@@ -185,9 +185,10 @@ export interface AlertActionOptions {
 }
 
 /**
- * Slot de ação no canto superior direito do alert (`.nds-alert-action`).
+ * Slot de ação à direita do texto do alert (`.nds-alert-action`).
  * Devolve o container vazio — o consumidor injeta o botão via `createButton`.
- * O CSS já reserva o padding-inline-end quando o alert tem `.nds-alert-action`.
+ * A folha abre uma terceira coluna do grid, com a largura do botão, quando o
+ * alert tem este slot como filho direto.
  */
 export function createAlertAction(options: AlertActionOptions = {}): HTMLElement {
   const { className } = options;

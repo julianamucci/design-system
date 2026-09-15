@@ -4,17 +4,18 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
-import AlertDismissivelStory from './AlertDismissivelStory.svelte';
+import AlertDismissibleStory from './AlertDismissibleStory.svelte';
 import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
-import AlertContrasteStory from './AlertContrasteStory.svelte';
+import AlertContrastStory from './AlertContrastStory.svelte';
 import {
-  alertAvisoSource,
   alertContrastSource,
   alertDestructiveSource,
-  alertDismissivelSource,
-  alertInformativoSource,
+  alertDismissibleByKeyboardSource,
+  alertDismissibleSource,
+  alertInfoSource,
   alertSource,
-  alertSucessoSource,
+  alertSuccessSource,
+  alertWarningSource,
 } from './alert.source';
 
 const meta: Meta = {
@@ -49,11 +50,25 @@ export const Default: Story = {
     },
   }),
 
-  play: async ({ canvasElement }) => {
-    const alert = await within(canvasElement).findByRole('alert');
-    await expect(alert).toHaveClass('nds-alert');
-    await expect(alert).not.toHaveClass('nds-alert-destructive');
-    await expect(within(canvasElement).getByText('Atenção')).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+
+    await step('A variante default não recebe classe de modificador', async () => {
+      await expect(alert).toHaveClass('nds-alert');
+      await expect(alert).not.toHaveClass('nds-alert-destructive');
+      await expect(canvas.getByText('Atenção')).toBeVisible();
+    });
+
+    await step('Ícone, título e descrição ocupam os slots que a folha espera', async () => {
+      // A folha posiciona por `data-slot`/classe: se um deles não recebesse a
+      // classe, o layout de duas colunas colapsaria sem erro nenhum.
+      await expect(alert.querySelector(':scope > svg')).toBeTruthy();
+      await expect(alert.querySelector('[data-slot="alert-title"]')).toHaveClass('nds-alert-title');
+      await expect(alert.querySelector('[data-slot="alert-description"]')).toHaveClass(
+        'nds-alert-description',
+      );
+    });
   },
 };
 
@@ -83,7 +98,7 @@ export const Destructive: Story = {
 export const Success: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { source: { transform: alertSucessoSource } },
+    docs: { source: { transform: alertSuccessSource } },
   },
   render: () => ({
     Component: AlertStory,
@@ -105,7 +120,7 @@ export const Success: Story = {
 
 export const Warning: Story = {
   parameters: {
-    docs: { source: { transform: alertAvisoSource } },
+    docs: { source: { transform: alertWarningSource } },
   },
   render: () => ({
     Component: AlertStory,
@@ -127,14 +142,14 @@ export const Warning: Story = {
 
 export const Info: Story = {
   parameters: {
-    docs: { source: { transform: alertInformativoSource } },
+    docs: { source: { transform: alertInfoSource } },
   },
   render: () => ({
     Component: AlertStory,
     props: {
       variant: 'info',
       title: 'Dica',
-      description: 'Você pode fixar seus filtros favoritos para acessá-los mais rápido.',
+      description: 'Você pode fixar os filtros mais usados para acessá-los mais rápido.',
       showIcon: true,
       icon: 'info',
     },
@@ -147,21 +162,23 @@ export const Info: Story = {
   },
 };
 
-// As duas stories abaixo usam AlertDismissivelStory: fechar remove o alert e
+// As duas stories abaixo usam AlertDismissibleStory: fechar remove o alert e
 // remonta um novo em seguida, então o canvas nunca fica vazio (Chromatic
 // fotografava a story vazia). A prova da remoção mede o nó ORIGINAL.
 export const Dismissible: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5'],
-    docs: { source: { transform: alertDismissivelSource } },
+    docs: { source: { transform: alertDismissibleSource } },
   },
   args: {
     dismissible: true,
     onDismiss: fn(),
   },
   render: (args) => ({
-    Component: AlertDismissivelStory,
+    Component: AlertDismissibleStory,
     props: {
+      title: 'Preferências salvas',
+      description: 'Você pode fechar este aviso quando quiser.',
       onDismiss: args.onDismiss,
     },
   }),
@@ -180,9 +197,9 @@ export const Dismissible: Story = {
       if (!alert.classList.contains('nds-animate-in')) {
         await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
         alert = await waitFor(() => {
-          const novo = canvas.getByRole('alert');
-          if (!novo.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
-          return novo;
+          const freshAlert = canvas.getByRole('alert');
+          if (!freshAlert.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
+          return freshAlert;
         });
         onDismiss.mockClear(); // o fechamento de preparo não entra na contagem
       }
@@ -222,8 +239,11 @@ export const Dismissible: Story = {
       const alert = canvas.getByRole('alert');
       await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
     });
+    // Guardado fora do step: o passo seguinte prova que o remontado é outro nó.
+    let alertOriginal: HTMLElement | null = null;
     await step('Clique no X remove o alert e dispara o callback uma única vez', async () => {
-      const alertOriginal = canvas.getByRole('alert');
+      const original = canvas.getByRole('alert');
+      alertOriginal = original;
       const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
       await userEvent.click(dismissButton);
       // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
@@ -232,30 +252,40 @@ export const Dismissible: Story = {
       dismissButton.click();
       // E a animação de um descendente também não pode encerrar a saída.
       dismissButton.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
-      await expect(alertOriginal).toBeInTheDocument();
+      await expect(original).toBeInTheDocument();
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
-      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
+      await waitFor(() => expect(original).not.toBeInTheDocument());
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
 
     await step('Um alert novo volta ao canvas — a story não fica vazia', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+      // O remontado é OUTRO nó: o original saiu do DOM e o wrapper montou um novo.
+      await waitFor(async () => {
+        const remounted = canvas.getByRole('alert');
+        await expect(remounted).not.toBe(alertOriginal);
+        await expect(remounted).toBeVisible();
+      });
     });
   },
 };
 
 export const DismissibleByKeyboard: Story = {
   parameters: {
-    docs: { source: { transform: alertDismissivelSource } },
+    docs: { source: { transform: alertDismissibleByKeyboardSource } },
   },
   args: {
     dismissible: true,
     onDismiss: fn(),
   },
   render: (args) => ({
-    Component: AlertDismissivelStory,
+    Component: AlertDismissibleStory,
     props: {
+      variant: 'success',
+      icon: 'success',
+      title: 'Perfil atualizado',
+      description: 'Suas informações foram salvas com sucesso.',
+      dismissLabel: 'Fechar confirmação',
       onDismiss: args.onDismiss,
     },
   }),
@@ -265,7 +295,7 @@ export const DismissibleByKeyboard: Story = {
 
     await step('Enter no botão focado remove o alert e dispara o callback uma única vez', async () => {
       const alertOriginal = await canvas.findByRole('alert');
-      const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
+      const dismissButton = within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' });
       // waitFor: o alert entra animado (.nds-animate-in) — medir o botão no
       // meio da animação é racy, e no headless ela fica presa no quadro zero
       // até o timeout de segurança limpar a classe.
@@ -308,7 +338,7 @@ export const Contrast: Story = {
       },
     },
   },
-  render: () => ({ Component: AlertContrasteStory }),
+  render: () => ({ Component: AlertContrastStory }),
   play: async ({ canvasElement }) => {
     // Contraste é aritmética, não olhômetro: a play calcula a razão entre a cor
     // do texto e o fundo COMPOSTO (o bg do alert tem alfa, então a cor declarada

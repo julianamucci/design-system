@@ -26,6 +26,7 @@ import {
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
+import { text } from '@/lib/story-source';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -57,13 +58,37 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * Índices dos itens de `testes.<grupo>` DERIVADOS do dicionário: um intervalo
+ * cravado para antes do último item quando o conteúdo cresce (foi assim que
+ * `functional.item8` e `visual.item6` ficaram de fora da página).
+ */
+function testItemIndexes(group: 'functional' | 'accessibility' | 'visual'): number[] {
+  const content = (alertTranslations as unknown as Record<string, { testes?: Record<string, Record<string, unknown>> }>)[getLocale()];
+  return Object.keys(content?.testes?.[group] ?? {})
+    .map((key) => /^item(\d+)$/.exec(key))
+    .filter((match): match is RegExpExecArray => match !== null)
+    .map((match) => Number(match[1]))
+    .sort((a, b) => a - b);
+}
+
+/** Literal de snippet a partir de uma chave do dicionário — o código mostrado acompanha o idioma e o preview. */
+function quoted(key: string): string {
+  return text(stripHtml(t(key)));
+}
+
 interface BuildAlertOptions {
+  /**
+   * Nível do título. `h4` nos cards (o card abre em `h3`); a Demonstração e as
+   * prévias de Do & Don't, que ficam direto sob o `h2` da seção, usam `h3`.
+   */
+  titleAs?: 'h3' | 'h4';
   /** Classes extras aplicadas junto de `className`. */
   extraClass?: string;
   /** Renderiza o botão X de fechar no canto superior direito. */
   dismissible?: boolean;
   onDismiss?: () => void;
-  /** Chave i18n do rótulo da ação — renderiza um botão dentro da descrição. */
+  /** Chave i18n do rótulo da ação — renderiza um botão no slot de ação. */
   actionKey?: string;
   onAction?: () => void;
 }
@@ -76,21 +101,24 @@ function buildAlert(
   descKey: string,
   options: BuildAlertOptions = {},
 ): HTMLElement {
-  const { extraClass = '', dismissible = false, onDismiss, actionKey, onAction } = options;
+  const { titleAs = 'h4', extraClass = '', dismissible = false, onDismiss, actionKey, onAction } = options;
 
   const el = createAlert({
     variant,
+    // Todo alerta da docs page já está na tela quando ela carrega: é conteúdo
+    // estático, e `note` não vira região viva (guideline 19).
+    role: 'note',
     className: [className, extraClass].filter(Boolean).join(' '),
     dismissible,
     onDismiss,
   });
   if (icon) el.appendChild(createAlertIcon(icon));
-  // as: 'h3' — as seções da docs page são h2; h3 preserva a hierarquia (axe heading-order).
-  if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)), as: 'h3' }));
+  // O nível preserva a hierarquia da página (axe heading-order).
+  if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)), as: titleAs }));
 
   if (actionKey) {
     // Slot AlertAction — NÃO botão inline dentro da descrição. `.nds-alert-action`
-    // é `position: absolute` no canto superior direito (alert.css), que é o
+    // é a coluna à direita do texto (alert.css), que é o
     // "alinhado à direita" que o conteúdo descreve. Empilhar o botão dentro da
     // descrição o joga para a linha de baixo, à esquerda: foi assim que a docs
     // page divergiu da story ComAcao, que sempre usou o slot.
@@ -213,9 +241,10 @@ export function createAlertDocs(): HTMLElement {
             // default sem título · destructive com título · success dismissível ·
             // warning com ação inline.
             wrap.append(
-              buildAlert('default', '', 'info', null, 'demonstration.labels.infoDesc'),
-              buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
+              buildAlert('default', '', 'info', null, 'demonstration.labels.infoDesc', { titleAs: 'h3' }),
+              buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc', { titleAs: 'h3' }),
               buildAlert('success', '', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc', {
+                titleAs: 'h3',
                 dismissible: true,
                 onDismiss: () => track('alert_dismiss', {
                   component: 'alert',
@@ -224,6 +253,7 @@ export function createAlertDocs(): HTMLElement {
                 }),
               }),
               buildAlert('warning', '', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc', {
+                titleAs: 'h3',
                 actionKey: 'demonstration.labels.warningAction',
               }),
             );
@@ -304,37 +334,21 @@ export function createAlertDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const el = createAlert({ variant: 'default' });
-                el.appendChild(createAlertIcon('info'));
-                el.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h3' }));
-                el.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão.' }));
-                return el;
-              },
-              dontPreviewFactory: () => {
-                const el = createAlert({ variant: 'default' });
-                el.appendChild(createAlertDescription({ text: 'Salvo!' }));
-                return el;
-              },
+              // `h3`: o container de Do & Don't só tem o `h2` da seção.
+              doPreviewFactory: () =>
+                buildAlert('default', '', 'info', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc', { titleAs: 'h3' }),
+              dontPreviewFactory: () =>
+                buildAlert('default', '', null, null, 'demonstration.labels.savedLabel', { titleAs: 'h3' }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const el = createAlert({ variant: 'destructive' });
-                el.appendChild(createAlertIcon('error'));
-                el.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h3' }));
-                el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
-                return el;
-              },
-              dontPreviewFactory: () => {
-                const el = createAlert({ variant: 'destructive' });
-                el.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h3' }));
-                el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
-                return el;
-              },
+              doPreviewFactory: () =>
+                buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc', { titleAs: 'h3' }),
+              dontPreviewFactory: () =>
+                buildAlert('destructive', '', null, 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc', { titleAs: 'h3' }),
             },
           ],
         });
@@ -348,13 +362,24 @@ export function createAlertDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeDefault = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
-        const codeDestructive = `const alert = createAlert({ variant: 'destructive' });\nalert.appendChild(createAlertIcon('error'));\nalert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));\nalert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));`;
-        const codeSuccess = `const alert = createAlert({ variant: 'success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
-        const codeWarning = `const alert = createAlert({ variant: 'warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
-        const codeInfo = `const alert = createAlert({ variant: 'info' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
-        const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
-        const codeDismissible = `const alert = createAlert({\n  variant: 'default',\n  dismissible: true,\n  dismissLabel: 'Fechar alerta',\n  onDismiss: () => console.log('fechado'),\n});\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
+        // O texto do snippet sai das MESMAS chaves do preview ao lado: código e
+        // exemplo mostram a mesma mensagem, no idioma de quem lê.
+        const variantCode = (variant: AlertVariant, icon: AlertIconType, titleKey: string | null, descKey: string) =>
+          `const alert = createAlert({ variant: '${variant}' });\n` +
+          `alert.appendChild(createAlertIcon('${icon}'));\n` +
+          (titleKey ? `alert.appendChild(createAlertTitle({ text: ${quoted(titleKey)}, as: 'h4' }));\n` : '') +
+          `alert.appendChild(createAlertDescription({ text: ${quoted(descKey)} }));`;
+        const codeDefault = variantCode('default', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc');
+        const codeDestructive = variantCode('destructive', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc');
+        const codeSuccess = variantCode('success', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc');
+        const codeWarning = variantCode('warning', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc');
+        const codeInfo = variantCode('info', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc');
+        const codeWithoutTitle = variantCode('default', 'info', null, 'demonstration.labels.infoDesc');
+        const codeDismissible =
+          `const alert = createAlert({\n  dismissible: true,\n  onDismiss: () => savePreference('notice-dismissed'),\n});\n` +
+          `alert.appendChild(createAlertIcon('info'));\n` +
+          `alert.appendChild(createAlertTitle({ text: ${quoted('demonstration.labels.infoTitle')}, as: 'h4' }));\n` +
+          `alert.appendChild(createAlertDescription({ text: ${quoted('demonstration.labels.infoDesc')} }));`;
         return createDocsCompositions({
           id: 'variantes',
           useWhenLabel: tNav('common.useWhen'),
@@ -398,22 +423,15 @@ export function createAlertDocs(): HTMLElement {
               code: codeDismissible,
               // Primeira emissão real do alert_dismiss: o primitivo não importa
               // analytics — o evento é fiado aqui, no consumidor, via callback.
-              previewFactory: () => {
-                const el = createAlert({
-                  variant: 'default',
-                  className: 'nds-w-full',
+              previewFactory: () =>
+                buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc', {
                   dismissible: true,
                   onDismiss: () => track('alert_dismiss', {
                     component: 'alert',
                     label: 'dismissible',
-                    location: 'docs_demo',
+                    location: 'docs_variantes',
                   }),
-                });
-                el.appendChild(createAlertIcon('info'));
-                el.appendChild(createAlertTitle({ text: stripHtml(t('demonstration.labels.infoTitle')), as: 'h3' }));
-                el.appendChild(createAlertDescription({ text: stripHtml(t('demonstration.labels.infoDesc')) }));
-                return el;
-              },
+                }),
             },
             {
               trackId: 'withoutTitle',
@@ -426,7 +444,16 @@ export function createAlertDocs(): HTMLElement {
         });
       }
 
-      case 'composicoes':
+      case 'composicoes': {
+        const actionCode = (dismissible: boolean) =>
+          `const alert = createAlert(${dismissible ? '{ dismissible: true }' : ''});\n` +
+          `alert.appendChild(createAlertIcon('info'));\n` +
+          `alert.appendChild(createAlertTitle({ text: ${quoted('demonstration.labels.sessionTitle')}, as: 'h4' }));\n` +
+          `alert.appendChild(createAlertDescription({ text: ${quoted('demonstration.labels.sessionDesc')} }));\n` +
+          `\n` +
+          `const action = createAlertAction();\n` +
+          `action.appendChild(createButton({ size: 'sm', variant: 'default', label: ${quoted('demonstration.labels.saveNow')} }));\n` +
+          `alert.appendChild(action);`;
         return createDocsCompositions({
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'alert',
@@ -439,8 +466,8 @@ export function createAlertDocs(): HTMLElement {
               code:
                 `const alert = createAlert();\n` +
                 `alert.appendChild(createAlertIcon('info'));\n` +
-                `alert.appendChild(createAlertTitle({ text: 'Informação' }));\n` +
-                `alert.appendChild(createAlertDescription({ text: 'Ícone SVG posicionado automaticamente.' }));`,
+                `alert.appendChild(createAlertTitle({ text: ${quoted('demonstration.labels.infoTitle')}, as: 'h4' }));\n` +
+                `alert.appendChild(createAlertDescription({ text: ${quoted('demonstration.labels.infoDesc')} }));`,
               previewFactory: () => buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
@@ -448,31 +475,33 @@ export function createAlertDocs(): HTMLElement {
               name: t('variants.compositions.withAction.name'),
               description: t('variants.compositions.withAction.description'),
               useWhen: t('variants.compositions.withAction.use'),
-              // Slot AlertAction, igual à story ComAcao. O markup anterior
+              // Slot AlertAction, igual à story WithAction. O markup anterior
               // empilhava o botão dentro da descrição e ele caía na linha de
               // baixo — divergia da story e do "alinhado à direita" do texto.
-              code:
-                `const alert = createAlert();\n` +
-                `alert.appendChild(createAlertIcon('info'));\n` +
-                `alert.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos' }));\n` +
-                `alert.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));\n` +
-                `\n` +
-                `const action = createAlertAction();\n` +
-                `action.appendChild(createButton({ size: 'sm', variant: 'default', label: 'Salvar agora' }));\n` +
-                `alert.appendChild(action);`,
-              previewFactory: () => {
-                const el = createAlert({ className: 'nds-w-full' });
-                el.appendChild(createAlertIcon('info'));
-                el.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos', as: 'h3' }));
-                el.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));
-                const action = createAlertAction();
-                action.appendChild(createButton({ size: 'sm', variant: 'default', label: 'Salvar agora' }));
-                el.appendChild(action);
-                return el;
-              },
+              code: actionCode(false),
+              previewFactory: () =>
+                buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.sessionTitle', 'demonstration.labels.sessionDesc', {
+                  actionKey: 'demonstration.labels.saveNow',
+                }),
+            },
+            {
+              // Ação e botão de fechar juntos — a ação é a coluna do grid com a
+              // largura do botão; o X fica no canto, na margem interna dele.
+              trackId: 'withActionAndDismiss',
+              name: t('variants.compositions.withActionAndDismiss.name'),
+              description: t('variants.compositions.withActionAndDismiss.description'),
+              useWhen: t('variants.compositions.withActionAndDismiss.use'),
+              code: actionCode(true),
+              previewFactory: () =>
+                buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.sessionTitle', 'demonstration.labels.sessionDesc', {
+                  dismissible: true,
+                  actionKey: 'demonstration.labels.saveNow',
+                }),
             },
           ],
         });
+
+      }
 
       case 'estados':
         return createDocsStates({
@@ -485,6 +514,7 @@ export function createAlertDocs(): HTMLElement {
             { label: t('states.complete.label'),      trigger: toPlainText(t('states.complete.trigger')),      behavior: toPlainText(t('states.complete.behavior'))},
             { label: t('states.withoutTitle.label'),  trigger: toPlainText(t('states.withoutTitle.trigger')),  behavior: toPlainText(t('states.withoutTitle.behavior'))},
             { label: t('states.withoutIcon.label'),   trigger: toPlainText(t('states.withoutIcon.trigger')),              behavior: toPlainText(t('states.withoutIcon.behavior'))},
+            { label: t('states.withoutAnnouncement.label'), trigger: toPlainText(t('states.withoutAnnouncement.trigger')), behavior: toPlainText(t('states.withoutAnnouncement.behavior')) },
             { label: t('states.dynamicInsert.label'), trigger: toPlainText(t('states.dynamicInsert.trigger')),            behavior: toPlainText(t('states.dynamicInsert.behavior')) },
             { label: t('states.dismissed.label'),     trigger: toPlainText(t('states.dismissed.trigger')),     behavior: toPlainText(t('states.dismissed.behavior'))},
           ],
@@ -522,29 +552,29 @@ export interface AlertTitleOptions {
               title: t('props.alertTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
-                { name: 'role',      type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText(t('props.table.role')) },
-                { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
-                { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: toPlainText(t('props.table.dismissible')) },
-                { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: toPlainText(t('props.table.onDismiss')) },
-                { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: 'Não', description: toPlainText(t('props.table.dismissLabel')) },
+                { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: tNav('common.no'), description: toPlainText(t('props.table.variant')) },
+                { name: 'role',      type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: tNav('common.no'), description: toPlainText(t('props.table.role')) },
+                { name: 'className', type: 'string',                    defaultValue: '—',         required: tNav('common.no'), description: toPlainText(t('props.table.className')) },
+                { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: tNav('common.no'), description: toPlainText(t('props.table.dismissible')) },
+                { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: tNav('common.no'), description: toPlainText(t('props.table.onDismiss')) },
+                { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: tNav('common.no'), description: toPlainText(t('props.table.dismissLabel')) },
               ],
             },
             {
               title: t('props.alertTitleTitle'),
               cols: propsCols,
               items: [
-                { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'as',        type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: 'Não', description: toPlainText(t('props.table.titleAs')) },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
+                { name: 'text',      type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.table.children') },
+                { name: 'as',        type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: tNav('common.no'), description: toPlainText(t('props.table.titleAs')) },
+                { name: 'className', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.className')) },
               ],
             },
             {
               title: t('props.alertDescTitle'),
               cols: propsCols,
               items: [
-                { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
+                { name: 'text',      type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.table.children') },
+                { name: 'className', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -647,7 +677,7 @@ export interface AlertTitleOptions {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
+            items: testItemIndexes('functional').map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -656,7 +686,7 @@ export interface AlertTitleOptions {
           accessibility: {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-            items: [1, 2, 3, 4].map(i => ({
+            items: testItemIndexes('accessibility').map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
@@ -668,7 +698,7 @@ export interface AlertTitleOptions {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: testItemIndexes('visual').map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

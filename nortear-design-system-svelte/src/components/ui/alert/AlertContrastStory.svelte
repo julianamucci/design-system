@@ -4,14 +4,14 @@
   import { Alert, AlertTitle, AlertDescription } from './index';
   import type { AlertVariant } from './index';
 
-  const variantes: AlertVariant[] = ['default', 'destructive', 'success', 'warning', 'info'];
+  const variants: AlertVariant[] = ['default', 'destructive', 'success', 'warning', 'info'];
 </script>
 
 <div class="nds-stack" data-spacing="sm">
-  {#each variantes as variant (variant)}
-    <Alert variant={variant}>
+  {#each variants as variant (variant)}
+    <Alert {variant}>
       <AlertTitle>Título {variant}</AlertTitle>
-      <AlertDescription>Texto corrido da variant {variant}.</AlertDescription>
+      <AlertDescription>Texto corrido da variante {variant}.</AlertDescription>
     </Alert>
   {/each}
 </div>

@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import {
   NdsAlert,
   NdsAlertTitle,
@@ -10,6 +10,14 @@ import {
   NdsAlertIcon,
 } from './alert';
 import { NdsButton } from './button';
+import {
+  alertAdditionalClassSource,
+  alertLayoutWithoutIconSource,
+  alertWithActionAndDismissSource,
+  alertWithActionSource,
+  alertWithIconSource,
+} from './alert.source';
+import { measureActionDismiss } from '@shared/testing/alert-probe';
 
 const meta: Meta = {
   title: 'Components/Feedback/Alert/Compositions',
@@ -37,7 +45,10 @@ export default meta;
 type Story = StoryObj;
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item2'],
+    docs: { source: { transform: alertWithIconSource } },
+  },
   render: () => ({
     template: `
       <div ndsAlert>
@@ -70,6 +81,7 @@ export const WithIcon: Story = {
 };
 
 export const WithAction: Story = {
+  parameters: { docs: { source: { transform: alertWithActionSource } } },
   render: () => ({
     template: `
       <div ndsAlert>
@@ -113,16 +125,17 @@ export const WithAction: Story = {
  * input `class`.
  *
  * `nds-w-full` no alert (que já é block e ocupa a largura) e `nds-w-auto` no
- * slot de ação (absoluto, shrink-to-fit por default) são inertes de propósito:
+ * slot de ação (coluna `auto` do grid, já na largura do conteúdo) são inertes de propósito:
  * a story prova a composição de classes sem mexer no snapshot visual.
  */
 export const AdditionalClass: Story = {
+  parameters: { docs: { source: { transform: alertAdditionalClassSource } } },
   render: () => ({
     template: `
       <div ndsAlert class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <h5 ndsAlertTitle class="nds-w-full">Classe adicional</h5>
-        <section ndsAlertDescription class="nds-w-full">A classe de quem usa convive com as do design system.</section>
+        <section ndsAlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</section>
         <div ndsAlertAction class="nds-w-auto">
           <button ndsButton variant="default" size="sm">Ação</button>
         </div>
@@ -132,7 +145,7 @@ export const AdditionalClass: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('A classe de quem usa soma à do design system', async () => {
+    await step('A classe do consumidor soma à do design system', async () => {
       const alerta = canvas.getByRole('alert');
       await expect(alerta).toHaveClass('nds-alert', 'nds-w-full');
 
@@ -149,7 +162,10 @@ export const AdditionalClass: Story = {
 };
 
 export const WithoutIcon: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: alertLayoutWithoutIconSource } },
+  },
   render: () => ({
     template: `
       <div ndsAlert>
@@ -172,6 +188,52 @@ export const WithoutIcon: Story = {
       // na borda do padding, sem buraco à esquerda.
       const colunas = getComputedStyle(alerta).gridTemplateColumns.split(' ');
       await expect(parseFloat(colunas[0])).toBe(0);
+    });
+  },
+};
+
+/**
+ * Ação E botão de fechar no mesmo alerta. A ação é a terceira coluna do grid e
+ * o X segue na calha dele, à direita; a medida é de CAIXA, pela sonda compartilhada, e
+ * não de classe — as classes estariam certas com a ação encostada no X.
+ */
+export const WithActionAndDismiss: Story = {
+  parameters: {
+    covers: ['functional.item8', 'visual.item6'],
+    docs: { source: { transform: alertWithActionAndDismissSource } },
+  },
+  render: () => ({
+    template: `
+      <div ndsAlert dismissible>
+        <svg ndsAlertIcon kind="info"></svg>
+        <h5 ndsAlertTitle>Sessão expira em 5 minutos</h5>
+        <section ndsAlertDescription>Salve seu trabalho para não perder as alterações.</section>
+        <div ndsAlertAction>
+          <button ndsButton variant="default" size="sm">Salvar agora</button>
+        </div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alerta = canvas.getByRole('alert');
+
+    await step('A ação e o botão de fechar estão no alerta, o X por último', async () => {
+      const action = within(alerta).getByRole('button', { name: 'Salvar agora' });
+      const close = within(alerta).getByRole('button', { name: 'Fechar alerta' });
+      await waitFor(() => expect(close).toBeVisible());
+      await expect(action).toBeVisible();
+      await expect(alerta.lastElementChild).toBe(close);
+    });
+
+    await step('A ação e o X não se sobrepõem, e o texto termina antes da ação', async () => {
+      // A entrada anima escala e opacidade: medir caixas no meio dela daria
+      // um retângulo que não é o de repouso. Leitura pura dentro do waitFor.
+      await waitFor(() => expect(alerta).not.toHaveClass('nds-animate-in'));
+      const layout = measureActionDismiss(alerta);
+      await expect(layout.overlap).toBe(false);
+      await expect(layout.gap).toBeGreaterThanOrEqual(0);
+      await expect(layout.textClearsAction).toBe(true);
     });
   },
 };

@@ -9,9 +9,10 @@
  *     <section class="nds-alert-description"><p>Descrição…</p></section>
  *   </div>
  *
- * Variantes:
- *   .nds-alert                  → default (bg-muted, fg-card-foreground)
- *   .nds-alert.nds-alert-destructive → vermelho (texto destructive)
+ * Variantes: .nds-alert (default, fundo --muted) e .nds-alert-destructive,
+ * -success, -warning, -info. A cor semântica pinta fundo, borda e ÍCONE;
+ * título e texto corrido ficam em --foreground nas cinco (ver os blocos
+ * "Títulos que NÃO podem usar a cor semântica" e da descrição).
  *
  * Tokens: --muted, --card-foreground, --foreground, --destructive/-foreground,
  *         --success/-foreground, --warning/-foreground, --info/-foreground,
@@ -69,6 +70,14 @@
   color: var(--alert-fg);
   font-size: var(--text-control);                          /* 14px — text-sm */
   line-height: 1.5;
+}
+
+/* Alerta fechado no Angular: o componente não remove o próprio host, escreve
+ * `hidden` nele. O `display: grid` acima vence a regra `[hidden]` do navegador,
+ * e a caixa ficava ocupando espaço — visível sob movimento reduzido e ainda na
+ * árvore de acessibilidade. Mesmo remendo das outras folhas com `display`. */
+.nds-alert[hidden] {
+  display: none;
 }
 
 /* Quando há ícone svg como filho, abre coluna pro ícone */
@@ -132,7 +141,9 @@
 /* ── Variantes semânticas ──────────────────────────────────────────────────── *
  * Regra WCAG 2.2 AA (contraste 4.5:1):
  *   - Container colorido: bg-soft + border-soft com tons da cor semântica
- *   - Ícone e título: podem usar a cor semântica (são curtos, contraste 3:1 ok)
+ *   - Ícone: usa a cor semântica (não-textual, piso de 3:1)
+ *   - Título: NÃO usa — é 14px semibold, limite de 4.5:1 (ver o bloco de
+ *     títulos adiante)
  *   - Texto corrido (description): NUNCA a cor semântica. Escreve o par
  *     `--X-foreground`, que neste projeto vale `--foreground` — os 4.5:1
  *     continuam garantidos e o token abre a customização em projetos derivados.
@@ -246,7 +257,9 @@
 .nds-alert-destructive > h3,
 .nds-alert-destructive > h4,
 .nds-alert-destructive > h5,
-.nds-alert-destructive > h6 {
+.nds-alert-destructive > h6,
+.nds-alert-destructive > strong,
+.nds-alert-destructive > [data-title] {
   color: hsl(var(--destructive-foreground));
 }
 .nds-alert-success .nds-alert-title,
@@ -255,7 +268,9 @@
 .nds-alert-success > h3,
 .nds-alert-success > h4,
 .nds-alert-success > h5,
-.nds-alert-success > h6 {
+.nds-alert-success > h6,
+.nds-alert-success > strong,
+.nds-alert-success > [data-title] {
   color: hsl(var(--success-foreground));
 }
 .nds-alert-warning .nds-alert-title,
@@ -264,7 +279,9 @@
 .nds-alert-warning > h3,
 .nds-alert-warning > h4,
 .nds-alert-warning > h5,
-.nds-alert-warning > h6 {
+.nds-alert-warning > h6,
+.nds-alert-warning > strong,
+.nds-alert-warning > [data-title] {
   color: hsl(var(--warning-foreground));
 }
 .nds-alert-info .nds-alert-title,
@@ -273,25 +290,40 @@
 .nds-alert-info > h3,
 .nds-alert-info > h4,
 .nds-alert-info > h5,
-.nds-alert-info > h6 {
+.nds-alert-info > h6,
+.nds-alert-info > strong,
+.nds-alert-info > [data-title] {
   color: hsl(var(--info-foreground));
 }
 
-/* ── Action (botão no canto superior direito) ─────────────────────────────── */
-.nds-alert-action {
-  position: absolute;
-  top: var(--spacing-2);
-  right: var(--spacing-2);
+/* ── Action (botão à direita do texto) ────────────────────────────────────── *
+ * A ação é uma TERCEIRA COLUNA do grid, com largura `auto`, e ocupa as duas
+ * linhas de título e descrição. Até 2026-09-15 ela era absoluta sobre uma calha
+ * fixa de 72px (`--spacing-18`), e a calha nunca coube o botão: medido no
+ * vanilla, "Salvar agora" em `sm` tem 108px, e título e descrição corriam 36px
+ * POR BAIXO dele — em qualquer alerta com ação, com ou sem o botão de fechar.
+ * Coluna `auto` mede o botão que estiver lá, em qualquer idioma e tamanho de
+ * fonte; calha fixa é palpite sobre um rótulo. Precisa ser filho DIRETO da raiz.
+ */
+.nds-alert:has(> .nds-alert-action) {
+  grid-template-columns: 0 1fr auto;
 }
 
-.nds-alert:has(.nds-alert-action) {
-  padding-inline-end: var(--spacing-18);
+.nds-alert:has(> svg):has(> .nds-alert-action) {
+  grid-template-columns: var(--spacing-4) 1fr auto;
+}
+
+.nds-alert > .nds-alert-action {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: start;
+  margin-inline-start: var(--spacing-3);        /* 12px entre o texto e a ação */
 }
 
 /* ── Dismiss (X no canto superior direito) ────────────────────────────────── *
  * Variante dismissible: o próprio Alert renderiza o botão de fechar (Button
- * ghost icon-sm da stack). Mutuamente exclusivo com .nds-alert-action por
- * design — quem precisa de ação usa a composição AlertAction. */
+ * ghost icon-sm da stack). Convive com .nds-alert-action — ver a regra de
+ * ação + fechar logo abaixo. */
 .nds-alert-dismiss {
   position: absolute;
   top: var(--spacing-1);
@@ -306,6 +338,13 @@
 .nds-alert:has(.nds-alert-dismiss) {
   padding-inline-end: var(--spacing-10);        /* 40px — botão icon-sm + respiro */
 }
+
+/* Ação E fechar no mesmo alerta. Até 2026-09-14 a folha declarava os dois
+ * mutuamente exclusivos só em comentário, e nada reprovava a ação encostada no
+ * X. Por decisão da dona a folha acomoda os dois — e, desde que a ação virou
+ * coluna do grid, isso não pede regra própria: a calha de 40px do fechar é
+ * padding da raiz, a coluna da ação termina onde o padding começa, e o X fica
+ * dentro da calha. */
 
 /* Links dentro de título/descrição */
 .nds-alert-title a,

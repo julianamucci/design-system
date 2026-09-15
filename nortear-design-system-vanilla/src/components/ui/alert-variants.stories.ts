@@ -29,12 +29,25 @@ export const Default: Story = {
     return alert;
   },
 
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = canvas.getByRole('alert');
-    await expect(alert).toHaveClass('nds-alert');
-    await expect(alert).not.toHaveClass('nds-alert-destructive');
-    await expect(canvas.getByText('Atenção')).toBeVisible();
+
+    await step('A variante default não recebe classe de modificador', async () => {
+      await expect(alert).toHaveClass('nds-alert');
+      await expect(alert).not.toHaveClass('nds-alert-destructive');
+      await expect(canvas.getByText('Atenção')).toBeVisible();
+    });
+
+    await step('Ícone, título e descrição ocupam os slots que a folha espera', async () => {
+      // A folha posiciona por classe e filho direto: se um deles não recebesse
+      // a classe, o layout de duas colunas colapsaria sem erro nenhum.
+      await expect(alert.querySelector(':scope > svg')).toBeTruthy();
+      await expect(alert.querySelector('[data-slot="alert-title"]')).toHaveClass('nds-alert-title');
+      await expect(alert.querySelector('[data-slot="alert-description"]')).toHaveClass(
+        'nds-alert-description',
+      );
+    });
   },
 };
 
@@ -193,7 +206,7 @@ export const Dismissible: Story = {
       source: {
         transform: alertSourceWith({
           dismissible: true,
-          onDismiss: "() => salvarPreferencia('aviso-fechado')",
+          onDismiss: "() => savePreference('notice-dismissed')",
           title: 'Preferências salvas',
           description: 'Você pode fechar este aviso quando quiser.',
         }),
@@ -224,9 +237,9 @@ export const Dismissible: Story = {
       if (!alert.classList.contains('nds-animate-in')) {
         await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
         alert = await waitFor(() => {
-          const novo = canvas.getByRole('alert');
-          if (!novo.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
-          return novo;
+          const freshAlert = canvas.getByRole('alert');
+          if (!freshAlert.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
+          return freshAlert;
         });
         onDismissClick.mockClear(); // o fechamento de preparo não entra na contagem
       }

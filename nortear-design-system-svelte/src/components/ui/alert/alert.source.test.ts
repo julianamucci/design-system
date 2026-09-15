@@ -1,19 +1,58 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertAvisoSource,
-  alertClassNameAdicionalSource,
-  alertWithActionSource,
+  alertAdditionalClassSource,
   alertContrastSource,
   alertDestructiveSource,
-  alertDismissivelSource,
-  alertInformativoSource,
-  alertInsercaoDinamicaSource,
+  alertDismissibleByKeyboardSource,
+  alertDismissibleSource,
+  alertDynamicInsertionSource,
+  alertInfoSource,
+  alertLayoutWithoutIconSource,
   alertNoAnnouncementSource,
   alertNoIconSource,
   alertNoTitleSource,
   alertSource,
-  alertSucessoSource,
+  alertSuccessSource,
+  alertWarningSource,
+  alertWithActionAndDismissSource,
+  alertWithActionSource,
+  alertWithIconSource,
 } from './alert.source';
+
+const ALL = [
+  alertSource,
+  alertDestructiveSource,
+  alertSuccessSource,
+  alertWarningSource,
+  alertInfoSource,
+  alertDismissibleSource,
+  alertDismissibleByKeyboardSource,
+  alertContrastSource,
+  alertNoTitleSource,
+  alertNoIconSource,
+  alertNoAnnouncementSource,
+  alertDynamicInsertionSource,
+  alertWithIconSource,
+  alertLayoutWithoutIconSource,
+  alertWithActionSource,
+  alertWithActionAndDismissSource,
+  alertAdditionalClassSource,
+];
+
+describe('regras que valem para todo snippet do alert', () => {
+  it('o ícone do alerta não carrega .nds-icon — a folha dimensiona por `.nds-alert > svg`', () => {
+    for (const build of ALL) expect(build()).not.toContain('nds-icon');
+  });
+
+  it('nenhum snippet embrulha o alerta numa região aria-live', () => {
+    for (const build of ALL) expect(build()).not.toContain('aria-live');
+  });
+
+  it('nenhum snippet ensina console.log como callback', () => {
+    for (const build of ALL) expect(build()).not.toContain('console.log');
+    expect(alertSource('', { args: { dismissible: true } })).not.toContain('console.log');
+  });
+});
 
 describe('alertSource', () => {
   it('sem args, entrega a forma canônica sem nenhum atributo padrão repetido', () => {
@@ -24,7 +63,7 @@ describe('alertSource', () => {
 </script>
 
 <Alert>
-  <Info class="nds-icon" aria-hidden="true" />
+  <Info aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
   <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
 </Alert>`,
@@ -41,11 +80,12 @@ describe('alertSource', () => {
     expect(alertSource('', { args: { role: 'note' } })).toContain('role="note"');
   });
 
-  it('o control de fechar traz a prop e o callback juntos', () => {
+  it('o control de fechar traz a prop e o callback declarado juntos', () => {
     expect(alertSource('', { args: { dismissible: false } })).not.toContain('dismissible');
-    const saida = alertSource('', { args: { dismissible: true } });
-    expect(saida).toContain('dismissible');
-    expect(saida).toContain('onDismiss=');
+    const output = alertSource('', { args: { dismissible: true } });
+    expect(output).toContain('dismissible');
+    expect(output).toContain('onDismiss={handleDismiss}');
+    expect(output).toContain('function handleDismiss()');
   });
 });
 
@@ -53,69 +93,107 @@ describe('transforms das stories de variante', () => {
   it('cada variante escreve a própria prop e importa o próprio ícone', () => {
     expect(alertDestructiveSource()).toContain('variant="destructive"');
     expect(alertDestructiveSource()).toContain('icons/circle-alert');
-    expect(alertSucessoSource()).toContain('variant="success"');
-    expect(alertSucessoSource()).toContain('icons/circle-check-big');
-    expect(alertAvisoSource()).toContain('variant="warning"');
-    expect(alertAvisoSource()).toContain('icons/triangle-alert');
-    expect(alertInformativoSource()).toContain('variant="info"');
+    expect(alertSuccessSource()).toContain('variant="success"');
+    expect(alertSuccessSource()).toContain('icons/circle-check-big');
+    expect(alertWarningSource()).toContain('variant="warning"');
+    expect(alertWarningSource()).toContain('icons/triangle-alert');
+    expect(alertInfoSource()).toContain('variant="info"');
+    expect(alertInfoSource()).toContain('Você pode fixar os filtros mais usados');
   });
 
-  it('o alert dispensável mostra a prop e o callback de fechamento', () => {
-    const saida = alertDismissivelSource();
-    expect(saida).toContain('<Alert dismissible onDismiss=');
+  it('o alert dispensável do clique mostra a prop e o callback, com o texto da story', () => {
+    const output = alertDismissibleSource();
+    expect(output).toContain('<Alert dismissible onDismiss={handleDismiss}>');
+    expect(output).toContain('Preferências salvas');
+  });
+
+  it('o alert dispensável do teclado é success e nomeia o que o X fecha', () => {
+    const output = alertDismissibleByKeyboardSource();
+    expect(output).toContain('variant="success"');
+    expect(output).toContain('dismissLabel="Fechar confirmação"');
   });
 
   it('a medição de contraste mostra as cinco variantes na mesma tela', () => {
-    const saida = alertContrastSource();
-    expect(saida).toContain('const variantes: AlertVariant[]');
-    expect(saida).toContain('<Alert variant={variante}>');
+    const output = alertContrastSource();
+    expect(output).toContain('const variants: AlertVariant[]');
+    expect(output).toContain('<Alert {variant}>');
     for (const variant of ['default', 'destructive', 'success', 'warning', 'info']) {
-      expect(saida).toContain(`"${variant}"`);
+      expect(output).toContain(`"${variant}"`);
     }
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('sem título, nem o subcomponente nem o import sobram', () => {
-    const saida = alertNoTitleSource();
-    expect(saida).not.toContain('AlertTitle');
-    expect(saida).toContain('<AlertDescription>');
+    const output = alertNoTitleSource();
+    expect(output).not.toContain('AlertTitle');
+    expect(output).toContain('<AlertDescription>');
   });
 
-  it('sem ícone, o snippet não importa ícone nenhum', () => {
-    const saida = alertNoIconSource();
-    expect(saida).not.toContain('@lucide/svelte');
-    expect(saida).toContain('<AlertTitle>Sem ícone</AlertTitle>');
+  it('sem ícone, o snippet não importa ícone nenhum e escreve o texto do estado', () => {
+    const output = alertNoIconSource();
+    expect(output).not.toContain('@lucide/svelte');
+    expect(output).toContain('<AlertTitle>Atenção</AlertTitle>');
+    expect(output).toContain('Suas alterações serão aplicadas na próxima sessão.');
+    expect(output).not.toContain('Sem ícone');
   });
 
   it('o par estático × urgente contrasta role="note" com a omissão da prop', () => {
-    const saida = alertNoAnnouncementSource();
-    expect(saida).toContain('<Alert role="note">');
+    const output = alertNoAnnouncementSource();
+    expect(output).toContain('<Alert role="note">');
     // O segundo alert NÃO declara role: é o padrão `alert` que se quer mostrar.
-    expect(saida).toContain('<Alert variant="destructive">');
+    expect(output).toContain('<Alert variant="destructive">');
+    expect(output).toContain('Falha no envio');
   });
 
-  it('a inserção dinâmica mantém o role padrão, que é o que anuncia na hora', () => {
-    const saida = alertInsercaoDinamicaSource();
-    expect(saida).toContain('<Alert>');
-    expect(saida).not.toContain('role=');
-    expect(saida).toContain('Operação concluída');
+  it('a inserção dinâmica monta o alerta depois da ação, com o role padrão na raiz', () => {
+    const output = alertDynamicInsertionSource();
+    expect(output).toContain('let generated = $state(false);');
+    expect(output).toContain('{#if generated}');
+    expect(output).toContain('<Alert>');
+    expect(output).not.toContain('role=');
+    expect(output).toContain('Operação concluída');
+    expect(output).toContain('<Button variant="default" size="sm"');
   });
 });
 
 describe('transforms das stories de composição', () => {
+  it('a composição com ícone escreve o texto da própria story, não o do meta', () => {
+    const output = alertWithIconSource();
+    expect(output).toContain('<Info aria-hidden="true" />');
+    expect(output).toContain('<AlertTitle>Informação</AlertTitle>');
+    expect(output).toContain('Ícone SVG posicionado automaticamente.');
+    expect(output).not.toContain('Atenção');
+  });
+
+  it('a composição sem ícone escreve só o texto da própria story', () => {
+    const output = alertLayoutWithoutIconSource();
+    expect(output).not.toContain('@lucide/svelte');
+    expect(output).toContain('<AlertTitle>Sem ícone</AlertTitle>');
+    expect(output).toContain('Alert sem ícone mantém layout de coluna única.');
+    expect(output).not.toContain('Atenção');
+  });
+
   it('a composição com ação aninha o Button dentro do AlertAction', () => {
-    const saida = alertWithActionSource();
-    expect(saida).toContain('from "@/components/ui/button"');
-    expect(saida).toContain('<AlertAction>');
-    expect(saida).toContain('<Button size="sm" variant="default">Atualizar</Button>');
+    const output = alertWithActionSource();
+    expect(output).toContain('from "@/components/ui/button"');
+    expect(output).toContain('<AlertAction>');
+    expect(output).toContain('<Button size="sm" variant="default">Atualizar</Button>');
+  });
+
+  it('ação e fechar convivem no mesmo alerta', () => {
+    const output = alertWithActionAndDismissSource();
+    expect(output).toContain('<Alert dismissible>');
+    expect(output).toContain('<AlertAction>');
+    expect(output).toContain('<Button size="sm" variant="default">Salvar agora</Button>');
+    expect(output).toContain('Sessão expira em 5 minutos');
   });
 
   it('a classe adicional aparece na raiz e em cada subcomponente', () => {
-    const saida = alertClassNameAdicionalSource();
-    expect(saida).toContain('<Alert class="nds-w-full">');
-    expect(saida).toContain('<AlertTitle class="nds-w-full">');
-    expect(saida).toContain('<AlertDescription class="nds-w-full">');
-    expect(saida).toContain('<AlertAction class="nds-w-auto">');
+    const output = alertAdditionalClassSource();
+    expect(output).toContain('<Alert class="nds-w-full">');
+    expect(output).toContain('<AlertTitle class="nds-w-full">');
+    expect(output).toContain('<AlertDescription class="nds-w-full">');
+    expect(output).toContain('<AlertAction class="nds-w-auto">');
   });
 });

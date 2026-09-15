@@ -1,19 +1,43 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertAvisoSource,
-  alertClassNameAdicionalSource,
-  alertWithActionSource,
+  alertAdditionalClassSource,
   alertContrastSource,
   alertDestructiveSource,
-  alertDispensavelSource,
+  alertDismissibleByKeyboardSource,
+  alertDismissibleSource,
+  alertDynamicInsertionSource,
   alertInfoSource,
-  alertInsercaoDinamicaSource,
   alertNoAnnouncementSource,
-  alertNoIconSource,
+  alertCompositionNoIconSource,
   alertNoTitleSource,
   alertSource,
-  alertSucessoSource,
+  alertStateNoIconSource,
+  alertSuccessSource,
+  alertWarningSource,
+  alertWithActionAndDismissSource,
+  alertWithActionSource,
+  alertWithIconSource,
 } from './alert.source';
+
+const ALL = [
+  alertSource,
+  alertDestructiveSource,
+  alertSuccessSource,
+  alertWarningSource,
+  alertInfoSource,
+  alertDismissibleSource,
+  alertDismissibleByKeyboardSource,
+  alertContrastSource,
+  alertNoTitleSource,
+  alertStateNoIconSource,
+  alertCompositionNoIconSource,
+  alertWithIconSource,
+  alertNoAnnouncementSource,
+  alertDynamicInsertionSource,
+  alertWithActionSource,
+  alertWithActionAndDismissSource,
+  alertAdditionalClassSource,
+];
 
 describe('alertSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
@@ -23,165 +47,206 @@ describe('alertSource', () => {
   });
 
   it('o ícone é reforço visual: quem nomeia o alerta é o texto', () => {
-    const saida = alertSource();
-    expect(saida).toContain('<Info aria-hidden="true" className="nds-icon" />');
-    // Posicionamento é do .nds-alert, que trata o SVG filho direto.
-    expect(saida).not.toContain('margin');
+    const output = alertSource();
+    expect(output).toContain('<Info aria-hidden="true" />');
+    // Dimensionamento e posicionamento são do .nds-alert, que trata o SVG filho direto.
+    expect(output).not.toContain('margin');
   });
 
   it('omite as props que são o padrão do componente', () => {
-    const saida = alertSource(undefined, {
+    const output = alertSource(undefined, {
       args: { variant: 'default', role: 'alert', dismissible: false },
     });
-    expect(saida).toContain('<Alert>');
-    expect(saida).not.toContain('variant=');
+    expect(output).toContain('<Alert>');
+    expect(output).not.toContain('variant=');
     // role="alert" é o padrão; escrevê-lo sugeriria que a escolha é decorativa
     // quando é ela que define se o conteúdo interrompe o leitor de tela.
-    expect(saida).not.toContain('role=');
-    expect(saida).not.toContain('dismissible');
+    expect(output).not.toContain('role=');
+    expect(output).not.toContain('dismissible');
   });
 
   it('escreve as props quando o control difere do padrão', () => {
-    const saida = alertSource(undefined, {
+    const output = alertSource(undefined, {
       args: { variant: 'warning', role: 'note', dismissible: true },
     });
-    expect(saida).toContain('variant="warning"');
-    expect(saida).toContain('role="note"');
-    expect(saida).toContain('dismissible');
+    expect(output).toContain('variant="warning"');
+    expect(output).toContain('role="note"');
+    expect(output).toContain('dismissible');
   });
 
   it('não inventa variante nem papel fora da união', () => {
-    const saida = alertSource(undefined, {
+    const output = alertSource(undefined, {
       args: { variant: 'roxo' as never, role: 'banner' as never },
     });
-    expect(saida).toContain('<Alert>');
+    expect(output).toContain('<Alert>');
   });
 
   it('o espião de control não vira código no painel', () => {
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = alertSource(undefined, {
+    const output = alertSource(undefined, {
       args: { variant: spy as never, dismissible: spy as never },
     });
-    expect(saida).not.toContain('CORPO_DO_MOCK');
-    expect(saida).not.toContain('undefined');
+    expect(output).not.toContain('CORPO_DO_MOCK');
+    expect(output).not.toContain('undefined');
   });
 });
 
 describe('variantes', () => {
-  const casos = [
+  const cases = [
     ['destructive', 'AlertCircle', alertDestructiveSource],
-    ['success', 'CheckCircle2', alertSucessoSource],
-    ['warning', 'TriangleAlert', alertAvisoSource],
+    ['success', 'CheckCircle2', alertSuccessSource],
+    ['warning', 'TriangleAlert', alertWarningSource],
     ['info', 'Info', alertInfoSource],
   ] as const;
 
   it('cada uma declara a variante e troca o ícone junto', () => {
-    for (const [name, icone, fn] of casos) {
-      const saida = fn();
-      expect(saida).toContain(`<Alert variant="${name}">`);
-      expect(saida).toContain(`import { ${icone} } from "lucide-react";`);
-      expect(saida).toContain(`<${icone} aria-hidden="true" className="nds-icon" />`);
+    for (const [name, icon, fn] of cases) {
+      const output = fn();
+      expect(output).toContain(`<Alert variant="${name}">`);
+      expect(output).toContain(`import { ${icon} } from "lucide-react";`);
+      expect(output).toContain(`<${icon} aria-hidden="true" />`);
     }
   });
 
   it('o texto corrido nunca carrega a cor semântica — só o contêiner a pinta', () => {
-    for (const [, , fn] of casos) {
-      const saida = fn();
-      expect(saida).not.toContain('nds-text-destructive');
-      expect(saida).not.toContain('nds-text-warning');
-      expect(saida).not.toContain('nds-text-success');
-      expect(saida).not.toContain('nds-text-info');
+    for (const [, , fn] of cases) {
+      const output = fn();
+      expect(output).not.toContain('nds-text-destructive');
+      expect(output).not.toContain('nds-text-warning');
+      expect(output).not.toContain('nds-text-success');
+      expect(output).not.toContain('nds-text-info');
     }
   });
 
+  it('a info ensina o mesmo texto que a story renderiza', () => {
+    expect(alertInfoSource()).toContain('Você pode fixar os filtros mais usados');
+  });
+
   it('a comparação de contraste mostra as cinco, sem ícone', () => {
-    const saida = alertContrastSource();
+    const output = alertContrastSource();
     for (const name of ['destructive', 'success', 'warning', 'info']) {
-      expect(saida).toContain(`<Alert variant="${name}">`);
+      expect(output).toContain(`<Alert variant="${name}">`);
     }
-    expect(saida).toContain('<Alert>');
-    expect(saida).not.toContain('lucide-react');
+    expect(output).toContain('<Alert>');
+    expect(output).not.toContain('lucide-react');
   });
 });
 
 describe('dispensável', () => {
   it('ensina o contrato, e não o wrapper que a story usa para remontar', () => {
-    const saida = alertDispensavelSource();
-    expect(saida).toContain('<Alert dismissible onDismiss={aoFechar}>');
+    const output = alertDismissibleSource();
+    expect(output).toContain('<Alert dismissible onDismiss={handleDismiss}>');
     // O onDismiss é aviso posterior: o componente se remove sozinho.
-    expect(saida).toContain('function aoFechar()');
-    expect(saida).not.toContain('useState');
-    expect(saida).not.toContain('key=');
+    expect(output).toContain('function handleDismiss()');
+    expect(output).toContain('Preferências salvas');
+    expect(output).not.toContain('useState');
+    expect(output).not.toContain('key=');
+  });
+
+  it('por teclado: o rótulo do botão de fechar entra no snippet, com a variante', () => {
+    const output = alertDismissibleByKeyboardSource();
+    expect(output).toContain('variant="success"');
+    expect(output).toContain('dismissLabel="Fechar confirmação"');
+    expect(output).toContain('onDismiss={handleDismiss}');
+    expect(output).not.toContain('key=');
   });
 });
 
 describe('ausências e contêineres', () => {
   it('sem título: a descrição vira o conteúdo inteiro, e o import encolhe junto', () => {
-    const saida = alertNoTitleSource();
-    expect(saida).not.toContain('<AlertTitle>');
-    expect(saida).toContain('import { Alert, AlertDescription } from "@/components/ui/alert";');
-    expect(saida).toContain('<AlertDescription>');
+    const output = alertNoTitleSource();
+    expect(output).not.toContain('<AlertTitle>');
+    expect(output).toContain('import { Alert, AlertDescription } from "@/components/ui/alert";');
+    expect(output).toContain('<AlertDescription>');
   });
 
   it('sem ícone: nenhuma prop desliga nada, é a ausência que muda o layout', () => {
-    const saida = alertNoIconSource();
-    expect(saida).not.toContain('lucide-react');
-    expect(saida).not.toContain('nds-icon');
-    expect(saida).toContain('<AlertTitle>');
+    for (const fn of [alertStateNoIconSource, alertCompositionNoIconSource]) {
+      const output = fn();
+      expect(output).not.toContain('lucide-react');
+      expect(output).not.toContain('aria-hidden');
+      expect(output).toContain('<AlertTitle>');
+    }
+  });
+
+  it('sem ícone: cada story ensina o próprio texto, sem misturar os dois', () => {
+    const state = alertStateNoIconSource();
+    expect(state).toContain('<AlertTitle>Atenção</AlertTitle>');
+    expect(state).toContain('Suas alterações serão aplicadas na próxima sessão.');
+    expect(state).not.toContain('coluna única');
+
+    const composition = alertCompositionNoIconSource();
+    expect(composition).toContain('<AlertTitle>Sem ícone</AlertTitle>');
+    expect(composition).toContain('Alert sem ícone mantém layout de coluna única.');
+    expect(composition).not.toContain('Atenção');
   });
 
   it('role=note ao lado do padrão: os dois juntos é que mostram a diferença', () => {
-    const saida = alertNoAnnouncementSource();
-    expect(saida).toContain('<Alert role="note">');
-    expect(saida).toContain('  <Alert>');
+    const output = alertNoAnnouncementSource();
+    expect(output).toContain('<Alert role="note">');
+    // O segundo alerta não declara papel: o padrão assertivo é o assunto.
+    expect(output).toContain('  <Alert variant="destructive">');
+    expect(output).toContain('Falha no envio');
   });
 
-  it('inserção dinâmica: quem anuncia é a região aria-live que envolve', () => {
-    expect(alertInsercaoDinamicaSource()).toContain('<div aria-live="polite">');
+  it('inserção dinâmica: o alerta nasce por estado, e nenhum contêiner aria-live o envolve', () => {
+    const output = alertDynamicInsertionSource();
+    expect(output).not.toContain('aria-live');
+    expect(output).toContain('import { useState } from "react";');
+    expect(output).toContain('onClick={() => setGenerated(true)}');
+    expect(output).toContain('{generated && (');
+    // Sem prop de papel: o padrão assertivo da raiz é quem anuncia.
+    expect(output).not.toContain('role=');
   });
 });
 
 describe('composições', () => {
   it('com ação: o AlertAction entra no import e o botão vem do design system', () => {
-    const saida = alertWithActionSource();
-    expect(saida).toContain('AlertAction');
-    expect(saida).toContain('import { Button } from "@/components/ui/button";');
-    expect(saida).toContain('<Button size="sm" variant="default">');
+    const output = alertWithActionSource();
+    expect(output).toContain('AlertAction');
+    expect(output).toContain('import { Button } from "@/components/ui/button";');
+    expect(output).toContain('<Button size="sm" variant="default">');
     // O alerta não é focável: quem recebe o Tab é o botão interno.
-    expect(saida).not.toContain('tabIndex');
+    expect(output).not.toContain('tabIndex');
+  });
+
+  it('com ícone: o painel ensina o texto que a story mostra, não o do meta', () => {
+    const output = alertWithIconSource();
+    expect(output).toContain('<Info aria-hidden="true" />');
+    expect(output).toContain('<AlertTitle>Informação</AlertTitle>');
+    expect(output).toContain('Ícone SVG posicionado automaticamente.');
+    expect(output).not.toContain('Atenção');
+  });
+
+  it('ação e fechar juntos: nenhuma prop a mais além de dismissible', () => {
+    const output = alertWithActionAndDismissSource();
+    expect(output).toContain('<Alert dismissible onDismiss={handleDismiss}>');
+    expect(output).toContain('<AlertAction>');
+    expect(output).toContain('Salvar agora');
+    expect(output).toContain('Sessão expira em 5 minutos');
   });
 
   it('classe adicional: o className aparece em cada subcomponente, não só na raiz', () => {
-    const saida = alertClassNameAdicionalSource();
-    expect(saida).toContain('<Alert className="nds-w-full">');
-    expect(saida).toContain('<AlertTitle className="nds-w-full">');
-    expect(saida).toContain('<AlertDescription className="nds-w-full">');
-    expect(saida).toContain('<AlertAction className="nds-w-auto">');
+    const output = alertAdditionalClassSource();
+    expect(output).toContain('<Alert className="nds-w-full">');
+    expect(output).toContain('<AlertTitle className="nds-w-full">');
+    expect(output).toContain('<AlertDescription className="nds-w-full">');
+    expect(output).toContain('<AlertAction className="nds-w-auto">');
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
-    for (const fn of [
-      alertSource,
-      alertDestructiveSource,
-      alertSucessoSource,
-      alertAvisoSource,
-      alertInfoSource,
-      alertDispensavelSource,
-      alertContrastSource,
-      alertNoTitleSource,
-      alertNoIconSource,
-      alertNoAnnouncementSource,
-      alertInsercaoDinamicaSource,
-      alertWithActionSource,
-      alertClassNameAdicionalSource,
-    ]) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
+    for (const fn of ALL) {
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
       // Nenhum valor de design em style inline: tudo por classe .nds-*.
-      expect(saida).not.toContain('style={{');
+      expect(output).not.toContain('style={{');
       // Altura fixa em primitivo interativo é proibida no repositório.
-      expect(saida).not.toContain('height:');
+      expect(output).not.toContain('height:');
+      // O ícone do alerta é dimensionado pela folha, nunca por classe própria.
+      expect(output).not.toContain('nds-icon');
+      // Região viva em volta de alerta aninharia duas.
+      expect(output).not.toContain('aria-live');
     }
   });
 });

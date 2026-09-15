@@ -86,10 +86,12 @@ esqueleto, ou é a barra em modo indeterminado — que existe nas cinco stacks, 
 **A cor nunca é o único indicador de estado** (WCAG 1.4.1): a variante semântica
 sempre vem acompanhada de ícone e de texto. Vale para Alert, Badge e Progress.
 
-**Em contêiner colorido, o texto corrido é `--foreground`.** Ícone e título podem
-carregar a cor semântica — são elementos curtos, com limiar de 3:1 —, e a
-descrição não, porque cor semântica sobre fundo suave raramente alcança os 4,5:1
-que texto longo exige. O contraste não pode depender da variante escolhida.
+**Em contêiner colorido, o texto corrido é `--foreground`.** O ícone pode carregar
+a cor semântica — é não-textual, com limiar de 3:1 —, e o texto não, porque cor
+semântica sobre fundo suave raramente alcança os 4,5:1 que texto exige. O TÍTULO
+entra na regra do texto quando não é texto grande: o do Alert é 14px semibold, e
+fica em `--foreground` (ver a tabela abaixo). O contraste não pode depender da
+variante escolhida.
 
 Como cada um aplica isso, medido nas folhas em 2026-09-13:
 
@@ -119,10 +121,11 @@ nenhum.
 - **Alert que já está na tela quando a página carrega usa `note`.** Estático não
   é região viva: `alert` e `status` existem para conteúdo que APARECE depois.
 - **Alert não se envolve em outro `aria-live`.** A raiz já é a região; envolvê-la
-  aninha duas. Medido em 2026-09-13: a story `DynamicInsertion` das cinco stacks
-  renderiza `role="alert"` dentro de um `aria-live="polite"`, e o conteúdo
-  compartilhado ensina isso em três chaves — texto anterior ao `role`
-  configurável.
+  aninha duas. Medido em 2026-09-13: a story `DynamicInsertion` de quatro stacks
+  renderizava `role="alert"` dentro de um `aria-live="polite"` (o svelte não), e
+  o conteúdo compartilhado ensinava isso em quatro chaves — texto anterior ao
+  `role` configurável. Desde 2026-09-14 as cinco montam o alerta DEPOIS de uma
+  ação, sem contêiner vivo, e o conteúdo ensina o `role` na própria raiz.
 - **A espera do Skeleton é anunciada pela REGIÃO, e a região é peça** desde
   2026-09-13, por decisão da dona: `SkeletonRegion` nas quatro stacks de
   framework, `createSkeletonRegion` no vanilla e `div[ndsSkeletonRegion]` no

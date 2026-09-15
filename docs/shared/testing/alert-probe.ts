@@ -1,15 +1,15 @@
 /**
- * Sonda de comparação do Alert entre as quatro stacks.
+ * Sonda de comparação do Alert entre as cinco stacks.
  *
- * Mesmo papel da sonda do Calendar: medir as quatro de uma vez, com o mesmo
+ * Mesmo papel da sonda do Calendar: medir as cinco de uma vez, com o mesmo
  * colhedor, para a divergência aparecer como diferença de valor e não como
  * impressão de quem olha.
  *
  * O que interessa aqui é sobretudo CONTRASTE. O alert pinta um fundo colorido
- * suave e escreve por cima; a regra do projeto é que o texto corrido fique
- * sempre em `--foreground` e só ícone e título possam receber a cor semântica —
- * e mesmo o título só quando alcança 4.5:1. Isso é aritmética, não olhômetro,
- * então a sonda calcula a razão em vez de comparar nomes de token.
+ * suave e escreve por cima; a regra do projeto é que título e texto corrido
+ * fiquem em `--foreground` e só o ÍCONE receba a cor semântica (D7 do PRD: o
+ * título é 14px semibold, e o limite dele é 4.5:1). Isso é aritmética, não
+ * olhômetro, então a sonda calcula a razão em vez de comparar nomes de token.
  */
 
 export interface TextMeasurement {
@@ -448,4 +448,43 @@ export function measureSemantica(root: HTMLElement): SemanticaDoAlert[] {
         : null,
     };
   });
+}
+
+// ─── Ação e botão de fechar juntos ─────────────────────────────────────────────
+
+export interface ActionDismissLayout {
+  /** As caixas da ação e do X se cruzam. */
+  overlap: boolean;
+  /** Folga horizontal entre a borda direita da ação e a esquerda do X (px). */
+  gap: number;
+  /** Título e descrição terminam antes de começar a ação. */
+  textClearsAction: boolean;
+}
+
+/**
+ * Mede o alerta que compõe `alert-action` E `alert-dismiss`.
+ *
+ * Até 2026-09-14 a folha declarava os dois mutuamente exclusivos só em
+ * comentário. A primeira acomodação (calha somada, ação absoluta) passou nas
+ * duas medidas de botão e reprovou nesta de texto: o botão "Salvar agora" tem
+ * 108px, a calha dava 72px, e título e descrição corriam 36px por baixo dele —
+ * defeito que já existia em TODO alerta com ação. Lê caixas, não classes, e por
+ * isso pegou o que o desenho da regra escondia.
+ */
+export function measureActionDismiss(alert: HTMLElement): ActionDismissLayout {
+  const action = alert.querySelector<HTMLElement>('[data-slot="alert-action"], .nds-alert-action');
+  const dismiss = alert.querySelector<HTMLElement>('.nds-alert-dismiss');
+  if (!action || !dismiss) throw new Error('SONDA::alert: o alerta precisa de ação e de botão de fechar');
+  const a = action.getBoundingClientRect();
+  const d = dismiss.getBoundingClientRect();
+  const overlap = a.left < d.right && a.right > d.left && a.top < d.bottom && a.bottom > d.top;
+  const texts = alert.querySelectorAll<HTMLElement>(
+    '[data-slot="alert-title"], .nds-alert-title, [data-slot="alert-description"], .nds-alert-description',
+  );
+  const textRight = Math.max(...Array.from(texts, (el) => el.getBoundingClientRect().right));
+  return {
+    overlap,
+    gap: d.left - a.right,
+    textClearsAction: texts.length === 0 || textRight <= a.left + 0.5,
+  };
 }

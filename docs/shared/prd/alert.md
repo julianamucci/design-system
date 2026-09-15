@@ -44,19 +44,20 @@ risco.
 |---|---|---|
 | C1 | Cinco variantes semânticas, e todas pela PROP: `default`, `destructive`, `success`, `warning`, `info` | `testes.functional.item1`, `item2`, `item5` (stories `Default`, `Destructive`, `Success`) |
 | C2 | O ícone é filho DIRETO da raiz, sem wrapper — a folha abre a coluna dele por `:has(> svg)` | `testes.functional.item3` (`Compositions/WithIcon`) |
-| C3 | O título é opcional; sem ele a descrição ocupa a coluna inteira, sem quebra | `testes.functional.item4` (`States/WithoutTitle` — **em quatro das cinco**; ver §7) |
+| C3 | O título é opcional; sem ele a descrição ocupa a coluna inteira, sem quebra | `testes.functional.item4` (`States/WithoutTitle`, nas cinco — afirma ausência da peça e de qualquer heading) |
 | C4 | A semântica de anúncio da raiz é escolhida por prop, com default `alert` | `testes.accessibility.item1` (`Playground` nas cinco) |
 | C5 | Alerta que já está na tela no carregamento usa `note`, que NÃO é live region | `States/WithoutAnnouncement`, nas cinco |
 | C6 | O ícone é decorativo: `aria-hidden="true"` sempre | `testes.accessibility.item2` (`Compositions/WithIcon`) |
 | C7 | Texto corrido e título ficam em `--foreground` nas cinco variantes — o contraste não depende da variante escolhida | `testes.accessibility.item3` (`Variants/Contrast`, três temas × dois modos) |
 | C8 | `dismissible` mostra um botão de fechar; acioná-lo tira o alerta da tela e dispara o callback **uma única vez** | `testes.functional.item7` (`Variants/Dismissible` e `DismissibleByKeyboard`) |
-| C9 | O botão de fechar é o ÚLTIMO filho — o leitor de tela lê a mensagem antes da ação de descartá-la, e o Tab chega nele por último | asserção `lastElementChild` na play de `Dismissible` — **em quatro das cinco**; o react só confere o `data-slot` do botão (ver §7) |
+| C9 | O botão de fechar é o ÚLTIMO filho — o leitor de tela lê a mensagem antes da ação de descartá-la, e o Tab chega nele por último | asserção `lastElementChild` na play de `Dismissible`, nas cinco |
 | C10 | A raiz não é focável e não tem `tabindex`; o Tab vai direto ao controle interno | asserção na play de `Compositions/WithAction` |
 | C11 | Fechar duas vezes durante a saída dispara o callback uma vez só — a guarda de reentrância é medida com um segundo clique de propósito | segundo `click()` na play de `Dismissible`, nas cinco |
 | C12 | Animação de DESCENDENTE não encerra a entrada nem a saída do alerta (`animationend` borbulha) | `AnimationEvent` disparado no botão, na play de `Dismissible` |
-| C13 | Inserção dinâmica é anunciada | `testes.functional.item6` (`States/DynamicInsertion`) |
-| C14 | A variante `dismissible` e a composição `AlertAction` são mutuamente exclusivas | — (só o comentário da folha; ver D10) |
+| C13 | Alerta montado em tempo de execução é anunciado pelo PAPEL da própria raiz — nenhum `aria-live` em volta dele | `testes.functional.item6` (`States/DynamicInsertion`: antes da ação não há alerta; depois dela há `role="alert"` e nenhum ancestral com `aria-live`) |
+| C14 | `dismissible` e `AlertAction` convivem: a ação anda para a esquerda do X, sem sobrepor, e o texto não passa por baixo dela | `testes.functional.item8` + `testes.visual.item6` (`Compositions/WithActionAndDismiss`, pela `measureActionDismiss` da sonda; ver D10) |
 | C15 | Nenhuma altura fixa: a caixa cresce com `padding-block` + `line-height` | — (inspeção da folha; nenhum portão mede ausência de `height` aqui) |
+| C16 | Alerta fechado some da tela mesmo quando o nó continua no DOM — `.nds-alert[hidden]` vence o `display: grid` da raiz | play de `Dismissible` no angular, único que fecha por `hidden` (§7) |
 
 ## 3. Decisões fixadas
 
@@ -115,15 +116,28 @@ o próprio ELEMENTO em que a diretiva foi aplicada, e não há default a herdar.
 **Por que a capacidade existe**: `heading-order` do axe reprova salto de nível, e
 o alerta não sabe de que profundidade da página foi inserido. Sob uma seção `h2`,
 um `h5` pula dois degraus.
-**Medido em 2026-09-13, e é o que dá a esta linha o seu valor**: o `DocsNotes` das
-CINCO stacks pede `h3`, e nas docs pages do Alert **todo título renderizado é
-`h3`** — o `h5` do default aparece somente nos snippets do painel Code e nas
-stories, que vivem num canvas sem hierarquia acima. Ou seja: o default não é
-usado por nenhum consumidor real do repositório.
-**Para revisitar**: é decisão da dona, e está listada como tal no relatório desta
-rodada — o default do popover foi de `h4` para `h2` em 2026-09-09 por medição
-parecida (`popover.md` D10), mas ali o painel é `role="dialog"` e o
-`aria-labelledby` procura um cabeçalho; aqui não há papel que dependa do nível.
+**Medido em 2026-09-13**: o `DocsNotes` das CINCO stacks pede `h3`, e nas docs
+pages do Alert o título renderizado era `h3` em quatro stacks e `h4` no Angular —
+o `h5` do default aparecia somente nos snippets do painel Code e nas stories.
+**Decidido pela dona em 2026-09-14: o default fica `h5`, e a documentação passa a
+ENSINAR o `as`.** Trocar o default seria quebra de contrato silenciosa em todo
+call site; o que faltava era quem copia o snippet saber que o nível se ajusta. A
+anatomia e os snippets de estrutura mostram `as="h4"` (no Angular, `<h4
+ndsAlertTitle>`; no vanilla, `createAlertTitle({ text, as: 'h4' })`), e o `as` é
+tipado `'h1' | … | 'h6'` em react, vue e svelte — antes o react aceitava qualquer
+`ElementType` e as outras duas qualquer string.
+**E, na mesma decisão, o título dentro dos cards das docs pages é `h4` nas cinco**:
+Variantes e Composições abrem o card em `h3`. A demonstração e as prévias de
+Do & Don't, que ficam direto sob o `h2` da seção, usam `h3`.
+**A premissa do card era falsa em três stacks, medido em 2026-09-15**: o nome do
+card do container `DocsVariants` (que também serve Composições) era `<h3>` no
+vanilla e no angular e `<p>` em react, vue e svelte — e a docs-smoke reprovou
+`h2 → h4` nas três. A dona decidiu alinhar o container ao vanilla: o nome do card
+passou a `<h3>` nas cinco, e a docs-smoke inteira de react, vue e svelte fechou
+verde depois da troca (98, 98 e 97 páginas), sem salto novo em outro componente.
+**Para revisitar**: o default do popover foi de `h4` para `h2` em 2026-09-09
+(`popover.md` D10), mas ali o painel é `role="dialog"` e o `aria-labelledby`
+procura um cabeçalho; aqui não há papel que dependa do nível.
 
 ### D5 · A força da lavagem do fundo é por MODO, e a borda anda junto
 
@@ -159,7 +173,9 @@ até alcançar o das frias.
 ### D7 · O título das QUATRO variantes semânticas usa `--foreground`
 
 **Estado**: os quatro blocos `.nds-alert-<variante> .nds-alert-title` (e os
-`> h1..h6` correspondentes) pintam `hsl(var(--X-foreground))`, que nos três temas
+`> h1..h6`, `> strong` e `> [data-title]` correspondentes — as mesmas quatro
+formas de título que a regra da raiz reconhece; até 2026-09-14 os blocos da
+variante cobriam só duas, e um título em `<strong>` herdava a cor do ícone) pintam `hsl(var(--X-foreground))`, que nos três temas
 e nos dois modos vale `var(--foreground)`.
 **Por que o título não é elemento curto para a WCAG**: ele é 14px semibold, e
 texto grande exige 18.66px em negrito — então o limite dele é **4.5:1**, não 3:1.
@@ -226,16 +242,32 @@ fica presa no primeiro quadro. Quem vencer a corrida encerra a fase, uma vez só
 qualquer descendente — o botão de fechar, um ícone — encerraria a fase do alerta
 antes da hora. É o C12, e a play planta o evento no botão de propósito.
 
-### D10 · `dismissible` e `AlertAction` são mutuamente exclusivos
+### D10 · `dismissible` e `AlertAction` convivem, e a folha acomoda os dois
 
-**Estado**: a folha reserva `padding-inline-end: var(--spacing-18)` (72px) quando
-há `.nds-alert-action` e `var(--spacing-10)` (40px) quando há
-`.nds-alert-dismiss`; o comentário declara a exclusividade "por design — quem
-precisa de ação usa a composição AlertAction".
-**Medido em 2026-09-13**: as duas regras são `:has()` de especificidade igual e a
-do `dismiss` vem DEPOIS, então um alerta que tivesse os dois ficaria com a calha
-de 40px e a ação de 72px encostaria no botão de fechar. Nada reprova — é
-exclusividade documentada em comentário e não cobrada em lugar nenhum (C14).
+**Estado**: a ação é a TERCEIRA COLUNA do grid, com largura `auto`, ocupando as
+linhas do título e da descrição, a `var(--spacing-3)` do texto. O botão de fechar
+continua absoluto dentro da calha de `var(--spacing-10)` (40px) da raiz, e a
+coluna da ação termina onde essa calha começa — os dois convivem sem regra
+própria.
+**Medido em 2026-09-13**: o comentário declarava a exclusividade "por design", e
+nada a cobrava. As duas regras são `:has()` de especificidade igual e a do
+`dismiss` vinha DEPOIS, então um alerta com os dois ficava com a calha de 40px e a
+ação de 72px encostava no botão de fechar.
+**Decidido pela dona em 2026-09-14: a folha acomoda os dois**, em vez de proibir.
+Exclusividade que só existe em comentário é contrato que ninguém lê; a combinação
+é plausível (uma sessão expirando pede "Salvar agora" E pode ser dispensada) e o
+custo é uma regra de especificidade maior.
+**E a primeira acomodação estava errada, medido em 2026-09-15**: somar as calhas
+(72px + 40px) e deslocar a ação absoluta passou nas medidas entre botões e
+reprovou na de texto. O botão "Salvar agora" em `sm` tem 108px e a calha da ação
+dava 72px: título e descrição corriam 36px POR BAIXO dele — e isso valia para
+todo alerta com ação desde sempre, com ou sem fechar, porque a calha fixa era um
+palpite sobre o rótulo. Nenhuma story media a composição `WithAction`; a
+`WithActionAndDismiss` foi a primeira a ler as caixas. A ação virou coluna `auto`
+do grid, que mede o botão que estiver lá, em qualquer idioma e tamanho de fonte.
+**Portão**: `Compositions/WithActionAndDismiss` nas cinco, pela
+`measureActionDismiss` de `alert-probe.ts` — mede a caixa renderizada da ação, do
+X e da descrição, nunca a classe (C14).
 
 ### D11 · O primitivo não conhece analytics; o evento é do consumidor
 
@@ -251,16 +283,16 @@ dois pontos: a demonstração e a variante.
 ## 4. Anatomia
 
 ```
-alert  [role=alert|status|note]      a caixa — grid de duas colunas
+alert  [role=alert|status|note]      a caixa — grid de duas colunas, três com alert-action
 ├── <svg>                            ÍCONE, filho DIRETO, aria-hidden
 │                                    abre a coluna 1 por :has(> svg)
-├── alert-title                      h1..h6 (default h5) — coluna 2
+├── alert-title                      h1..h6 (default h5, ajuste por `as`) — coluna 2
 ├── alert-description                <section> — coluna 2, empilha <p> com gap
 │   └── <p> | <ul>                   texto corrido, sempre --foreground
-├── alert-action                     ESTRUTURA — absoluto, canto superior direito
+├── alert-action                     ESTRUTURA — coluna 3 (auto), linhas do título e da descrição
 │   └── [botão do design system]     sm + variante preenchida
 └── alert-dismiss                    o X — absoluto, mesmo canto; ÚLTIMO filho
-                                     (exclusivo com alert-action — D10)
+                                     (convive com alert-action — D10)
 ```
 
 **O que é obrigatório**: a raiz e a descrição. O ícone e o título são opcionais, e
@@ -292,7 +324,7 @@ cinco docs pages fecham com a folha (`node scripts/tabela-tokens.mjs alert`,
 | gap entre linhas do grid | 2px | `--spacing-0-5` |
 | coluna do ícone | 16px, com vão de 8px | `--spacing-4` e `--spacing-2`; sem ícone a coluna é `0` e o vão também |
 | gap entre `<p>` da descrição | 4px | `--spacing-1` |
-| calha do botão de ação | 72px | `--spacing-18` |
+| coluna da ação | `auto` (a largura do botão), a 12px do texto | `--spacing-3` |
 | calha do botão de fechar | 40px | `--spacing-10` |
 | borda | 1px | `--alert-border` |
 | raio | — | `--radius-alert` |
@@ -363,7 +395,7 @@ compartilhado chama a coluna de "Configuração" de propósito.
 | Sem título | o título é omitido | a descrição ocupa a coluna 2 sozinha; nada desloca |
 | Sem ícone | nenhum `<svg>` filho direto | a coluna 1 vai a `0` e o vão a `0` — layout de coluna única |
 | Sem anúncio | `role="note"` | sai da árvore de live regions; continua visível e legível |
-| Inserção dinâmica | montado depois do carregamento | é o caso legítimo de `alert` ou `status` |
+| Inserção dinâmica | montado depois do carregamento | é o caso legítimo de `alert` ou `status`; o papel da raiz já anuncia, sem `aria-live` em volta (C13) |
 | Entrando | só no `dismissible`, na montagem | `.nds-animate-in`: opacidade 0→1 e `scale(0.95)`→1, em `--duration-spring` com `--ease-spring` |
 | Saindo | o X foi acionado | `.nds-animate-out` (`--duration-base`, `--ease-exit`, `forwards`); no fim o nó sai — ver §7 para o que o Angular faz aqui |
 | Fechado | a saída terminou | o alerta não está mais na tela e o callback já disparou, uma vez só |
@@ -409,10 +441,10 @@ Forma de API não tem fonte de verdade — cada framework tem a sua.
 | angular | o callback é `output` `(dismiss)`, sem o prefixo `on`, que duplicaria a sintaxe do template; `variant` e `role` são `input`; `dismissible` usa `booleanAttribute` para aceitar a forma curta `<div ndsAlert dismissible>`, como o HTML faz com `disabled` |
 | angular | **o nível do título é o ELEMENTO, não uma prop** — o seletor cobre `h1[ndsAlertTitle]` … `h6[ndsAlertTitle]`, e não há default a herdar |
 | angular | **a descrição não tem tag amarrada**: `[ndsAlertDescription]` é seletor de atributo puro, para que uma descrição de uma linha possa ser `<div>` sem inventar um landmark vazio. Nas outras quatro é `<section>` cravado (D3) |
-| angular | **fechar não remove o nó** — um componente não remove o próprio host. O `close()` escreve `hidden` no host (atributo HTML, não CSS inline, e tira o alerta também da árvore de acessibilidade) e emite `(dismiss)`; tirar o nó do DOM é do consumidor, com um `@if`/`@for` sobre o evento. As stories de lá mostram o padrão idiomático: `@for` com `track` sobre um contador |
+| angular | **fechar não remove o nó** — um componente não remove o próprio host. O `close()` escreve `hidden` no host (atributo HTML, não CSS inline, e tira o alerta também da árvore de acessibilidade) e emite `(dismiss)`; tirar o nó do DOM é do consumidor, com um `@if`/`@for` sobre o evento. As stories de lá mostram o padrão idiomático: `@for` com `track` sobre um contador. **Medido em 2026-09-14**: `hidden` sozinho não escondia nada, porque `.nds-alert { display: grid }` vence o `display: none` do agente de usuário — o alerta ficava na tela fora da árvore de acessibilidade, e só o `@for` das stories disfarçava. A folha ganhou `.nds-alert[hidden] { display: none }` (C16), e o snippet de fechamento das docs mostra o `@if` |
 | vanilla | fábricas em vez de componentes: `createAlert(options)` devolve o `HTMLElement`, e `createAlertTitle`/`createAlertDescription`/`createAlertAction` são sub-fábricas. A raiz também recebe `data-dismissible="true"`, porque o snippet da story sai do `outerHTML` e configuração só no closure congelaria a caixa de código |
 | vanilla | é a única com `queueMicrotask` reposicionando o botão de fechar para o fim (§4): quem compõe faz `appendChild` DEPOIS de `createAlert()`, então sem isso o X seria o primeiro filho |
-| react | `Omit<React.ComponentProps<'div'>, 'role'>` para que o `role` do componente não seja sobrescrito por fallthrough; `as?: React.ElementType` no título (as outras duas de framework aceitam `string`) |
+| react | `Omit<React.ComponentProps<'div'>, 'role'>` para que o `role` do componente não seja sobrescrito por fallthrough |
 | react | é a única em que o callback dispara num EFEITO separado, depois do commit que devolveu `null` — nas outras quatro ele é chamado no mesmo passo que marca o alerta como fechado (no vanilla, logo depois do `el.remove()`). Em todas as cinco ele dispara uma vez só, e a story planta um segundo acionamento para provar a guarda (C11) |
 
 ### Peças, por stack
@@ -445,27 +477,30 @@ uma lista `[tag, attrs]`, e construir nós é o caminho (também imune a XSS: n�
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
 
-### Divergências nas stories e nos snippets, medidas em 2026-09-13
+### Stories e snippets, alinhados em 2026-09-15
 
-A árvore de stories é a mesma nas cinco: quatro arquivos, dezoito stories, os
-mesmos nomes (`Playground`; `Default`, `Destructive`, `Success`, `Warning`,
-`Info`, `Dismissible`, `DismissibleByKeyboard`, `Contrast`; `Complete`,
-`WithoutTitle`, `WithoutIcon`, `WithoutAnnouncement`, `DynamicInsertion`;
-`WithIcon`, `WithAction`, `AdditionalClass`, `WithoutIcon`). O que diverge é
-quem carrega o quê:
+A árvore de stories é a mesma nas cinco: quatro arquivos, **dezenove** stories,
+os mesmos nomes e os mesmos `covers` (`Playground`; `Default`, `Destructive`,
+`Success`, `Warning`, `Info`, `Dismissible`, `DismissibleByKeyboard`,
+`Contrast`; `Complete`, `WithoutTitle`, `WithoutIcon`, `WithoutAnnouncement`,
+`DynamicInsertion`; `WithIcon`, `WithAction`, `AdditionalClass`, `WithoutIcon`,
+`WithActionAndDismiss`). As plays carregam as mesmas asserções: o `Playground`
+segue o control `role` e confere as quatro classes de variante e o ícone; a
+`Dismissible` afirma o X como último filho, a guarda de reentrância e a animação
+de descendente nas duas fases; a `WithoutAnnouncement` conta os papéis; a
+`DynamicInsertion` volta ao estado inicial antes de medir, para sobreviver ao
+replay do painel Interactions no mesmo DOM.
 
-| o que diverge | quem faz o quê | maioria |
-|---|---|---|
-| onde mora `functional.item4` + `visual.item3` ("renderizar sem AlertTitle") | vue, svelte, vanilla, angular na `WithoutTitle`; **react na `WithoutAnnouncement`**, com a `WithoutTitle` sem `covers` | 4 de 5 na `WithoutTitle` |
-| `covers: ['accessibility.item1']` na `WithoutAnnouncement` | só o angular declara | 4 de 5 não declaram (a chave já sai coberta pelo `Playground`) |
-| construtores de snippet | vue 18, react 13, svelte 13, vanilla 7 (um builder parametrizado serve todas), **angular 1** | as quatro têm construtor por story ou builder; o angular publica o template cru em 17 das 18 |
-| `alert.source.test.ts` | react, vue, svelte, vanilla têm; **angular não** | 4 de 5 |
-| o snippet ensina o nível do título | **vue escreve `as="h3"` nos snippets**; react, svelte e vanilla mostram o default; o angular escreve `<h5 ndsAlertTitle>` | 4 de 5 mostram o default |
-| o `Playground` segue o control `role` | **só o svelte** usa `getByRole(args.role)` em todos os passos; angular confere o atributo contra `args.role` e depois volta a `getByRole('alert')`; react, vue e vanilla cravam `'alert'` | 4 de 5 quebram se o control virar `note` |
-| a play do `Playground` confere as classes da variante default | react, vue, svelte, angular; **vanilla não** | 4 de 5 |
-| a play de `Dismissible` afirma que o X é o ÚLTIMO filho (C9) | vue, svelte, vanilla, angular com `lastElementChild`; **react só confere o `data-slot` do botão** | 4 de 5 |
-| a `WithoutAnnouncement` conta os papéis na tela | **só o vanilla** afirma `getAllByRole('alert')` com comprimento 1 e `getByRole('note')` visível | 1 de 5 — e é a referência que está mais completa |
-| `.nds-icon` no ícone do alerta | react, vue e svelte usam a classe em parte dos pontos e não em outros, DENTRO da mesma stack; vanilla e angular nunca a usam, com o motivo escrito (`.nds-alert > svg` já dimensiona, e é mais específico) | vanilla e angular são consistentes; as três de framework não |
+As cinco têm construtor de snippet por story (o vanilla, por builder
+parametrizado) e `alert.source.test.ts`; nenhuma põe `.nds-icon` no ícone do
+alerta nem `aria-live` em volta dele; os snippets das docs pages ensinam o nível
+do título (`as="h4"`, `as: 'h4'` ou `<h4 ndsAlertTitle>`).
+
+**O que continua diferente, e por quê**: a forma de voltar ao estado inicial na
+`DynamicInsertion` é do framework — sinal de módulo no react, vue e angular,
+remoção do nó no vanilla, evento que o componente de story escuta no svelte, onde
+o estado só se reinicia de dentro do componente. É divergência de API, não de
+contrato: as cinco afirmam as mesmas três coisas depois do reinício.
 
 ## 8. Acessibilidade
 
@@ -578,14 +613,10 @@ impedir.
 | tabela de tokens × folha, nos dois sentidos | `node scripts/tabela-tokens.mjs alert` |
 | rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo |
 
-**Linha de base do auditor, medida em 2026-09-13**: `node scripts/audit.mjs alert
---json` devolve **18 achados** — 13 que já existiam antes deste documento (4 do
-Angular sobre snippet, 9 de `identificador_pt`) e os 5 que o nascimento dele
-liga. Nenhuma regra de PRD reprova: `prd_token_sem_lastro` fecha com a folha, e as
-três pendências abaixo passam pelos dois portões de envelhecimento. Os três
-grupos estão declarados como pendência, e é por isso que este número está
-escrito aqui: PRD novo que deixa o auditor vermelho sem dizer onde é PRD que já
-nasce desatualizado.
+**Linha de base do auditor, medida em 2026-09-15**: `node scripts/audit.mjs alert
+--json` devolve **zero achados**. Em 2026-09-13 eram 18 — 4 do Angular sobre
+snippet, 9 de `identificador_pt` e 5 que o nascimento deste documento ligou —, e
+as duas pendências abaixo fecharam na passagem de `fix` de 2026-09-14/15.
 
 **FECHADA em 2026-09-13, no mesmo dia**: a regra da categoria virou
 [`19-feedback.md`](../guidelines/19-feedback.md), o catálogo do Alert ficou aqui, e
@@ -605,9 +636,8 @@ do vanilla lista QUATRO variantes (falta `info`), a do svelte afirma que o
 usa lib nenhuma), react e vue não documentam a prop `role` e mandam pôr
 `aria-live` no contêiner pai, e a do angular diz "fechar remove o alert" onde o
 próprio primitivo escreve que não remove.
-`catalogo_duplicado_com_prd` nas cinco stacks.
 
-> **PENDÊNCIA · 2026-09-13** — o Angular publica o template da story no painel
+> **FECHADA · 2026-09-15** — o Angular publica o template da story no painel
 > Code em **17 das 18 stories**: `alert.source.ts` de lá tem UM construtor
 > (`alertPlaygroundSource`), contra 18 no vue, 13 no react, 13 no svelte e 7 no
 > vanilla (onde um builder parametrizado serve todas). `audit.mjs` reprova os três
@@ -617,11 +647,22 @@ próprio primitivo escreve que não remove.
 > **Fecha quando** as 17 stories tiverem construtor (ou exceção declarada com a
 > premissa cobrada por caso), o `alert.source.test.ts` existir, e `audit.mjs`
 > deixar de reportar `story_file_sem_transform` e `source_sem_teste` neste slug.
+> **Como fechou**: `alert.source.ts` do Angular ganhou um construtor por story
+> (e dois de template para a docs page), as dezenove stories têm `transform`, e o
+> `alert.source.test.ts` novo cobra que todo exemplo de fechamento mostra o `@if`
+> sobre o `(dismiss)` — o componente não remove o nó —, sem `@for` e sem
+> `aria-live`. O auditor não reporta mais nenhuma das duas regras.
 
-> **PENDÊNCIA · 2026-09-13** — nove achados de `identificador_pt` neste slug, em
+> **FECHADA · 2026-09-15** — nove achados de `identificador_pt` neste slug, em
 > quatro stacks: `padrao` (react ×2, vanilla, angular), `novo` (react, vue,
 > svelte, vanilla) e `com` (vanilla). São nomes que a campanha de tradução de
 > identificadores não pôde varrer, e a lista de motivos está em
 > `docs/shared/primitives/identificadores-pt.ts`.
 > **Fecha quando** `node scripts/audit.mjs alert --json` deixar de reportar
 > `identificador_pt` neste slug.
+> **Como fechou**: `padrao`/`nota` viraram `defaultAlert`/`noteAlert` nas stories e
+> `defaultBlock`/`noteBlock` no source do react; `novo` virou `freshAlert`; `com`
+> virou `withDismiss`. Na mesma rodada os exports e os componentes de story com
+> nome em português saíram também (`alertSucessoSource` → `alertSuccessSource`,
+> `AlertDismissivelStory` → `AlertDismissibleStory` e afins), embora nenhum
+> portão os cobrasse.

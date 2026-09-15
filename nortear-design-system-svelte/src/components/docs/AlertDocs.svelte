@@ -56,6 +56,20 @@
     return cleanup;
   });
 
+  // ─── Testes: quantos itens existem é do dicionário ──────────────────────────
+  //
+  // A contagem sai do conteúdo e não de um intervalo cravado: com a lista
+  // escrita à mão a página renderizou 7 de 8 critérios funcionais quando o
+  // conteúdo ganhou um item, e ninguém viu.
+  function testCount(group: 'functional' | 'accessibility' | 'visual'): number[] {
+    const dict = (alertTranslations as unknown as Record<
+      string,
+      { testes?: Record<string, Record<string, unknown>> }
+    >)[$locale]?.testes?.[group] ?? {};
+    const count = Object.keys(dict).filter((key) => /^item\d+$/.test(key)).length;
+    return Array.from({ length: count }, (_, index) => index + 1);
+  }
+
   // ─── Active section ──────────────────────────────────────────────────────────
 
   const NAV_GROUPS = $derived.by(() => {
@@ -113,7 +127,7 @@ import Info from '@lucide/svelte/icons/info';`;
 
   const codeDefault = `<Alert>
   <Info aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -121,7 +135,7 @@ import Info from '@lucide/svelte/icons/info';`;
 
   const codeDestructive = `<Alert variant="destructive">
   <AlertCircle aria-hidden="true" />
-  <AlertTitle>Erro ao salvar</AlertTitle>
+  <AlertTitle as="h4">Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
@@ -129,7 +143,7 @@ import Info from '@lucide/svelte/icons/info';`;
 
   const codeSuccess = `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
-  <AlertTitle>Perfil atualizado</AlertTitle>
+  <AlertTitle as="h4">Perfil atualizado</AlertTitle>
   <AlertDescription>
     Suas informações foram salvas com sucesso.
   </AlertDescription>
@@ -137,7 +151,7 @@ import Info from '@lucide/svelte/icons/info';`;
 
   const codeWarning = `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
-  <AlertTitle>Assinatura expirando</AlertTitle>
+  <AlertTitle as="h4">Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
   </AlertDescription>
@@ -145,15 +159,21 @@ import Info from '@lucide/svelte/icons/info';`;
 
   const codeInfo = `<Alert variant="info">
   <Info aria-hidden="true" />
-  <AlertTitle>Dica</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>
-    Você pode fixar seus filtros favoritos para acessá-los mais rápido.
+    Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
 </Alert>`;
 
-  const codeDismissible = `<Alert dismissible onDismiss={() => console.log("fechado")}>
+  const codeDismissible = `<script lang="ts">
+  function handleDismiss() {
+    // o alerta já saiu da tela: registre aqui a preferência de quem fechou
+  }
+</${'script'}>
+
+<Alert dismissible onDismiss={handleDismiss}>
   <Info aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -165,6 +185,25 @@ import Info from '@lucide/svelte/icons/info';`;
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
 </Alert>`;
+
+  // Os snippets das composições escrevem o MESMO texto que a prévia mostra.
+  const codeWithAction = $derived(`<Alert>
+  <Info aria-hidden="true" />
+  <AlertTitle as="h4">${$tStore('demonstration.labels.sessionTitle')}</AlertTitle>
+  <AlertDescription>${$tStore('demonstration.labels.sessionDesc')}</AlertDescription>
+  <AlertAction>
+    <Button size="sm" variant="default">${$tStore('demonstration.labels.saveNow')}</Button>
+  </AlertAction>
+</Alert>`);
+
+  const codeWithActionAndDismiss = $derived(`<Alert dismissible>
+  <Info aria-hidden="true" />
+  <AlertTitle as="h4">${$tStore('demonstration.labels.sessionTitle')}</AlertTitle>
+  <AlertDescription>${$tStore('demonstration.labels.sessionDesc')}</AlertDescription>
+  <AlertAction>
+    <Button size="sm" variant="default">${$tStore('demonstration.labels.saveNow')}</Button>
+  </AlertAction>
+</Alert>`);
 
   const interfaceCode = `// Alert
 interface AlertProps {
@@ -179,7 +218,13 @@ interface AlertProps {
 
 // AlertTitle
 interface AlertTitleProps {
-  as?: string;                 // nível do heading (h1..h6), default 'h5'
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'; // nível do heading, default 'h5'
+  class?: string;
+  children?: Snippet;
+}
+
+// AlertDescription
+interface AlertDescriptionProps {
   class?: string;
   children?: Snippet;
 }
@@ -201,18 +246,19 @@ interface AlertTitleProps {
       <DocsDemonstration>
         <div class="nds-w-full nds-stack" data-spacing="sm">
           <!-- default: sem título — só ícone + descrição -->
-          <Alert>
+          <Alert role="note">
             <Info aria-hidden="true" />
             <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
           </Alert>
           <!-- destructive: com título -->
-          <Alert variant="destructive">
+          <Alert role="note" variant="destructive">
             <AlertCircle aria-hidden="true" />
             <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
           </Alert>
           <!-- success: com título + dismissible -->
           <Alert
+            role="note"
             variant="success"
             dismissible
             onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'demonstration', location: 'docs_demo' })}
@@ -222,11 +268,11 @@ interface AlertTitleProps {
             <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
           </Alert>
           <!-- warning: com título + ação no slot AlertAction.
-               `.nds-alert-action` é position:absolute no canto superior direito
-               (alert.css) — é o "alinhado à direita" que o conteúdo descreve.
+               `.nds-alert-action` é a coluna à direita do texto (alert.css) —
+               é o "alinhado à direita" que o conteúdo descreve.
                Empilhar o botão dentro da descrição o joga para a linha de baixo,
                à esquerda, divergindo da story ComAcao, que sempre usou o slot. -->
-          <Alert variant="warning">
+          <Alert role="note" variant="warning">
             <TriangleAlert aria-hidden="true" />
             <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
@@ -331,26 +377,26 @@ interface AlertTitleProps {
       />
 
       {#snippet doPair1()}
-        <Alert>
+        <Alert role="note">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle as="h3">Erro ao salvar</AlertTitle>
-          <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet dontPair1()}
-        <Alert><AlertDescription>Salvo!</AlertDescription></Alert>
+        <Alert role="note"><AlertDescription>{$tStore('demonstration.labels.savedLabel')}</AlertDescription></Alert>
       {/snippet}
       {#snippet doPair2()}
-        <Alert variant="destructive">
+        <Alert role="note" variant="destructive">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle as="h3">Erro ao salvar</AlertTitle>
-          <AlertDescription>Verifique sua conexão.</AlertDescription>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet dontPair2()}
-        <Alert variant="destructive">
-          <AlertTitle as="h3">Erro ao salvar</AlertTitle>
-          <AlertDescription>Verifique sua conexão.</AlertDescription>
+        <Alert role="note" variant="destructive">
+          <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
 
@@ -379,53 +425,53 @@ interface AlertTitleProps {
       />
 
       {#snippet variantDefault()}
-        <Alert class="nds-w-full">
+        <Alert role="note" class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantDestructive()}
-        <Alert variant="destructive" class="nds-w-full">
+        <Alert role="note" variant="destructive" class="nds-w-full">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantSuccess()}
-        <Alert variant="success" class="nds-w-full">
+        <Alert role="note" variant="success" class="nds-w-full">
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWarning()}
-        <Alert variant="warning" class="nds-w-full">
+        <Alert role="note" variant="warning" class="nds-w-full">
           <TriangleAlert aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantInfo()}
-        <Alert variant="info" class="nds-w-full">
+        <Alert role="note" variant="info" class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">Dica</AlertTitle>
-          <AlertDescription>Você pode fixar seus filtros favoritos para acessá-los mais rápido.</AlertDescription>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantDismissible()}
-        <Alert
+        <Alert role="note"
           dismissible
           class="nds-w-full"
-          onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'dismissible', location: 'docs_demo' })}
+          onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'dismissible', location: 'docs_variantes' })}
         >
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWithoutTitle()}
-        <Alert class="nds-w-full">
+        <Alert role="note" class="nds-w-full">
           <Info aria-hidden="true" />
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
@@ -440,7 +486,7 @@ interface AlertTitleProps {
             name: $tStore('variants.compositions.withIcon.name'),
             description: $tStore('variants.compositions.withIcon.description'),
             useWhen: $tStore('variants.compositions.withIcon.use'),
-            code: `<Alert><Info aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription></Alert>`,
+            code: `<Alert><Info aria-hidden="true" /><AlertTitle as="h4">Informação</AlertTitle><AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription></Alert>`,
             preview: compWithIcon,
           },
           {
@@ -451,26 +497,44 @@ interface AlertTitleProps {
             // Slot AlertAction, igual à story ComAcao. O markup anterior
             // empilhava o botão dentro da descrição e ele caía na linha de
             // baixo — divergia da story e do "alinhado à direita" do texto.
-            code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
+            code: codeWithAction,
             preview: compWithAction,
+          },
+          {
+            trackId: 'withActionAndDismiss',
+            name: $tStore('variants.compositions.withActionAndDismiss.name'),
+            description: $tStore('variants.compositions.withActionAndDismiss.description'),
+            useWhen: $tStore('variants.compositions.withActionAndDismiss.use'),
+            code: codeWithActionAndDismiss,
+            preview: compWithActionAndDismiss,
           },
         ]}
       />
 
       {#snippet compWithIcon()}
-        <Alert class="nds-w-full">
+        <Alert role="note" class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet compWithAction()}
-        <Alert class="nds-w-full">
+        <Alert role="note" class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
-          <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
+          <AlertTitle as="h4">{$tStore('demonstration.labels.sessionTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.sessionDesc')}</AlertDescription>
           <AlertAction>
-            <Button size="sm" variant="default">Salvar agora</Button>
+            <Button size="sm" variant="default">{$tStore('demonstration.labels.saveNow')}</Button>
+          </AlertAction>
+        </Alert>
+      {/snippet}
+      {#snippet compWithActionAndDismiss()}
+        <Alert role="note" class="nds-w-full" dismissible>
+          <Info aria-hidden="true" />
+          <AlertTitle as="h4">{$tStore('demonstration.labels.sessionTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.sessionDesc')}</AlertDescription>
+          <AlertAction>
+            <Button size="sm" variant="default">{$tStore('demonstration.labels.saveNow')}</Button>
           </AlertAction>
         </Alert>
       {/snippet}
@@ -486,6 +550,7 @@ interface AlertTitleProps {
           { label: $tStore('states.complete.label'),      trigger: toPlainText($tStore('states.complete.trigger')),      behavior: toPlainText($tStore('states.complete.behavior'))},
           { label: $tStore('states.withoutTitle.label'),  trigger: toPlainText($tStore('states.withoutTitle.trigger')),  behavior: toPlainText($tStore('states.withoutTitle.behavior'))},
           { label: $tStore('states.withoutIcon.label'),   trigger: toPlainText($tStore('states.withoutIcon.trigger')),              behavior: toPlainText($tStore('states.withoutIcon.behavior'))},
+          { label: $tStore('states.withoutAnnouncement.label'), trigger: toPlainText($tStore('states.withoutAnnouncement.trigger')), behavior: toPlainText($tStore('states.withoutAnnouncement.behavior')) },
           { label: $tStore('states.dynamicInsert.label'), trigger: toPlainText($tStore('states.dynamicInsert.trigger')),            behavior: toPlainText($tStore('states.dynamicInsert.behavior')) },
           { label: $tStore('states.dismissed.label'),     trigger: toPlainText($tStore('states.dismissed.trigger')),                behavior: toPlainText($tStore('states.dismissed.behavior'))},
         ]}
@@ -504,13 +569,13 @@ interface AlertTitleProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
-              { name: 'role',     type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText($tStore('props.table.role')) },
-              { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.className'))           },
-              { name: 'children', type: 'Snippet',                   defaultValue: '—',         required: 'Não', description: $tStore('props.table.children')            },
-              { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: $tStore('props.table.dismissible')  },
-              { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: $tStore('props.table.onDismiss')    },
-              { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: 'Não', description: $tStore('props.table.dismissLabel') },
+              { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.variant')) },
+              { name: 'role',     type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.role')) },
+              { name: 'class',    type: 'string',                    defaultValue: '—',         required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.className'))           },
+              { name: 'children', type: 'Snippet',                   defaultValue: '—',         required: $tNavStore('common.no'), description: $tStore('props.table.children')            },
+              { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: $tNavStore('common.no'), description: $tStore('props.table.dismissible')  },
+              { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: $tNavStore('common.no'), description: $tStore('props.table.onDismiss')    },
+              { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: $tNavStore('common.no'), description: $tStore('props.table.dismissLabel') },
             ],
           },
           {
@@ -523,8 +588,9 @@ interface AlertTitleProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: toPlainText($tStore('props.table.titleAs')) },
-              { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: $tStore('props.table.children') },
+              { name: 'as',       type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.titleAs')) },
+              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
+              { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.className')) },
             ],
           },
           {
@@ -537,7 +603,8 @@ interface AlertTitleProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: $tStore('props.table.children') },
+              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
+              { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.className')) },
             ],
           },
         ]}
@@ -638,15 +705,11 @@ interface AlertTitleProps {
             result: $tNavStore('common.expectedResult'),
             priority: $tNavStore('common.priority'),
           },
-          items: [
-            { action: $tStore('testes.functional.item1.action'), result: $tStore('testes.functional.item1.result'), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item2.action'), result: $tStore('testes.functional.item2.result'), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item3.action'), result: $tStore('testes.functional.item3.result'), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
-          ],
+          items: testCount('functional').map((i) => ({
+            action: $tStore(`testes.functional.item${i}.action`),
+            result: $tStore(`testes.functional.item${i}.result`),
+            priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
+          })),
         }}
         accessibility={{
           title: $tStore('testes.accessibility.title'),
@@ -655,12 +718,11 @@ interface AlertTitleProps {
             level: 'WCAG',
             how: $tNavStore('common.howToVerify'),
           },
-          items: [
-            { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-            { criterion: $tStore('testes.accessibility.item2.criterion'), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-            { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-            { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-          ],
+          items: testCount('accessibility').map((i) => ({
+            criterion: $tStore(`testes.accessibility.item${i}.criterion`),
+            level: $tStore(`testes.accessibility.item${i}.level`),
+            how: $tStore(`testes.accessibility.item${i}.how`),
+          })),
         }}
         visual={{
           title: $tStore('testes.visual.title'),
@@ -668,13 +730,10 @@ interface AlertTitleProps {
             story: $tNavStore('common.storyState'),
             priority: $tNavStore('common.priority'),
           },
-          items: [
-            { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
-          ],
+          items: testCount('visual').map((i) => ({
+            story: $tStore(`testes.visual.item${i}.story`),
+            priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
+          })),
         }}
       />
 </DocsPageLayout>

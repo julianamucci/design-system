@@ -5,7 +5,7 @@
 </script>
 
 <Alert>
-  <Info class="nds-icon" aria-hidden="true" />
+  <Info aria-hidden="true" />
   <AlertTitle>Atualização disponível</AlertTitle>
   <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
   <AlertAction>

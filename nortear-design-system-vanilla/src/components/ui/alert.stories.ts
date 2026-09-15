@@ -116,12 +116,17 @@ export const Playground: Story = {
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
   },
   render: (args) => buildAlert(args),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    // O control `role` troca a semântica da raiz — TODAS as buscas seguem o arg,
+    // para a story continuar verde em qualquer configuração do painel.
+    const role = args.role ?? 'alert';
+    const variant = args.variant ?? 'default';
 
-    await step('Elemento alert está presente no DOM', async () => {
-      const alert = canvas.getByRole('alert');
+    await step('A semântica de anúncio escolhida chega ao DOM', async () => {
+      const alert = canvas.getByRole(role);
       await expect(alert).toBeInTheDocument();
+      await expect(alert).toHaveAttribute('role', role);
     });
 
     // waitFor nas asserções de visibilidade: com o control `dismissible`
@@ -129,22 +134,42 @@ export const Playground: Story = {
     // quadro falha. Sem o control ligado passa de primeira — o waitFor não
     // custa nada e cobre as duas configurações do Playground.
     await step('Alert está visível', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+      await waitFor(() => expect(canvas.getByRole(role)).toBeVisible());
     });
 
-    await step('AlertTitle é renderizado corretamente', async () => {
-      await waitFor(() => expect(canvas.getByText('Atenção')).toBeVisible());
-    });
-
-    await step('AlertTitle é H5 por default', async () => {
-      // Trava o default da factory: sem `as`, createAlertTitle rende <h5>.
-      await expect(canvas.getByText('Atenção').tagName).toBe('H5');
-    });
+    if (args.title) {
+      await step('AlertTitle é renderizado e é H5 por padrão', async () => {
+        await waitFor(() => expect(canvas.getByText(args.title)).toBeVisible());
+        // Trava o default da factory: sem `as`, createAlertTitle rende <h5>.
+        const title = canvas.getByText(args.title);
+        await expect(title.tagName).toBe('H5');
+        await expect(title).toHaveClass('nds-alert-title');
+      });
+    }
 
     await step('AlertDescription é renderizado corretamente', async () => {
-      await waitFor(() =>
-        expect(canvas.getByText(/Suas alterações serão aplicadas/)).toBeVisible(),
-      );
+      await waitFor(() => expect(canvas.getByText(args.description)).toBeVisible());
+    });
+
+    await step('A variante aplica as classes do design system', async () => {
+      const alert = canvas.getByRole(role);
+      await expect(alert).toHaveAttribute('data-slot', 'alert');
+      await expect(alert).toHaveClass('nds-alert');
+      if (variant === 'default') {
+        // Default é só a classe base: nenhum modificador de variante.
+        for (const other of ['destructive', 'success', 'warning', 'info']) {
+          await expect(alert).not.toHaveClass(`nds-alert-${other}`);
+        }
+      } else {
+        await expect(alert).toHaveClass(`nds-alert-${variant}`);
+      }
+    });
+
+    await step('O ícone é decorativo e filho direto do alert', async () => {
+      // Filho DIRETO: é `.nds-alert > svg` que abre a coluna do ícone.
+      const icon = canvas.getByRole(role).querySelector(':scope > svg');
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon).not.toHaveClass('nds-icon');
     });
   },
 };

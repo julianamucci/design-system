@@ -117,6 +117,7 @@ export const Playground: Story = {
     await step('AlertTitle é H5 por padrão', async () => {
       const title = canvas.getByText('Atenção');
       await expect(title.tagName).toBe('H5');
+      await expect(title).toHaveClass('nds-alert-title');
     });
 
     await step('AlertDescription é renderizado corretamente', async () => {
@@ -125,9 +126,32 @@ export const Playground: Story = {
       );
     });
 
-    await step('Variante default aplica classes corretas', async () => {
+    await step('A semântica de anúncio escolhida chega ao DOM', async () => {
+      await expect(canvas.getByRole(role)).toHaveAttribute('role', role);
+    });
+
+    await step('A variante aplica as classes do design system', async () => {
       const alert = canvas.getByRole(role);
+      const variant = args.variant ?? 'default';
+      await expect(alert).toHaveAttribute('data-slot', 'alert');
       await expect(alert).toHaveClass('nds-alert');
+      if (variant === 'default') {
+        // Default é só a classe base: nenhum modificador de variante.
+        for (const other of ['destructive', 'success', 'warning', 'info']) {
+          await expect(alert).not.toHaveClass(`nds-alert-${other}`);
+        }
+      } else {
+        await expect(alert).toHaveClass(`nds-alert-${variant}`);
+      }
+    });
+
+    await step('O ícone é decorativo e filho direto do alert', async () => {
+      // Filho DIRETO: é `.nds-alert > svg` que abre a coluna do ícone. Um
+      // wrapper no meio deixaria o layout de uma coluna só.
+      const icon = canvas.getByRole(role).querySelector(':scope > svg');
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      // A folha dimensiona o ícone pelo seletor de filho; a utilitária duplicaria a regra.
+      await expect(icon).not.toHaveClass('nds-icon');
     });
   },
 };

@@ -119,8 +119,10 @@ export const Playground: Story = {
     // ligado, o alert ENTRA animado (opacidade 0 → 1) e medir no primeiro
     // quadro é racy. Sem o control ligado passa de primeira — o waitFor não
     // custa nada e cobre as duas configurações do Playground.
+    // Todos os passos consultam pelo papel ESCOLHIDO no control: com `note` ou
+    // `status`, um `getByRole('alert')` fixo reprovaria por não achar nada.
     await step('Alert está visível', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+      await waitFor(() => expect(canvas.getByRole(args.role)).toBeVisible());
     });
 
     await step('Título e descrição são renderizados', async () => {
@@ -135,19 +137,28 @@ export const Playground: Story = {
       await expect(title).toHaveClass('nds-alert-title');
     });
 
-    await step('A variante default aplica só a classe base', async () => {
-      const alerta = canvas.getByRole('alert');
+    await step('A variante aplica as classes do design system', async () => {
+      const alerta = canvas.getByRole(args.role);
       await expect(alerta).toHaveAttribute('data-slot', 'alert');
       await expect(alerta).toHaveClass('nds-alert');
-      await expect(alerta).not.toHaveClass('nds-alert-destructive');
+      if (args.variant === 'default') {
+        // Default é só a classe base: nenhum modificador de variante.
+        for (const other of ['destructive', 'success', 'warning', 'info']) {
+          await expect(alerta).not.toHaveClass(`nds-alert-${other}`);
+        }
+      } else {
+        await expect(alerta).toHaveClass(`nds-alert-${args.variant}`);
+      }
     });
 
     await step('O ícone é decorativo e filho direto do alert', async () => {
       // Filho DIRETO: é o seletor `.nds-alert:has(> svg)` que abre a coluna do
       // ícone. Um wrapper no meio deixaria o layout de uma coluna só.
-      const alerta = canvas.getByRole('alert');
+      const alerta = canvas.getByRole(args.role);
       const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
       await expect(icone).toHaveAttribute('aria-hidden', 'true');
+      // Sem `.nds-icon`: é `.nds-alert > svg` que dimensiona o ícone.
+      await expect(icone).not.toHaveClass('nds-icon');
     });
   },
 };

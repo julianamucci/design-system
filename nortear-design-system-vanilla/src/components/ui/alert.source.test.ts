@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   alertWithActionSnippet,
-  alertEmRegiaoVivaSnippet,
+  alertDynamicInsertionSnippet,
   alertSnippet,
   alertSource,
   alertSourceWith,
@@ -51,14 +51,14 @@ describe('alertSnippet', () => {
     const without = alertSnippet({ dismissLabel: 'Fechar confirmação' });
     expect(without).not.toContain('dismissLabel');
 
-    const com = alertSnippet({
+    const withDismiss = alertSnippet({
       dismissible: true,
       dismissLabel: 'Fechar confirmação',
-      onDismiss: "() => salvarPreferencia('aviso-fechado')",
+      onDismiss: "() => savePreference('notice-dismissed')",
     });
-    expect(com).toContain('dismissible: true');
-    expect(com).toContain("dismissLabel: 'Fechar confirmação'");
-    expect(com).toContain("onDismiss: () => salvarPreferencia('aviso-fechado')");
+    expect(withDismiss).toContain('dismissible: true');
+    expect(withDismiss).toContain("dismissLabel: 'Fechar confirmação'");
+    expect(withDismiss).toContain("onDismiss: () => savePreference('notice-dismissed')");
   });
 
   it('ignora o callback que a story passa como função de verdade', () => {
@@ -68,6 +68,12 @@ describe('alertSnippet', () => {
     });
     expect(code).toContain('dismissible: true');
     expect(code).not.toContain('onDismiss');
+  });
+
+  it('nunca ensina ícone com .nds-icon nem região aria-live', () => {
+    const code = alertSnippet();
+    expect(code).not.toContain('nds-icon');
+    expect(code).not.toContain('aria-live');
   });
 });
 
@@ -89,7 +95,7 @@ describe('alertSource', () => {
   });
 });
 
-describe('alertSourceCom', () => {
+describe('alertSourceWith', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = alertSourceWith({ variant: 'warning' });
     const code = transform('', { args: { variant: 'destructive' } });
@@ -98,25 +104,33 @@ describe('alertSourceCom', () => {
   });
 });
 
-describe('alertComAcaoSnippet', () => {
+describe('alertWithActionSnippet', () => {
   it('mostra a sub-fábrica do slot de ação, com o botão do design system', () => {
-    const code = alertWithActionSnippet({ acao: 'Atualizar' });
+    const code = alertWithActionSnippet({ action: 'Atualizar' });
     expect(code).toContain("import { createButton } from '@/components/ui/button';");
     expect(code).toContain('createAlertAction()');
     expect(code).toContain("createButton({ label: 'Atualizar', variant: 'default', size: 'sm' })");
-    expect(code).toContain('alerta.appendChild(acao);');
+    expect(code).toContain('alerta.appendChild(action);');
   });
 
   it('leva a classe do consumidor para a raiz', () => {
     expect(alertWithActionSnippet({ className: 'nds-w-full' })).toContain("className: 'nds-w-full'");
   });
+
+  it('com dismissible, mostra ação e botão de fechar na mesma composição', () => {
+    const code = alertWithActionSnippet({ dismissible: true, action: 'Salvar agora' });
+    expect(code).toContain('dismissible: true');
+    expect(code).toContain('createAlertAction()');
+    expect(code).toContain("label: 'Salvar agora'");
+  });
 });
 
-describe('alertEmRegiaoVivaSnippet', () => {
-  it('mostra a região viva e a inserção em tempo de execução', () => {
-    const code = alertEmRegiaoVivaSnippet({ icon: 'success', title: 'Operação concluída' });
-    expect(code).toContain("regiao.setAttribute('aria-live', 'polite');");
-    expect(code).toContain('regiao.appendChild(alerta);');
-    expect(code).toContain("createAlertIcon('success')");
+describe('alertDynamicInsertionSnippet', () => {
+  it('mostra a inserção em tempo de execução sem contêiner aria-live', () => {
+    const code = alertDynamicInsertionSnippet({ icon: 'success', title: 'Operação concluída' });
+    expect(code).not.toContain('aria-live');
+    expect(code).toContain('function showResult(container: HTMLElement): void {');
+    expect(code).toContain('  container.appendChild(alerta);');
+    expect(code).toContain("  alerta.appendChild(createAlertIcon('success'));");
   });
 });

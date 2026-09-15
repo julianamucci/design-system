@@ -22,7 +22,7 @@
     icon?: IconType;
     class?: ClassValue | null;
     descriptionClass?: string;
-    /** Slot de ação no canto superior direito (.nds-alert-action). */
+    /** Slot de ação à direita do texto (.nds-alert-action). */
     action?: Snippet;
     /** Exibe o botão de fechar do Alert. */
     dismissible?: boolean;
@@ -53,7 +53,7 @@
 
 <Alert {variant} {role} class={className} {dismissible} {onDismiss} {dismissLabel}>
   {#if showIcon}
-    <IconComponent class="nds-icon" aria-hidden="true" />
+    <IconComponent aria-hidden="true" />
   {/if}
   {#if title}
     <AlertTitle>{title}</AlertTitle>

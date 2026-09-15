@@ -1,11 +1,13 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { Alert, AlertAction, AlertTitle, AlertDescription } from './index';
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-vue-next';
+import { measureActionDismiss } from '@shared/testing/alert-probe';
 import {
-  alertClassNameAdicionalSource,
+  alertAdditionalClassSource,
+  alertWithActionAndDismissSource,
   alertWithActionSource,
   alertWithIconSource,
   alertLayoutNoIconSource,
@@ -33,7 +35,7 @@ export const WithIcon: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="nds-icon" aria-hidden="true" />
+        <Info aria-hidden="true" />
         <AlertTitle>Informação</AlertTitle>
         <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>
       </Alert>
@@ -58,7 +60,7 @@ export const WithAction: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="nds-icon" aria-hidden="true" />
+        <Info aria-hidden="true" />
         <AlertTitle>Atualização disponível</AlertTitle>
         <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
         <AlertAction>
@@ -96,21 +98,21 @@ export const WithAction: Story = {
  * consumidor, e ela SOMA às do design system — não substitui.
  *
  * `nds-w-full` (block, já ocupa a largura) e `nds-w-auto` no slot de ação
- * (absoluto, shrink-to-fit por default) são inertes de propósito: a story prova
+ * (coluna `auto` do grid, já na largura do conteúdo) são inertes de propósito: a story prova
  * a composição de classes sem mexer no snapshot visual.
  */
 export const AdditionalClass: Story = {
   parameters: {
     // O assunto é a classe em CADA subcomponente — sem elas escritas, o
     // exemplo não mostra nada.
-    docs: { source: { transform: alertClassNameAdicionalSource } },
+    docs: { source: { transform: alertAdditionalClassSource } },
   },
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
     setup() { return {}; },
     template: `
       <Alert class="nds-w-full">
-        <Info class="nds-icon" aria-hidden="true" />
+        <Info aria-hidden="true" />
         <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
         <AlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</AlertDescription>
         <AlertAction class="nds-w-auto">
@@ -159,5 +161,57 @@ export const WithoutIcon: Story = {
     const alert = canvas.getByRole('alert');
     await expect(alert.querySelector('svg')).toBeNull();
     await expect(canvas.getByText('Sem ícone')).toBeVisible();
+  },
+};
+
+/**
+ * Ação e botão de fechar no mesmo alerta.
+ *
+ * A ação é a terceira coluna do grid e o X segue absoluto na própria calha; a
+ * prova de que nada se sobrepõe é de CAIXA, pela sonda compartilhada, e não de
+ * classe.
+ */
+export const WithActionAndDismiss: Story = {
+  parameters: {
+    covers: ['functional.item8', 'visual.item6'],
+    // A prop de fechar e o slot de ação juntos: nenhuma das duas existe na do
+    // meta.
+    docs: { source: { transform: alertWithActionAndDismissSource } },
+  },
+  render: () => ({
+    components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
+    setup() { return {}; },
+    template: `
+      <Alert dismissible>
+        <Info aria-hidden="true" />
+        <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+        <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
+        <AlertAction>
+          <Button size="sm" variant="default">Salvar agora</Button>
+        </AlertAction>
+      </Alert>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+
+    // O alert fechável ENTRA animado; caixa medida no meio da entrada seria a
+    // de um elemento em transformação. Espera só leitura, sem tocar o DOM.
+    await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
+
+    await step('A ação e o botão de fechar são alcançáveis por nome', async () => {
+      await expect(within(alert).getByRole('button', { name: 'Salvar agora' })).toBeVisible();
+      await expect(within(alert).getByRole('button', { name: 'Fechar alerta' })).toBeVisible();
+      // O X continua o último filho: o leitor encontra conteúdo e ação antes.
+      await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
+    });
+
+    await step('A ação não se sobrepõe ao X e o texto termina antes dela', async () => {
+      const layout = measureActionDismiss(alert);
+      await expect(layout.overlap).toBe(false);
+      await expect(layout.gap).toBeGreaterThanOrEqual(0);
+      await expect(layout.textClearsAction).toBe(true);
+    });
   },
 };

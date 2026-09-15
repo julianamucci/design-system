@@ -11,8 +11,8 @@ import {
   alertContrastSource,
   alertDefaultSource,
   alertDestructiveSource,
-  keyboardAlertDismissivelSource,
-  alertDismissivelSource,
+  alertDismissibleByKeyboardSource,
+  alertDismissibleSource,
   alertInfoSource,
   alertSuccessSource,
   alertWarningSource,
@@ -40,17 +40,31 @@ export const Default: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <InfoIcon class="nds-icon" aria-hidden="true" />
+        <InfoIcon aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const alert = within(canvasElement).getByRole('alert');
-    await expect(alert).toHaveClass('nds-alert');
-    await expect(alert).not.toHaveClass('nds-alert-destructive');
-    await expect(within(canvasElement).getByText('Atenção')).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+
+    await step('A variante default não recebe classe de modificador', async () => {
+      await expect(alert).toHaveClass('nds-alert');
+      await expect(alert).not.toHaveClass('nds-alert-destructive');
+      await expect(canvas.getByText('Atenção')).toBeVisible();
+    });
+
+    await step('Ícone, título e descrição ocupam os slots que a folha espera', async () => {
+      // A folha posiciona por classe: se um deles não a recebesse, o layout de
+      // duas colunas colapsaria sem erro nenhum.
+      await expect(alert.querySelector(':scope > svg')).toBeTruthy();
+      await expect(alert.querySelector('[data-slot="alert-title"]')).toHaveClass('nds-alert-title');
+      await expect(alert.querySelector('[data-slot="alert-description"]')).toHaveClass(
+        'nds-alert-description',
+      );
+    });
   },
 };
 
@@ -66,7 +80,7 @@ export const Destructive: Story = {
     setup() { return {}; },
     template: `
       <Alert variant="destructive">
-        <AlertCircle class="nds-icon" aria-hidden="true" />
+        <AlertCircle aria-hidden="true" />
         <AlertTitle>Erro ao salvar</AlertTitle>
         <AlertDescription>Não foi possível salvar. Verifique sua conexão e tente novamente.</AlertDescription>
       </Alert>
@@ -90,7 +104,7 @@ export const Success: Story = {
     setup() { return {}; },
     template: `
       <Alert variant="success">
-        <CheckCircle2 class="nds-icon" aria-hidden="true" />
+        <CheckCircle2 aria-hidden="true" />
         <AlertTitle>Perfil atualizado</AlertTitle>
         <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
       </Alert>
@@ -113,7 +127,7 @@ export const Warning: Story = {
     setup() { return {}; },
     template: `
       <Alert variant="warning">
-        <TriangleAlert class="nds-icon" aria-hidden="true" />
+        <TriangleAlert aria-hidden="true" />
         <AlertTitle>Assinatura expirando</AlertTitle>
         <AlertDescription>Sua assinatura expira em 3 dias. Renove para evitar interrupções.</AlertDescription>
       </Alert>
@@ -136,9 +150,9 @@ export const Info: Story = {
     setup() { return {}; },
     template: `
       <Alert variant="info">
-        <InfoIcon class="nds-icon" aria-hidden="true" />
+        <InfoIcon aria-hidden="true" />
         <AlertTitle>Dica</AlertTitle>
-        <AlertDescription>Você pode personalizar os atalhos de teclado nas configurações.</AlertDescription>
+        <AlertDescription>Você pode fixar os filtros mais usados para acessá-los mais rápido.</AlertDescription>
       </Alert>
     `,
   }),
@@ -160,10 +174,10 @@ export const Dismissible: Story = {
     covers: ['functional.item7', 'visual.item5'],
     // A prop de fechar, o rótulo do botão e o evento não existem na do meta — e
     // a remontagem por :key é andaime da story, que o snippet não reproduz.
-    docs: { source: { transform: alertDismissivelSource } },
+    docs: { source: { transform: alertDismissibleSource } },
   },
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
+    components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() {
       const instanceKey = ref(0);
       function onDismiss() {
@@ -173,10 +187,10 @@ export const Dismissible: Story = {
       return { instanceKey, onDismiss };
     },
     template: `
-      <Alert :key="instanceKey" variant="success" dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
-        <CheckCircle2 class="nds-icon" aria-hidden="true" />
-        <AlertTitle>Perfil atualizado</AlertTitle>
-        <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
+      <Alert :key="instanceKey" dismissible @dismiss="onDismiss">
+        <InfoIcon aria-hidden="true" />
+        <AlertTitle>Preferências salvas</AlertTitle>
+        <AlertDescription>Você pode fechar este aviso quando quiser.</AlertDescription>
       </Alert>
     `,
   }),
@@ -194,9 +208,9 @@ export const Dismissible: Story = {
       if (!alert.classList.contains('nds-animate-in')) {
         await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
         alert = await waitFor(() => {
-          const novo = canvas.getByRole('alert');
-          if (!novo.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
-          return novo;
+          const freshAlert = canvas.getByRole('alert');
+          if (!freshAlert.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
+          return freshAlert;
         });
         dismissSpy.mockClear(); // o fechamento de preparo não entra na contagem
       }
@@ -250,10 +264,13 @@ export const Dismissible: Story = {
       // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(dismissSpy).toHaveBeenCalledTimes(1);
-    });
 
-    await step('Um alert novo assume o lugar — o canvas nunca fica vazio', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+      // Um alert novo assume o lugar — e é OUTRO nó, não o original reaproveitado.
+      await waitFor(async () => {
+        const remounted = canvas.getByRole('alert');
+        await expect(remounted).not.toBe(alertOriginal);
+        await expect(remounted).toBeVisible();
+      });
     });
   },
 };
@@ -264,10 +281,10 @@ export const DismissibleByKeyboard: Story = {
   parameters: {
     // O teclado não tem nada a configurar, e é isso que o snippet precisa
     // mostrar: a mesma raiz fechável, sem handler de tecla nenhum.
-    docs: { source: { transform: keyboardAlertDismissivelSource } },
+    docs: { source: { transform: alertDismissibleByKeyboardSource } },
   },
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, InfoIcon },
+    components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() {
       const instanceKey = ref(0);
       function onDismiss() {
@@ -277,10 +294,10 @@ export const DismissibleByKeyboard: Story = {
       return { instanceKey, onDismiss };
     },
     template: `
-      <Alert :key="instanceKey" dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
-        <InfoIcon class="nds-icon" aria-hidden="true" />
-        <AlertTitle>Atenção</AlertTitle>
-        <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
+      <Alert :key="instanceKey" variant="success" dismissible dismiss-label="Fechar confirmação" @dismiss="onDismiss">
+        <CheckCircle2 aria-hidden="true" />
+        <AlertTitle>Perfil atualizado</AlertTitle>
+        <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
       </Alert>
     `,
   }),
@@ -290,7 +307,7 @@ export const DismissibleByKeyboard: Story = {
 
     await step('Enter no botão focado remove o alert original e dispara o emit uma única vez', async () => {
       const alertOriginal = canvas.getByRole('alert');
-      const closeButton = canvas.getByRole('button', { name: 'Fechar alerta' });
+      const closeButton = within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' });
       closeButton.focus();
       await expect(closeButton).toHaveFocus();
       await userEvent.keyboard('{Enter}');

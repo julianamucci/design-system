@@ -25,9 +25,12 @@ export type AlertArgs = {
 };
 
 const VARIANTS = ['default', 'destructive', 'success', 'warning', 'info'] as const;
-const PAPEIS = ['alert', 'status', 'note'] as const;
+const ROLES = ['alert', 'status', 'note'] as const;
 
 const IMPORT = 'import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";';
+const IMPORT_WITH_ACTION =
+  'import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";';
+const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Import do design system somado ao do ícone, nesta ordem em todos os snippets. */
 function header(icons: string[], extra?: string): string {
@@ -40,31 +43,40 @@ function header(icons: string[], extra?: string): string {
  * O corpo canônico: ícone decorativo, título e texto corrido.
  *
  * O ícone leva `aria-hidden` porque quem nomeia o alerta é o texto — e o
- * posicionamento é do `.nds-alert`, que trata o SVG filho direto, nunca uma
- * margem no ícone. Título e descrição ficam no `--foreground`: em contêiner
- * colorido, o texto corrido não pode depender da variante para alcançar 4.5:1.
+ * dimensionamento e o posicionamento são do `.nds-alert`, que trata o SVG filho
+ * direto: nenhuma classe no ícone. Título e descrição ficam no `--foreground`:
+ * em contêiner colorido, o texto corrido não pode depender da variante para
+ * alcançar 4.5:1.
  */
-function body(icone: string | null, title: string, descricao: string, indentacao = '  '): string {
+function body(icon: string | null, title: string, description: string, indent = '  '): string {
   const lines: string[] = [];
-  if (icone) lines.push(`${indentacao}<${icone} aria-hidden="true" className="nds-icon" />`);
-  if (title) lines.push(`${indentacao}<AlertTitle>${title}</AlertTitle>`);
-  lines.push(`${indentacao}<AlertDescription>${descricao}</AlertDescription>`);
+  if (icon) lines.push(`${indent}<${icon} aria-hidden="true" />`);
+  if (title) lines.push(`${indent}<AlertTitle>${title}</AlertTitle>`);
+  lines.push(`${indent}<AlertDescription>${description}</AlertDescription>`);
   return lines.join('\n');
 }
 
-function alerta(attrs: string, interior: string): string {
-  return `<Alert${attrs}>\n${interior}\n</Alert>`;
+function alertBlock(attrs: string, inner: string): string {
+  return `<Alert${attrs}>\n${inner}\n</Alert>`;
+}
+
+/** Recuo de um bloco inteiro, para aninhá-lo num contêiner. */
+function indented(block: string, indent = '  '): string {
+  return block
+    .split('\n')
+    .map((line) => `${indent}${line}`)
+    .join('\n');
 }
 
 /** Uma variante inteira: raiz, ícone próprio e o par título/descrição. */
 function variant(
   name: (typeof VARIANTS)[number],
-  icone: string,
+  icon: string,
   title: string,
-  descricao: string,
+  description: string,
 ): string {
   const attrs = name === 'default' ? '' : ` variant="${name}"`;
-  return jsxSnippet(header([icone]), alerta(attrs, body(icone, title, descricao)));
+  return jsxSnippet(header([icon]), alertBlock(attrs, body(icon, title, description)));
 }
 
 /**
@@ -77,16 +89,16 @@ function variant(
  * valor, porque escrever `role="alert"` sugeriria que a escolha é opcional
  * quando na verdade é ela que define se o conteúdo interrompe ou não.
  */
-export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
+export const alertSource: SourceTransform<AlertArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
   const attrs = attrsMultilinha([
     propOption('variant', args.variant, VARIANTS, 'default'),
-    propOption('role', args.role, PAPEIS, 'alert'),
+    propOption('role', args.role, ROLES, 'alert'),
     propBool('dismissible', args.dismissible),
   ]);
   return jsxSnippet(
     header(['Info']),
-    alerta(
+    alertBlock(
       attrs,
       body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
     ),
@@ -108,7 +120,7 @@ export function alertDestructiveSource(): string {
   );
 }
 
-export function alertSucessoSource(): string {
+export function alertSuccessSource(): string {
   return variant(
     'success',
     'CheckCircle2',
@@ -117,7 +129,7 @@ export function alertSucessoSource(): string {
   );
 }
 
-export function alertAvisoSource(): string {
+export function alertWarningSource(): string {
   return variant(
     'warning',
     'TriangleAlert',
@@ -131,33 +143,51 @@ export function alertInfoSource(): string {
     'info',
     'Info',
     'Dica',
-    'Você pode alterar o tema em Configurações a qualquer momento.',
+    'Você pode fixar os filtros mais usados para acessá-los mais rápido.',
   );
 }
 
 /**
- * Dispensável, por clique ou por teclado — as duas stories compartilham esta
- * transform porque a marcação é a mesma; o que muda é como a play aciona.
+ * Dispensável por clique.
  *
- * O `render` das duas monta um wrapper que remonta o alert ao fechar, para o
- * canvas não ficar vazio no Chromatic. Isso é andaime de teste, e é exatamente
- * o que o painel imprimia. Aqui fica só o contrato real: `dismissible` desenha o
- * botão e o componente se remove sozinho; `onDismiss` avisa depois, uma vez.
+ * O `render` monta um wrapper que remonta o alert ao fechar, para o canvas não
+ * ficar vazio no Chromatic. Isso é andaime de teste, e é exatamente o que o
+ * painel imprimia. Aqui fica só o contrato real: `dismissible` desenha o botão e
+ * o componente se remove sozinho; `onDismiss` avisa depois, uma vez.
  */
-export function alertDispensavelSource(): string {
+export function alertDismissibleSource(): string {
+  return jsxSnippet(
+    `${header(['Info'])}
+
+function handleDismiss() {
+  // Dispara uma vez só, depois que o alerta já saiu da tela.
+}`,
+    alertBlock(
+      ' dismissible onDismiss={handleDismiss}',
+      body('Info', 'Preferências salvas', 'Você pode fechar este aviso quando quiser.'),
+    ),
+  );
+}
+
+/**
+ * Dispensável por teclado: a marcação muda no rótulo do botão de fechar, que é
+ * o que o leitor de tela anuncia no foco — por isso ele aparece no snippet.
+ */
+export function alertDismissibleByKeyboardSource(): string {
   return jsxSnippet(
     `${header(['CheckCircle2'])}
 
-function aoFechar() {
+function handleDismiss() {
   // Dispara uma vez só, depois que o alerta já saiu da tela.
 }`,
-    alerta(
-      ' dismissible onDismiss={aoFechar}',
-      body(
-        'CheckCircle2',
-        'Perfil atualizado',
-        'Suas informações foram salvas com sucesso.',
-      ),
+    alertBlock(
+      attrsMultilinha([
+        'variant="success"',
+        'dismissible',
+        'dismissLabel="Fechar confirmação"',
+        'onDismiss={handleDismiss}',
+      ]),
+      body('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
     ),
   );
 }
@@ -190,19 +220,37 @@ export function alertContrastSource(): string {
 export function alertNoTitleSource(): string {
   return jsxSnippet(
     header(['Info'], 'import { Alert, AlertDescription } from "@/components/ui/alert";'),
-    alerta('', body('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alertBlock('', body('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
 /**
  * Sem ícone: o layout vira coluna única sem nenhuma prop — o `.nds-alert` reage
- * à presença do SVG filho direto. Compartilhado pelas duas stories que provam a
- * mesma ausência (estados e composições).
+ * à presença do SVG filho direto. Duas stories provam a mesma ausência com
+ * textos diferentes, e cada painel ensina o texto que a sua story mostra.
  */
-export function alertNoIconSource(): string {
+function noIcon(title: string, description: string): string {
+  return jsxSnippet(IMPORT, alertBlock('', body(null, title, description)));
+}
+
+/** `WithoutIcon` de Estados. */
+export function alertStateNoIconSource(): string {
+  return noIcon('Atenção', 'Suas alterações serão aplicadas na próxima sessão.');
+}
+
+/** `WithoutIcon` de Composições. */
+export function alertCompositionNoIconSource(): string {
+  return noIcon('Sem ícone', 'Alert sem ícone mantém layout de coluna única.');
+}
+
+/**
+ * Com ícone: o corpo canônico, com o texto que a story `WithIcon` renderiza —
+ * o snippet do `meta` diria "Atenção" numa story que mostra "Informação".
+ */
+export function alertWithIconSource(): string {
   return jsxSnippet(
-    IMPORT,
-    alerta('', body(null, 'Atenção', 'Alert sem ícone mantém layout de coluna única.')),
+    header(['Info']),
+    alertBlock('', body('Info', 'Informação', 'Ícone SVG posicionado automaticamente.')),
   );
 }
 
@@ -211,49 +259,65 @@ export function alertNoIconSource(): string {
  *
  * `note` NÃO é live region — é o valor correto para conteúdo já presente no
  * carregamento, que não deve interromper a leitura. O padrão `alert` continua
- * assertivo e fica no snippet sem prop nenhuma, provando que a escolha do papel
+ * assertivo e fica no snippet sem prop de papel, provando que a escolha do papel
  * é uma decisão de conteúdo, não de estilo.
  */
 export function alertNoAnnouncementSource(): string {
-  const nota = [
+  const noteBlock = [
     '  <Alert role="note">',
     body(
       'Info',
       'Nota de implementação',
-      'Conteúdo já presente no carregamento — o leitor de tela não é interrompido.',
+      'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.',
       '    ',
     ),
     '  </Alert>',
   ].join('\n');
-  const padrao = [
-    '  <Alert>',
+  const defaultBlock = [
+    '  <Alert variant="destructive">',
     body(
-      'Info',
-      'Sessão expirada',
-      'Mensagem urgente que surge em tempo de execução.',
+      'AlertCircle',
+      'Falha no envio',
+      'Mensagem urgente surgida em tempo de execução: anúncio imediato.',
       '    ',
     ),
     '  </Alert>',
   ].join('\n');
   return jsxSnippet(
-    header(['Info']),
-    `<div className="nds-stack" data-spacing="sm">\n${nota}\n${padrao}\n</div>`,
+    header(['AlertCircle', 'Info']),
+    `<div className="nds-stack" data-spacing="md">\n${noteBlock}\n${defaultBlock}\n</div>`,
   );
 }
 
 /**
- * Inserção dinâmica: o alerta nasce depois do carregamento, dentro de uma região
- * já anunciada como `aria-live="polite"`. É o contêiner que muda o
- * comportamento, e ele não cabe em nenhum arg do componente.
+ * Inserção dinâmica: o alerta nasce DEPOIS do carregamento, por mudança de
+ * estado, e é o `role="alert"` da própria raiz que o anuncia.
+ *
+ * Nenhum contêiner `aria-live` em volta: a raiz já é região viva, e envolvê-la
+ * em outra aninharia duas — o leitor de tela anuncia em dobro ou descarta um dos
+ * anúncios, conforme o par navegador × leitor.
  */
-export function alertInsercaoDinamicaSource(): string {
+export function alertDynamicInsertionSource(): string {
   return jsxSnippet(
-    header(['Info']),
-    `<div aria-live="polite">\n${[
-      '  <Alert>',
-      body('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.', '    '),
-      '  </Alert>',
-    ].join('\n')}\n</div>`,
+    `import { useState } from "react";
+${IMPORT}
+${IMPORT_BUTTON}
+import { CheckCircle2 } from "lucide-react";
+
+const [generated, setGenerated] = useState(false);`,
+    `<div className="nds-stack" data-spacing="sm">
+  <div>
+    <Button size="sm" variant="default" onClick={() => setGenerated(true)}>
+      Gerar relatório
+    </Button>
+  </div>
+  {generated && (
+${indented(
+  alertBlock('', body('CheckCircle2', 'Operação concluída', 'O relatório foi gerado com sucesso.')),
+  '    ',
+)}
+  )}
+</div>`,
   );
 }
 
@@ -265,10 +329,10 @@ export function alertInsercaoDinamicaSource(): string {
  */
 export function alertWithActionSource(): string {
   return jsxSnippet(
-    `import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+    `${IMPORT_WITH_ACTION}
+${IMPORT_BUTTON}
 import { Info } from "lucide-react";`,
-    alerta(
+    alertBlock(
       '',
       [
         body('Info', 'Atualização disponível', 'Uma nova versão está pronta para instalação.'),
@@ -283,19 +347,46 @@ import { Info } from "lucide-react";`,
 }
 
 /**
+ * Ação e botão de fechar no mesmo alerta. Nenhuma prop a mais: a ação é a
+ * terceira coluna do grid, e o X fica à direita dela.
+ */
+export function alertWithActionAndDismissSource(): string {
+  return jsxSnippet(
+    `${IMPORT_WITH_ACTION}
+${IMPORT_BUTTON}
+import { Info } from "lucide-react";
+
+function handleDismiss() {
+  // Dispara uma vez só, depois que o alerta já saiu da tela.
+}`,
+    alertBlock(
+      ' dismissible onDismiss={handleDismiss}',
+      [
+        body('Info', 'Sessão expira em 5 minutos', 'Salve seu trabalho para não perder as alterações.'),
+        '  <AlertAction>',
+        '    <Button size="sm" variant="default">',
+        '      Salvar agora',
+        '    </Button>',
+        '  </AlertAction>',
+      ].join('\n'),
+    ),
+  );
+}
+
+/**
  * Classe do consumidor: ela SOMA às do design system, não substitui — em todos
  * os subcomponentes. O que a story prova é a composição de classes, e por isso o
  * snippet precisa mostrar o `className` em cada peça, e não só na raiz.
  */
-export function alertClassNameAdicionalSource(): string {
+export function alertAdditionalClassSource(): string {
   return jsxSnippet(
-    `import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+    `${IMPORT_WITH_ACTION}
+${IMPORT_BUTTON}
 import { Info } from "lucide-react";`,
-    alerta(
+    alertBlock(
       ' className="nds-w-full"',
       [
-        '  <Info aria-hidden="true" className="nds-icon" />',
+        '  <Info aria-hidden="true" />',
         '  <AlertTitle className="nds-w-full">Classe adicional</AlertTitle>',
         '  <AlertDescription className="nds-w-full">',
         '    A classe do consumidor convive com as do design system.',

@@ -1,12 +1,13 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
-import AlertSemAnuncioStory from './AlertSemAnuncioStory.svelte';
+import AlertWithoutAnnouncementStory from './AlertWithoutAnnouncementStory.svelte';
+import AlertDynamicInsertionStory from './AlertDynamicInsertionStory.svelte';
 import {
-  alertInsercaoDinamicaSource,
+  alertDynamicInsertionSource,
   alertNoAnnouncementSource,
   alertNoIconSource,
   alertNoTitleSource,
@@ -79,10 +80,12 @@ export const WithoutTitle: Story = {
       await expect(canvas.getByRole('alert')).toBeVisible();
     });
 
-    await step('Sem elemento de título no DOM', async () => {
+    // Nenhum heading de nível nenhum — conferir só `h5` passaria com um título
+    // renderizado em outro nível pela prop `as`.
+    await step('Nenhum heading no DOM', async () => {
       const alert = canvas.getByRole('alert');
-      const heading = alert.querySelector('[data-slot="alert-title"]');
-      await expect(heading).toBeNull();
+      await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
+      await expect(alert.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
     });
   },
 };
@@ -123,49 +126,65 @@ export const WithoutAnnouncement: Story = {
     docs: { source: { transform: alertNoAnnouncementSource } },
   },
   render: () => ({
-    Component: AlertSemAnuncioStory,
+    Component: AlertWithoutAnnouncementStory,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Alert estático usa role="note" — não é live region', async () => {
-      const nota = canvas.getByRole('note');
-      await expect(nota).toHaveAttribute('role', 'note');
-      await expect(canvas.getByText(/não deve ser anunciado/)).toBeVisible();
+    await step('role="note" não é live region', async () => {
+      const note = canvas.getByText('Nota de implementação').closest('.nds-alert');
+      await expect(note).toHaveAttribute('role', 'note');
     });
 
-    await step('Sem a prop, o padrão continua role="alert"', async () => {
-      const alerts = canvas.getAllByRole('alert');
-      await expect(alerts).toHaveLength(1);
-      await expect(alerts[0]).toHaveAttribute('role', 'alert');
+    await step('Sem `role`, o default continua alert', async () => {
+      const defaultAlert = canvas.getByText('Falha no envio').closest('.nds-alert');
+      await expect(defaultAlert).toHaveAttribute('role', 'alert');
+      await expect(canvas.getByRole('alert')).toBe(defaultAlert);
+    });
+
+    await step('A nota não aparece como alert para o leitor de tela', async () => {
+      await expect(canvas.getAllByRole('alert')).toHaveLength(1);
+      await expect(canvas.getByRole('note')).toBeVisible();
     });
   },
 };
 
+/**
+ * O alerta entra DEPOIS de uma ação, com `role="alert"` na própria raiz. Montado
+ * de saída ele provaria só a presença do papel, e não a inserção que o estado
+ * descreve — por isso a story espera o clique.
+ */
 export const DynamicInsertion: Story = {
   parameters: {
     covers: ['functional.item6'],
-    docs: { source: { transform: alertInsercaoDinamicaSource } },
+    docs: { source: { transform: alertDynamicInsertionSource } },
   },
-  render: () => ({
-    Component: AlertStory,
-    props: {
-      variant: 'default',
-      title: 'Operação concluída',
-      description: 'O relatório foi gerado com sucesso.',
-      showIcon: true,
-      icon: 'success',
-    },
-  }),
+  render: () => ({ Component: AlertDynamicInsertionStory }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Role alert presente', async () => {
-      await expect(canvas.getByRole('alert')).toBeInTheDocument();
+    await step('Antes da ação não há alerta', async () => {
+      // Replay do painel Interactions: o alerta da rodada anterior ainda está
+      // no DOM. A play volta ao estado inicial antes de afirmar a ausência.
+      const trigger = canvas.getByRole('button', { name: 'Gerar relatório' });
+      trigger.dispatchEvent(new CustomEvent('alert-story-reset', { bubbles: true }));
+      await waitFor(() => expect(canvas.queryByRole('alert')).toBeNull());
     });
 
-    await step('Alert está visível', async () => {
-      await expect(canvas.getByRole('alert')).toBeVisible();
+    await step('Depois do clique o alerta aparece com role="alert"', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Gerar relatório' }));
+      const alert = await canvas.findByRole('alert');
+      await expect(alert).toHaveAttribute('role', 'alert');
+      await expect(alert).toBeVisible();
+      await expect(within(alert).getByText('Operação concluída')).toBeVisible();
+    });
+
+    await step('Nenhum ancestral embrulha o alerta em aria-live', async () => {
+      // Região viva em volta de `role="alert"` aninharia duas regiões, e o leitor
+      // anunciaria a mesma mensagem duas vezes.
+      const alert = canvas.getByRole('alert');
+      await expect(alert.parentElement?.closest('[aria-live]') ?? null).toBeNull();
+      await expect(alert).not.toHaveAttribute('aria-live');
     });
   },
 };

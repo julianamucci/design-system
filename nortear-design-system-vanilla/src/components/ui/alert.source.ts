@@ -46,18 +46,18 @@ function variantIcon(variant: AlertVariant): AlertIconType {
   return variant;
 }
 
-type PartesDoAlerta = {
+type AlertParts = {
   /** Nomes importados de `@/components/ui/alert` para esta composição. */
   names: string[];
-  criacao: string;
+  creation: string;
   body: string[];
 };
 
-function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
+function alertParts(o: AlertSnippetOptions): AlertParts {
   const variant = o.variant ?? 'default';
   const title = o.title ?? TITLE_DEFAULT;
   const description = o.description ?? DESCRIPTION_DEFAULT;
-  const icone = o.icon === undefined ? variantIcon(variant) : o.icon;
+  const icon = o.icon === undefined ? variantIcon(variant) : o.icon;
 
   const lines = options([
     ['variant', variant !== 'default' ? text(variant) : undefined],
@@ -72,7 +72,7 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
   ]);
 
   const names = ['createAlert'];
-  if (icone) names.push('createAlertIcon');
+  if (icon) names.push('createAlertIcon');
   if (title) names.push('createAlertTitle');
   if (description) names.push('createAlertDescription');
 
@@ -80,9 +80,9 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
     names,
     // Sem nenhuma opção a chamada é `createAlert()`: a fábrica tem parâmetro
     // com valor padrão, e um `{}` vazio seria ruído.
-    criacao: `const alerta = ${lines.length ? callLine('createAlert', lines) : 'createAlert()'};`,
+    creation: `const alerta = ${lines.length ? callLine('createAlert', lines) : 'createAlert()'};`,
     body: [
-      icone ? `alerta.appendChild(createAlertIcon(${text(icone)}));` : '',
+      icon ? `alerta.appendChild(createAlertIcon(${text(icon)}));` : '',
       title ? `alerta.appendChild(createAlertTitle({ text: ${text(title)} }));` : '',
       description
         ? `alerta.appendChild(createAlertDescription({ text: ${text(description)} }));`
@@ -93,78 +93,87 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
 
 /** A chamada real de `createAlert` e a composição que a story monta em cima. */
 export function alertSnippet(o: AlertSnippetOptions = {}): string {
-  const { names, criacao, body } = partesDoAlerta(o);
-  return snippet(importing('alert', ...names), [criacao, ...body].join('\n'), appendLine('alerta'));
+  const { names, creation, body } = alertParts(o);
+  return snippet(importing('alert', ...names), [creation, ...body].join('\n'), appendLine('alerta'));
 }
 
 /**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
  * do Playground; nas stories sem args cai nos padrões da fábrica.
  */
-export const alertSource: SourceTransform<AlertSnippetOptions> = (_gerado, ctx) =>
+export const alertSource: SourceTransform<AlertSnippetOptions> = (_generated, ctx) =>
   alertSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function alertSourceWith(fixas: AlertSnippetOptions): SourceTransform<AlertSnippetOptions> {
-  return (_gerado, ctx) => alertSnippet({ ...ctx.args, ...fixas });
+export function alertSourceWith(fixed: AlertSnippetOptions): SourceTransform<AlertSnippetOptions> {
+  return (_generated, ctx) => alertSnippet({ ...ctx.args, ...fixed });
 }
 
 // ─── Com botão de ação ───────────────────────────────────────────────────────
 
 export type AlertWithActionSnippetOptions = AlertSnippetOptions & {
   /** Rótulo do botão que entra no slot de ação. */
-  acao?: string;
+  action?: string;
 };
 
 /**
  * FORMA diferente: o slot de ação é uma sub-fábrica (`createAlertAction`) que
  * nasce vazia — quem consome injeta o botão. Espremer isso numa opção do
  * snippet padrão esconderia justamente a peça que a story documenta.
+ *
+ * Com `dismissible` a mesma forma mostra ação e botão de fechar juntos: a ação é
+ * a coluna do grid com a largura do botão e o X fica no canto, na margem interna
+ * reservada a ele — nada muda na chamada além da opção.
  */
 export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): string {
-  const acao = o.acao ?? 'Atualizar';
-  const { names, criacao, body } = partesDoAlerta(o);
+  const action = o.action ?? 'Atualizar';
+  const { names, creation, body } = alertParts(o);
 
   return snippet(
     [importing('alert', ...names, 'createAlertAction'), importing('button', 'createButton')].join(
       '\n',
     ),
-    [criacao, ...body].join('\n'),
-    `const acao = createAlertAction();
-acao.appendChild(createButton({ label: ${text(acao)}, variant: 'default', size: 'sm' }));
-alerta.appendChild(acao);`,
+    [creation, ...body].join('\n'),
+    `const action = createAlertAction();
+action.appendChild(createButton({ label: ${text(action)}, variant: 'default', size: 'sm' }));
+alerta.appendChild(action);`,
     appendLine('alerta'),
   );
 }
 
 export function alertWithActionSourceWith(
-  fixas: AlertWithActionSnippetOptions,
+  fixed: AlertWithActionSnippetOptions,
 ): SourceTransform<AlertWithActionSnippetOptions> {
-  return (_gerado, ctx) => alertWithActionSnippet({ ...ctx.args, ...fixas });
+  return (_generated, ctx) => alertWithActionSnippet({ ...ctx.args, ...fixed });
 }
 
 // ─── Inserido em tempo de execução ───────────────────────────────────────────
 
 /**
- * FORMA diferente: aqui o assunto não é o alerta, é ONDE ele entra. `role="alert"`
+ * FORMA diferente: aqui o assunto não é o alerta, é QUANDO ele entra. `role="alert"`
  * só interrompe o leitor de tela quando a mensagem SURGE — o alerta que já está
  * na página ao carregar é anunciado na ordem do documento e nada mais.
+ *
+ * Sem contêiner `aria-live` em volta: a raiz do alerta já é a região viva, e
+ * envolvê-la aninharia duas regiões anunciando a mesma mensagem.
  */
-export function alertEmRegiaoVivaSnippet(o: AlertSnippetOptions = {}): string {
-  const { names, criacao, body } = partesDoAlerta(o);
+export function alertDynamicInsertionSnippet(o: AlertSnippetOptions = {}): string {
+  const { names, creation, body } = alertParts(o);
+  const indented = [creation, ...body].join('\n').replace(/^/gm, '  ');
 
   return snippet(
     importing('alert', ...names),
-    `const regiao = document.createElement('div');
-regiao.setAttribute('aria-live', 'polite');
-document.querySelector('#app')?.append(regiao);`,
-    '// Em tempo de execução: o alerta entra na região e o anúncio acontece.',
-    [criacao, ...body, 'regiao.appendChild(alerta);'].join('\n'),
+    `// Em tempo de execução — quando a operação termina, por exemplo. O alerta
+// surge com role="alert" na própria raiz, e é isso que dispara o anúncio.
+function showResult(container: HTMLElement): void {
+${indented}
+  container.appendChild(alerta);
+}`,
   );
 }
 
-export function regiaoVivaSourceWithAlert(
-  fixas: AlertSnippetOptions,
+export function alertDynamicInsertionSourceWith(
+  fixed: AlertSnippetOptions,
 ): SourceTransform<AlertSnippetOptions> {
-  return (_gerado, ctx) => alertEmRegiaoVivaSnippet({ ...ctx.args, ...fixas });
+  return (_generated, ctx) => alertDynamicInsertionSnippet({ ...ctx.args, ...fixed });
 }

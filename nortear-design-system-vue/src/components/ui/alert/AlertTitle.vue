@@ -6,10 +6,11 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
   /**
    * Nível do heading do título. Default `h5`. Passe o nível que preserva a
-   * hierarquia de headings da página onde o Alert está (ex.: `h3` sob uma
-   * seção `h2`).
+   * hierarquia de headings da página onde o Alert está (ex.: `h4` sob uma
+   * seção `h3`). Tipado nos seis níveis: qualquer outra tag deixaria de ser
+   * heading, e o título sairia da navegação por cabeçalhos.
    */
-  as?: string
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 }>()
 </script>
 

@@ -277,9 +277,9 @@ export class NdsAlertDescription {}
 
 // ─── AlertAction ──────────────────────────────────────────────────────────────
 //
-// Slot de ação no canto superior direito (`.nds-alert-action`, absoluto). O
-// consumidor põe um `<button ndsButton size="sm" variant="default">` dentro.
-// A folha já reserva o `padding-inline-end` do alert quando este slot existe.
+// Slot de ação à direita do texto (`.nds-alert-action`, terceira coluna do grid,
+// com a largura do botão). O consumidor põe um `<button ndsButton size="sm"
+// variant="default">` dentro. Precisa ser filho direto do alert.
 
 @Directive({
   selector: 'div[ndsAlertAction]',

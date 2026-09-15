@@ -8,7 +8,7 @@
       "title": "Alert — Feedback",
       "description": "Documentação do Alert: 5 variantes semânticas via prop, opção dismissible e semântica de anúncio configurável para leitores de tela.",
       "aiSummary": "Componente Alert com 5 variantes semânticas (default, destructive, success, warning, info) pela prop de variante, opção dismissible com botão de fechar, semântica de anúncio configurável (assertiva, polida ou estática) e suporte a ícone, título e descrição.",
-      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
+      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, role status, role note"
     },
     "demonstration": {
       "labels": {
@@ -22,21 +22,25 @@
         "successDesc": "Suas informações foram salvas com sucesso.",
         "warningTitle": "Assinatura expirando",
         "warningDesc": "Sua assinatura expira em 3 dias. Renove para evitar interrupções.",
-        "warningAction": "Renovar assinatura"
+        "warningAction": "Renovar assinatura",
+        "sessionTitle": "Sessão expira em 5 minutos",
+        "sessionDesc": "Salve seu trabalho para não perder as alterações.",
+        "saveNow": "Salvar agora",
+        "savedLabel": "Salvo!"
       }
     },
     "anatomy": {
       "item1": "<strong>Alert</strong> — container <code>&lt;div&gt;</code> com a semântica de anúncio escolhida pela prop de role. Recebe todos os atributos HTML do elemento.",
       "item2": "<strong>Ícone (opcional)</strong> — filho direto do Alert, sem wrapper. Deve ter <code>aria-hidden=\"true\"</code>.",
-      "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir quando a descrição já é autoexplicativa.",
-      "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para o texto principal da mensagem.",
+      "item3": "<strong>AlertTitle (opcional)</strong> — heading de nível configurável, <code>h5</code> por padrão. Passe o nível que preserva a hierarquia da página: sob uma seção <code>h3</code>, use <code>h4</code>. Omita o título quando a descrição já é autoexplicativa.",
+      "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;section&gt;</code> para o texto principal da mensagem.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>",
-        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Ícone (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descrição -->\n</div>",
-        "vue": "<Alert role=\"status\">                    <!-- Container — semântica de anúncio por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
-        "svelte": "<Alert role=\"status\">                    <!-- Container — semântica de anúncio por prop (alert | status | note) -->\n  <Info class=\"nds-icon\" aria-hidden=\"true\" />  <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
-        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });  // Container — semântica de anúncio por opção\nalert.appendChild(createAlertIcon('info'));                      // Ícone (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título' }));  // Título (opcional)\nalert.appendChild(createAlertDescription({ text: 'Descrição' }));  // Descrição"
+        "react": "<Alert role=\"status\">                {/* Container — role por prop (alert | status | note) */}\n  <Info aria-hidden=\"true\" />        {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle as=\"h4\">…</AlertTitle> {/* Título (opcional) — nível pela hierarquia */}\n  <AlertDescription>…</AlertDescription> {/* Descrição */}\n</Alert>",
+        "angular": "<div ndsAlert role=\"status\">                 <!-- Container — role por prop (alert | status | note) -->\n  <svg ndsAlertIcon kind=\"info\"></svg>       <!-- Ícone (opcional, aria-hidden) -->\n  <h4 ndsAlertTitle>…</h4>                   <!-- Título (opcional) — o nível é a tag -->\n  <section ndsAlertDescription>…</section>   <!-- Descrição -->\n</div>",
+        "vue": "<Alert role=\"status\">                    <!-- Container — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nível pela hierarquia -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
+        "svelte": "<Alert role=\"status\">                    <!-- Container — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nível pela hierarquia -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
+        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });        // Container — role por prop (alert | status | note)\nalert.appendChild(createAlertIcon('info'));                            // Ícone (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título', as: 'h4' }));  // Título (opcional) — nível pela hierarquia\nalert.appendChild(createAlertDescription({ text: 'Descrição' }));      // Descrição"
       }
     },
     "usage": {
@@ -137,10 +141,10 @@
       "withIcon": "Com ícone Lucide:"
     },
     "variants": {
-      "note": "As cinco variantes são expostas pela própria API do componente. Cada uma consome o par de tokens semânticos correspondente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); o texto corrido permanece em <code>--foreground</code> para garantir contraste.",
+      "note": "As cinco variantes são expostas pela própria API do componente. Cada uma consome o token semântico correspondente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>) no fundo, na borda e no ícone; título e texto corrido permanecem em <code>--foreground</code> para garantir contraste.",
       "items": {
         "default": "Mensagens informativas e neutras. Fundo e borda do tema padrão.",
-        "destructive": "Erros críticos ou ações irreversíveis. Texto e borda na cor <code>--destructive</code>.",
+        "destructive": "Erros críticos ou ações irreversíveis. Fundo, borda e ícone na cor <code>--destructive</code>; título e texto em <code>--foreground</code>.",
         "success": "Confirmações de ações bem-sucedidas. Aplica a variante <code>success</code> do tema, baseada no token <code>--success</code>.",
         "warning": "Avisos que requerem atenção, mas não bloqueiam. Aplica a variante <code>warning</code> do tema, baseada no token <code>--warning</code>.",
         "info": "Destaque neutro-informativo para dicas e contexto adicional que não bloqueiam o fluxo.",
@@ -160,6 +164,11 @@
           "name": "Com ação",
           "description": "Alert que inclui um botão de ação alinhado à direita. A ação é opcional e deve ser <code>Button</code> de tamanho <code>sm</code> e variante <code>default</code> — sobre a lavagem colorida do alert, a variante preenchida é a que se separa do fundo; a de contorno se perde nele.",
           "use": "Quando a mensagem oferece uma ação contextual relacionada (\"Salvar agora\", \"Tentar de novo\", \"Ver detalhes\"). Evite mais de uma ação por Alert — para fluxos críticos, use Dialog."
+        },
+        "withActionAndDismiss": {
+          "name": "Com ação e fechar",
+          "description": "Alert dispensável que também oferece uma ação com <code>Button</code>. A ação ocupa uma coluna própria, do tamanho do botão, e termina antes da calha do botão de fechar — nada se sobrepõe, com qualquer rótulo.",
+          "use": "Quando a mensagem pede uma ação e também pode ser dispensada sem ela — uma sessão prestes a expirar, por exemplo."
         }
       }
     },
@@ -187,12 +196,17 @@
       "dynamicInsert": {
         "label": "Inserção dinâmica",
         "trigger": "Renderizar após montagem via estado",
-        "behavior": "Adicionar <code>aria-live=\"polite\"</code> no container pai para anunciar via leitor de tela"
+        "behavior": "O alerta monta depois do carregamento com <code>role=\"alert\"</code> (urgente) ou <code>role=\"status\"</code> (sem interromper) na própria raiz — sem contêiner <code>aria-live</code> em volta, que aninharia duas regiões vivas."
       },
       "dismissed": {
         "label": "Fechado",
         "trigger": "Acionar o botão de fechar",
         "behavior": "O alert sai da tela e o callback de fechamento dispara uma única vez."
+      },
+      "withoutAnnouncement": {
+        "label": "Sem anúncio",
+        "trigger": "<code>role=\"note\"</code>",
+        "behavior": "Sai das regiões vivas: continua visível e legível, e o leitor não o anuncia ao carregar. É o certo para alerta que já está na página."
       }
     },
     "props": {
@@ -216,7 +230,7 @@
         "titleAs": "Nível do heading do título (h1–h6). Passe o nível que preserva a hierarquia da página onde o Alert está — o padrão h5 pula níveis sob seções h2/h3 e falha o axe (heading-order)."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Prefira as classes de variante do tema ou tokens CSS semânticos (<code>--success</code>, <code>--warning</code>) definidos no arquivo de tema do projeto — nunca cores hardcoded."
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para ajustes de layout. A variante visual vem sempre da prop de variante; para mudar cores num tema, redefina as vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) de forma escopada — nunca cores hardcoded."
     },
     "tokens": {
       "table": {
@@ -224,20 +238,20 @@
         "class": "Aplicação no tema",
         "part": "Parte do componente",
         "background": "Fundo (variante default)",
-        "foreground": "Texto (variante default)",
+        "foreground": "Título e texto corrido de todas as variantes",
         "border": "Borda padrão",
         "destructiveBorder": "Borda (variante destructive)",
-        "destructiveText": "Texto e ícone (variante destructive)",
-        "success": "Fundo + texto + borda (variante success do tema)",
-        "warning": "Fundo + texto + borda (variante warning do tema)",
-        "info": "Fundo + texto + borda (variante info do tema)",
+        "destructiveText": "Ícone (variante destructive)",
+        "success": "Fundo + borda + ícone (variante success do tema)",
+        "warning": "Fundo + borda + ícone (variante warning do tema)",
+        "info": "Fundo + borda + ícone (variante info do tema)",
         "radius": "Border radius do container",
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
-        "alertFg": "Texto e ícone — var interna",
+        "alertFg": "Ícone — var interna (o título recebe o par de texto da variante)",
         "alertBorder": "Borda — var interna",
         "alertBgAlpha": "Opacidade da lavagem de fundo — var interna. Vale 0.1 no claro e 0.2 no escuro, porque sobre o fundo escuro 10% não separava a caixa da página. O destructive usa 0.32: a página escura é azulada e o vermelho é quente, então a 0.2 os dois se cancelam e a lavagem sai cinza.",
         "alertBorderAlpha": "Opacidade da borda — var interna. Anda JUNTO com a lavagem: quando o fundo engrossa e a borda não, o recorte some dentro do próprio preenchimento.",
-        "alertBodyFg": "Texto corrido da descrição — var interna. Separada de --alert-fg porque ícone e título podem carregar a cor semântica e o texto corrido não pode: cada variante a aponta para o par de texto da sua cor",
+        "alertBodyFg": "Texto corrido da descrição — var interna. Cada variante a aponta para o par de texto da sua cor, que neste projeto vale --foreground",
         "alertGlow": "Tom base do gradiente animado da borda — var interna, igual nas 5 variantes; as 4 variações saem daí"
       },
       "customizationTitle": "Como personalizar via tema:",
@@ -252,21 +266,15 @@
       "item2": "<strong>Inserção dinâmica</strong> — um alert que aparece depois da montagem é o caso legítimo de <code>alert</code> (assertivo, para erro que bloqueia o fluxo) ou <code>status</code> (anuncia sem interromper).",
       "item3": "<strong>Ícones decorativos</strong> — sempre <code>aria-hidden=\"true\"</code>. O texto da <code>AlertDescription</code> já descreve o estado.",
       "item4": "<strong>Cor + ícone + texto</strong> — nunca use cor como único indicador (WCAG 1.4.1). Cada variante deve ter ícone e texto correspondentes.",
-      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fundo). Demais variantes mantêm o texto corrido em <code>--foreground</code> sobre fundo soft para garantir 4.5:1.",
+      "item5": "<strong>Contraste</strong> — título e texto corrido ficam em <code>--foreground</code> nas cinco variantes, sobre o fundo soft: 4.5:1 sem depender da variante nem do tema de marca.",
       "keyboard": {
         "tab": "Navega para links ou botões dentro do Alert, se houver.",
         "enter": "Ativa links ou botões internos ao Alert.",
         "noKeyboard": "O Alert em si não é interativo — apenas o conteúdo filho pode receber foco."
       },
-      "aria": {
-        "role": "<code>role</code> — <code>alert</code> por padrão (anúncio imediato). Conteúdo estático deve usar <code>note</code>, que não vira live region.",
-        "ariaLive": "<code>aria-live=\"polite\"</code> — no container pai para alerts inseridos dinamicamente.",
-        "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — apenas para erros críticos urgentes.",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> — em todos os ícones decorativos."
-      },
       "screenReader": {
         "onInsert": "Ao inserir o Alert no DOM: leitor anuncia o conteúdo completo (título + descrição).",
-        "onUpdate": "Ao atualizar o conteúdo: o leitor anuncia as mudanças se <code>aria-live</code> estiver presente.",
+        "onUpdate": "Ao atualizar o conteúdo de um alerta com <code>role=\"alert\"</code> ou <code>role=\"status\"</code>: o leitor anuncia a mudança. Com <code>role=\"note\"</code>, não anuncia.",
         "icons": "Ícones ignorados pelo leitor — o texto descreve o estado completamente."
       }
     },
@@ -279,7 +287,7 @@
       "progress": "Para comunicar progresso de operações assíncronas em andamento."
     },
     "notes": {
-      "tip1": "Para variantes success e warning, use as classes de variante do tema baseadas nos tokens <code>--success</code> e <code>--warning</code> — nunca cores hardcoded. Isso garante consistência no dark mode.",
+      "tip1": "As variantes success, warning e info vêm da prop de variante, que já lê os tokens <code>--success</code>, <code>--warning</code> e <code>--info</code> — nunca classe de variante nem cor hardcoded. Isso garante consistência no modo escuro.",
       "tip2": "O ícone deve ser filho direto do Alert — não envolva em <code>&lt;div&gt;</code>. O CSS do componente posiciona o SVG automaticamente via seletor de filho direto.",
       "tip3": "Em formulários, prefira inserir o Alert acima dos campos com erro, não dentro deles — assim a mensagem é anunciada assim que aparece, sem competir com o rótulo do campo."
     },
@@ -291,7 +299,7 @@
         "payload": "Payload Adicional",
         "dismiss": "alert_dismiss",
         "dismissTrigger": "Usuário descarta um alerta importante (botão de fechar)",
-        "dismissPayload": "{ label: string }",
+        "dismissPayload": "{ component: \"alert\", label, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -341,6 +349,11 @@
           "action": "Acionar o botão de fechar (clique ou Enter)",
           "result": "Alert sai da tela e o callback de fechamento dispara uma única vez",
           "priority": "high"
+        },
+        "item8": {
+          "action": "Compor ação e botão de fechar no mesmo alerta",
+          "result": "A ação, o botão de fechar e o texto não se sobrepõem: a ação ocupa uma coluna do tamanho do botão, e o fechar fica na calha da borda",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -364,7 +377,7 @@
         "item4": {
           "criterion": "Sem violações axe-core no estado padrão",
           "level": "AA",
-          "how": "axe-playwright no test-runner do Storybook"
+          "how": "Addon de acessibilidade (axe-core) na suíte de stories"
         }
       },
       "visual": {
@@ -389,6 +402,10 @@
         "item5": {
           "story": "Variantes — Dismissible",
           "priority": "medium"
+        },
+        "item6": {
+          "story": "Composições — ação e botão de fechar juntos",
+          "priority": "medium"
         }
       }
     }
@@ -402,7 +419,7 @@
       "title": "Alert — Feedback",
       "description": "Alert documentation: 5 semantic variants via prop, dismissible option, and configurable announcement semantics for screen readers.",
       "aiSummary": "Alert component with 5 semantic variants (default, destructive, success, warning, info) via the variant prop, dismissible option with a close button, configurable announcement semantics (assertive, polite, or static), and support for icon, title, and description.",
-      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
+      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, role status, role note"
     },
     "demonstration": {
       "labels": {
@@ -416,21 +433,25 @@
         "successDesc": "Your information has been saved successfully.",
         "warningTitle": "Subscription expiring",
         "warningDesc": "Your subscription expires in 3 days. Renew to avoid interruptions.",
-        "warningAction": "Renew subscription"
+        "warningAction": "Renew subscription",
+        "sessionTitle": "Session expires in 5 minutes",
+        "sessionDesc": "Save your work so you do not lose your changes.",
+        "saveNow": "Save now",
+        "savedLabel": "Saved!"
       }
     },
     "anatomy": {
       "item1": "<strong>Alert</strong> — <code>&lt;div&gt;</code> container with the announcement semantics chosen by the role prop. Accepts all HTML attributes of the element.",
       "item2": "<strong>Icon (optional)</strong> — direct child of Alert, no wrapper needed. Must have <code>aria-hidden=\"true\"</code>.",
-      "item3": "<strong>AlertTitle (optional)</strong> — <code>&lt;h5&gt;</code> element. Omit when the description is self-explanatory.",
-      "item4": "<strong>AlertDescription</strong> — <code>&lt;div&gt;</code> element for the primary message text.",
+      "item3": "<strong>AlertTitle (optional)</strong> — heading with a configurable level, <code>h5</code> by default. Pass the level that keeps the page hierarchy: under an <code>h3</code> section, use <code>h4</code>. Omit the title when the description is self-explanatory.",
+      "item4": "<strong>AlertDescription</strong> — <code>&lt;section&gt;</code> element for the main message text.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>",
-        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role via input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icon (optional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Title (optional) -->\n  <div ndsAlertDescription></div>  <!-- Description -->\n</div>",
-        "vue": "<Alert role=\"status\">                    <!-- Container — announcement semantics via prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Title (optional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
-        "svelte": "<Alert role=\"status\">                    <!-- Container — announcement semantics via prop (alert | status | note) -->\n  <Info class=\"nds-icon\" aria-hidden=\"true\" />  <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Title (optional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
-        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });  // Container — announcement semantics via option\nalert.appendChild(createAlertIcon('info'));                      // Icon (optional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Title' }));  // Title (optional)\nalert.appendChild(createAlertDescription({ text: 'Description' }));  // Description"
+        "react": "<Alert role=\"status\">                {/* Container — role by prop (alert | status | note) */}\n  <Info aria-hidden=\"true\" />        {/* Icon (optional, aria-hidden) */}\n  <AlertTitle as=\"h4\">…</AlertTitle> {/* Title (optional) — level by hierarchy */}\n  <AlertDescription>…</AlertDescription> {/* Description */}\n</Alert>",
+        "angular": "<div ndsAlert role=\"status\">                 <!-- Container — role by prop (alert | status | note) -->\n  <svg ndsAlertIcon kind=\"info\"></svg>       <!-- Icon (optional, aria-hidden) -->\n  <h4 ndsAlertTitle>…</h4>                   <!-- Title (optional) — the level is the tag -->\n  <section ndsAlertDescription>…</section>   <!-- Description -->\n</div>",
+        "vue": "<Alert role=\"status\">                    <!-- Container — role by prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Title (optional) — level by hierarchy -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
+        "svelte": "<Alert role=\"status\">                    <!-- Container — role by prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Title (optional) — level by hierarchy -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
+        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });        // Container — role by prop (alert | status | note)\nalert.appendChild(createAlertIcon('info'));                            // Icon (optional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Title', as: 'h4' }));  // Title (optional) — level by hierarchy\nalert.appendChild(createAlertDescription({ text: 'Description' }));      // Description"
       }
     },
     "usage": {
@@ -531,10 +552,10 @@
       "withIcon": "With Lucide icon:"
     },
     "variants": {
-      "note": "All five variants are exposed by the component API itself. Each consumes the matching pair of semantic tokens (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); body text stays on <code>--foreground</code> to preserve contrast.",
+      "note": "The five variants are exposed by the component API itself. Each one uses the matching semantic token (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>) on the background, border and icon; title and body text stay in <code>--foreground</code> to guarantee contrast.",
       "items": {
         "default": "Informational and neutral messages. Default theme background and border.",
-        "destructive": "Critical errors or irreversible actions. Text and border in <code>--destructive</code>.",
+        "destructive": "Critical errors or irreversible actions. Background, border and icon in <code>--destructive</code>; title and text in <code>--foreground</code>.",
         "success": "Successful action confirmations. Applies the theme's <code>success</code> variant, based on the <code>--success</code> token.",
         "warning": "Warnings requiring attention but not blocking. Applies the theme's <code>warning</code> variant, based on the <code>--warning</code> token.",
         "info": "Neutral informational emphasis for tips and extra context that do not block the flow.",
@@ -554,6 +575,11 @@
           "name": "With action",
           "description": "Alert that includes a right-aligned action button. The action is optional and should be a <code>Button</code> of size <code>sm</code> and variant <code>default</code> — over the alert’s coloured wash, the filled variant is the one that separates from the background; the outlined one gets lost in it.",
           "use": "When the message offers a contextual related action (\"Save now\", \"Try again\", \"See details\"). Avoid more than one action per Alert — for critical flows, use Dialog."
+        },
+        "withActionAndDismiss": {
+          "name": "With action and dismiss",
+          "description": "A dismissible Alert that also offers an action with a <code>Button</code>. The action takes its own column, as wide as the button, and ends before the close button’s gutter — nothing overlaps, whatever the label.",
+          "use": "When the message asks for an action and can also be dismissed without taking it — a session about to expire, for example."
         }
       }
     },
@@ -581,12 +607,17 @@
       "dynamicInsert": {
         "label": "Dynamic insertion",
         "trigger": "Render after mount via state",
-        "behavior": "Add <code>aria-live=\"polite\"</code> to the parent container to announce via screen reader"
+        "behavior": "The alert mounts after load with <code>role=\"alert\"</code> (urgent) or <code>role=\"status\"</code> (without interrupting) on its own root — no <code>aria-live</code> container around it, which would nest two live regions."
       },
       "dismissed": {
         "label": "Dismissed",
         "trigger": "Activate the close button",
         "behavior": "The alert leaves the screen and the dismiss callback fires exactly once."
+      },
+      "withoutAnnouncement": {
+        "label": "No announcement",
+        "trigger": "<code>role=\"note\"</code>",
+        "behavior": "Leaves the live regions: it stays visible and readable, and the screen reader does not announce it on load. It is the right choice for an alert already on the page."
       }
     },
     "props": {
@@ -610,7 +641,7 @@
         "titleAs": "Heading level of the title (h1–h6). Pass the level that preserves the hierarchy of the page hosting the Alert — the h5 default skips levels under h2/h3 sections and fails axe (heading-order)."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Prefer theme variant classes or semantic CSS tokens (<code>--success</code>, <code>--warning</code>) defined in the project's theme file — never hardcoded colors."
+      "extensibility": "<code>className</code> — every subcomponent accepts <code>className</code> for layout adjustments. The visual variant always comes from the variant prop; to change colours in a theme, redefine the internal vars (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) in a scoped way — never hardcoded colours."
     },
     "tokens": {
       "table": {
@@ -618,20 +649,20 @@
         "class": "Theme application",
         "part": "Component Part",
         "background": "Background (default variant)",
-        "foreground": "Text (default variant)",
+        "foreground": "Title and body text of every variant",
         "border": "Default border",
         "destructiveBorder": "Border (destructive variant)",
-        "destructiveText": "Text and icon (destructive variant)",
-        "success": "Background + text + border (theme's success variant)",
-        "warning": "Background + text + border (theme's warning variant)",
-        "info": "Background + text + border (theme's info variant)",
+        "destructiveText": "Icon (destructive variant)",
+        "success": "Background + border + icon (theme success variant)",
+        "warning": "Background + border + icon (theme warning variant)",
+        "info": "Background + border + icon (theme info variant)",
         "radius": "Container border radius",
         "alertBg": "Container background — internal var, follows the theme per variant",
-        "alertFg": "Text and icon — internal var",
+        "alertFg": "Icon — internal var (the title gets the variant text pair)",
         "alertBorder": "Border — internal var",
         "alertBgAlpha": "Background wash opacity — internal var. 0.1 in light and 0.2 in dark, because over the dark background 10% did not separate the box from the page. Destructive uses 0.32: the dark page is bluish and red is warm, so at 0.2 the two cancel out and the wash turns grey.",
         "alertBorderAlpha": "Border opacity — internal var. It moves WITH the wash: when the fill thickens and the border does not, the outline disappears into the fill itself.",
-        "alertBodyFg": "Body text of the description — internal var. Kept apart from --alert-fg because icon and title may carry the semantic colour and body text may not: each variant points it at its colour's text pair",
+        "alertBodyFg": "Description body text — internal var. Each variant points it to its colour text pair, which in this project is --foreground",
         "alertGlow": "Base tone of the animated border gradient — internal var, the same across all 5 variants; the 4 variations derive from it"
       },
       "customizationTitle": "How to customize via theme:",
@@ -646,21 +677,15 @@
       "item2": "<strong>Dynamic insertion</strong> — an alert that appears after mount is the legitimate case for <code>alert</code> (assertive, for flow-blocking errors) or <code>status</code> (announces without interrupting).",
       "item3": "<strong>Decorative icons</strong> — always <code>aria-hidden=\"true\"</code>. The <code>AlertDescription</code> text already describes the state.",
       "item4": "<strong>Color + icon + text</strong> — never use color as the only indicator (WCAG 1.4.1). Each variant must have a matching icon and text.",
-      "item5": "<strong>Contrast</strong> — default variant: 4.5:1 (text over background). Other variants keep body text in <code>--foreground</code> over a soft background to ensure 4.5:1.",
+      "item5": "<strong>Contrast</strong> — title and body text stay in <code>--foreground</code> in all five variants, over the soft background: 4.5:1 regardless of variant or brand theme.",
       "keyboard": {
         "tab": "Navigates to links or buttons inside the Alert, if any.",
         "enter": "Activates links or buttons inside the Alert.",
         "noKeyboard": "The Alert itself is not interactive — only child content can receive focus."
       },
-      "aria": {
-        "role": "<code>role</code> — <code>alert</code> by default (immediate announcement). Static content should use <code>note</code>, which is not a live region.",
-        "ariaLive": "<code>aria-live=\"polite\"</code> — on the parent container for dynamically inserted alerts.",
-        "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — only for critical urgent errors.",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> — on all decorative icons."
-      },
       "screenReader": {
         "onInsert": "When Alert is inserted in the DOM: reader announces the full content (title + description).",
-        "onUpdate": "When content updates: reader announces changes if <code>aria-live</code> is present.",
+        "onUpdate": "When the content of an alert with <code>role=\"alert\"</code> or <code>role=\"status\"</code> changes: the reader announces it. With <code>role=\"note\"</code>, it does not.",
         "icons": "Icons are ignored by the reader — the text fully describes the state."
       }
     },
@@ -673,7 +698,7 @@
       "progress": "For communicating progress of ongoing async operations."
     },
     "notes": {
-      "tip1": "For success and warning variants, use the theme variant classes based on the <code>--success</code> and <code>--warning</code> tokens — never hardcoded colors. This ensures dark mode consistency.",
+      "tip1": "The success, warning and info variants come from the variant prop, which already reads the <code>--success</code>, <code>--warning</code> and <code>--info</code> tokens — never a variant class or a hardcoded colour. This keeps dark mode consistent.",
       "tip2": "The icon must be a direct child of Alert — don't wrap in a <code>&lt;div&gt;</code>. The component's CSS positions the SVG automatically via a direct-child selector.",
       "tip3": "In forms, insert the Alert above the fields with errors rather than inside them — the message is announced as soon as it appears, without competing with the field label."
     },
@@ -685,7 +710,7 @@
         "payload": "Additional Payload",
         "dismiss": "alert_dismiss",
         "dismissTrigger": "User dismisses an important alert (close button)",
-        "dismissPayload": "{ label: string }",
+        "dismissPayload": "{ component: \"alert\", label, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -735,6 +760,11 @@
           "action": "Activate the close button (click or Enter)",
           "result": "Alert leaves the screen and the dismiss callback fires exactly once",
           "priority": "high"
+        },
+        "item8": {
+          "action": "Compose an action and a close button in the same alert",
+          "result": "The action, the close button and the text do not overlap: the action takes a column as wide as the button, and the close button sits in the edge gutter",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -758,7 +788,7 @@
         "item4": {
           "criterion": "No axe-core violations in default state",
           "level": "AA",
-          "how": "axe-playwright in Storybook test-runner"
+          "how": "Accessibility addon (axe-core) in the story suite"
         }
       },
       "visual": {
@@ -783,6 +813,10 @@
         "item5": {
           "story": "Variantes — Dismissible",
           "priority": "medium"
+        },
+        "item6": {
+          "story": "Compositions — action and close button together",
+          "priority": "medium"
         }
       }
     }
@@ -796,7 +830,7 @@
       "title": "Alert — Feedback",
       "description": "Documentación del Alert: 5 variantes semánticas vía prop, opción dismissible y semántica de anuncio configurable para lectores de pantalla.",
       "aiSummary": "Componente Alert con 5 variantes semánticas (default, destructive, success, warning, info) por la prop de variante, opción dismissible con botón de cerrar, semántica de anuncio configurable (asertiva, polite o estática) y soporte de icono, título y descripción.",
-      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
+      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, role status, role note"
     },
     "demonstration": {
       "labels": {
@@ -810,21 +844,25 @@
         "successDesc": "Tu información se guardó correctamente.",
         "warningTitle": "Suscripción por vencer",
         "warningDesc": "Tu suscripción vence en 3 días. Renueva para evitar interrupciones.",
-        "warningAction": "Renovar suscripción"
+        "warningAction": "Renovar suscripción",
+        "sessionTitle": "La sesión expira en 5 minutos",
+        "sessionDesc": "Guarda tu trabajo para no perder los cambios.",
+        "saveNow": "Guardar ahora",
+        "savedLabel": "¡Guardado!"
       }
     },
     "anatomy": {
       "item1": "<strong>Alert</strong> — contenedor <code>&lt;div&gt;</code> con la semántica de anuncio elegida por la prop de role. Acepta todos los atributos HTML del elemento.",
       "item2": "<strong>Ícono (opcional)</strong> — hijo directo del Alert, sin wrapper. Debe tener <code>aria-hidden=\"true\"</code>.",
-      "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir cuando la descripción es autoexplicativa.",
-      "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para el texto principal del mensaje.",
+      "item3": "<strong>AlertTitle (opcional)</strong> — heading de nivel configurable, <code>h5</code> por defecto. Pase el nivel que preserva la jerarquía de la página: bajo una sección <code>h3</code>, use <code>h4</code>. Omita el título cuando la descripción ya se explica sola.",
+      "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;section&gt;</code> para el texto principal del mensaje.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>",
-        "angular": "<div ndsAlert role=\"status\">   <!-- Contenedor — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icono (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descripción -->\n</div>",
-        "vue": "<Alert role=\"status\">                    <!-- Contenedor — semántica de anuncio por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icono (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
-        "svelte": "<Alert role=\"status\">                    <!-- Contenedor — semántica de anuncio por prop (alert | status | note) -->\n  <Info class=\"nds-icon\" aria-hidden=\"true\" />  <!-- Icono (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
-        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });  // Contenedor — semántica de anuncio por opción\nalert.appendChild(createAlertIcon('info'));                      // Icono (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título' }));  // Título (opcional)\nalert.appendChild(createAlertDescription({ text: 'Descripción' }));  // Descripción"
+        "react": "<Alert role=\"status\">                {/* Contenedor — role por prop (alert | status | note) */}\n  <Info aria-hidden=\"true\" />        {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle as=\"h4\">…</AlertTitle> {/* Título (opcional) — nivel por jerarquía */}\n  <AlertDescription>…</AlertDescription> {/* Descripción */}\n</Alert>",
+        "angular": "<div ndsAlert role=\"status\">                 <!-- Contenedor — role por prop (alert | status | note) -->\n  <svg ndsAlertIcon kind=\"info\"></svg>       <!-- Ícono (opcional, aria-hidden) -->\n  <h4 ndsAlertTitle>…</h4>                   <!-- Título (opcional) — el nivel es la etiqueta -->\n  <section ndsAlertDescription>…</section>   <!-- Descripción -->\n</div>",
+        "vue": "<Alert role=\"status\">                    <!-- Contenedor — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícono (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nivel por jerarquía -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
+        "svelte": "<Alert role=\"status\">                    <!-- Contenedor — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícono (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nivel por jerarquía -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
+        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });        // Contenedor — role por prop (alert | status | note)\nalert.appendChild(createAlertIcon('info'));                            // Ícono (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título', as: 'h4' }));  // Título (opcional) — nivel por jerarquía\nalert.appendChild(createAlertDescription({ text: 'Descripción' }));      // Descripción"
       }
     },
     "usage": {
@@ -925,10 +963,10 @@
       "withIcon": "Con ícono Lucide:"
     },
     "variants": {
-      "note": "Las cinco variantes son expuestas por la propia API del componente. Cada una consume el par de tokens semánticos correspondiente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); el texto corrido permanece en <code>--foreground</code> para garantizar el contraste.",
+      "note": "Las cinco variantes las expone la propia API del componente. Cada una usa el token semántico correspondiente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>) en el fondo, el borde y el ícono; el título y el texto corrido permanecen en <code>--foreground</code> para garantizar contraste.",
       "items": {
         "default": "Mensajes informativos y neutros. Fondo y borde del tema predeterminado.",
-        "destructive": "Errores críticos o acciones irreversibles. Texto y borde en color <code>--destructive</code>.",
+        "destructive": "Errores críticos o acciones irreversibles. Fondo, borde e ícono en <code>--destructive</code>; título y texto en <code>--foreground</code>.",
         "success": "Confirmaciones de acciones exitosas. Aplica la variante <code>success</code> del tema, basada en el token <code>--success</code>.",
         "warning": "Advertencias que requieren atención pero no bloquean. Aplica la variante <code>warning</code> del tema, basada en el token <code>--warning</code>.",
         "info": "Énfasis neutro-informativo para consejos y contexto adicional que no bloquean el flujo.",
@@ -948,6 +986,11 @@
           "name": "Con acción",
           "description": "Alert que incluye un botón de acción alineado a la derecha. La acción es opcional y debe ser un <code>Button</code> de tamaño <code>sm</code> y variante <code>default</code> — sobre la capa de color del alert, la variante rellena es la que se separa del fondo; la de contorno se pierde en él.",
           "use": "Cuando el mensaje ofrece una acción contextual relacionada (\"Guardar ahora\", \"Reintentar\", \"Ver detalles\"). Evita más de una acción por Alert — para flujos críticos, usa Dialog."
+        },
+        "withActionAndDismiss": {
+          "name": "Con acción y cierre",
+          "description": "Alert descartable que también ofrece una acción con un <code>Button</code>. La acción ocupa una columna propia, del ancho del botón, y termina antes del margen del botón de cerrar — nada se superpone, con cualquier etiqueta.",
+          "use": "Cuando el mensaje pide una acción y también puede descartarse sin ella — una sesión a punto de expirar, por ejemplo."
         }
       }
     },
@@ -975,12 +1018,17 @@
       "dynamicInsert": {
         "label": "Inserción dinámica",
         "trigger": "Renderizar después del montaje vía estado",
-        "behavior": "Agregar <code>aria-live=\"polite\"</code> al contenedor padre para anunciar vía lector de pantalla"
+        "behavior": "La alerta se monta después de la carga con <code>role=\"alert\"</code> (urgente) o <code>role=\"status\"</code> (sin interrumpir) en su propia raíz — sin contenedor <code>aria-live</code> alrededor, que anidaría dos regiones vivas."
       },
       "dismissed": {
         "label": "Cerrado",
         "trigger": "Activar el botón de cierre",
         "behavior": "El alert sale de la pantalla y el callback de cierre se dispara una única vez."
+      },
+      "withoutAnnouncement": {
+        "label": "Sin anuncio",
+        "trigger": "<code>role=\"note\"</code>",
+        "behavior": "Sale de las regiones vivas: sigue visible y legible, y el lector no la anuncia al cargar. Es lo correcto para una alerta que ya está en la página."
       }
     },
     "props": {
@@ -1004,7 +1052,7 @@
         "titleAs": "Nivel del heading del título (h1–h6). Pasa el nivel que preserva la jerarquía de la página donde está el Alert — el h5 por defecto salta niveles bajo secciones h2/h3 y falla axe (heading-order)."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Prefiere las clases de variante del tema o tokens CSS semánticos (<code>--success</code>, <code>--warning</code>) definidos en el archivo de tema del proyecto — nunca colores hardcoded."
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para ajustes de layout. La variante visual viene siempre de la prop de variante; para cambiar colores en un tema, redefina las vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) con alcance — nunca colores hardcoded."
     },
     "tokens": {
       "table": {
@@ -1012,20 +1060,20 @@
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "background": "Fondo (variante default)",
-        "foreground": "Texto (variante default)",
+        "foreground": "Título y texto corrido de todas las variantes",
         "border": "Borde predeterminado",
         "destructiveBorder": "Borde (variante destructive)",
-        "destructiveText": "Texto e ícono (variante destructive)",
-        "success": "Fondo + texto + borde (variante success del tema)",
-        "warning": "Fondo + texto + borde (variante warning del tema)",
-        "info": "Fondo + texto + borde (variante info del tema)",
+        "destructiveText": "Ícono (variante destructive)",
+        "success": "Fondo + borde + ícono (variante success del tema)",
+        "warning": "Fondo + borde + ícono (variante warning del tema)",
+        "info": "Fondo + borde + ícono (variante info del tema)",
         "radius": "Border radius del contenedor",
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
-        "alertFg": "Texto e ícono — var interna",
+        "alertFg": "Ícono — var interna (el título recibe el par de texto de la variante)",
         "alertBorder": "Borde — var interna",
         "alertBgAlpha": "Opacidad de la capa de fondo — var interna. Vale 0.1 en claro y 0.2 en oscuro, porque sobre el fondo oscuro el 10% no separaba la caja de la página. El destructive usa 0.32: la página oscura es azulada y el rojo es cálido, así que a 0.2 ambos se cancelan y la capa sale gris.",
         "alertBorderAlpha": "Opacidad del borde — var interna. Va JUNTO con la capa: cuando el relleno se refuerza y el borde no, el contorno desaparece dentro del propio relleno.",
-        "alertBodyFg": "Texto corrido de la descripción — var interna. Separada de --alert-fg porque el icono y el título pueden llevar el color semántico y el texto corrido no: cada variante la apunta al par de texto de su color",
+        "alertBodyFg": "Texto corrido de la descripción — var interna. Cada variante la apunta al par de texto de su color, que en este proyecto vale --foreground",
         "alertGlow": "Tono base del degradado animado del borde — var interna, igual en las 5 variantes; las 4 variaciones salen de ahí"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
@@ -1040,21 +1088,15 @@
       "item2": "<strong>Inserción dinámica</strong> — un alert que aparece después del montaje es el caso legítimo de <code>alert</code> (asertivo, para errores que bloquean el flujo) o <code>status</code> (anuncia sin interrumpir).",
       "item3": "<strong>Íconos decorativos</strong> — siempre <code>aria-hidden=\"true\"</code>. El texto de <code>AlertDescription</code> ya describe el estado.",
       "item4": "<strong>Color + ícono + texto</strong> — nunca uses el color como único indicador (WCAG 1.4.1). Cada variante debe tener ícono y texto correspondientes.",
-      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fondo). Las demás variantes mantienen el texto en <code>--foreground</code> sobre fondo soft para garantizar 4.5:1.",
+      "item5": "<strong>Contraste</strong> — el título y el texto corrido quedan en <code>--foreground</code> en las cinco variantes, sobre el fondo suave: 4.5:1 sin depender de la variante ni del tema de marca.",
       "keyboard": {
         "tab": "Navega a links o botones dentro del Alert, si los hay.",
         "enter": "Activa links o botones internos al Alert.",
         "noKeyboard": "El Alert en sí no es interactivo — solo el contenido hijo puede recibir foco."
       },
-      "aria": {
-        "role": "<code>role</code> — <code>alert</code> por defecto (anuncio inmediato). El contenido estático debe usar <code>note</code>, que no es una live region.",
-        "ariaLive": "<code>aria-live=\"polite\"</code> — en el contenedor padre para alerts insertados dinámicamente.",
-        "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — solo para errores críticos urgentes.",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> — en todos los íconos decorativos."
-      },
       "screenReader": {
         "onInsert": "Al insertar el Alert en el DOM: el lector anuncia el contenido completo (título + descripción).",
-        "onUpdate": "Al actualizar el contenido: el lector anuncia los cambios si <code>aria-live</code> está presente.",
+        "onUpdate": "Al actualizar el contenido de una alerta con <code>role=\"alert\"</code> o <code>role=\"status\"</code>: el lector anuncia el cambio. Con <code>role=\"note\"</code>, no lo anuncia.",
         "icons": "Los íconos son ignorados por el lector — el texto describe completamente el estado."
       }
     },
@@ -1067,7 +1109,7 @@
       "progress": "Para comunicar el progreso de operaciones asíncronas en curso."
     },
     "notes": {
-      "tip1": "Para las variantes success y warning, usa las clases de variante del tema basadas en los tokens <code>--success</code> y <code>--warning</code> — nunca colores hardcoded. Esto garantiza consistencia en dark mode.",
+      "tip1": "Las variantes success, warning e info vienen de la prop de variante, que ya lee los tokens <code>--success</code>, <code>--warning</code> e <code>--info</code> — nunca una clase de variante ni un color hardcoded. Así el modo oscuro se mantiene consistente.",
       "tip2": "El ícono debe ser hijo directo del Alert — no lo envuelvas en un <code>&lt;div&gt;</code>. El CSS del componente posiciona el SVG automáticamente vía un selector de hijo directo.",
       "tip3": "En formularios, inserta el Alert encima de los campos con error, no dentro de ellos — así el mensaje se anuncia en cuanto aparece, sin competir con la etiqueta del campo."
     },
@@ -1079,7 +1121,7 @@
         "payload": "Payload Adicional",
         "dismiss": "alert_dismiss",
         "dismissTrigger": "Usuario descarta un alerta importante (botón de cerrar)",
-        "dismissPayload": "{ label: string }",
+        "dismissPayload": "{ component: \"alert\", label, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -1129,6 +1171,11 @@
           "action": "Activar el botón de cierre (clic o Enter)",
           "result": "El alert sale de la pantalla y el callback de cierre se dispara una única vez",
           "priority": "high"
+        },
+        "item8": {
+          "action": "Componer una acción y un botón de cerrar en la misma alerta",
+          "result": "La acción, el botón de cerrar y el texto no se superponen: la acción ocupa una columna del ancho del botón, y el cierre queda en el margen del borde",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -1152,7 +1199,7 @@
         "item4": {
           "criterion": "Sin violaciones axe-core en estado predeterminado",
           "level": "AA",
-          "how": "axe-playwright en test-runner de Storybook"
+          "how": "Addon de accesibilidad (axe-core) en la suite de stories"
         }
       },
       "visual": {
@@ -1176,6 +1223,10 @@
         },
         "item5": {
           "story": "Variantes — Dismissible",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Composiciones — acción y botón de cerrar juntos",
           "priority": "medium"
         }
       }

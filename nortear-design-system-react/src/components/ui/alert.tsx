@@ -178,7 +178,7 @@ function AlertTitle({
    * Elemento heading a renderizar. Default `h5`. Passe o nível (`h1`..`h6`)
    * que preserva a hierarquia de headings da página onde o Alert está.
    */
-  as?: React.ElementType
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 }) {
   return (
     // heading/<section>: mesma marcação nas 4 stacks e a que o alert.css

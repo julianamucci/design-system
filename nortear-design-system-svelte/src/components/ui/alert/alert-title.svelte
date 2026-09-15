@@ -13,7 +13,9 @@
 		as = "h5",
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & { as?: string } = $props();
+	}: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & {
+		as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+	} = $props();
 </script>
 
 <svelte:element

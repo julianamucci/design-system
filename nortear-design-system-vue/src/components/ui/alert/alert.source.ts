@@ -34,14 +34,17 @@ function importIcon(...names: string[]): string {
   return `import { ${names.join(', ')} } from 'lucide-vue-next'`;
 }
 
-/** O ícone entra como filho comum: a posição é do CSS, não de uma prop. */
-function icone(name: string): string {
-  return `<${name} class="nds-icon" aria-hidden="true" />`;
+/**
+ * O ícone entra como filho comum: a posição e o tamanho são da folha
+ * (`.nds-alert > svg`), não de uma prop nem de classe utilitária.
+ */
+function icon(name: string): string {
+  return `<${name} aria-hidden="true" />`;
 }
 
 /** Raiz + filhos, cada filho indentado um nível. */
-function alerta(partes: Array<string | false | undefined>, children: string[]): string {
-  return `<Alert${attrs(...partes)}>\n${indentar(children.join('\n'))}\n</Alert>`;
+function alertBlock(parts: Array<string | false | undefined>, children: string[]): string {
+  return `<Alert${attrs(...parts)}>\n${indentar(children.join('\n'))}\n</Alert>`;
 }
 
 /**
@@ -51,11 +54,11 @@ function alerta(partes: Array<string | false | undefined>, children: string[]): 
  * contêiner colorido: cor semântica sobre fundo suave raramente alcança os
  * 4.5:1 que texto longo exige. Por isso não há classe de cor aqui.
  */
-function body(nomeIcone: string | null, title: string, descricao: string): string[] {
+function body(iconName: string | null, title: string, description: string): string[] {
   const children = [];
-  if (nomeIcone) children.push(icone(nomeIcone));
+  if (iconName) children.push(icon(iconName));
   if (title) children.push(`<AlertTitle>${title}</AlertTitle>`);
-  children.push(`<AlertDescription>${descricao}</AlertDescription>`);
+  children.push(`<AlertDescription>${description}</AlertDescription>`);
   return children;
 }
 
@@ -66,11 +69,11 @@ function body(nomeIcone: string | null, title: string, descricao: string): strin
  * `role` fica de fora quando é o padrão: `alert` já é live region assertiva, e
  * repeti-lo sugeriria que a semântica precisa ser pedida.
  */
-export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
+export const alertSource: SourceTransform<AlertArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta(
+    alertBlock(
       [
         attr('variant', args.variant, 'default'),
         attr('role', args.role, 'alert'),
@@ -85,7 +88,7 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
 export function alertDefaultSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta([], body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alertBlock([], body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -93,7 +96,7 @@ export function alertDefaultSource(): string {
 export function alertDestructiveSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('AlertCircle')}`,
-    alerta(
+    alertBlock(
       ['variant="destructive"'],
       body(
         'AlertCircle',
@@ -108,7 +111,7 @@ export function alertDestructiveSource(): string {
 export function alertSuccessSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('CheckCircle2')}`,
-    alerta(
+    alertBlock(
       ['variant="success"'],
       body('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
     ),
@@ -119,7 +122,7 @@ export function alertSuccessSource(): string {
 export function alertWarningSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('TriangleAlert')}`,
-    alerta(
+    alertBlock(
       ['variant="warning"'],
       body(
         'TriangleAlert',
@@ -134,36 +137,31 @@ export function alertWarningSource(): string {
 export function alertInfoSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta(
+    alertBlock(
       ['variant="info"'],
-      body('Info', 'Dica', 'Você pode personalizar os atalhos de teclado nas configurações.'),
+      body('Info', 'Dica', 'Você pode fixar os filtros mais usados para acessá-los mais rápido.'),
     ),
   );
 }
 
 /**
- * Fechável: o botão aparece por uma prop, e o rótulo dele é texto de produto.
+ * Fechável: o botão aparece por uma prop; o rótulo padrão ("Fechar alerta")
+ * não é escrito, porque repetir o padrão sugeriria que ele precisa ser pedido.
  *
  * O componente se remove sozinho ao fechar — o evento existe para quem precisa
  * reagir. O `v-if` não é o que remove: é o que impede o alerta de voltar quando
  * o que está em volta renderizar de novo.
  */
-export function alertDismissivelSource(): string {
+export function alertDismissibleSource(): string {
   return vueSnippet(
     `${IMPORT}
-${importIcon('CheckCircle2')}
+${importIcon('Info')}
 import { ref } from 'vue'
 
-const avisoVisivel = ref(true)`,
-    alerta(
-      [
-        'v-if="avisoVisivel"',
-        'variant="success"',
-        'dismissible',
-        'dismiss-label="Fechar alerta"',
-        '@dismiss="avisoVisivel = false"',
-      ],
-      body('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
+const noticeVisible = ref(true)`,
+    alertBlock(
+      ['v-if="noticeVisible"', 'dismissible', '@dismiss="noticeVisible = false"'],
+      body('Info', 'Preferências salvas', 'Você pode fechar este aviso quando quiser.'),
     ),
   );
 }
@@ -171,14 +169,15 @@ const avisoVisivel = ref(true)`,
 /**
  * Fechar pelo teclado não tem nada a configurar: o controle é botão de verdade,
  * então o Tab chega nele e Enter e Espaço o acionam. Escrever um handler de
- * tecla aqui ensinaria um remendo que o componente não precisa.
+ * tecla aqui ensinaria um remendo que o componente não precisa. O que muda é o
+ * rótulo, que diz O QUE está sendo fechado.
  */
-export function keyboardAlertDismissivelSource(): string {
+export function alertDismissibleByKeyboardSource(): string {
   return vueSnippet(
-    `${IMPORT}\n${importIcon('Info')}`,
-    alerta(
-      ['dismissible', 'dismiss-label="Fechar alerta"'],
-      body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
+    `${IMPORT}\n${importIcon('CheckCircle2')}`,
+    alertBlock(
+      ['variant="success"', 'dismissible', 'dismiss-label="Fechar confirmação"'],
+      body('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
     ),
   );
 }
@@ -189,9 +188,9 @@ export function keyboardAlertDismissivelSource(): string {
  * nenhuma cor no texto corrido.
  */
 export function alertContrastSource(): string {
-  const variantes = ['default', 'destructive', 'success', 'warning', 'info'];
-  const blocks = variantes.map((v) =>
-    alerta(
+  const variants = ['default', 'destructive', 'success', 'warning', 'info'];
+  const blocks = variants.map((v) =>
+    alertBlock(
       [attr('variant', v, 'default')],
       body(null, `Título ${v}`, `Texto corrido da variante ${v}.`),
     ),
@@ -205,10 +204,10 @@ ${indentar(blocks.join('\n'))}
 }
 
 /** Composição completa: ícone, título e descrição. */
-export function alertCompletoSource(): string {
+export function alertCompleteSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta([], body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alertBlock([], body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -219,7 +218,7 @@ export function alertCompletoSource(): string {
 export function alertNoTitleSource(): string {
   return vueSnippet(
     `${IMPORT.replace(', AlertTitle', '')}\n${importIcon('Info')}`,
-    alerta([], body('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alertBlock([], body('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -227,7 +226,7 @@ export function alertNoTitleSource(): string {
 export function alertNoIconSource(): string {
   return vueSnippet(
     IMPORT,
-    alerta([], body(null, 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alertBlock([], body(null, 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -240,25 +239,25 @@ export function alertNoIconSource(): string {
  */
 export function alertNoAnnouncementSource(): string {
   return vueSnippet(
-    `${IMPORT}\n${importIcon('Info')}`,
+    `${IMPORT}\n${importIcon('AlertCircle', 'Info')}`,
     `<div class="nds-stack" data-spacing="md">
 ${indentar(
-  alerta(
+  alertBlock(
     ['role="note"'],
     body(
       'Info',
       'Nota de implementação',
-      'Conteúdo estático, já presente no carregamento: o leitor de tela lê na ordem da página, sem interromper.',
+      'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.',
     ),
   ),
 )}
 ${indentar(
-  alerta(
-    [],
+  alertBlock(
+    ['variant="destructive"'],
     body(
-      'Info',
-      'Falha ao salvar',
-      'Sem papel explícito o alerta segue como live region assertiva.',
+      'AlertCircle',
+      'Falha no envio',
+      'Mensagem urgente surgida em tempo de execução: anúncio imediato.',
     ),
   ),
 )}
@@ -267,18 +266,23 @@ ${indentar(
 }
 
 /**
- * Inserção em tempo de execução: quando o alerta só aparece depois de uma ação,
- * a região que o recebe já precisa estar no documento. Anunciar um elemento
- * junto com o contêiner que o carrega é o caso que os leitores de tela perdem.
+ * Inserção em tempo de execução: o alerta só monta depois de uma ação, e o
+ * anúncio vem do papel na PRÓPRIA raiz. Nenhum contêiner `aria-live` em volta —
+ * ele aninharia duas regiões vivas, e o leitor anunciaria duas vezes ou nenhuma.
  */
-export function alertInsercaoDinamicaSource(): string {
+export function alertDynamicInsertionSource(): string {
   return vueSnippet(
-    `${IMPORT}\n${importIcon('Info')}`,
-    `<div aria-live="polite">
-${indentar(
-  alerta([], body('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.')),
-)}
-</div>`,
+    `${IMPORT}
+import { Button } from '@/components/ui/button'
+${importIcon('CheckCircle2')}
+import { ref } from 'vue'
+
+const reportReady = ref(false)`,
+    `<Button size="sm" @click="reportReady = true">Gerar relatório</Button>
+${alertBlock(
+  ['v-if="reportReady"'],
+  body('CheckCircle2', 'Operação concluída', 'O relatório foi gerado com sucesso.'),
+)}`,
   );
 }
 
@@ -286,20 +290,21 @@ ${indentar(
 export function alertWithIconSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta([], body('Info', 'Informação', 'Ícone posicionado automaticamente.')),
+    alertBlock([], body('Info', 'Informação', 'Ícone SVG posicionado automaticamente.')),
   );
 }
 
 /**
  * Ação dentro do alerta: ela vive num slot próprio, que é quem a posiciona.
- * O botão é secundário de propósito — o assunto do alerta é a mensagem.
+ * O botão é `sm` e preenchido — sobre a lavagem colorida, é o que se separa do
+ * fundo.
  */
 export function alertWithActionSource(): string {
   return vueSnippet(
     `${IMPORT_WITH_ACTION}
 import { Button } from '@/components/ui/button'
 ${importIcon('Info')}`,
-    alerta(
+    alertBlock(
       [],
       [
         ...body('Info', 'Atualização disponível', 'Uma nova versão está pronta para instalação.'),
@@ -312,16 +317,37 @@ ${importIcon('Info')}`,
 }
 
 /**
+ * Ação e botão de fechar no mesmo alerta. Não há prop de layout: a ação ocupa a
+ * própria coluna do grid, e o X fica na calha dele, à direita.
+ */
+export function alertWithActionAndDismissSource(): string {
+  return vueSnippet(
+    `${IMPORT_WITH_ACTION}
+import { Button } from '@/components/ui/button'
+${importIcon('Info')}`,
+    alertBlock(
+      ['dismissible'],
+      [
+        ...body('Info', 'Sessão expira em 5 minutos', 'Salve seu trabalho para não perder as alterações.'),
+        `<AlertAction>
+  <Button size="sm" variant="default">Salvar agora</Button>
+</AlertAction>`,
+      ],
+    ),
+  );
+}
+
+/**
  * Classe do consumidor: ela SOMA às do design system em qualquer subcomponente,
  * nunca substitui. É o que permite ajustar o encaixe sem reescrever o alerta.
  */
-export function alertClassNameAdicionalSource(): string {
+export function alertAdditionalClassSource(): string {
   return vueSnippet(
     `${IMPORT_WITH_ACTION}
 import { Button } from '@/components/ui/button'
 ${importIcon('Info')}`,
     `<Alert class="nds-w-full">
-  ${icone('Info')}
+  ${icon('Info')}
   <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
   <AlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</AlertDescription>
   <AlertAction class="nds-w-auto">
@@ -335,6 +361,6 @@ ${importIcon('Info')}`,
 export function alertLayoutNoIconSource(): string {
   return vueSnippet(
     IMPORT,
-    alerta([], body(null, 'Sem ícone', 'Alerta sem ícone mantém layout de coluna única.')),
+    alertBlock([], body(null, 'Sem ícone', 'Alert sem ícone mantém layout de coluna única.')),
   );
 }

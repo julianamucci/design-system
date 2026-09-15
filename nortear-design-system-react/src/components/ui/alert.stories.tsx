@@ -78,19 +78,24 @@ export const Playground: Story = {
   parameters: { covers: ["accessibility.item1", "accessibility.item4", "visual.item1"] },
   render: (args) => (
     <Alert {...args}>
-      <Info aria-hidden="true" className="nds-icon" />
+      <Info aria-hidden="true" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
     </Alert>
   ),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    // O control `role` troca a semântica da raiz — TODAS as buscas seguem o arg
+    // para a story continuar verde em qualquer configuração do painel.
+    const role = args.role ?? "alert";
+    const variant = args.variant ?? "default";
 
-    await step("Elemento alert está presente no DOM", async () => {
-      const alert = canvas.getByRole("alert");
+    await step("A semântica de anúncio escolhida chega ao DOM", async () => {
+      const alert = canvas.getByRole(role);
       await expect(alert).toBeInTheDocument();
+      await expect(alert).toHaveAttribute("role", role);
     });
 
     // waitFor nas asserções de visibilidade: com o control `dismissible`
@@ -98,7 +103,7 @@ export const Playground: Story = {
     // quadro falha. Sem o control ligado passa de primeira — o waitFor não
     // custa nada e cobre as duas configurações do Playground.
     await step("Alert está visível", async () => {
-      await waitFor(() => expect(canvas.getByRole("alert")).toBeVisible());
+      await waitFor(() => expect(canvas.getByRole(role)).toBeVisible());
     });
 
     await step("AlertTitle é renderizado corretamente", async () => {
@@ -116,10 +121,22 @@ export const Playground: Story = {
       );
     });
 
-    await step("Variante default aplica classes corretas", async () => {
-      const alert = canvas.getByRole("alert");
+    await step("A variante do control aplica as classes corretas", async () => {
+      const alert = canvas.getByRole(role);
       await expect(alert).toHaveAttribute("data-slot", "alert");
       await expect(alert).toHaveClass("nds-alert");
+      for (const modifier of ["destructive", "success", "warning", "info"]) {
+        // A default não recebe modificador; as outras recebem só o seu.
+        if (modifier === variant) await expect(alert).toHaveClass(`nds-alert-${modifier}`);
+        else await expect(alert).not.toHaveClass(`nds-alert-${modifier}`);
+      }
+    });
+
+    await step("O ícone é decorativo e filho direto do alert", async () => {
+      // Filho DIRETO: é `.nds-alert > svg` que abre a coluna do ícone.
+      const icon = canvas.getByRole(role).querySelector(":scope > svg");
+      await expect(icon).toHaveAttribute("aria-hidden", "true");
+      await expect(icon).not.toHaveClass("nds-icon");
     });
   },
 };

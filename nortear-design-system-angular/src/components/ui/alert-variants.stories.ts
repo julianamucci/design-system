@@ -8,7 +8,19 @@ import {
   NdsAlertTitle,
   NdsAlertDescription,
   NdsAlertIcon,
+  type AlertIconKind,
+  type AlertVariant,
 } from './alert';
+import {
+  alertContrastSource,
+  alertDefaultSource,
+  alertDestructiveSource,
+  alertDismissibleByKeyboardSource,
+  alertDismissibleSource,
+  alertInfoSource,
+  alertSuccessSource,
+  alertWarningSource,
+} from './alert.source';
 import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
 
 const meta: Meta = {
@@ -32,6 +44,7 @@ type Story = StoryObj;
 export const Default: Story = {
   parameters: {
     covers: ['functional.item1', 'accessibility.item3', 'visual.item2'],
+    docs: { source: { transform: alertDefaultSource } },
   },
   render: () => ({
     template: `
@@ -67,7 +80,10 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: {
+    covers: ['functional.item2'],
+    docs: { source: { transform: alertDestructiveSource } },
+  },
   render: () => ({
     template: `
       <div ndsAlert variant="destructive">
@@ -89,21 +105,26 @@ export const Destructive: Story = {
       await expect(canvas.getByText('Erro ao salvar')).toBeVisible();
     });
 
-    await step('O texto corrido não herda a cor da variante', async () => {
-      // Regra dos containers coloridos: ícone e título podem usar a cor
-      // semântica (são curtos, 3:1 basta); o texto corrido não, porque
-      // vermelho sobre fundo soft não alcança os 4.5:1 que ele exige.
+    await step('Só o ícone recebe a cor da variante', async () => {
+      // Regra dos containers coloridos, e a folha a cumpre nas cinco variantes:
+      // a cor semântica pinta fundo, borda e ÍCONE (não-textual, 3:1). O título
+      // é 14px semibold — pela WCAG não é texto grande, o limite dele é 4.5:1 —
+      // e fica em `--foreground` junto com o texto corrido.
       const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
+      const title = alerta.querySelector<HTMLElement>('[data-slot="alert-title"]')!;
       const descricao = alerta.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
-      await expect(getComputedStyle(descricao).color).not.toBe(
-        getComputedStyle(icone).color,
-      );
+      await expect(getComputedStyle(descricao).color).not.toBe(getComputedStyle(icone).color);
+      await expect(getComputedStyle(title).color).not.toBe(getComputedStyle(icone).color);
+      await expect(getComputedStyle(title).color).toBe(getComputedStyle(descricao).color);
     });
   },
 };
 
 export const Success: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { source: { transform: alertSuccessSource } },
+  },
   render: () => ({
     template: `
       <div ndsAlert variant="success">
@@ -122,6 +143,7 @@ export const Success: Story = {
 };
 
 export const Warning: Story = {
+  parameters: { docs: { source: { transform: alertWarningSource } } },
   render: () => ({
     template: `
       <div ndsAlert variant="warning">
@@ -140,12 +162,13 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
+  parameters: { docs: { source: { transform: alertInfoSource } } },
   render: () => ({
     template: `
       <div ndsAlert variant="info">
         <svg ndsAlertIcon kind="info"></svg>
         <h5 ndsAlertTitle>Dica</h5>
-        <section ndsAlertDescription>Você pode alterar o tema em Configurações a qualquer momento.</section>
+        <section ndsAlertDescription>Você pode fixar os filtros mais usados para acessá-los mais rápido.</section>
       </div>
     `,
   }),
@@ -157,39 +180,41 @@ export const Info: Story = {
   },
 };
 
+type RemountingAlertOptions = {
+  variant: AlertVariant;
+  kind: AlertIconKind;
+  title: string;
+  description: string;
+  dismissLabel: string;
+};
+
 /**
  * O alert fechado se esconde sozinho (`hidden` no host), mas quem tira o nó do
  * DOM é o consumidor — em Angular um componente não remove o próprio host.
  *
- * Estas duas stories mostram o padrão idiomático: `@for` com `track` sobre um
- * contador. Fechar incrementa o contador, a view antiga é destruída (a prova do
- * fechamento continua mensurável) e uma nova monta no lugar — sem isso o canvas
- * ficaria vazio depois da play e o Chromatic fotografaria o nada.
+ * Nas stories o consumidor é um `@for` com `track` sobre um contador: fechar
+ * incrementa o contador, a view antiga é destruída (a prova do fechamento
+ * continua mensurável) e uma nova monta no lugar — sem isso o canvas ficaria
+ * vazio depois da play e o Chromatic fotografaria o nada. É ANDAIME: o snippet
+ * do painel Code ensina o `@if`, que é o que quem consome escreve.
  */
-function alertDismissivelRemontavel(
-  onDismiss: () => void,
-  kind: string,
-  title: string,
-  descricao: string,
-) {
-  const instancia = signal(0);
+function remountingDismissibleAlert(onDismiss: () => void, o: RemountingAlertOptions) {
+  const instance = signal(0);
   return {
     props: {
-      instancia,
-      kind,
-      title,
-      descricao,
-      aoFechar: () => {
-        instancia.update((n) => n + 1);
+      ...o,
+      instance,
+      handleDismiss: () => {
+        instance.update((n) => n + 1);
         onDismiss();
       },
     },
     template: `
-      @for (i of [instancia()]; track i) {
-        <div ndsAlert variant="success" dismissible (dismiss)="aoFechar()">
+      @for (i of [instance()]; track i) {
+        <div ndsAlert [variant]="variant" dismissible [dismissLabel]="dismissLabel" (dismiss)="handleDismiss()">
           <svg ndsAlertIcon [kind]="kind"></svg>
           <h5 ndsAlertTitle>{{ title }}</h5>
-          <section ndsAlertDescription>{{ descricao }}</section>
+          <section ndsAlertDescription>{{ description }}</section>
         </div>
       }
     `,
@@ -197,7 +222,10 @@ function alertDismissivelRemontavel(
 }
 
 export const Dismissible: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+    docs: { source: { transform: alertDismissibleSource } },
+  },
   argTypes: {
     // Armadilha 5 do stack: função em `args` sem `argTypes` não chega ao
     // template — o `(dismiss)` ficaria ligado a nada, sem erro nenhum.
@@ -206,42 +234,94 @@ export const Dismissible: Story = {
   args: { onDismiss: fn() },
   render: (args) => {
     const onDismiss = args['onDismiss'] as () => void;
-    return alertDismissivelRemontavel(
-      onDismiss,
-      'success',
-      'Perfil atualizado',
-      'Suas informações foram salvas com sucesso.',
-    );
+    const remounting = remountingDismissibleAlert(onDismiss, {
+      variant: 'default',
+      kind: 'info',
+      title: 'Preferências salvas',
+      description: 'Você pode fechar este aviso quando quiser.',
+      dismissLabel: 'Fechar alerta',
+    });
+    return {
+      props: remounting.props,
+      // O segundo alerta NÃO remonta: é a prova de que o alerta fechado sai da
+      // tela sem ninguém remover o nó. O `close()` grava `hidden`, e o
+      // `display: grid` da folha venceria a regra `[hidden]` do navegador se a
+      // folha não tivesse `.nds-alert[hidden] { display: none }`. `role="status"`
+      // e rótulo próprio para não disputar as consultas do alerta de cima.
+      template: `
+        <div class="nds-stack" data-spacing="sm">
+          ${remounting.template}
+          <div ndsAlert role="status" dismissible dismissLabel="Fechar lembrete">
+            <svg ndsAlertIcon kind="info"></svg>
+            <h5 ndsAlertTitle>Lembrete</h5>
+            <section ndsAlertDescription>Este aviso sai da tela ao fechar e não volta.</section>
+          </div>
+        </div>
+      `,
+    };
   },
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
     const onDismiss = args['onDismiss'] as ReturnType<typeof fn>;
 
+    // Primeiro step de propósito: só vale enquanto a entrada ainda roda. O
+    // painel Interactions reexecuta a play no MESMO DOM, onde o alert já
+    // assentou — então, quando a classe não está lá, provocamos uma remontagem
+    // (o `@for` remonta ao fechar) e medimos no nó novo.
+    await step('Animação de descendente não encerra a entrada antes da hora', async () => {
+      let alerta = canvas.getByRole('alert');
+      if (!alerta.classList.contains('nds-animate-in')) {
+        await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+        const previous = alerta;
+        alerta = await waitFor(() => {
+          const fresh = canvas.getByRole('alert');
+          if (fresh === previous || !fresh.classList.contains('nds-animate-in')) {
+            throw new Error('aguardando remontagem');
+          }
+          return fresh;
+        });
+        onDismiss.mockClear(); // o fechamento de preparo não entra na contagem
+      }
+      await expect(alerta).toHaveClass('nds-animate-in');
+
+      // `animationend` borbulha — sem a guarda de `event.target`, a animação de
+      // qualquer filho (o botão de fechar, um ícone) encerraria a entrada.
+      const close = within(alerta).getByRole('button', { name: 'Fechar alerta' });
+      close.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alerta).toHaveClass('nds-animate-in');
+
+      // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
+      // não tem mais nada a limpar: nem volta a classe, nem fecha o alerta.
+      alerta.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await waitFor(() => expect(alerta).not.toHaveClass('nds-animate-in'));
+      alerta.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alerta).not.toHaveClass('nds-animate-in');
+      await expect(alerta).toBeInTheDocument();
+      await expect(onDismiss).not.toHaveBeenCalled();
+    });
+
     await step('O botão de fechar é o último filho e tem rótulo acessível', async () => {
       const alerta = canvas.getByRole('alert');
-      const close = canvas.getByRole('button', { name: 'Fechar alerta' });
+      const close = within(alerta).getByRole('button', { name: 'Fechar alerta' });
       // Ordem no DOM: o X vem DEPOIS do conteúdo, então o leitor de tela
       // anuncia a mensagem antes da ação e o Tab chega nele por último.
       await expect(alerta.lastElementChild).toBe(close);
       await expect(close).toHaveAttribute('data-slot', 'alert-dismiss');
-      // waitFor: o alert dismissible ENTRA animado (opacidade 0 → 1); no
-      // Chromium headless a animação fica presa no quadro zero até o timeout
-      // de segurança do primitivo limpar a classe.
+      // waitFor: o alert dismissible ENTRA animado (opacidade 0 → 1).
       await waitFor(() => expect(close).toBeVisible());
     });
 
     await step('Fechar remove o alert original e a demo remonta', async () => {
       const original = canvas.getByRole('alert');
-      const close = canvas.getByRole('button', { name: 'Fechar alerta' });
+      const close = within(original).getByRole('button', { name: 'Fechar alerta' });
       await userEvent.click(close);
 
       // Segunda ativação com a saída em curso: tem que cair na guarda de
-      // reentrada. Sem ela, o "uma única vez" do último step seria verdade
+      // reentrada. Sem ela, o "uma única vez" do step seguinte seria verdade
       // trivial — nunca teria havido chance de disparar duas.
       close.click();
 
-      // E a animação de um DESCENDENTE não pode encerrar a saída do alert:
-      // `animationend` borbulha.
+      // E a animação de um DESCENDENTE não pode encerrar a saída do alert.
       close.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
       await expect(original).toBeInTheDocument();
 
@@ -250,14 +330,26 @@ export const Dismissible: Story = {
       await waitFor(() => expect(original).not.toBeInTheDocument());
 
       await waitFor(async () => {
-        const remontado = canvas.getByRole('alert');
-        await expect(remontado).not.toBe(original);
-        await expect(remontado).toBeVisible();
+        const remounted = canvas.getByRole('alert');
+        await expect(remounted).not.toBe(original);
+        await expect(remounted).toBeVisible();
       });
     });
 
     await step('O callback de fechamento dispara uma única vez', async () => {
       await expect(onDismiss).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Sem remontagem, o alerta fechado não fica visível', async () => {
+      const fixed = canvas.getByRole('status');
+      await userEvent.click(within(fixed).getByRole('button', { name: 'Fechar lembrete' }));
+      await waitFor(() => expect(fixed).toHaveAttribute('hidden'));
+      // O nó continua no DOM — ninguém o removeu —, e quem o tira da tela é a
+      // guarda `.nds-alert[hidden]` da folha. `toBeVisible` sozinho não prova
+      // isso (ele já reprova pelo atributo); o `display` computado prova.
+      await expect(fixed).toBeInTheDocument();
+      await expect(getComputedStyle(fixed).display).toBe('none');
+      await expect(fixed).not.toBeVisible();
     });
   },
 };
@@ -265,18 +357,20 @@ export const Dismissible: Story = {
 // O contrato documenta "clique ou Enter" — esta story cobre o caminho de
 // teclado, com o foco no botão.
 export const DismissibleByKeyboard: Story = {
+  parameters: { docs: { source: { transform: alertDismissibleByKeyboardSource } } },
   argTypes: {
     onDismiss: { control: false, table: { disable: true } },
   },
   args: { onDismiss: fn() },
   render: (args) => {
     const onDismiss = args['onDismiss'] as () => void;
-    return alertDismissivelRemontavel(
-      onDismiss,
-      'info',
-      'Atenção',
-      'Suas alterações serão aplicadas na próxima sessão.',
-    );
+    return remountingDismissibleAlert(onDismiss, {
+      variant: 'success',
+      kind: 'success',
+      title: 'Perfil atualizado',
+      description: 'Suas informações foram salvas com sucesso.',
+      dismissLabel: 'Fechar confirmação',
+    });
   },
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
@@ -284,16 +378,16 @@ export const DismissibleByKeyboard: Story = {
 
     await step('Enter no botão focado fecha o alert', async () => {
       const original = canvas.getByRole('alert');
-      const close = canvas.getByRole('button', { name: 'Fechar alerta' });
+      const close = within(original).getByRole('button', { name: 'Fechar confirmação' });
       close.focus();
       await expect(close).toHaveFocus();
       await userEvent.keyboard('{Enter}');
 
       await waitFor(() => expect(original).not.toBeInTheDocument());
       await waitFor(async () => {
-        const remontado = canvas.getByRole('alert');
-        await expect(remontado).not.toBe(original);
-        await expect(remontado).toBeVisible();
+        const remounted = canvas.getByRole('alert');
+        await expect(remounted).not.toBe(original);
+        await expect(remounted).toBeVisible();
       });
     });
 
@@ -319,6 +413,7 @@ export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      source: { transform: alertContrastSource },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',

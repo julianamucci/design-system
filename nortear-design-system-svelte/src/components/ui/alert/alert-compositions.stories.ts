@@ -1,16 +1,20 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
-import AlertAcaoStory from './AlertAcaoStory.svelte';
-import AlertClasseAdicionalStory from './AlertClasseAdicionalStory.svelte';
+import AlertWithActionStory from './AlertWithActionStory.svelte';
+import AlertAdditionalClassStory from './AlertAdditionalClassStory.svelte';
+import AlertWithActionAndDismissStory from './AlertWithActionAndDismissStory.svelte';
+import { measureActionDismiss } from '@shared/testing/alert-probe';
 import {
-  alertClassNameAdicionalSource,
+  alertAdditionalClassSource,
+  alertWithActionAndDismissSource,
   alertWithActionSource,
-  alertNoIconSource,
+  alertLayoutWithoutIconSource,
   alertSource,
+  alertWithIconSource,
 } from './alert.source';
 
 const meta: Meta = {
@@ -33,7 +37,11 @@ export default meta;
 type Story = StoryObj;
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item2'],
+    // O snippet do meta escreve "Atenção"; esta story mostra outro texto.
+    docs: { source: { transform: alertWithIconSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -56,7 +64,7 @@ export const WithAction: Story = {
   parameters: {
     docs: { source: { transform: alertWithActionSource } },
   },
-  render: () => ({ Component: AlertAcaoStory }),
+  render: () => ({ Component: AlertWithActionStory }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -88,9 +96,9 @@ export const WithAction: Story = {
  */
 export const AdditionalClass: Story = {
   parameters: {
-    docs: { source: { transform: alertClassNameAdicionalSource } },
+    docs: { source: { transform: alertAdditionalClassSource } },
   },
-  render: () => ({ Component: AlertClasseAdicionalStory }),
+  render: () => ({ Component: AlertAdditionalClassStory }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -114,7 +122,7 @@ export const AdditionalClass: Story = {
 export const WithoutIcon: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: alertNoIconSource } },
+    docs: { source: { transform: alertLayoutWithoutIconSource } },
   },
   render: () => ({
     Component: AlertStory,
@@ -130,5 +138,41 @@ export const WithoutIcon: Story = {
     const alert = await canvas.findByRole('alert');
     await expect(alert.querySelector('svg')).toBeNull();
     await expect(canvas.getByText('Sem ícone')).toBeVisible();
+  },
+};
+
+/**
+ * Ação e botão de fechar no mesmo alerta. Até 2026-09-14 a folha os declarava
+ * exclusivos só em comentário, e a ação encostava no X. A prova é de CAIXA, pela
+ * sonda compartilhada: nada se cruza, a ação fica à esquerda do X e o texto
+ * termina antes da ação.
+ */
+export const WithActionAndDismiss: Story = {
+  parameters: {
+    covers: ['functional.item8', 'visual.item6'],
+    docs: { source: { transform: alertWithActionAndDismissSource } },
+  },
+  render: () => ({ Component: AlertWithActionAndDismissStory }),
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+
+    await step('Ação e botão de fechar estão no mesmo alerta', async () => {
+      await expect(within(alert).getByRole('button', { name: 'Salvar agora' })).toBeInTheDocument();
+      await expect(within(alert).getByRole('button', { name: 'Fechar alerta' })).toBeInTheDocument();
+      // O X continua o último filho: o leitor encontra conteúdo e ação antes.
+      await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
+    });
+
+    await step('As caixas não se cruzam e o texto não corre por baixo da ação', async () => {
+      // O alerta dispensável ENTRA animado; a caixa só é medida depois de a
+      // entrada assentar. Dentro do waitFor, leitura pura de classe.
+      await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
+      const layout = measureActionDismiss(alert);
+      await expect(layout.overlap).toBe(false);
+      await expect(layout.gap).toBeGreaterThanOrEqual(0);
+      await expect(layout.textClearsAction).toBe(true);
+    });
   },
 };

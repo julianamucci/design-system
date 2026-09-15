@@ -200,7 +200,7 @@
   --spacing-12:  calc(var(--spacing-base) * 12);    /* 48px */
   --spacing-14:  calc(var(--spacing-base) * 14);  /* 56px — audit-ignore: orphan-token — degrau da régua */
   --spacing-16:  calc(var(--spacing-base) * 16);    /* 64px */
-  --spacing-18:  calc(var(--spacing-base) * 18);    /* 72px — calha do botão de ação no canto do alert */
+  --spacing-18:  calc(var(--spacing-base) * 18);    /* 72px — audit-ignore: orphan-token — degrau da régua. O único consumidor era a calha fixa da ação do alert, que nunca coube o botão (108px medidos contra 72px); em 2026-09-15 a ação virou coluna `auto` do grid. O degrau fica porque a régua é contínua */
   --spacing-20:  calc(var(--spacing-base) * 20);    /* 80px */
   --spacing-24:  calc(var(--spacing-base) * 24);    /* 96px */
   --spacing-40:  calc(var(--spacing-base) * 40);    /* 160px — comprimento mínimo do trilho de slider vertical */

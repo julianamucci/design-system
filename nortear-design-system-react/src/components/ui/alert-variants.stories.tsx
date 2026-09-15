@@ -2,18 +2,19 @@ import { figmaDesign } from "@shared/figma/design-links";
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fn, userEvent, waitFor } from "storybook/test";
-// `Info as InfoIcon`: a story exportada se chama `Info` nas 4 stacks; sem o
+// `Info as InfoIcon`: a story exportada se chama `Info` nas cinco stacks; sem o
 // alias o ícone e o export colidem no mesmo escopo de módulo.
 import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 import {
-  alertAvisoSource,
   alertContrastSource,
   alertDestructiveSource,
-  alertDispensavelSource,
+  alertDismissibleByKeyboardSource,
+  alertDismissibleSource,
   alertInfoSource,
   alertSource,
-  alertSucessoSource,
+  alertSuccessSource,
+  alertWarningSource,
 } from "./alert.source";
 import { themeContrast, themeReprovas } from "@shared/testing/alert-probe";
 
@@ -36,19 +37,32 @@ export const Default: Story = {
   parameters: { covers: ["functional.item1", "accessibility.item3", "visual.item2"] },
   render: () => (
     <Alert>
-      <InfoIcon aria-hidden="true" className="nds-icon" />
+      <InfoIcon aria-hidden="true" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
     </Alert>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = canvas.getByRole("alert");
-    await expect(alert).toHaveClass("nds-alert");
-    await expect(alert).not.toHaveClass("nds-alert-destructive");
-    await expect(canvas.getByText("Atenção")).toBeVisible();
+
+    await step("A variante default não recebe classe de modificador", async () => {
+      await expect(alert).toHaveClass("nds-alert");
+      await expect(alert).not.toHaveClass("nds-alert-destructive");
+      await expect(canvas.getByText("Atenção")).toBeVisible();
+    });
+
+    await step("Ícone, título e descrição ocupam os slots que a folha espera", async () => {
+      // A folha posiciona por `data-slot`/classe: se um deles não recebesse a
+      // classe, o layout de duas colunas colapsaria sem erro nenhum.
+      await expect(alert.querySelector(":scope > svg")).toBeTruthy();
+      await expect(alert.querySelector('[data-slot="alert-title"]')).toHaveClass("nds-alert-title");
+      await expect(alert.querySelector('[data-slot="alert-description"]')).toHaveClass(
+        "nds-alert-description",
+      );
+    });
   },
 };
 
@@ -60,7 +74,7 @@ export const Destructive: Story = {
   },
   render: () => (
     <Alert variant="destructive">
-      <AlertCircle aria-hidden="true" className="nds-icon" />
+      <AlertCircle aria-hidden="true" />
       <AlertTitle>Erro ao salvar</AlertTitle>
       <AlertDescription>
         Não foi possível salvar. Verifique sua conexão e tente novamente.
@@ -79,11 +93,11 @@ export const Success: Story = {
   parameters: {
     covers: ["functional.item5"],
     // Cada variante troca também o ícone — cor sozinha não comunica.
-    docs: { source: { transform: alertSucessoSource } },
+    docs: { source: { transform: alertSuccessSource } },
   },
   render: () => (
     <Alert variant="success">
-      <CheckCircle2 aria-hidden="true" className="nds-icon" />
+      <CheckCircle2 aria-hidden="true" />
       <AlertTitle>Perfil atualizado</AlertTitle>
       <AlertDescription>
         Suas informações foram salvas com sucesso.
@@ -100,10 +114,10 @@ export const Success: Story = {
 
 export const Warning: Story = {
   // Idem: a variante e o ícone que a acompanha não vêm de arg nenhum.
-  parameters: { docs: { source: { transform: alertAvisoSource } } },
+  parameters: { docs: { source: { transform: alertWarningSource } } },
   render: () => (
     <Alert variant="warning">
-      <TriangleAlert aria-hidden="true" className="nds-icon" />
+      <TriangleAlert aria-hidden="true" />
       <AlertTitle>Assinatura expirando</AlertTitle>
       <AlertDescription>
         Sua assinatura expira em 3 dias. Renove para evitar interrupções.
@@ -123,10 +137,10 @@ export const Info: Story = {
   parameters: { docs: { source: { transform: alertInfoSource } } },
   render: () => (
     <Alert variant="info">
-      <InfoIcon aria-hidden="true" className="nds-icon" />
+      <InfoIcon aria-hidden="true" />
       <AlertTitle>Dica</AlertTitle>
       <AlertDescription>
-        Você pode alterar o tema em Configurações a qualquer momento.
+        Você pode fixar os filtros mais usados para acessá-los mais rápido.
       </AlertDescription>
     </Alert>
   ),
@@ -145,25 +159,31 @@ export const Info: Story = {
  * sai do DOM (a prova do fechamento continua mensurável) e um alert novo monta
  * imediatamente no lugar.
  */
-function AlertDismissivelRemontavel({
+function RemountingDismissibleAlert({
   onDismiss,
+  variant,
+  dismissLabel,
   icon,
   title,
   description,
 }: {
   onDismiss?: () => void;
+  variant?: React.ComponentProps<typeof Alert>["variant"];
+  dismissLabel?: string;
   icon: React.ReactNode;
   title: string;
   description: string;
 }) {
-  const [instancia, setInstancia] = React.useState(0);
+  const [instance, setInstance] = React.useState(0);
 
   return (
     <Alert
-      key={instancia}
+      key={instance}
+      variant={variant}
       dismissible
+      dismissLabel={dismissLabel}
       onDismiss={() => {
-        setInstancia((n) => n + 1);
+        setInstance((n) => n + 1);
         onDismiss?.();
       }}
     >
@@ -179,15 +199,15 @@ export const Dismissible: Story = {
     covers: ["functional.item7", "visual.item5"],
     // O render monta o wrapper que remonta o alert ao fechar — andaime de
     // teste, para o canvas não ficar vazio depois da play.
-    docs: { source: { transform: alertDispensavelSource } },
+    docs: { source: { transform: alertDismissibleSource } },
   },
   args: { onDismiss: fn() },
   render: (args) => (
-    <AlertDismissivelRemontavel
+    <RemountingDismissibleAlert
       onDismiss={args.onDismiss}
-      icon={<CheckCircle2 aria-hidden="true" className="nds-icon" />}
-      title="Perfil atualizado"
-      description="Suas informações foram salvas com sucesso."
+      icon={<InfoIcon aria-hidden="true" />}
+      title="Preferências salvas"
+      description="Você pode fechar este aviso quando quiser."
     />
   ),
   play: async ({ canvasElement, args, step }) => {
@@ -203,9 +223,9 @@ export const Dismissible: Story = {
       if (!alert.classList.contains("nds-animate-in")) {
         await userEvent.click(canvas.getByRole("button", { name: "Fechar alerta" }));
         alert = await waitFor(() => {
-          const novo = canvas.getByRole("alert");
-          if (!novo.classList.contains("nds-animate-in")) throw new Error("aguardando remontagem");
-          return novo;
+          const freshAlert = canvas.getByRole("alert");
+          if (!freshAlert.classList.contains("nds-animate-in")) throw new Error("aguardando remontagem");
+          return freshAlert;
         });
         onDismiss.mockClear(); // o fechamento de preparo não entra na contagem
       }
@@ -236,8 +256,13 @@ export const Dismissible: Story = {
       await waitFor(() => expect(dismiss).toBeVisible());
     });
 
+    await step("X é o ÚLTIMO filho — leitor de tela encontra o conteúdo antes", async () => {
+      const alert = canvas.getByRole("alert");
+      await expect(alert.lastElementChild).toHaveAttribute("data-slot", "alert-dismiss");
+    });
+
     await step("Clique remove o alert original e a demo remonta", async () => {
-      const alertOriginal = canvas.getByRole("alert");
+      const originalAlert = canvas.getByRole("alert");
       const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
       await userEvent.click(dismiss);
       // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
@@ -246,16 +271,16 @@ export const Dismissible: Story = {
       dismiss.click();
       // E a animação de um descendente também não pode encerrar a saída.
       dismiss.dispatchEvent(new AnimationEvent("animationend", { bubbles: true }));
-      await expect(alertOriginal).toBeInTheDocument();
+      await expect(originalAlert).toBeInTheDocument();
 
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
-      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
+      await waitFor(() => expect(originalAlert).not.toBeInTheDocument());
 
       await waitFor(async () => {
-        const remontado = canvas.getByRole("alert");
-        await expect(remontado).not.toBe(alertOriginal);
-        await expect(remontado).toBeVisible();
+        const remounted = canvas.getByRole("alert");
+        await expect(remounted).not.toBe(originalAlert);
+        await expect(remounted).toBeVisible();
       });
     });
 
@@ -268,37 +293,39 @@ export const Dismissible: Story = {
 };
 
 // Segundo cenário do contrato: o caso documentado é "clique ou Enter" — este
-// story cobre o caminho de teclado (Enter no botão focado).
+// story cobre o caminho de teclado (Enter no botão focado), com rótulo próprio.
 export const DismissibleByKeyboard: Story = {
-  // Mesmo andaime de remontagem; a marcação é a mesma, muda só como a play aciona.
-  parameters: { docs: { source: { transform: alertDispensavelSource } } },
+  // Mesmo andaime de remontagem; o snippet mostra a variante e o rótulo do X.
+  parameters: { docs: { source: { transform: alertDismissibleByKeyboardSource } } },
   args: { onDismiss: fn() },
   render: (args) => (
-    <AlertDismissivelRemontavel
+    <RemountingDismissibleAlert
       onDismiss={args.onDismiss}
-      icon={<InfoIcon aria-hidden="true" className="nds-icon" />}
-      title="Atenção"
-      description="Suas alterações serão aplicadas na próxima sessão."
+      variant="success"
+      dismissLabel="Fechar confirmação"
+      icon={<CheckCircle2 aria-hidden="true" />}
+      title="Perfil atualizado"
+      description="Suas informações foram salvas com sucesso."
     />
   ),
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
 
     await step("Enter no botão focado remove o alert original e a demo remonta", async () => {
-      const alertOriginal = canvas.getByRole("alert");
-      const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
+      const originalAlert = canvas.getByRole("alert");
+      const dismiss = within(originalAlert).getByRole("button", { name: "Fechar confirmação" });
       dismiss.focus();
       await expect(dismiss).toHaveFocus();
       await userEvent.keyboard("{Enter}");
 
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
-      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
+      await waitFor(() => expect(originalAlert).not.toBeInTheDocument());
 
       await waitFor(async () => {
-        const remontado = canvas.getByRole("alert");
-        await expect(remontado).not.toBe(alertOriginal);
-        await expect(remontado).toBeVisible();
+        const remounted = canvas.getByRole("alert");
+        await expect(remounted).not.toBe(originalAlert);
+        await expect(remounted).toBeVisible();
       });
     });
 

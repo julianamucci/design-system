@@ -1,8 +1,9 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { regiaoVivaSourceWithAlert, alertSource, alertSourceWith } from './alert.source';
+import { alertDynamicInsertionSourceWith, alertSource, alertSourceWith } from './alert.source';
+import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -60,10 +61,13 @@ export const WithoutTitle: Story = {
       await expect(canvas.getByRole('alert')).toBeVisible();
     });
 
-    await step('Sem elemento de título no DOM', async () => {
+    await step('Sem título no DOM, em nenhum nível de heading', async () => {
+      // Não basta procurar `h5`: o nível é configurável por `as`, e um título
+      // em `h4` passaria por uma busca presa ao default.
       const alert = canvas.getByRole('alert');
-      const h5 = alert.querySelector('h5');
-      await expect(h5).toBeNull();
+      await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
+      await expect(within(alert).queryByRole('heading')).toBeNull();
+      await expect(alert.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
     });
   },
 };
@@ -116,33 +120,34 @@ export const WithoutAnnouncement: Story = {
     wrapper.dataset.spacing = 'md';
 
     // Estático: já está na tela quando a página carrega — não pode ser live region.
-    const nota = createAlert({ role: 'note' });
-    nota.appendChild(createAlertIcon('info'));
-    nota.appendChild(createAlertTitle({ text: 'Nota de implementação' }));
-    nota.appendChild(createAlertDescription({ text: 'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.' }));
+    const noteAlert = createAlert({ role: 'note' });
+    noteAlert.appendChild(createAlertIcon('info'));
+    noteAlert.appendChild(createAlertTitle({ text: 'Nota de implementação' }));
+    noteAlert.appendChild(createAlertDescription({ text: 'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.' }));
 
     // Sem `role`, a factory mantém o default 'alert'.
-    const padrao = createAlert({ variant: 'destructive' });
-    padrao.appendChild(createAlertIcon('error'));
-    padrao.appendChild(createAlertTitle({ text: 'Falha no envio' }));
-    padrao.appendChild(createAlertDescription({ text: 'Mensagem urgente surgida em tempo de execução: anúncio imediato.' }));
+    const defaultAlert = createAlert({ variant: 'destructive' });
+    defaultAlert.appendChild(createAlertIcon('error'));
+    defaultAlert.appendChild(createAlertTitle({ text: 'Falha no envio' }));
+    defaultAlert.appendChild(createAlertDescription({ text: 'Mensagem urgente surgida em tempo de execução: anúncio imediato.' }));
 
-    wrapper.appendChild(nota);
-    wrapper.appendChild(padrao);
+    wrapper.appendChild(noteAlert);
+    wrapper.appendChild(defaultAlert);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     await step('role="note" não é live region', async () => {
-      const nota = canvas.getByText('Nota de implementação').closest('.nds-alert');
-      await expect(nota).toHaveAttribute('role', 'note');
+      const noteAlert = canvas.getByText('Nota de implementação').closest('.nds-alert');
+      await expect(noteAlert).toHaveAttribute('role', 'note');
+      await expect(noteAlert).not.toHaveAttribute('aria-live');
     });
 
     await step('Sem `role`, o default continua alert', async () => {
-      const padrao = canvas.getByText('Falha no envio').closest('.nds-alert');
-      await expect(padrao).toHaveAttribute('role', 'alert');
-      await expect(canvas.getByRole('alert')).toBe(padrao);
+      const defaultAlert = canvas.getByText('Falha no envio').closest('.nds-alert');
+      await expect(defaultAlert).toHaveAttribute('role', 'alert');
+      await expect(canvas.getByRole('alert')).toBe(defaultAlert);
     });
 
     await step('A nota não aparece como alert para o leitor de tela', async () => {
@@ -153,13 +158,14 @@ export const WithoutAnnouncement: Story = {
 };
 
 export const DynamicInsertion: Story = {
-  // Override de story: aqui o assunto não é o alerta, é ONDE ele entra — a
-  // região viva é outra FORMA de snippet, não uma opção da fábrica.
+  // Override de story: aqui o assunto não é o alerta, é QUANDO ele entra — a
+  // inserção em tempo de execução é outra FORMA de snippet, não uma opção da
+  // fábrica.
   parameters: {
     covers: ['functional.item6'],
     docs: {
       source: {
-        transform: regiaoVivaSourceWithAlert({
+        transform: alertDynamicInsertionSourceWith({
           icon: 'success',
           title: 'Operação concluída',
           description: 'O relatório foi gerado com sucesso.',
@@ -168,25 +174,53 @@ export const DynamicInsertion: Story = {
     },
   },
   render: () => {
+    // Sem contêiner `aria-live`: a raiz do alerta, com `role="alert"`, já é a
+    // região viva. Envolvê-la aninharia duas regiões anunciando a mesma coisa.
     const wrapper = document.createElement('div');
-    wrapper.setAttribute('aria-live', 'polite');
-    const alert = createAlert();
-    alert.appendChild(createAlertIcon('success'));
-    alert.appendChild(createAlertTitle({ text: 'Operação concluída' }));
-    alert.appendChild(createAlertDescription({ text: 'O relatório foi gerado com sucesso.' }));
-    wrapper.appendChild(alert);
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+
+    const trigger = createButton({
+      label: 'Gerar relatório',
+      variant: 'default',
+      size: 'sm',
+      onClick: () => {
+        // Um alerta por vez: clicar de novo substitui, não empilha.
+        wrapper.querySelector('[data-slot="alert"]')?.remove();
+        const alert = createAlert();
+        alert.appendChild(createAlertIcon('success'));
+        alert.appendChild(createAlertTitle({ text: 'Operação concluída' }));
+        alert.appendChild(createAlertDescription({ text: 'O relatório foi gerado com sucesso.' }));
+        wrapper.appendChild(alert);
+      },
+    });
+    const triggerRow = document.createElement('div');
+    triggerRow.appendChild(trigger);
+    wrapper.appendChild(triggerRow);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Alert dentro de região aria-live', async () => {
-      const liveRegion = canvasElement.querySelector('[aria-live="polite"]');
-      await expect(liveRegion).toBeInTheDocument();
+    await step('Antes do clique não há alerta na tela', async () => {
+      // Reexecução no mesmo DOM (painel Interactions): remove o alerta da rodada
+      // anterior. A espera só LÊ o DOM — quem o altera é a remoção acima dela.
+      canvasElement.querySelector('[data-slot="alert"]')?.remove();
+      await waitFor(() => expect(canvas.queryByRole('alert')).toBeNull());
     });
 
-    await step('Role alert presente na região live', async () => {
-      await expect(canvas.getByRole('alert')).toBeVisible();
+    await step('Depois do clique o alerta surge com role="alert"', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Gerar relatório' }));
+      const alert = await canvas.findByRole('alert');
+      await expect(alert).toHaveAttribute('role', 'alert');
+      await expect(alert).toBeVisible();
+      await expect(within(alert).getByText('Operação concluída')).toBeVisible();
+    });
+
+    await step('Nenhum ancestral do alerta tem aria-live', async () => {
+      const alert = canvas.getByRole('alert');
+      await expect(alert).not.toHaveAttribute('aria-live');
+      await expect(alert.parentElement?.closest('[aria-live]') ?? null).toBeNull();
     });
   },
 };

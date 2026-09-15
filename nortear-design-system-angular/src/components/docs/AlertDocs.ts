@@ -23,6 +23,10 @@ import {
   NdsAlertIcon,
 } from '@/components/ui/alert';
 import { NdsButton } from '@/components/ui/button';
+import {
+  alertActionAndDismissTemplateSnippet,
+  alertDismissibleTemplateSnippet,
+} from '@/components/ui/alert.source';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
 
@@ -131,7 +135,7 @@ const IMPORT_WITH_ICON = `import {
 
 const CODE_DEFAULT = `<div ndsAlert>
   <svg ndsAlertIcon kind="info"></svg>
-  <h5 ndsAlertTitle>Atenção</h5>
+  <h4 ndsAlertTitle>Atenção</h4>
   <section ndsAlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </section>
@@ -139,7 +143,7 @@ const CODE_DEFAULT = `<div ndsAlert>
 
 const CODE_DESTRUCTIVE = `<div ndsAlert variant="destructive">
   <svg ndsAlertIcon kind="error"></svg>
-  <h5 ndsAlertTitle>Erro ao salvar</h5>
+  <h4 ndsAlertTitle>Erro ao salvar</h4>
   <section ndsAlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </section>
@@ -147,7 +151,7 @@ const CODE_DESTRUCTIVE = `<div ndsAlert variant="destructive">
 
 const CODE_SUCCESS = `<div ndsAlert variant="success">
   <svg ndsAlertIcon kind="success"></svg>
-  <h5 ndsAlertTitle>Perfil atualizado</h5>
+  <h4 ndsAlertTitle>Perfil atualizado</h4>
   <section ndsAlertDescription>
     Suas informações foram salvas com sucesso.
   </section>
@@ -155,27 +159,34 @@ const CODE_SUCCESS = `<div ndsAlert variant="success">
 
 const CODE_WARNING = `<div ndsAlert variant="warning">
   <svg ndsAlertIcon kind="warning"></svg>
-  <h5 ndsAlertTitle>Assinatura expirando</h5>
+  <h4 ndsAlertTitle>Assinatura expirando</h4>
   <section ndsAlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
   </section>
 </div>`;
 
-const CODE_INFO = `<div ndsAlert variant="info">
+/**
+ * Snippet dos cards cujo preview é o alerta informativo: montado das MESMAS
+ * chaves do preview (`infoTitle`/`infoDesc`), para código e prévia não
+ * divergirem de texto em nenhum idioma.
+ */
+function infoCardCode(variant: 'default' | 'info'): string {
+  const open = variant === 'default' ? '<div ndsAlert>' : `<div ndsAlert variant="${variant}">`;
+  return `${open}
   <svg ndsAlertIcon kind="info"></svg>
-  <h5 ndsAlertTitle>Dica</h5>
+  <h4 ndsAlertTitle>${stripHtml(t('demonstration.labels.infoTitle'))}</h4>
   <section ndsAlertDescription>
-    Você pode alterar o tema em Configurações a qualquer momento.
+    ${stripHtml(t('demonstration.labels.infoDesc'))}
   </section>
 </div>`;
+}
 
-const CODE_DISMISSIBLE = `<div ndsAlert dismissible (dismiss)="aoFechar()">
-  <svg ndsAlertIcon kind="success"></svg>
-  <h5 ndsAlertTitle>Perfil atualizado</h5>
-  <section ndsAlertDescription>
-    Suas informações foram salvas com sucesso.
-  </section>
-</div>`;
+// O componente não remove o próprio nó ao fechar: grava `hidden` e emite
+// `(dismiss)`. O `@if` sobre o signal que o `(dismiss)` desliga é o que tira o
+// alerta do DOM — e é o mesmo construtor do painel Code da story.
+const CODE_DISMISSIBLE = alertDismissibleTemplateSnippet();
+
+const CODE_WITH_ACTION_AND_DISMISS = alertActionAndDismissTemplateSnippet();
 
 const CODE_NO_TITLE = `<div ndsAlert>
   <svg ndsAlertIcon kind="info"></svg>
@@ -184,17 +195,9 @@ const CODE_NO_TITLE = `<div ndsAlert>
   </section>
 </div>`;
 
-const CODE_WITH_ICON = `<div ndsAlert>
-  <svg ndsAlertIcon kind="info"></svg>
-  <h5 ndsAlertTitle>Informação</h5>
-  <section ndsAlertDescription>
-    Ícone SVG posicionado automaticamente pelo CSS do componente.
-  </section>
-</div>`;
-
 const CODE_WITH_ACTION = `<div ndsAlert>
   <svg ndsAlertIcon kind="info"></svg>
-  <h5 ndsAlertTitle>Sessão expira em 5 minutos</h5>
+  <h4 ndsAlertTitle>Sessão expira em 5 minutos</h4>
   <section ndsAlertDescription>
     Salve seu trabalho para não perder as alterações.
   </section>
@@ -241,29 +244,30 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
   ],
   template: `
     <!-- ── Previews do Do & Don't ────────────────────────────────────────────
-         Nível de heading h3: a seção abre em h2 e não tem h3 próprio, então h3
-         aqui não pula degrau (axe heading-order). -->
+         h3: o DocsDoDont só abre o h2 da seção, sem heading no card.
+         role="note" em todo preview: são alertas ESTÁTICOS, já presentes ao
+         carregar — alert/status só no que surge em tempo de execução. -->
     <ng-template #tplDoDont1Do>
-      <div ndsAlert class="nds-w-full">
+      <div ndsAlert role="note" class="nds-w-full">
         <svg ndsAlertIcon kind="error"></svg>
         <h3 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h3>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <div ndsAlert class="nds-w-full">
-        <section ndsAlertDescription>{{ t('demonstration.labels.successTitle') }}</section>
+      <div ndsAlert role="note" class="nds-w-full">
+        <section ndsAlertDescription>{{ t('demonstration.labels.savedLabel') }}</section>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <div ndsAlert variant="destructive" class="nds-w-full">
+      <div ndsAlert role="note" variant="destructive" class="nds-w-full">
         <svg ndsAlertIcon kind="error"></svg>
         <h3 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h3>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <div ndsAlert variant="destructive" class="nds-w-full">
+      <div ndsAlert role="note" variant="destructive" class="nds-w-full">
         <h3 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h3>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
@@ -272,35 +276,35 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     <!-- ── Previews das variantes ────────────────────────────────────────────
          h4 aqui: o card da seção já abre um h3 com o nome da variante. -->
     <ng-template #tplVarDefault>
-      <div ndsAlert class="nds-w-full">
+      <div ndsAlert role="note" class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarDestructive>
-      <div ndsAlert variant="destructive" class="nds-w-full">
+      <div ndsAlert role="note" variant="destructive" class="nds-w-full">
         <svg ndsAlertIcon kind="error"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarSuccess>
-      <div ndsAlert variant="success" class="nds-w-full">
+      <div ndsAlert role="note" variant="success" class="nds-w-full">
         <svg ndsAlertIcon kind="success"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.successTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.successDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarWarning>
-      <div ndsAlert variant="warning" class="nds-w-full">
+      <div ndsAlert role="note" variant="warning" class="nds-w-full">
         <svg ndsAlertIcon kind="warning"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.warningTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.warningDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarInfo>
-      <div ndsAlert variant="info" class="nds-w-full">
+      <div ndsAlert role="note" variant="info" class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
@@ -308,20 +312,24 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     </ng-template>
     <ng-template #tplVarDismissible>
       <!-- Alert dismissible de verdade: fechar dispara a emissão real de
-           alert_dismiss (payload tipado em analytics.ts). -->
-      <div
-        ndsAlert
-        dismissible
-        class="nds-w-full"
-        (dismiss)="rastrearFechamento('dismissible')"
-      >
-        <svg ndsAlertIcon kind="success"></svg>
-        <h4 ndsAlertTitle>{{ t('demonstration.labels.successTitle') }}</h4>
-        <section ndsAlertDescription>{{ t('demonstration.labels.successDesc') }}</section>
-      </div>
+           alert_dismiss (payload tipado em analytics.ts). O @if sobre o
+           (dismiss) é o que tira o nó do DOM — o componente só grava hidden. -->
+      @if (variantDismissibleVisible()) {
+        <div
+          ndsAlert
+          role="note"
+          dismissible
+          class="nds-w-full"
+          (dismiss)="handleDismiss('dismissible', 'docs_variantes')"
+        >
+          <svg ndsAlertIcon kind="info"></svg>
+          <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
+          <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
+        </div>
+      }
     </ng-template>
     <ng-template #tplVarSemTitulo>
-      <div ndsAlert class="nds-w-full">
+      <div ndsAlert role="note" class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
       </div>
@@ -329,7 +337,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
 
     <!-- ── Previews das composições ─────────────────────────────────────── -->
     <ng-template #tplCompIcone>
-      <div ndsAlert class="nds-w-full">
+      <div ndsAlert role="note" class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
@@ -337,15 +345,29 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     </ng-template>
     <ng-template #tplCompAcao>
       <!-- Slot ndsAlertAction, não um botão dentro da descrição:
-           a classe .nds-alert-action é absoluto no canto superior direito, que é o
+           a classe .nds-alert-action é a coluna à direita do texto, que é o
            "alinhado à direita" que o conteúdo descreve. -->
-      <div ndsAlert variant="warning" class="nds-w-full">
+      <div ndsAlert role="note" variant="warning" class="nds-w-full">
         <svg ndsAlertIcon kind="warning"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.warningTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.warningDesc') }}</section>
         <div ndsAlertAction>
           <button ndsButton variant="default" size="sm">
             {{ t('demonstration.labels.warningAction') }}
+          </button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #tplCompActionDismiss>
+      <!-- Ação E fechar: a ação é a terceira coluna do grid e o X segue na
+           calha dele. Estático como os outros previews (role="note"). -->
+      <div ndsAlert role="note" dismissible class="nds-w-full">
+        <svg ndsAlertIcon kind="info"></svg>
+        <h4 ndsAlertTitle>{{ t('demonstration.labels.sessionTitle') }}</h4>
+        <section ndsAlertDescription>{{ t('demonstration.labels.sessionDesc') }}</section>
+        <div ndsAlertAction>
+          <button ndsButton variant="default" size="sm">
+            {{ t('demonstration.labels.saveNow') }}
           </button>
         </div>
       </div>
@@ -381,17 +403,19 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
               <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
             </div>
 
-            <div
-              ndsAlert
-              variant="success"
-              role="note"
-              dismissible
-              (dismiss)="rastrearFechamento('demonstration')"
-            >
-              <svg ndsAlertIcon kind="success"></svg>
-              <h3 ndsAlertTitle>{{ t('demonstration.labels.successTitle') }}</h3>
-              <section ndsAlertDescription>{{ t('demonstration.labels.successDesc') }}</section>
-            </div>
+            @if (demoDismissibleVisible()) {
+              <div
+                ndsAlert
+                variant="success"
+                role="note"
+                dismissible
+                (dismiss)="handleDismiss('demonstration', 'docs_demo')"
+              >
+                <svg ndsAlertIcon kind="success"></svg>
+                <h3 ndsAlertTitle>{{ t('demonstration.labels.successTitle') }}</h3>
+                <section ndsAlertDescription>{{ t('demonstration.labels.successDesc') }}</section>
+              </div>
+            }
 
             <div ndsAlert variant="warning" role="note">
               <svg ndsAlertIcon kind="warning"></svg>
@@ -518,14 +542,26 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarSemTitulo = viewChild.required<TemplateRef<unknown>>('tplVarSemTitulo');
   private readonly tplCompIcone = viewChild.required<TemplateRef<unknown>>('tplCompIcone');
   private readonly tplCompAcao = viewChild.required<TemplateRef<unknown>>('tplCompAcao');
+  private readonly tplCompActionDismiss = viewChild.required<TemplateRef<unknown>>('tplCompActionDismiss');
+
+  /** O `@if` de cada alerta dispensável: o `(dismiss)` desliga, e o nó sai do DOM. */
+  protected readonly demoDismissibleVisible = signal(true);
+  protected readonly variantDismissibleVisible = signal(true);
 
   /**
    * O Alert das docs pages é produto: fechar aqui emite o evento real, com
    * valores estáveis (nunca texto traduzido, que dividiria um evento em três
-   * no GA4).
+   * no GA4). `location` diz de onde veio: a demonstração (`docs_demo`) ou o
+   * card de Variantes (`docs_variantes`).
    */
-  protected rastrearFechamento(label: string): void {
-    track('alert_dismiss', { component: 'alert', label, location: 'docs_demo' });
+  protected handleDismiss(
+    label: 'demonstration' | 'dismissible',
+    location: 'docs_demo' | 'docs_variantes',
+  ): void {
+    (label === 'demonstration' ? this.demoDismissibleVisible : this.variantDismissibleVisible).set(
+      false,
+    );
+    track('alert_dismiss', { component: 'alert', label, location });
   }
 
   protected readonly navGroups = computed(() => {
@@ -613,7 +649,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       destructive: { tpl: this.tplVarDestructive(), code: CODE_DESTRUCTIVE },
       success:     { tpl: this.tplVarSuccess(),     code: CODE_SUCCESS     },
       warning:     { tpl: this.tplVarWarning(),     code: CODE_WARNING     },
-      info:        { tpl: this.tplVarInfo(),        code: CODE_INFO        },
+      info:        { tpl: this.tplVarInfo(),        code: infoCardCode('info') },
     };
 
     const base = (Object.keys(byVariant) as ChaveDeVariante[]).map((v) => ({
@@ -649,8 +685,9 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     return [
-      { key: 'withIcon',   code: CODE_WITH_ICON, tpl: this.tplCompIcone() },
+      { key: 'withIcon',   code: infoCardCode('default'), tpl: this.tplCompIcone() },
       { key: 'withAction', code: CODE_WITH_ACTION,  tpl: this.tplCompAcao()  },
+      { key: 'withActionAndDismiss', code: CODE_WITH_ACTION_AND_DISMISS, tpl: this.tplCompActionDismiss() },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),
       description: withQuandoUsar(
@@ -674,7 +711,14 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
 
   protected readonly stateItems = computed(() => {
     dict();
-    return ['complete', 'withoutTitle', 'withoutIcon', 'dynamicInsert', 'dismissed'].map((k) => ({
+    return [
+      'complete',
+      'withoutTitle',
+      'withoutIcon',
+      'withoutAnnouncement',
+      'dynamicInsert',
+      'dismissed',
+    ].map((k) => ({
       label: t(`states.${k}.label`),
       trigger: toPlainText(t(`states.${k}.trigger`)),
       behavior: toPlainText(t(`states.${k}.behavior`)),

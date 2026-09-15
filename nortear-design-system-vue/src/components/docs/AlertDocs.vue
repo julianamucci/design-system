@@ -137,7 +137,7 @@ import { Info } from "lucide-vue-next";`;
 
 const codeDefault = `<Alert>
   <Info aria-hidden="true" />
-  <AlertTitle as="h3">Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -145,7 +145,7 @@ const codeDefault = `<Alert>
 
 const codeDestructive = `<Alert variant="destructive">
   <AlertCircle aria-hidden="true" />
-  <AlertTitle as="h3">Erro ao salvar</AlertTitle>
+  <AlertTitle as="h4">Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
@@ -153,7 +153,7 @@ const codeDestructive = `<Alert variant="destructive">
 
 const codeSuccess = `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
-  <AlertTitle as="h3">Perfil atualizado</AlertTitle>
+  <AlertTitle as="h4">Perfil atualizado</AlertTitle>
   <AlertDescription>
     Suas informações foram salvas com sucesso.
   </AlertDescription>
@@ -161,7 +161,7 @@ const codeSuccess = `<Alert variant="success">
 
 const codeWarning = `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
-  <AlertTitle as="h3">Assinatura expirando</AlertTitle>
+  <AlertTitle as="h4">Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
   </AlertDescription>
@@ -169,9 +169,9 @@ const codeWarning = `<Alert variant="warning">
 
 const codeInfo = `<Alert variant="info">
   <Info aria-hidden="true" />
-  <AlertTitle as="h3">Dica</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>
-    Você pode personalizar os atalhos de teclado nas configurações.
+    Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
 </Alert>`;
 
@@ -184,7 +184,7 @@ const codeWithoutTitle = `<Alert>
 
 const codeDismissible = `<Alert dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
   <Info aria-hidden="true" />
-  <AlertTitle as="h3">Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -204,7 +204,7 @@ interface AlertProps {
 
 // AlertTitle
 interface AlertTitleProps {
-  as?: string;    // nível do heading (h1–h6) — padrão: 'h5'
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';  // nível pela hierarquia da página — padrão: 'h5'
   class?: string;
 }
 
@@ -225,17 +225,17 @@ const variantItems = computed(() => [
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
   { name: 'info',        description: stripHtml(tContent('variants.items.info')),        code: codeInfo         },
-  { trackId: 'withoutTitle', name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
   { trackId: 'dismissible', name: tContent('variants.items.dismissible.name'), description: tContent('variants.items.dismissible.description'), useWhen: tContent('variants.items.dismissible.use'), code: codeDismissible },
+  { trackId: 'withoutTitle', name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
 ]);
 
-// Primeira emissão real do evento alert_dismiss — o primitivo não importa
+// Fechamento do card "Dispensável" em Variantes. O primitivo não importa
 // analytics; o tracking é responsabilidade do consumidor via emit @dismiss.
-function onDemoDismiss() {
+function onVariantDismiss() {
   track('alert_dismiss', {
     component: 'alert',
     label: 'dismissible',
-    location: 'docs_demo',
+    location: 'docs_variantes',
   });
 }
 
@@ -254,7 +254,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
-    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h4">Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
   },
   {
     trackId: 'withAction',
@@ -264,7 +264,16 @@ const compositionItems = computed(() => [
     // Slot AlertAction, igual à story ComAcao. O markup anterior empilhava o
     // botão dentro da descrição e ele caía na linha de baixo, à esquerda —
     // divergia da story e do "alinhado à direita" do texto.
-    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
+  },
+  {
+    trackId: 'withActionAndDismiss',
+    name: tContent('variants.compositions.withActionAndDismiss.name'),
+    description: tContent('variants.compositions.withActionAndDismiss.description'),
+    useWhen: tContent('variants.compositions.withActionAndDismiss.use'),
+    // Mesma composição da story WithActionAndDismiss: nenhuma prop de layout, a
+    // ação ocupa a própria coluna do grid e o botão de fechar fica na calha dele.
+    code: `<Alert dismissible>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
   },
 ]);
 
@@ -272,6 +281,7 @@ const stateItems = computed(() => [
   { label: tContent('states.complete.label'),      trigger: toPlainText(tContent('states.complete.trigger')),      behavior: toPlainText(tContent('states.complete.behavior'))},
   { label: tContent('states.withoutTitle.label'),  trigger: toPlainText(tContent('states.withoutTitle.trigger')),  behavior: toPlainText(tContent('states.withoutTitle.behavior'))},
   { label: tContent('states.withoutIcon.label'),   trigger: toPlainText(tContent('states.withoutIcon.trigger')),              behavior: toPlainText(tContent('states.withoutIcon.behavior'))},
+  { label: tContent('states.withoutAnnouncement.label'), trigger: toPlainText(tContent('states.withoutAnnouncement.trigger')), behavior: toPlainText(tContent('states.withoutAnnouncement.behavior'))},
   { label: tContent('states.dynamicInsert.label'), trigger: toPlainText(tContent('states.dynamicInsert.trigger')),            behavior: toPlainText(tContent('states.dynamicInsert.behavior'))    },
   { label: tContent('states.dismissed.label'),     trigger: toPlainText(tContent('states.dismissed.trigger')),                behavior: toPlainText(tContent('states.dismissed.behavior'))},
 ]);
@@ -283,21 +293,31 @@ const propCols = computed(() => ({
 }));
 
 const alertPropItems = computed(() => [
-  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
-  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText(tContent('props.table.role'))                  },
-  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className'))             },
-  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: toPlainText(tContent('props.table.dismissible'))  },
-  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: toPlainText(tContent('props.table.onDismiss'))    },
-  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: 'Não', description: toPlainText(tContent('props.table.dismissLabel')) },
+  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: tNav('common.no'), description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: tNav('common.no'), description: toPlainText(tContent('props.table.role'))                  },
+  { name: 'class',   type: 'string',                    defaultValue: '—',         required: tNav('common.no'), description: toPlainText(tContent('props.table.className'))             },
+  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: tNav('common.no'), description: toPlainText(tContent('props.table.dismissible'))  },
+  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: tNav('common.no'), description: toPlainText(tContent('props.table.onDismiss'))    },
+  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: tNav('common.no'), description: toPlainText(tContent('props.table.dismissLabel')) },
 ]);
 
-const slotPropItems = computed(() => [
-  { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: tContent('props.table.children') },
-]);
+const slotPropItem = computed(() => (
+  { name: 'default slot', type: 'VNode', defaultValue: '—', required: tNav('common.yes'), description: tContent('props.table.children') }
+));
+
+const classPropItem = computed(() => (
+  { name: 'class', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.className')) }
+));
 
 const alertTitlePropItems = computed(() => [
-  { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: toPlainText(tContent('props.table.titleAs')) },
-  ...slotPropItems.value,
+  { name: 'as', type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: tNav('common.no'), description: toPlainText(tContent('props.table.titleAs')) },
+  classPropItem.value,
+  slotPropItem.value,
+]);
+
+const alertDescriptionPropItems = computed(() => [
+  classPropItem.value,
+  slotPropItem.value,
 ]);
 
 const tokenRows = computed(() => [
@@ -356,30 +376,42 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
-  { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
-]);
+// Os itens saem das chaves `itemN` do dicionário do locale vigente: item novo no
+// conteúdo aparece na página sem ninguém lembrar de estender uma lista à mão.
+function testItemIndexes(group: 'functional' | 'accessibility' | 'visual'): number[] {
+  const testes = (alertTranslations as unknown as Record<
+    string,
+    { testes?: Record<string, Record<string, unknown>> }
+  >)[locale.value]?.testes;
+  return Object.keys(testes?.[group] ?? {})
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((n): n is string => n !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
+}
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
-]);
+const functionalTestItems = computed(() =>
+  testItemIndexes('functional').map((i) => ({
+    action: tContent(`testes.functional.item${i}.action`),
+    result: tContent(`testes.functional.item${i}.result`),
+    priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
+  })),
+);
 
-const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
-]);
+const a11yTestItems = computed(() =>
+  testItemIndexes('accessibility').map((i) => ({
+    criterion: tContent(`testes.accessibility.item${i}.criterion`),
+    level: tContent(`testes.accessibility.item${i}.level`),
+    how: tContent(`testes.accessibility.item${i}.how`),
+  })),
+);
+
+const visualTestItems = computed(() =>
+  testItemIndexes('visual').map((i) => ({
+    story: tContent(`testes.visual.item${i}.story`),
+    priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
+  })),
+);
 </script>
 
 <template>
@@ -403,12 +435,15 @@ const visualTestItems = computed(() => [
         data-spacing="sm"
       >
         <!-- default — sem título: só ícone + descrição -->
-        <Alert>
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
         <!-- destructive — título + descrição -->
-        <Alert variant="destructive">
+        <Alert
+          role="note"
+          variant="destructive"
+        >
           <AlertCircle aria-hidden="true" />
           <AlertTitle as="h3">
             {{ tContent('demonstration.labels.errorTitle') }}
@@ -417,6 +452,7 @@ const visualTestItems = computed(() => [
         </Alert>
         <!-- success — dismissible: o fechamento emite dismiss -->
         <Alert
+          role="note"
           variant="success"
           dismissible
           @dismiss="onDemonstrationDismiss"
@@ -428,14 +464,17 @@ const visualTestItems = computed(() => [
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
         <!-- warning — ação no slot AlertAction (mesmo markup da composição withAction) -->
-        <Alert variant="warning">
+        <Alert
+          role="note"
+          variant="warning"
+        >
           <TriangleAlert aria-hidden="true" />
           <AlertTitle as="h3">
             {{ tContent('demonstration.labels.warningTitle') }}
           </AlertTitle>
           <!-- Slot AlertAction — NÃO botão inline dentro da descrição.
-               .nds-alert-action é position: absolute no canto superior direito
-               (alert.css), que é o "alinhado à direita" que o conteúdo descreve.
+               .nds-alert-action é a coluna à direita do texto (alert.css), que
+               é o "alinhado à direita" que o conteúdo descreve.
                Empilhar o botão dentro da descrição o joga para a linha de baixo,
                à esquerda, divergindo da story ComAcao. -->
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
@@ -496,32 +535,40 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <Alert>
+        <Alert role="note">
           <AlertCircle aria-hidden="true" />
           <AlertTitle as="h3">
-            Erro ao salvar
+            {{ tContent('demonstration.labels.errorTitle') }}
           </AlertTitle>
-          <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #dont-preview-0>
-        <Alert><AlertDescription>Salvo!</AlertDescription></Alert>
+        <Alert role="note">
+          <AlertDescription>{{ tContent('demonstration.labels.savedLabel') }}</AlertDescription>
+        </Alert>
       </template>
       <template #do-preview-1>
-        <Alert variant="destructive">
+        <Alert
+          role="note"
+          variant="destructive"
+        >
           <AlertCircle aria-hidden="true" />
           <AlertTitle as="h3">
-            Erro ao salvar
+            {{ tContent('demonstration.labels.errorTitle') }}
           </AlertTitle>
-          <AlertDescription>Verifique sua conexão.</AlertDescription>
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #dont-preview-1>
-        <Alert variant="destructive">
+        <Alert
+          role="note"
+          variant="destructive"
+        >
           <AlertTitle as="h3">
-            Erro ao salvar
+            {{ tContent('demonstration.labels.errorTitle') }}
           </AlertTitle>
-          <AlertDescription>Verifique sua conexão.</AlertDescription>
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
     </DocsDoDont>
@@ -542,9 +589,12 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Alert class="nds-w-full">
+        <Alert
+          role="note"
+          class="nds-w-full"
+        >
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">
+          <AlertTitle as="h4">
             {{ tContent('demonstration.labels.infoTitle') }}
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
@@ -552,11 +602,12 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <Alert
+          role="note"
           variant="destructive"
           class="nds-w-full"
         >
           <AlertCircle aria-hidden="true" />
-          <AlertTitle as="h3">
+          <AlertTitle as="h4">
             {{ tContent('demonstration.labels.errorTitle') }}
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
@@ -564,11 +615,12 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-2>
         <Alert
+          role="note"
           variant="success"
           class="nds-w-full"
         >
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle as="h3">
+          <AlertTitle as="h4">
             {{ tContent('demonstration.labels.successTitle') }}
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
@@ -576,11 +628,12 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-3>
         <Alert
+          role="note"
           variant="warning"
           class="nds-w-full"
         >
           <TriangleAlert aria-hidden="true" />
-          <AlertTitle as="h3">
+          <AlertTitle as="h4">
             {{ tContent('demonstration.labels.warningTitle') }}
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
@@ -588,32 +641,37 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-4>
         <Alert
+          role="note"
           variant="info"
           class="nds-w-full"
         >
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">
-            Dica
+          <AlertTitle as="h4">
+            {{ tContent('demonstration.labels.infoTitle') }}
           </AlertTitle>
-          <AlertDescription>Você pode personalizar os atalhos de teclado nas configurações.</AlertDescription>
+          <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-5>
-        <Alert class="nds-w-full">
+        <Alert
+          role="note"
+          dismissible
+          class="nds-w-full"
+          @dismiss="onVariantDismiss"
+        >
           <Info aria-hidden="true" />
+          <AlertTitle as="h4">
+            {{ tContent('demonstration.labels.infoTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-6>
         <Alert
-          dismissible
+          role="note"
           class="nds-w-full"
-          @dismiss="onDemoDismiss"
         >
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">
-            {{ tContent('demonstration.labels.infoTitle') }}
-          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -626,27 +684,54 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Alert class="nds-w-full">
+        <Alert
+          role="note"
+          class="nds-w-full"
+        >
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">
+          <AlertTitle as="h4">
             {{ tContent('demonstration.labels.infoTitle') }}
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-1>
-        <Alert class="nds-w-full">
+        <Alert
+          role="note"
+          class="nds-w-full"
+        >
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">
-            Sessão expira em 5 minutos
+          <AlertTitle as="h4">
+            {{ tContent('demonstration.labels.sessionTitle') }}
           </AlertTitle>
-          <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
+          <AlertDescription>{{ tContent('demonstration.labels.sessionDesc') }}</AlertDescription>
           <AlertAction>
             <Button
               size="sm"
               variant="default"
             >
-              Salvar agora
+              {{ tContent('demonstration.labels.saveNow') }}
+            </Button>
+          </AlertAction>
+        </Alert>
+      </template>
+      <template #variant-preview-2>
+        <Alert
+          role="note"
+          dismissible
+          class="nds-w-full"
+        >
+          <Info aria-hidden="true" />
+          <AlertTitle as="h4">
+            {{ tContent('demonstration.labels.sessionTitle') }}
+          </AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.sessionDesc') }}</AlertDescription>
+          <AlertAction>
+            <Button
+              size="sm"
+              variant="default"
+            >
+              {{ tContent('demonstration.labels.saveNow') }}
             </Button>
           </AlertAction>
         </Alert>
@@ -664,7 +749,7 @@ const visualTestItems = computed(() => [
       :tables="[
         { title: tContent('props.alertTitle'), cols: propCols, items: alertPropItems },
         { title: tContent('props.alertTitleTitle'), cols: propCols, items: alertTitlePropItems },
-        { title: tContent('props.alertDescTitle'), cols: propCols, items: slotPropItems },
+        { title: tContent('props.alertDescTitle'), cols: propCols, items: alertDescriptionPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
