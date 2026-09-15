@@ -584,6 +584,15 @@ relatório.
 **`task` é id estável** (`"upload"` nas cinco), nunca texto traduzido, e
 `location` é `docs_demo`.
 
+**E `docs_demo` é o location CERTO aqui, não dívida.** O componente é passivo: as
+prévias de Variantes, Estados e Do & Dont são barras paradas, sem clique, e o
+único evento da página sai da demonstração animada. Até 2026-09-14 as cinco
+páginas estavam na lista de dívida do `location_so_da_demo`, como se devessem
+rastrear as prévias; desde então o slug está em `demoUnica`, a exceção declarada
+do mesmo arquivo, e o portão confere em cada página que todo `docs_demo` sai de
+`track("task_progress")` ou `track("task_complete")` — um evento qualquer numa
+prévia mandando `docs_demo` reprova.
+
 ## 10. Reconstruir do zero
 
 Ordem: folha → primitivo da stack → composição de rótulo e valor → stories →

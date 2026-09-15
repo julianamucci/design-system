@@ -565,6 +565,60 @@ function DIVIDA_LOCATION_SO_DA_DEMO() {
   return _dividaLocationSoDaDemo;
 }
 
+/**
+ * A EXCEÇÃO declarada do `location_so_da_demo` — por slug, na chave `demoUnica`
+ * do mesmo arquivo da dívida. Dívida é página ERRADA que ainda não foi paga;
+ * exceção é página CERTA que a regra não sabia distinguir.
+ *
+ * O caso é o componente PASSIVO: nada nele é clicável, as prévias de Variantes,
+ * Estados e Do & Dont são desenho parado, e o único evento de produto da página
+ * sai da demonstração animada — onde `docs_demo` é a verdade. Medido em
+ * 2026-09-14 no Progress: nas cinco stacks, os dois literais eram
+ * `task_progress` e `task_complete` da demo, e ele era o único dos 24 slugs da
+ * lista de dívida nessa situação. Tratá-lo como dívida obrigaria a inventar
+ * evento em prévia parada — upload que não aconteceu, registrado no GA4.
+ *
+ * A exceção não é cheque em branco: a regra confere a premissa em cada página
+ * (ver `auditAnalytics`).
+ */
+let _excecaoDemoUnica = null;
+function EXCECAO_DEMO_UNICA() {
+  if (_excecaoDemoUnica) return _excecaoDemoUnica;
+  try {
+    const bruto = JSON.parse(readFile(join(ROOT, 'docs', 'shared', 'primitives', 'location-so-da-demo-divida.json')) || '{}');
+    _excecaoDemoUnica = new Map(Object.entries(bruto.demoUnica || {}));
+  } catch {
+    _excecaoDemoUnica = new Map();
+  }
+  return _excecaoDemoUnica;
+}
+
+/** Eventos de produto que o conteúdo compartilhado do slug declara em `analytics.table`. */
+function eventosDaTabelaDeAnalytics(slug) {
+  const eventos = new Set();
+  const EVENT_RX = /^[a-z]+_[a-z_]+$/;
+  const bruto = readFile(join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json'));
+  if (!bruto) return eventos;
+  try {
+    for (const locale of Object.values(JSON.parse(bruto))) {
+      const table = locale?.analytics?.table;
+      if (!table || typeof table !== 'object') continue;
+      for (const [key, val] of Object.entries(table)) {
+        if (val && typeof val === 'object' && EVENT_RX.test(key) && !CAMPOS_DE_PAYLOAD.has(key)) eventos.add(key);
+        else if (typeof val === 'string' && EVENT_RX.test(val) && !CAMPOS_DE_PAYLOAD.has(val)) eventos.add(val);
+      }
+    }
+  } catch { /* JSON inválido não é responsabilidade deste check */ }
+  return eventos;
+}
+
+/** O evento do `track(` mais próximo ANTES do literal — quem carrega aquele `location`. */
+function eventoDoTrackAnterior(content, index) {
+  const antes = content.slice(Math.max(0, index - 800), index);
+  const chamadas = [...antes.matchAll(/\btrack\(\s*["'`]([a-z_]+)["'`]/g)];
+  return chamadas.length ? chamadas[chamadas.length - 1][1] : null;
+}
+
 function auditAnalytics(slug) {
   const violations = [];
   // ── `location` diz a SEÇÃO, e por muito tempo disse sempre a mesma ─────────
@@ -676,13 +730,58 @@ function auditAnalytics(slug) {
         }
 
         for (const m of achados) {
-          achadosDaUnidade.push({ valor: m[1], file, line: content.slice(0, m.index).split('\n').length });
+          achadosDaUnidade.push({
+            valor: m[1], file, line: content.slice(0, m.index).split('\n').length,
+            evento: eventoDoTrackAnterior(content, m.index),
+          });
         }
       }
 
       const valores = new Set(achadosDaUnidade.map((a) => a.valor));
       const soDemo = achadosDaUnidade.length >= 1 && valores.size === 1 && valores.has('docs_demo');
       const chaveDivida = `${stack}/${basename(pagina)}`;
+      // Exceção `demoUnica` (ver `EXCECAO_DEMO_UNICA`): componente passivo cujo
+      // único evento sai da demonstração. Três premissas, conferidas por página,
+      // e qualquer uma quebrada reprova — exceção que não se confere vira o
+      // `source-snippets.test.ts` que encolheu em silêncio:
+      //   1. a página não está TAMBÉM na dívida (as duas listas não se somam);
+      //   2. todo `location` ainda é `docs_demo` — se uma seção passou a
+      //      rastrear, o componente deixou de ser passivo e a exceção sobra;
+      //   3. cada `docs_demo` sai de um `track(` de evento que o conteúdo do
+      //      componente declara em `analytics.table`. Um `button_click` numa
+      //      prévia, mandando `docs_demo`, é exatamente o defeito que esta regra
+      //      existe para pegar, e não pode se esconder atrás da exceção.
+      const motivoExcecao = EXCECAO_DEMO_UNICA().get(slug);
+      if (motivoExcecao !== undefined) {
+        const alvo = achadosDaUnidade[0] ?? { file: pagina, line: 1 };
+        if (DIVIDA_LOCATION_SO_DA_DEMO().has(chaveDivida)) {
+          violations.push({
+            category: 'analytics', severity: 'medium', slug, stack,
+            file: 'docs/shared/primitives/location-so-da-demo-divida.json', rule: 'location_so_da_demo',
+            message: `${chaveDivida} está na dívida E o slug está em demoUnica — página certa não é dívida; remova a entrada de "paginas"`,
+          });
+        }
+        if (!soDemo) {
+          violations.push({
+            category: 'analytics', severity: 'medium', slug, stack,
+            file: relative(ROOT, alvo.file), line: alvo.line, rule: 'location_so_da_demo',
+            message: achadosDaUnidade.length === 0
+              ? `"${slug}" está em demoUnica e esta página não manda location nenhum — a exceção não cobre nada aqui; remova-a ou confira a demonstração`
+              : `"${slug}" está em demoUnica e esta página manda ${[...valores].join(', ')} — alguma seção passou a rastrear, o componente deixou de ser passivo; remova a exceção`,
+          });
+          continue;
+        }
+        const eventos = eventosDaTabelaDeAnalytics(slug);
+        for (const a of achadosDaUnidade) {
+          if (a.evento && eventos.has(a.evento)) continue;
+          violations.push({
+            category: 'analytics', severity: 'medium', slug, stack,
+            file: relative(ROOT, a.file), line: a.line, rule: 'location_so_da_demo',
+            message: `"docs_demo" sai de ${a.evento ? `track("${a.evento}")` : 'lugar nenhum com track('}, que não é evento da tabela de analytics de "${slug}" — a exceção demoUnica só cobre os eventos que o conteúdo do componente declara (${[...eventos].join(', ') || 'nenhum'})`,
+          });
+        }
+        continue;
+      }
       // O limiar de TRÊS literais era o buraco, medido em 2026-09-11: a página
       // que centraliza o rastreio num helper escreve `docs_demo` uma ou duas
       // vezes — e é justamente o padrão que esta regra condena ("constante no

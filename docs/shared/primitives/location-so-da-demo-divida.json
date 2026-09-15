@@ -9,7 +9,6 @@
     "angular/CarouselDocs.ts": "carousel",
     "angular/CollapsibleDocs.ts": "collapsible",
     "angular/PaginationDocs.ts": "pagination",
-    "angular/ProgressDocs.ts": "progress",
     "angular/ResizableDocs.ts": "resizable",
     "angular/SwitchDocs.ts": "switch",
     "angular/TextareaDocs.ts": "textarea",
@@ -23,7 +22,6 @@
     "react/FormDocs.tsx": "form",
     "react/InputDocs.tsx": "input",
     "react/PaginationDocs.tsx": "pagination",
-    "react/ProgressDocs.tsx": "progress",
     "react/RadioGroupDocs.tsx": "radio-group",
     "react/SidebarDocs.tsx": "sidebar",
     "react/StepperDocs.tsx": "stepper",
@@ -39,7 +37,6 @@
     "svelte/FormDocs.svelte": "form",
     "svelte/InputDocs.svelte": "input",
     "svelte/PaginationDocs.svelte": "pagination",
-    "svelte/ProgressDocs.svelte": "progress",
     "svelte/SidebarDocs.svelte": "sidebar",
     "svelte/StepperDocs.svelte": "stepper",
     "svelte/TabsDocs.svelte": "tabs",
@@ -53,7 +50,6 @@
     "vanilla/FormDocs.ts": "form",
     "vanilla/InputDocs.ts": "input",
     "vanilla/PaginationDocs.ts": "pagination",
-    "vanilla/ProgressDocs.ts": "progress",
     "vanilla/RadioGroupDocs.ts": "radio-group",
     "vanilla/SelectDocs.ts": "select",
     "vanilla/SidebarDocs.ts": "sidebar",
@@ -73,7 +69,6 @@
     "vue/FormDocs.vue": "form",
     "vue/InputDocs.vue": "input",
     "vue/PaginationDocs.vue": "pagination",
-    "vue/ProgressDocs.vue": "progress",
     "vue/RadioGroupDocs.vue": "radio-group",
     "vue/ResizableDocs.vue": "resizable",
     "vue/SelectDocs.vue": "select",
@@ -84,5 +79,9 @@
     "vue/TextareaDocs.vue": "textarea",
     "vue/ToggleDocs.vue": "toggle",
     "vue/ToggleGroupDocs.vue": "toggle-group"
+  },
+  "$descricaoDemoUnica": "Exceção DECLARADA, por slug: componente passivo cujo único evento de produto sai da demonstração — ali docs_demo é a verdade, e as prévias paradas não têm o que rastrear. A regra confere as premissas em cada página (não está na dívida, todo location ainda é docs_demo, e cada um sai de track() de evento da analytics.table do componente) e reprova a entrada que deixou de valer.",
+  "demoUnica": {
+    "progress": "Componente passivo (2026-09-14): o único evento é task_progress/task_complete da demonstração animada, nas cinco stacks; Variantes, Estados e Do & Dont são barras paradas."
   }
 }

@@ -147,6 +147,17 @@ renderizam componentes **vivos**, e um clique ali é tão real quanto na demo.
 Esses elementos disparam o evento do produto (`button_click`, `tooltip_view`,
 `dialog_open`…) com o `location` da própria seção.
 
+**A exceção é o componente PASSIVO**, e ela é declarada, não presumida. Quando
+nada no componente é clicável e as prévias fora da demonstração são desenho
+parado, o único evento de produto sai da demonstração — e ali `docs_demo` é a
+verdade. Inventar evento numa prévia parada para variar o `location` seria pior:
+um upload que não aconteceu, registrado no GA4. Esses slugs ficam em
+`demoUnica`, em `docs/shared/primitives/location-so-da-demo-divida.json`, e o
+portão `location_so_da_demo` confere três premissas em cada página: ela não está
+também na lista de dívida, todo `location` ainda é `docs_demo`, e cada um sai de
+um `track(` de evento que o `analytics.table` do componente declara. Medido em
+2026-09-14: o Progress era o único dos 24 slugs da dívida nessa situação.
+
 ---
 
 ## Catálogo de Eventos por Componente
