@@ -1,8 +1,9 @@
 # PRD — HoverCard
 
-> **Estado descrito**: 2026-09-12. **Revisão serial fechada em** 2026-09-06.
+> **Estado descrito**: 2026-09-15. **Revisão serial fechada em** 2026-09-06.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
 
 ## 1. Identidade
 
@@ -24,13 +25,13 @@ submit — em touch não há caminho acessível até eles.
 
 | # | o contrato | portão |
 |---|---|---|
-| C1 | Abre no hover do gatilho, depois da espera de abertura | play, nas cinco |
-| C2 | Abre TAMBÉM no foco por Tab, sem exigir ponteiro | `accessibility.items.item1` — é o que WCAG 1.4.13 pede |
-| C3 | Permanece aberto enquanto o ponteiro estiver sobre o CARTÃO: dá para o cursor viajar do gatilho até ele | `accessibility.items.item2` |
-| C4 | `Escape` fecha | `accessibility.items.item3` — cláusula "dismissable" da 1.4.13 |
-| C5 | O gatilho é DESCRITO pelo cartão via `aria-describedby`, e só enquanto o cartão existe | `accessibility.items.item5` |
-| C6 | Renderiza em portal, fora da raiz da página | `notes.item2` |
-| C7 | Sem espaço no `side` pedido, vira para o lado oposto | story de posicionamento |
+| C1 | Abre no hover do gatilho, depois da espera de abertura | play `Playground` (passo do ponteiro) e `Variants/WithShortDelay` (abre em menos de 550ms), nas cinco |
+| C2 | Abre TAMBÉM no foco por Tab, sem exigir ponteiro | play `Playground` (`userEvent.tab()`), nas cinco; conteúdo em `accessibility.items.item1` — é o que WCAG 1.4.13 pede. Ver a inconsistência 3 da §7: foco programático não abre em duas |
+| C3 | Permanece aberto enquanto o ponteiro estiver sobre o CARTÃO: dá para o cursor viajar do gatilho até ele | play `States/Open` (`panelEntrar`), nas cinco; `accessibility.items.item2` |
+| C4 | `Escape` fecha | play `Playground` (passo do Escape), nas cinco; `accessibility.items.item3` — cláusula "dismissable" da 1.4.13 |
+| C5 | O gatilho é DESCRITO pelo cartão via `aria-describedby`, e só enquanto o cartão existe | plays `States/Open` (aponta para `panel.id`) e `States/Closed` + fim do `Playground` (atributo ausente), nas cinco; `accessibility.items.item5` |
+| C6 | Renderiza em portal, fora da raiz da página | `notes.item2`; a sonda `panelOpen()` consulta `document.body`, não o canvas |
+| C7 | Sem espaço no `side` pedido, vira para o lado oposto, e o painel fica ONDE o `data-side` diz | play `Compositions/Sides` com `expectOndeDiz`, nas cinco (D8) |
 | C8 | O conteúdo do cartão NÃO é o único caminho para a informação | `accessibility.items.item4` — julgamento, sem portão automático |
 
 ## 3. Decisões fixadas
@@ -44,7 +45,11 @@ gatilho continua se chamando o que ele é; o cartão acrescenta descrição.
 
 ### D2 · As esperas são 600ms para abrir e 300ms para fechar
 
-**Estado**: iguais nas cinco stacks, expostas como `openDelay`/`closeDelay`.
+**Estado**: iguais nas cinco stacks, expostas como `openDelay`/`closeDelay`. Quatro
+declaram o padrão no próprio wrapper (constantes no react e no vanilla, `withDefaults`
+no vue, desestruturação no svelte); o angular não declara e herda 600/300 dos inputs
+do gatilho do `radix-ng`. No angular os dois moram no GATILHO, não na raiz — ver a
+tabela de divergências de forma na §7.
 **Por quê**: a espera de abertura é o filtro natural contra hover de baixa
 intenção — é ela que evita que passar o mouse por cima conte como engajamento.
 **Orientação registrada**: para previews ricos, 300–500ms; abaixo disso o cartão
@@ -167,12 +172,19 @@ Drawer no mesmo dia, por decisão da dona (`18-overlay.md` §Analytics).
 ## 4. Anatomia
 
 ```
-hover-card                    (raiz — só estado)
+hover-card                    (raiz — só estado; vira elemento só no vanilla e no angular)
 └── hover-card-trigger        aria-describedby aponta para o cartão enquanto ele existe
-    └── hover-card-positioner (existe na marcação de react e angular; as outras três não o nomeiam)
-        └── hover-card-content  a caixa — CASCO, ver D5
-            └── [conteúdo arbitrário]
+
+[portal no <body>, só enquanto aberto]
+└── hover-card-positioner     (classe nomeada só em react e angular; vue e svelte têm invólucro anônimo da lib; vanilla não tem)
+    └── hover-card-content    a caixa — CASCO, ver D5
+        └── [conteúdo arbitrário]
 ```
+
+O positioner NÃO é filho do gatilho: vive no portal. `data-slot="hover-card"` só
+chega ao DOM no vanilla (`<div>` com `display: contents`) e no angular (`<span>`); no
+react e no vue o atributo é passado a uma raiz de lib que não renderiza elemento, e o
+svelte não o escreve.
 
 **O que é obrigatório**: `hover-card-content`. O título e o corpo do exemplo de
 referência **não são partes do componente** — a story preenche o cartão com um
@@ -181,10 +193,10 @@ métrica.
 
 ## 5. Geometria e tokens
 
-Fonte: `docs/shared/styles/nds/hover-card.css` — **dezessete declarações**, e o
-arquivo é pequeno o bastante para a conta fechar: **onze** nas dez linhas da
-tabela abaixo — a linha da largura vale por duas, a declaração no `:root` e a
-leitura no painel — e **seis** fora dela, nomeadas logo depois.
+Fonte: `docs/shared/styles/nds/hover-card.css` — **quinze declarações**, e o
+arquivo é pequeno o bastante para a conta fechar: **nove** na tabela abaixo — a
+linha da largura vale por duas, a declaração no `:root` e a leitura no painel, e a
+linha de posicionamento vale por zero — e **seis** fora dela, nomeadas logo depois.
 
 | propriedade | valor | token |
 |---|---|---|
@@ -202,11 +214,8 @@ As seis de fora: o `transform-origin` da cadeia de três libs (D6), o `isolation
 e o `z-index` do `.nds-hover-card-positioner`, e as três da saída animada
 (`opacity`, `transform`, `transition`).
 
-**Até 2026-09-12 esta seção prometia "dezesseis declarações, e a lista abaixo é
-toda ela"**, e a lista tinha nove linhas. Medido em 2026-09-12, contando a folha:
-eram dezessete, e a que faltava na tabela era justamente o `position: absolute`
-do painel. Ela foi contada, virou linha da tabela, e **saiu da folha em
-2026-09-13** (D8) — junto com o `max-width: none` que dependia dela (D4).
+Recontado em 2026-09-15: eram dezessete até 2026-09-13, quando saíram
+`position: absolute` (D8) e `max-width: none` (D4).
 
 **O degrau da sombra sai do TIPO de superfície**, não da comparação com os
 vizinhos: flutuante passivo é `lg`, pela regra em
@@ -215,29 +224,17 @@ Esta linha dizia "a mesma do Tooltip e mais alta que a do Popover (`md`)", e
 descrever vizinho é o que já envelheceu a linha equivalente do popover no dia em
 que tooltip e hover-card desceram de `xl` para `lg`.
 
-**Animação**: só a saída anima (`data-ending-style`), para evitar corrida entre
+**Animação**: só a saída anima (`[data-ending-style]`), para evitar corrida entre
 opacidade zero na entrada e checagem síncrona de visibilidade — foi ela que
-derrubava `toBeVisible` nas plays.
+derrubava `toBeVisible` nas plays. **E ela só existe onde a lib publica
+`data-ending-style`**: react (base-ui), svelte (bits, `getDataTransitionAttrs`) e
+angular (radix-ng). O vue (reka publica só `data-state`) e o vanilla (a fábrica
+remove o painel na hora) fecham sem animação — inconsistência 5 da §7.
 
-**Até 2026-09-12 esta linha dizia "pelo mesmo motivo do Popover"**, e o motivo do
-Popover deixou de existir: naquele dia ele parou de animar por completo, por
-decisão da dona, e não sobrou lado nenhum para comparar. Citar vizinho pelo nome
-envelhece sozinho — a mesma lição que a pendência da §8 vem medindo.
-
-**`position: absolute` no painel foi a divergência ABERTA desta folha, e fechou
-em 2026-09-13** (D8). Vale guardar como ela sobreviveu, porque o mecanismo é o
-que esta casa vem pagando repetido: o `tooltip.css` tirou a declaração
-equivalente em 2026-09-04 (ver `tooltip.md` D1) e o `popover.css` a RECUSA num
-comentário no topo do seletor (ver `popover.md` §4), pelo mesmo defeito medido
-nos dois — fora do fluxo, o invólucro que a lib posiciona colapsa para 0×0.
-
-Aqui a declaração continuou, e este parágrafo dizia, com todas as letras, que o
-colapso estava **medido e tratado como dado, não como defeito**, e que era
-"decisão de CÓDIGO, relatada e não resolvida aqui". Ou seja: a medição certa, no
-documento certo, e a correção esperando uma rodada que só veio quando outro
-agente a relatou como achado NOVO. É a regra do CLAUDE.md sobre defeito medido e
-adiado — o que fecha a rodada não é a linha no documento, é o portão. Agora ele
-existe: `folha_tira_do_fluxo_sem_dizer_onde`.
+**`position: absolute` no painel ficou nesta folha até 2026-09-13** (D8), medido
+e registrado aqui como dado enquanto o `tooltip.css` já o tinha tirado pelo mesmo
+defeito. O que fechou foi o portão, não a linha no documento:
+`folha_tira_do_fluxo_sem_dizer_onde`.
 
 **`prefers-reduced-motion` é atendido pela camada de TOKEN, e a ausência de um
 bloco `@media` nesta folha NÃO é defeito** — foi relatada como tal duas vezes,
@@ -248,9 +245,8 @@ transição da saída usa `var(--duration-fast)`. Medido em 2026-09-09 em motor 
 CSS real (Chromium com `reducedMotion: 'reduce'`, lendo `getComputedStyle`):
 este painel para, junto com os outros 21 alvos de overlay sondados.
 
-**Até 2026-09-12 a frase acima estava no presente — "é a única da categoria".**
-São DUAS desde aquele dia: o `popover.css` perdeu a guarda junto com a animação,
-e o motivo está escrito no fim daquela folha. Sete das nove têm bloco.
+Das nove folhas da categoria, sete têm bloco; `hover-card.css` e `popover.css` não
+(o popover não anima desde 2026-09-12). Recontado em 2026-09-15.
 
 Os blocos por folha das vizinhas são redundância, e vários deles não seguram
 nada: a guarda mira a classe nua, (0,1,0), contra uma declaração em
@@ -270,7 +266,7 @@ situação foram corrigidas no fim de `utilities.css`.
 | Opening | hover ou foco, durante a espera | nada visível ainda — a espera É o estado |
 | Open | espera cumprida | cartão montado; `aria-describedby` ativo |
 | Closing | ponteiro sai, durante a espera de fechamento | cartão ainda montado |
-| Transitioning | saída | opacidade e escala até a transição terminar |
+| Transitioning | saída, com `[data-ending-style]` | opacidade e escala até a transição terminar — só em react, svelte e angular; vue e vanilla desmontam sem transição |
 
 ## 7. API
 
@@ -284,30 +280,24 @@ situação foram corrigidas no fim de `utilities.css`.
 | `side` | `top \| right \| bottom \| left` | `bottom` |
 | `align` | `start \| center \| end` | `center` |
 
-`side` e `align` moram no Content, não na raiz.
+`side` e `align` moram no Content, não na raiz. `sideOffset` (padrão 4, D9) existe
+nas cinco.
 
-**`open` é a única linha da tabela que não vale nas cinco**: o vanilla não a tem —
-lá o modo controlado é imperativo, e os outros seis nomes existem em todas.
-Medido em 2026-09-12 em `HoverCardOptions`.
+**Duas linhas da tabela não valem igual nas cinco**, medido em 2026-09-15: `open`
+não existe no vanilla — lá o modo controlado é imperativo —, e `openDelay`/`closeDelay`
+moram no GATILHO no angular (`hover-card.ts:246`, alias de `delay`/`closeDelay` do
+`RdxPreviewCardTrigger`), e não na raiz. Os demais nomes existem nas cinco no lugar
+que a tabela diz.
 
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
 | svelte | a lib é `LinkPreview`, não `HoverCard`; `defaultOpen` não existe nela e é implementado no wrapper — registrado em `PATCHES.md#svelte-hovercard-defaultopen` |
-| vanilla | fábrica `createHoverCard`, que devolve `{ open, close, toggle, isOpen }` — o modo controlado é imperativo, e não há `open` como opção: quem controla chama os verbos e recebe cada mudança de volta em `onOpenChange` |
-| react, angular | montam o `hover-card-positioner` nomeado; vue, svelte e vanilla não |
-
-**Até 2026-09-12 a linha do vanilla dizia** que a fábrica "ainda expõe
-`open`/`close` em vez dos verbos em inglês que o popover e o sidebar adotaram", e
-a frase não fechava consigo mesma: `open` e `close` SÃO os verbos em inglês, e são
-os mesmos que `createPopover` devolve. Medido em 2026-09-12 nos dois arquivos, a
-divergência real é o quarto membro de cada tupla — `createHoverCard` devolve
-`isOpen()`, um LEITOR de estado, e `createPopover` devolve `setOpen()`, um
-ESCRITOR. Ela cai do gesto: o popover tem modo controlado por opção (`open`), e
-`setOpen` é por onde ele anda; o cartão não tem opção controlada nenhuma, e quem o
-comanda por fora precisa saber se ele está aberto. Divergência de forma de API não
-tem fonte de verdade, então isto fica registrado e não "alinhado".
+| vanilla | fábrica `createHoverCard`, que devolve `{ open, close, toggle, isOpen }` — o modo controlado é imperativo, e não há `open` como opção: quem controla chama os verbos e recebe cada mudança de volta em `onOpenChange`. `isOpen()` é LEITOR, ao contrário do `setOpen()` escritor do `createPopover`, porque aqui não há opção controlada por onde andar |
+| angular | `openDelay`/`closeDelay` são inputs do `ndsHoverCardTrigger`, não do `span[ndsHoverCard]`; o gatilho só aceita `a` e `button`, ganha `type="button"` quando é botão sem tipo e expõe `disabled`; a classe extra do painel é o input `contentClass` do `ng-template` |
+| react | a classe extra do painel é `className`; vue, svelte e vanilla usam `class` |
+| react, angular | montam o `hover-card-positioner` nomeado; vue e svelte têm invólucro anônimo da lib, e o vanilla posiciona o próprio painel |
 
 ### Peças, por stack
 
@@ -341,13 +331,163 @@ Este componente **não tem título de cabeçalho**, então não há seletor `h2[
 nem `h3[…]` aqui — a nota de nível de cabeçalho vale para dialog, sheet, drawer
 e alert-dialog, que são os que nomeiam o painel com um cabeçalho.
 
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Medidas arquivo a arquivo, lendo o código das cinco stacks e a fonte instalada das
+quatro libs. Nenhuma suíte foi rodada. `node scripts/audit.mjs hover-card --json`
+não reporta nada (`[]`): nenhum item abaixo tem portão hoje. Caminhos curtos:
+`ui/` é `src/components/ui/` de cada stack (`ui/hover-card/` no vue e no svelte),
+`docs/` é `src/components/docs/HoverCardDocs.*`.
+
+**Comportamento**
+
+1. **Default de `alignOffset`.** react `4` (`ui/hover-card.tsx:178`); angular `0`
+   (`ui/hover-card.ts:135`); vue e svelte não declaram, e as libs usam 0; vanilla
+   não tem a opção (`HoverCardOptions`, `ui/hover-card.ts:95-110`). Maioria (3): 0.
+   Com `align` em `start`/`end`, o react desloca o painel 4px no eixo cruzado e as
+   outras não.
+2. **Que foco abre.** react só abre em `:focus-visible` (`useFocus` do base-ui,
+   `PreviewCardTrigger.js:71`; comentário em `ui/hover-card.tsx:55-59`) e svelte
+   também (`isFocusVisible`, `bits-ui/dist/bits/link-preview/link-preview.svelte.js:134-137`).
+   vue (`reka-ui/dist/HoverCard/HoverCardTrigger.js:54`), angular
+   (`radix-ng-primitives-preview-card.mjs:707-714`) e vanilla (`ui/hover-card.ts:288`)
+   abrem com foco cru, inclusive programático. Maioria (3), com a referência: foco
+   cru. Nas duas o filtro é da lib — alinhar exige interceptar, senão declarar.
+3. **Clique fora fecha?** react (`useDismiss`, `PreviewCardRoot.js:81`), vue
+   (`DismissableLayer`, `HoverCardContentImpl.js:161-167`), svelte
+   (`onInteractOutside`, `link-preview.svelte.js`) e angular (`outsidePress: () => true`,
+   `radix-ng-primitives-preview-card.mjs:493`) fecham. O vanilla só escuta Escape no
+   documento (`ui/hover-card.ts:219-221,253`): clicar fora não fecha. Maioria (4):
+   fecha; a referência não.
+4. **Saída animada.** react, svelte (`getDataTransitionAttrs`, `link-preview.svelte.js:228`)
+   e angular (`data-ending-style` no popup, `radix-ng-primitives-preview-card.mjs:516`)
+   publicam `[data-ending-style]` e animam a saída da folha. O vue não: a reka
+   publica só `data-state` (`HoverCardContentImpl.js:174`). O vanilla remove o
+   painel na hora (`ui/hover-card.ts:266`). Maioria (3): anima; a referência não.
+5. **Atributo de estado no painel.** react e angular: `data-open`/`data-closed`; vue e
+   svelte: `data-state` (`HoverCardContentImpl.js:174`, `link-preview.svelte.js:227`);
+   vanilla: nenhum. Mecânica de lib — registrar, não alinhar. Mas a story
+   `States/Controlled` do svelte afirma `data-state="open"`
+   (`ui/hover-card/hover-card-states.stories.ts:183`), uma asserção que só existe
+   nessa stack.
+6. **Formato do `id` do painel.** vanilla `hover-card-N` (`ui/hover-card.ts:196`);
+   react `nds-hover-card-<useId>` (`ui/hover-card.tsx:195`); vue
+   `useId(undefined, 'nds-hover-card-content')` (`HoverCardContent.vue:40`); svelte
+   `$props.id()`, só quando a lib não deu id (`hover-card-content.svelte:59,65`);
+   angular `contentId` do radix-ng (`ui/hover-card.ts:268`). Não há contrato sobre o
+   formato, só sobre o vínculo (C5). Registrar.
+7. **Raiz no DOM.** Só vanilla (`<div data-slot="hover-card">` com `display: contents`,
+   `ui/hover-card.ts:206-207`) e angular (`<span>`, `ui/hover-card.ts:188`) renderizam
+   a raiz. react e vue passam `data-slot` a uma raiz de lib sem elemento
+   (`ui/hover-card.tsx:121`, `HoverCard.vue:64`), e o svelte não o escreve. Só o
+   Playground do vanilla (`hover-card.stories.ts:127`) e o do angular
+   (`hover-card.stories.ts:119-120`) afirmam a raiz. Divergência de API de framework —
+   registrar, não alinhar.
+
+**API**
+
+8. **Onde moram as esperas**, **nome da classe extra** e **forma do gatilho** no
+   angular — ver a tabela de divergências de forma acima. Divergência de API —
+   registrar, não alinhar.
+
+**Stories e asserções**
+
+9. **Conjunto de stories.** As quatro stacks de lib têm as mesmas 12 (`Playground`;
+   `Variants/Default`, `WithShortDelay`; `States/Closed`, `Open`, `Controlled`;
+   `Compositions/UserProfile`, `LinkPreview`, `TermDefinition`, `ExplainedMetric`,
+   `Sides`, `ExtraPanelClass`). O vanilla tem 13: soma `States/ListenerCleanup`
+   (`ui/hover-card-states.stories.ts:276`), que prova a limpeza dos ouvintes de
+   documento que só a fábrica registra — legítima. O svelte é o único que dá `name:`
+   em inglês a 7 stories (`compositions:61,90,121`, `states:88,164`,
+   `variants:44,72`). Maioria (4): sem `name`.
+10. **`States/Controlled` mede coisas diferentes.** react, vue, vanilla e angular
+    montam dois botões externos e um espelho do estado, e afirmam abrir e fechar por
+    fora (`states.stories:216-288`, `:204-269`, `:164-237`, `:194-260`). O svelte
+    nasce com `open: true` nos args e afirma só que abriu e que o Escape fecha
+    (`states.stories.ts:163-191`). Maioria (4): botões externos. O passo extra do
+    vanilla (`:240-263`) prova `open`/`close`/`toggle`/`isOpen`, e o título dele fala
+    em "apelidos em português" que a fábrica não tem mais.
+11. **`onOpenChange` no Playground.** react (`hover-card.stories.tsx:173,185`), vue
+    (`:170,182`), vanilla (`:141,153`) e angular (`:143,155`) afirmam que o callback
+    foi chamado. O svelte nem declara o argType (`hover-card.stories.ts:32-82`) e não
+    afirma. Maioria (4).
+12. **`Variants/Default` afirma o `data-slot` do gatilho** no react (`:96`), vue
+    (`:92`) e svelte (`:66`). O vanilla afirma só que o link é visível (`:68`), embora
+    escreva o `data-slot` desde 2026-09-13 (D9). O angular afirma a ausência de um
+    atributo `openDelay` (`:83`). Maioria (3): `data-slot`.
+13. **`Compositions/TermDefinition` — nome do painel.** react (`:231`), vue (`:219`),
+    svelte (`:153`) e vanilla (`:196`) usam `accessibleName(panel)` vazio, que olha
+    `aria-label` e `aria-labelledby`. O angular só afirma a ausência de `aria-label`
+    (`hover-card-compositions.stories.ts:211`). Maioria (4).
+14. **`Compositions/LinkPreview` — `href` do gatilho.** Afirmado no react (`:175`),
+    vue (`:162`), svelte (`:115`) e vanilla (`:137`); ausente no angular
+    (`:144-151`). Maioria (4).
+15. **`aria-label` nos gatilhos das stories.** Só o vanilla os escreve
+    (`ui/hover-card-compositions.stories.ts:169,255,311`). Por isso o `TermDefinition`
+    dele procura "Definição de WCAG 2.2 AA" e as outras quatro procuram "WCAG 2.2 AA".
+    Maioria (4): sem `aria-label`. O comentário de `paresAbertos` na sonda
+    compartilhada (`docs/shared/testing/hover-card-probe.ts:179-180`) ainda diz que
+    "duas" stacks acrescentam.
+16. **Espera de abertura do angular.** `ui/hover-card.fixtures.ts:50-62` redefine
+    `waitForOpen`/`waitForQuantidade` só com `data-side`, e dispensa o `assentado` da
+    sonda (`hover-card-probe.ts:59-67`: visibilidade, opacidade, `noLugarDeEspera`),
+    que as outras quatro usam direto. Maioria (4): a sonda.
+
+**Construtores de snippet e testes**
+
+17. **Um construtor por story?** react, vue e angular: 10 exports cada. svelte: 8, e
+    não tem construtor de espera curta, controlado nem fechado, então
+    `States/Closed`, `Open`, `Controlled` e `Variants/WithShortDelay` publicam o
+    genérico `hoverCardSource` (`states.stories.ts:33`, `variants.stories.ts:31`).
+    vanilla: 5 construtores parametrizados (`hoverCardSourceWith`) — a forma de
+    fábrica, legítima. No react, `Compositions/UserProfile` e `States/Open` publicam o
+    genérico (`compositions:42`, `states:37`), e vue, svelte e angular usam
+    `hoverCardPerfilSource`. Nome: o vue chama de `hoverCardDefaultSource` o que react,
+    svelte e angular chamam de `hoverCardWaitDefaultSource`. Casos `it(` declarados:
+    react 20, vue 20, angular 23, svelte 15, vanilla 15.
+
+**Docs page e conteúdo**
+
+18. **`trigger_id` das variantes.** No vanilla, `buildProfilePreview` crava
+    `'user-profile'` (`docs/HoverCardDocs.ts:121`) e serve às variantes `default` e
+    `withDelay` (`:537`, `:544`). As outras quatro mandam `'default'` e `'with-delay'`
+    (react `:596,618`; vue `:751,792`; svelte `:571,588`; angular `:404,415`).
+    Maioria (4). Defeito de payload: as três variantes do vanilla viram um valor só no
+    GA4.
+19. **Tabela de analytics do angular.** A linha de `hover_card_close` anuncia payload
+    `component, reason, location` (`docs/HoverCardDocs.ts:1071`), e `reason` saiu em
+    2026-09-10 (§9). As duas linhas usam `analytics.description` como coluna de
+    gatilho. As outras quatro dizem `onOpenChange(true|false)` e payload sem `reason`
+    (react `:918-926`, vue `:384-385`, svelte `:836-837`, vanilla `:807-815`).
+    Maioria (4).
+20. **Snippet de interface local do angular** (`INTERFACE_CODE`,
+    `docs/HoverCardDocs.ts:186-188`): `sideOffset = input(8)` e `label = input('')`.
+    O componente tem `sideOffset` 4 (`ui/hover-card.ts:132`, D9) e nenhum input
+    `label`. Só o angular tem esse snippet.
+21. **Snippets compartilhados de extensibilidade.** O `props.extensibilityCode.vanilla`
+    termina em `card.abrir()` nos três idiomas (`translations.json:241,650,1059`), e a
+    fábrica só tem `open()`. A página do vanilla o renderiza (`docs/HoverCardDocs.ts:740`).
+    O `props.extensibilityCode.angular` põe `[openDelay]`/`[closeDelay]` no
+    `span[ndsHoverCard]` e `class` no `<ng-template>`: nenhum dos dois funciona. A
+    página do angular não o usa, porque troca por um `EXTENSIBILITY_CODE` local e
+    correto (`:192-215`, `:603`), mas a variante errada continua no conteúdo
+    compartilhado, que é o que o `@nortear/ds-core` publica.
+22. **Demonstração.** O `href` do gatilho é `#joana` em react (`:393`), vue, svelte e
+    vanilla (`:116`), e `?path=/docs/components-display-avatar--docs` no angular
+    (`:554`). Maioria (4). `componentSlug` no container: svelte (`:227`) e vanilla
+    (`:369`) passam; react (`:383`) e vue (`:444`) não passam; o angular não tem o
+    input. É informativo, porque o container não injeta `data-track*`. As quinze
+    seções e os ids de `trackId` das variantes são iguais nas cinco.
+
 ## 8. Acessibilidade
 
 **Atributos**: gatilho com `aria-describedby` apontando para o cartão enquanto ele
 existe (D1). Nenhum `role` de diálogo — este painel não é diálogo.
 
 **Teclado**: Tab no gatilho abre; Escape fecha. Não há foco dentro do cartão, e é
-por isso que ele não pode guardar ação.
+por isso que ele não pode guardar ação. No react e no svelte só o foco VISÍVEL abre
+(filtro da lib), e foco programático não abre; nas outras três, abre — inconsistência
+2 da §7.
 
 **O que NÃO se faz, de propósito:**
 
@@ -404,39 +544,58 @@ alcança.
 > `movimento_sem_guarda_eficaz`, que reprova exatamente a guarda que perde. O que
 > sobra é enfeite: blocos que anunciam proteção sobre movimento que o token já
 > para, e que o portão não acusa porque ali não há duração literal.
-> **REFEITA em 2026-09-12, varrendo as nove folhas: são QUATRO, e duas nunca
-> estiveram na lista.** A do `popover.css` saiu — não por ter sido consertada, mas
-> porque o Popover deixou de animar por decisão da dona, e sem `[data-ending-style]`
-> não há declaração para a guarda perder; as duas coisas saíram juntas da folha,
-> com o motivo escrito lá. Em troca entraram o `tooltip.css` e o `sheet.css`, que
-> têm a mesma forma desde sempre e nunca foram contados:
+> **Remedida em 2026-09-15, folha a folha nas nove, sem ler esta lista: continuam
+> QUATRO, as mesmas.** A varredura de 2026-09-12 já tinha tirado o `popover.css`
+> (deixou de animar, e a guarda saiu junto) e somado `tooltip.css` e `sheet.css`,
+> que nunca tinham sido contados. Nenhuma duração literal nas nove.
 >
 > | folha | a guarda mira | a declaração que ela deveria desligar | quem vence |
 > |---|---|---|---|
-> | `tooltip.css` | `.nds-tooltip-content` | `…[data-ending-style]` — a transição de saída | a declaração; a guarda é INERTE por inteiro |
-> | `dialog.css` | `.nds-dialog-overlay`, `.nds-dialog-content` | `…[data-open]`, `…[data-state="open"]`, `…[data-closed]` — as quatro animações | a declaração; a guarda é inerte por inteiro |
-> | `dropdown-menu.css` | `.nds-dropdown-menu-item`, `.nds-dropdown-menu-content` | `…[data-open]`, `…[data-state="open"]` — a animação de entrada | a declaração; **metade** da guarda serve, porque a transição do ITEM está na classe nua e a guarda vem depois |
-> | `sheet.css` | `.nds-sheet-overlay`, `.nds-sheet-content` | `.nds-sheet-content[data-side="…"]` — as quatro animações de entrada, uma por lado | a declaração; **metade** da guarda serve, porque a animação do VÉU e as duas transições estão na classe nua |
+> | `tooltip.css` | `.nds-tooltip-content` (`:176-180`) | `.nds-tooltip-content[data-ending-style]` — a transição de saída (`:81-85`); a classe nua não declara transição | a declaração; a guarda é INERTE por inteiro |
+> | `dialog.css` | `.nds-dialog-overlay`, `.nds-dialog-content` (`:293-298`) | `…[data-open]`, `…[data-state="open"]`, `…[data-closed]` — as quatro animações (`:231-246`) | a declaração; a guarda é inerte por inteiro |
+> | `dropdown-menu.css` | `.nds-dropdown-menu-item`, `.nds-dropdown-menu-content` (`:414-420`) | `.nds-dropdown-menu-content[data-open]`, `…[data-state="open"]` — a animação de entrada (`:410-412`) | a declaração; **metade** da guarda serve, porque a transição do ITEM está na classe nua (`:89`) e a guarda vem depois |
+> | `sheet.css` | `.nds-sheet-overlay`, `.nds-sheet-content` (`:347-353`) | `.nds-sheet-content[data-side="…"]` — as quatro animações de entrada, uma por lado (`:129-163`) | a declaração; **metade** da guarda serve, porque a animação do VÉU (`:94`) e as duas transições (`:296`, `:305`) estão na classe nua |
 >
-> As três que seguram: `drawer.css` (a guarda repete o próprio
-> `:not([data-swiping])` da declaração e vem depois), `alert-dialog.css` (a guarda
-> ENUMERA os dez seletores de atributo, um a um) e `command.css` (declaração e
-> guarda na mesma classe nua). O `hover-card.css` não tem guarda, de propósito.
->
-> **Até 2026-09-12 esta pendência dizia "são DUAS"**, e o erro não foi de
-> contagem: foi ter estreitado a lista tirando o caso que fechou sem varrer a
-> categoria de novo. Lista de defeito que só encolhe é lista que envelhece — e
-> aqui ela encolheu duas vezes enquanto dois casos iguais estavam de pé o tempo
-> todo. Quem fechar isto varre as nove folhas, não relê a lista.
-> **E uma referência apodreceu junto**: o comentário desta mesma família no
-> `hover-card.css` usava a guarda do popover como exemplo VIVO da perda na
-> cascata. Os dois lados do exemplo deixaram de existir, e ele passou a descrever
-> a FORMA do defeito em vez do caso — citar vizinho pelo nome envelhece sozinho,
-> que é exatamente o que esta pendência vem medindo desde 2026-09-09.
+> As três que seguram, conferidas na mesma data: `drawer.css` (a guarda repete o
+> `:not([data-swiping])` da declaração e vem depois, `:309` × `:362-368`),
+> `alert-dialog.css` (a guarda enumera os dez seletores de atributo, `:180-193`) e
+> `command.css` (declaração e guarda na mesma classe nua, `:129` × `:298-302`).
+> `hover-card.css` e `popover.css` não têm guarda, de propósito. Quem fechar isto
+> varre as nove folhas de novo, e não relê esta lista.
 > **Fecha quando**: as quatro guardas (`tooltip.css`, `dialog.css`,
 > `dropdown-menu.css` e `sheet.css`) forem removidas com o motivo escrito na
 > folha, ou passarem a mirar seletor que vença a declaração — e quando a varredura
 > que decide isso for a das nove folhas da categoria, não a leitura desta lista.
+
+> **PENDÊNCIA · 2026-09-15** — docs pages e conteúdo compartilhado ensinam ou medem
+> o que o código não faz: `reason` na tabela de analytics do angular e
+> `sideOffset = input(8)` e `label = input('')` no `INTERFACE_CODE` dele (§7, itens
+> 19 e 20); `card.abrir()` no `props.extensibilityCode.vanilla` e delays na raiz no
+> `props.extensibilityCode.angular` (item 21); `trigger_id` `user-profile` nas
+> variantes `default` e `withDelay` do vanilla (item 18).
+> **Fecha quando**: `grep` não acha `reason` no `HoverCardDocs.ts` do angular, nem
+> `input(8)`/`label = input` ali, nem `abrir()` em
+> `docs/shared/content/hover-card/translations.json`; a variante `angular` de
+> `props.extensibilityCode` põe as esperas no `ndsHoverCardTrigger` e a classe em
+> `contentClass`; e o vanilla manda `default` e `with-delay`.
+
+> **PENDÊNCIA · 2026-09-15** — paridade de asserção entre as stories (§7, itens 10 a
+> 16): `onOpenChange` sem asserção no Playground do svelte; `States/Controlled` do
+> svelte sem botões externos; `Variants/Default` sem `data-slot` no vanilla e no
+> angular; `TermDefinition` sem `accessibleName` e `LinkPreview` sem `href` no angular;
+> `waitForOpen` próprio do angular sem o `assentado` da sonda; `aria-label` só nos
+> gatilhos do vanilla; e o título de passo "apelidos em português" no vanilla.
+> **Fecha quando**: cada story citada afirma nas cinco o que a maioria afirma, ou
+> declara na própria story por que não afirma (premissa verificada); e o
+> `hover-card.fixtures.ts` do angular deixa de redefinir a espera.
+
+> **PENDÊNCIA · 2026-09-15** — comportamento que diverge sem decisão registrada (§7,
+> itens 1 a 4): `alignOffset` 4 só no react; foco programático não abre no react e no
+> svelte; clique fora não fecha no vanilla; saída animada ausente no vue e no vanilla.
+> Os três últimos põem a referência (vanilla) contra a maioria, e por isso não se
+> alinham sem a dona.
+> **Fecha quando**: cada um dos quatro vira uma decisão D com data, e o código das
+> cinco a cumpre ou declara a exceção de lib com a premissa verificada.
 
 ## 9. Analytics
 
@@ -445,8 +604,11 @@ alcança.
 | `hover_card_open` | o cartão abre | `{ component: "hover-card", trigger_id, location }` |
 | `hover_card_close` | o cartão fecha | `{ component: "hover-card", location }` |
 
-`trigger_id` é id estável em kebab-case, igual nas cinco, **nunca** o texto do
-gatilho traduzido — ver D7. A espera de abertura serve de filtro contra hover de
+`trigger_id` é id estável em kebab-case, **nunca** o texto do gatilho traduzido — ver
+D7. Os tipos são iguais nas cinco `lib/analytics.ts` (`trigger_id` e `location`
+opcionais). Os valores das docs pages são iguais em quatro. O vanilla manda
+`user-profile` também para as variantes `default` e `with-delay` (inconsistência 18
+da §7). A espera de abertura serve de filtro contra hover de
 baixa intenção, então não há necessidade de filtrar de novo no consumidor.
 
 **O fechamento leva só `component` e `location`** — nem `trigger_id`, nem
@@ -462,13 +624,8 @@ sempre "o ponteiro saiu", e ninguém ia agir sobre a quebra. O popover, que
 aceita formulário e onde desistiu × concluiu é pergunta de produto, ficou com o
 campo — obrigatório e fechado. Portão: `reason_parcial_entre_stacks`.
 
-A mesma afirmação falsa vivia em mais duas superfícies, e as três foram
-corrigidas juntas em 2026-09-09: as tabelas de analytics do **react** e do
-**vue** anunciavam um campo `label` que nenhuma stack emite e nenhum tipo
-declara — as duas colapsavam os dois eventos numa linha só —, e a descrição do
-conteúdo compartilhado pedia `trigger_id` como obrigatório nos DOIS eventos.
-Svelte e vanilla já traziam a forma certa, uma linha por evento, e foi a delas
-que as outras duas passaram a seguir.
+As tabelas de analytics das docs pages trazem uma linha por evento nas cinco. A do
+angular ainda anuncia `reason` no fechamento (inconsistência 19 da §7).
 
 ## 10. Reconstruir do zero
 
@@ -486,7 +643,7 @@ Ordem: folha → primitivo → stories → docs page.
 
 | assunto | arquivo |
 |---|---|
-| geometria, tokens, largura e teto | `docs/shared/styles/nds/hover-card.css` |
+| geometria, tokens e largura | `docs/shared/styles/nds/hover-card.css` |
 | texto, props, critérios de teste | `docs/shared/content/hover-card/translations.json` |
 | divergências intencionais sobre libs | `PATCHES.md` |
 | desenho e anotações | Figma, página `HoverCard` (componente `674:3`) |

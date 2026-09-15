@@ -4,6 +4,8 @@
 > stacks (§12). **Revisão serial fechada em** 2026-09-10 (`00fa34458`, pipeline
 > `fix` — ver §12).
 >
+> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
+>
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto. Quando
 > uma linha muda, ela se move para o histórico com a nova data e a nova medição,
@@ -142,8 +144,9 @@ inset que o raio aninhado desconta é o padding do grupo (`--spacing-1`, 4px).
 **Os 4px do token são LITERAIS** — a declaração é
 `--radius-sm: max(0px, calc(var(--radius) - 4px))`, em `docs/shared/tokens/tokens.css` —, e não `--spacing-1`: hoje os
 dois coincidem, e mudar um não muda o outro — os cantos derivam em silêncio.
-(Até 2026-09-12 esta linha citava `tokens.css:222`; a declaração está na 236, e
-número de linha em documento é referência que envelhece sozinha.)
+(Esta linha já citou `tokens.css:222`; a declaração estava na 236 em 2026-09-12
+e na 250 em 2026-09-15 — número de linha em documento é referência que envelhece
+sozinha.)
 
 ### D11 · O primeiro item fica em destaque sozinho
 
@@ -181,6 +184,11 @@ o tempo todo (região viva criada na hora não anuncia nada) e o que entra e sai
 a CLASSE e o texto; sem a classe ele segue na árvore de acessibilidade com
 altura zero, que é o oposto de `display: none`. É também a única região viva do
 componente.
+
+Os nomes da árvore são os das classes `.nds-command-*`. O `data-slot` não existe
+em todo nó em todas as stacks — o invólucro do campo e o cabeçalho de grupo
+divergem, ver §7, inconsistência 1 — e `command-item-check` é só classe nas
+cinco.
 
 ## 5. Geometria e tokens
 
@@ -312,11 +320,14 @@ paleta: no inline do react e do svelte, Ctrl+K subia o destaque E abria a paleta
 ao mesmo tempo. As duas stacks desligam (`vimBindings={false}`); as outras três
 nunca tiveram.
 
-**Grupo sem cabeçalho não se anuncia como grupo.** Vanilla e vue nunca põem o
-papel; cmdk, bits e radix-ng põem `role="group"` fixo no nó dos itens, com ou sem
-cabeçalho, e nenhuma das três deixa desligar por prop. React tira o papel num
-efeito de layout depois de montar (e o devolve se o cabeçalho chegar), svelte
-desenha o nó pelo snippet `child` sem ele, angular o condiciona ao `heading`.
+**Grupo sem cabeçalho não se anuncia como grupo.** Só o vanilla nunca põe o
+papel; reka, cmdk, bits e radix-ng põem `role="group"` no nó dos itens, com ou sem
+cabeçalho. O vue o anula junto com o `aria-labelledby`, passando `null` no
+`v-bind` do `ListboxGroup` (`CommandGroup.vue`); react tira o papel num efeito de
+layout depois de montar (e o devolve se o cabeçalho chegar), svelte desenha o nó
+pelo snippet `child` sem ele, angular o condiciona ao `heading`. (Até 2026-09-15
+esta linha dizia que "vanilla e vue nunca põem o papel" — no vue quem o põe é a
+lib, e é o componente que o tira.)
 Grupo anônimo seria um "grupo" sem nome lido a cada item.
 
 **C9 no react e no svelte precisa de ajuda.** cmdk e bits filtram só pelo
@@ -398,7 +409,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vue | `Command`, `CommandDialog`, `CommandEmpty`, `CommandGroup`, `CommandInput`, `CommandItem`, `CommandList`, `CommandSeparator`, `CommandShortcut` |
 | svelte | `Command`, `CommandDialog`, `CommandEmpty`, `CommandGroup`, `CommandInput`, `CommandItem`, `CommandLinkItem`, `CommandList`, `CommandLoading`, `CommandSeparator`, `CommandShortcut` |
 | vanilla | `createCommand` |
-| angular | `div[ndsCommandEmpty]`, `div[ndsCommandGroup]`, `div[ndsCommandItem]`, `div[ndsCommandList]`, `div[ndsCommandSeparator]`, `input[ndsCommandInput]`, `nds-command`, `span[ndsCommandShortcut]` |
+| angular | `div[ndsCommandEmpty]`, `div[ndsCommandGroup]`, `div[ndsCommandItem]`, `div[ndsCommandList]`, `div[ndsCommandSeparator]`, `input[ndsCommandInput]`, `nds-command`, `span[ndsCommandShortcut]`, mais a constante de conveniência `NDS_COMMAND` com as oito e o tipo `CommandSelectDetails` |
 
 O índice do svelte também reexporta as formas curtas — `Dialog`, `Empty`, `Group`, `Input`, `Item`, `LinkItem`, `List`, `Loading`, `Root`, `Separator`, `Shortcut` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
@@ -409,6 +420,162 @@ semântica, não só o estilo.
 Este componente **não tem título de cabeçalho**, então não há seletor `h2[…]`
 nem `h3[…]` aqui — a nota de nível de cabeçalho vale para dialog, sheet, drawer
 e alert-dialog, que são os que nomeiam o painel com um cabeçalho.
+
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Lidas nos cinco primitivos, nas vinte árvores de story, nas cinco docs pages, nos
+cinco `command.source.ts` e na fonte instalada das libs (cmdk 1.1.1, bits-ui
+2.19.0, reka-ui 2.10.4, @radix-ng/primitives 1.1.2). Não entra aqui o que esta
+§7 já registra acima (valor controlado, ponteiro que sai, busca depois da
+escolha, reordenação, vazio do vue, Home/End, C9 no angular). Os caminhos são
+relativos a `src/components/ui/` de cada stack, salvo quando dito.
+`node scripts/audit.mjs command --json` devolveu **zero violações** nesta data:
+nenhum item abaixo é visto por portão.
+
+1. **`data-slot` do invólucro do campo e do cabeçalho de grupo.** Invólucro:
+   `data-slot="command-input-wrapper"` no react (`command.tsx:185`), no vue
+   (`command/CommandInput.vue:102`) e no svelte (`command/command-input.svelte:39`);
+   só a classe no vanilla (`command.ts:284-285`) e no angular (`command.ts:189`).
+   Cabeçalho: `data-slot="command-group-heading"` só no vue
+   (`command/CommandGroup.vue:56`); classe sem `data-slot` no vanilla
+   (`command.ts:428-429`), no svelte (`command/command-group.svelte:55-56`) e no
+   angular (`command.ts:655`); o react não tem nem a classe, só o atributo
+   `[cmdk-group-heading]` da lib (já registrado acima). Maioria (3) marca o
+   invólucro, e a referência não; no cabeçalho a maioria (4) não usa `data-slot`,
+   como o vanilla.
+2. **O que "filtrar por texto" quer dizer.** Três regras. Vanilla: trecho, sem
+   distinguir maiúsculas e **distinguindo acento** (`command.ts:399-400`). Vue e
+   angular: trecho, sem distinguir maiúsculas nem acento — `useFilter({ sensitivity:
+   'base' })` (`command/Command.vue:31`) e o `Intl.Collator` de `sensitivity: 'base'`
+   do radix-ng (`radix-ng-primitives-core.mjs:3983-3998`, chamado em
+   `radix-ng-primitives-combobox.mjs:142`). React e svelte: pontuação APROXIMADA
+   do cmdk e do bits, que casa letras em ordem mesmo sem serem vizinhas
+   (`compute-command-score.js`, `SCORE_CHARACTER_JUMP`; o svelte a chama em
+   `command/command.svelte:50`) e só baixa a caixa, sem tirar acento
+   (`formatInput`, `compute-command-score.js:120-122`). Na prática, "btn" acha
+   "Button" só no react e no svelte, e "acoes" acha "Ações" só no vue e no
+   angular. Sem maioria nos dois eixos, e o conteúdo, em português, só diz "filtro
+   por texto" — decisão da dona.
+3. **Enter durante composição de IME.** Vue, react, svelte e angular não executam
+   o comando com a composição aberta: `isComposing` na reka
+   (`reka-ui/dist/Listbox/ListboxRoot.js:165`), `isComposing || keyCode === 229` no
+   cmdk (`cmdk/dist/index.mjs`) e no bits (`command.svelte.js:935`), `composing ||
+   isComposing` no radix-ng (`radix-ng-primitives-autocomplete.mjs:1014` e `:1054`),
+   e o `stopAtEdge` do angular também solta a tecla (`command.ts:365`). O vanilla
+   trata `Enter` e as setas sem olhar composição (`command.ts:531-542`). Maioria
+   (4) guarda; a referência não, e nenhuma story das cinco exercita composição.
+4. **Onde o separador aparece.** No vanilla a fábrica desenha um traço entre
+   CADA par de grupos na tela (`command.ts:420`), e a entrada `{ type:
+   'separator' }` só quebra o bloco (`command.ts:395-397`): a `WithGroups` do
+   vanilla não declara separador e afirma um divisor
+   (`command-variants.stories.ts:88`). Nas outras quatro o traço existe só onde
+   quem consome escreve `CommandSeparator`/`ndsCommandSeparator`. Consequência: no
+   vanilla não se desenha dois grupos seguidos sem traço. Divergência de API —
+   registrar, não alinhar.
+5. **O que a escolha entrega.** Vanilla: `onSelect(value: string)`
+   (`command.ts:188`). React: `onSelect(value: string)` do cmdk
+   (`cmdk/dist/index.d.ts:77`). Svelte: `onSelect: () => void` do bits
+   (`bits-ui/dist/bits/command/types.d.ts:118`) — o valor chega por closure
+   (`command/CommandInlineStory.svelte:58`). Vue: o evento `select` da reka, com
+   `preventDefault` (`command/CommandItem.vue:30` e `:98-108`). Angular: `{ value,
+   label }`, por item e na raiz (`command.ts:119-124`, `:224`, `:742`). Divergência
+   de API — registrar, não alinhar.
+6. **`CommandDialog` com ou sem raiz dentro.** No vue e no svelte o diálogo já
+   embrulha a paleta (`command/CommandDialog.vue:42`,
+   `command/command-dialog.svelte:49`); no react ele repassa os filhos direto
+   (`command.tsx:161`), e quem consome escreve `<Command>` dentro
+   (`command-compositions.stories.tsx:445`). Vanilla e angular não têm a peça.
+   Divergência de API — registrar, não alinhar.
+7. **Nome acessível do campo.** Vanilla, vue e angular escrevem `aria-label` com o
+   placeholder (`command.ts:297`, `command/CommandInput.vue:118`, `command.ts:471`),
+   e o react o entrega ao rótulo oculto do cmdk (`command.tsx:116`). O svelte não
+   escreve nome: o `aria-labelledby` do bits aponta o `<label>` oculto da lib
+   (`command.svelte.js:1112`), cujo texto é a prop `label` com padrão `""`
+   (`bits-ui/dist/bits/command/components/command.svelte:21` e `:124-126`), que o
+   `command/command.svelte` não preenche — o nome só sai do placeholder por
+   fallback. A story também não o cobra: o `Playground` do svelte afirma o nome da
+   LISTA e não o do campo (`command/command.stories.ts:141-154`), contra
+   `toHaveAccessibleName` no react (`command.stories.tsx:172`) e `aria-label` no
+   vue (`:177`), no vanilla (`:166`) e no angular (`:171`). Os textos de reserva
+   também divergem: "Buscar"/"Resultados" no vanilla (`command.ts:297`, `:307`) e
+   no vue (`CommandInput.vue:118`, `CommandList.vue:88`), só "Resultados" no
+   svelte (`command-list.svelte:41`), nenhum no react e no angular. Maioria (4)
+   nomeia o campo explicitamente, como o vanilla.
+8. **Controles do `Playground`.** Vanilla, vue e angular: `placeholder`,
+   `emptyMessage`, `showGroups` (`command.stories.ts:31-58`,
+   `command/command.stories.ts:43-70`, `command.stories.ts:29-56`). Svelte:
+   `placeholder`, `emptyMessage`, `loop`, `shouldFilter`
+   (`command/command.stories.ts:34-67`). React: `loop`, `shouldFilter`, sem texto
+   nenhum (`command.stories.tsx:36-60`). O espião se chama `onSelect` no vanilla e
+   no vue e `onItemSelect` nas outras três. Maioria (3): o conjunto do vanilla.
+9. **Asserções que existem numa stack e faltam noutra.** Os quatro arquivos de
+   story têm os mesmos nomes de export nas cinco; o svelte tem mais `WithLinkItem`
+   e `LoadingState`, das peças que só ele tem. Dentro deles:
+   - *grupo sem cabeçalho não tem papel de grupo* (`queryAllByRole('group')` com
+     zero): react (`command-compositions.stories.tsx:123`,
+     `command-states.stories.tsx:208`), svelte (`command-compositions.stories.ts:103`,
+     `command-states.stories.ts:95`), angular (`command-compositions.stories.ts:196`,
+     `command.stories.ts:220`), vue (`command-compositions.stories.ts:123`). O
+     vanilla não cobra — só afirma que o CABEÇALHO não tem papel
+     (`command.stories.ts:188`);
+   - *clicar num comando não tira o foco do campo*: react
+     (`command.stories.tsx:397`), vue (`:385`), svelte (`:378`); vanilla
+     (`command.stories.ts:377-386`) e angular (`command.stories.ts:434-447`) não
+     afirmam o foco;
+   - *depois de uma busca, o destaque pula o desabilitado* (D11): react
+     (`command-compositions.stories.tsx:320`), svelte (`command-states.stories.ts:223`),
+     vanilla (`command-states.stories.ts:221`, `command-compositions.stories.ts:273`),
+     angular (`command-states.stories.ts:240`); o vue não tem;
+   - *C9, metade do rótulo* ("arq" acha "Novo arquivo"): só react
+     (`command-compositions.stories.tsx:228`) e svelte
+     (`command-compositions.stories.ts:181`). A metade do VALOR — buscar um `value`
+     que o rótulo não contém — não é cobrada em stack nenhuma, e é por isso que o
+     defeito do angular segue latente;
+   - *o gatilho da paleta anuncia o diálogo* (`aria-haspopup`): react
+     (`command-compositions.stories.tsx:511`), svelte (`:338`), angular (`:424`); o vue
+     só afirma `aria-expanded` no passo do Escape (`:413`), e o vanilla nada —
+     embora a fábrica do Dialog escreva os dois (`dialog.ts:256`);
+   - *reabrir a paleta começa do zero* (D11 "a cada abertura"): só vanilla
+     (`command-compositions.stories.ts:450`); *o primeiro comando já em destaque
+     com a paleta aberta*: só angular (`command-compositions.stories.ts:442`).
+   Maioria nos três primeiros: a referência cobra menos que as outras.
+10. **O estado "Carregando" é das cinco docs pages e de uma stack.** O conteúdo
+    publica `states.loading` (`docs/shared/content/command/translations.json:155-159`,
+    nos três idiomas), e só o svelte tem a peça (`command/command-loading.svelte`) e
+    a story (`command-states.stories.ts:353`). As outras quatro não têm peça, story
+    nem prop para esse estado. E a peça do svelte herda do bits `aria-label="Loading..."`
+    em inglês (`command.svelte.js:1226`). Decisão da dona: tirar a linha do
+    conteúdo ou dar o estado às cinco.
+11. **Docs page e analytics.** A chave do grupo é tipada como união
+    `'components' | 'utils'` no react (`docs/CommandDocs.tsx:116`), no vue
+    (`docs/CommandDocs.vue:220`), no svelte (`docs/CommandDocs.svelte:140`) e no
+    vanilla (`docs/CommandDocs.ts:105`); o angular a busca num mapa por valor e cai
+    em `''` quando não acha (`docs/CommandDocs.ts:930`), o que emitiria
+    `group: ""`. O `componentSlug` do container da demonstração só é passado no
+    svelte (`docs/CommandDocs.svelte:360`), onde é informativo. Tipos de evento e os
+    call sites de `command_palette_open` são iguais nas cinco. Maioria (4): o
+    vanilla.
+12. **Construtores de snippet.** O mesmo exemplo tem nomes diferentes:
+    `EmptyState` é `commandEmptyStateSource` no react (`command.source.ts:153`) e no
+    angular (`:241`), `commandEmptySource` no vue (`command/command.source.ts:164`) e
+    `commandNoResultsSource` no svelte (`command/command.source.ts:213`);
+    `CheckedItem` é `commandItemCheckedSource` em react, vue e svelte e
+    `commandCheckedItemSource` no angular (`:273`); o `Playground` é `commandSource`
+    em quatro e `commandPlaygroundSource` no angular (`:188`). O vanilla usa
+    opções da fábrica (`commandSourceWith`, `command.source.ts:166`), e o angular tem
+    ainda `commandDemoInlineSource`/`commandDemoPaletteSource` (`:423`, `:432`).
+    O teste que cobra que todo export é conhecido existe só no react
+    (`command.source.test.ts:34`) e no svelte (`command/command.source.test.ts:102`).
+    Divergência de forma — registrar, não alinhar.
+
+> **PENDÊNCIA · 2026-09-15** — C9 pela metade no angular: o filtro padrão do radix-ng compara só `textValue()`, e buscar um `value` que o rótulo não contém não acha o comando; nenhuma story das cinco cobra essa metade (inconsistência 9).
+> **Fecha quando**: o `NdsCommand` compara a busca também com o `value` do item, e uma story nas cinco busca um `value` ausente do rótulo e acha o comando.
+
+> **PENDÊNCIA · 2026-09-15** — as inconsistências 1, 3, 7, 9 e 11 acima, que têm maioria e lado certo medidos, estão abertas no código.
+> **Fecha quando**: cada uma está alinhada nas cinco stacks ou declarada nesta §7 como divergência de forma, com a premissa conferida.
+
+> **PENDÊNCIA · 2026-09-15** — duas decisões da dona: a regra do filtro (inconsistência 2: trecho × aproximada, com ou sem acento) e o estado "Carregando" que o conteúdo publica e só o svelte implementa (inconsistência 10).
+> **Fecha quando**: a dona decidir, e a decisão entrar como D numerada na §3 com o código das cinco seguindo-a.
 
 ## 8. Acessibilidade
 
@@ -515,7 +682,7 @@ hospedeiro (Dialog) → stories → docs page.
 | texto, props, critérios de teste | `docs/shared/content/command/translations.json` |
 | desenho e anotações | Figma, página `Command` (componente `702:8`) |
 | portões determinísticos | `node scripts/audit.mjs command --json` |
-| código do painel Code | `command.source.ts` (só construtores de snippet) — em `ui/command/` no vue e no svelte, solto em `ui/` no react, no vanilla e no angular. Os andaimes que as stories dividem moram no `command.fixtures.ts` ao lado, que existe em QUATRO stacks: o react não tem, porque o único auxiliar dele é de uma linha, repetido em dois arquivos de story — corpo de uma linha é exceção declarada do portão `fixture_duplicada_entre_stories`. A varredura `source-snippets.test.ts` de cada stack cobra a fronteira |
+| código do painel Code | `command.source.ts` (só construtores de snippet) — em `ui/command/` no vue e no svelte, solto em `ui/` no react, no vanilla e no angular. Os andaimes que as stories dividem moram no `command.fixtures.ts` ao lado, que existe em QUATRO stacks: o react não tem, porque os auxiliares das stories dele são constantes de seta de uma linha (`commandByValue`, repetida em `command-compositions` e `command-states`), e o portão `fixture_duplicada_entre_stories` só casa declaração `function` com corpo normalizado de 80 caracteres ou mais (`auditFixtureDuplicada`). Não é exceção declarada, é o alcance da regra (até 2026-09-15 esta célula dizia "exceção declarada"). A varredura `source-snippets.test.ts` de cada stack cobra a fronteira |
 | rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
 | título (`h2`) de cada seção | o mesmo rótulo do menu, derivado do id da seção — ver `docs-page-landmarks.ts` |
 
@@ -585,7 +752,8 @@ peça por peça. O que mudou, na ordem das seções:
 Aberto no CÓDIGO, medido nesta passagem e não corrigido aqui porque este
 documento não edita código: **C9 está pela metade no angular** (o filtro do
 radix-ng compara só `textValue()`, e o `value` do item fica de fora — §7). A §2 e
-a §7 descrevem o estado real enquanto isso não fecha.
+a §7 descrevem o estado real enquanto isso não fecha. Desde 2026-09-15 é
+PENDÊNCIA formal, no fim da §7.
 
 **2026-09-10 · a varredura do painel Code reprovava no svelte, e ninguém a rodava.** A
 rodada que fez as cinco cumprirem o mesmo contrato deixou o `command.source.ts` do

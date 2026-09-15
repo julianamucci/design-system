@@ -149,22 +149,29 @@ consome, que publica `guidelines/` e não `prd/`.
 
 ## Índice
 
-A categoria Overlay inteira — dez componentes em nove PRDs — passou pela revisão
-serial e, depois dela, pela pipeline `fix`. As duas colunas de data são
+A categoria Overlay inteira — onze componentes em nove PRDs — passou pela revisão
+serial e, depois dela, pela pipeline `fix`. As duas primeiras colunas de data são
 diferentes de propósito: a primeira é quando a revisão fechou o componente, a
 segunda é a última passagem que mudou o código dele e, com ele, este registro.
 
-| componente | PRD | revisão serial | última pipeline `fix` |
-|---|---|---|---|
-| Popover | [popover.md](popover.md) | 2026-09-06 | 2026-09-12 |
-| HoverCard | [hover-card.md](hover-card.md) | 2026-09-06 | 2026-09-10 |
-| Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 | 2026-09-12 |
-| Sheet | [sheet.md](sheet.md) | 2026-09-06 | 2026-09-11 |
-| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 | 2026-09-11 |
-| Drawer | [drawer.md](drawer.md) | 2026-09-07 | 2026-09-11 |
-| Dialog | [dialog.md](dialog.md) | 2026-09-10 | 2026-09-11 |
-| AlertDialog | [alert-dialog.md](alert-dialog.md) | 2026-09-10 | 2026-09-12 |
-| Command | [command.md](command.md) | 2026-09-10 | 2026-09-10 |
+**A terceira coluna é a do modelo de Feedback, aplicado depois.** Em 2026-09-15
+os nove foram relidos contra o código das cinco stacks e ganharam, ao fim da §7,
+a lista numerada **Inconsistências entre stacks, medidas em 2026-09-15** — o que
+diverge, onde, qual lado é maioria e o que a referência faz. Com o `audit.mjs`
+verde nos onze slugs, essa lista é a base da próxima revisão de código: nenhum
+item dela é visto por portão.
+
+| componente | PRD | revisão serial | última pipeline `fix` | relido contra o código |
+|---|---|---|---|---|
+| Popover | [popover.md](popover.md) | 2026-09-06 | 2026-09-12 | 2026-09-15 |
+| HoverCard | [hover-card.md](hover-card.md) | 2026-09-06 | 2026-09-10 | 2026-09-15 |
+| Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 | 2026-09-12 | 2026-09-15 |
+| Sheet | [sheet.md](sheet.md) | 2026-09-06 | 2026-09-11 | 2026-09-15 |
+| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 | 2026-09-11 | 2026-09-15 |
+| Drawer | [drawer.md](drawer.md) | 2026-09-07 | 2026-09-11 | 2026-09-15 |
+| Dialog | [dialog.md](dialog.md) | 2026-09-10 | 2026-09-11 | 2026-09-15 |
+| AlertDialog | [alert-dialog.md](alert-dialog.md) | 2026-09-10 | 2026-09-12 | 2026-09-15 |
+| Command | [command.md](command.md) | 2026-09-10 | 2026-09-10 | 2026-09-15 |
 
 ### Feedback — escritos ANTES da revisão de código
 

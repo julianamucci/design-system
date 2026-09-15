@@ -38,9 +38,11 @@ instância que via, e o invariante continuava sem dono.
 
 Aqui fica a regra UMA vez, e a última seção diz qual portão cobra cada uma. O
 que é mecânica de uma stack só — o `ng-template` do Angular, o teclado feito à
-mão no vanilla — continua na `10-overlay-components.md` daquela stack, e o
-portão `guideline_de_stack_repete_categoria` impede que ela volte a copiar este
-arquivo.
+mão no vanilla — fica na `10-overlay-components.md` daquela stack, que hoje só
+existe nessas duas; react, vue e svelte não têm mecânica de overlay própria a
+registrar. O portão `guideline_de_stack_repete_categoria` impede que a `10`
+volte a copiar este arquivo — e só ela: a cópia que migrou para OUTRO arquivo
+de stack não é vista (ver a tabela de invariantes).
 
 ---
 
@@ -89,7 +91,8 @@ plano do outro.
 | Command | `.nds-command` | `--popover` | `--popover-foreground` |
 | Tooltip | `.nds-tooltip-content` | `--primary` | `--primary-foreground` |
 
-Medido nas folhas em 2026-09-10. **Nenhuma lê `--card`.**
+Medido nas folhas em 2026-09-10 e de novo em 2026-09-15, sem mudança. **Nenhuma
+lê `--card`.**
 
 - **O Tooltip é o único que inverte o par**, e é o exemplo de por que ninguém
   pinta fundo por fora: uma classe de fundo por cima o transformaria num
@@ -103,25 +106,28 @@ Medido nas folhas em 2026-09-10. **Nenhuma lê `--card`.**
 
 `--overlay` a 80%, **sem desfoque**. As folhas modais o declaram em
 `.nds-dialog-overlay`, `.nds-alert-dialog-overlay` e `.nds-sheet-overlay` — o
-Drawer reusa o do Sheet. O último `backdrop-filter` saiu do Dialog em 2026-09-08
-(D5 do `dialog.md`): sob um véu a 80% o desfoque quase não aparecia, e custava
-pintura em toda abertura.
+Drawer reusa o do Sheet nas cinco stacks (a `drawer.css` não declara véu). O
+último `backdrop-filter` saiu do Dialog em 2026-09-08 (D5 do `dialog.md`): sob
+um véu a 80% o desfoque quase não aparecia, e custava pintura em toda abertura.
 
 ## Camadas
 
 A ordem sai da escada de tokens, e cada folha lê o seu degrau — número escrito
 no call site desfaz a garantia:
 
-| token | valor | quem lê |
+| token | valor | quem lê (medido nas folhas em 2026-09-15) |
 |---|---:|---|
-| `--z-dropdown` | 1000 | |
-| `--z-sticky` | 1020 | |
-| `--z-fixed` | 1030 | |
+| `--z-dropdown` | 1000 | nenhum overlay — só a DataTable |
+| `--z-sticky` | 1020 | ninguém; degrau reservado para cabeçalho fixo de aplicação |
+| `--z-fixed` | 1030 | nenhum overlay — só o Sidebar |
 | `--z-modal-backdrop` | 1040 | véu do Dialog, do AlertDialog e do Sheet (que o Drawer reusa) |
 | `--z-modal` | 1050 | painel do Dialog, do AlertDialog, do Sheet e do Drawer |
-| `--z-popover` | 1060 | Popover, HoverCard, DropdownMenu, popup do Combobox |
+| `--z-popover` | 1060 | Popover, HoverCard, DropdownMenu e o painel do Menubar — e, fora desta categoria, Select, Combobox, NavigationMenu e Composer |
 | `--z-tooltip` | 1070 | Tooltip |
-| `--z-toast` | 1080 | Toast |
+| `--z-toast` | 1080 | Sonner |
+
+O Command não lê degrau nenhum: ele não flutua sozinho, e mora dentro do painel
+que o contém.
 
 O flutuante fica ACIMA do modal de propósito: o popover ou o tooltip de um
 controle que mora dentro de um diálogo tem de aparecer por cima dele. Não existe
@@ -137,12 +143,26 @@ Os dois atravessam mais que esta categoria, e moram na guideline do assunto:
   barra do Menubar é a única peça desta categoria fora dos três: ela não flutua,
   e desde 2026-09-12 lê o degrau `xs`, que nasceu para relevo no plano da página
   — antes era uma sombra cravada na folha, invisível ao portão, que só classifica
-  quem LÊ `var(--elevation-*)`.
+  quem LÊ `var(--elevation-*)`. O Command não tem sombra: a elevação é do painel
+  que o hospeda.
 - **Movimento reduzido**: quem para o movimento é a camada de token, que zera a
-  escada de `--duration-*` sob a preferência; as nove folhas desta categoria
-  declaram duração só por token. Regra em [`13-animacao.md`](13-animacao.md); o
+  escada de `--duration-*` sob a preferência. Toda folha desta categoria que
+  anima declara duração só por token — medido em 2026-09-15, nenhuma duração
+  literal —, e a do Popover não anima nada desde 2026-09-12, por decisão da dona,
+  nem para entrar nem para sair. Regra em [`13-animacao.md`](13-animacao.md); o
   mecanismo, medido, na §8 do [`hover-card.md`](../prd/hover-card.md), onde a
   leitura errada pousou duas vezes.
+
+  **As guardas por folha são redundância, e quatro delas não seguram nada.**
+  `@media` não acrescenta especificidade, então guarda que mira a classe nua
+  (0,1,0) perde para a animação declarada num seletor de atributo (0,2,0).
+  Medido em 2026-09-15: o `animation: none` perde no Dialog
+  (`[data-state="open"]`, `[data-closed]`), no Sheet (`[data-side="…"]`) e no
+  DropdownMenu (`[data-state="open"]`), e o `transition: none` do Tooltip perde
+  para `[data-ending-style]`. Vencem as do AlertDialog e do Drawer, que repetem
+  o seletor de atributo, e as do Command e do Menubar, que miram a mesma classe
+  nua da transição. Nada disso deixa movimento na tela — a camada de token
+  alcança as quatro —, e é por isso que ninguém tinha visto.
 
 ---
 
@@ -159,32 +179,38 @@ reimplementa**. No vanilla, cada fábrica o implementa — ver a
 | setas | percorrem os itens do menu e o destaque do Command |
 | letra | no menu, typeahead; no Command, vira texto da busca, e o foco nunca sai do campo |
 
-- **Ao fechar, o foco volta ao gatilho** — Dialog, AlertDialog, Sheet, Popover e
-  DropdownMenu.
+- **Ao fechar, o foco volta ao gatilho** — Dialog, AlertDialog, Sheet, Drawer,
+  Popover e DropdownMenu (e o Menubar, ao gatilho da barra).
 - **Clique fora**: fecha Dialog, Sheet, Popover e menu; **não** fecha o
   AlertDialog, que exige escolha explícita (D1 do `alert-dialog.md`). O Drawer
   fecha pelo véu e pelo arraste quando é `dismissible`.
 - **HoverCard e Tooltip abrem também no foco por Tab**, sem exigir ponteiro —
-  WCAG 1.4.13. O Tooltip abre no foco sem atraso.
+  WCAG 1.4.13. O Tooltip abre no foco sem atraso: a espera é só do ponteiro.
 
 ## Modalidade
 
 | família | `aria-modal` | o que liga junto |
 |---|---|---|
-| Dialog, AlertDialog, Sheet, Drawer | sempre `"true"` | foco preso, rolagem travada |
+| AlertDialog | sempre `"true"` | foco preso, rolagem travada |
+| Dialog, Sheet | `"true"` — o vanilla escreve sem condição; react e vue acompanham o `modal` da raiz da lib, que é `true` no padrão | foco preso, rolagem travada |
+| Drawer | `"true"` no padrão; `modal` existe e é `true` por padrão nas cinco, e com `modal: false` o atributo fica **ausente** | foco preso, rolagem travada — os três saem juntos no não-modal |
 | Popover | só com `modal: true` — no padrão, **ausente**, nem como `"false"` | as mesmas três coisas, juntas (D2 do `popover.md`) |
-| HoverCard, Tooltip, DropdownMenu, Command | nunca | — |
+| HoverCard, Tooltip, DropdownMenu, ContextMenu, Menubar, Command | nunca | — |
 
 O `modal` do DropdownMenu tem padrão `true`, e ali significa véu de interação e
-trava de rolagem — **não** armadilha de foco (D1 do `dropdown-menu.md`).
+trava de rolagem — **não** armadilha de foco (D1 do `dropdown-menu.md`). O
+Command em si nunca anuncia modalidade; quando é montado dentro de um Dialog,
+quem anuncia é o Dialog.
 
 ## Título
 
 O título do painel sai em **`h2` por padrão**, e aceita qualquer nível de `h1`
 a `h6`. Cada stack chega lá pelo mecanismo da própria lib — a tabela "Nível do
 título, por stack" está no PRD de cada painel. No angular não há padrão a
-herdar: o SELETOR carrega o elemento (`h2[ndsAlertDialogTitle]`), então o nível
-é o que quem escreve usa.
+herdar: no Dialog, no AlertDialog, no Sheet e no Drawer o SELETOR carrega o
+elemento (`h1[ndsAlertDialogTitle]` … `h6[ndsAlertDialogTitle]`), e no Popover
+ele é só atributo (`[ndsPopoverTitle]`) — nos dois casos o nível é o que quem
+escreve usa.
 
 **Até 2026-09-12 esta linha terminava em "e todos os exemplos da stack usam
 `h2`", e era falso em 39 pontos.** O inventário daquele dia achou, no Angular,
@@ -238,12 +264,16 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 [`07-analytics.md`](07-analytics.md). O que é desta categoria:
 
 - **Quem abriu vai em `trigger_id`, em todo painel** — `dialog_*` (Dialog,
-  AlertDialog, Sheet), `drawer_*`, `popover_open`, `hover_card_open` e
-  `tooltip_view`. O valor é o id estável do gatilho; no Sheet e no Drawer das
-  demonstrações, o lado que ele abre. Até 2026-09-10 o mesmo papel tinha três
-  nomes, e o último a cair foi `label`, no AlertDialog, no Sheet e no Drawer —
-  a dona unificou em `trigger_id`. Os menus ficam de fora: lá quem identifica é o
-  menu, no campo `menu`.
+  AlertDialog, Sheet, incluindo o `dialog_confirm`), `drawer_*`, `popover_open`,
+  `hover_card_open` e `tooltip_view`. O valor é o id estável do gatilho; no Sheet
+  e no Drawer das demonstrações, o lado que ele abre. **A obrigatoriedade não é a
+  mesma nos dois grupos**, medido nos cinco `analytics.ts` em 2026-09-15: em
+  `dialog_*` e `drawer_*` o campo é obrigatório e `label?: never` reprova o nome
+  antigo; em `popover_open`, `hover_card_open` e `tooltip_view` ele é opcional
+  (`trigger_id?`), e o `popover_close` e o `hover_card_close` não o levam. Até
+  2026-09-10 o mesmo papel tinha três nomes, e o último a cair foi `label`, no
+  AlertDialog, no Sheet e no Drawer — a dona unificou em `trigger_id`. Os menus
+  ficam de fora: lá quem identifica é o menu, no campo `menu`.
 
 - **O fechamento diz por que fechou**, com `reason` **obrigatório** e de
   vocabulário do design system, nunca o da lib — quatro palavras, iguais em
@@ -274,7 +304,7 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
   sintoma, medido no Sheet do vanilla — a stack de REFERÊNCIA de contrato —, era
   a página fingir um clique no véu para fechar pelo rodapé e sobrescrever o
   motivo relatado com uma variável dela. A página repassa a palavra; inventar a
-  palavra é do componente.
+  palavra é do componente. Portão: `motivo_sintetizado_na_docs_page`.
 
 - **Desmontar não é fechar.** O painel que sai da página junto com quem o montou
   — troca de story, desmonte de docs page, troca de idioma, que refaz as seções —
@@ -301,9 +331,17 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 
 ## Posicionamento dos flutuantes
 
-A animação de entrada dos painéis flutuantes cresce a partir do gatilho, e a
-origem sai de uma cadeia de custom properties — uma por lib, porque cada uma
-publica com o seu prefixo:
+- **O painel flutuante fica EM FLUXO dentro do invólucro que a lib posiciona.**
+  Folha que declara `position: absolute` sem deslocamento nenhum na família de
+  seletores colapsa esse invólucro para 0×0, e a lib passa a calcular posição e
+  colisão contra uma caixa vazia — sem erro, com o painel aparecendo no lugar
+  errado. Custou o Tooltip (2026-09-04) e o HoverCard (2026-09-13). Ou a folha
+  declara o deslocamento e É o posicionador, ou ela não declara `position`; a
+  fábrica sem lib crava a posição inline, que é onde essa responsabilidade mora.
+
+A animação de entrada dos painéis flutuantes que animam cresce a partir do
+gatilho, e a origem sai de uma cadeia de custom properties — uma por lib, porque
+cada uma publica com o seu prefixo:
 
 ```
 transform-origin: var(--transform-origin,                          ← base-ui e radix-ng
@@ -314,11 +352,14 @@ transform-origin: var(--transform-origin,                          ← base-ui e
 
 - **O nome da peça no bits não se deriva do nome do componente.** O HoverCard é
   `link-preview`, e a folha do DropdownMenu, que veste três componentes, precisa
-  de quatro degraus (`dropdown-menu`, `context-menu`, `menubar` e `menu` para os
-  submenus).
+  de quatro degraus do bits (`dropdown-menu`, `context-menu`, `menubar` e `menu`
+  para os submenus) e três do reka.
 - **Degrau faltando não quebra nada visível**: `center` é fallback válido, e o
   painel do Svelte passava a crescer do MEIO em silêncio. Foi o defeito que mais
   voltou como "achado novo".
+- **O Popover mantém a cadeia sem animar.** Ela é inerte desde 2026-09-12, quando
+  a animação saiu, e continua declarada — e cobrada pelo portão — para que a
+  animação, se voltar, volte com a origem certa.
 
 ---
 
@@ -329,22 +370,29 @@ instrução: o que a mantém é um **portão**. Esta tabela diz qual, e o que el
 cobre — metade coberta que se anuncia inteira é o defeito que ela existe para
 evitar.
 
+Cada linha foi conferida contra `scripts/audit.mjs` e as stories das cinco
+stacks em 2026-09-15.
+
 | invariante | onde a regra está | portão | o que o portão NÃO cobre |
 |---|---|---|---|
-| Movimento para sob `prefers-reduced-motion` | `13-animacao.md` | `movimento_sem_guarda_eficaz` | duração por token fica de fora de propósito — a camada de token a alcança |
-| Elevação por tipo de superfície | `04-padroes-design-sistema.md` | `elevacao_fora_do_mapa` · `prd_token_sem_lastro` confere cada PRD contra a folha | — |
-| `reason` no fechamento | aqui, §Analytics | `reason_parcial_entre_stacks` (presença entre stacks) · `reason_vocabulario_divergente` (obrigatório e com as quatro palavras, em todo `*_close` e todo `*CloseReason`) | que a docs page deduza o motivo CERTO — o portão lê o tipo, não o caminho que o preenche |
-| Nível do título | aqui, §Título | `nivel_de_titulo_divergente` | lê o default no vanilla, onde está ESCRITO; nas outras quatro ele vem da lib |
-| Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `cadeia_transform_origin_premissa` · `cadeia_transform_origin_nao_declarada` (os dois últimos NÃO levam `sem_bits` no nome — a forma abreviada que esta linha usava até 2026-09-12 devolvia zero a quem procurasse por ela) | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele. E o portão lê a cadeia da FOLHA, não se a stack escreve a variável: o ContextMenu do vanilla não escrevia `--transform-origin` nenhum e caía em `center` (medido em 2026-09-10) |
+| Movimento para sob `prefers-reduced-motion` | `13-animacao.md` | `movimento_sem_guarda_eficaz` (todas as folhas de `docs/shared/styles/nds/`: duração literal sem guarda, ou com guarda que perde por especificidade) | duração por token fica de fora de propósito — a camada de token a alcança. Por isso a guarda INERTE sobre duração por token passa calada: quatro desta categoria (Dialog, Sheet, DropdownMenu, Tooltip), ver §Elevação e movimento |
+| Elevação por tipo de superfície | `04-padroes-design-sistema.md` | `elevacao_fora_do_mapa` · `prd_token_sem_lastro` confere a tabela de geometria de cada PRD contra a folha | folha que não está no mapa e não LÊ `var(--elevation-*)` não é classificada; sombra literal é da `sombra_cravada`. O `prd_token_sem_lastro` lê um sentido só: token que a folha lê e o PRD não cita não reprova |
+| `reason` no fechamento | aqui, §Analytics | `reason_vocabulario_divergente` (em todo `*_close` dos cinco `analytics.ts`: presente, obrigatório e com as quatro palavras, salvo o `hover_card_close`, declarado em `FECHAMENTO_SEM_REASON` com premissa neste arquivo; em todo `*CloseReason`, só palavra FORA do vocabulário) · `reason_da_familia_divergente` e `reason_entre_stacks_divergente` (o `*CloseReason` com MENOS palavras) · `motivo_sintetizado_na_docs_page` (docs page que traduz o motivo por conta própria) · `reason_parcial_entre_stacks` (presença de `reason` nas chamadas de `track` das docs pages, entre stacks) | que o componente mapeie cada caminho para a palavra CERTA — isso é das plays que colecionam os motivos relatados. E o `reason_parcial_entre_stacks` lista `menu_close`, evento que nenhuma stack tipa: `dropdown_menu_close`, `context_menu_close` e `menubar_close` ficam fora dele (a presença nesses três segue cobrada pelo tipo obrigatório) |
+| Desmontar não emite fechamento | aqui, §Analytics | `desmonte_emite_fechamento` | só o vanilla, só o callback de limpeza de `tornarDestruivel`, e só até dois saltos de chamada local até `onClose`; chamada de método (`obj.close()`) não é seguida. Nas quatro stacks com lib, nada |
+| Nível do título | aqui, §Título | `nivel_de_titulo_divergente` — no vanilla, o default ESCRITO de `titleLevel`/`level` em `dialog.ts`, `alert-dialog.ts`, `sheet.ts`, `drawer.ts` e `popover.ts`; no Angular, o call site `<hN … nds{Popover,Dialog,AlertDialog,Sheet,Drawer,HoverCard}Title>`, com as exceções de `NIVEL_TROCADO_DE_PROPOSITO` e a premissa `HeadingH3` conferida | react, vue e svelte, onde o nível vem da lib ou de `aria-level` escrito à mão; no Angular, título cujo `<hN>` não está literal no template do arquivo |
+| Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `cadeia_transform_origin_premissa` · `cadeia_transform_origin_nao_declarada` (os dois últimos NÃO levam `sem_bits` no nome — a forma abreviada que esta linha usava até 2026-09-12 devolvia zero a quem procurasse por ela) | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele. A premissa só é conferida onde há `node_modules` do svelte. E o portão lê a cadeia da FOLHA, não se a stack escreve a variável: o ContextMenu do vanilla não escrevia `--transform-origin` nenhum e caía em `center` (medido em 2026-09-10; hoje escreve, em `context-menu.ts`) |
+| Painel flutuante em fluxo no invólucro da lib | aqui, §Posicionamento | `folha_tira_do_fluxo_sem_dizer_onde` · `posicao_sem_deslocamento_declarada_vencida` (a exceção declarada cuja premissa caiu) | deslocamento escrito em seletor que não é da mesma família de prefixo; e se o invólucro da lib colapsa por outra causa que não `position` na folha |
 | Anel de foco | `01-acessibilidade.md` | `focus_ring_sobrescrito` · `focus_ring_translucido` · `anel_de_foco_ausente` (peça que zera o `outline` sem regra de foco que desenhe anel; 10 exceções declaradas em `ANEL_DE_FOCO_EXCECOES`, cada uma com premissa conferida em arquivo) | que o anel CONTRASTE com o fundo em cada tema — a regra lê presença; a razão é da `focus_ring_translucido` só para `box-shadow`. Nasceu em 2026-09-10 e achou o navigation-menu sem anel em três peças, corrigido junto |
 | O ponteiro pinta o destaque em toda peça | D4 do `dropdown-menu.md` | `destaque_sem_hover` (peça pintada por `[data-highlighted]` sem o `:hover` par na folha; select e combobox são exceções declaradas, porque o vanilla destaca por ponteiro ali — premissa conferida no arquivo) | a COR do hover — a regra lê a presença do par, não se ele pinta o mesmo que o destaque. Nasceu em 2026-09-10: no vanilla o mouse não pintava marcação, rádio nem sub-gatilho |
-| Modalidade | aqui, §Modalidade | `modalidade_sem_condicao` | só a família NÃO-modal; o inverso é da suíte, que assere `aria-modal="true"` |
-| O `<form>` e o rodapé | aqui, §Formulário | `submit_fora_do_form` no conteúdo compartilhado; play lendo `button.form`, nas cinco | a varredura do código das stacks foi retirada em 2026-09-08 (a maioria dos achados era falsa) |
-| Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` (o nome antigo do Popover em qualquer lugar, e `label` no payload documentado de `dialog_*`/`drawer_*`) · `location_fora_do_vocabulario` · `campo_de_payload_morto` · `rotulo_de_rastreio_texto` · o TIPO: `label?: never` em `dialog_*` e `drawer_*` nos cinco `analytics.ts` | o nome do campo nos eventos que não são de painel — o menu usa `menu`, e nada cobra que continue assim |
-| O véu não desfoca | aqui, §Véu | `veu_com_desfoque` | — |
-| Corpo é `flex: 1 1 auto` | aqui, §O corpo que rola | `corpo_com_atalho_flex` | — |
-| Ordem dos botões no rodapé | `02-alinhamento-botoes.md` | play, nas cinco, no Dialog e no AlertDialog (story `Responsive`: ordem no DOM e `column-reverse` no mobile) | no Drawer, o DOM renderizado não é asserido em stack nenhuma; o snippet é, no Vue (`drawer.source.test.ts`) |
-| A regra de categoria não volta a ser copiada por stack | aqui | `guideline_de_stack_repete_categoria` | compara títulos de seção; cópia sem o título escapa |
+| Modalidade | aqui, §Modalidade | `modalidade_sem_condicao` — `aria-modal` com o literal `true` sem condição, nos primitivos de `popover`, `hover-card`, `tooltip` e `dropdown-menu` | Command, ContextMenu e Menubar estão fora da lista `NAO_MODAIS`. O inverso — a família modal anunciar — é da suíte: há asserção de `aria-modal` nas stories de Dialog, AlertDialog, Sheet, Drawer e Popover nas cinco stacks |
+| Foco volta ao gatilho ao fechar | aqui, §Teclado e foco | nenhum portão de audit — play, nas cinco, no Dialog, AlertDialog, Sheet, Drawer, Popover, DropdownMenu e Menubar | nada reprova um overlay NOVO sem essa asserção |
+| Rolagem travada no modal | aqui, §Modalidade | nenhum portão de audit — play no Dialog (cinco stacks), no Popover modal (cinco) e no Sheet (quatro; não no svelte) | o AlertDialog não tem asserção de trava em stack nenhuma, e o Drawer só no Angular — medido por leitura das stories em 2026-09-15 |
+| O `<form>` e o rodapé | aqui, §Formulário | `submit_fora_do_form`, só nos `*Code` do `translations.json` do slug; play lendo `button.form` — no Drawer nas cinco, no Dialog em svelte, vanilla e angular, no Sheet em svelte e vanilla | a varredura do código das stacks foi retirada em 2026-09-08 (a maioria dos achados era falsa); por isso, nas stacks sem a play, nada lê o elo |
+| Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` (o nome antigo do campo no Popover, em qualquer lugar, e `label` no payload de `dialog_*`/`drawer_*` escrito na mesma linha que o `component`, em conteúdo, PRD, guideline e código) · `location_fora_do_vocabulario` · `campo_de_payload_morto` · `rotulo_de_rastreio_texto` · o TIPO: `label?: never` em `dialog_*` e `drawer_*` nos cinco `analytics.ts` | payload documentado em mais de uma linha escapa do `campo_gatilho_divergente`; e o nome do campo nos eventos que não são de painel — o menu usa `menu`, e nada cobra que continue assim |
+| O véu não desfoca | aqui, §Véu | `veu_com_desfoque` (seletor `-overlay`/`-backdrop` nas nove folhas de `OVERLAY_FOLHAS`) | desfoque declarado em seletor sem esses sufixos |
+| Corpo é `flex: 1 1 auto` | aqui, §O corpo que rola | `corpo_com_atalho_flex` (seletor `-body` nas nove folhas de `OVERLAY_FOLHAS`, valor exato `flex: 1;`) | `flex: 1 1 0`, `flex-basis: 0` e o atalho como última declaração da regra, sem `;` |
+| Ordem dos botões no rodapé | `02-alinhamento-botoes.md` | play, nas cinco: no Dialog, a story `CustomCloseInFooter` (ordem no DOM); no AlertDialog, a story `Responsive` (ordem no DOM e `column-reverse` no estreito) | no Drawer e no Sheet, a ordem renderizada não é asserida em stack nenhuma — a play do Drawer confere só que os dois botões EXISTEM (`toContain`), inclusive no Angular, cujo passo se chama "nessa ordem de leitura". O snippet do Drawer é asserido no Vue e no Angular (`drawer.source.test.ts`) |
+| A regra de categoria não volta a ser copiada por stack | aqui | `guideline_de_stack_repete_categoria` | compara títulos de seção, e só na `10-overlay-components.md`: cópia sem o título escapa, e cópia em outro arquivo de stack também — medido em 2026-09-15, a `01-regras-gerais.md` das cinco stacks ainda manda Dialog em `--card`, e a `03-sistema-design.md` do svelte, do vanilla e do angular põe Dialog, Sheet e Drawer em `--card` e o Tooltip em `--popover` |
 
 A **largura como custom property com default em `:root`** não entra: só três dos
 nove a têm (Sheet, Drawer, HoverCard), o Popover é exceção declarada (D6), e os
@@ -353,9 +401,18 @@ invariante de categoria.
 
 ### O que está aberto
 
-1. **A ordem do rodapé do Drawer** não é asserida no DOM renderizado em stack
-   nenhuma, enquanto a do Dialog é asserida nas cinco. É play, não regra de
-   audit.
+1. **A ordem do rodapé do Drawer e do Sheet** não é asserida no DOM renderizado
+   em stack nenhuma, enquanto a do Dialog e a do AlertDialog são asseridas nas
+   cinco. No Drawer a play já tem o passo — só assere presença. É play, não regra
+   de audit.
+2. **Quatro guardas de movimento reduzido inertes** (Dialog, Sheet, DropdownMenu,
+   Tooltip). Não há movimento sobrando, porque a camada de token alcança; a
+   decisão é se a guarda por folha sai — como saiu do Popover, pelo argumento de
+   que guarda inerte anuncia proteção que não dá — ou se ganha o seletor de
+   atributo, como a do AlertDialog e a do Drawer.
+3. **As cópias de `--card` nas guidelines de stack** (`01-regras-gerais.md` nas
+   cinco, `03-sistema-design.md` em três) contradizem a §Superfície, e o portão
+   de cópia só lê a `10-overlay-components.md`.
 
 ### Como este inventário foi levantado, para poder ser refeito
 
@@ -373,7 +430,8 @@ movimento reduzido aparecia nos nove, como parágrafo de seção, nunca como `D`
 
 **A lista não promete estar completa.** Invariante que nunca virou decisão fixada
 em PRD nenhum não aparece aqui — foi o caso do movimento reduzido até
-2026-09-09, que vivia só em comentário de CSS. O teste de que ela fechou não é
+2026-09-09, que vivia só em comentário de CSS, e do retorno de foco e da trava de
+rolagem até 2026-09-15, que viviam só em play. O teste de que ela fechou não é
 ficar sem linhas abertas: é **um relato novo cair num assunto que já está na
 tabela**. Enquanto chegar achado de assunto que não está aqui, ela ganha uma
 linha.

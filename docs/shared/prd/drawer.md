@@ -1,8 +1,10 @@
 # PRD — Drawer
 
-> **Estado descrito**: 2026-09-07. **Revisão serial fechada em** 2026-09-07.
+> **Estado descrito**: 2026-09-15. **Revisão serial fechada em** 2026-09-07.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+>
+> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
 
 ## 1. Identidade
 
@@ -24,17 +26,23 @@ O que só existe aqui: o **gesto**. Arrastar o painel para fora da tela o dispen
 
 ## 2. Contrato de comportamento
 
+Cada linha é verificável. A coluna do portão diz quem reprova se ela deixar de
+valer — e `—` é dívida declarada, não ausência de risco.
+
 | # | o contrato | portão |
 |---|---|---|
-| C1 | O título é obrigatório e vincula `aria-labelledby` automaticamente | `accessibility.items.item1` |
-| C2 | A descrição é opcional; quando existe, vincula `aria-describedby` | `accessibility.items.item2` |
-| C3 | O foco fica preso: Tab e Shift+Tab circulam dentro do painel | `accessibility.items.item3` |
-| C4 | `Escape` fecha quando `dismissible` | `accessibility.items.item4` |
-| C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `accessibility.items.item5` |
-| C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `accessibility.items.item6` |
-| C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `accessibility.items.item7` |
-| C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue; no DOM renderizado, — (nenhuma stack assere; aberto na `18-overlay.md`) |
-| C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `6c1ce87c0` — sem portão automático |
+| C1 | O título é obrigatório e vincula `aria-labelledby` automaticamente | `Playground` passo 1 (`toHaveAccessibleName`) e `HeadingH3`, nas cinco |
+| C2 | A descrição é opcional; quando existe, vincula `aria-describedby` | `Playground` passo 1 (`toHaveAccessibleDescription`), nas cinco |
+| C3 | O foco fica preso: Tab e Shift+Tab circulam dentro do painel | `Playground` (seis Tabs e o foco continua dentro), nas cinco |
+| C4 | `Escape` fecha; com a dispensa desligada, não fecha | o caminho positivo: `Playground` passo 4, nas cinco. O negativo: `NotDismissible` em quatro — **o angular fecha com Escape** e a story dele não tem o passo (§7, inconsistência 1) |
+| C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `DragToDismiss`, nas cinco (arraste curto, arraste longo, Escape no mesmo painel, alça sem foco) |
+| C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `movimento_sem_guarda_eficaz`, que lê a folha; nenhuma story liga a preferência |
+| C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `WithScroll`, nas cinco |
+| C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue e do angular; no DOM renderizado, — (pendência abaixo) |
+| C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `WithForm` lendo `button.form`, nas cinco |
+
+> **PENDÊNCIA · 2026-09-15** — a ordem do rodapé não é afirmada no DOM renderizado em stack nenhuma: as cinco `WithForm` afirmam só `toContain`, e a do angular se chama "nessa ordem de leitura" (`drawer-compositions.stories.ts:149`) sem afirmar ordem. É o item aberto 1 da `18-overlay.md`, e continua aberto.
+> **Fecha quando**: uma story das cinco stacks afirmar o secundário antes do primário no DOM do rodapé e o `flex-direction` computado de `.nds-drawer-footer`.
 
 ## 3. Decisões fixadas
 
@@ -110,8 +118,10 @@ longo empurrava o rodapé com os botões para fora da tela.
 
 **Estado desde 2026-09-10**: `box-shadow: var(--elevation-xl)` em `.nds-drawer-content`.
 **Por quê**: a dona fixou nesse dia a regra de elevação por TIPO de superfície, e
-o drawer entrou como os outros painéis que interrompem a página. A escada, como
-`ELEVACAO_POR_TIPO` a declara hoje:
+o drawer entrou como os outros painéis que interrompem a página. O que vale para o
+drawer é a linha `xl`; a escada inteira mora em `ELEVACAO_POR_TIPO`
+(`scripts/audit.mjs`), que é o que o portão `elevacao_fora_do_mapa` lê. Cópia
+conferida contra o mapa em 2026-09-15:
 
 | degrau | tipo | folhas |
 |---|---|---|
@@ -119,74 +129,50 @@ o drawer entrou como os outros painéis que interrompem a página. A escada, com
 | `sm` | card, sobre o background | `card`, `slider` |
 | `md` | flutuante interativo | `popover`, `dropdown-menu`, `select`, `combobox`, `navigation-menu`, `calendar`, `composer` |
 | `lg` | flutuante passivo | `hover-card`, `tooltip` |
-| `xl` | modal, drawer e toast | `dialog`, `alert-dialog`, `sheet`, **`drawer`**, `toast` |
+| `xl` | modal, drawer e toast | `dialog`, `alert-dialog`, `sheet`, **`drawer`**, `sonner` |
 
-**Até 2026-09-12 esta linha listava quatro degraus** — "card `sm` · flutuante
-interativo `md` · flutuante passivo `lg` · modal e drawer `xl`" —, e ela já estava
-incompleta no próprio 2026-09-10: o toast entrou em `xl` naquele mesmo dia
-(`d65c42a67`), por motivo de CAMADA e não de tipo (`--z-toast` é 1080, acima do
-`--z-modal` 1050). O degrau `xs` nasceu dois dias depois (`aaa9ea44c`, quando a
-medição achou quinze declarações cravando aquela sombra à mão, sem seguir o modo
-escuro). Enumerar a categoria inteira dentro do PRD de UM componente é justamente
-a forma que envelhece: o que vale para o drawer é a linha do `xl`; a escada de
-verdade mora em `ELEVACAO_POR_TIPO`, que é o que o portão
-`elevacao_fora_do_mapa` lê.
+O toast está em `xl` por motivo de CAMADA, não de tipo (`--z-toast` é 1080, acima
+do `--z-modal` 1050), e a folha dele chama-se `sonner` desde 2026-09-13.
+
 **A sombra é direcional**: as camadas do token descem em y. No drawer de baixo
 quase toda ela cai fora do viewport e o que se vê é a borda de cima; no de cima
 ela desce sobre o conteúdo e fica bem mais visível. É o mesmo token nos quatro
 lados — a diferença é geometria, não regra.
 
-**Histórico — revertido em 2026-09-10.** Até então o painel não tinha sombra
-nenhuma, com o motivo de que ele encosta na borda da tela e quem o separa do
-fundo é o véu. Fica o registro porque o argumento não era ruim; ele perdeu para
-a consistência da categoria, e quem quiser revisitá-lo precisa revisitar a
-regra inteira, não só o drawer.
+**Revertido em 2026-09-10.** Até então o painel não tinha sombra nenhuma, com o
+motivo de que ele encosta na borda da tela e quem o separa do fundo é o véu. O
+argumento perdeu para a consistência da categoria; quem quiser revisitá-lo precisa
+revisitar a regra inteira, não só o drawer.
 
 ### D8 · `touch-action: none` é o que faz o gesto existir
 
 **Estado**: declarado no painel.
 **Medição**: sem isso o navegador trata o movimento como rolagem da página e nunca
-entrega os `pointermove` ao painel. As três stacks que rodam lib de gesto já
-recebiam a declaração da própria lib; na folha ela é do design system, e é o que
-permite às outras duas rodarem o gesto que implementam em casa.
-
-**Nota de 2026-09-08**: esta linha dizia que o valor era "o da lib, LIDO na folha
-que ela injeta". Descrever o próprio contrato como cópia do de uma dependência
-convida a tratá-lo como emprestado — foi assim que o atributo de direção passou
-anos chamando-se `data-vaul-drawer-direction` na folha que as CINCO leem (ver D13). O valor é `none` porque é o único que entrega `pointermove` ao
-painel, e isso é verdade independente de quem mais o declare.
+entrega os `pointermove` ao painel. As três stacks que rodam `vaul` recebem a
+mesma declaração da folha que a lib injeta; na folha compartilhada ela é do design
+system, e é o que permite às outras duas rodarem o gesto que implementam em casa.
+O valor é `none` porque é o único que entrega `pointermove` ao painel — é
+contrato próprio, não cópia do de uma dependência (ver D13).
 **O que nenhum portão desta casa alcança**: o toque. A suíte dirige um ponteiro de
 mouse, onde `touch-action` não tem efeito. A convivência desta declaração com a
-rolagem por toque dentro do corpo é herdada da lib e continua sem medição.
+rolagem por toque dentro do corpo continua sem medição.
 
 ### D9 · A transição é suprimida durante o arraste, por dois mecanismos
 
 **Estado**: `.nds-drawer-content:not([data-swiping])` — durante o arraste quem
 manda é o transform escrito a cada quadro seguindo o ponteiro, e interpolar por
 cima deixaria o painel atrasado em relação ao dedo.
-**Medição que corrigiu a nota anterior**: `[data-swiping]` é escrito pelo motor de
-ponteiro de CADA stack — vanilla em `ui/drawer-swipe.ts`, angular na diretiva
-`NdsDrawerSwipe` (o motor era compartilhado até 2026-09-08; ver a nota em
-`docs/shared/primitives/drawer-swipe.ts`). A versão antiga da nota dizia que
-a lib escrevia o atributo, e era FALSO — procurado na fonte publicada, ele não
-aparece uma única vez; a lib suprime a transição por `style` inline
-(`transition: none`), que vence esta folha de qualquer jeito. O seletor era um
-gancho que ninguém puxava. Agora duas stacks o puxam, e nas outras três a
-supressão continua vindo do inline: mesmo efeito, dois mecanismos.
+**Quem escreve `[data-swiping]`**: a fiação de ponteiro de duas stacks — vanilla em
+`ui/drawer-swipe.ts`, angular na diretiva `NdsDrawerSwipe` de `ui/drawer.ts`. Do
+compartilhado `docs/shared/primitives/drawer-swipe.ts` vêm só os limiares e as
+funções que DECIDEM (separado em 2026-09-08, `2dcd473fa`). A `vaul` não escreve o
+atributo — procurado na fonte publicada, ele não aparece; a lib suprime a
+transição por `style` inline (`transition: 'none'`), que vence a folha de qualquer
+jeito. Mesmo efeito, dois mecanismos.
 **Consequência para `prefers-reduced-motion`**: ao soltar, o transform inline é
 apagado e a volta ao repouso é ESTA transição — por isso é ela que precisa parar
 sob movimento reduzido (§8). O arraste em si não é animação: é o painel
 acompanhando o ponteiro, e não há o que reduzir enquanto o dedo está na tela.
-
-**Comentário corrigido em 2026-09-12**: o docblock da transição em `drawer.css`
-dizia "`[data-swiping]` é escrito pelo motor de ponteiro compartilhado — vanilla e
-angular". Compartilhado ele não é desde 2026-09-08
-(`2dcd473fa`): o que ficou em `docs/shared/primitives/drawer-swipe.ts` são os
-limiares e as funções que DECIDEM, e a fiação é de cada stack — `ui/drawer-swipe.ts`
-no vanilla, a diretiva `NdsDrawerSwipe` em `ui/drawer.ts` no angular. A palavra
-sobreviveu quatro dias numa folha que as CINCO leem, e o que a derrubou não foi
-portão nenhum: foi a conferência do PRD contra o código, que é o trabalho que este
-arquivo existe para provocar.
 
 ### D10 · O cabeçalho centraliza em `bottom` e `top`, e vai à esquerda a partir de **48rem**
 
@@ -209,16 +195,17 @@ utilitária é (0,1,0).
 **Fixada em** 2026-09-07, decisão da dona.
 **Estado**: `WithConfirmation` sim; `WithForm` não — para não cobrar um Tab a mais
 de quem só quer editar.
-**Nota de implementação**: cada stack escolhe o alvo pela API da sua lib, e o
-**angular consulta `[ndsDrawerClose]`, não `data-slot`**, porque host binding de
-diretiva disputa o atributo. As cinco `play` de confirmação afirmam qual elemento
-tem o foco **e qual não tem**.
+**Nota de implementação**: cada stack escolhe o alvo pela API da sua lib (§7,
+inconsistência 16), e o **angular consulta `[ndsDrawerClose]`, não `data-slot`**,
+porque host binding de diretiva disputa o atributo. As cinco `WithConfirmation`
+afirmam qual elemento tem o foco; quatro afirmam também qual NÃO tem — o vanilla
+não (`drawer-compositions.stories.ts:202-205`, §7 inconsistência 15).
 
 ### D13 · O atributo de direção é `data-direction`, e não o nome de uma lib
 
 **Trocada em** 2026-09-08 (`b5724a109` na folha, mais um commit por stack).
 **Estado**: os dezessete seletores da folha leem `[data-direction]`, e as cinco
-stacks emitem esse atributo.
+stacks emitem esse atributo no painel.
 **Histórico**: até então a folha compartilhada — lida pelas CINCO — se ancorava em
 `data-vaul-drawer-direction`, o nome que a lib de gaveta escreve. As duas stacks
 sem lib tinham de imitar o atributo de uma dependência que elas não usam, e a
@@ -234,16 +221,16 @@ seletor que as cinco leem.
 `form="<id>"`. Com dois campos o navegador **não faz submissão implícita**, então
 o Enter num campo não disparava nada — mesmo defeito de teclado que um
 `type="submit"` fora do form produz, só que em silêncio em vez de mentindo.
-**Por que nenhum portão pega**: o markup é válido. Foram doze superfícies em
-cinco stacks — story, snippet do painel Code e docs page —, e o Angular era o
-caso extremo: a story `WithForm` não tinha `<form>` sequer.
+**Por que o markup sozinho não denuncia**: é válido. Foram doze superfícies em
+cinco stacks — story, snippet do painel Code e docs page. O portão hoje é a
+`WithForm` das cinco lendo `button.form` (C9).
 
 ## 4. Anatomia
 
 ```
 sheet-overlay                 véu — reusado do Sheet, não declarado aqui
 drawer-content [data-direction]
-├── drawer-handle             só em bottom (D4)
+├── drawer-handle             só em bottom (D4); sem data-slot, aria-hidden, sem foco
 ├── drawer-header             gap 2px, padding 16px; centralizado em bottom/top (D10)
 │   ├── drawer-title             obrigatório — regra do Sheet
 │   └── drawer-description       opcional — regra do Sheet
@@ -277,25 +264,21 @@ Fonte: `docs/shared/styles/nds/drawer.css`.
 | entrada, saída e volta ao repouso | — | `--duration-base`, com `ease-in-out` literal |
 | camada | — | `--z-modal` |
 
-**Conferida linha a linha em 2026-09-12, depois da tokenização de elevação**
-(`aaa9ea44c`, `7975f6b53`): as dezesseis linhas fecham com a folha. A sombra
-ganhou linha própria nessa conferência — **até então ela vivia só numa nota solta
-abaixo da tabela** ("Sombra `--elevation-xl` (D7, revertida em 2026-09-10)"), que
-era a única propriedade pintada da folha fora da tabela e ainda lia como se o
-`xl` fosse o que tinha sido revertido; o que foi revertido é a decisão ANTERIOR,
-de não ter sombra. O instrumento
-`node scripts/tabela-tokens.mjs drawer` confirma: nenhuma linha das tabelas das
-cinco stacks deixa de fechar com a folha, e os dois tokens que a folha lê sem
-aparecer nas tabelas das docs pages são justamente `--elevation-xl` e
-`--radius-full` — o segundo já estava aqui, na linha da alça.
+**Conferida em 2026-09-15** com `node scripts/tabela-tokens.mjs drawer`: as 40
+linhas das cinco tabelas de docs page (8 por stack) fecham com a folha, sem
+divergência entre stacks. Os dois tokens que a folha lê e nenhuma tabela lista são
+`--elevation-xl` e `--radius-full` — os dois já estão aqui.
 
-**O degrau `xs` que nasceu naquela rodada não toca este painel**: nenhuma das
-onze folhas que o consomem é de superfície modal (ver D7).
+**O degrau `xs` não toca este painel**: nenhuma das dez folhas que o consomem é de
+superfície modal (ver D7).
 
 **O título e a descrição não estão nesta tabela de propósito**: eles são regra do
 `sheet.css` (`.nds-sheet-title` e `.nds-sheet-description`), reusada aqui. Os
 valores estão na tabela do [PRD do Sheet](sheet.md), e mexer neles alcança os dois
 componentes.
+
+**As regras de entrada e saída (`[data-starting-style]`/`[data-ending-style]`,
+`drawer.css:326-349`) só são lidas no angular** — ver §7, inconsistência 4.
 
 ## 6. Estados
 
@@ -305,57 +288,50 @@ componentes.
 | Open | gatilho | painel montado, foco preso, rolagem travada |
 | Swiping | ponteiro arrastando | transição suprimida; o transform segue o dedo (D9) |
 | Settling | ao soltar | a transição devolve o painel ao repouso — é ela que para sob movimento reduzido |
-| Transitioning | entrada e saída | deslizamento a partir da borda da direção |
+| Transitioning | entrada e saída | deslizamento a partir da borda da direção — em quatro stacks; o vanilla monta e desmonta no mesmo quadro (§7, inconsistência 4) |
 
 ## 7. API
 
-| prop | tipo | padrão |
-|---|---|---|
-| `open` | boolean | — |
-| `defaultOpen` | boolean | `false` |
-| `onOpenChange` | `(open: boolean) => void` | — |
-| `direction` | `bottom \| top \| left \| right` | `bottom` |
-| `modal` | boolean | `true` |
-| `dismissible` | boolean | `true` — Escape, clique no véu e arraste |
-| `onClose` | `(reason: DrawerCloseReason) => void` | — · **só o vanilla** |
+| prop | tipo | padrão | onde existe |
+|---|---|---|---|
+| `open` | boolean | — | react, vue, svelte (`bind:open`), angular (`model`); o vanilla expõe verbos |
+| `defaultOpen` | boolean | `false` | react, vue, angular — **não** existe no svelte nem no vanilla (inconsistência 7) |
+| `onOpenChange` | `(open: boolean) => void` | — | nas cinco (`update:open` no vue, `openChange`/`onOpenChange` no angular) |
+| `direction` | `bottom \| top \| left \| right` | `bottom` | nas cinco |
+| `modal` | boolean | `true` | nas cinco |
+| `dismissible` | boolean | `true` — Escape, clique no véu e arraste | react, vue, svelte, vanilla; no angular é o inverso, `disablePointerDismissal`, e **não alcança o Escape** (inconsistência 1) |
+| `onClose` | `(reason: DrawerCloseReason) => void` | — | **só o vanilla** |
 
 **O `onClose(reason)` da fábrica é quem alimenta o `reason` do `drawer_close` no
-vanilla**, e faltava nesta tabela. As quatro palavras são as mesmas do §9
-(`escape` · `overlay` · `close-button` · `api`), e é a fábrica que sabe qual
-caminho fechou: o Escape, o clique no véu, o botão de saída e o `close()` de
-código chegam ali já nomeados, sem a dedução que as outras quatro stacks têm de
-fazer a partir do evento da lib. Nas outras quatro o motivo sai do
-`<slug>-close-reason` ao lado do primitivo (§9). **Até 2026-09-12 esta tabela não
-tinha a linha**, e a docs page do vanilla já publicava a prop na tabela de API.
+vanilla.** As quatro palavras são as mesmas do §9 (`escape` · `overlay` ·
+`close-button` · `api`), e é a fábrica que sabe qual caminho fechou: o Escape, o
+clique no véu, o botão de saída, o arraste (`overlay`) e o `close()` de código
+chegam ali já nomeados. Nas outras quatro o motivo sai do helper de motivo ao lado
+do primitivo (§9).
 
-**A fábrica do vanilla também tem API imperativa, e ela é o que tornou o gatilho
-dispensável**: o que `createDrawer` devolve é o wrapper com `open()`, `close()`,
-`toggle()` e `isOpen()` — mais o descarte de `tornarDestruivel`. `close()` e o
-`toggle()` que fecha informam `api`; o descarte chama `onOpenChange(false)` e
-**não** chama `onClose`, porque desmontar não é a pessoa fechando (mesma decisão
-do AlertDialog, `alert-dialog.md` §9). Os verbos são os do Sidebar, em inglês.
-
-**O que mudou em 2026-09-12 foi o `trigger`, não os verbos.** `open()` e
-`isOpen()` já existiam nesta fábrica; a rodada do gatilho escondido
-(`7f24ea325`) tornou `trigger` opcional e apagou o espelho `stateExterno`, com a
-guarda de reentrância passando a morar no próprio `open()`. É a distinção que
-separa esta fábrica do Sheet e do Dialog, que naquela semana ganharam `open()` e
-`isOpen()` de fato (`efdf144cd`).
+**A fábrica do vanilla também tem API imperativa**: o que `createDrawer` devolve é
+o wrapper com `open()`, `close()`, `toggle()` e `isOpen()` — mais o descarte de
+`tornarDestruivel`. `close()` e o `toggle()` que fecha informam `api`; o descarte
+chama `onOpenChange(false)` e **não** chama `onClose`, porque desmontar não é a
+pessoa fechando (mesma decisão do AlertDialog, `alert-dialog.md` §9). Os verbos
+são os do Sidebar, em inglês. `trigger` é opcional desde 2026-09-12 (`7f24ea325`),
+com a guarda de reentrância morando no próprio `open()`.
 
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
 | vanilla, angular | motor de ponteiro PRÓPRIO, que escreve `[data-swiping]` (D9); do compartilhado vêm só os limiares e as funções que decidem |
-| svelte | `shouldScaleBackground` e `activeSnapPoint` chegaram a ser expostos contra o que o comentário compartilhado afirma, e foram recolhidos em `3807596f8` |
-| angular | consulta `[ndsDrawerClose]` para o foco inicial, porque host binding disputa `data-slot` (D12) |
-| vanilla | `trigger` é OPCIONAL desde 2026-09-12 — a gaveta comandada de fora se abre por `open()`, sem gatilho nenhum |
+| svelte | `shouldScaleBackground` e `activeSnapPoint` não são declarados no wrapper (recolhidos em `3807596f8`); chegam à lib por `restProps` com o padrão dela |
+| angular | `dismissible` é `disablePointerDismissal`; `panelClass` no `ng-template[ndsDrawerContent]`, porque o painel nasce no portal e não há elemento onde escrever classe; consulta `[ndsDrawerClose]` para o foco inicial (D12) |
+| vue | o alvo do foco inicial é prop do `DrawerContent` (`initial-focus="panel" \| "close"`), porque a `vaul-vue` cancela o foco automático e não repassa o evento |
+| vanilla | `trigger` é OPCIONAL — a gaveta comandada de fora se abre por `open()`, sem gatilho nenhum |
 
 **Por que `trigger` pôde ficar opcional aqui, e a medição que decidiu**: a
 fábrica o usava em DOIS lugares — anexar ao wrapper e ouvir o clique. Não escreve
-`aria-haspopup`, `aria-expanded` nem `aria-controls`, e não o usa como âncora,
-porque a gaveta encosta na borda da tela. Sem gatilho, quem anuncia o papel é
-quem montou o botão externo.
+`aria-haspopup`, `aria-expanded` nem `aria-controls` (as quatro libs escrevem —
+inconsistência 5), e não o usa como âncora, porque a gaveta encosta na borda da
+tela. Sem gatilho, quem anuncia o papel é quem montou o botão externo.
 
 **No DropdownMenu a mesma pergunta tem resposta oposta, e vale escrever**: lá o
 gatilho tem SETE usos, e um deles é ser a âncora do posicionamento — menu
@@ -364,8 +340,7 @@ que separa as duas respostas; simetria de API teria dado a mesma para os dois.
 
 ### Peças, por stack
 
-Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
-seletores do código — não transcrito da guideline, que é a fonte aposentada.
+Extraído dos exports e dos seletores do código em 2026-09-15.
 
 | stack | peças |
 |---|---|
@@ -373,10 +348,17 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vue | `Drawer`, `DrawerBody`, `DrawerClose`, `DrawerContent`, `DrawerDescription`, `DrawerFooter`, `DrawerHeader`, `DrawerOverlay`, `DrawerTitle`, `DrawerTrigger` |
 | svelte | `Drawer`, `DrawerBody`, `DrawerClose`, `DrawerContent`, `DrawerDescription`, `DrawerFooter`, `DrawerHeader`, `DrawerOverlay`, `DrawerPortal`, `DrawerTitle`, `DrawerTrigger` |
 | vanilla | `createDrawer` |
-| angular | `[ndsDrawerSwipe]`, `button[ndsDrawerClose]`, `button[ndsDrawerTrigger]`, `div[ndsDrawerBody]`, `div[ndsDrawerFooter]`, `div[ndsDrawerHeader]`, `h1[ndsDrawerTitle]` … `h6[ndsDrawerTitle]` (os seis), `nds-drawer`, `ng-template[ndsDrawerContent]`, `p[ndsDrawerDescription]` |
+| angular | `[ndsDrawerSwipe]`, `button[ndsDrawerClose]`, `button[ndsDrawerTrigger]`, `div[ndsDrawerBody]`, `div[ndsDrawerFooter]`, `div[ndsDrawerHeader]`, `h1[ndsDrawerTitle]` … `h6[ndsDrawerTitle]` (os seis), `nds-drawer`, `ng-template[ndsDrawerContent]`, `p[ndsDrawerDescription]`, mais a constante `NDS_DRAWER` |
 
-O índice do svelte também reexporta as formas curtas — `Body`, `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
-para quem importa o namespace inteiro. As stories usam a forma longa.
+O índice do svelte também reexporta as formas curtas — `Body`, `Close`, `Content`,
+`Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`,
+`Trigger` —, para quem importa o namespace inteiro. As stories usam a forma longa.
+
+**O helper do motivo de fechamento sai junto das peças**: `drawerCloseReason` e
+`DrawerCloseReason` no angular (`ui/drawer.ts`) e no vanilla (só o tipo);
+`drawerCloseReason`, `createDrawerCloseWatch` e `createDrawerDragWatch` no índice
+do vue; `drawerCloseReason` e `createDrawerCloseWatch` no índice do svelte; no
+react, módulo à parte `ui/drawer-close-reason.ts`.
 
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
@@ -386,71 +368,258 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 
 | stack | mecanismo | padrão |
 |---|---|---|
-| react | prop `asChild` no `DrawerTitle` — o filho escrito por quem compõe recebe id, classe e slot por fusão de props | `h2` |
+| react | prop `asChild` no `DrawerTitle` (o `Title` do dialog do radix, por baixo da `vaul`) — o filho escrito por quem compõe recebe id, classe e slot por fusão de props | `h2` |
 | vue | prop `as` (ou `as-child`) | `as: 'h2'` |
 | svelte | snippet `child` + prop `level` | `div` com `aria-level="2"` |
 | angular | seletor por elemento, nos SEIS níveis | o que quem escreve usar |
 | vanilla | opção `titleLevel` da fábrica | `2` |
 
-**Até 2026-09-12 a linha do react dizia `prop render (BaseUIComponentProps<'h2'>)`**,
-que é o mecanismo do **AlertDialog** — daquela stack, e da base-ui. O Drawer do
-react não roda base-ui: roda `vaul`, cujo `Title` é o `Title` do dialog do radix,
-e a delegação de elemento dali chama-se `asChild`. A story `HeadingH3` daquela
-stack escreve exatamente isso (`<DrawerTitle asChild><h3>…</h3></DrawerTitle>`),
-então a linha errada convivia com a prova ao lado — a mesma forma de apodrecer da
-D9 e do §8 deste arquivo: texto copiado do PRD vizinho porque a estrutura das duas
-seções é igual.
-
-As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
-diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
-dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
-`titleLevel`.
+**No svelte `level` sozinho não troca a tag.** O título daquela lib renderiza
+`<div role="heading">` e o `level` só alimenta o `aria-level`. Quem entrega o
+cabeçalho de verdade é o snippet `child`, e os dois andam juntos: sem `level`, um
+`h3` escrito pelo `child` sairia com `aria-level="2"`, e a tag brigaria com o ARIA.
 
 **O nome da opção é relativo ao ESCOPO da fábrica, e isso NÃO é divergência** —
 já foi relatado como tal três vezes. Fábrica que monta só o título usa `level`
 (`createPopoverTitle`, `createCardTitle`); fábrica que monta o componente
 inteiro usa `titleLevel` (`createDialog`, `createSheet`, `createDrawer`,
-`createAlertDialog`), porque `createCardTitle({ titleLevel })` leria "title
-title level". A regra vale fora do vanilla: no Svelte o wrapper de story usa
-`titleLevel` e o snippet emite `level`, que é a prop do bits.
-
-**O DEFAULT, esse era divergência, e fechou em 2026-09-09**: o
-`createPopoverTitle` defaultava `h4` e passou a `2`, alinhando com estas quatro
-fábricas e com o que as outras stacks anunciavam. O `createCardTitle` não tem
-default de nível — sem `level` ele monta `div`, igual a react, vue e svelte no
-card. Citar as duas como precedente de FORMA, que era o que esta linha fazia,
-dizia menos do que parecia: o precedente é do nome, nunca do valor.
-
-**A linha do svelte estava ERRADA até 2026-09-09, e foi a story que a corrigiu**:
-`level` sozinho não troca a tag. O título daquela lib renderiza
-`<div role="heading">` e o `level` só alimenta o `aria-level` — e como o mesmo
-componente serve os quatro painéis, não há atalho por slug. Quem entrega o
-cabeçalho de verdade é o snippet `child`, que é a delegação de elemento daquela
-lib, irmã do `render`, do `as` e do `asChild`. Os dois andam juntos: sem
-`level`, um `h3` escrito pelo `child` sairia com `aria-level="2"`, e a tag
-brigaria com o ARIA. A afirmação antiga — "as cinco aceitam qualquer nível pelo
-mecanismo da própria lib" — era verdadeira só no sentido do ARIA, e ninguém
-tinha medido porque nenhuma superfície exercitava a capacidade.
+`createAlertDialog`). No Svelte o andaime de story usa `titleLevel` e passa
+`level` à peça, que é a prop do bits.
 
 **Por que isso importa**: `heading-order` do axe reprova salto de nível, e o
-painel não sabe de que profundidade da página foi aberto — um diálogo disparado
-de dentro de uma seção já em `h3` precisa sair em `h4`.
+painel não sabe de que profundidade da página foi aberto.
 
-**A story existe desde 2026-09-09**: `HeadingH3`, no arquivo de variantes das
-cinco stacks, com o painel aberto na montagem e o título pedido em `h3`. Ela
-afirma as duas metades, e a segunda é a que dá valor à primeira — o elemento
-renderizado é o pedido (`tagName`), e o `aria-labelledby` do painel continua
-resolvendo NELE, com o nome acessível saindo do seu texto. Os dois defeitos que
-ela existe para pegar foram plantados e reprovaram nas cinco: trocar a tag
-mantendo o vínculo, e manter a tag rompendo o vínculo.
+**A story é `HeadingH3`**, no arquivo de variantes das cinco stacks, com o painel
+aberto e o título em `h3`. Ela afirma as duas metades: o elemento renderizado é o
+pedido (`tagName`), e o `aria-labelledby` do painel continua resolvendo NELE, com
+o nome acessível saindo do seu texto.
+
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Medidas arquivo a arquivo nas cinco stacks, sem suíte de navegador — onde o item
+depende de comportamento de lib, a medição é na fonte publicada em
+`node_modules`. `node scripts/audit.mjs drawer --json` devolveu **zero violações**
+nesta data: nenhuma das divergências abaixo é vista por portão.
+
+**Comportamento**
+
+1. **Escape com a dispensa desligada.** Vanilla não fecha
+   (`ui/drawer.ts:454`); react, vue e svelte não fecham e afirmam isso
+   (`NotDismissible`: react `drawer-states.stories.tsx:320`, vue
+   `drawer/drawer-states.stories.ts:305`, svelte `drawer/drawer-states.stories.ts:190`).
+   Angular fecha: o input é `disablePointerDismissal` (`ui/drawer.ts:499`, `:592`),
+   o docblock chama isso de deliberado por WCAG 2.1.2 (`:480-485`), e a
+   `NotDismissible` de lá não tem passo de Escape (`drawer-states.stories.ts:278-300`)
+   — mas o rodapé tem saída explícita, então não há armadilha a evitar.
+   Maioria (4) e referência: Escape não fecha. O NOME do input é divergência de
+   API — registrar; o comportamento não é.
+2. **O arraste que dispensa não emite `drawer_close` no angular.**
+   `dismissBySwipe` escreve o model direto (`ui/drawer.ts:605-607`), e o
+   `@radix-ng` só emite `onOpenChange` dentro de `show()`/`close()`
+   (`radix-ng-primitives-dialog.mjs:214-220`) — o `case 'swipe'` de
+   `drawerCloseReason` (`ui/drawer.ts:220`) nunca é alcançado, e o docblock de
+   `dismissBySwipe` (`:600-603`) ainda diz que o motivo vira `'action'`, palavra que
+   saiu do vocabulário. Vanilla fecha por `overlay` na fábrica (`ui/drawer.ts:409`);
+   react, vue e svelte anotam `overlay` no `onDrag` (`drawer-close-reason.ts:73-78`,
+   `drawer.close-reason.ts:113-121`, `close-reason.ts:105-110`). Maioria (4):
+   `drawer_close` com `overlay`. Medido na fonte, não no navegador.
+3. **Foco inicial.** Vue foca o PAINEL (`DrawerContent.vue:140-145`); vanilla vai
+   ao primeiro focável (`ui/drawer.ts:393`), react e svelte ligam o foco
+   automático da lib com o primeiro tabbable (`drawer.tsx:84`, `drawer.svelte:65`),
+   angular idem (`ui/drawer.ts:557-563`) — que é o corpo rolável quando existe.
+   Maioria (4) e referência: primeiro focável. Nenhuma play vê: todas afirmam só
+   "o foco está dentro do painel".
+4. **Animação de entrada e saída.** Vanilla não anima: a fábrica não escreve
+   `data-starting-style`/`data-ending-style` (zero ocorrências em `ui/drawer.ts`) e
+   remove o painel no mesmo quadro (`:427-428`). Angular anima pelas regras da
+   folha (`drawer.css:326-349`) com os atributos do `@radix-ng`
+   (`radix-ng-primitives-dialog.mjs:572`). React, vue e svelte animam pela folha
+   que a `vaul` injeta (`slideFrom*`, `vaul/dist/index.mjs:62`), e não pelas
+   regras da folha compartilhada. Maioria (4): anima; a referência não.
+5. **O gatilho anuncia o diálogo em quatro stacks.** As quatro libs escrevem
+   `aria-haspopup="dialog"` (com `aria-expanded`/`aria-controls`) no gatilho —
+   `radix-ng-primitives-dialog.mjs:794`, `reka-ui/dist/Dialog/DialogTrigger.js:33`,
+   `bits-ui/dist/bits/dialog/dialog.svelte.js:127`, `@radix-ui/react-dialog`; a
+   fábrica do vanilla não escreve nenhum dos três (docblock `ui/drawer.ts:126-132`).
+   Só o angular assere (`drawer-states.stories.ts:98`). Maioria (4): anuncia.
+
+**Markup e `data-slot`**
+
+6. **`data-slot` fora do painel.** Raiz: `div[data-slot="drawer"]` no vanilla
+   (`ui/drawer.ts:270`) e no host do angular (`ui/drawer.ts:504`); react e vue
+   passam `data-slot="drawer"` a uma raiz que não renderiza elemento
+   (`drawer.tsx:144`, `Drawer.vue:105`), svelte não passa — divergência de API
+   (raiz provider), registrar. Gatilho: `drawer-trigger` em react, vue, svelte e
+   angular; no vanilla o botão fica `button` — Maioria (4). Fechador:
+   `drawer-close` em react, vue e svelte, escrito por quem compõe no vanilla
+   (é o gancho da delegação, `ui/drawer.ts:380-383`), ausente no angular por disputa
+   de host binding (`ui/drawer.ts:771-784`) — registrar.
+7. **`defaultOpen` não existe em duas stacks.** React, vue e angular têm a prop;
+   svelte só tem `open` bindável (`drawer.svelte:64-70`, e o andaime
+   `DrawerStory.svelte:41-49` a emula); vanilla abre por `open()`. Divergência de
+   API — registrar. **Mas a tabela de props da docs page do svelte publica
+   `defaultOpen`** (`DrawerDocs.svelte:954`), que o componente de lá não aceita —
+   isso é defeito, não API.
+
+**Stories — conjunto e asserções**
+
+8. **`ListenerCleanup` e o passo 6 do `Playground` só existem no vanilla**
+   (`drawer-states.stories.ts:357`, `drawer.stories.ts:218-233`): prova de
+   `destroy()` e dos verbos da fábrica. Mecânica de fábrica — registrar. Nos
+   outros arquivos o conjunto é o mesmo nas cinco (Playground; Closed, Open,
+   Controlled, NotDismissible, DragToDismiss; Bottom, Top, Left, Right, WithScroll,
+   HeadingH3; WithForm, WithConfirmation); só a ordem difere — o vanilla declara
+   `HeadingH3` logo depois de `Bottom` (`drawer-variants.stories.ts:98`), as outras
+   quatro por último.
+9. **O `Playground` cobra coisas diferentes.** Espião de `onOpenChange`: react
+   (`drawer.stories.tsx:157,170`), vue (`drawer/drawer.stories.ts:183,197`) e
+   angular (`drawer.stories.ts:130,145`); svelte espiona o `onCancel` do andaime
+   (`drawer/drawer.stories.ts:186-190`); vanilla nada — Maioria (3). Clique no véu
+   FECHA: só o angular assere (`drawer.stories.ts:193-201`), e nenhuma outra story
+   das quatro cobre o caminho positivo do véu. Controls: svelte sem `modal`
+   (`drawer/drawer.stories.ts:38-91`), angular sem `dismissible`
+   (`drawer.stories.ts:21-49`); react, vue e vanilla têm os dois.
+10. **`Closed`, `Open` e `Controlled` afirmam atributos diferentes.**
+    `data-slot="drawer-trigger"`: react (`drawer-states.stories.tsx:108`), vue
+    (`:117`) e angular (`:99`); svelte e vanilla não. `Open` do angular troca `role` e
+    `data-slot` por `data-state="open"` (`drawer-states.stories.ts:147`); as outras
+    quatro afirmam `role` e `data-slot`. `Controlled` do angular afirma
+    `data-state` em vez do nome acessível (`:216`). `Controlled` do svelte abre pelo
+    `DrawerTrigger` interno do andaime, rotulado "Abrir via estado externo"
+    (`drawer/drawer-states.stories.ts:129,140`), sem botão de fora — Maioria (4):
+    botão externo comandando o estado.
+11. **`Left` afirma uma posição que passa durante a entrada.** `left < 1` —
+    verdade também com o painel a −384px no meio da transição, como o próprio vue
+    registra (`drawer/drawer-variants.stories.ts:178-182`) — em react
+    (`drawer-variants.stories.tsx:167`), svelte (`:135`), vanilla (`:195`) e angular
+    (`:171`). Só o vue espera e mede `Math.abs(...) < 2`, em `Left` e `Right`
+    (`:183-185`, `:211-214`). Maioria (4) com a asserção fraca; a forma do vue é a
+    que tem dentes.
+12. **Variantes do angular afirmam nome sem valor** (`toHaveAccessibleName()`,
+    `drawer-variants.stories.ts:115,143,169,194`); as outras quatro afirmam o texto.
+    E o rodapé das variantes do svelte tem dois botões (o andaime é um só,
+    `DrawerStory.svelte:179-207`), contra um `Fechar` nas outras quatro.
+13. **`WithForm`.** Svelte abre à direita (`drawer/drawer-compositions.stories.ts:39`),
+    as outras quatro em baixo. Angular tem um passo a mais, o corpo como região
+    rolável (`drawer-compositions.stories.ts:170-180`), e conta os botões do painel
+    inteiro em vez do rodapé (`:150`). Nenhuma das cinco afirma a ordem do rodapé
+    no DOM (pendência do §2).
+14. **`NotDismissible` do react tem um passo que as outras não têm** — o painel
+    ENTRA na tela (`drawer-states.stories.tsx:298-318`), porque só ali a raiz assume o
+    controle com a dispensa desligada (`drawer.tsx:114-150`). Mecânica da stack —
+    registrar.
+15. **`WithConfirmation`.** Svelte: a ação principal NÃO tem a variante
+    destrutiva (`DrawerStory.svelte:201-207`) e nenhum passo a cobra
+    (`drawer/drawer-compositions.stories.ts:116-120`); as outras quatro afirmam
+    `nds-button-destructive` — Maioria (4). Vanilla: não afirma que a ação principal
+    fica SEM foco (`drawer-compositions.stories.ts:202-205`); as outras quatro sim.
+    Passo `type="button"` e `form` nulo só em vanilla (`:207-214`) e svelte
+    (`:131-138`). Angular não afirma o nome acessível (`:243-245`). Corpo com texto
+    em vanilla e svelte; sem corpo em react, vue e angular.
+16. **API do alvo de foco inicial** — divergência de API, registrar: vanilla opção
+    `initialFocus` (elemento, `drawer-compositions.stories.ts:179`); react
+    `onOpenAutoFocus` no `DrawerContent` (`drawer-compositions.stories.tsx:180-198`);
+    vue prop `initial-focus="close"` (`drawer/drawer-compositions.stories.ts:175`);
+    svelte `onOpenAutoFocus`, hoje só no andaime (`DrawerStory.svelte:101-107,120`);
+    angular output `(openAutoFocus)` com `[ndsDrawerClose]`
+    (`drawer-compositions.stories.ts:210-222`).
+17. **`DragToDismiss` afirma `data-swiping` ausente só onde a stack o escreve**
+    (vanilla `drawer-states.stories.ts:519`, angular `:441`) — segue de D9,
+    registrar. O angular espera a devolução de foco com `waitFor` (`:469-471`); as
+    outras quatro leem na hora.
+
+**Docs page**
+
+18. **Demonstração.** Vanilla monta UMA gaveta, só `bottom`
+    (`DrawerDocs.ts:287-305`); as outras quatro montam as quatro direções (react
+    `DrawerDocs.tsx:402-415`, vue `DrawerDocs.vue:606-650`, svelte
+    `DrawerDocs.svelte:365` em diante, angular `DrawerDocs.ts:610-643`). Maioria (4);
+    o conteúdo tem as quatro legendas (`demonstration.labels.bottom|right|left|top`).
+19. **Onde `drawer_open` e `drawer_close` nascem.** Angular: só na Demonstração,
+    com `location: 'docs_demo'` (`DrawerDocs.ts:614-617`, `810-821`) — os painéis
+    vivos de Do & Dont, Variantes e Composições (`:354-589`) não têm ouvinte. As
+    outras quatro rastreiam todo painel vivo com o `location` da seção (react
+    `trackDrawer` em `DrawerDocs.tsx:351,492,663,753,843`; vue
+    `DrawerDocs.vue:620-1152`; svelte `drawerWatch` em demo, do-dont, variantes e
+    composições; vanilla `buildDrawerDemo` em `DrawerDocs.ts:297-729`). Maioria (4).
+20. **`dialog_confirm` só no angular** (`DrawerDocs.ts:555,582,832-839`). As outras
+    quatro não disparam, e `analytics.description` lista só `drawer_open` e
+    `drawer_close`. Maioria (4): não dispara.
+21. **Quem produz `api`, e o default do motivo.** Vanilla: `close()`/`toggle()`
+    (`ui/drawer.ts:500-503`). Angular: é o default, e inclui `trigger-press` e
+    `none` (`ui/drawer.ts:222-226`). Svelte `markProgrammatic`
+    (`close-reason.ts:111`) e vue gesto `confirm` (`drawer.close-reason.ts:68-69`)
+    existem sem chamador. React não tem caminho que produza `api`
+    (`drawer-close-reason.ts:49-53`). Motivo não anotado cai em `close-button` em
+    react, vue e svelte, e em `api` no angular. Os NOMES dos sinais divergem —
+    svelte `escape-key|outside-press|drag-dismiss|imperative-action`, vue
+    `escape-key-down|pointer-down-outside|drag-dismiss|confirm`, react sem tipo de
+    sinal — e isso é API, registrar; o default e a ausência de produtor não são.
+22. **O "não faça" do par 1 abre um diálogo SEM nome** no vanilla (`title: ''`,
+    `DrawerDocs.ts:372-379`) e no svelte (sem `DrawerTitle`,
+    `DrawerDocs.svelte:547-563`); react e vue dão ao painel um título `nds-sr-only`
+    (`DrawerDocs.tsx:529`, `DrawerDocs.vue:766`), angular usa o título ruim da
+    tabela de UX writing (`DrawerDocs.ts:369-387`). Maioria (3): o painel tem nome.
+    O "não faça" do par 2 é descritivo, sem painel, só no angular (`:404-412`); nas
+    outras quatro é um painel vivo.
+23. **Container de Variantes e `componentSlug`.** Angular usa `nds-docs-variants`
+    (`DrawerDocs.ts:671`); as outras quatro reusam o container de composições
+    (react `DrawerDocs.tsx:596`, vue `DrawerDocs.vue:871`, svelte
+    `DrawerDocs.svelte:611`, vanilla `DrawerDocs.ts:466`). `componentSlug` chega a:
+    react — layout, composições ×2, relacionados, notas; angular — layout,
+    importação, variantes, composições, relacionados, notas; svelte e vanilla — só
+    composições ×2; vue — nenhuma seção, só o SEO (`DrawerDocs.vue:147`). Sem
+    maioria.
+24. **Título da lista de leitor de tela.** Angular lê
+    `accessibility.screenReader.title` do conteúdo (`DrawerDocs.ts:709`); as outras
+    quatro leem `tNav('common.screenReader')`. Maioria (4): cromo.
+25. **Tabela de analytics.** Colunas: vanilla e angular leem `tNav('common.event')`
+    e irmãs; react monta um ternário por locale (`DrawerDocs.tsx:280-284`); vue
+    crava `'Evento'`, `'Quando dispara'`, `'Payload'` (`DrawerDocs.vue:1238-1242`);
+    svelte crava `'Evento'`, `'Trigger'`, `'Payload'` (`DrawerDocs.svelte:1018-1022`).
+    Linhas: react e vue têm duas; svelte e vanilla somam uma linha `—` com
+    `analytics.description`; angular soma `docs_page_view`
+    (`DrawerDocs.ts:1194-1198`). Coluna de gatilho: react, vue e angular do
+    conteúdo; svelte `onOpenChange(true|false)`; vanilla `onOpenChange(true)` e
+    `onClose(reason)`. Payload: react e angular `component, trigger_id, location`;
+    vue, svelte e vanilla `{ component: 'drawer', location, trigger_id }`. Maioria
+    nas colunas (2, e é a referência): vocabulário compartilhado.
+26. **Importação.** Segundo bloco de código em svelte (`DrawerDocs.svelte:606-607`),
+    vanilla (`DrawerDocs.ts:413-416`) e angular (`DrawerDocs.ts:665-666`); react
+    (`DrawerDocs.tsx:593`) e vue (`DrawerDocs.vue:866-867`) só o import. Maioria (3)
+    e referência: com o segundo bloco.
+27. **A tabela de props do vanilla contradiz a fábrica.** Publica `trigger` como
+    obrigatório (`DrawerDocs.ts:804`) e `trigger: HTMLElement` na interface (`:763`),
+    contra `trigger?:` (`ui/drawer.ts:134`); `footer` como `HTMLElement`, contra
+    `HTMLElement | HTMLElement[]` (`ui/drawer.ts:165`); não tem linha para
+    `titleLevel`, `bodyLabel` nem `initialFocus`. Nomes de prop por stack — vue
+    `onUpdate:open`, angular `open` como `model<boolean>`, `openChange`,
+    `disablePointerDismissal` e a tabela de `panelClass` (`DrawerDocs.ts:1021-1085`) —
+    são API, registrar.
+
+**Snippets**
+
+28. **Ordem do rodapé no snippet.** Vue (`drawer/drawer.source.test.ts:167-182`) e
+    angular (`drawer.source.test.ts:532-537`, `:554`) afirmam cancelar antes do
+    primário; react só afirma rodapé depois do corpo (`drawer.source.test.ts:160`);
+    svelte e vanilla não afirmam. As cinco têm `drawer.source.test.ts`. A linha
+    "no Vue" da tabela de invariantes da `18-overlay.md` está menor que o código.
+
+> **PENDÊNCIA · 2026-09-15** — as 28 inconsistências acima estão abertas; nenhum portão as vê.
+> **Fecha quando**: cada item estiver corrigido nas stacks que divergem ou reescrito aqui como divergência de API registrada, com a premissa conferida.
+
+> **PENDÊNCIA · 2026-09-15** — o arraste que dispensa não emite `drawer_close` no angular (inconsistência 2).
+> **Fecha quando**: `dismissBySwipe` fechar por um caminho que emite `onOpenChange` com motivo, e o painel dispensado por arraste na docs page do angular registrar `drawer_close` com `reason: 'overlay'`.
 
 ## 8. Acessibilidade
 
 **Atributos**: título obrigatório ligando `aria-labelledby`; descrição opcional
-ligando `aria-describedby`.
+ligando `aria-describedby`; `aria-modal="true"` só no modo modal — escrito à mão
+em react e vue (`drawer.tsx:223`, `DrawerContent.vue:182`), pela lib no svelte e no
+angular, pela fábrica no vanilla.
 
 **Teclado**: Tab e Shift+Tab circulam dentro do painel; Escape fecha quando
-`dismissible`.
+`dismissible` — no angular, sempre (§7, inconsistência 1).
 
 **O corpo rolável** entra na ordem de tabulação (WCAG 2.1.1) e recebe
 `role="group"` quando você lhe dá um nome — o mesmo trio do Sheet e do Dialog.
@@ -459,11 +628,12 @@ ligando `aria-describedby`.
 
 - o arraste nunca é o único caminho para dispensar (C5) — em teclado e em leitor
   de tela ele não existe;
+- a alça não recebe foco nem nome: o arraste vale no painel inteiro, não nela;
 - animação própria acrescentada por quem consome precisa parar sob
   `prefers-reduced-motion`: o painel e o véu já param, o extra não.
 
-**Movimento reduzido** — o C6 afirma que painel e véu param, e é verdade. Aqui
-DUAS camadas seguram, como no `alert-dialog.md` §8:
+**Movimento reduzido** — o C6 afirma que painel e véu param, e DUAS camadas
+seguram, como no `alert-dialog.md` §8:
 
 - **a de token**: a folha declara duração só por `var(--duration-base)`, e
   `docs/shared/tokens/motion.css` zera a escada inteira sob a preferência;
@@ -472,51 +642,29 @@ DUAS camadas seguram, como no `alert-dialog.md` §8:
   de `.nds-drawer-content:not([data-swiping])`. Ele vem depois das regras de
   transição, com os mesmos seletores, e por isso vence.
 
+Sob a preferência, a volta ao repouso depois do arraste é instantânea; o
+acompanhamento do ponteiro continua (é a posição do dedo, não animação); e a
+resistência elástica ao puxar além do aberto é desligada pelo motor de ponteiro
+(`drawerSwipeTranslate` com `reducedMotion`), não pelo CSS — nas stacks com
+`vaul`, a lib não tem esse corte.
+
 O véu é do Sheet e a folha de lá o desliga — é a única metade do C6 que não mora
 neste arquivo.
-
-**Até 2026-09-12 este parágrafo creditava só a camada de token**, e mandava ler o
-mecanismo em `hover-card.md` §8 — que descreve guardas INERTES. A guarda desta
-folha não é inerte, e o comentário dela até diz o que ela faz com o gesto: a volta
-ao repouso passa a ser instantânea, o acompanhamento do ponteiro continua (não é
-animação, é a posição do dedo), e a resistência elástica para além do aberto é
-desligada pelo motor de ponteiro, não pelo CSS. Descrever a folha do vizinho é o
-defeito que a D8 deste mesmo arquivo já tinha registrado uma vez.
 
 ## 9. Analytics
 
 | evento | quando | payload | quem dispara |
 |---|---|---|---|
-| `drawer_open` | o painel abre | `{ component: "drawer", trigger_id, location }` | as cinco |
-| `drawer_close` | o painel fecha | idem, mais `reason` | as cinco |
-| `dialog_confirm` | a ação primária do rodapé da composição é acionada | `{ component: "drawer", action: "confirm", trigger_id, location }` | **só o angular** |
+| `drawer_open` | o painel abre | `{ component: "drawer", trigger_id, location }` | as cinco — no angular só na Demonstração (inconsistência 19) |
+| `drawer_close` | o painel fecha | idem, mais `reason` | as cinco — no angular só na Demonstração, e não no arraste (inconsistências 2 e 19) |
+| `dialog_confirm` | a ação primária do rodapé das Composições é acionada | `{ component: "drawer", action: "confirm", trigger_id, location }` | **só o angular** |
 
-**O `dialog_confirm` é de UMA stack, e o estado é divergência, não decisão.**
-Medido em 2026-09-12: a única chamada da árvore está em
-`nortear-design-system-angular/src/components/docs/DrawerDocs.ts`, no
-`aoConfirmar(qual, secao)` que o rodapé das Composições chama — e ali o
-`location` vem do TEMPLATE, para que clique nascido nas Composições não se
-registre como `docs_demo`. Nas outras quatro o botão primário existe nas mesmas
-composições e não rastreia nada: o `confirm` só aparece como rótulo traduzido.
-
-O conteúdo compartilhado está do lado das quatro — `analytics.description`
-publica dois eventos, `drawer_open` e `drawer_close` —, então o angular dispara
-um terceiro que a própria página dele não lista na tabela. A pendência é de
-código ou de conteúdo, não deste arquivo, e vai relatada: ou as outras quatro
-passam a disparar e o conteúdo ganha a terceira linha, ou o angular para. A
-palavra `dialog_confirm` já é tipada em `AnalyticsEvents` pela família do Dialog,
-então nenhum portão de tipo reprova a assimetria.
-
-**Até 2026-09-12 esta tabela tinha duas linhas e nenhuma coluna de quem
-dispara**, e a última frase da seção — "o evento era disparado só pelo Angular.
-Hoje as cinco disparam" — se lia como se valesse para todos. Ela vale para
-`drawer_open` e `drawer_close`; o `dialog_confirm` continua sozinho.
+Os dois primeiros estão tipados nos cinco `analytics.ts` com `label?: never`.
 
 **`trigger_id` carrega a DIREÇÃO** — `bottom`, `right`, `left` ou `top` —, nunca
-o título traduzido, que partiria a mesma série em um valor por idioma no GA4. O
-campo era `label` até 2026-09-10, quando a dona unificou o campo de quem abriu em
-`trigger_id` na categoria inteira (`18-overlay.md` §Analytics); os valores não
-mudaram, e o tipo proíbe o campo antigo (`label?: never`).
+o título traduzido, que partiria a mesma série em um valor por idioma no GA4. É o
+campo único de quem abriu na categoria (`18-overlay.md` §Analytics, decisão da
+dona em 2026-09-10).
 
 **`reason` é obrigatório no fechamento**, e tem vocabulário fechado no tipo:
 `escape`, `overlay`, `close-button` ou `api`. É o vocabulário do design
@@ -525,12 +673,13 @@ esconde a diferença entre desistir e concluir.
 
 **E quem deduz o motivo fica AO LADO DO PRIMITIVO**, exportado pelo mesmo índice
 das peças — a docs page só repassa a palavra (`18-overlay.md` §Analytics, portão
-`motivo_sintetizado_na_docs_page`). O vanilla e o Angular já faziam assim; as
-outras três mudaram de casa em 2026-09-12 — `react/ui/drawer-close-reason.ts`,
-`vue/ui/drawer/drawer.close-reason.ts` e `svelte/ui/drawer/close-reason.ts` —, e
-enquanto a dedução morava na página ela não tinha teste nenhum.
+`motivo_sintetizado_na_docs_page`): `react/ui/drawer-close-reason.ts`,
+`vue/ui/drawer/drawer.close-reason.ts`, `svelte/ui/drawer/close-reason.ts`,
+`drawerCloseReason` em `angular/ui/drawer.ts`, e o `onClose` da fábrica no vanilla.
+Os três primeiros têm teste de unidade ao lado (`drawer-close-reason.test.ts`,
+`drawer.close-reason.test.ts`, `close-reason.test.ts`).
 
-O par `onDrag`/`onRelease` sai JUNTO do mesmo observador, nas três: é o
+O par `onDrag`/`onRelease` sai do mesmo módulo, nas três stacks com `vaul`: é o
 pareamento que mantém o motivo certo, e separá-los é o defeito.
 
 **O default do Drawer é `close-button`, e ele é diferente do da família do
@@ -538,7 +687,8 @@ Dialog de propósito**: aqui o que sobra depois de Escape, véu e arraste é o b
 de saída do rodapé, que a lib não anuncia por evento próprio. Na família do
 Dialog o botão TEM anúncio, e o que sobra é o fechamento por código, que é `api`.
 Trocar um pelo outro faz "confirmou e fechou" chegar ao relatório como "apertou o
-botão de fechar".
+botão de fechar". O angular é a exceção: lá a lib anuncia `close-press`, e o
+default é `api` (inconsistência 21).
 
 **O arraste que dispensa é anotado no ARRASTE, não na soltura** — a lib fecha
 antes de anunciar a soltura (`closeDrawer(); onRelease(event, false)`), então
@@ -546,15 +696,10 @@ anotar ali chegaria depois do evento. Arraste curto, que volta ao repouso, é
 anunciado com `open = true` e limpa a anotação; sem isso o próximo fechamento por
 botão herdaria um motivo que não é dele.
 
-**As duas pendências registradas em 2026-09-07 fecharam em 2026-09-08**: a prosa
-pedia o título traduzido (`2f64c9b2d`), e o PAR `drawer_open`/`drawer_close` era
-disparado só pelo Angular. Hoje as cinco disparam esses dois — o `dialog_confirm`
-é o que continua sozinho, e está na tabela acima.
+> **PENDÊNCIA · 2026-09-15** — `dialog_confirm` é disparado só pelo angular, e o conteúdo compartilhado (`analytics.description`) publica dois eventos. A palavra já é tipada em `AnalyticsEvents` pela família do Dialog, então nenhum portão de tipo vê a assimetria.
+> **Fecha quando**: as cinco docs pages concordarem — ou as cinco disparam `dialog_confirm` nas Composições e `analytics.description` o lista, ou o angular deixa de disparar.
 
-**Até 2026-09-12 esta linha dizia "o evento era disparado só pelo Angular. Hoje
-as cinco disparam"**, sem nomear qual evento. Escrita quando a tabela tinha duas
-linhas, ela passou a ler como quitação geral no dia em que apareceu um terceiro
-evento que só o Angular manda. Pendência fechada se nomeia pelo que fechou.
+> **FECHADA · 2026-09-08** — as duas pendências registradas em 2026-09-07: a prosa de analytics pedia o título traduzido (`2f64c9b2d`), e o par `drawer_open`/`drawer_close` era disparado só pelo angular. Hoje as cinco disparam o par.
 
 ## 10. Reconstruir do zero
 
@@ -569,6 +714,8 @@ Ordem: folha → primitivo → alça → cabeçalho, corpo e rodapé → motor d
   portão daqui mede isso.
 - **A alça só em `bottom`** (D4), e os cantos só do lado de dentro (D5).
 - **O ponto de corte do cabeçalho é 48rem**, não 40 (D10).
+- **Entrada e saída leem `data-starting-style`/`data-ending-style`** — quem monta
+  o painel sem lib precisa escrever os dois, ou o painel salta (inconsistência 4).
 
 ## 11. Onde está a verdade
 
@@ -578,35 +725,20 @@ Ordem: folha → primitivo → alça → cabeçalho, corpo e rodapé → motor d
 | véu, título e descrição (reusados) | `docs/shared/styles/nds/sheet.css` |
 | regra do par de botões | `docs/shared/guidelines/02-alinhamento-botoes.md` — **o texto canônico**; a seção homônima da `04-padroes-design-sistema.md` só aponta para lá |
 | regra do gesto (constantes e as três decisões) | `docs/shared/primitives/drawer-swipe.ts` |
-| fiação do gesto, por stack | `ui/drawer-swipe.ts` no vanilla · diretiva `NdsDrawerSwipe` no angular · a lib nas outras três |
+| fiação do gesto, por stack | `ui/drawer-swipe.ts` no vanilla · diretiva `NdsDrawerSwipe` no angular · a `vaul` nas outras três |
+| motivo do fechamento, por stack | ver §9 |
 | texto, props, critérios de teste | `docs/shared/content/drawer/translations.json` |
 | desenho e anotações | Figma, página `Drawer` (conjunto `698:116`) |
 | portões determinísticos | `node scripts/audit.mjs drawer --json` |
+| tabela de tokens contra a folha | `node scripts/tabela-tokens.mjs drawer` |
 | rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
-| título (`h2`) de cada seção | o mesmo rótulo do menu, derivado do id da seção — ver `docs-page-landmarks.ts` |
+| título (`h2`) de cada seção | o mesmo rótulo do menu, derivado do id da seção — ver `docs/shared/primitives/docs-page-landmarks.ts` |
 
-**As 54 chaves `nav` saíram do conteúdo em 2026-09-12.** As páginas do vue e
-do svelte liam o conteúdo, então este slug mostrava "When to Use" onde as outras
-três mostravam "Usage", e "Tests" onde as outras mostravam "Pruebas" — deriva de
-escrita, invisível para quem lê uma stack só.
-
-O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
-página das cinco stacks, lidas de relance e comparando páginas — e desde a mesma
-data o TÍTULO da seção é a mesma frase, derivada do mesmo lugar. A linha abaixo
-registra por quê. Portões: `rotulo_de_nav_no_conteudo`,
-`rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
-porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
-das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
-comparava as cinco cópias.
-
-**As 45 chaves de título de seção saíram do conteúdo em 2026-09-12**, e
-**15 delas diziam palavra diferente da do item de menu que salta para a
-seção** — "Quando e Como Usar" contra "Quando Usar", "Design Tokens" contra
-"Tokens", "Componentes Relacionados" contra "Relacionados". O `h2` agora
-nasce do id que a própria seção declara, então divergir deixou de ser possível
-em vez de passar a ser proibido. Portões: `titulo_de_secao_no_conteudo`,
-`titulo_de_secao_pedido_ao_conteudo` e `titulo_passado_ao_container` — o
-terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
-`ngc` (é atributo global do HTML) e viraria tooltip silencioso no cabeçalho.
-
-
+**Rótulo de menu e título de seção não moram no conteúdo** desde 2026-09-12: o
+`h2` nasce do id que a seção declara, então divergir deixou de ser possível em vez
+de passar a ser proibido. Portões: `rotulo_de_nav_no_conteudo`,
+`rotulo_de_nav_do_conteudo`, `vocabulario_de_nav_divergente`,
+`titulo_de_secao_no_conteudo`, `titulo_de_secao_pedido_ao_conteudo` e
+`titulo_passado_ao_container` — o último porque no Angular um `[title]` esquecido
+**não** reprova no `ngc` (é atributo global do HTML) e viraria tooltip silencioso
+no cabeçalho.

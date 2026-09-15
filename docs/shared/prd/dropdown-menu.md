@@ -10,6 +10,7 @@
 > `7f24ea325`, `9d0cf0823`, `17980d769`): §1, §2 (C1), D1, D2, D4, D9, §4, §5,
 > §6, §7, §8, §10 e §11 mudaram. A correção maior é de fato: **o Menubar TEM
 > folha própria** — o documento negava isso em três lugares.
+> **Revisado contra o código em 2026-09-15**, nos três membros e nas cinco stacks — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
 
@@ -28,7 +29,7 @@ da barra e a ancoragem do painel de topo (D9).
 construídos com estas mesmas classes, e nenhum dos dois tem folha própria", e a
 segunda metade era falsa desde 2026-07-16, quando
 `docs/shared/styles/nds/menubar.css` nasceu com a infraestrutura `.nds-*`
-(`7e8045dbd`): hoje 194 linhas, três classes (`.nds-menubar`,
+(`7e8045dbd`): hoje 213 linhas, três classes (`.nds-menubar`,
 `.nds-menubar-trigger`, `.nds-menubar-panel`). O erro estava em três lugares de uma vez — aqui, no
 título e no corpo da D9, e na linha de §11 que apontava só `dropdown-menu.css`.
 
@@ -65,9 +66,9 @@ membros (`menu.contains(document.activeElement)`).
 
 | membro | vanilla | angular | react · vue · svelte |
 |---|---|---|---|
-| DropdownMenu | primeiro item, sempre (`dropdown-menu.ts:648`) | primeiro item, sempre (`show('first')`) | painel quando abre por ponteiro; primeiro item quando abre por teclado |
-| ContextMenu | primeiro item, sempre (`context-menu.ts:570`) | depende do GESTO: ponteiro e toque longo → painel; tecla de menu e Shift+F10 → primeiro item | painel; a seta seguinte pousa no primeiro item |
-| Menubar | primeiro item por clique e por teclado; o gatilho na troca por seta lateral; nenhum foco quando abre por `defaultOpen` (`menubar.ts:381`) | primeiro item por clique, Enter, Espaço e seta-baixo; na troca por ponteiro o foco fica no GATILHO | primeiro item — no vue por patch nosso (`MenubarTrigger.vue:37`), nas outras duas pelo caminho de teclado da lib |
+| DropdownMenu | primeiro item, sempre (`dropdown-menu.ts:649-650`) | primeiro item, sempre (`show('first')`) | painel quando abre por ponteiro; primeiro item quando abre por teclado |
+| ContextMenu | primeiro item, sempre (`context-menu.ts:570-571`) | depende do GESTO: ponteiro e toque longo → painel; tecla de menu e Shift+F10 → primeiro item | painel; a seta seguinte pousa no primeiro item |
+| Menubar | primeiro item por clique e por teclado; o gatilho na troca por seta lateral; nenhum foco quando abre por `defaultOpen` (`menubar.ts:884-886`; o foco por gesto é o parâmetro de `openMenu`, `:381`) | primeiro item por clique, Enter, Espaço e seta-baixo; na troca por ponteiro o foco fica no GATILHO | primeiro item — no vue por patch nosso (`MenubarTrigger.vue:37`), nas outras duas pelo caminho de teclado da lib |
 
 **Até 2026-09-12 o C1 dizia** "o painel recebe o foco ao abrir", e isso descrevia
 três das cinco stacks em um dos três membros. A referência faz o contrário do que
@@ -112,9 +113,11 @@ dedicada no DropdownMenu (`TabLeavesMenu` + `TabAtPageEnd`) e no Menubar
 **No ContextMenu não existe `TabAtPageEnd` em nenhuma das cinco, e o caso está
 coberto de outra forma** — medido em 2026-09-12. A metade do vizinho é a story
 `TabLeavesMenu`; a metade do fim da página é um `step` dentro do Playground nas
-cinco (`context-menu.stories.ts` — react :340, vue :333, svelte :307, vanilla
-:300, angular :243), duas delas conferindo a precondição de que não sobra ponto
-de tabulação depois da área em vez de supô-la. O `functional.item12` do conteúdo
+cinco (`context-menu.stories.ts` — react :352, vue :345, svelte :319, vanilla
+:311, angular :255; linhas conferidas em 2026-09-15, as de 2026-09-12 tinham
+andado ~12 linhas e caíam no step anterior), duas delas — react e vue —
+conferindo a precondição de que não sobra ponto de tabulação depois da área em
+vez de supô-la. O `functional.item12` do conteúdo
 promete as duas metades e as duas são medidas; o que não existe é a simetria de
 NOME com os irmãos. **Até 2026-09-12 esta linha dizia** que cada stack tem
 `TabLeavesMenu` e `TabAtPageEnd` — afirmava cinco stories que não existem, e a
@@ -210,6 +213,12 @@ sem medir os dois casos.
 não há keyframe de saída — manter o menu montado durante o fechamento deixa os
 focus-guards da lib visíveis para o axe (`aria-hidden-focus`).
 **O que vale**: menus fecham instantâneo, como no vanilla.
+**A entrada não anima nas quinze** — medido no código em 2026-09-15: a regra
+casa `[data-open]` (base-ui, radix-ng) ou `[data-state="open"]` (reka, bits), e
+das fábricas do vanilla só o `createContextMenu` escreve `data-state="open"` no
+painel (`context-menu.ts:492`). O painel do `createDropdownMenu` e o painel de
+topo do `createMenubar` não levam nenhum dos dois, e ali o menu aparece sem a
+entrada. Inconsistência 7 da §7.
 **Até 2026-09-10 a folha dizia o contrário**: declarava `nds-menu-out` sob
 `[data-closed]`/`[data-state="closed"]` desde 2026-07-26, logo abaixo do
 comentário que proibia a saída animada. Saiu por decisão da dona; a entrada
@@ -249,11 +258,11 @@ dois estados apagaria a diferença para quem depende do símbolo.
 
 **Estado do ContextMenu**: não existe `context-menu.css`. O componente inteiro é
 montado com as classes desta folha, e a única regra própria dele mora **dentro**
-de `dropdown-menu.css:132`: `.nds-context-menu-trigger { user-select: none }`.
+de `dropdown-menu.css:160-162`: `.nds-context-menu-trigger { user-select: none }`.
 **O que difere**: o gatilho (área de clique-direito) e onde o painel é colocado
 (no ponteiro, não ancorado a um elemento). Nenhum dos dois é desenho.
 
-**Estado do Menubar**: existe `docs/shared/styles/nds/menubar.css`, 194 linhas, e
+**Estado do Menubar**: existe `docs/shared/styles/nds/menubar.css`, 213 linhas, e
 ela declara exatamente três classes — nenhuma delas de miolo:
 
 | classe | o que declara |
@@ -302,47 +311,8 @@ ter lastro. Medido em 2026-09-12: com a linha do relevo da barra na §5, o
 portão não está errado; ele foi escrito para um PRD de um componente, e este é de
 uma família com duas folhas.
 
-> **PENDÊNCIA · 2026-09-12** — a `.nds-menubar-panel` é escrita só pelo vanilla
-> (`menubar.ts:422-424`, painel de topo). React, Vue, Svelte e Angular aplicam
-> apenas `nds-dropdown-menu-content` no painel do Menubar, então nas quatro nem a
-> ancoragem por `[data-side]`/`[data-align]` nem o `overflow: visible` da folha
-> alcançam o painel — ele fica com o `overflow-y: auto` do bloco composto, que é
-> a condição exata do `scrollable-region-focusable` que a regra de
-> `menubar.css:146-167` existe para evitar. Posicionar é papel da lib nas quatro,
-> mas o `overflow` não.
-> **A primeira saída que esta pendência prescrevia FICOU ERRADA, e a D12 é o
-> motivo.** Ela dizia "as quatro stacks escreverem a classe no painel de topo".
-> Só que `.nds-menubar-panel` declara `position: absolute` JUNTO com a ancoragem
-> por `top`/`left`, e nas quatro quem posiciona é a lib: aplicar a classe lá
-> reintroduziria, ao contrário, o defeito que a D12 acabou de remover — uma folha
-> disputando posição com o posicionador da lib. Medido em 2026-09-13.
->
-> **A rodada tem TRÊS passos, nesta ordem, e o primeiro pode dispensar os
-> outros dois.** Endereçada à passagem do Menubar (2026-09-13).
->
-> **1. MEDIR se o problema existe nas quatro.** A razão ORIGINAL da regra acabou:
-> o submenu passou a ir para o `body` em 2026-09-07, e era ele que virava região
-> rolável. A razão atual — um menu LONGO estourando a altura e virando região
-> rolável alcançável por seta e não por Tab — nunca foi medida. O próprio bloco
-> em `menubar.css` diz isso com todas as letras: "precisa ser MEDIDO com um menu
-> longo, não deduzido". Monte uma story com itens suficientes para estourar a
-> altura nas quatro stacks de lib e rode o axe. **Se o achado não aparecer, a
-> regra inteira é obsoleta e a saída é apagá-la** — não replicá-la.
->
-> **2. Se aparecer, SEPARAR as duas responsabilidades.** Hoje `.nds-menubar-panel`
-> carrega o `overflow: visible`, que as cinco precisam, junto com a ancoragem por
-> folha (`position` mais `top`/`left` por `[data-side]`), que é do painel aninhado
-> do vanilla e só dele. Enquanto estiverem na mesma classe não há como dar uma às
-> quatro sem dar a outra — e dar a outra é reintroduzir o defeito da D12 pelo
-> avesso. Precisa de um seletor que leve só o `overflow`, aplicável nas cinco, e
-> de um marcador próprio para a ancoragem.
->
-> **3. Só então aplicar nas quatro stacks**, com a asserção correspondente nas
-> cinco — a terceira forma da regra de não criar divergência nova.
->
-> Qualquer que seja o caminho, o que fecha é MEDIÇÃO no documento, não dedução:
-> foi deduzindo que esta pendência nasceu com uma receita que teria quebrado as
-> quatro stacks.
+> **PENDÊNCIA · 2026-09-12** — a `.nds-menubar-panel` (e com ela o `overflow: visible` de `menubar.css:165-167`) é escrita só pelo vanilla (`menubar.ts:422-424`); nas outras quatro o painel do Menubar leva só `nds-dropdown-menu-content` (react `menubar.tsx:91-97` via `DropdownMenuContent`, vue `MenubarContent.vue:65`, svelte `menubar-content.svelte:73`, angular `menubar.ts:251`) e fica com o `overflow-y: auto` do bloco composto. Conferido em 2026-09-15: continua assim, e nenhuma story das cinco monta um menu longo o bastante para rolar — o passo 1 abaixo não foi feito. Aplicar a classe inteira nas quatro NÃO é saída: ela traz `position: absolute` com `top`/`left`, e disputaria posição com a lib (D12). A ordem é (1) medir com um menu longo, nas quatro stacks de lib, se o axe acusa `scrollable-region-focusable` — se não acusar, a regra `menubar.css:146-167` é obsoleta e sai; (2) se acusar, separar o `overflow` da ancoragem num seletor aplicável às cinco; (3) aplicar com asserção nas cinco.
+> **Fecha quando**: existe nas cinco stacks uma story de Menubar com menu longo o bastante para rolar, com a medição do axe registrada aqui, e a regra de `menubar.css:146-167` foi apagada (achado ausente) ou passou a alcançar o painel das cinco (achado presente).
 
 ### D12 · A folha NÃO posiciona o painel, e o vão do Menubar é 8
 
@@ -488,6 +458,13 @@ portam o painel raiz para o `<body>` —, e por isso o painel e os itens dele s�
 `<div>` em vez de `<ul>`/`<li>`. O SUBMENU dos três vai sempre para o `<body>`,
 desde 2026-09-07: aninhado, ele não sabia recuar quando não cabia.
 
+As árvores acima são as do vanilla, e três nós delas não existem igual nas cinco
+— medido em 2026-09-15, detalhe na §7: o `menubar-menu` só é elemento no vanilla
+e no angular (inconsistência 3); o rótulo que nomeia o grupo leva
+`data-slot="*-group-heading"` no DropdownMenu e no Menubar do svelte
+(inconsistência 4); e o vanilla não escreve `data-slot` no rótulo nem no
+separador do DropdownMenu (inconsistência 1).
+
 ## 5. Geometria e tokens
 
 Fonte: `docs/shared/styles/nds/dropdown-menu.css` — o painel e o miolo dos TRÊS
@@ -547,7 +524,7 @@ portão, que só lia o par token↔seletor quando os dois eram literais na pági
 | Open | gatilho | painel montado; o foco entra nele — no painel ou no primeiro item, conforme o membro e o gesto (C1) —, setas ativas |
 | Item destacado | ponteiro ou setas | fundo accent a 20%, texto `--accent-foreground` |
 | Item com foco visível | navegação por teclado | soma o anel interno (D2) |
-| Item desabilitado | `data-disabled` nas libs, `aria-disabled="true"` no vanilla | 50% de opacidade, sem eventos de ponteiro; as setas continuam pousando nele |
+| Item desabilitado | `data-disabled` nas libs; `aria-disabled="true"` no vanilla (o `createContextMenu` escreve também `data-disabled`, `context-menu.ts:309-312`) | 50% de opacidade, sem eventos de ponteiro; as setas continuam pousando nele |
 | Submenu aberto | seta direita, Enter ou Espaço no sub-gatilho, ou ponteiro | o sub-gatilho permanece destacado — a folha lê o nome de estado de cada lib (`data-popup-open` na base-ui e no radix-ng; `data-state="open"` na reka, no bits e no controlador de submenu do vanilla); sem o último, no Vue, no Svelte e no vanilla o destaque sumia quando o foco entrava no submenu (corrigido em 2026-09-10) |
 
 ## 7. API
@@ -705,6 +682,247 @@ Este componente **não tem título de cabeçalho**, então não há seletor `h2[
 nem `h3[…]` aqui — a nota de nível de cabeçalho vale para dialog, sheet, drawer
 e alert-dialog, que são os que nomeiam o painel com um cabeçalho.
 
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Medidas no código (primitivos, folhas, stories, docs pages, `analytics.ts` e
+construtores de snippet) dos três membros nas cinco stacks, sem rodar suíte.
+Caminhos relativos a `src/components/ui/` de cada stack (vue e svelte na pasta do
+membro), salvo docs pages e `lib/`. Só entra o que foi lido; o que é dedução do
+código, e não medição em navegador, diz isso no próprio item.
+
+1. **DropdownMenu — o vanilla não escreve `data-slot` no rótulo nem no
+   separador.** vanilla: separador sem slot (`dropdown-menu.ts:404-406`), rótulo
+   sem slot (`:438-445`). As outras quatro escrevem `dropdown-menu-label` e
+   `dropdown-menu-separator` (react `dropdown-menu.tsx:240`, `:440`; vue
+   `DropdownMenuLabel.vue:16`, `DropdownMenuSeparator.vue:19`; svelte
+   `dropdown-menu-label.svelte:18`, `dropdown-menu-separator.svelte:29`; angular
+   `dropdown-menu.ts:375`, `:401`), e as duas fábricas irmãs do próprio vanilla
+   também (`context-menu.ts:286`, `:463`; `menubar.ts:451`, `:475`). Maioria (4):
+   escreve. A referência é a que falta aqui.
+
+2. **Os três membros, no vanilla — o desabilitado é marcado de dois jeitos.**
+   `createContextMenu` escreve `aria-disabled="true"` E `data-disabled`
+   (`context-menu.ts:309-312`, `:404-407`); `createDropdownMenu` e `createMenubar`
+   só `aria-disabled` (`dropdown-menu.ts:491`, `menubar.ts:243`). A folha cobre os
+   dois (`dropdown-menu.css:102-105`, `:228-231`, `:350-358`), então nada muda na
+   tela; é markup divergente dentro da referência.
+
+3. **Menubar — `menubar-menu` só é elemento no vanilla e no angular.** vanilla:
+   `<div class="nds-menubar-menu" data-slot="menubar-menu">` (`menubar.ts:769-771`);
+   angular: host com a classe e o slot (`menubar.ts:223-224`). react passa o slot
+   a `Menu.Root` da base-ui, que não renderiza elemento (`menubar.tsx:47`); vue
+   `MenubarMenu.vue:10` sobre o `MenubarMenu` da reka, que só renderiza o slot; svelte
+   `menubar-menu.svelte:7` nem declara o slot. Divergência de lib — registrar, não
+   alinhar: a classe só serve de bloco de referência à ancoragem por folha, que é
+   só do vanilla (D12).
+
+4. **DropdownMenu e Menubar, no svelte — o rótulo que nomeia o grupo é outra
+   peça, com outro `data-slot`.** Dentro de grupo as stories usam
+   `DropdownMenuGroupHeading` (`DropdownMenuStory.svelte:106`) e
+   `MenubarGroupHeading` (`MenubarStory.svelte:136`), que escrevem
+   `dropdown-menu-group-heading` e `menubar-group-heading`
+   (`dropdown-menu-group-heading.svelte:18`, `menubar-group-heading.svelte:18`); o
+   `DropdownMenuLabel` e o `MenubarLabel` do svelte são `<div>` soltos que não
+   nomeiam grupo nenhum (`dropdown-menu-label.svelte:16-24`,
+   `menubar-label.svelte:17-25`). O ContextMenu do mesmo svelte já resolveu isso:
+   um `Label` só, que vira cabeçalho da lib dentro de grupo e mantém
+   `context-menu-label` (`context-menu-label.svelte:36-65`). Maioria (4 stacks, e
+   o terceiro membro do svelte): `*-label` nomeando o grupo.
+
+5. **Menubar, no svelte — o separador é anunciado como `group`.**
+   `menubar-separator.svelte:12-17` usa o `Separator` do bits sem sobrescrever o
+   papel, e o bits crava `role: "group"` no separador
+   (`bits-ui/dist/bits/menu/menu.svelte.js:1333`, mesclado por último). O
+   DropdownMenu e o ContextMenu do svelte contornam isso e escrevem
+   `role="separator"` (`dropdown-menu-separator.svelte:23-33`,
+   `context-menu-separator.svelte:24-31`), como as outras quatro stacks e o
+   vanilla (`menubar.ts:452`). Maioria (14 de 15): `separator`. Lido na fonte, não
+   medido em navegador.
+
+6. **DropdownMenu e Menubar — `inset` aceito em item de marcação e de rádio, onde
+   a folha não recua nada.** A folha só lê `[data-inset]` em item, rótulo e
+   sub-gatilho (`dropdown-menu.css:244-248`). Aceitam a prop: react
+   `DropdownMenuCheckboxItem`/`RadioItem` (`dropdown-menu.tsx:358`, `:408`) e
+   `MenubarCheckboxItem`/`RadioItem` (`menubar.tsx:136`, `:183`); svelte
+   `menubar-checkbox-item.svelte:15`, `menubar-radio-item.svelte:11`; o vanilla do
+   Menubar escreve `data-inset` na marcação e na opção (`menubar.ts:242`, `:490`,
+   `:573`). Não aceitam: vue (`DropdownMenuCheckboxItem.vue:15`,
+   `MenubarRadioItem.vue:14`), angular (`dropdown-menu.ts:634`, `:707`;
+   `menubar.ts:610`, `:680`), o vanilla do DropdownMenu (`dropdown-menu.ts:490`, só
+   no item de ação), e o ContextMenu inteiro, que removeu a prop por ser inerte
+   (react `context-menu.tsx:385-387`, svelte `context-menu-checkbox-item.svelte:30-31`).
+   Maioria: sem `inset` na marcação.
+
+7. **DropdownMenu e Menubar, no vanilla — o painel não anima a entrada.** A
+   folha anima só `[data-open]`/`[data-state="open"]` (`dropdown-menu.css:409-412`).
+   base-ui e radix-ng escrevem `data-open` no popup (radix-ng
+   `radix-ng-primitives-menu.mjs:1388`), reka e bits `data-state`, e
+   `createContextMenu` escreve `data-state="open"` (`context-menu.ts:492`). O
+   painel de `createDropdownMenu` (`dropdown-menu.ts:378-392`) e o painel de topo
+   de `createMenubar` (`menubar.ts:420-435`) não levam nenhum dos dois — nem o
+   painel de submenu dos três, que sai de `buildMenu`/`createPanel`
+   (`submenu.ts:323`). Maioria (13 de 15 painéis de topo): anima. Aqui a
+   referência diverge da folha.
+
+8. **ContextMenu e submenus — o vão do painel diverge, e em duas stacks mora na
+   lib.** Submenu: react `sideOffset 0`, `alignOffset -3`
+   (`dropdown-menu.tsx:308-310`); angular `0` e `-3` (`dropdown-menu.ts:315`,
+   `:321`; `menubar.ts:316`, `:323`; `context-menu.ts:244-245`); vanilla `4` sem
+   deslocamento de alinhamento (`submenu.ts:39`, e `dropdown-menu.ts:355` repassa
+   o `sideOffset` do menu); vue e svelte não declaram nada no wrapper
+   (`DropdownMenuSubContent.vue`, `dropdown-menu-sub-content.svelte`) e herdam o
+   padrão da lib, não medido em pixel. ContextMenu raiz: react `sideOffset 0`,
+   `alignOffset 4` (`context-menu.tsx:147-150`); angular `0`/`0`
+   (`context-menu.ts:200-206`); svelte herda `sideOffset 2` do bits
+   (`bits-ui/.../context-menu-content.svelte:22`); vue herda da reka; o vanilla não
+   tem a opção (§7, side do ContextMenu). Sem maioria medida. O vão é valor de
+   design system (D12), não API — decidir um número e medi-lo, como a D12 fez com
+   o Menubar.
+
+9. **Três membros, no vanilla — três formas de API para escolha única.**
+   `createDropdownMenu`: `type: 'radio'` com `group` por item
+   (`dropdown-menu.ts:153-154`); `createContextMenu`: um grupo só, com
+   `radioValue`/`onRadioChange` na raiz (`context-menu.ts:150-152`);
+   `createMenubar`: `type: 'radio-group'` com `options`, `value` e `onValueChange`
+   (`menubar.ts:119-122`). Divergência de API dentro de uma stack — registrar, não
+   alinhar sem decisão (muda API pública de dois componentes).
+
+10. **Menubar, no vue — reabrir pelo teclado só entra se o primeiro item for
+    `menuitem`.** O conserto de `MenubarTrigger.vue:37-62` procura
+    `[role="menuitem"]` (`:59`); menu que começa por marcação ou rádio fica com o
+    foco no gatilho na reabertura. As outras quatro entram no primeiro item de
+    qualquer papel (vanilla `menubar.ts:392` sobre `focaveis`; angular
+    `menu-popup-scope.ts:182-183` casa os cinco seletores de item). Lido, não
+    medido em navegador.
+
+11. **Os três membros — o conjunto de stories difere só no vanilla.** Existem só
+    no vanilla: `Placement` (`dropdown-menu-variants.stories.ts:148`), `ItemInset`
+    do DropdownMenu (`dropdown-menu-states.stories.ts:377` — o do ContextMenu
+    existe nas cinco), `ListenerCleanup` nos três (`dropdown-menu-states:499`,
+    `context-menu-states:341`, `menubar-states:411`) e `NestedSubmenu`
+    (`menubar-compositions.stories.ts:327`). O ContextMenu não tem arquivo de
+    variantes em nenhuma das cinco. Os demais arquivos têm os mesmos nomes nas
+    cinco, e nenhum desliga teste (`a11y.test: 'todo'`, `!test`).
+
+12. **Os três membros — Shift+Tab de dentro do submenu não é afirmado em seis das
+    quinze stories de Tab.** Afirmam: DropdownMenu `TabLeavesMenu` react `:348`,
+    vue `:348`, svelte `:292`; ContextMenu `TabLeavesMenu` react `:558`, svelte
+    `:427`; Menubar `TabLeavesMenubar` react `:502`, vue `:496`, svelte `:416`.
+    Faltam: DropdownMenu vanilla e angular; ContextMenu vue, vanilla e angular;
+    Menubar vanilla e angular. O C2 promete "também de dentro do submenu" para as
+    duas direções. Maioria por membro: afirma no DropdownMenu e no Menubar (3), não
+    afirma no ContextMenu (3 faltam).
+
+13. **ContextMenu, no vanilla — marcar e escolher rádio não conferem que o menu
+    segue aberto.** `WithCheckbox` (`context-menu-compositions.stories.ts:92`, passo
+    em `:145`) e `WithRadioGroup` (`:159`, passo em `:208`) clicam sem contar menus
+    abertos; as outras quatro contam (react `:190`, `:296`; vue `:236`, `:335`;
+    svelte `:144`, `:209`; angular `:189`, `:262`), e o vanilla conta nos outros
+    dois membros. Maioria (4): afirma (C10).
+
+14. **DropdownMenu, no vanilla — o Playground não afirma que o foco entrou no
+    painel.** react `dropdown-menu.stories.tsx:162`, vue `:153` e svelte `:133`
+    afirmam o containment; angular afirma o primeiro item (`:130`); o vanilla não
+    afirma nenhum dos dois, e troca a checagem de `aria-expanded="false"` por
+    `aria-controls` (`dropdown-menu.stories.ts:147`). Maioria (4): afirma (C1).
+
+15. **Os três membros — contratos sem asserção em nenhuma stack.** O
+    `preventDefault` do typeahead (C4; o único `defaultPrevented` afirmado na
+    família é o do `contextmenu` nativo, ContextMenu Playground react `:208`, vue
+    `:194`, svelte `:151`, vanilla `:149`, angular `:121`); a volta da seta lateral
+    do último gatilho ao primeiro no Menubar (o padrão é ligado nas cinco —
+    `menubar.ts:265` no vanilla, `Menubar.vue:24-26`, `loop = true` do bits,
+    `loopFocus = true` da base-ui e do radix-ng —, mas nenhuma story afirma);
+    movimento reduzido; e disparo de evento de analytics.
+
+16. **Os três membros — asserções que existem numa parte das stacks.** Destaque
+    por ponteiro (`userEvent.hover` → `data-highlighted`): nas variantes do
+    DropdownMenu e do Menubar em react, vue, svelte e angular, não no vanilla, que
+    é justamente a stack que depende do `:hover` da folha (D4). `aria-owns` do
+    sub-gatilho: afirmado só no vanilla e no angular (compositions); o
+    `aria-controls` das outras três (§8) não é afirmado. Menubar Playground: o
+    svelte não tem o passo "clicar no gatilho aberto fecha"; ContextMenu
+    Playground: o svelte não tem o passo de Shift+F10; `expectInvolucroComCaixa`
+    roda sem `waitForAncorado` no vue (`context-menu.stories.ts:224`) e no vanilla
+    (`:174`). Motivo do fechamento no Playground do DropdownMenu: afirmado em
+    react, vue, vanilla e angular, não no svelte.
+
+17. **Os três membros, no angular — stories de Tab sem `transform`.**
+    `node scripts/audit.mjs <membro> --json` devolve um
+    `story_file_sem_transform` por membro, só no angular: `TabLeavesMenu` e
+    `TabAtPageEnd` (`dropdown-menu.stories.ts`), `TabLeavesMenu`
+    (`context-menu.stories.ts`), `TabLeavesMenubar` e `TabAtPageEnd`
+    (`menubar.stories.ts`). As outras quatro não reportam. Maioria (4): sem achado.
+
+18. **Os três membros — o `reason` tem três palavras no componente e quatro no
+    evento.** O tipo do componente declara `escape | overlay | api` nas cinco
+    (react `menu-close-reason.ts:20`, svelte `:22`, angular `:12`, vue
+    `dropdown-menu.context.ts:20`, vanilla `dropdown-menu.ts:179`); o tipo do
+    evento em `lib/analytics.ts` declara também `close-button` nos três eventos de
+    fechamento das cinco (react `:301`, `:379`, `:402`; vue e svelte `:249`,
+    `:298`, `:321`; vanilla `:282`, `:331`, `:354`; angular `:269`, `:318`,
+    `:341`). A tabela `analytics` do conteúdo mostra três. Iguais entre stacks,
+    divergentes entre as duas camadas.
+
+19. **Menubar — Enter ou Espaço no gatilho do menu já aberto.** vue: fecha com
+    `overlay` (`MenubarTrigger.vue:73-77`); angular: `overlay` pelo gesto de saída
+    (`menu-close-reason.ts:62`, `:75`); vanilla: não fecha e não avisa — o
+    `keydown` chama `openMenu` (`menubar.ts:798-801`), que sai cedo com o menu já
+    aberto (`:384`); svelte: o vigia da docs page só marca o ponteiro
+    (`menu-close-reason.ts:153-156`), então sai `api` (dedução, não medido);
+    react: depende do motivo da base-ui, não conferido. Sem maioria medida.
+
+20. **Menubar, no svelte — Tab com o foco no gatilho do menu aberto sai `api`.**
+    O fechamento vai por `menubar.svelte:32-37` e `menubar-content.svelte:58-60`
+    sem passar pelo vigia da docs page (dedução do código); vanilla `overlay`
+    (`menubar.ts:377`), vue `overlay` (`menubar/tab-leaves-menu.ts:41`). Maioria
+    medida (2): `overlay`.
+
+21. **Docs pages — as mesmas quinze seções na mesma ordem, e quatro divergências
+    de conteúdo.** (a) A seção de variantes do ContextMenu no angular é
+    `nds-docs-variants` (`ContextMenuDocs.ts:659`); as outras catorze páginas usam
+    o container de composições. (b) Notas do DropdownMenu: o angular mostra sete,
+    com `item6`/`item7` e três itens reescritos por override nos três idiomas
+    (`DropdownMenuDocs.ts:103-111`, `:151-159`, `:200-208`); o conteúdo tem cinco,
+    e as outras quatro mostram cinco. No ContextMenu o vanilla crava `tip1`…`tip5`
+    (`ContextMenuDocs.ts:986-992`) onde as outras leem o dicionário. (c) Tabela de
+    props: o svelte omite `defaultOpen` e `modal` no DropdownMenu
+    (`DropdownMenuDocs.svelte:1013-1017`) e `defaultValue` no Menubar; o vanilla
+    omite `value`/`onValueChange` no Menubar; o angular monta as linhas por chaves
+    de override próprias (`DropdownMenuDocs.ts:72-101`, `MenubarDocs.ts:81-115`).
+    (d) React e svelte ainda listam "Keyboard test" e "Contrast checker" em inglês
+    na coluna de ferramenta de acessibilidade do DropdownMenu e do Menubar (react
+    `DropdownMenuDocs.tsx:110-121`, `MenubarDocs.tsx:112-122`); o vue os removeu e
+    lista só `axe-core` (`DropdownMenuDocs.vue:585`). Iguais nas cinco:
+    `componentSlug`, os ids de `menu` da demonstração (`demo-account` …
+    `demo-file`; `demo`; `demo-file` … `demo-tools`), os `location` e a ausência de
+    `data-track-id` literal (as prévias passam `trackId` com a chave do card).
+    Maioria em (b) e (c): o conteúdo compartilhado sem override.
+
+22. **Os três membros — construtores de snippet.** O angular não tem construtor
+    a partir da lista de entradas em `ui/`: as páginas montam o código localmente
+    (`DropdownMenuDocs.ts:525`, `ContextMenuDocs.ts:267`, `MenubarDocs.ts:741`),
+    onde react, vue e vanilla expõem `dropdownMenuSnippet`/`contextMenuSnippet`/
+    `menubarSnippet` e o svelte `*EntriesSource`. O `menubar.source.ts` do svelte
+    tem só três construtores, sem os de story que as outras stacks têm. Exports
+    que o próprio teste não cobre: `dropdownMenuSourceControlled` e
+    `menubarControlledSource` no vanilla, `menubarControlledSource` no vue e no
+    svelte. Nomes em português que as outras stacks têm em inglês (react
+    `contextMenuWithChoiceUnicaSource`, `menubarItemBloqueadoSource`; vue
+    `dropdownMenuMarkupMistaSource`, `menubarEditorCompletoSource`; svelte
+    `dropdownMenuIndeterminadoSource`) e `contextMenuPaletteDarkSource` no vue
+    contra `contextMenuDarkPaletteSource` nas outras três. Maioria: construtor em
+    `ui/` e nome em inglês.
+
+> **PENDÊNCIA · 2026-09-15** — o separador do Menubar no svelte sai com `role="group"` (inconsistência 5), e é o único dos quinze; lido na fonte do bits, falta medir em navegador e corrigir no wrapper como os outros dois membros do svelte já fazem.
+> **Fecha quando**: `menubar-separator.svelte` escreve `role="separator"` e uma story do Menubar nas cinco stacks afirma o papel do separador.
+
+> **PENDÊNCIA · 2026-09-15** — o painel do `createDropdownMenu` e o painel de topo do `createMenubar` no vanilla não animam a entrada que as outras stacks animam (inconsistência 7).
+> **Fecha quando**: os dois painéis do vanilla levam o marcador que `dropdown-menu.css:409-412` lê, ou a D5 registra que o vanilla não anima e por quê.
+
+> **PENDÊNCIA · 2026-09-15** — Enter ou Espaço no gatilho de um menu da barra JÁ aberto fecha com `overlay` no vue e no angular, não fecha nem avisa no vanilla, e sai `api` no svelte por dedução do código (inconsistência 19); falta decidir o comportamento e medir as cinco, react incluído.
+> **Fecha quando**: uma story de Menubar nas cinco stacks aperta Enter no gatilho aberto e afirma o mesmo estado final e o mesmo `reason`.
+
 ## 8. Acessibilidade
 
 **Papéis**: `menu` no painel; `menuitem`, `menuitemcheckbox` e `menuitemradio`
@@ -779,10 +997,14 @@ cinco `analytics.ts` que o cobra: evento fora dele não compila.
   aberto e, no Menubar, a passagem ao menu vizinho — saiu sem decidir) ou `api`
   (item escolhido que fecha, ou fechamento pelo código — "decisão de dentro",
   como no resto da categoria). `close-button` não ocorre — menu não tem
-  controle de fechar —, e **o tipo declara três palavras**, não quatro: até
-  2026-09-11 o React carregava a quarta, que nenhum caminho produzia, enquanto as
-  outras declaravam três. Palavra sem comportamento atrás é a mesma dívida do
-  comportamento sem palavra, do outro lado.
+  controle de fechar. **O tipo do motivo no componente declara três palavras**
+  nas cinco (react e svelte e angular em `ui/menu-close-reason.ts`, vue nos
+  `*.context.ts`, vanilla nas três fábricas); **o tipo do EVENTO declara
+  quatro** nas cinco `analytics.ts`, com `close-button` (react `:301`, `:379`,
+  `:402`; vanilla `:282`, `:331`, `:354`) — corrigido em 2026-09-15: esta linha
+  dizia que o tipo declarava três, e isso só vale para o lado do componente.
+  Palavra sem comportamento atrás é a mesma dívida do comportamento sem palavra,
+  do outro lado (inconsistência 18 da §7).
 - **A tradução do motivo mora AO LADO DO PRIMITIVO, e é UMA para a família
   inteira** — `ui/menu-close-reason.ts` no react, no angular e no svelte, plano
   ao lado das três pastas de propósito, porque um arquivo por componente vira
@@ -799,8 +1021,10 @@ cinco `analytics.ts` que o cobra: evento fora dele não compila.
   `ReferenceError`. Enquanto morava na página, esse trecho não tinha como ser
   exercitado fora do navegador.
 - **`location`** é a seção da página onde a prévia está (`docs_demo`,
-  `docs_variantes`, `docs_composicoes`, `docs_do_dont`) — toda prévia viva
-  rastreia, e a seção vem do chamador.
+  `docs_variantes`, `docs_do_dont`) — toda prévia viva rastreia, e a seção vem do
+  chamador. `docs_composicoes` não ocorre nas quinze docs pages desta família
+  (conferido em 2026-09-15): as prévias de composição estão na seção de
+  variantes e rastreiam como `docs_variantes`.
 
 **Os ids são em inglês, e o texto nunca entra** (D10). Traduzido, o mesmo item
 viraria três valores no GA4, um por idioma, e a série não juntaria.
@@ -876,7 +1100,7 @@ rótulo → stories → docs page.
 | assunto | arquivo |
 |---|---|
 | geometria, estados, anel de foco, submenus — do painel e do miolo dos TRÊS | `docs/shared/styles/nds/dropdown-menu.css` |
-| a barra do Menubar, o gatilho dela e a ancoragem do painel de topo | `docs/shared/styles/nds/menubar.css` — 194 linhas, três classes (D9) |
+| a barra do Menubar, o gatilho dela e a ancoragem do painel de topo | `docs/shared/styles/nds/menubar.css` — 213 linhas, três classes (D9) |
 | texto, props, critérios de teste | `docs/shared/content/<membro>/translations.json`, um por membro da família |
 | desenho e anotações | Figma, página `DropdownMenu` (componente `684:377`) |
 | portões determinísticos | `node scripts/audit.mjs dropdown-menu --json` — e os outros dois membros, `context-menu` e `menubar`: o `contrato_de_familia_sem_teste` lê o §2 deste arquivo contra o conteúdo dos três |

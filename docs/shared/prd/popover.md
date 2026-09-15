@@ -1,8 +1,9 @@
 # PRD — Popover
 
-> **Estado descrito**: 2026-09-12. **Revisão serial fechada em** 2026-09-06.
+> **Estado descrito**: 2026-09-15. **Revisão serial fechada em** 2026-09-06.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
 
 ## 1. Identidade
 
@@ -32,15 +33,15 @@ valer — e `—` é dívida declarada, não ausência de risco.
 
 | # | o contrato | portão |
 |---|---|---|
-| C1 | Abre no clique do gatilho | play de `Open`, nas cinco |
-| C2 | Ao abrir, o foco ENTRA no painel: primeiro focável, ou o próprio painel quando não há nenhum | `testes.functional.item1` |
-| C3 | O foco NÃO fica preso: Tab a partir do último focável SAI do painel e segue a ordem da página | — (controle negativo é comportamento de navegador; anotado para quando a suíte for autorizada) |
-| C4 | `Escape` fecha e devolve o foco ao gatilho | `testes.functional.item2` |
-| C5 | Clique fora fecha | `testes.functional.item3` |
-| C6 | O painel SEMPRE tem nome acessível — `aria-labelledby` quando há título visível, `aria-label` quando o conteúdo é livre | `testes.accessibility.item5` + regra `aria-dialog-name` do axe |
-| C7 | No modo padrão o painel NÃO recebe `aria-modal` — nem como `"false"` | asserção de ausência, nas cinco |
-| C8 | `modal: true` liga três coisas JUNTAS: foco preso, rolagem travada, `aria-modal="true"` | story `Modal`, nas cinco |
-| C9 | Sem espaço no `side` pedido, o painel vira para o lado oposto (auto-flip) | story `SideTop` — e **só no vanilla ela mede isso**; ver abaixo |
+| C1 | Abre no clique do gatilho | passo "Clicar no gatilho abre o painel" da `Playground`, nas cinco — a `Open` abre por `defaultOpen` em quatro e só clica no vanilla (§7, inconsistência 12) |
+| C2 | Ao abrir, o foco ENTRA no painel: primeiro focável, ou o próprio painel quando não há nenhum | `testes.functional.item1` + passo "O foco entra no painel ao abrir" da `Playground`, nas cinco |
+| C3 | O foco NÃO fica preso: Tab a partir do último focável SAI do painel e segue a ordem da página | só no vanilla — passo "E do ÚLTIMO focável o Tab SAI do painel" da `Focused`; nas outras quatro, — (§7, inconsistências 1 e 11) |
+| C4 | `Escape` fecha e devolve o foco ao gatilho | `testes.functional.item2` + passo de Escape da `Playground`, nas cinco |
+| C5 | Clique fora fecha | `testes.functional.item3` + passo "Clicar fora fecha" — na `Playground` de quatro, na `Controlled` do angular |
+| C6 | O painel SEMPRE tem nome acessível — `aria-labelledby` quando há título visível, `aria-label` quando o conteúdo é livre | `testes.accessibility.item5` + passos de `Default` e `WithTitle`, nas cinco + regra `aria-dialog-name` do axe |
+| C7 | No modo padrão o painel NÃO recebe `aria-modal` — nem como `"false"` | passo "O painel não é modal" da `Playground`, nas cinco |
+| C8 | `modal: true` liga três coisas JUNTAS: foco preso, rolagem travada, `aria-modal="true"` | story `Modal`, nas cinco — mas ela mede `aria-modal` e o laço de Tab; **a trava de rolagem não tem asserção em stack nenhuma** |
+| C9 | Sem espaço no `side` pedido, o painel vira para o lado oposto (auto-flip) | story `SideTop`, nas cinco: lado exato com espaço, virada sem espaço — ver D0 |
 | C10 | Renderiza em portal no `body`; fechado, não existe no DOM | `notes.item3` |
 | C11 | Nenhuma região viva: o painel não é anúncio, é alcançado | inspeção — nenhuma regra de axe cobre ausência de `aria-live` |
 
@@ -94,9 +95,10 @@ ligada em stack nenhuma; faltava só a asserção.
 mesmo `data-split="last"` com o popover como filho único — o utilitário põe
 `margin-top: auto` no ÚLTIMO filho, e ele já era o último. No react ele nem isso:
 a lib deixa um nó depois do gatilho, então o `:last-child` daquela árvore nunca
-foi ele. O espaço vinha de `layout: 'centered'`, por acidente, e em duas stacks a
-story precisou virar `padded` para o passo medir o recurso em vez da altura da
-janela.
+foi ele. O espaço vinha de `layout: 'centered'`, por acidente. Hoje o espaço é um
+irmão de verdade nas cinco; vue, svelte e angular declaram `layout: 'padded'` na
+própria `SideTop`, o vanilla herda `padded` do `meta`, e o react segue `centered`
+com o contêiner `nds-stack nds-min-h-100` (§7, inconsistência 14).
 
 **Efeito colateral registrado**: depois desta rodada, `data-split` não tem mais
 NENHUM consumidor vivo nas cinco stacks — só menções em comentário, explicando
@@ -306,15 +308,18 @@ nas outras quatro.
 ## 4. Anatomia
 
 ```
-popover                       (raiz — só estado, sem caixa própria)
+popover                       (raiz — só estado; caixa própria só no vanilla e no angular)
 └── popover-trigger           o gatilho; aria-expanded + aria-haspopup="dialog"
-    └── popover-positioner    a lib põe no lugar; o painel ocupa fluxo normal dentro dele
-        └── popover-content   role="dialog" · a caixa
-            ├── popover-header        ESTRUTURA — coluna com gap próprio
-            │   ├── popover-title        h*, peso medium
-            │   └── popover-description  p, --muted-foreground
-            └── [conteúdo arbitrário]  campo, botão, seleção — é o que distingue
-                                       este painel de um menu ou de uma dica
+
+<body>                        (portal — irmão da raiz, não filho do gatilho)
+└── .nds-popover-positioner   a lib põe no lugar; o painel ocupa fluxo normal dentro dele
+    │                         (classe só no react e no angular; sem data-slot em stack nenhuma)
+    └── popover-content       role="dialog" · a caixa
+        ├── popover-header        ESTRUTURA — coluna com gap próprio
+        │   ├── popover-title        h2 (ou role="heading" aria-level="2"), peso medium
+        │   └── popover-description  p (div no svelte), --muted-foreground
+        └── [conteúdo arbitrário]  campo, botão, seleção — é o que distingue
+                                   este painel de um menu ou de uma dica
 ```
 
 **O que é obrigatório**: `popover-content`. Tudo mais é composição.
@@ -412,7 +417,7 @@ linha:
 |---|---|---|
 | `open` | boolean | — |
 | `defaultOpen` | boolean | `false` |
-| `onOpenChange` | `(open: boolean) => void` | — |
+| `onOpenChange` | `(open: boolean, …) => void` — o segundo argumento difere por stack, ver inconsistência 10 | — |
 | `modal` | boolean | `false` |
 | `side` | `top \| right \| bottom \| left` | `bottom` |
 | `align` | `start \| center \| end` | `center` |
@@ -507,11 +512,218 @@ acima dela carrega o histórico do `h4`. Duas afirmações sobre o mesmo default
 mesmo documento é a forma de defeito que o PRD existe para não ter: a que a
 revisão de componente lê é a da §7, e era a errada.
 
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Medidas arquivo a arquivo no código de 2026-09-15, com leitura da fonte das libs
+onde o comportamento é delas. Caminhos curtos: `react/…` é
+`nortear-design-system-react/src/components/…`, e assim nas outras;
+`ui/popover/` no vue e no svelte. Nada aqui foi rodado em navegador.
+
+**Comportamento e markup**
+
+1. **Tab para fora do painel fecha em três stacks e não fecha em duas.** react:
+   a base-ui monta `FloatingFocusManager` com `closeOnFocusOut = true` por
+   padrão (`@base-ui/react/floating-ui-react/components/FloatingFocusManager.js:127`),
+   e `PopoverPopup.js` não o desliga. vue: a `DismissableLayer` da reka emite
+   `dismiss` no `focusOutside` não prevenido (`reka-ui/dist/DismissableLayer/DismissableLayer.js:65-70`).
+   angular: "outside-press + focus-out always close"
+   (`radix-ng-primitives-popover.mjs:543`, fecha em `:613`). svelte: a camada
+   do bits só CHAMA o `onFocusOutside`, sem dispensar
+   (`bits-ui/dist/bits/utilities/dismissible-layer/use-dismissable-layer.svelte.js:80-90`),
+   e `ui/popover/popover-content.svelte:97-100` só anota o motivo. vanilla: não
+   há ouvinte de foco (`ui/popover.ts:556-591` trata Escape, Tab modal e clique
+   fora). Maioria (3): fecha. A referência não fecha, e o C3 só diz que o foco
+   sai — não diz se o painel fica. **Decisão da dona.**
+2. **`aria-describedby` só existe em duas.** react: a base-ui liga
+   (`@base-ui/react/popover/popup/PopoverPopup.js:94`), provado em
+   `react/ui/popover.stories.tsx:95` e `popover-variants.stories.tsx:158`.
+   angular: o `RdxPopoverDescription` liga, provado em
+   `angular/ui/popover.stories.ts:99-114` e `popover-variants.stories.ts:127`.
+   vue, svelte e vanilla não o emitem em lugar nenhum
+   (`vanilla/ui/popover.ts:423-436` só nomeia). E a story do svelte AFIRMA o que
+   não entrega: `svelte/ui/popover/popover.stories.ts:67` descreve a descrição
+   "ligada por aria-describedby". Maioria (3): sem — incluindo a referência —,
+   contra a §8, que promete o atributo. **Decisão da dona.**
+3. **O react não emite `data-state`.** vanilla escreve no gatilho e no painel
+   (`ui/popover.ts:368,379`); angular na raiz, no gatilho e no painel
+   (`ui/popover.ts:221,244,464`); vue e svelte recebem da lib e o afirmam nas
+   stories de estado (`svelte/ui/popover/popover-states.stories.ts:125`). O react
+   não escreve, e a base-ui publica `data-popup-open`/`data-open`; nenhum arquivo
+   `popover*` do react menciona `data-state`. O conteúdo compartilhado cita
+   `data-state` seis vezes. Maioria (4), com a referência: `data-state`.
+4. **A descrição do svelte é `<div>`.** `svelte/ui/popover/popover-description.svelte:13`.
+   vanilla `<p>` (`ui/popover.ts:255`), vue `<p>` (`ui/popover/PopoverDescription.vue:11`),
+   react `<p>` pela base-ui (`@base-ui/react/popover/description/PopoverDescription.js:29`),
+   angular `<p>` nos 20 usos das stories. Maioria (4), com a referência: `<p>`.
+5. **Sem título e sem nome declarado, o nome de reserva sai de quatro receitas.**
+   vanilla: `aria-label` do gatilho, senão o texto dele, senão `'Popover'`
+   (`ui/popover.ts:431-435`). react: `aria-label` do gatilho, senão o texto, e
+   nada se os dois faltarem (`ui/popover.tsx:151-152`). angular: `aria-label`,
+   senão o texto, senão `null` (`ui/popover.ts:349-350`). svelte: SÓ o texto do
+   gatilho, senão `'Popover'` — ignora o `aria-label` dele, então um gatilho só
+   de ícone nomeia o painel "Popover" (`ui/popover/popover-content.svelte:67-70`).
+   vue: não calcula; a reka aponta `aria-labelledby` para o gatilho
+   (`ui/popover/PopoverContent.vue:44-48`). Maioria (3: vanilla, react, angular):
+   `aria-label` do gatilho primeiro. O caminho do vue é mecânica de lib e dá o
+   mesmo nome; o do svelte não dá.
+6. **`data-autofocus` só é lido no angular.** `angular/ui/popover.ts:409` o
+   prefere ao primeiro focável (motivo escrito: o Calendar dentro do Popover).
+   vanilla (`ui/popover.ts:476`), react, vue e svelte não o leem. Maioria (4),
+   com a referência: não lê. Registrar ou promover é **decisão da dona**.
+7. **O que `modal` faz com o resto da página muda por stack.** vue: a reka
+   esconde os irmãos por `aria-hidden` sempre (`useHideOthers`, citado em
+   `ui/popover/Popover.vue:25-27`). react e angular: só quando há peça de fechar
+   registrada no painel — `aria-hidden` na base-ui, `inert` no radix-ng
+   (`react/ui/popover.tsx:20-25`, `angular/ui/popover.ts:97-99`). svelte e
+   vanilla: nunca. Foco preso, trava de rolagem e `aria-modal` são iguais nas
+   cinco; esta metade não. Mecânica de lib nas três com lib — registrar; a
+   pergunta que sobra é se o vanilla deve esconder o resto.
+8. **O vanilla posiciona uma vez só.** `positionFloating` roda em `open()`
+   (`ui/popover.ts:456`) e nada reposiciona em rolagem de contêiner ou
+   redimensionamento. reka, bits e radix-ng usam `autoUpdate` do floating-ui
+   (`reka-ui/dist/Popper/PopperContent.js`,
+   `bits-ui/dist/bits/utilities/floating-layer/use-floating-layer.svelte.js`,
+   `radix-ng-primitives-popper.mjs`); na base-ui a chamada não foi localizada
+   nesta medição. A folha e o conteúdo não dizem o que se espera.
+9. **Raiz e positioner — divergência de framework, registrar.** vanilla: raiz
+   `div[data-slot="popover"]` com `display: contents` (`ui/popover.ts:354-356`),
+   sem positioner. angular: raiz `div[ndsPopover]` com `nds-inline-block` e
+   positioner `.nds-popover-positioner` (`ui/popover.ts:219-220,234`). react:
+   `data-slot="popover"` passado a uma raiz que não renderiza elemento
+   (`ui/popover.tsx:50`), positioner com a classe (`:248`). vue: o mesmo
+   `data-slot` inerte (`ui/popover/Popover.vue:73`) e o wrapper da reka sem
+   classe. svelte: nem `data-slot` na raiz, e o wrapper do bits sem classe. O
+   `data-slot="popover"` do react e do vue é atributo que não chega ao DOM.
+
+**API**
+
+10. **Divergência de API — registrar, não alinhar.** O segundo argumento do
+    `onOpenChange`: vanilla `(open, reason?)` no vocabulário do design system
+    (`ui/popover.ts:157`); svelte o mesmo (`ui/popover/popover.svelte:48`); vue
+    `update:open [value, reason?]` (`ui/popover/Popover.vue:34-38`); react
+    `(open, eventDetails)` da base-ui, com o motivo cru; angular
+    `RdxPopoverOpenChange` com `reason` cru. A tabela compartilhada publica
+    `(open: boolean) => void`. E `alignOffset`: prop do react
+    (`ui/popover.tsx:185`) e input do angular (`ui/popover.ts:165`), repassado à
+    lib no vue e no svelte, **ausente** do vanilla (`ui/popover.ts:115-159`) e da
+    tabela compartilhada.
+
+**Stories e asserções**
+
+11. **O conjunto de stories de estado difere.** react: `Closed`, `Open`,
+    `Controlled`, `CloseButton`, `Modal`. vue e svelte: `Closed`, `Open`,
+    `Controlled`, `Modal`. vanilla: mais `Focused` e `ListenerCleanup`
+    (`ui/popover-states.stories.ts:226,492`). angular: mais `Focus`
+    (`ui/popover-states.stories.ts:212`) — outro nome para a mesma story. A
+    `Focused` do vanilla é a única que prova o C3 (`:289`); a `Focus` do angular
+    para no anel de foco. O motivo `close-button` é provado na `Playground` de
+    vue, svelte, vanilla e angular e numa story própria no react
+    (`react/ui/popover-states.stories.tsx:306`). Maioria (3: react, vue, svelte):
+    sem story de foco; a referência tem. **Decisão da dona**:
+    `Focused` nas cinco (com o passo do C3) ou em nenhuma.
+12. **A `Open` abre por clique só no vanilla.** `vanilla/ui/popover-states.stories.ts:112-143`
+    clica o gatilho; react, vue, svelte e angular montam com `defaultOpen` e não
+    clicam. O clique está coberto pela `Playground` das cinco (C1). Maioria (4):
+    `defaultOpen` — e o nome da story do svelte diz isso ("Open (defaultOpen)").
+13. **Fechar por confirmação é provado de forma desigual.** `Form`: react, vue e
+    angular provam o Atualizar E o Enter num campo
+    (`react/ui/popover-variants.stories.tsx:266,279`,
+    `vue/ui/popover/popover-variants.stories.ts:257,268`,
+    `angular/ui/popover-variants.stories.ts:219,229`); svelte só o Atualizar
+    (`:159`); **vanilla nenhum dos dois** — o ouvinte de `submit` existe e a play
+    para em "aceitam digitação" (`vanilla/ui/popover-variants.stories.ts:177-202`).
+    `EditProfile`: vue e angular provam Cancelar e Atualizar
+    (`vue/…/popover-compositions.stories.ts:129,136`,
+    `angular/ui/popover-compositions.stories.ts:132,145,153`); react, svelte e
+    vanilla só o preenchimento. `TableFilter`: só o angular prova que Aplicar
+    fecha por código (`:231`). Maioria na `Form` (3): Atualizar + Enter.
+14. **A `SideTop` do vanilla mede menos.** Não passa `sideOffset`
+    (`vanilla/ui/popover-compositions.stories.ts:307`, padrão 4) e não mede o
+    vão nem o `data-side` no primeiro passo (`:329-340`); as outras quatro usam
+    `sideOffset` 12 e exigem `data-side="top"` e o vão de 12px com espaço
+    (`react/ui/popover-compositions.stories.tsx:429-436`,
+    `vue/…/popover-compositions.stories.ts:445`, `svelte/…:272`,
+    `angular/ui/popover-compositions.stories.ts:450`). O alinhamento no eixo
+    cruzado é provado em vue, svelte e vanilla, não em react e angular. E o
+    quadro: react `centered` com `nds-min-h-100` (`:40,69`); vue, svelte e
+    angular `padded` na story (`vue:371`, `svelte:211`, `angular:412`); vanilla
+    `padded` pelo `meta`. Maioria (4): vão de 12 medido.
+15. **O `layout` dos `meta` diverge.** `popover-states`, `-variants` e
+    `-compositions` são `padded` no vanilla (`:28`, `:22`, `:21`) e `centered`
+    nas outras quatro. A `Playground` do vue não declara `layout`
+    (`vue/ui/popover/popover.stories.ts:20-30`) — cai no `padded` padrão — contra
+    `centered` nas outras quatro. Maioria (4) nos dois casos; nos três arquivos, a
+    referência é a minoria.
+16. **Só o svelte renomeia stories.** `name: 'Side top (auto-flip)'`
+    (`svelte/ui/popover/popover-compositions.stories.ts:203`), `'Open (defaultOpen)'`
+    e `'Controlled (open prop)'` (`popover-states.stories.ts:98,141`). As outras
+    quatro usam o nome do export, e o menu lateral das cinco deixa de casar.
+    Maioria (4): sem `name`.
+17. **As plays de composição do vanilla afirmam renderização, não
+    comportamento.** `TableFilter` não prova que marcar um status mantém o painel
+    aberto (`vanilla/ui/popover-compositions.stories.ts:160`; nas outras quatro
+    há o passo, ex. `react/…:249`); `QuickSettings` diz "renderizam com estados
+    iniciais" (`:276`) onde as outras provam "independentes entre si". Maioria
+    (4): comportamento.
+18. **Escape na `Modal` só no vanilla; trava de rolagem em nenhuma.** O passo
+    "Sem peça de fechar, o Escape é a única saída" existe só em
+    `vanilla/ui/popover-states.stories.ts:463`. Nenhuma das cinco `Modal` mede a
+    trava de rolagem (C8). Maioria (4): sem o passo do Escape — e a D2 explica
+    por que ele importa nas cinco.
+
+**Snippets e docs page**
+
+19. **O svelte tem UM construtor de snippet.** `svelte/ui/popover/popover.source.ts`
+    exporta só `popoverSource`, com 13 casos no teste; react 12 construtores e 23
+    casos, vue 13 e 26, vanilla 11 e 22, angular 12 e 44 (contagem de
+    `it`/`test`). As stories do svelte reaproveitam a `transform` do `meta`. O
+    audit não reprova (o slug volta vazio), porque a regra olha a presença de
+    `transform`, não a granularidade. Maioria (4): construtor por story.
+20. **A tabela de props da docs page do vanilla é literal, e uma linha é
+    falsa.** `vanilla/docs/PopoverDocs.ts:1145-1155` escreve tipo, padrão,
+    obrigatoriedade (`'Sim'`/`'Não'`, 14 ocorrências) e várias descrições em
+    português fixo, então a tabela não troca de idioma. E a linha de `side`
+    (`:1147`) acrescenta "A posição é fixa: não há reposicionamento automático
+    por colisão" — falso desde 2026-09-13, quando o `flip` foi ligado (D0). As
+    outras quatro leem `props.table.*` do conteúdo. Maioria (4): conteúdo.
+21. **O angular publica um `extensibilityCode` local.** `EXTENSIBILITY_CODE` em
+    `angular/docs/PopoverDocs.ts:171`, passado em `:675`, com o motivo em `:162`.
+    As outras quatro leem `props.extensibilityCode` do conteúdo
+    (`react/…:1124`, `vue/…:1210`, `svelte/…:944`, `vanilla/…:1170`). É snippet
+    fora do conteúdo compartilhado, invisível a quem lê o JSON — a mesma perda
+    que a regra de nunca pôr `*Code` em override existe para evitar. Maioria (4):
+    conteúdo — o que falta é a variante `angular` no JSON dizer o que a local
+    diz.
+
+**O que foi medido igual nas cinco**, para não ser remedido: `componentSlug:
+'popover'`; os mesmos sete `trackId` nas quatro stacks com lista literal
+(`default`, `withTitle`, `form`, `editProfile`, `tableFilter`, `colorPicker`,
+`quickSettings`) e `trackId: key` no angular; os tipos `popover_open` e
+`popover_close` idênticos nos cinco `analytics.ts`, com `reason` obrigatório;
+os mesmos valores de `location` (`docs_demo`, `docs_variantes`,
+`docs_composicoes`, `docs_do_dont`); as quinze seções da docs page; `sideOffset`
+4, `side` `bottom` e `align` `center` como padrão; a asserção de ausência de
+`aria-modal` na `Playground`; o laço de Tab e o `aria-modal` na `Modal`; a
+`SideTop` exigindo o lado exato e a virada.
+
+> **PENDÊNCIA · 2026-09-15** — as inconsistências 1 a 21 acima estão abertas.
+> As que pedem decisão da dona são a 1 (Tab para fora fecha?), a 2
+> (`aria-describedby` nas cinco ou em nenhuma), a 6 (`data-autofocus`) e a 11
+> (story de foco nas cinco ou em nenhuma).
+> **Fecha quando**: cada item estiver alinhado, ou declarado como divergência
+> registrada na tabela de forma acima, e esta seção for remedida.
+
+> **PENDÊNCIA · 2026-09-15** — a trava de rolagem do modo modal (C8) não tem
+> asserção em stack nenhuma.
+> **Fecha quando**: a `Modal` das cinco medir a rolagem travada com o painel
+> aberto e destravada depois de fechar.
+
 ## 8. Acessibilidade
 
 **Atributos.** Painel: `role="dialog"`, mais `aria-labelledby` **ou** `aria-label`
-(C6), `aria-describedby` quando há descrição, e `aria-modal="true"` só no modo
-modal. Gatilho: `aria-expanded`, `aria-haspopup="dialog"`, e `aria-controls` só
+(C6), `aria-describedby` quando há descrição — **só no react e no angular**, onde
+a lib o liga; vue, svelte e vanilla não o emitem (§7, inconsistência 2) —, e
+`aria-modal="true"` só no modo modal. Gatilho: `aria-expanded`, `aria-haspopup="dialog"`, e `aria-controls` só
 com o painel montado (D8).
 
 **Teclado.** Tab percorre os focáveis do painel e, a partir do último, SAI e segue
@@ -744,25 +956,14 @@ terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
 > **Fecha quando** as treze stories tiverem construtor (ou exceção declarada com
 > a premissa cobrada por caso) e o audit deste slug voltar vazio.
 >
-> **FECHADA em 2026-09-13.** `node scripts/audit.mjs popover --json` devolve
-> `{"popover": []}` com exit 0. O Angular foi de 1 construtor para **6**:
-> `popover-variants` e `popover-compositions` ganharam o `popoverFormSource` na
-> rodada do submit de formulário, e as cinco stories de `popover-states` ganharam
-> os quatro restantes.
->
-> **Uma delas serve duas stories, e a premissa é cobrada**: `Closed` e `Focus`
-> têm `template` byte a byte idêntico e o mesmo `props` — o que as separa é
-> interação, que não aparece em snippet. `Open` tem construtor próprio porque o
-> estado inicial dela difere, e um caso deriva o snippet dela do irmão trocando
-> `signal(true)` por `signal(false)`: no dia em que uma das duas ganhar markup
-> próprio, a dupla reprova.
->
-> **A dívida que sobra está DECLARADA, não esquecida**: seis stories de
-> `variants`/`compositions` ainda publicam template cru, numa lista nomeada
-> `SEM_CONSTRUTOR` do teste — quem lhes der transform sem tirá-las da lista
-> reprova. O teste foi de 12 para 34 casos, cobrando a tabela de construtores nos
-> dois sentidos e a premissa de cada exceção, inclusive a do andaime que os
-> snippets removem de propósito (o alvo inerte da `Controlled` e o
-> `[defaultOpen]` da `Modal`).
+> **FECHADA em 2026-09-13; remedida em 2026-09-15.** `node scripts/audit.mjs
+> popover --json` devolve `{"popover": []}` com exit 0. O Angular tem hoje **12**
+> construtores em `popover.source.ts` para 14 stories — `Closed` e `Focus`
+> dividem o `popoverBasicSource` (template e `props` idênticos; o que as separa é
+> interação), e `Form` e `EditProfile` dividem o `popoverFormSource` — e
+> `popover.source.test.ts` cobra a tabela nos dois sentidos. A
+> lista `SEM_CONSTRUTOR`, que carregava seis stories cruas como dívida declarada,
+> deixou de existir no mesmo dia, junto com o último item dela
+> (`popover.source.test.ts:98`).
 
 

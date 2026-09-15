@@ -1,21 +1,10 @@
 # PRD — Dialog
 
-> **Estado descrito**: 2026-09-12, conferido linha a linha contra o código das
-> cinco stacks. **Revisão serial fechada em** 2026-09-10 (`1a6ca4fbb`), e as
-> rodadas de CATEGORIA de 2026-09-11 e 2026-09-12 passaram por aqui depois: o
-> motivo do fechamento saiu da docs page, o vanilla ganhou `open()`/`isOpen()` e
-> perdeu o gatilho escondido, o rótulo do menu das docs pages foi unificado.
+> **Estado descrito**: 2026-09-15, conferido contra o código das cinco stacks.
+> **Revisão serial fechada em** 2026-09-10 (`1a6ca4fbb`); as rodadas de
+> CATEGORIA de 2026-09-11 e 2026-09-12 passaram por aqui depois.
 >
-> Nesta conferência mudaram **§5** (o véu não desfoca), **§6** e **§7** (os dois
-> `showCloseButton`), **§9** (`dialog_action` entra na tabela), **C3** e **D1** —
-> cada linha antiga registrada no lugar, com data e medição, em vez de reescrita
-> por cima.
->
-> **Até 2026-09-12 este cabeçalho dizia "Estado descrito: 2026-09-07" e trazia o
-> aviso "⚠ Escrito ANTES da revisão serial deste componente".** O aviso
-> sobreviveu dois dias à revisão que ele anunciava, e as rodadas que
-> reescreveram §7 e §9 nesse meio-tempo não o releram: cabeçalho que avisa sobre
-> o futuro é a linha que ninguém volta para fechar.
+> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
@@ -36,25 +25,19 @@ reusa as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas aqui.
 
 ## 2. Contrato de comportamento
 
-| # | o contrato | portão |
-|---|---|---|
-| C1 | `role="dialog"` com `aria-modal="true"` | `accessibility.item1` |
-| C2 | Nome e descrição saem do título e da descrição, automaticamente | `accessibility.item2` |
-| C3 | O foco fica preso; o foco inicial vai ao primeiro focável | `accessibility.item3` |
-| C4 | Ao fechar, o foco volta ao gatilho | `accessibility.item4` |
-| C5 | `Escape` e clique no véu fecham, **sem** disparar ações do rodapé; a rolagem é restaurada | `accessibility.item5` |
-| C6 | O botão de fechar tem nome acessível para leitor de tela | `accessibility.item6` |
-| C7 | Corpo mais alto que o painel precisa de `tabindex="0"`, `role="group"` e `aria-label` juntos | docblock da folha — sem portão automático |
+A coluna "texto" é a chave de `docs/shared/content/dialog/translations.json` que
+publica o contrato; a coluna "portão" é a story que o AFIRMA, medida em
+2026-09-15 nas cinco stacks. Onde o portão não cobre as cinco, a linha diz quais.
 
-**O portão da C3 descrevia uma rota que não existe mais, e foi corrigido em
-2026-09-12.** Medido naquele dia nos três idiomas: o `accessibility.item3` de
-`docs/shared/content/dialog/translations.json` dizia "…na rota de rolagem, em que
-o corpo inteiro rola, ele vai para o painel, que é quem recebe a rolagem" — o
-painel recebendo a rolagem era exatamente o par `-overlay-scroll` +
-`-content-scroll` que a D7 retirou em 2026-09-08. Hoje a chave diz o que o código
-faz: quem rola é o CORPO, e é ele que entra na ordem de tabulação com papel e nome
-próprios. A metade que sempre valeu é a primeira — foco preso, foco inicial no
-primeiro focável.
+| # | o contrato | texto | portão |
+|---|---|---|---|
+| C1 | `role="dialog"` com `aria-modal="true"` | `accessibility.item1` | `Playground` nas cinco; react, vue e angular só afirmam `aria-modal` com `modal` ligado, e react e vue afirmam também a AUSÊNCIA com `modal=false` |
+| C2 | Nome e descrição saem do título e da descrição, automaticamente | `accessibility.item2` | `Playground`, `Variants/Default` e `Variants/HeadingH3` pela fixture de cada stack — a do angular não confere o nome (inconsistência 16) |
+| C3 | O foco fica preso; o foco inicial vai ao primeiro focável | `accessibility.item3` | `Playground` nas cinco (Tab e Shift+Tab) |
+| C4 | Ao fechar, o foco volta ao gatilho | `accessibility.item4` | `Playground` (Escape, véu e X) e `Compositions/MediaPreview` nas cinco |
+| C5 | `Escape` e clique no véu fecham, **sem** disparar ações do rodapé; a rolagem é restaurada | `accessibility.item5` | fechar: `Playground` nas cinco; rolagem restaurada: **só o vanilla** afirma (inconsistência 13) |
+| C6 | O botão de fechar tem nome acessível para leitor de tela | `accessibility.item6` | `Variants/NoFooter` e `Compositions/MediaPreview` nas cinco |
+| C7 | Corpo mais alto que o painel precisa de `tabindex="0"`, `role="group"` e `aria-label` juntos | docblock da folha | `Variants/WithScrollContent` nas cinco afirma `tabindex` e nome; **nenhuma** afirma o `role="group"` |
 
 ## 3. Decisões fixadas
 
@@ -72,31 +55,17 @@ primeiro focável.
 | `drawer.css` | `--background` |
 
 São **quatro**, e o Dialog é o único fora do consenso. **Nenhuma** lê `--card`.
+Reconferido em 2026-09-15 nas quatro folhas: `sheet.css:107`,
+`alert-dialog.css:74` e `drawer.css:69` declaram `--background`; `dialog.css:78`,
+`--popover`. A tabela nomeia as quatro de propósito — uma contagem anterior dizia
+"três" e sobreviveu à entrada do Drawer, porque afirmação sobre os vizinhos não
+passa por este arquivo quando um deles muda.
 
-**Esta contagem já esteve errada aqui, e o modo de errar é o que importa**: a
-linha dizia "as três folhas modais" e ficou de pé depois de o Drawer entrar na
-categoria, porque contava os VIZINHOS — e afirmação sobre o que os outros fazem
-não passa por este arquivo quando um deles muda. É a mesma lição que a D8 do
-`alert-dialog.md` escreveu sobre o desfoque, uma seção antes de esta contagem
-apodrecer do mesmo jeito. A defesa aqui é a tabela: ela nomeia as quatro, então
-uma quinta folha modal que apareça não cabe sem ser escrita.
-
-**O registro é ESTE arquivo, e a guideline aponta para cá.** Desde 2026-09-10 a
-regra da categoria mora uma vez só, em `docs/shared/guidelines/18-overlay.md`
-§Superfície: a tabela de lá nomeia as dez classes com o par de tokens de cada
-uma, diz que **nenhuma lê `--card`** e manda a divergência dos quatro painéis
-modais para esta D1. Não há mais duas fontes para a mesma coisa, e o ponteiro
-agora é para uma seção, não para "a guideline" sem dizer qual.
-
-**Até 2026-09-12 este parágrafo dizia "as cinco discordam: em 2026-09-09, quatro
-delas ainda afirmam `--card` para os painéis".** A medição estava certa no dia em
-que foi feita e o mundo que ela descreve durou um dia: `b77b4d155` unificou as
-cinco cópias de `10-overlay-components.md`, e o `--card` que quatro delas
-afirmavam ficou registrado no histórico da própria guideline unificada (§Por que
-este arquivo existe). O mecanismo é o mesmo da contagem de painéis acima —
-**afirmação sobre o estado de OUTRO arquivo não se corrige quando aquele arquivo
-muda** —, e a defesa foi a mesma: trocar a afirmação por um ponteiro para a
-seção que responde.
+**O registro é ESTE arquivo, e a guideline aponta para cá.** A regra da categoria
+mora em `docs/shared/guidelines/18-overlay.md` §Superfície: a tabela de lá nomeia
+nove classes (onze componentes — a do DropdownMenu serve também ContextMenu e
+Menubar) com o par de tokens de cada uma, diz que **nenhuma lê `--card`** e manda
+a divergência dos quatro painéis modais para esta D1.
 
 **Enquanto a divergência existir**, o que vale é a regra estrutural: a classe do
 painel resolve a superfície, e ninguém pinta fundo por fora. A revisão serial
@@ -188,9 +157,15 @@ acrescenta navegação — mesma decisão registrada em `sheet.css`.
 
 ### D8 · O gap do cabeçalho vem do composto, não da base
 
-**Estado**: a folha base declara `--spacing-1-5` e o bloco composto — que é o que
-as cinco stacks entregam — sobrescreve para `--spacing-2`, alinhado à esquerda.
-**Consequência**: ao ler a folha, o segundo valor é o que vale.
+**Estado**: a folha base declara `--spacing-1-5` (`dialog.css:94`) e um segundo
+bloco, mais abaixo, sobrescreve para `--spacing-2` (`dialog.css:249-251`). O
+seletor do segundo bloco é o mesmo `.nds-dialog-header`, sem condição, então vale
+nas cinco stacks — inclusive no vanilla, que não é "composto".
+**Consequência**: ao ler a folha, o segundo valor é o que vale. O alinhamento NÃO
+muda com ele: o cabeçalho é centralizado abaixo de 40rem e alinhado à esquerda a
+partir daí (`dialog.css:95-102`). O comentário do segundo bloco ("Header do
+composite React não é centralizado") descreve o contrário do que a folha faz —
+até 2026-09-15 esta D8 o repetia, dizendo "alinhado à esquerda".
 
 ### D9 · No rodapé, o primário é o ÚLTIMO do DOM — e é a folha que inverte
 
@@ -201,7 +176,7 @@ sobe ao topo; deitado ele vai para a direita.
 
 **Por que o inverso do que parece**: escrever o primário por último é
 contraintuitivo, e por isso o defeito é reincidente. Medido em 2026-09-07 nas
-cinco stacks: as quatro que oferecem `showCloseButtonFooter` renderizavam o
+cinco stacks: as quatro que oferecem o `showCloseButton` do Footer renderizavam o
 botão DEPOIS dos filhos, o que o punha na posição do primário; e a story do
 vanilla montava `[Voltar, Continuar, Fechar]`, deixando o primário no MEIO com
 um `ghost` acima dele.
@@ -232,9 +207,17 @@ sequer; e a mesma coisa vivia em `anatomy.structureCode` de react, vue e svelte
 — que é conteúdo COMPARTILHADO, a chave mais copiada que o componente tem.
 Corrigido em 2026-09-07 nas quatro pontas.
 
+**E não fechou nas cinco.** Medido em 2026-09-15: as stories `Variants/WithForm`
+(`dialog-variants.stories.ts:178-193`) e `Compositions/ProfileEdit`
+(`dialog-compositions.stories.ts:100-119`) do **vue** fecham o `<form>` antes do
+`<DialogFooter>`, com o `Button type="submit"` dentro do rodapé — o submit órfão
+desta decisão, vivo em duas stories. Nenhuma asserção o pega ali: o vue não lê
+`button.form` em story nenhuma (inconsistência 14).
+
 **O que nenhum portão vê**: `<form>` presente e submit fora dele é HTML válido,
 compila nas cinco e passa em qualquer asserção por papel ou por texto. O que
-denuncia é ler `button.form` — vazio quando o botão está órfão.
+denuncia é ler `button.form` — vazio quando o botão está órfão. Hoje quem lê é
+`WithForm` no svelte, no vanilla e no angular, e `ProfileEdit` só no vanilla.
 
 ### D11 · O cenário das duas composições sem consenso é o do Vanilla
 
@@ -255,9 +238,16 @@ pela dona em 2026-09-08, a favor do vanilla.
 
 **O que deixou isso passar tanto tempo**: `demonstration_labels_divergent` só
 aponta quem foge da MAIORIA e emudecia sem ela — ver a nota da regra em
-`scripts/audit.mjs`. Divergência máxima produzia zero achados. Hoje o
-`demonstration_labels_sem_consenso` cobre esse caso, e ele acusava 3 dos 85
-componentes: chart, dialog e table.
+`scripts/audit.mjs`. Divergência máxima produzia zero achados. O
+`demonstration_labels_sem_consenso` cobre esse caso, e em 2026-09-15
+`node scripts/audit.mjs dialog --json` não acusa nada neste slug.
+
+**Conferido em 2026-09-15**: as duas stories usam as mesmas chaves nas cinco
+stacks (`guideTrigger`, `guideTitle`, `guideDescription`, `guideBody`, `close`,
+`back`, `continueAction`; `aboutTitle`, `aboutDescription`, `aboutBody`). A
+mesma regra NÃO alcançou outras stories do arquivo — `ConfirmEmail` conta duas
+histórias diferentes e `WithForm`, `WithCloseButtonHidden` e `ProfileEdit` cravam
+literais em algumas stacks (inconsistência 19).
 
 **Consequência para quem for montar demo nova**: rótulo de cenário nasce no
 conteúdo compartilhado, nunca cravado numa stack. `demonstration.labels` tinha
@@ -267,12 +257,14 @@ stack a inventar a sua.
 ## 4. Anatomia
 
 ```
-dialog-overlay                véu, sem desfoque (D5)
+dialog                        raiz com elemento SÓ no vanilla e no angular (inconsistência 3)
+└── dialog-trigger
+dialog-overlay                véu, sem desfoque (D5) — irmão do painel, no body
 dialog-content                role="dialog" · aria-modal="true" · centralizado por translate
 ├── dialog-header             coluna
 │   ├── dialog-title
 │   └── dialog-description
-├── dialog-body               sem estilo próprio — quem monta a tela decide
+├── dialog-body               sem estilo próprio — peça só no vanilla e no angular (inconsistência 4)
 ├── dialog-footer             É a aresta de baixo do painel (D2)
 └── dialog-close              absoluto, canto superior direito
 ```
@@ -280,10 +272,15 @@ dialog-content                role="dialog" · aria-modal="true" · centralizado
 **O corpo não tem estilo próprio**, e a folha diz isso por escrito: o consumidor
 define padding e espaçamento do conteúdo.
 
-**O botão de fechar tem duas formas**, como no Sheet: o vanilla monta
-`.nds-dialog-close`, e as quatro stacks com lib compõem o botão do design system
-e usam só `.nds-dialog-close-position`, com o rótulo em `.nds-sr-only`. A folha
-traz as duas regras, com afastamentos diferentes — ver §5.
+**O botão de fechar tem duas formas**, e a divisão NÃO é "vanilla contra as
+quatro com lib". Medido em 2026-09-15: o vanilla (`dialog.ts:356-375`) e o
+angular (`dialog.ts:276-291`) montam um `<button>` puro com `.nds-dialog-close` e
+o SVG escrito à mão; react (`dialog.tsx:144-156`), vue
+(`DialogContent.vue:62-75`) e svelte (`dialog-content.svelte:73-80`) compõem o
+`Button` ghost `icon-sm` do design system e usam só `.nds-dialog-close-position`.
+Nas cinco o rótulo vai em `.nds-sr-only`. A folha traz as duas regras, com
+afastamentos diferentes — ver §5. Até 2026-09-15 este parágrafo contava o angular
+entre as compostas.
 
 ## 5. Geometria e tokens
 
@@ -309,89 +306,75 @@ Fonte: `docs/shared/styles/nds/dialog.css`.
 | corpo rolável | teto de 60vh, respiro lateral | `--spacing-2` |
 | camadas | — | `--z-modal-backdrop` e `--z-modal` |
 
-**Até 2026-09-12 a linha do véu dizia "80% de opacidade, desfoque de 4px".** O
-`backdrop-filter` saiu em 2026-09-08 e a D5 deste mesmo arquivo registrou a saída
-no dia — a tabela ficou quatro dias contradizendo a D5, que está duas seções
-acima dela. Medido em 2026-09-12: nenhuma das quatro folhas modais
-(`dialog.css`, `sheet.css`, `alert-dialog.css`, `drawer.css`) declara
-`backdrop-filter`. Duas linhas sobre o mesmo valor no mesmo arquivo é uma linha
-que ninguém relê; a tabela agora só aponta para a D5.
-
-**O canto do botão de fechar tem DOIS valores, e é a mesma diferença de forma
-que o Sheet registra na §4 dele**: o vanilla monta `.nds-dialog-close`, afastado
-16px, e as quatro stacks com lib compõem o botão do design system usando só
-`.nds-dialog-close-position`, afastado 8px. Medido em 2026-09-12 na folha;
-**até essa data esta tabela tinha uma linha só, "canto a 16px"**, que descrevia a
-forma de uma stack como se fosse das cinco. Por que os dois números diferem não
-está escrito em lugar nenhum da folha — o botão composto traz padding próprio, e
-o afastamento menor é compatível com compensá-lo, mas isso é leitura, não
-medição: se a diferença óptica importa, ela se mede em tela, e não aqui.
+**O canto do botão de fechar tem DOIS valores**: `.nds-dialog-close`, afastado
+16px, é a forma do vanilla e do angular; `.nds-dialog-close-position`, afastado
+8px, é a de react, vue e svelte (§4). Por que os dois números diferem não está
+escrito em lugar nenhum da folha — o botão composto traz padding próprio, e o
+afastamento menor é compatível com compensá-lo, mas isso é leitura, não medição:
+se a diferença óptica importa, ela se mede em tela, e não aqui.
 
 **Animação**: entrada com fade e zoom (`--duration-base`, `--ease-entrance`),
-saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
-`prefers-reduced-motion` as duas somem.
+casando `[data-open]` ou `[data-state="open"]` (`dialog.css:230-238`); saída mais
+rápida (`--duration-fast`, `--ease-exit`), casando **só** `[data-closed]`
+(`dialog.css:240-246`). Por isso a saída só roda onde a lib escreve
+`data-closed` — react e angular. Vue e svelte fecham com `data-state="closed"`,
+que nenhuma regra de saída casa, e o vanilla remove o painel no mesmo quadro em
+que marca `closed` (`dialog.ts:411-422`, decisão escrita no docblock, linhas
+66-69). Ver inconsistência 5. O comentário do véu em `dialog.css:59` ("entrada
+instantânea — anima só a saída") contradiz as regras de entrada da mesma folha.
+Sob `prefers-reduced-motion` as duas animações param — ver §8.
 
 ## 6. Estados
 
 | estado | quando ocorre | o que muda |
 |---|---|---|
 | Closed | inicial, ou `open=false` | só o gatilho na tela; o painel não está no DOM — não é painel escondido |
-| Opening | de fechado para aberto | `data-state="open"`: o véu aparece e o painel cresce a partir de 95% |
+| Opening | de fechado para aberto | `data-state="open"` (vanilla, vue, svelte, angular) ou `data-open` (react, angular): o véu aparece e o painel cresce a partir de 95% |
 | Open | gatilho, ou `open=true` | véu semitransparente, foco preso, rolagem da página travada |
-| Closing | de aberto para fechado | `data-state="closed"`: o painel encolhe e o véu some, em `--duration-fast` |
+| Closing | de aberto para fechado | `data-closed`: o painel encolhe e o véu some, em `--duration-fast` — **só em react e angular**; nas outras três o painel sai sem animação (§5) |
 | WithCloseButtonHidden | o `showCloseButton` do Content desligado | sem X no canto; a saída fica sendo Escape, clique no véu ou ação do rodapé |
 
 **Entrada e saída são estados SEPARADOS**, e não um `Transitioning` só — foi o
 conteúdo compartilhado que os separou, e eles não são simétricos: a entrada usa
 `--duration-base` com `--ease-entrance`, a saída `--duration-fast` com
-`--ease-exit`. Sob `prefers-reduced-motion` as duas somem.
+`--ease-exit`. Sob `prefers-reduced-motion` as duas param.
 
 O foco dentro do painel não é estado do Dialog: o anel é do elemento focado, e
 no botão de fechar ele tem as duas camadas descritas na §5.
 
 ## 7. API
 
-| prop | o que faz |
-|---|---|
-| `open` | estado controlado |
-| `defaultOpen` | estado inicial não controlado |
-| `onOpenChange` | callback com o novo estado |
-| `showCloseButton` **do Content** | exibe o X no canto do painel — padrão `true` |
-| `showCloseButton` **do Footer** | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9). Padrão `false` |
-| `closeLabel` | rótulo do botão de fechar, prop das DUAS peças: no Content é o nome de leitor de tela do X, no Footer é o texto visível. Padrão `'Fechar'` em cada uma |
-| `className` | classes `.nds-*` adicionais |
+| prop | o que faz | onde existe |
+|---|---|---|
+| `open` | estado controlado | react, vue (`v-model:open`), svelte (`bind:open`), angular (`[(open)]`); no vanilla é VERBO — `open()`, `close()`, `isOpen()` |
+| `defaultOpen` | estado inicial não controlado | react, vue, angular. **Não** existe no svelte (a raiz do bits só tem `open` bindável) nem no vanilla |
+| `onOpenChange` | callback com o novo estado | react, svelte, vanilla, angular (`(openChange)`); no vue é o evento `update:open` |
+| `modal` | modalidade (trava de rolagem, `inert` e `aria-modal`) | react, vue, angular; **não** existe no svelte nem no vanilla, que são sempre modais |
+| `showCloseButton` **do Content** | exibe o X no canto do painel — padrão `true` | as cinco (no vanilla, opção da fábrica) |
+| `showCloseButton` **do Footer** | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9). Padrão `false` | react, vue, svelte, angular |
+| `closeLabel` | rótulo do botão de fechar: no Content é o nome de leitor de tela do X, no Footer é o texto visível. Padrão `'Fechar'` em cada uma | as cinco no Content; no Footer, as quatro que têm a peça |
+| `className` / `class` | classes `.nds-*` adicionais | `className` no react, `class` em vue, svelte e vanilla, atributo do host no angular |
 
-**São duas props com o MESMO nome, em peças diferentes — e até 2026-09-12 esta
-tabela as chamava de `showCloseButtonContent` e `showCloseButtonFooter`, que não
-são props de stack nenhuma.** Medido nas cinco em 2026-09-12: react, vue, svelte
-e angular declaram `showCloseButton` no Content (padrão `true`) e outro
+**São duas props com o MESMO nome, em peças diferentes.** React, vue, svelte e
+angular declaram `showCloseButton` no Content (padrão `true`) e outro
 `showCloseButton` no Footer (padrão `false`); o vanilla tem um só, em
 `DialogOptions`, porque ali o rodapé é a opção `footer`, que recebe os botões
 **já montados** por quem compõe — não há peça de rodapé para pendurar um botão
-de fechar próprio (D9). Os dois nomes longos existem, e é daí que a confusão
-vinha: são as CHAVES do conteúdo compartilhado
+de fechar próprio (D9). Os nomes longos `showCloseButtonContent` e
+`showCloseButtonFooter` não são props de stack nenhuma: são as CHAVES do conteúdo compartilhado
 (`props.table.showCloseButtonContent` e `.showCloseButtonFooter` em
 `docs/shared/content/dialog/translations.json`), que precisam ser distintas
 porque a tabela da docs page é plana e as duas linhas moram na mesma lista. Chave
 de conteúdo vestida de nome de prop leva quem lê a escrever uma prop que nenhuma
 stack aceita — e `tsc` não reprova o que ninguém escreveu ainda.
 
-`closeLabel` existia só no Angular e foi levado a react, vue e svelte em
-2026-09-07, com o mesmo default (`'Fechar'`), de modo que nenhum call site
-existente muda. Antes disso o literal ficava cravado DENTRO do primitivo, e quem
-consumisse em outro idioma tinha de reescrever o componente.
-
-**O vanilla ficou de fora naquela passagem, e foi fechado em 2026-09-08.** Ele
-cravava `'Fechar'` em dois pontos — o `aria-label` do botão e o `.nds-sr-only`
-dentro dele —, exatamente o defeito que a regularização existia para corrigir,
-sobrevivendo na stack que é a referência de contrato da casa.
-
-**Por que passou**: a §7 afirmava "regularizado nas cinco" quando eram quatro. O
-commit que fez o trabalho tocou react, vue e svelte, e o texto contou o Angular
-(que já tinha) sem conferir o vanilla (que não). Afirmação de cobertura escrita
-a partir do que a passagem FEZ, e não do que ela DEIXOU — some quem nunca entrou
-na lista. É a mesma forma do `source-snippets.test.ts`, que encolheu em silêncio
-quando 28 exports saíram da varredura.
+`closeLabel` existe nas cinco desde 2026-09-08, com o mesmo default (`'Fechar'`).
+Antes o literal ficava cravado DENTRO do primitivo, e quem consumisse em outro
+idioma tinha de reescrever o componente. A passagem de 2026-09-07 declarou
+"regularizado nas cinco" tendo tocado três stacks e contado o angular, que já
+tinha — o vanilla, que não tinha, só entrou no dia seguinte. A prop existir não
+garante que a docs page a use: a do vanilla não passa `closeLabel`
+(inconsistência 23).
 
 **Conferidos junto, e os três estão certos**: o `sheet.ts` do vanilla já tinha
 `closeLabel`; o `drawer` não gera botão de fechar em stack nenhuma — delega a
@@ -429,22 +412,23 @@ O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `
 para quem importa o namespace inteiro. As stories usam a forma longa.
 
 **A peça que diz por que o painel fechou também é do componente**, e desde
-2026-09-12 as cinco a têm ao lado do primitivo, exportada pelo mesmo índice das
-peças. Antes disso, três stacks deduziam o motivo DENTRO da docs page, onde a
-dedução não tinha teste e cada página fazia à sua maneira:
+2026-09-12 as cinco a têm ao lado do primitivo. Antes disso, três stacks deduziam
+o motivo DENTRO da docs page, onde a dedução não tinha teste e cada página fazia
+à sua maneira:
 
-| stack | peça | forma |
-|---|---|---|
-| react | `ui/dialog-close-reason.ts` | traduz — a base-ui publica o motivo em `eventDetails.reason` |
-| angular | `ui/dialog-close-reason.ts` | traduz — o radix-ng publica `RdxDialogOpenChangeReason`, que tem oito palavras contra as nossas quatro |
-| vanilla | a própria fábrica, em `onClose(reason)` | sabe de primeira mão: é ela que fecha |
-| vue | `ui/dialog/dialog.close-reason.ts` | OBSERVA o gesto: a reka-ui não publica motivo |
-| svelte | `ui/dialog/close-reason.ts` | observa o gesto: a bits-ui também não publica |
+| stack | peça | forma | exportada por | como se marca a confirmação |
+|---|---|---|---|---|
+| react | `ui/dialog-close-reason.ts` | traduz — a base-ui publica o motivo em `eventDetails.reason` | o próprio arquivo; `dialog.tsx` **não** a reexporta | `markConfirmation()`, estado de módulo consumido na leitura seguinte |
+| angular | `ui/dialog-close-reason.ts` | traduz — o radix-ng publica `RdxDialogOpenChangeReason`, que tem oito palavras contra as nossas quatro; o mesmo arquivo traz `alertDialogCloseReason` | reexportada por `dialog.ts:467` | parâmetro `hints.confirmed` |
+| vanilla | a própria fábrica, em `onClose(reason)` | sabe de primeira mão: é ela que fecha | `DialogCloseReason` em `dialog.ts:77` | `close()` informa `api` |
+| vue | `ui/dialog/dialog.close-reason.ts` | OBSERVA o gesto: a reka-ui não publica motivo | `index.ts:10-17`, com `createDialogCloseWatch` e `DIALOG_CLOSE_SLOT` | gesto `confirm` anotado por quem chama |
+| svelte | `ui/dialog/close-reason.ts` | observa o gesto: a bits-ui também não publica | `index.ts:15-21`, com `createDialogCloseWatch` | `markConfirmation()` do objeto devolvido |
 
-Quem marca a CONFIRMAÇÃO continua sendo a página — é ela que sabe que a pessoa
-decidiu —, e a marca vence o motivo da lib, porque a ação e o cancelar são as
-duas partes de fechar e a lib entrega a mesma palavra para as duas. O que saiu da
-página foi a tradução. Portão: `motivo_sintetizado_na_docs_page`.
+Quem marca a CONFIRMAÇÃO é a página — é ela que sabe que a pessoa decidiu —, e a
+marca vence o motivo da lib, porque a ação e o cancelar são as duas partes de
+fechar e a lib entrega a mesma palavra para as duas. O que saiu da página foi a
+tradução. Portão: `motivo_sintetizado_na_docs_page`. **A marca existe nas cinco e
+só duas páginas a chamam** — ver inconsistência 24.
 
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
@@ -503,6 +487,260 @@ resolvendo NELE, com o nome acessível saindo do seu texto. Os dois defeitos que
 ela existe para pegar foram plantados e reprovaram nas cinco: trocar a tag
 mantendo o vínculo, e manter a tag rompendo o vínculo.
 
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Medidas arquivo a arquivo no primitivo, nas quatro stories, nas fixtures, nos
+testes de motivo e de snippet, e na docs page das cinco stacks. Caminhos curtos:
+`ui/` é `src/components/ui/` (vue e svelte em `ui/dialog/`), `docs/` é
+`src/components/docs/`. "var", "st" e "comp" são os arquivos
+`dialog-variants`, `dialog-states` e `dialog-compositions.stories`.
+
+**Markup e comportamento do primitivo**
+
+1. **Forma do X do canto.** vanilla `ui/dialog.ts:356-375` e angular
+   `ui/dialog.ts:276-291`: `<button class="nds-dialog-close">` com SVG à mão,
+   afastado 16px. react `ui/dialog.tsx:144-156`, vue `DialogContent.vue:62-75`,
+   svelte `dialog-content.svelte:73-80`: `Button` ghost `icon-sm` +
+   `.nds-dialog-close-position`, afastado 8px. Maioria (3): composta; a
+   referência (vanilla) e o angular usam a forma pura. A maioria não inclui a
+   referência — decisão da dona.
+2. **`data-slot="dialog-close"` nos fechadores que não são o X.** O contrato do
+   vanilla é que todo `[data-slot="dialog-close"]` dentro do painel fecha
+   (`ui/dialog.ts:311-314`), e o vue reusa o seletor para observar o motivo
+   (`DIALOG_CLOSE_SLOT`, `dialog.close-reason.ts:83`). O fechar do rodapé
+   (`showCloseButton` do Footer) leva o slot só no vue (`DialogFooter.vue:60-68`);
+   não leva em react (`ui/dialog.tsx:221-225`), svelte
+   (`dialog-footer.svelte:62-66`) nem angular (`ui/dialog.ts:424`). A peça avulsa
+   de fechar leva o slot em react (`ui/dialog.tsx:94-96`), vue
+   (`DialogClose.vue:10`) e svelte (`dialog-close.svelte:11`), e não no angular
+   (`NdsDialogClose`, `ui/dialog.ts:457-462`, que declara o motivo: disputa de
+   host binding com o `NdsButton`). Maioria (3) sem slot no fechar do rodapé;
+   a referência pede o slot.
+3. **Elemento raiz `data-slot="dialog"`.** Existe no vanilla (`<div>` em volta do
+   gatilho, `ui/dialog.ts:249-259`) e no angular (`div[ndsDialog]`,
+   `ui/dialog.ts:106-119`). React (`ui/dialog.tsx:61`) e vue (`Dialog.vue:33`)
+   passam o atributo a uma raiz de lib que não renderiza elemento; o svelte nem
+   o declara (`dialog.svelte:40`). Divergência de lib (raiz sem elemento) —
+   registrar, não alinhar.
+4. **`dialog-body` como peça.** Vanilla cria o corpo (`ui/dialog.ts:338-341`) e
+   angular tem `div[ndsDialogBody]` (`ui/dialog.ts:370-378`); react, vue e svelte
+   não têm peça, e cada story ou docs page escreve `class="nds-dialog-body"` à mão
+   — ou esquece: o corpo rolável da docs page do vanilla sai com
+   `nds-dialog-body-scroll` sem `nds-dialog-body` (`docs/DialogDocs.ts:649`).
+   Maioria (3) sem peça; referência e angular com. Decisão da dona.
+5. **Atributo de estado e animação de saída.** `data-state` no vanilla
+   (`ui/dialog.ts:277,295`), vue (reka `DialogContentImpl.js:86`), svelte (bits
+   `dialog.svelte.js:90`) e angular (escrito pelo wrapper, `ui/dialog.ts:201,257`,
+   além do `data-open`/`data-closed` da lib); o react só tem
+   `data-open`/`data-closed` (base-ui `utils/popupStateMapping.js`). A folha anima a
+   saída só em `[data-closed]` (`dialog.css:240-246`), então a SAÍDA anima em
+   react e angular e não anima em vue, svelte e vanilla (este remove no mesmo
+   quadro, `ui/dialog.ts:411-422`, por decisão escrita em 66-69). Maioria (3),
+   com a referência: sem animação de saída — contra o que o conteúdo publica em
+   `states.closing`. Decisão da dona.
+6. **Tag do título e da descrição no svelte.** O bits renderiza `<div
+   role="heading" aria-level>` no título e `<div>` na descrição
+   (`bits-ui/dist/bits/dialog/components/dialog-title.svelte:33`,
+   `dialog-description.svelte:31`). As outras quatro saem `h2` e `p` (base-ui
+   `DialogTitle.js:30` e `DialogDescription.js:30`; reka `DialogTitle.js:17` e
+   `DialogDescription.js:17`; vanilla `ui/dialog.ts:323,330`; angular por seletor,
+   `ui/dialog.ts:338,353`). O título tem saída pelo snippet `child` (acima); a
+   descrição não usa esse recurso em ponto nenhum. Maioria (4): `p`.
+7. **Nome de fallback em inglês no vue.** `DialogContent.vue:57` escreve
+   `aria-label: 'Dialog'` quando `$attrs['aria-labelledby']` falta — e ele sempre
+   falta, porque a reka liga `aria-labelledby` pelo contexto e não pelos atributos
+   de quem consome. É a premissa medida e RETIRADA no AlertDialog do vue em
+   2026-09-10 (`PATCHES.md`, `#vue-alert-dialog-fallback-label`). Nenhuma das
+   outras quatro emite nome de fallback. Maioria (4), com a referência: sem.
+8. **Modalidade e estado inicial.** `modal` existe em react (`ui/dialog.tsx:56-63`,
+   e o `aria-modal` segue o modo em 139), vue (`DialogContent.vue:48-49`) e angular
+   (`ui/dialog.ts:112`); svelte emite `aria-modal="true"` sempre (bits
+   `dialog.svelte.js:266`) sem prop, e vanilla sempre (`ui/dialog.ts:291`) sem
+   opção. `disablePointerDismissal` é input exposto só no angular
+   (`ui/dialog.ts:112`) e prop repassada à base-ui no react. `defaultOpen` falta no
+   svelte (a raiz do bits só tem `open` bindável) e no vanilla (verbos). Divergência
+   de API — registrar, não alinhar (tabela da §7).
+9. **Forma da peça de motivo.** React marca a confirmação por estado de módulo
+   (`dialog-close-reason.ts:26-30`), angular por parâmetro `hints.confirmed`
+   (`dialog-close-reason.ts:66-70`), vue por gesto `confirm` anotado por quem chama
+   (`dialog.close-reason.ts:44-49`), svelte por objeto com `markConfirmation()` e
+   precedência do ÚLTIMO gesto (`close-reason.ts:107-132`). Só o svelte acrescenta
+   prop ao primitivo para isso — `onClosePress` no Content e no Footer
+   (`dialog-content.svelte:37`, `dialog-footer.svelte:28`). Divergência de API
+   imposta pela lib — registrar, não alinhar.
+10. **Escape com dois painéis abertos.** O vanilla pendura um `keydown` no
+    DOCUMENTO por instância (`ui/dialog.ts:394`, tratado em 432-437), então um
+    Escape fecha TODOS os painéis abertos de uma vez. As quatro libs fecham só o de
+    cima (react `ui/dialog.tsx:17-18`, `escapeKey: isTopmost`; angular
+    `ui/dialog.ts:40-41`; reka e bits por camada de escape). Maioria (4): só o do
+    topo; a referência diverge. Nenhuma story monta painel aninhado.
+11. **Lista de focáveis do vanilla.** `getFocusable` (`ui/dialog.ts:199`) filtra
+    `button:not([disabled])`, mas não `textarea`, `input` nem `select`
+    desabilitados — o foco inicial e o laço do Tab podem mirar um campo que não
+    recebe foco. As libs usam a própria noção de tabulável. Maioria (4).
+
+**Stories e asserções**
+
+12. **`States/Controlled` não tem a mesma forma.** Sem gatilho, aberto por botão
+    externo: react (`st:296-314`), vue (`st:333-385`) e vanilla (`st:265-292`,
+    por `open()`, afirmando que a fábrica não monta gatilho). Com gatilho e
+    `open` ligado: svelte (`st:182-207`) e angular (`st:236-254`). Só o vue
+    afirma motivos (`[escape, close-button, api]`), só o angular afirma o retorno
+    do foco, e o svelte não tem espião de estado. Maioria (3), com a referência:
+    sem gatilho.
+13. **Rolagem travada e resto da página inerte.** `body` com `overflow: hidden`
+    e restaurado ao fechar só no `Playground` do vanilla (`dialog.stories.ts:197,232`)
+    — a metade "a rolagem é restaurada" da C5 não tem portão em quatro stacks.
+    `inert`/`aria-hidden` fora do painel só em react (`dialog.stories.tsx:167`) e
+    vue (`dialog.stories.ts:185`). Movimento reduzido: nenhuma das cinco.
+14. **D10 no vue e `button.form`.** O vue põe o rodapé FORA do `<form>` em
+    `WithForm` (`var:178-193`) e `ProfileEdit` (`comp:100-119`). `submit.form ===
+    form` é afirmado em `WithForm` no svelte (`var:166`), vanilla (`var:254`) e
+    angular (`var:209`), e em `ProfileEdit` só no vanilla (`comp:133`); react e vue
+    não o afirmam em story nenhuma. Maioria (3), com a referência: rodapé dentro
+    do form e `button.form` afirmado.
+15. **Motivo de fechamento afirmado em story.** svelte `Playground`
+    (`dialog.stories.ts:178,191,203,218`), vanilla `Playground`
+    (`dialog.stories.ts:223,240,252,272,275-283`) e vue `Controlled`. React e
+    angular não afirmam motivo em story nenhuma — só no teste unitário. Nos
+    testes unitários, o angular cobre `swipe` (`dialog-close-reason.test.ts:9-22`)
+    e o react não (`dialog-close-reason.test.ts:9-21`); o vanilla não tem teste
+    unitário de motivo, só as stories e a `ListenerCleanup`.
+16. **Asserções que faltam em uma ou duas stacks.** `aria-expanded` falta no
+    `Playground` do react; `data-state` só é afirmado no `Playground` e na `Open`
+    de vue, vanilla e angular; `role="dialog"` falta na `Open` do svelte e do
+    angular (`st:103-112`, `st:137-145`), e o angular também não afirma
+    `aria-modal` nem nome ali; a fixture do angular não confere nome acessível
+    (`dialog.fixtures.ts:160-171`) e a do vanilla confere por classe, não por
+    `data-slot` (`dialog.fixtures.ts:116,120`); o Cancelar do `Playground` do
+    vanilla não confere o retorno do foco. `States/ListenerCleanup` existe só no
+    vanilla (`st:305-361`) — mecânica de fábrica sem par nas libs, a declarar.
+    `parameters.actions.disable` falta no meta de `comp` do react e em todos os
+    metas do angular (só a `HeadingH3` o põe, `var:553`).
+17. **D9 afirmada com granularidades diferentes.** Em `CustomCloseInFooter`,
+    contagem de três botões só em react (`var:497`) e svelte (`var:354`); variante
+    `ghost` do fechar em react, svelte e angular; variante do Voltar só em react e
+    svelte; o vue confere só a ordem dos textos (`var:467`). Em `Default`, as cinco
+    conferem só que o primário é o último.
+18. **Cancelar inerte na story do vanilla.** `Compositions/ProfileEdit` monta o
+    rodapé à mão dentro do form (`comp:84-86`) sem `data-slot="dialog-close"` no
+    Cancelar, e a fábrica só fecha por esse slot (`ui/dialog.ts:311-314`). Nas
+    outras quatro o Cancelar é a peça de fechar da lib. Nenhum passo clica nele.
+19. **Cenário e literais das stories.** `ConfirmEmail` conta duas histórias:
+    texto informativo com `maria@exemplo.com` em react, vanilla e angular; campo
+    de e-mail com rótulo literal em vue e svelte. `WithForm`: `samplePersonName`
+    em react e svelte; literais em vue (`var:176-187`, "Juliana Mucci"), vanilla
+    ("Maria Souza") e angular (`var:161,165`, "Ana Ribeiro"). `WithCloseButtonHidden`:
+    cenário próprio cravado no vue (`st:207-218`) e no vanilla (`st:169-171`).
+    `ProfileEdit`: campos literais no vue e no vanilla. `WithScrollContent`: gatilho
+    literal no react (`var:239`) e no vanilla (`var:303,307`). Maioria em cada
+    caso: chaves do conteúdo compartilhado.
+
+**Docs page**
+
+20. **Botões da docs page do vanilla que fecham ou não fecham ao contrário das
+    outras quatro.** Em `custom-close-in-footer` o Voltar entra como `cancelLabel`
+    e recebe `data-slot="dialog-close"` (`docs/DialogDocs.ts:121-125,754`), então
+    FECHA e relata `close-button`; nas outras quatro o Voltar não fecha. Em
+    `scroll-content` o Recusar não leva o slot (`docs/DialogDocs.ts:665-668`) e não
+    faz nada; nas outras quatro é a peça de fechar.
+21. **Literais onde a maioria lê chave.** Gatilho da rolagem: "Ver termos" no
+    react (`docs/DialogDocs.tsx:827`), "Ler termos" no vanilla
+    (`docs/DialogDocs.ts:643`). Gatilho destrutivo "Remover" no react (919) e ação
+    destrutiva "Remover" no vanilla (712). Cancelar do `pair1-dont` "Não" no react
+    (701). Ação do `pair2-dont` "Excluir" no react (755) e no vanilla (471).
+    Descrições do Do & Don't literais no vue e no vanilla. Gatilho de
+    `confirm-email`: `confirmEmailTitle` em vue, svelte e angular,
+    `confirmEmailAction` em react e vanilla; descrição e corpo literais nas quatro
+    e chave de override no angular. Gatilho de `media-preview` em três redações.
+    A tabela de props do vanilla tem descrições literais em português
+    (`docs/DialogDocs.ts:986-1017`).
+22. **Estrutura da página.** `variants.note` não é passado no react. O angular
+    cria OITO chaves de override que não existem no conteúdo compartilhado
+    (`docs/DialogDocs.ts:78-127`: `confirmEmailDescription`, `confirmEmailBody`,
+    `coverAlt`, `import.withScroll`, `props.table.modal`, `closeLabel`,
+    `escapeKeyDown`, `pointerDownOutside`), omite `notes.tip1`/`tip3`
+    (1457-1458), é o único a renderizar `aria.*`, `screenReader.*` e as descrições
+    de `testes`, não passa `breadcrumb` ao SEO e não mostra o "quando usar" de
+    `confirmEmail` (1191-1197). O texto do override `props.table.closeLabel` do
+    react difere do de vue, svelte e angular; o vanilla não tem override. Tabela de
+    props: o vue não tem a linha `children` na raiz, o vanilla não tem `closeLabel`
+    nem o `showCloseButton` do Footer, o angular acrescenta `modal`,
+    `escapeKeyDown` e `pointerDownOutside`. Ordem do teclado: Escape primeiro em
+    react, vanilla e angular; por último em vue e svelte.
+23. **`closeLabel` na docs page.** React, vue, svelte e angular passam
+    `demonstration.labels.close` ao X; a docs page do vanilla não passa `closeLabel`
+    a nenhum `createDialog`, e o X sai "Fechar" em inglês e espanhol. Maioria (4).
+24. **A ação primária fecha o painel, e quem marca a confirmação.** Nas docs
+    pages de react (`docs/DialogDocs.tsx:227`), vue (`docs/DialogDocs.vue:673`),
+    svelte (`docs/DialogDocs.svelte:417`) e vanilla (`docs/DialogDocs.ts:127-136`)
+    a primária NÃO é peça de fechar — só dispara `dialog_action`. Na demonstração do
+    angular ela é `ndsDialogClose type="submit"` (`docs/DialogDocs.ts:847`) e marca
+    `confirmed` antes (1074), saindo `api`. A marca: react tem `markConfirmation()`
+    sem call site; svelte idem (`close-reason.ts:122`); vue anota `confirm`
+    (`docs/DialogDocs.vue:237`) sem efeito, pois nada fecha pela primária. Nas
+    stories a primária fecha no `Playground` do vanilla e na `Controlled` do vue.
+    Maioria (4), com a referência: na docs page a primária não fecha. Decisão da
+    dona.
+25. **Momento do `dialog_action` na prévia com formulário.** No `submit` do form
+    em react (`docs/DialogDocs.tsx:250`) e vue (`docs/DialogDocs.vue:947`); no
+    clique do botão em svelte (`docs/DialogDocs.svelte:700`), vanilla
+    (`docs/DialogDocs.ts:229-241`) e angular (`docs/DialogDocs.ts:569`). Maioria
+    (3), com a referência: clique. Decisão da dona (o `submit` conta também o Enter
+    que a D10 existe para garantir).
+26. **Demonstração.** O react monta dois painéis (`docs/DialogDocs.tsx:506-530`);
+    as outras quatro, um. O gatilho é `outline` em react, vanilla e angular e
+    `default` em vue e svelte. Só o angular monta a demonstração com `<form>` e
+    campos, com valores literais (`docs/DialogDocs.ts:986-987`). Maioria (4), com a
+    referência: um painel, sem form.
+27. **Snippet do painel Code que não bate com a prévia.** No react a variante
+    `withScrollContent` não tem `code` (`docs/DialogDocs.tsx:816-879`); no vue as
+    variantes de rolagem e destrutiva publicam `codeDefault`
+    (`docs/DialogDocs.vue:410,412`). Svelte, vanilla e angular publicam o snippet
+    da própria variante.
+
+**Construtores de snippet**
+
+28. **Conjunto e nomes dos construtores.** O react não tem construtor de
+    `ConfirmEmail`; o svelte não tem os de `Open`, `WithCloseButtonHidden` e
+    `Controlled`; o vanilla tem construtores genéricos por opção
+    (`dialogSnippet`, `dialogSourceWith`). Os nomes misturam idiomas: react
+    `dialogPerfilSource`, `dialogWithMidiaSource`; vue e svelte
+    `dialogConfirmarEmailSource`, `dialogEditarPerfilSource`,
+    `dialogPreviaDeMidiaSource`; angular em inglês (`dialogConfirmEmailSource`,
+    `dialogProfileEditSource`, `dialogMediaPreviewSource`). A varredura "todo
+    construtor exportado entra no teste" existe dentro do próprio
+    `dialog.source.test.ts` só no vue (298) e no angular (272). Nome de export é
+    API de framework — registrar; o conjunto faltante não é.
+
+### Pendências
+
+Não havia pendência no formato fixo neste arquivo antes de 2026-09-15.
+
+> **PENDÊNCIA · 2026-09-15** — o vue ainda tem o submit órfão da D10 em `Variants/WithForm` e `Compositions/ProfileEdit`, e react e vue não afirmam `button.form` em story nenhuma (inconsistência 14).
+> **Fecha quando**: nas duas stories do vue o `DialogFooter` está dentro do `<form>`, e a `WithForm` de react e vue afirma `submit.form === form`.
+
+> **PENDÊNCIA · 2026-09-15** — botões da referência que fecham ou não fecham ao contrário das outras quatro: Voltar que fecha e Recusar inerte na docs page do vanilla, Cancelar inerte na `ProfileEdit` do vanilla (inconsistências 18 e 20).
+> **Fecha quando**: o Voltar de `custom-close-in-footer` não leva `data-slot="dialog-close"`, e o Recusar de `scroll-content` e o Cancelar da `ProfileEdit` levam.
+
+> **PENDÊNCIA · 2026-09-15** — `DialogContent.vue` emite `aria-label="Dialog"` em inglês em todo painel, pela premissa já refutada no AlertDialog (inconsistência 7).
+> **Fecha quando**: `DialogContent.vue` não escreve `aria-label` de fallback.
+
+> **PENDÊNCIA · 2026-09-15** — a C5 ("a rolagem é restaurada") só tem portão no vanilla, e a C7 não tem portão para `role="group"` em stack nenhuma (inconsistência 13).
+> **Fecha quando**: o `Playground` das cinco afirma `overflow` travado e restaurado, e a `WithScrollContent` das cinco afirma `role="group"`.
+
+> **PENDÊNCIA · 2026-09-15** — três alinhamentos em que a maioria não inclui a referência, ou em que a referência contradiz o conteúdo publicado: forma do X do canto (1), peça `dialog-body` (4) e animação de saída (5).
+> **Fecha quando**: a dona decide cada uma e a decisão entra como D na §3.
+
+> **PENDÊNCIA · 2026-09-15** — no vanilla um Escape fecha todos os painéis abertos, e a lista de focáveis aceita campo desabilitado (inconsistências 10 e 11).
+> **Fecha quando**: `ui/dialog.ts` do vanilla só fecha o painel do topo no Escape e filtra `textarea`, `input` e `select` desabilitados.
+
+> **PENDÊNCIA · 2026-09-15** — fechar pela ação primária e o momento do `dialog_action` diferem entre as docs pages, e a marca de confirmação existe sem call site em react e svelte (inconsistências 24 e 25).
+> **Fecha quando**: a dona decide se a primária fecha na docs page e se a ação conta no clique ou no `submit`, e as cinco páginas seguem a decisão.
+
+> **PENDÊNCIA · 2026-09-15** — docs pages divergentes em conteúdo: literais onde a maioria lê chave, `closeLabel` ausente no vanilla, segundo painel na demonstração do react, snippets que não batem com a prévia no react e no vue, overrides do angular sem chave compartilhada (inconsistências 21, 22, 23, 26 e 27).
+> **Fecha quando**: as cinco docs pages leem as mesmas chaves para cada prévia, montam um painel na demonstração e publicam o snippet da própria variante.
+
 ## 8. Acessibilidade
 
 **Atributos**: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` e
@@ -517,10 +755,13 @@ ação do rodapé; ao fechar, o foco volta ao gatilho.
   confirmar;
 - não se deixa o corpo rolável sem o trio de atributos (D7).
 
-**Movimento reduzido** — a §5 e a §6 dizem que a entrada e a saída somem, e é verdade. Quem o para é a camada de TOKEN: a folha
-declara duração só por `var(--duration-*)`, e `docs/shared/tokens/motion.css`
-zera a escada inteira sob a preferência. O mecanismo está por extenso em
-`hover-card.md` §8.
+**Movimento reduzido** — a §5 e a §6 dizem que a entrada e a saída param, e há
+DUAS portas fazendo isso. A camada de token: a folha declara duração só por
+`var(--duration-*)`, e `docs/shared/tokens/motion.css:102` zera a escada inteira
+sob a preferência (mecanismo por extenso em `hover-card.md` §8). E a própria
+folha: `dialog.css:293-298` declara `animation: none` no véu e no painel sob
+`prefers-reduced-motion`. Nenhuma story das cinco stacks afirma o movimento
+reduzido.
 
 ## 9. Analytics
 
@@ -530,16 +771,11 @@ zera a escada inteira sob a preferência. O mecanismo está por extenso em
 | `dialog_close` | fecha | `{ component: "dialog", trigger_id, location, reason }` |
 | `dialog_action` | clique na ação primária do rodapé | `{ component: "dialog", action_label, location }` |
 
-**Até 2026-09-12 esta tabela tinha duas linhas, e o componente disparava três.**
-Medido nas cinco em 2026-09-12: `dialog_action` está tipado em todas as cinco
-`analytics.ts` e é disparado pelas cinco docs pages (`DialogDocs.*`), e a tabela
-`analytics.table` do conteúdo compartilhado o documenta desde 2026-04-29
-(`2c9115827`, a primeira gravação do conteúdo deste slug) — evento que
-existe no tipo, no call site e no conteúdo, e faltava só no documento que se
-propõe a descrever o componente. Nenhum portão via: o `event_not_typed` do
-`audit.mjs` cobra o caminho contrário — evento disparado que a `analytics.ts` não
-declara — e a tabela deste arquivo não é lida por regra nenhuma. Falta de linha
-em PRD é ausência, e ausência não tem quem a acuse.
+`dialog_action` está tipado nas cinco `analytics.ts`, é disparado pelas cinco
+docs pages e documentado em `analytics.table` do conteúdo compartilhado. **O
+momento do disparo não é o mesmo nas cinco** na prévia com formulário: no
+`submit` do form em react e vue, no clique do botão em svelte, vanilla e angular
+(inconsistência 25).
 
 **Ele é o ÚNICO dos três que não leva `trigger_id`**, e a diferença é de
 pergunta: `dialog_open` e `dialog_close` respondem "qual painel", e o
@@ -575,10 +811,9 @@ Até 2026-09-10 este evento dizia `action` onde o drawer e o popover diziam
 e o Dialog e o AlertDialog do Vue e do Svelte não mandavam motivo nenhum — a lib
 deles não publica, e a docs page não o deduzia. A dona decidiu por `api`, e as
 cinco passaram a mandar o campo nos três componentes que usam este evento. Onde
-a lib não publica motivo, a docs page o anota pelos eventos de `Escape` e de
-clique fora do conteúdo, e marca a confirmação ANTES de o painel fechar — a ação
-e o cancelar são partes de fechar da lib, e sem a marca "confirmou" chegaria ao
-relatório como "apertou o botão de fechar". Portão: `reason_vocabulario_divergente`.
+a lib não publica motivo (vue, svelte), a peça de motivo ao lado do primitivo
+(§7) observa `Escape`, clique fora, foco que escapa e o clique em controle de
+fechar, e a docs page só repassa a palavra. Portão: `reason_vocabulario_divergente`.
 
 **Desmontar não é fechar** (2026-09-12). Sair da página com o painel aberto —
 troca de story, desmonte de docs page, troca de idioma, que refaz as seções —
@@ -630,11 +865,12 @@ união, o `npm run build` reprovou exatamente esses pontos, e mais um
 | Variantes | `basic` · `with-form` · `scroll-content` · `no-footer` · `destructive` · `custom-close-in-footer` · `confirm-email` | `docs_variantes` |
 | Composições | `profile-edit` · `media-preview` | `docs_composicoes` |
 
-Até 2026-09-10 metade disso não existia: a prévia de rolagem, a sem rodapé e
-as duas composições abriam sem deixar rastro no vanilla, e a de fechar próprio
-mandava `scroll-content` — o nome da de rolagem. Três stacks copiaram a troca, a
-quarta pôs o id no lugar certo e deixou a outra muda. A série `scroll-content`
-anterior a essa data é a do guia com "Fechar" próprio, não a de rolagem.
+Reconferido em 2026-09-15: ids e `location` iguais nas cinco. A única prévia a
+mais é do react, que monta um SEGUNDO painel na demonstração com
+`trigger_id: with-form` e `location: docs_demo` (`DialogDocs.tsx:524-530`) —
+inconsistência 26. **Para ler a série histórica**: antes de 2026-09-10 a prévia de
+fechar próprio mandava `scroll-content`, então a série `scroll-content` anterior
+a essa data é a do guia com "Fechar" próprio, não a de rolagem.
 
 **O campo passou de `label` a `trigger_id` em 2026-09-09**, por decisão da dona,
 e junto foi um defeito de dados que o nome escondia. No vanilla o payload mandava
@@ -667,8 +903,10 @@ Ordem: folha → primitivo → cabeçalho, corpo e rodapé → botão de fechar 
 - **No vanilla, o ícone de fechar é montado nó a nó** (`createElementNS`), e não
   por `innerHTML` com a string do SVG: é a regra de XSS da casa
   (`09-seguranca-xss.md`, portão que varre `.innerHTML =` no vanilla), e o que
-  a protege é o dia em que o ícone vier do conteúdo em vez de um literal. Nas
-  outras quatro o ícone vem do `lucide`, e a pergunta não se coloca.
+  a protege é o dia em que o ícone vier do conteúdo em vez de um literal. No
+  angular o SVG também é escrito à mão, mas no template do `NdsDialogContent`
+  (`dialog.ts:277-289`), onde não há `innerHTML`; em react, vue e svelte o ícone
+  vem do `lucide`, e a pergunta não se coloca.
 
 ## 11. Onde está a verdade
 
