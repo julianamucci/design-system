@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { CheckCircle2, Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Badge, BadgeCounter } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  badgeAsButtonSnippet,
+  badgeAsLinkSnippet,
+  badgeWithCounterSnippet,
+  badgeWithIconSnippet,
+} from "@/components/ui/badge.source";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -34,6 +41,19 @@ const priorityKeyMap: Record<string, string> = {
   medium: "common.medium",
   low: "common.low",
 };
+
+type TestGroup = keyof (typeof badgeTranslations)["pt-BR"]["testes"];
+
+/**
+ * Índices dos itens de um grupo de testes, DERIVADOS do dicionário. Lista
+ * literal (`[1, 2, 3, 4]`) é o que deixava a página renderizar 4 de 7 quando o
+ * conteúdo ganhava item: o dicionário cresce e a página acompanha sozinha.
+ */
+const testItemIndexes = (group: TestGroup): number[] =>
+  Object.keys(badgeTranslations["pt-BR"].testes[group])
+    .filter((key) => /^item\d+$/.test(key))
+    .map((key) => Number(key.slice("item".length)))
+    .sort((a, b) => a - b);
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -115,17 +135,28 @@ export function BadgeDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  // ─── Rótulos ────────────────────────────────────────────────────────────────
+
+  const labelDefault = tContent("demonstration.labels.defaultLabel");
+  const labelDestructive = tContent("demonstration.labels.destructiveLabel");
+  const labelWarning = tContent("demonstration.labels.warningLabel");
+  const labelSuccess = tContent("demonstration.labels.successLabel");
+  const labelInfo = tContent("demonstration.labels.infoLabel");
+  const labelStatus = tContent("demonstration.labels.statusLabel");
+  const labelCategory = tContent("demonstration.labels.categoryLabel");
+  const labelCategoryFilter = tContent("demonstration.labels.categoryFilterLabel");
+
   // ─── Code strings ───────────────────────────────────────────────────────────
 
   const codeImportBasic = `import { Badge } from "@/components/ui/badge";`;
   const codeImportWithIcon = `import { Badge } from "@/components/ui/badge";
-import { CheckCircle2 } from "lucide-react";`;
+import { Check } from "lucide-react";`;
 
-  const codeDefault = `<Badge variant="default">Novo</Badge>`;
-  const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
-  const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
-  const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
-  const codeInfo = `<Badge variant="info">Novidade</Badge>`;
+  const codeDefault = `<Badge>${labelDefault}</Badge>`;
+  const codeDestructive = `<Badge variant="destructive">${labelDestructive}</Badge>`;
+  const codeWarning = `<Badge variant="warning">${labelWarning}</Badge>`;
+  const codeSuccess = `<Badge variant="success">${labelSuccess}</Badge>`;
+  const codeInfo = `<Badge variant="info">${labelInfo}</Badge>`;
 
   const interfaceCode = `// Badge
 interface BadgeProps
@@ -166,16 +197,16 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration >
+      <DocsDemonstration componentSlug="badge">
         <div className="nds-cluster" data-spacing="sm">
-          <Badge variant="default">{tContent("demonstration.labels.defaultLabel")}</Badge>
-          <Badge variant="destructive">{tContent("demonstration.labels.destructiveLabel")}</Badge>
-          <Badge variant="warning">{tContent("demonstration.labels.warningLabel")}</Badge>
-          <Badge variant="success">{tContent("demonstration.labels.successLabel")}</Badge>
-          <Badge variant="info">{tContent("demonstration.labels.infoLabel")}</Badge>
-          <Badge variant="success">
-            <CheckCircle2 aria-hidden="true" />
-            {tContent("demonstration.labels.statusLabel")}
+          <Badge>{labelDefault}</Badge>
+          <Badge variant="destructive">{labelDestructive}</Badge>
+          <Badge variant="warning">{labelWarning}</Badge>
+          <Badge variant="success">{labelSuccess}</Badge>
+          <Badge variant="info">{labelInfo}</Badge>
+          <Badge>
+            <Check aria-hidden="true" data-icon="inline-start" />
+            {labelStatus}
           </Badge>
         </div>
       </DocsDemonstration>
@@ -272,25 +303,29 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
       />
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
+      {/* Uma etiqueta por prévia, com o texto de `doDont.previews.*`. */}
       <DocsDoDont
         pairs={[
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
-            doPreview: <Badge variant="default">Novo</Badge>,
-            dontPreview: (
-              <Badge variant="default">
-                Este item acabou de ser adicionado ao catálogo
-              </Badge>
-            ),
+            doPreview: <Badge>{tContent("doDont.previews.pair1Do")}</Badge>,
+            dontPreview: <Badge>{tContent("doDont.previews.pair1Dont")}</Badge>,
             doCaption: toPlainText(tContent("doDont.pair1.do")),
             dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
-            doPreview: <Badge variant="destructive">Expirado</Badge>,
-            dontPreview: <Badge variant="destructive">Em breve</Badge>,
+            doPreview: (
+              <Badge variant="destructive">
+                <X aria-hidden="true" data-icon="inline-start" />
+                {tContent("doDont.previews.pair2Do")}
+              </Badge>
+            ),
+            dontPreview: (
+              <Badge variant="destructive">{tContent("doDont.previews.pair2Dont")}</Badge>
+            ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
             dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
@@ -299,6 +334,7 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
+        componentSlug="badge"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withIcon")}
@@ -307,36 +343,38 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
+        componentSlug="badge"
+        note={tContent("variants.note")}
         items={[
           {
             name: "default",
             description: stripHtml(tContent("variants.items.default")),
             code: codeDefault,
-            preview: <Badge variant="default">{tContent("demonstration.labels.defaultLabel")}</Badge>,
+            preview: <Badge>{labelDefault}</Badge>,
           },
           {
             name: "destructive",
             description: stripHtml(tContent("variants.items.destructive")),
             code: codeDestructive,
-            preview: <Badge variant="destructive">{tContent("demonstration.labels.destructiveLabel")}</Badge>,
+            preview: <Badge variant="destructive">{labelDestructive}</Badge>,
           },
           {
             name: "warning",
             description: stripHtml(tContent("variants.items.warning")),
             code: codeWarning,
-            preview: <Badge variant="warning">{tContent("demonstration.labels.warningLabel")}</Badge>,
+            preview: <Badge variant="warning">{labelWarning}</Badge>,
           },
           {
             name: "success",
             description: stripHtml(tContent("variants.items.success")),
             code: codeSuccess,
-            preview: <Badge variant="success">{tContent("demonstration.labels.successLabel")}</Badge>,
+            preview: <Badge variant="success">{labelSuccess}</Badge>,
           },
           {
             name: "info",
             description: stripHtml(tContent("variants.items.info")),
             code: codeInfo,
-            preview: <Badge variant="info">{tContent("demonstration.labels.infoLabel")}</Badge>,
+            preview: <Badge variant="info">{labelInfo}</Badge>,
           },
         ]}
       />
@@ -351,11 +389,11 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             name: tContent("variants.compositions.withIcon.name"),
             description: tContent("variants.compositions.withIcon.description"),
             useWhen: tContent("variants.compositions.withIcon.use"),
-            code: `<Badge>\n  <Check aria-hidden="true" />\n  Ativo\n</Badge>`,
+            code: badgeWithIconSnippet({ label: labelStatus }),
             preview: (
               <Badge>
-                <Check aria-hidden="true" />
-                Ativo
+                <Check aria-hidden="true" data-icon="inline-start" />
+                {labelStatus}
               </Badge>
             ),
           },
@@ -366,10 +404,10 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             useWhen: tContent("variants.compositions.withCounter.use"),
             // A peça é subcomponente, não prop: qualquer variante a aceita, e o
             // conteúdo nem sempre é número puro ("99+").
-            code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
+            code: badgeWithCounterSnippet({ variant: "destructive", label: labelDestructive, count: "12" }),
             preview: (
               <Badge variant="destructive">
-                Urgente
+                {labelDestructive}
                 <BadgeCounter>12</BadgeCounter>
               </Badge>
             ),
@@ -379,19 +417,27 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             name: tContent("variants.compositions.asTrigger.name"),
             description: tContent("variants.compositions.asTrigger.description"),
             useWhen: tContent("variants.compositions.asTrigger.use"),
-            // `padding` e `border` a zero continuam inline: são o RESET do
-            // <button>, não valor de design. O que saiu foi o `display`, que a
-            // classe já dá — e é a mesma que a story usa.
-            code: `<button type="button" aria-label="Filtrar por React" className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ padding: 0, border: 0 }}>\n  <Badge variant="info">React</Badge>\n</button>`,
+            // O Button do design system faz o reset, o foco e o anel: nada de
+            // <button> cru com `style` inline.
+            code: badgeAsButtonSnippet({ label: labelCategory, accessibleName: labelCategoryFilter }),
             preview: (
-              <button
-                type="button"
-                aria-label="Filtrar por React"
-                className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent"
-                style={{ padding: 0, border: 0 }}
-              >
-                <Badge variant="info">React</Badge>
-              </button>
+              <Button variant="ghost" size="sm" aria-label={labelCategoryFilter}>
+                <Badge variant="info">{labelCategory}</Badge>
+              </Button>
+            ),
+          },
+          {
+            trackId: "asLink",
+            name: tContent("variants.compositions.asLink.name"),
+            description: tContent("variants.compositions.asLink.description"),
+            useWhen: tContent("variants.compositions.asLink.use"),
+            // A etiqueta é filha DIRETA do link: é a relação que a regra de
+            // hover da folha (`a > .nds-badge:hover`) exige.
+            code: badgeAsLinkSnippet({ label: labelCategory }),
+            preview: (
+              <a href="#">
+                <Badge variant="info">{labelCategory}</Badge>
+              </a>
             ),
           },
         ]}
@@ -430,21 +476,21 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
                 name: "variant",
                 type: '"default" | "destructive" | "warning" | "success" | "info"',
                 defaultValue: '"default"',
-                required: "Não",
+                required: tNav("common.no"),
                 description: toPlainText(tContent("props.table.variant")),
               },
               {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
-                required: "Não",
+                required: tNav("common.no"),
                 description: tContent("props.table.className"),
               },
               {
                 name: "children",
                 type: "React.ReactNode",
                 defaultValue: "—",
-                required: "Sim",
+                required: tNav("common.no"),
                 description: tContent("props.table.children"),
               },
             ],
@@ -467,8 +513,8 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           // seletor que lê. A variante mora na BORDA; fundo e texto são
           // neutros em todas elas, e a única peça preenchida é o contador.
           // `--info` não tem linha porque a folha não o lê: a variante info é
-          // pintada por `--border`. Linha com travessão só ocuparia espaço
-          // dizendo que o token não faz nada aqui.
+          // pintada por `--border`. `--ring` também não: a etiqueta não tem
+          // anel de foco — quem recebe foco é o botão ou o link que a envolve.
           { token: "--primary", value: ".nds-badge-default", description: tContent("tokens.table.primary") },
           { token: "--destructive", value: ".nds-badge-destructive", description: tContent("tokens.table.destructive") },
           { token: "--success", value: ".nds-badge-success", description: tContent("tokens.table.success") },
@@ -477,7 +523,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           { token: "--secondary", value: ".nds-badge-counter", description: tContent("tokens.table.secondary") },
           { token: "--foreground", value: ".nds-badge", description: tContent("tokens.table.foreground") },
           { token: "--background", value: ".nds-badge", description: tContent("tokens.table.background") },
-          { token: "--ring", value: ".nds-badge:focus-visible", description: tContent("tokens.table.ring") },
           { token: "--radius-badge", value: ".nds-badge", description: tContent("tokens.table.radius") },
           // As três vars internas, que é o que o override escopado alcança.
           { token: "--badge-bg", value: "hsl(var(--background))", description: tContent("tokens.table.badgeBg") },
@@ -504,10 +549,17 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           { key: "Tab",   description: stripHtml(tContent("keyboard.wrappedInButton")) },
           { key: "Enter", description: stripHtml(tContent("keyboard.wrappedInLink")) },
         ]}
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={[
+          tContent("screenReader.onRender"),
+          tContent("screenReader.onUpdate"),
+          tContent("screenReader.icons"),
+        ]}
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
+        componentSlug="badge"
         items={[
           {
             name: "Alert",
@@ -524,6 +576,7 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
+        componentSlug="badge"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -566,38 +619,11 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              action: tContent("testes.functional.item1.action"),
-              result: tContent("testes.functional.item1.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item2.action"),
-              result: tContent("testes.functional.item2.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item3.action"),
-              result: tContent("testes.functional.item3.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item4.action"),
-              result: tContent("testes.functional.item4.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item5.action"),
-              result: tContent("testes.functional.item5.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item5.priority")] ?? "common.medium"),
-            },
-            {
-              action: tContent("testes.functional.item6.action"),
-              result: tContent("testes.functional.item6.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.medium"),
-            },
-          ],
+          items: testItemIndexes("functional").map((i) => ({
+            action: tContent(`testes.functional.item${i}.action`),
+            result: tContent(`testes.functional.item${i}.result`),
+            priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.medium"),
+          })),
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
@@ -606,28 +632,11 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [
-            {
-              criterion: tContent("testes.accessibility.item1.criterion"),
-              level: tContent("testes.accessibility.item1.level"),
-              how: tContent("testes.accessibility.item1.how"),
-            },
-            {
-              criterion: tContent("testes.accessibility.item2.criterion"),
-              level: tContent("testes.accessibility.item2.level"),
-              how: tContent("testes.accessibility.item2.how"),
-            },
-            {
-              criterion: tContent("testes.accessibility.item3.criterion"),
-              level: tContent("testes.accessibility.item3.level"),
-              how: tContent("testes.accessibility.item3.how"),
-            },
-            {
-              criterion: tContent("testes.accessibility.item4.criterion"),
-              level: tContent("testes.accessibility.item4.level"),
-              how: tContent("testes.accessibility.item4.how"),
-            },
-          ],
+          items: testItemIndexes("accessibility").map((i) => ({
+            criterion: tContent(`testes.accessibility.item${i}.criterion`),
+            level: tContent(`testes.accessibility.item${i}.level`),
+            how: tContent(`testes.accessibility.item${i}.how`),
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),
@@ -635,12 +644,10 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [
-            { story: tContent("testes.visual.item1.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item1.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item2.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item2.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item3.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.medium") },
-            { story: tContent("testes.visual.item4.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium") },
-          ],
+          items: testItemIndexes("visual").map((i) => ({
+            story: tContent(`testes.visual.item${i}.story`),
+            priority: tNav(priorityKeyMap[tContent(`testes.visual.item${i}.priority`)] ?? "common.medium"),
+          })),
         }}
       />
     </DocsPageLayout>

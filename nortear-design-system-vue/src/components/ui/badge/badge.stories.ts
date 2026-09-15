@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
+import { badgeRoot } from '@shared/testing/badge-probe';
 import { Badge } from './index';
 import BadgeDocs from '@/components/docs/BadgeDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -12,6 +13,7 @@ const meta = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('badge'),
+    actions: { disable: true },
     layout: 'centered',
     docs: { page: withAutoDocsTab(BadgeDocs), source: { transform: badgeSource } },
   },
@@ -20,6 +22,7 @@ const meta = {
       control: 'select',
       options: ['default', 'destructive', 'warning', 'success', 'info'],
       description: 'Variante visual nativa do Badge',
+      table: { defaultValue: { summary: 'default' } },
     },
   },
   args: {
@@ -34,22 +37,29 @@ export const Playground: Story = {
   parameters: { covers: ['accessibility.item1', 'visual.item1'] },
   render: (args) => ({
     components: { Badge },
-    setup() { return { args }; },
-    template: `<Badge v-bind="args">Novo</Badge>`,
+    // Na variante padrão a prop NÃO é passada: a play cobra que a etiqueta
+    // declare `data-variant="default"` quando ninguém escreveu variante — era
+    // exatamente o caso que ficava sem atributo. O painel Code sai do
+    // `badgeSource`, então este andaime não vaza.
+    setup() {
+      const bound = () => (args.variant === 'default' ? {} : args);
+      return { bound };
+    },
+    template: `<Badge v-bind="bound()">Novo</Badge>`,
   }),
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
-    const badge = canvas.getByText('Novo');
+    const badge = badgeRoot(canvasElement);
+    await expect(canvas.getByText('Novo')).toBe(badge);
 
-    await step('Os controls chegam ao elemento', async () => {
+    await step('A variante chega ao DOM, mesmo quando não foi passada', async () => {
       await expect(badge).toHaveAttribute('data-slot', 'badge');
-      await expect(badge).toHaveAttribute('data-variant', String(args.variant));
+      await expect(badge).toHaveAttribute('data-variant', args.variant ?? 'default');
     });
 
     await step('É um <span>, para caber dentro de frase e célula', async () => {
       // Um <div> aqui quebra o fluxo do texto que acompanha o badge, e
-      // <div> dentro de <p> é aninhamento inválido. Só o Angular afirmava
-      // isso — e era justamente a stack que sobrava que renderizava <div>.
+      // <div> dentro de <p> é aninhamento inválido.
       await expect(badge.tagName).toBe('SPAN');
     });
 
@@ -59,6 +69,8 @@ export const Playground: Story = {
       const styles = getComputedStyle(badge);
       await expect(styles.display).toBe('inline-flex');
       await expect(styles.whiteSpace).toBe('nowrap');
+      // Etiqueta não é alvo de foco: quem precisa de interação a envolve.
+      await expect(badge.hasAttribute('tabindex')).toBe(false);
     });
 
     await step('Tipografia compacta do componente', async () => {

@@ -4,6 +4,9 @@
  * Módulo de TS puro — o `.tsx` só entra por `import type`, que o compilador
  * apaga. É o que deixa as funções rodarem no projeto `unit` do vitest, a única
  * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
+ *
+ * Um construtor por story, e o texto de cada um é o markup que a story monta:
+ * o painel é a parte da página feita para ser copiada.
  */
 import { attrs, childText, jsxSnippet, propOption, type SourceTransform } from '@/lib/story-source';
 
@@ -49,14 +52,16 @@ export function badgeDestructiveSource(): string {
 }
 
 /**
- * As três variantes semânticas juntas — a escala é o assunto da story, e um
- * badge sozinho esconderia justamente isso. A cor vem do fundo e da borda; o
- * texto fica neutro, que é o que sustenta 4.5:1 sem depender da variante.
+ * As cinco variantes juntas — a escala é o assunto da story, e um badge sozinho
+ * esconderia justamente isso. A cor vem só da borda; fundo e texto são neutros,
+ * que é o que sustenta 4.5:1 sem depender da variante.
  */
-export function badgeSemanticasSource(): string {
+export function badgeSemanticsSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-cluster" data-spacing="sm">
+  <Badge>Novo</Badge>
+  <Badge variant="destructive">Urgente</Badge>
   <Badge variant="warning">Vence hoje</Badge>
   <Badge variant="success">Aprovado</Badge>
   <Badge variant="info">Novidade</Badge>
@@ -65,19 +70,38 @@ export function badgeSemanticasSource(): string {
 }
 
 /**
+ * Opções dos construtores de composição. O padrão é o texto das stories; a
+ * docs page passa os rótulos do conteúdo, e o markup continua o mesmo do painel.
+ */
+export type BadgeCompositionSnippetOptions = {
+  variant?: BadgeArgs['variant'];
+  /** Texto da etiqueta. */
+  label?: string;
+  /** Número já formatado do contador — acima de 99, a aplicação passa `"99+"`. */
+  count?: string;
+  /** Nome acessível do botão em volta — o texto da etiqueta é curto demais para servir. */
+  accessibleName?: string;
+};
+
+/**
  * Com ícone: o ícone é reforço visual, então sai da árvore de acessibilidade e
  * quem nomeia é o texto. O respiro entre os dois é do contêiner — `data-icon`
  * encurta o padding daquele lado —, nunca uma margem no ícone.
  */
-export function badgeWithIconSource(): string {
+export function badgeWithIconSnippet(o: BadgeCompositionSnippetOptions = {}): string {
   return jsxSnippet(
     `${IMPORT}
 import { Check } from "lucide-react";`,
-    `<Badge>
+    `<Badge${attrs(propOption('variant', o.variant, VARIANTS, 'default'))}>
   <Check aria-hidden="true" data-icon="inline-start" />
-  Ativo
+  ${childText(o.label, 'Ativo')}
 </Badge>`,
   );
+}
+
+/** Transform da story WithIcon — o construtor com o texto padrão. */
+export function badgeWithIconSource(): string {
+  return badgeWithIconSnippet();
 }
 
 /**
@@ -86,30 +110,55 @@ import { Check } from "lucide-react";`,
  * próprio — e a peça é neutra de propósito, porque a cor da variante fica na
  * borda ao redor.
  */
-export function badgeWithCounterSource(): string {
+export function badgeWithCounterSnippet(o: BadgeCompositionSnippetOptions = {}): string {
   return jsxSnippet(
     'import { Badge, BadgeCounter } from "@/components/ui/badge";',
-    `<Badge variant="destructive">
-  Urgente
-  <BadgeCounter>12</BadgeCounter>
+    `<Badge${attrs(propOption('variant', o.variant ?? 'destructive', VARIANTS, 'default'))}>
+  ${childText(o.label, 'Urgente')}
+  <BadgeCounter>${childText(o.count, '12')}</BadgeCounter>
 </Badge>`,
   );
 }
 
+/** Transform da story WithCounter — o construtor com o texto padrão. */
+export function badgeWithCounterSource(): string {
+  return badgeWithCounterSnippet();
+}
+
 /**
- * Dentro de botão: o badge NÃO vira o elemento clicável. Quem recebe foco,
- * teclado e nome acessível é o botão; o badge fica decorativo dentro dele, sem
- * `tabindex` próprio para não competir pelo foco.
+ * Como gatilho: a etiqueta dentro do Button do design system, `ghost` e `sm`.
+ * Quem recebe foco, teclado, anel e nome acessível é o botão; o badge fica só
+ * com a aparência, sem `tabIndex` próprio para não competir pelo foco.
  */
+export function badgeAsButtonSnippet(o: BadgeCompositionSnippetOptions = {}): string {
+  return jsxSnippet(
+    `${IMPORT}
+import { Button } from "@/components/ui/button";`,
+    `<Button variant="ghost" size="sm" aria-label="${childText(o.accessibleName, 'Filtrar por Design')}">
+  <Badge${attrs(propOption('variant', o.variant ?? 'info', VARIANTS, 'default'))}>${childText(o.label, 'Design')}</Badge>
+</Button>`,
+  );
+}
+
+/** Transform da story AsButton — o construtor com o texto padrão. */
 export function badgeAsButtonSource(): string {
+  return badgeAsButtonSnippet();
+}
+
+/**
+ * Como link: a etiqueta é filha DIRETA do `<a>` — é essa relação que a regra de
+ * hover da folha (`a > .nds-badge:hover`) exige. Foco e Enter são do link.
+ */
+export function badgeAsLinkSnippet(o: BadgeCompositionSnippetOptions = {}): string {
   return jsxSnippet(
     IMPORT,
-    `<button
-  type="button"
-  aria-label="Filtrar por React"
-  className="nds-cluster nds-rounded-md nds-focus-ring-inset"
->
-  <Badge variant="info">React</Badge>
-</button>`,
+    `<a href="#">
+  <Badge${attrs(propOption('variant', o.variant ?? 'info', VARIANTS, 'default'))}>${childText(o.label, 'Design')}</Badge>
+</a>`,
   );
+}
+
+/** Transform da story AsLink — o construtor com o texto padrão. */
+export function badgeAsLinkSource(): string {
+  return badgeAsLinkSnippet();
 }

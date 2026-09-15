@@ -29,19 +29,26 @@ export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
     ['variant', o.variant && o.variant !== 'default' ? text(o.variant) : undefined],
     // `children` aceita texto, elemento ou a lista dos dois — é assim que ícone
     // e rótulo entram juntos, sem sub-fábrica nenhuma.
-    ['children', o.withIcon ? `[icone, ${text(label)}]` : text(label)],
+    ['children', o.withIcon ? `[icon, ${text(label)}]` : text(label)],
     ['className', o.className ? text(o.className) : undefined],
   ]);
 
+  // O ícone é construído À VISTA, com o `createElement` do próprio pacote de
+  // ícones: um snippet que chamasse um helper da docs page entregaria a quem
+  // copia uma função que ele não tem.
   return snippet(
-    importing('badge', 'createBadge'),
     o.withIcon
-      ? `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
-// O tamanho vem de \`.nds-badge > svg\` e o respiro do gap da etiqueta —
-// margem escrita à mão somaria ao gap e dobraria o espaço.`
+      ? `${importing('badge', 'createBadge')}\nimport { Check, createElement } from 'lucide';`
+      : importing('badge', 'createBadge'),
+    o.withIcon
+      ? `// Ícone decorativo: quem nomeia a etiqueta é o texto. O tamanho vem de
+// \`.nds-badge > svg\`, e \`data-icon="inline-start"\` encurta o respiro daquele lado.
+const icon = createElement(Check);
+icon.setAttribute('aria-hidden', 'true');
+icon.setAttribute('data-icon', 'inline-start');`
       : undefined,
-    `const etiqueta = ${callLine('createBadge', lines)};`,
-    appendLine('etiqueta'),
+    `const badge = ${callLine('createBadge', lines)};`,
+    appendLine('badge'),
   );
 }
 
@@ -49,23 +56,25 @@ export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
  * do Playground; nas stories sem args cai no padrão da fábrica.
  */
-export const badgeSource: SourceTransform<BadgeSnippetOptions> = (_gerado, ctx) =>
+export const badgeSource: SourceTransform<BadgeSnippetOptions> = (_generated, ctx) =>
   badgeSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function badgeSourceCom(fixas: BadgeSnippetOptions): SourceTransform<BadgeSnippetOptions> {
-  return (_gerado, ctx) => badgeSnippet({ ...ctx.args, ...fixas });
+export function badgeSourceWith(fixed: BadgeSnippetOptions): SourceTransform<BadgeSnippetOptions> {
+  return (_generated, ctx) => badgeSnippet({ ...ctx.args, ...fixed });
 }
 
 // ─── Várias etiquetas lado a lado ────────────────────────────────────────────
 
-export type BadgeGrupoItem = { variant: BadgeVariant; label: string };
+export type BadgeGroupItem = { variant: BadgeVariant; label: string };
 
-export type BadgeGrupoSnippetOptions = {
-  items?: readonly BadgeGrupoItem[];
+export type BadgeGroupSnippetOptions = {
+  items?: readonly BadgeGroupItem[];
 };
 
-const GRUPO_PADRAO: readonly BadgeGrupoItem[] = [
+const DEFAULT_GROUP: readonly BadgeGroupItem[] = [
+  { variant: 'default', label: 'Novo' },
+  { variant: 'destructive', label: 'Urgente' },
   { variant: 'warning', label: 'Vence hoje' },
   { variant: 'success', label: 'Aprovado' },
   { variant: 'info', label: 'Novidade' },
@@ -73,30 +82,34 @@ const GRUPO_PADRAO: readonly BadgeGrupoItem[] = [
 
 /**
  * FORMA diferente: o assunto é o conjunto, e uma etiqueta sozinha não mostra o
- * que as variantes semânticas prometem — ser distinguíveis entre si.
+ * que as variantes prometem — ser distinguíveis entre si.
  */
-export function badgeEmGrupoSnippet(o: BadgeGrupoSnippetOptions = {}): string {
-  const items = o.items?.length ? o.items : GRUPO_PADRAO;
+export function badgeGroupSnippet(o: BadgeGroupSnippetOptions = {}): string {
+  const items = o.items?.length ? o.items : DEFAULT_GROUP;
   const calls = items
-    .map((i) => `  createBadge({ variant: ${text(i.variant)}, children: ${text(i.label)} }),`)
+    .map((i) =>
+      i.variant === 'default'
+        ? `  createBadge({ children: ${text(i.label)} }),`
+        : `  createBadge({ variant: ${text(i.variant)}, children: ${text(i.label)} }),`,
+    )
     .join('\n');
 
   return snippet(
     importing('badge', 'createBadge'),
-    `const grupo = document.createElement('div');
-grupo.className = 'nds-cluster';
-grupo.dataset.spacing = 'sm';
-grupo.append(
+    `const group = document.createElement('div');
+group.className = 'nds-cluster';
+group.dataset.spacing = 'sm';
+group.append(
 ${calls}
 );`,
-    appendLine('grupo'),
+    appendLine('group'),
   );
 }
 
-export function badgeEmGrupoSourceCom(
-  fixas: BadgeGrupoSnippetOptions,
-): SourceTransform<BadgeGrupoSnippetOptions> {
-  return (_gerado, ctx) => badgeEmGrupoSnippet({ ...ctx.args, ...fixas });
+export function badgeGroupSourceWith(
+  fixed: BadgeGroupSnippetOptions,
+): SourceTransform<BadgeGroupSnippetOptions> {
+  return (_generated, ctx) => badgeGroupSnippet({ ...ctx.args, ...fixed });
 }
 
 // ─── Contador dentro da etiqueta ─────────────────────────────────────────────
@@ -124,50 +137,89 @@ export function badgeWithCounterSnippet(o: BadgeWithCounterSnippetOptions = {}):
 
   return snippet(
     importing('badge', 'createBadge', 'createBadgeCounter'),
-    `const etiqueta = ${callLine('createBadge', [
+    `const badge = ${callLine('createBadge', [
       `variant: ${text(variant)},`,
       `children: [${text(label)}, createBadgeCounter({ text: ${text(count)} })],`,
     ])};`,
-    appendLine('etiqueta'),
+    appendLine('badge'),
   );
 }
 
-export function badgeWithCounterSourceCom(
-  fixas: BadgeWithCounterSnippetOptions,
+export function badgeWithCounterSourceWith(
+  fixed: BadgeWithCounterSnippetOptions,
 ): SourceTransform<BadgeWithCounterSnippetOptions> {
-  return (_gerado, ctx) => badgeWithCounterSnippet({ ...ctx.args, ...fixas });
+  return (_generated, ctx) => badgeWithCounterSnippet({ ...ctx.args, ...fixed });
 }
 
-// ─── Dentro de um botão clicável ─────────────────────────────────────────────
+// ─── Dentro do Button do design system ───────────────────────────────────────
 
-export type BadgeEmGatilhoSnippetOptions = BadgeSnippetOptions & {
-  /** Nome acessível do alvo — o texto da etiqueta é curto demais para servir. */
+export type BadgeTriggerSnippetOptions = {
+  /** Variante da etiqueta dentro do botão — `info`, a neutra discreta, nas cinco stacks. */
+  variant?: BadgeVariant;
+  label?: string;
+  /** Nome acessível do botão — o texto da etiqueta é curto demais para servir. */
   accessibleName?: string;
 };
 
 /**
  * FORMA diferente: a etiqueta não é um alvo. Ela não recebe foco, não tem papel
- * e não aceita `tabindex` — quem clica é o botão em volta, e é dele o nome
- * acessível.
+ * e não aceita `tabindex` — quem clica é o Button em volta (ghost, sm), e é dele
+ * o nome acessível. Nada de `<button>` cru com a aparência reiniciada à mão: o
+ * Button do design system já traz foco visível, alvo e estados.
  */
-export function badgeEmGatilhoSnippet(o: BadgeEmGatilhoSnippetOptions = {}): string {
-  const label = o.label ?? 'React';
+export function badgeTriggerSnippet(o: BadgeTriggerSnippetOptions = {}): string {
+  const label = o.label ?? 'Design';
+  const name = o.accessibleName ?? 'Filtrar por Design';
   const variant = o.variant ?? 'info';
-  const name = o.accessibleName ?? 'Filtrar por React';
 
   return snippet(
-    importing('badge', 'createBadge'),
-    `const alvo = document.createElement('button');
-alvo.type = 'button';
-alvo.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
-alvo.setAttribute('aria-label', ${text(name)});
-alvo.appendChild(createBadge({ variant: ${text(variant)}, children: ${text(label)} }));`,
-    appendLine('alvo'),
+    `${importing('badge', 'createBadge')}\n${importing('button', 'createButton')}`,
+    `const trigger = ${callLine('createButton', [
+      `variant: 'ghost',`,
+      `size: 'sm',`,
+      `'aria-label': ${text(name)},`,
+      `children: createBadge({ variant: ${text(variant)}, children: ${text(label)} }),`,
+    ])};`,
+    appendLine('trigger'),
   );
 }
 
-export function triggerSourceWithBadge(
-  fixas: BadgeEmGatilhoSnippetOptions,
-): SourceTransform<BadgeEmGatilhoSnippetOptions> {
-  return (_gerado, ctx) => badgeEmGatilhoSnippet({ ...ctx.args, ...fixas });
+export function badgeTriggerSourceWith(
+  fixed: BadgeTriggerSnippetOptions,
+): SourceTransform<BadgeTriggerSnippetOptions> {
+  return (_generated, ctx) => badgeTriggerSnippet({ ...ctx.args, ...fixed });
+}
+
+// ─── Dentro de um link ───────────────────────────────────────────────────────
+
+export type BadgeLinkSnippetOptions = {
+  /** Variante da etiqueta dentro do link — `info`, a neutra discreta, nas cinco stacks. */
+  variant?: BadgeVariant;
+  label?: string;
+  href?: string;
+};
+
+/**
+ * FORMA diferente: quem recebe foco e `Enter` é o `<a>`. A etiqueta é filha
+ * DIRETA do link — é o que a regra `a > .nds-badge:hover` da folha exige para o
+ * fundo reagir ao ponteiro.
+ */
+export function badgeLinkSnippet(o: BadgeLinkSnippetOptions = {}): string {
+  const label = o.label ?? 'Design';
+  const href = o.href ?? '#';
+  const variant = o.variant ?? 'info';
+
+  return snippet(
+    importing('badge', 'createBadge'),
+    `const link = document.createElement('a');
+link.href = ${text(href)};
+link.append(createBadge({ variant: ${text(variant)}, children: ${text(label)} }));`,
+    appendLine('link'),
+  );
+}
+
+export function badgeLinkSourceWith(
+  fixed: BadgeLinkSnippetOptions,
+): SourceTransform<BadgeLinkSnippetOptions> {
+  return (_generated, ctx) => badgeLinkSnippet({ ...ctx.args, ...fixed });
 }

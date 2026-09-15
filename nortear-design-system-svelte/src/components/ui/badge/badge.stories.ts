@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
+import { mount, unmount } from 'svelte';
 import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
@@ -14,6 +15,7 @@ const meta: Meta = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('badge'),
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(BadgeDocs),
@@ -53,10 +55,25 @@ export const Playground: Story = {
       await expect(badge).toHaveAttribute('data-variant', String(args.variant));
     });
 
+    await step('Sem variante passada, a etiqueta declara `default`', async () => {
+      // O control sempre entrega um valor, então a prova do padrão monta uma
+      // etiqueta SEM a prop, lê o atributo e a desmonta.
+      const host = canvasElement.ownerDocument.createElement('div');
+      canvasElement.appendChild(host);
+      const bare = mount(Badge, { target: host, props: {} });
+      try {
+        const bareBadge = host.querySelector('[data-slot="badge"]');
+        await expect(bareBadge).not.toBeNull();
+        await expect(bareBadge).toHaveAttribute('data-variant', 'default');
+      } finally {
+        await unmount(bare);
+        host.remove();
+      }
+    });
+
     await step('É um <span>, para caber dentro de frase e célula', async () => {
       // Um <div> aqui quebra o fluxo do texto que acompanha o badge, e
-      // <div> dentro de <p> é aninhamento inválido. Só o Angular afirmava
-      // isso — e era justamente a stack que sobrava que renderizava <div>.
+      // <div> dentro de <p> é aninhamento inválido.
       await expect(badge.tagName).toBe('SPAN');
     });
 
@@ -66,6 +83,8 @@ export const Playground: Story = {
       const styles = getComputedStyle(badge);
       await expect(styles.display).toBe('inline-flex');
       await expect(styles.whiteSpace).toBe('nowrap');
+      // A etiqueta não é alvo: foco é de quem a envolve, nunca dela.
+      await expect(badge.hasAttribute('tabindex')).toBe(false);
     });
 
     await step('Tipografia compacta do componente', async () => {

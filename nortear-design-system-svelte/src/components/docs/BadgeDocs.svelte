@@ -1,8 +1,9 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { Badge, BadgeCounter } from '@/components/ui/badge';
+  import { Button } from '@/components/ui/button';
   import Check from '@lucide/svelte/icons/check';
-  import TagIcon from '@lucide/svelte/icons/tag';
+  import X from '@lucide/svelte/icons/x';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -16,6 +17,13 @@
   import uiTranslations from '@/i18n/ui.json';
   import badgeTranslations from '@shared/content/badge/translations.json';
   import { stripHtml, toPlainText } from '@/lib/strip-html';
+  import {
+    badgeAsButtonSource,
+    badgeAsLinkSource,
+    badgeVariantSnippet,
+    badgeWithCounterSource,
+    badgeWithIconSource,
+  } from '@/components/ui/badge/badge.source';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(badgeTranslations);
@@ -84,30 +92,34 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  /**
+   * Listas numeradas DERIVADAS do dicionário: quem conta os itens é o conteúdo,
+   * e não um intervalo cravado aqui — foi assim que a página ficou mostrando 7
+   * de 8 critérios funcionais. A parada usa o contrato do `t()` desta stack
+   * (chave ausente volta como a própria chave). Os nomes são os que o
+   * `lista_mais_curta_que_o_conteudo` reconhece como derivação.
+   */
+  function itemsFromDict<K extends string>(
+    tFn: (key: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Record<K, string>[] {
+    const rows: Record<K, string>[] = [];
+    for (let i = 1; ; i++) {
+      const probe = `${base}.item${i}.${fields[0]}`;
+      if (tFn(probe) === probe) break;
+      const row = {} as Record<K, string>;
+      for (const f of fields) row[f] = tFn(`${base}.item${i}.${f}`);
+      rows.push(row);
+    }
+    return rows;
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import { Badge } from "@/components/ui/badge";`;
   const codeImportWithIcon = `import { Badge } from "@/components/ui/badge";
 import Check from '@lucide/svelte/icons/check';`;
-
-  const codeDefault = `<Badge variant="default">Novo</Badge>`;
-  const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
-  const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
-  const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
-  const codeInfo = `<Badge variant="info">Novidade</Badge>`;
-
-  const codeWithIcon = `<Badge variant="default">
-  <Check aria-hidden="true" />
-  Ativo
-</Badge>`;
-
-  const codeAsTrigger = `<button
-  type="button"
-  aria-label="Filtrar por acessibilidade"
-  onclick={() => applyFilter('acessibilidade')}
->
-  <Badge variant="info">Acessibilidade</Badge>
-</button>`;
 
   const interfaceCode = `// Badge
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
@@ -134,23 +146,16 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration>
-    <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+  <DocsDemonstration componentSlug="badge">
+    <div class="nds-cluster" data-spacing="sm">
       <Badge variant="default">{$tStore('demonstration.labels.defaultLabel')}</Badge>
       <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
       <Badge variant="warning">{$tStore('demonstration.labels.warningLabel')}</Badge>
+      <Badge variant="success">{$tStore('demonstration.labels.successLabel')}</Badge>
       <Badge variant="info">{$tStore('demonstration.labels.infoLabel')}</Badge>
       <Badge variant="default">
-        <Check aria-hidden="true" />
+        <Check aria-hidden="true" data-icon="inline-start" />
         {$tStore('demonstration.labels.statusLabel')}
-      </Badge>
-      <Badge variant="info">
-        <TagIcon aria-hidden="true" />
-        {$tStore('demonstration.labels.tagLabel')}
-      </Badge>
-      <Badge variant="destructive">
-        {$tStore('demonstration.labels.destructiveLabel')}
-        <BadgeCounter>12</BadgeCounter>
       </Badge>
     </div>
   </DocsDemonstration>
@@ -232,37 +237,43 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair1.do'),
-        dontCaption: $tStore('doDont.pair1.dont'),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair2.do'),
-        dontCaption: $tStore('doDont.pair2.dont'),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
     ]}
   />
 
+  <!-- Par 1: uma etiqueta curta contra uma frase inteira na etiqueta.
+       Par 2: destructive num alerta real contra destructive de enfeite. -->
   {#snippet doPair1()}
-    <Badge variant="default">Ativo</Badge>
+    <Badge variant="default">{$tStore('doDont.previews.pair1Do')}</Badge>
   {/snippet}
   {#snippet dontPair1()}
-    <Badge variant="default">Este item está atualmente ativo no sistema</Badge>
+    <Badge variant="default">{$tStore('doDont.previews.pair1Dont')}</Badge>
   {/snippet}
   {#snippet doPair2()}
-    <Badge variant="destructive">Expirado</Badge>
+    <Badge variant="destructive">
+      <X aria-hidden="true" data-icon="inline-start" />
+      {$tStore('doDont.previews.pair2Do')}
+    </Badge>
   {/snippet}
   {#snippet dontPair2()}
-    <Badge variant="destructive">Novo</Badge>
+    <Badge variant="destructive">{$tStore('doDont.previews.pair2Dont')}</Badge>
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
+    componentSlug="badge"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withIcon')}
@@ -271,12 +282,14 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
+    componentSlug="badge"
+    note={$tStore('variants.note')}
     items={[
-      { name: 'default',     description: stripHtml($tStore('variants.items.default')),     code: codeDefault,     preview: variantDefault     },
-      { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
-      { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),     code: codeWarning,     preview: variantWarning     },
-      { name: 'success',     description: stripHtml($tStore('variants.items.success')),     code: codeSuccess,     preview: variantSuccess     },
-      { name: 'info',        description: stripHtml($tStore('variants.items.info')),        code: codeInfo,        preview: variantInfo        },
+      { name: 'default',     description: stripHtml($tStore('variants.items.default')),     code: badgeVariantSnippet('default',     $tStore('demonstration.labels.defaultLabel')),     preview: variantDefault     },
+      { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: badgeVariantSnippet('destructive', $tStore('demonstration.labels.destructiveLabel')), preview: variantDestructive },
+      { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),     code: badgeVariantSnippet('warning',     $tStore('demonstration.labels.warningLabel')),     preview: variantWarning     },
+      { name: 'success',     description: stripHtml($tStore('variants.items.success')),     code: badgeVariantSnippet('success',     $tStore('demonstration.labels.successLabel')),     preview: variantSuccess     },
+      { name: 'info',        description: stripHtml($tStore('variants.items.info')),        code: badgeVariantSnippet('info',        $tStore('demonstration.labels.infoLabel')),        preview: variantInfo        },
     ]}
   />
 
@@ -296,7 +309,9 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
     <Badge variant="info">{$tStore('demonstration.labels.infoLabel')}</Badge>
   {/snippet}
 
-  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <!-- ── Composições ──────────────────────────────────────────────
+       O código é o mesmo do painel Code da story: sai das transforms de
+       `badge.source.ts`, e não de uma cópia que envelhece aqui. -->
   <DocsCompositions
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="badge"
@@ -306,7 +321,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         name: $tStore('variants.compositions.withIcon.name'),
         description: $tStore('variants.compositions.withIcon.description'),
         useWhen: $tStore('variants.compositions.withIcon.use'),
-        code: `<Badge>\n  <Check class="nds-icon-sm" aria-hidden="true" />\n  Ativo\n</Badge>`,
+        code: badgeWithIconSource({ label: $tStore('demonstration.labels.statusLabel') }),
         preview: compWithIcon,
       },
       {
@@ -314,7 +329,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         name: $tStore('variants.compositions.withCounter.name'),
         description: $tStore('variants.compositions.withCounter.description'),
         useWhen: $tStore('variants.compositions.withCounter.use'),
-        code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
+        code: badgeWithCounterSource({ label: $tStore('demonstration.labels.destructiveLabel') }),
         preview: compWithCounter,
       },
       {
@@ -322,28 +337,45 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         name: $tStore('variants.compositions.asTrigger.name'),
         description: $tStore('variants.compositions.asTrigger.description'),
         useWhen: $tStore('variants.compositions.asTrigger.use'),
-        code: `<button type="button" aria-label="Filtrar por acessibilidade" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="info">Acessibilidade</Badge>\n</button>`,
+        code: badgeAsButtonSource({
+          label: $tStore('demonstration.labels.categoryLabel'),
+          accessibleName: $tStore('demonstration.labels.categoryFilterLabel'),
+        }),
         preview: compAsTrigger,
+      },
+      {
+        trackId: 'asLink',
+        name: $tStore('variants.compositions.asLink.name'),
+        description: $tStore('variants.compositions.asLink.description'),
+        useWhen: $tStore('variants.compositions.asLink.use'),
+        code: badgeAsLinkSource({ label: $tStore('demonstration.labels.categoryLabel') }),
+        preview: compAsLink,
       },
     ]}
   />
 
   {#snippet compWithIcon()}
     <Badge>
-      <Check class="nds-icon-sm" aria-hidden="true" />
-      Ativo
+      <Check aria-hidden="true" data-icon="inline-start" />
+      {$tStore('demonstration.labels.statusLabel')}
     </Badge>
   {/snippet}
   {#snippet compWithCounter()}
     <Badge variant="destructive">
-      Urgente
+      {$tStore('demonstration.labels.destructiveLabel')}
       <BadgeCounter>12</BadgeCounter>
     </Badge>
   {/snippet}
   {#snippet compAsTrigger()}
-    <button type="button" aria-label="Filtrar por acessibilidade" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">
-      <Badge variant="info">Acessibilidade</Badge>
-    </button>
+    <Button variant="ghost" size="sm" aria-label={$tStore('demonstration.labels.categoryFilterLabel')}>
+      <Badge variant="info">{$tStore('demonstration.labels.categoryLabel')}</Badge>
+    </Button>
+  {/snippet}
+  {#snippet compAsLink()}
+    <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- Storybook sem router: o destino é o fragmento vazio da demonstração -->
+    <a href="#">
+      <Badge variant="info">{$tStore('demonstration.labels.categoryLabel')}</Badge>
+    </a>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -371,9 +403,9 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'variant',  type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
-          { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className') },
-          { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children')  },
+          { name: 'variant',  type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.variant')) },
+          { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.className') },
+          { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children')  },
         ],
       },
     ]}
@@ -385,8 +417,8 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   <!-- ── Tokens ───────────────────────────────────────────────────
        A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR
        que lê. `--info` não tem linha porque a folha não o lê: a variante
-       info é pintada por `--border`, e linha com travessão só ocuparia
-       espaço dizendo que o token não faz nada aqui. -->
+       info é pintada por `--border`. `--ring` também não: a etiqueta não é
+       focável, e o anel de foco saiu da folha. -->
   <DocsTokens
     cols={{
       token: $tStore('tokens.table.token'),
@@ -402,7 +434,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       { token: '--secondary',        value: '.nds-badge-counter',      description: $tStore('tokens.table.secondary')   },
       { token: '--foreground',       value: '.nds-badge',              description: $tStore('tokens.table.foreground')  },
       { token: '--background',       value: '.nds-badge',              description: $tStore('tokens.table.background')  },
-      { token: '--ring',             value: '.nds-badge:focus-visible', description: $tStore('tokens.table.ring')       },
       { token: '--radius-badge',     value: '.nds-badge',              description: $tStore('tokens.table.radius')      },
       { token: '--badge-bg',         value: 'hsl(var(--background))',  description: $tStore('tokens.table.badgeBg')     },
       { token: '--badge-fg',         value: 'hsl(var(--foreground))',  description: $tStore('tokens.table.badgeFg')     },
@@ -428,10 +459,17 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       { key: 'Tab',   description: stripHtml($tStore('keyboard.wrappedInButton')) },
       { key: 'Enter', description: stripHtml($tStore('keyboard.wrappedInLink'))   },
     ]}
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={[
+      $tStore('screenReader.onRender'),
+      $tStore('screenReader.onUpdate'),
+      $tStore('screenReader.icons'),
+    ]}
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
+    componentSlug="badge"
     items={[
       { name: 'Alert',   description: $tStore('related.alert'),  path: '?path=/docs/components-feedback-alert--docs'   },
       { name: 'Button',  description: $tStore('related.button'), path: '?path=/docs/components-form-button--docs'  },
@@ -440,6 +478,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
+    componentSlug="badge"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -470,15 +509,11 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { action: $tStore('testes.functional.item1.action'), result: $tStore('testes.functional.item1.result'), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: $tStore('testes.functional.item2.result'), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: $tStore('testes.functional.item3.result'), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
-      ],
+      items: itemsFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
+        action: r.action,
+        result: r.result,
+        priority: localPriority(r.priority, $tNavStore),
+      })),
     }}
     accessibility={{
       title: $tStore('testes.accessibility.title'),
@@ -487,12 +522,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-        { criterion: $tStore('testes.accessibility.item2.criterion'), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-        { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-        { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-      ],
+      items: itemsFromDict($tStore, 'testes.accessibility', ['criterion', 'level', 'how']),
     }}
     visual={{
       title: $tStore('testes.visual.title'),
@@ -500,14 +530,10 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item6.story'), priority: localPriority($tStore('testes.visual.item6.priority'), $tNavStore) },
-      ],
+      items: itemsFromDict($tStore, 'testes.visual', ['story', 'priority']).map((r) => ({
+        story: r.story,
+        priority: localPriority(r.priority, $tNavStore),
+      })),
     }}
   />
 </DocsPageLayout>

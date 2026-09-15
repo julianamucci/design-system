@@ -2,8 +2,15 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { X, Star } from 'lucide';
+import { Check, X, createElement, type IconNode } from 'lucide';
 import { createBadge, createBadgeCounter, type BadgeVariant } from '@/components/ui/badge';
+import { createButton } from '@/components/ui/button';
+import {
+  badgeLinkSnippet,
+  badgeSnippet,
+  badgeTriggerSnippet,
+  badgeWithCounterSnippet,
+} from '@/components/ui/badge.source';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
 
@@ -45,47 +52,64 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// ─── Icon helpers (Lucide as vanilla SVG) ─────────────────────────────────────
+type ContentNode = Record<string, unknown>;
 
-type LucideIconNode = [string, Record<string, string>];
-
-function createIcon(nodes: LucideIconNode[], className = 'size-3'): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', className);
-
-  for (const [tag, attrs] of nodes) {
-    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
-    svg.appendChild(child);
-  }
-  return svg;
+/** O nó do conteúdo no idioma vigente, por caminho pontuado. */
+function contentNode(path: string): ContentNode {
+  const all = badgeTranslations as unknown as Record<string, ContentNode>;
+  const byLocale = all[getLocale()] ?? all['pt-BR'];
+  const node = path
+    .split('.')
+    .reduce<unknown>((acc, key) => (acc as ContentNode | undefined)?.[key], byLocale);
+  return (node ?? {}) as ContentNode;
 }
 
-function buildStarIcon(): SVGSVGElement {
-  return createIcon(Star as unknown as LucideIconNode[], 'size-3 mr-1');
+/**
+ * Os números dos `itemN` que o conteúdo declara naquele caminho, em ordem.
+ *
+ * A lista sai do DICIONÁRIO, e não de um `[1, 2, 3…]` escrito aqui: a lista
+ * literal envelhece no primeiro item que o conteúdo ganha, e a página passa a
+ * esconder o que o conteúdo publica sem nada ficar vermelho.
+ */
+function itemNumbers(path: string): number[] {
+  return Object.keys(contentNode(path))
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((n): n is string => n !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
 }
 
-function buildXIcon(): SVGSVGElement {
-  return createIcon(X as unknown as LucideIconNode[], 'size-3 mr-1');
-}
+// ─── Ícones e etiquetas ───────────────────────────────────────────────────────
 
-// ─── Badge builders ───────────────────────────────────────────────────────────
+/**
+ * Ícone decorativo antes do texto, construído como o snippet ensina: sem classe
+ * de tamanho nem margem — `.nds-badge > svg` dimensiona, o gap espaça e
+ * `data-icon="inline-start"` encurta o respiro daquele lado.
+ */
+function buildIcon(node: IconNode): SVGElement {
+  const icon = createElement(node);
+  icon.setAttribute('aria-hidden', 'true');
+  icon.setAttribute('data-icon', 'inline-start');
+  return icon;
+}
 
 function buildLabelBadge(variant: BadgeVariant, label: string): HTMLElement {
   return createBadge({ variant, children: label });
 }
 
-function buildIconBadge(variant: BadgeVariant, icon: SVGSVGElement, label: string): HTMLElement {
-  return createBadge({ variant, children: [icon as unknown as HTMLElement, label] });
+function buildIconBadge(variant: BadgeVariant, icon: SVGElement, label: string): HTMLElement {
+  return createBadge({ variant, children: [icon, label] });
 }
+
+const VARIANT_LABEL_KEY: Record<BadgeVariant, string> = {
+  default: 'demonstration.labels.defaultLabel',
+  destructive: 'demonstration.labels.destructiveLabel',
+  warning: 'demonstration.labels.warningLabel',
+  success: 'demonstration.labels.successLabel',
+  info: 'demonstration.labels.infoLabel',
+};
+
+const VARIANTS: readonly BadgeVariant[] = ['default', 'destructive', 'warning', 'success', 'info'];
 
 // ─── createBadgeDocs ──────────────────────────────────────────────────────────
 
@@ -186,17 +210,14 @@ export function createBadgeDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
+          componentSlug: 'badge',
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
             wrap.dataset.spacing = 'sm';
             wrap.append(
-              buildLabelBadge('default',     t('demonstration.labels.defaultLabel')),
-              buildLabelBadge('destructive', t('demonstration.labels.destructiveLabel')),
-              buildLabelBadge('warning',     t('demonstration.labels.warningLabel')),
-              buildLabelBadge('success',     t('demonstration.labels.successLabel')),
-              buildLabelBadge('info',        t('demonstration.labels.infoLabel')),
-              buildIconBadge('default',      buildStarIcon(), t('demonstration.labels.statusLabel')),
+              ...VARIANTS.map((variant) => buildLabelBadge(variant, t(VARIANT_LABEL_KEY[variant]))),
+              buildIconBadge('default', buildIcon(Check), t('demonstration.labels.statusLabel')),
             );
             return wrap;
           },
@@ -268,6 +289,8 @@ export function createBadgeDocs(): HTMLElement {
         });
 
       case 'do-dont':
+        // Os previews usam só rótulos do conteúdo: texto cravado aqui ficaria
+        // em português nos três idiomas.
         return createDocsDoDont({
           pairs: [
             {
@@ -275,118 +298,55 @@ export function createBadgeDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'xs';
-                wrap.append(
-                  buildLabelBadge('default', 'Novo'),
-                  buildLabelBadge('info',    'Beta'),
-                  buildLabelBadge('success', 'Aprovado'),
-                );
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                return buildLabelBadge(
-                  'default',
-                  'Este item acaba de ser adicionado à sua lista e precisa de revisão',
-                );
-              },
+              // Par 1: uma etiqueta curta contra uma frase inteira na etiqueta.
+              doPreviewFactory: () =>
+                buildLabelBadge('default', t('doDont.previews.pair1Do')),
+              dontPreviewFactory: () =>
+                buildLabelBadge('default', t('doDont.previews.pair1Dont')),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'xs';
-                wrap.append(
-                  buildIconBadge('destructive', buildXIcon(), 'Expirado'),
-                  buildLabelBadge('destructive', 'Urgente'),
-                );
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'xs';
-                wrap.append(
-                  buildLabelBadge('destructive', 'Promoção'),
-                  buildLabelBadge('destructive', 'Novo'),
-                );
-                return wrap;
-              },
+              // Par 2: destructive num alerta real contra destructive de enfeite.
+              doPreviewFactory: () =>
+                buildIconBadge('destructive', buildIcon(X), t('doDont.previews.pair2Do')),
+              dontPreviewFactory: () =>
+                buildLabelBadge('destructive', t('doDont.previews.pair2Dont')),
             },
           ],
         });
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'badge',
           description: t('import.basic'),
           code: `import { createBadge } from '@/components/ui/badge';`,
           secondaryDescription: t('import.withIcon'),
-          secondaryCode: `import { createBadge } from '@/components/ui/badge';\nimport { Check } from 'lucide';\n// ícone SVG construído a partir dos nós e envolvido no children do Badge`,
+          secondaryCode:
+            `import { createBadge } from '@/components/ui/badge';\n` +
+            `import { Check, createElement } from 'lucide';`,
         });
 
-      case 'variantes': {
-        const codeDefault = `const badge = createBadge({ variant: 'default', children: 'Novo' });`;
-        const codeDestructive = `const badge = createBadge({ variant: 'destructive', children: 'Urgente' });`;
-        const codeWarning = `const badge = createBadge({ variant: 'warning', children: 'Vence hoje' });`;
-        const codeSuccess = `const badge = createBadge({ variant: 'success', children: 'Aprovado' });`;
-        const codeInfo = `const badge = createBadge({ variant: 'info', children: 'Novidade' });`;
-
+      case 'variantes':
         return createDocsVariants({
-          items: [
-            {
-              name: 'default',
-              description: stripHtml(t('variants.items.default')),
-              code: codeDefault,
-              previewFactory: () => buildLabelBadge('default', t('demonstration.labels.defaultLabel')),
-            },
-            {
-              name: 'destructive',
-              description: stripHtml(t('variants.items.destructive')),
-              code: codeDestructive,
-              previewFactory: () => buildLabelBadge('destructive', t('demonstration.labels.destructiveLabel')),
-            },
-            {
-              name: 'warning',
-              description: stripHtml(t('variants.items.warning')),
-              code: codeWarning,
-              previewFactory: () => buildLabelBadge('warning', t('demonstration.labels.warningLabel')),
-            },
-            {
-              name: 'success',
-              description: stripHtml(t('variants.items.success')),
-              code: codeSuccess,
-              previewFactory: () => buildLabelBadge('success', t('demonstration.labels.successLabel')),
-            },
-            {
-              name: 'info',
-              description: stripHtml(t('variants.items.info')),
-              code: codeInfo,
-              previewFactory: () => buildLabelBadge('info', t('demonstration.labels.infoLabel')),
-            },
-          ],
+          componentSlug: 'badge',
+          note: t('variants.note'),
+          items: VARIANTS.map((variant) => ({
+            // O nome é a variante — id estável, igual nos três idiomas.
+            name: variant,
+            description: stripHtml(t(`variants.items.${variant}`)),
+            code: badgeSnippet({ variant, label: t(VARIANT_LABEL_KEY[variant]) }),
+            previewFactory: () => buildLabelBadge(variant, t(VARIANT_LABEL_KEY[variant])),
+          })),
         });
-      }
 
       case 'composicoes': {
-        function createCheckSvg(): SVGSVGElement {
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-          svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('width', '12'); svg.setAttribute('height', '12');
-          svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
-          svg.setAttribute('stroke-width', '2'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
-          svg.setAttribute('aria-hidden', 'true');
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-          path.setAttribute('points', '20 6 9 17 4 12');
-          svg.appendChild(path);
-          return svg;
-        }
+        const statusLabel = t('demonstration.labels.statusLabel');
+        const counterLabel = t('demonstration.labels.destructiveLabel');
+        const categoryLabel = t('demonstration.labels.categoryLabel');
+        const categoryFilterLabel = t('demonstration.labels.categoryFilterLabel');
 
         return createDocsCompositions({
           useWhenLabel: tNav('common.useWhen'),
@@ -397,25 +357,19 @@ export function createBadgeDocs(): HTMLElement {
               name: t('variants.compositions.withIcon.name'),
               description: t('variants.compositions.withIcon.description'),
               useWhen: t('variants.compositions.withIcon.use'),
-              code:
-                `const checkSvg = createCheckSvg();\n` +
-                `const badge = createBadge({ variant: 'default', children: [checkSvg, 'Ativo'] });`,
-              previewFactory: () => createBadge({ variant: 'default', children: [createCheckSvg() as unknown as HTMLElement, 'Ativo'] }),
+              code: badgeSnippet({ withIcon: true, label: statusLabel }),
+              previewFactory: () => buildIconBadge('default', buildIcon(Check), statusLabel),
             },
             {
               trackId: 'withCounter',
               name: t('variants.compositions.withCounter.name'),
               description: t('variants.compositions.withCounter.description'),
               useWhen: t('variants.compositions.withCounter.use'),
-              code:
-                `const etiqueta = createBadge({\n` +
-                `  variant: 'destructive',\n` +
-                `  children: ['Urgente', createBadgeCounter({ text: '12' })],\n` +
-                `});`,
+              code: badgeWithCounterSnippet({ variant: 'destructive', label: counterLabel, count: '12' }),
               previewFactory: () =>
                 createBadge({
                   variant: 'destructive',
-                  children: ['Urgente', createBadgeCounter({ text: '12' })],
+                  children: [counterLabel, createBadgeCounter({ text: '12' })],
                 }),
             },
             {
@@ -423,25 +377,26 @@ export function createBadgeDocs(): HTMLElement {
               name: t('variants.compositions.asTrigger.name'),
               description: t('variants.compositions.asTrigger.description'),
               useWhen: t('variants.compositions.asTrigger.use'),
-              code:
-                `const btn = document.createElement('button');\n` +
-                `btn.type = 'button';\n` +
-                `btn.setAttribute('aria-label', 'Filtrar por React');\n` +
-                `btn.className = 'nds-rounded-md nds-cursor-pointer nds-bg-transparent';\n` +
-                `btn.style.display = 'inline-flex';\n` +
-                `btn.style.padding = '0';\n` +
-                `btn.style.border = '0';\n` +
-                `btn.appendChild(createBadge({ variant: 'info', children: 'React' }));`,
+              code: badgeTriggerSnippet({ label: categoryLabel, accessibleName: categoryFilterLabel }),
+              previewFactory: () =>
+                createButton({
+                  variant: 'ghost',
+                  size: 'sm',
+                  'aria-label': categoryFilterLabel,
+                  children: createBadge({ variant: 'info', children: categoryLabel }),
+                }),
+            },
+            {
+              trackId: 'asLink',
+              name: t('variants.compositions.asLink.name'),
+              description: t('variants.compositions.asLink.description'),
+              useWhen: t('variants.compositions.asLink.use'),
+              code: badgeLinkSnippet({ label: categoryLabel }),
               previewFactory: () => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.setAttribute('aria-label', 'Filtrar por React');
-                btn.className = 'nds-rounded-md nds-cursor-pointer nds-bg-transparent';
-                btn.style.display = 'inline-flex';
-                btn.style.padding = '0';
-                btn.style.border = '0';
-                btn.appendChild(createBadge({ variant: 'info', children: 'React' }));
-                return btn;
+                const link = document.createElement('a');
+                link.href = '#';
+                link.append(createBadge({ variant: 'info', children: categoryLabel }));
+                return link;
               },
             },
           ],
@@ -466,7 +421,7 @@ export type BadgeVariant = 'default' | 'destructive' | 'warning' | 'success' | '
 
 export interface BadgeOptions {
   variant?: BadgeVariant;
-  children?: string | HTMLElement | Array<string | HTMLElement>;
+  children?: string | HTMLElement | SVGElement | Array<string | HTMLElement | SVGElement>;
   className?: string;
 }`;
 
@@ -477,6 +432,7 @@ export interface BadgeOptions {
           required: t('props.table.required'),
           description: t('props.table.description'),
         };
+        const no = tNav('common.no');
 
         return createDocsProps({
           tables: [
@@ -484,9 +440,9 @@ export interface BadgeOptions {
               title: t('props.badgeTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
-                { name: 'children',  type: 'string | HTMLElement | Array<string | HTMLElement>',  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.children')) },
-                { name: 'className', type: 'string',                                               defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
+                { name: 'variant',   type: '"default" | "destructive" | "warning" | "success" | "info"',                  defaultValue: '"default"', required: no, description: toPlainText(t('props.table.variant')) },
+                { name: 'children',  type: 'string | HTMLElement | SVGElement | Array<string | HTMLElement | SVGElement>', defaultValue: '—',         required: no, description: toPlainText(t('props.table.children')) },
+                { name: 'className', type: 'string',                                                                       defaultValue: '—',         required: no, description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -507,8 +463,8 @@ export interface BadgeOptions {
             // A tabela lista o que a folha LÊ, e a coluna do meio diz ONDE:
             // o SELETOR que lê o token.
             // `--info` não tem linha porque a folha não o lê — a variante
-            // info é pintada por `--border`. Linha com travessão só ocuparia
-            // espaço dizendo que o token não faz nada aqui.
+            // info é pintada por `--border`. `--ring` também não: a etiqueta
+            // não tem anel de foco (quem recebe foco é o botão ou o link).
             { token: '--primary',          value: '.nds-badge-default',       description: t('tokens.table.primary')         },
             { token: '--destructive',      value: '.nds-badge-destructive',   description: t('tokens.table.destructive')     },
             { token: '--success',          value: '.nds-badge-success',       description: t('tokens.table.success')         },
@@ -517,7 +473,6 @@ export interface BadgeOptions {
             { token: '--secondary',        value: '.nds-badge-counter',       description: t('tokens.table.secondary')       },
             { token: '--foreground',       value: '.nds-badge',               description: t('tokens.table.foreground')      },
             { token: '--background',       value: '.nds-badge',               description: t('tokens.table.background')      },
-            { token: '--ring',             value: '.nds-badge:focus-visible', description: t('tokens.table.ring')            },
             { token: '--radius-badge',     value: '.nds-badge',               description: t('tokens.table.radius')          },
             { token: '--badge-bg',         value: 'hsl(var(--background))',   description: t('tokens.table.badgeBg')         },
             { token: '--badge-fg',         value: 'hsl(var(--foreground))',   description: t('tokens.table.badgeFg')         },
@@ -544,10 +499,17 @@ export interface BadgeOptions {
             { key: 'Tab',   description: stripHtml(t('keyboard.wrappedInButton')) },
             { key: 'Enter', description: stripHtml(t('keyboard.wrappedInLink'))   },
           ],
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: [
+            t('screenReader.onRender'),
+            t('screenReader.onUpdate'),
+            t('screenReader.icons'),
+          ],
         });
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'badge',
           items: [
             { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/components-feedback-alert--docs'  },
             { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/components-form-button--docs' },
@@ -556,6 +518,7 @@ export interface BadgeOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'badge',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -586,7 +549,7 @@ export interface BadgeOptions {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: itemNumbers('testes.functional').map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -595,7 +558,7 @@ export interface BadgeOptions {
           accessibility: {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemNumbers('testes.accessibility').map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
@@ -607,7 +570,7 @@ export interface BadgeOptions {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemNumbers('testes.visual').map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

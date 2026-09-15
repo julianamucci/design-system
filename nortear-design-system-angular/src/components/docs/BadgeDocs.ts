@@ -17,6 +17,13 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NdsBadge, NdsBadgeCounter, type BadgeVariant } from '@/components/ui/badge';
 import { NdsButton, NdsButtonIcon } from '@/components/ui/button';
+import {
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeVariantSnippet,
+  badgeWithCounterSource,
+  badgeWithIconSource,
+} from '@/components/ui/badge.source';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
 
@@ -108,6 +115,13 @@ export class NdsBadge {
 })
 export class NdsBadgeCounter {}`;
 
+const IMPORT_CODE = `import { NdsBadge, NdsBadgeCounter } from '@/components/ui/badge';`;
+
+// O ícone da etiqueta é o mesmo SVG do botão (conjunto lucide), com
+// `data-icon="inline-start"` para encurtar o respiro daquele lado.
+const IMPORT_ICON_CODE = `import { NdsBadge } from '@/components/ui/badge';
+import { NdsButtonIcon } from '@/components/ui/button';`;
+
 const VARIANTS: BadgeVariant[] = [
   'default', 'destructive', 'warning', 'success', 'info',
 ];
@@ -126,26 +140,23 @@ const VARIANTS: BadgeVariant[] = [
     NdsDocsTestes,
   ],
   template: `
+    <!-- Pares do vanilla: uma etiqueta por prévia, rótulos de doDont.previews.
+         Par 1: etiqueta curta contra uma frase inteira. Par 2: destructive num
+         alerta real contra destructive usado como enfeite. -->
     <ng-template #tplDoDont1Do>
-      <span ndsBadge variant="success">{{ t('demonstration.labels.successLabel') }}</span>
+      <span ndsBadge>{{ t('doDont.previews.pair1Do') }}</span>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <span ndsBadge variant="success">
-        {{ t('demonstration.labels.successLabel') }} — {{ t('description') }}
-      </span>
+      <span ndsBadge>{{ t('doDont.previews.pair1Dont') }}</span>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <span class="nds-cluster" data-spacing="xs">
-        <span ndsBadge variant="warning">{{ t('demonstration.labels.warningLabel') }}</span>
+      <span ndsBadge variant="destructive">
+        <svg ndsButtonIcon kind="x" size="sm" data-icon="inline-start"></svg>
+        {{ t('doDont.previews.pair2Do') }}
       </span>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <span class="nds-cluster" data-spacing="xs">
-        <span ndsBadge variant="warning">{{ t('demonstration.labels.warningLabel') }}</span>
-        <span ndsBadge variant="info">{{ t('demonstration.labels.infoLabel') }}</span>
-        <span ndsBadge variant="success">{{ t('demonstration.labels.successLabel') }}</span>
-        <span ndsBadge variant="destructive">{{ t('demonstration.labels.destructiveLabel') }}</span>
-      </span>
+      <span ndsBadge variant="destructive">{{ t('doDont.previews.pair2Dont') }}</span>
     </ng-template>
 
     <ng-template #tplVarDefault><span ndsBadge>{{ t('demonstration.labels.defaultLabel') }}</span></ng-template>
@@ -154,9 +165,11 @@ const VARIANTS: BadgeVariant[] = [
     <ng-template #tplVarSuccess><span ndsBadge variant="success">{{ t('demonstration.labels.successLabel') }}</span></ng-template>
     <ng-template #tplVarInfo><span ndsBadge variant="info">{{ t('demonstration.labels.infoLabel') }}</span></ng-template>
 
+    <!-- Previews das composições: as MESMAS peças das stories, e o código de
+         cada card sai do construtor que a story usa (badge.source.ts). -->
     <ng-template #tplCompIcon>
-      <span ndsBadge variant="success">
-        <svg ndsButtonIcon kind="check" size="sm"></svg>
+      <span ndsBadge>
+        <svg ndsButtonIcon kind="check" size="sm" data-icon="inline-start"></svg>
         {{ t('demonstration.labels.statusLabel') }}
       </span>
     </ng-template>
@@ -167,9 +180,14 @@ const VARIANTS: BadgeVariant[] = [
       </span>
     </ng-template>
     <ng-template #tplCompTrigger>
-      <button ndsButton variant="ghost" size="sm" aria-label="Filtrar por categoria">
+      <button ndsButton variant="ghost" size="sm" [attr.aria-label]="t('demonstration.labels.categoryFilterLabel')">
         <span ndsBadge variant="info">{{ t('demonstration.labels.categoryLabel') }}</span>
       </button>
+    </ng-template>
+    <ng-template #tplCompLink>
+      <a href="#">
+        <span ndsBadge variant="info">{{ t('demonstration.labels.categoryLabel') }}</span>
+      </a>
     </ng-template>
 
     <nds-docs-page-layout
@@ -189,9 +207,13 @@ const VARIANTS: BadgeVariant[] = [
       <ng-container docsMain>
         <nds-docs-demonstration>
           <div class="nds-cluster" data-spacing="sm">
-            @for (v of variantes; track v) {
-              <span ndsBadge [variant]="v">{{ rotuloDaVariante(v) }}</span>
+            @for (v of variants; track v) {
+              <span ndsBadge [variant]="v">{{ variantLabel(v) }}</span>
             }
+            <span ndsBadge>
+              <svg ndsButtonIcon kind="check" size="sm" data-icon="inline-start"></svg>
+              {{ t('demonstration.labels.statusLabel') }}
+            </span>
           </div>
         </nds-docs-demonstration>
 
@@ -213,8 +235,10 @@ const VARIANTS: BadgeVariant[] = [
         <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [code]="t('import.basic')"
-          [secondaryCode]="t('import.withIcon')"
+          [description]="t('import.basic')"
+          [code]="importCode"
+          [secondaryDescription]="t('import.withIcon')"
+          [secondaryCode]="importIconCode"
           componentSlug="badge"
           language="ts"
         />
@@ -286,7 +310,9 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly variantes = VARIANTS;
+  protected readonly variants = VARIANTS;
+  protected readonly importCode = IMPORT_CODE;
+  protected readonly importIconCode = IMPORT_ICON_CODE;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -302,8 +328,9 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompIcon = viewChild.required<TemplateRef<unknown>>('tplCompIcon');
   private readonly tplCompCounter = viewChild.required<TemplateRef<unknown>>('tplCompCounter');
   private readonly tplCompTrigger = viewChild.required<TemplateRef<unknown>>('tplCompTrigger');
+  private readonly tplCompLink = viewChild.required<TemplateRef<unknown>>('tplCompLink');
 
-  protected rotuloDaVariante(v: BadgeVariant): string {
+  protected variantLabel(v: BadgeVariant): string {
     return t(`demonstration.labels.${v}Label`);
   }
 
@@ -401,9 +428,12 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
       success: this.tplVarSuccess(),
       info: this.tplVarInfo(),
     };
+    // `name` é a variante — id estável, igual nos três idiomas; a explicação é
+    // a `description`. O código é o snippet da etiqueta sozinha.
     return VARIANTS.map((v) => ({
-      name: t(`variants.items.${v}`),
-      description: t(`variants.items.${v}`),
+      name: v,
+      description: stripHtml(t(`variants.items.${v}`)),
+      code: badgeVariantSnippet(v),
       trackId: v,
       preview: tpls[v],
     }));
@@ -411,18 +441,20 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
 
   protected readonly compositionItems = computed(() => {
     dict();
-    const mapa: { key: string; tpl: TemplateRef<unknown> }[] = [
-      { key: 'withIcon',  tpl: this.tplCompIcon()    },
+    const entries: { key: string; tpl: TemplateRef<unknown>; code: string }[] = [
+      { key: 'withIcon',    tpl: this.tplCompIcon(),    code: badgeWithIconSource()    },
       // A peça é subpeça, não prop: qualquer variante a aceita, e o conteúdo
       // nem sempre é número puro ("99+"). O contador AVULSO — badge que era só
       // um número ao lado de um ícone solto — saiu por ser redundante com ela.
-      { key: 'withCounter', tpl: this.tplCompCounter() },
-      { key: 'asTrigger', tpl: this.tplCompTrigger() },
+      { key: 'withCounter', tpl: this.tplCompCounter(), code: badgeWithCounterSource() },
+      { key: 'asTrigger',   tpl: this.tplCompTrigger(), code: badgeAsButtonSource()    },
+      { key: 'asLink',      tpl: this.tplCompLink(),    code: badgeAsLinkSource()      },
     ];
-    return mapa.map(({ key, tpl }) => ({
+    return entries.map(({ key, tpl, code }) => ({
       name: t(`variants.compositions.${key}.name`),
       description: t(`variants.compositions.${key}.description`),
       useWhen: t(`variants.compositions.${key}.use`),
+      code,
       trackId: key,
       preview: tpl,
     }));
@@ -467,7 +499,7 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
         items: [
           { name: 'variant', type: 'BadgeVariant', defaultValue: "'default'", required: not, description: toPlainText(t('props.table.variant')) },
           { name: 'class',   type: 'string',       defaultValue: '—',         required: not, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML',      defaultValue: '—',         required: not, description: toPlainText(t('props.table.children')) },
+          { name: 'ng-content', type: 'HTML',      defaultValue: '—',         required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
     ];
@@ -498,7 +530,6 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
       { token: '--secondary',        value: '.nds-badge-counter',       k: 'secondary'        },
       { token: '--foreground',       value: '.nds-badge',               k: 'foreground'       },
       { token: '--background',       value: '.nds-badge',               k: 'background'       },
-      { token: '--ring',             value: '.nds-badge:focus-visible', k: 'ring'             },
       { token: '--radius-badge',     value: '.nds-badge',               k: 'radius'           },
       // As três vars internas, que é o que o override escopado alcança.
       { token: '--badge-bg',         value: 'hsl(var(--background))',   k: 'badgeBg'          },

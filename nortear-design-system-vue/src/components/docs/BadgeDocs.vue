@@ -5,7 +5,16 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Badge, BadgeCounter } from '@/components/ui/badge';
-import { Check } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import {
+  badgeWithIconSource,
+  badgeWithCounterSource,
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeVariantSource,
+  type BadgeArgs,
+} from '@/components/ui/badge/badge.source';
+import { Check, X } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
@@ -121,11 +130,16 @@ const codeImportBasic = `import { Badge } from "@/components/ui/badge";`;
 const codeImportWithIcon = `import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-vue-next";`;
 
-const codeDefault = `<Badge>Novo</Badge>`;
-const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
-const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
-const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
-const codeInfo = `<Badge variant="info">Novidade</Badge>`;
+/** Rótulo de cada variante — a chave do conteúdo, nunca o texto cravado. */
+const VARIANT_LABEL_KEY: Record<BadgeArgs['variant'], string> = {
+  default: 'demonstration.labels.defaultLabel',
+  destructive: 'demonstration.labels.destructiveLabel',
+  warning: 'demonstration.labels.warningLabel',
+  success: 'demonstration.labels.successLabel',
+  info: 'demonstration.labels.infoLabel',
+};
+
+const VARIANTS: readonly BadgeArgs['variant'][] = ['default', 'destructive', 'warning', 'success', 'info'];
 
 const interfaceCode = `// Badge
 interface BadgeProps {
@@ -144,13 +158,15 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item4'),
 ]);
 
-const variantItems = computed(() => [
-  { name: 'default',     description: stripHtml(tContent('variants.items.default')),     code: codeDefault     },
-  { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive },
-  { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning     },
-  { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess     },
-  { name: 'info',        description: stripHtml(tContent('variants.items.info')),        code: codeInfo        },
-]);
+const variantItems = computed(() =>
+  VARIANTS.map((variant) => ({
+    // O nome é a variante — id estável, igual nos três idiomas.
+    name: variant,
+    description: stripHtml(tContent(`variants.items.${variant}`)),
+    // O mesmo construtor do painel Code, com o rótulo do idioma ativo.
+    code: badgeVariantSource(variant, tContent(VARIANT_LABEL_KEY[variant])),
+  })),
+);
 
 const compositionItems = computed(() => [
   {
@@ -158,21 +174,33 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
-    code: `<Badge>\n  <Check class="nds-icon-sm" aria-hidden="true" />\n  Ativo\n</Badge>`,
+    // O código é o MESMO construtor do painel Code da story: página e story não
+    // podem ensinar duas formas da mesma composição.
+    code: badgeWithIconSource(),
   },
   {
     trackId: 'withCounter',
     name: tContent('variants.compositions.withCounter.name'),
     description: tContent('variants.compositions.withCounter.description'),
     useWhen: tContent('variants.compositions.withCounter.use'),
-    code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
+    code: badgeWithCounterSource(),
   },
   {
     trackId: 'asTrigger',
     name: tContent('variants.compositions.asTrigger.name'),
     description: tContent('variants.compositions.asTrigger.description'),
     useWhen: tContent('variants.compositions.asTrigger.use'),
-    code: `<button type="button" aria-label="Filtrar por acessibilidade" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="info">Acessibilidade</Badge>\n</button>`,
+    code: badgeAsButtonSource({
+      label: tContent('demonstration.labels.categoryLabel'),
+      accessibleName: tContent('demonstration.labels.categoryFilterLabel'),
+    }),
+  },
+  {
+    trackId: 'asLink',
+    name: tContent('variants.compositions.asLink.name'),
+    description: tContent('variants.compositions.asLink.description'),
+    useWhen: tContent('variants.compositions.asLink.use'),
+    code: badgeAsLinkSource({ label: tContent('demonstration.labels.categoryLabel') }),
   },
 ]);
 
@@ -187,9 +215,9 @@ const propCols = computed(() => ({
 }));
 
 const badgePropItems = computed(() => [
-  { name: 'variant',      type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
-  { name: 'class',        type: 'string',                                    defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className')) },
-  { name: 'default slot', type: 'VNode',                                     defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children')) },
+  { name: 'variant',      type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: tNav('common.no'), description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'class',        type: 'string',                                    defaultValue: '—',         required: tNav('common.no'), description: toPlainText(tContent('props.table.className')) },
+  { name: 'default slot', type: 'VNode',                                     defaultValue: '—',         required: tNav('common.no'), description: toPlainText(tContent('props.table.children')) },
 ]);
 
 /**
@@ -209,7 +237,6 @@ const tokenRows = computed(() => [
   { token: '--secondary',    value: '.nds-badge-counter',      description: tContent('tokens.table.secondary')   },
   { token: '--foreground',   value: '.nds-badge',              description: tContent('tokens.table.foreground')  },
   { token: '--background',   value: '.nds-badge',              description: tContent('tokens.table.background')  },
-  { token: '--ring',         value: '.nds-badge:focus-visible', description: tContent('tokens.table.ring')       },
   { token: '--radius-badge', value: '.nds-badge',              description: tContent('tokens.table.radius')      },
   { token: '--badge-bg',     value: 'hsl(var(--background))',  description: tContent('tokens.table.badgeBg')     },
   { token: '--badge-fg',     value: 'hsl(var(--foreground))',  description: tContent('tokens.table.badgeFg')     },
@@ -253,28 +280,53 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
-]);
+type LocaleContent = {
+  screenReader?: Record<string, string>;
+  testes?: Record<string, Record<string, unknown>>;
+};
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
-]);
+/** O bloco do idioma ativo, lido direto do dicionário (o `t()` exige nome de chave). */
+function localeContent(): LocaleContent {
+  return (badgeTranslations as unknown as Record<string, LocaleContent>)[locale.value] ?? {};
+}
 
-const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-]);
+/**
+ * Os `itemN` de um grupo de testes, em ordem numérica, DERIVADOS do dicionário.
+ * Lista cravada `[1, 2, 3…]` ficava para trás quando o conteúdo ganhava item —
+ * a página renderizava 6 de 8 e ninguém via.
+ */
+function testItemKeys(group: 'functional' | 'accessibility' | 'visual'): string[] {
+  return Object.keys(localeContent().testes?.[group] ?? {})
+    .filter((key) => /^item\d+$/.test(key))
+    .sort((a, b) => Number(a.slice(4)) - Number(b.slice(4)));
+}
+
+// As chaves de `screenReader` variam por componente: só os valores chegam ao
+// container.
+const screenReaderItems = computed(() => Object.values(localeContent().screenReader ?? {}));
+
+const functionalTestItems = computed(() =>
+  testItemKeys('functional').map((key) => ({
+    action: tContent(`testes.functional.${key}.action`),
+    result: tContent(`testes.functional.${key}.result`),
+    priority: localPriority(tContent(`testes.functional.${key}.priority`)),
+  })),
+);
+
+const a11yTestItems = computed(() =>
+  testItemKeys('accessibility').map((key) => ({
+    criterion: tContent(`testes.accessibility.${key}.criterion`),
+    level: tContent(`testes.accessibility.${key}.level`),
+    how: tContent(`testes.accessibility.${key}.how`),
+  })),
+);
+
+const visualTestItems = computed(() =>
+  testItemKeys('visual').map((key) => ({
+    story: tContent(`testes.visual.${key}.story`),
+    priority: localPriority(tContent(`testes.visual.${key}.priority`)),
+  })),
+);
 </script>
 
 <template>
@@ -292,11 +344,10 @@ const visualTestItems = computed(() => [
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration>
+    <DocsDemonstration component-slug="badge">
       <div
         class="nds-cluster"
         data-spacing="sm"
-        style="flex-wrap: wrap"
       >
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
         <Badge variant="destructive">
@@ -313,8 +364,8 @@ const visualTestItems = computed(() => [
         </Badge>
         <Badge>
           <Check
-            class="nds-icon-sm"
             aria-hidden="true"
+            data-icon="inline-start"
           />
           {{ tContent('demonstration.labels.statusLabel') }}
         </Badge>
@@ -394,20 +445,29 @@ const visualTestItems = computed(() => [
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!--
+        Uma etiqueta por prévia, rótulos de `doDont.previews.*`: o par 1 contrasta
+        um rótulo curto com uma frase inteira dentro da etiqueta; o par 2,
+        destructive em alerta real contra destructive em rótulo que não é alerta.
+      -->
       <template #do-preview-0>
-        <Badge>Novo</Badge>
+        <Badge>{{ tContent('doDont.previews.pair1Do') }}</Badge>
       </template>
       <template #dont-preview-0>
-        <Badge>Este item foi adicionado recentemente ao catálogo</Badge>
+        <Badge>{{ tContent('doDont.previews.pair1Dont') }}</Badge>
       </template>
       <template #do-preview-1>
         <Badge variant="destructive">
-          Expirado
+          <X
+            aria-hidden="true"
+            data-icon="inline-start"
+          />
+          {{ tContent('doDont.previews.pair2Do') }}
         </Badge>
       </template>
       <template #dont-preview-1>
         <Badge variant="destructive">
-          Novidade
+          {{ tContent('doDont.previews.pair2Dont') }}
         </Badge>
       </template>
     </DocsDoDont>
@@ -418,11 +478,14 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withIcon')"
       :secondary-code="codeImportWithIcon"
+      component-slug="badge"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsVariants
       :items="variantItems"
+      :note="tContent('variants.note')"
+      component-slug="badge"
     >
       <!--
         Os slots são POSICIONAIS: cada índice casa com a linha de mesma posição
@@ -463,29 +526,35 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <Badge>
           <Check
-            class="nds-icon-sm"
             aria-hidden="true"
+            data-icon="inline-start"
           />
-          Ativo
+          {{ tContent('demonstration.labels.statusLabel') }}
         </Badge>
       </template>
       <template #variant-preview-1>
         <Badge variant="destructive">
-          Urgente
+          {{ tContent('demonstration.labels.destructiveLabel') }}
           <BadgeCounter>12</BadgeCounter>
         </Badge>
       </template>
       <template #variant-preview-2>
-        <button
-          type="button"
-          aria-label="Filtrar por acessibilidade"
-          class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent"
-          style="padding: 0; border: 0"
+        <Button
+          variant="ghost"
+          size="sm"
+          :aria-label="tContent('demonstration.labels.categoryFilterLabel')"
         >
           <Badge variant="info">
-            Acessibilidade
+            {{ tContent('demonstration.labels.categoryLabel') }}
           </Badge>
-        </button>
+        </Button>
+      </template>
+      <template #variant-preview-3>
+        <a href="#">
+          <Badge variant="info">
+            {{ tContent('demonstration.labels.categoryLabel') }}
+          </Badge>
+        </a>
       </template>
     </DocsCompositions>
 
@@ -519,16 +588,20 @@ const visualTestItems = computed(() => [
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
       :keyboard-items="keyboardItems"
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="badge"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="badge"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

@@ -1,14 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import {
-  badgeEmGatilhoSnippet,
-  badgeEmGrupoSnippet,
+  badgeGroupSnippet,
+  badgeLinkSnippet,
+  badgeLinkSourceWith,
   badgeSnippet,
   badgeSource,
-  badgeSourceCom,
+  badgeSourceWith,
+  badgeTriggerSnippet,
+  badgeTriggerSourceWith,
   badgeWithCounterSnippet,
+  badgeWithCounterSourceWith,
+  badgeGroupSourceWith,
 } from './badge.source';
 
-describe('badgeSnippet', () => {
+// Um bloco por story: o que cada painel Code publica tem de bater com o que a
+// story ao lado monta.
+
+describe('Playground — badgeSnippet / badgeSource', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
     const code = badgeSnippet();
     expect(code).toContain("import { createBadge } from '@/components/ui/badge';");
@@ -37,17 +45,6 @@ describe('badgeSnippet', () => {
     expect(code).toContain("className: 'nds-shrink-0'");
   });
 
-  it('o ícone entra na MESMA lista de children, junto com o texto', () => {
-    const code = badgeSnippet({ withIcon: true, label: 'Ativo' });
-    expect(code).toContain("children: [icone, 'Ativo']");
-    expect(code).toContain('aria-hidden');
-    // Não existe fábrica de ícone genérica nesta stack: inventá-la seria API falsa.
-    expect(code).not.toContain('createIcon(');
-    expect(code).not.toContain('lucide');
-  });
-});
-
-describe('badgeSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const noArgs = badgeSource('<span data-slot="badge">', {});
     const withArgs = badgeSource('<span data-slot="badge">', {
@@ -65,35 +62,60 @@ describe('badgeSource', () => {
   });
 });
 
-describe('badgeSourceCom', () => {
+describe('Destructive — badgeSourceWith', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = badgeSourceCom({ variant: 'success', label: 'Aprovado' });
-    const code = transform('', { args: { variant: 'destructive', label: 'Urgente' } });
-    expect(code).toContain("variant: 'success'");
-    expect(code).toContain("children: 'Aprovado'");
-    expect(code).not.toContain('Urgente');
+    const transform = badgeSourceWith({ variant: 'destructive', label: 'Urgente' });
+    const code = transform('', { args: { variant: 'success', label: 'Aprovado' } });
+    expect(code).toContain("variant: 'destructive'");
+    expect(code).toContain("children: 'Urgente'");
+    expect(code).not.toContain('Aprovado');
   });
 });
 
-describe('badgeEmGrupoSnippet', () => {
-  it('mostra as três etiquetas juntas, que é o que a story compara', () => {
-    const code = badgeEmGrupoSnippet({
-      items: [
-        { variant: 'warning', label: 'Vence hoje' },
-        { variant: 'success', label: 'Aprovado' },
-        { variant: 'info', label: 'Novidade' },
-      ],
-    });
+describe('Semantics — badgeGroupSnippet', () => {
+  it('mostra as cinco etiquetas juntas, que é o que a story compara', () => {
+    const code = badgeGroupSourceWith({})('', {});
+    expect(code).toContain("createBadge({ children: 'Novo' }),");
+    expect(code).toContain("createBadge({ variant: 'destructive', children: 'Urgente' }),");
     expect(code).toContain("createBadge({ variant: 'warning', children: 'Vence hoje' }),");
     expect(code).toContain("createBadge({ variant: 'success', children: 'Aprovado' }),");
     expect(code).toContain("createBadge({ variant: 'info', children: 'Novidade' }),");
-    expect(code).toContain("grupo.className = 'nds-cluster';");
+    expect(code).toContain("group.className = 'nds-cluster';");
+  });
+
+  it('a variante padrão não é repetida na chamada', () => {
+    const code = badgeGroupSnippet({ items: [{ variant: 'default', label: 'Novo' }] });
+    expect(code).not.toContain("variant: 'default'");
   });
 });
 
-describe('badgeWithCounterSnippet', () => {
+describe('WithIcon — badgeSnippet com ícone', () => {
+  const code = badgeSnippet({ withIcon: true, label: 'Ativo' });
+
+  it('o ícone entra na MESMA lista de children, junto com o texto', () => {
+    expect(code).toContain("children: [icon, 'Ativo']");
+  });
+
+  it('ensina a construir o ícone, em vez de chamar um helper que quem copia não tem', () => {
+    expect(code).toContain("import { Check, createElement } from 'lucide';");
+    expect(code).toContain('const icon = createElement(Check);');
+    expect(code).not.toContain('createCheckSvg');
+    expect(code).not.toContain('createIcon(');
+  });
+
+  it('marca o ícone como decorativo e posicional', () => {
+    expect(code).toContain("icon.setAttribute('aria-hidden', 'true');");
+    expect(code).toContain("icon.setAttribute('data-icon', 'inline-start');");
+  });
+});
+
+describe('WithCounter — badgeWithCounterSnippet', () => {
   it('monta o contador pela subfábrica, dentro do children da etiqueta', () => {
-    const code = badgeWithCounterSnippet({ variant: 'destructive', label: 'Urgente', count: '12' });
+    const code = badgeWithCounterSourceWith({
+      variant: 'destructive',
+      label: 'Urgente',
+      count: '12',
+    })('', {});
     expect(code).toContain(
       "import { createBadge, createBadgeCounter } from '@/components/ui/badge';",
     );
@@ -109,24 +131,45 @@ describe('badgeWithCounterSnippet', () => {
   });
 });
 
-describe('badgeEmGatilhoSnippet', () => {
-  it('o botão em volta é quem recebe o clique, o foco e o nome acessível', () => {
-    const code = badgeEmGatilhoSnippet({
-      variant: 'info',
-      label: 'React',
-      accessibleName: 'Filtrar por React',
-    });
-    expect(code).toContain("document.createElement('button')");
-    expect(code).toContain("alvo.type = 'button';");
-    expect(code).toContain("alvo.setAttribute('aria-label', 'Filtrar por React');");
-    expect(code).toContain("createBadge({ variant: 'info', children: 'React' })");
+describe('AsButton — badgeTriggerSnippet', () => {
+  const code = badgeTriggerSourceWith({
+    label: 'Design',
+    accessibleName: 'Filtrar por Design',
+  })('', {});
+
+  it('o Button do design system, ghost e sm, é quem recebe clique, foco e nome', () => {
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("variant: 'ghost',");
+    expect(code).toContain("size: 'sm',");
+    expect(code).toContain("'aria-label': 'Filtrar por Design',");
+    expect(code).toContain("children: createBadge({ variant: 'info', children: 'Design' }),");
+  });
+
+  it('a etiqueta é info por padrão, e a variante vem da opção', () => {
+    expect(badgeTriggerSnippet()).toContain("createBadge({ variant: 'info', children: 'Design' })");
+    expect(badgeTriggerSnippet({ variant: 'success' })).toContain("variant: 'success'");
+  });
+
+  it('não reinicia a aparência de um <button> cru', () => {
+    expect(code).not.toContain("document.createElement('button')");
+    expect(code).not.toContain('.style.');
     // A etiqueta não compete pelo foco.
     expect(code).not.toContain('tabindex');
   });
+});
 
-  it('não monta link: a etiqueta clicável é sempre um botão', () => {
-    const code = badgeEmGatilhoSnippet({ label: 'React' });
-    expect(code).not.toContain("document.createElement('a')");
-    expect(code).not.toContain('alvo.href');
+describe('AsLink — badgeLinkSnippet', () => {
+  it('a etiqueta é filha direta do <a>, que é quem recebe foco e Enter', () => {
+    const code = badgeLinkSourceWith({ label: 'Design' })('', {});
+    expect(code).toContain("const link = document.createElement('a');");
+    expect(code).toContain("link.href = '#';");
+    expect(code).toContain("link.append(createBadge({ variant: 'info', children: 'Design' }));");
+    expect(code).not.toContain('tabindex');
+  });
+
+  it('o destino vem da opção', () => {
+    expect(badgeLinkSnippet({ href: '/categorias/design' })).toContain(
+      "link.href = '/categorias/design';",
+    );
   });
 });

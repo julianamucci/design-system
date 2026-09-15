@@ -7,6 +7,12 @@
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+>
+> **Revisado em 2026-09-14** pela passagem `/pipeline fix badge`, com quatro
+> decisões da dona: os anéis de foco e de inválido saíram da folha (o hover dentro
+> de link ficou, com composição própria), o gatilho é o Button do design system,
+> o rótulo do gatilho é `categoryLabel`, e as chaves úteis passaram a renderizar
+> nas cinco. A medição mora em `docs/shared/testing/badge-probe.ts`.
 
 ## 1. Identidade
 
@@ -14,7 +20,7 @@ Etiqueta **inline** de rótulo curto — status, categoria, contagem — que mor
 dentro de frase, de título e de célula de tabela sem quebrar a linha.
 
 Não é controle: não recebe foco, não tem papel ARIA e não escuta clique. Quando o
-rótulo precisa ser acionável, quem envolve é um `<button>`, e o badge fica só com
+rótulo precisa ser acionável, quem envolve é o Button do design system ou um `<a>`, e o badge fica só com
 a aparência.
 
 | vizinho | diferença que decide |
@@ -45,31 +51,34 @@ ou `info`. As cinco stacks consomem a MESMA função — medido nos cinco
 
 Cada linha aponta a chave de `docs/shared/content/badge/translations.json` que a
 publica e a story que a mede. As chaves citadas existem nos três idiomas
-(conferido em 2026-09-13: `testes.functional` tem 7 itens, `testes.accessibility`
-4 e `testes.visual` 6, em pt-BR, en e es).
+(conferido em 2026-09-14: `testes.functional` tem 8 itens, `testes.accessibility`
+5 e `testes.visual` 7, em pt-BR, en e es).
 
 | # | o contrato | chave · onde é medido |
 |---|---|---|
-| C1 | A raiz é `<span>`, inline-flex, `white-space: nowrap` | `testes.accessibility.item1` · passo "É um `<span>`" do Playground das cinco |
-| C2 | A etiqueta NÃO é preenchida: fundo `--background` e texto `--foreground` em todas as variantes | `testes.functional.item7` · `Semantics` (react, vue, svelte, vanilla) e passo "Cada variante pinta a BORDA" do `Variants` (angular) |
-| C3 | Quem carrega a variante é a borda, com no mínimo 2px | `testes.functional.item1` · `Default` das quatro; `Variants` no angular |
+| C1 | A raiz é `<span>`, inline-flex, `white-space: nowrap` | passo "É um `<span>`" do Playground das cinco |
+| C2 | A etiqueta NÃO é preenchida: fundo `--background` e texto `--foreground` em todas as variantes | `testes.functional.item7` · `Semantics` das cinco, por `badgeSurface` |
+| C3 | Quem carrega a variante é a borda, com no mínimo 2px | `testes.functional.item1` · `Default` das cinco, por `badgeBorder` |
 | C4 | `default` lê `--primary`, `destructive` lê `--destructive`, `warning` lê `--warning`, `success` lê `--success` | `testes.functional.item1`, `item2`, `item3` · `Default`, `Destructive`, `Semantics` |
-| C5 | `info` NÃO lê o token homônimo: ela usa a hairline neutra `--border` | `testes.functional.item4` · `Semantics` / `Variants`, que gravam a expressão de cor esperada em vez do nome do token |
+| C5 | `info` NÃO lê o token homônimo: ela usa a hairline neutra `--border` | `testes.functional.item4` · `Semantics` das cinco, pela tabela `BADGE_BORDER_TOKEN` da sonda |
 | C6 | As três semânticas são distinguíveis entre si — três cores, não três nomes da mesma | `testes.functional.item7` · asserção `new Set(borders).size === 3` nas cinco |
 | C7 | A `warning` não pode coincidir com a `destructive` | `testes.functional.item2` · comparação explícita contra a borda da destructive nas cinco |
-| C8 | O texto alcança 4.5:1 sem depender da variante escolhida | `testes.accessibility.item3` · medida de razão em vue, svelte e angular; igualdade contra referência viva em react e vanilla |
+| C8 | O texto alcança 4.5:1 sem depender da variante escolhida | `testes.accessibility.item3` · razão medida por `badgeSurface` nas cinco |
 | C9 | O ícone filho é decorativo (`aria-hidden="true"`) e o nome acessível é só o texto | `testes.accessibility.item2` · `WithIcon` das cinco |
-| C10 | O respiro entre ícone e rótulo é do container (`gap`), e `data-icon` encurta o padding daquele lado | `testes.functional.item5` · `WithIcon` das cinco, comparando `paddingInlineStart < paddingInlineEnd` |
+| C10 | O respiro entre ícone e rótulo é do container (`gap`), e `data-icon` encurta o padding daquele lado | `testes.functional.item5` · `WithIcon` das cinco, por `iconPadding` — o `gap` em si é afirmado só no react |
 | C11 | O contador fica à DIREITA do rótulo, na mesma linha, e é texto lido (sem `aria-hidden`) | `testes.visual.item6` · `WithCounter` das cinco, com a caixa do rótulo saindo de um `Range` |
 | C12 | O contador é neutro em qualquer variante, e o número alcança 4.5:1 contra o fundo dele | `testes.visual.item6` · `WithCounter` das cinco |
-| C13 | Envolvido em `<button>`, quem recebe o foco é o pai; o badge não ganha `tabindex` | `testes.functional.item6`, `testes.accessibility.item4` · `AsButton` (react, vue, svelte, vanilla) e `AsTrigger` (angular) |
-| C14 | `data-slot="badge"` e a classe `.nds-badge` saem sempre; o contador sai com `data-slot="badge-counter"` e `.nds-badge-counter` | `testes.visual.item6` · Playground e `WithCounter` das cinco |
+| C13 | Envolvido no Button do design system (ghost, sm), quem recebe o foco é o botão; o badge não ganha `tabindex` | `testes.functional.item6`, `testes.accessibility.item4` · `AsButton` das cinco |
+| C14 | `data-slot="badge"` e a classe `.nds-badge` saem sempre; o contador sai com `data-slot="badge-counter"` e `.nds-badge-counter` | `testes.visual.item6` · `data-slot` no Playground e no `WithCounter` das cinco — a classe `.nds-badge` é afirmada só no angular |
 | C15 | Tipografia fixa: 12px e peso ≥ 500 — não há eixo de tamanho | — · passo "Tipografia compacta" do Playground das cinco |
+| C16 | A borda das variantes cromáticas alcança 3:1 contra a página; a `info` fica abaixo por decisão (D3) | `testes.accessibility.item5` · `Semantics` das cinco, por `borderAgainstPage` e `BADGE_BORDER_FLOOR` |
+| C17 | Envolvida em `<a>`, o link recebe o foco e, com o ponteiro em cima, o fundo da etiqueta passa a `--secondary` | `testes.functional.item8`, `testes.visual.item7` · `AsLink` das cinco — foco por Tab, e o hover pela DECLARAÇÃO da folha (`badgeLinkHover`), porque `:hover` não acende por evento sintético |
 
-**O que NENHUM portão mede, e está registrado aqui de propósito**: `data-variant`
-é afirmado nas cinco, mas só com a variante EXPLÍCITA (ver §7, divergência do
-Vue); e os três estados que a folha desenha — foco visível, inválido e hover
-dentro de link — não têm produtor em stack nenhuma (§6).
+**Até 2026-09-14 dois buracos ficavam registrados aqui**: `data-variant` só era
+afirmado com variante explícita (o vue não o emitia sem ela), e três estados da
+folha não tinham produtor. Os dois fecharam: o `Playground` das cinco afirma
+`data-variant="default"` sem variante passada, os anéis de foco e de inválido
+saíram da folha, e o hover dentro de link ganhou a `AsLink` (C17).
 
 ## 3. Decisões fixadas
 
@@ -88,7 +97,7 @@ C8 verificável por igualdade contra uma referência viva, sem medir cinco razõ
 
 **Medição**: em traço fino duas cores próximas somem na tela, e desde D1 a borda é
 o ÚNICO portador da variante. As plays das cinco cobram `borderTopWidth ≥ 2`
-(no svelte, igualdade exata a 2).
+(pela sonda, `badgeBorder`, igual nas cinco desde 2026-09-14).
 
 ### D3 · O piso da borda é 3:1, e uma das cinco fica abaixo dele de propósito
 
@@ -107,6 +116,8 @@ A `info` assumiu a hairline neutra do projeto, a mesma que input e card desenham
 mudar isso é assunto da paleta, não do badge. Em troca ela responde por outra
 promessa — não parecer a ênfase alta (C5).
 **Onde está escrito**: comentário do bloco de variantes de `badge.css`.
+**Portão**: até 2026-09-14 só o svelte media o piso; hoje a `Semantics` das cinco
+mede, pela mesma sonda (C16).
 
 ### D4 · A `warning` voltou ao token, e a exceção por componente resolvia o problema errado
 
@@ -139,7 +150,7 @@ escolhida. A cor não se perde — quem a carrega é a borda, ao redor.
 `info` é pintada por `--border` (D3).
 **Onde está registrado**: docblock da folha ("`--info` NÃO é lido aqui"), a tabela
 de tokens das cinco docs pages (que omitem a linha de propósito — o comentário
-está em `BadgeDocs.vue`) e as plays, que gravam a EXPRESSÃO de cor esperada por
+está nas cinco docs pages) e as plays, que gravam a EXPRESSÃO de cor esperada por
 variante justamente para reprovar quem devolver os tokens homônimos por simetria.
 
 ### D7 · São cinco variantes: `secondary` e `outline` saíram
@@ -179,15 +190,19 @@ cobrir nem o que ignorar.
 
 ### D10 · Nunca `onClick` no badge — quem envolve é o controle
 
-**Estado**: as cinco publicam a composição "como gatilho" com a etiqueta DENTRO de
-um `<button>`, e as plays cobram que o badge não tenha `tabindex` e que o foco
-pare no pai (C13).
+**Estado**: as cinco publicam a composição "como gatilho" com a etiqueta DENTRO do
+Button do design system, variante `ghost`, tamanho `sm` — decisão da dona em
+2026-09-14; até ali eram três `<button>` crus sem reset (com o cromo do
+navegador), um reset por `style` inline no vanilla e o Button no angular. As plays
+cobram que o badge não tenha `tabindex` e que o foco pare no botão (C13). E há a
+composição "como link", `AsLink`, nas cinco (C17).
 **O que saiu por causa disso**: as classes `ghost` e `link` da folha (eram estilo
 de badge interativo, e ninguém as renderizava), a prop `href` do svelte, e a
 composição "como link" do vue e do angular — as duas ensinavam a mesma divisão de
 papéis do gatilho.
-**O que ficou como resíduo**: a folha ainda desenha `a > .nds-badge:hover` e
-`a.nds-badge:hover`, sem produtor em stack nenhuma (§6).
+**O que era resíduo e deixou de ser**: a folha desenha `a > .nds-badge:hover` e
+`a.nds-badge:hover`, que não tinham produtor; desde 2026-09-14 a `AsLink` os
+produz e mede.
 
 ### D11 · Não há eixo de tamanho, e a altura é resultado
 
@@ -218,16 +233,16 @@ dimensiona por `.nds-badge > svg`.
 
 **`data-icon` é o posicionador, e é ele que compensa o padding**: com
 `data-icon="inline-start"` a folha encurta `padding-inline-start`; com
-`inline-end`, o outro lado. Ele é escrito pelas STORIES das cinco e por
-**nenhuma docs page** (medido em 2026-09-13: zero ocorrências de `data-icon` nos
-cinco `BadgeDocs.*`) — ver as pendências de §11.
+`inline-end`, o outro lado. Ele é escrito pelas stories E pelas docs pages das
+cinco desde 2026-09-14 — até ali nenhuma página o escrevia, e a etiqueta com ícone
+da demonstração saía com o respiro errado.
 
 ## 5. Geometria e tokens
 
 Fonte: `docs/shared/styles/nds/badge.css`, linha a linha. Instrumento:
 `node scripts/tabela-tokens.mjs badge` — em 2026-09-13 ele fecha com 0 linhas
 divergentes e 0 divergências entre stacks, com as cinco tabelas de docs page
-listando as mesmas 13 linhas.
+listando as mesmas 13 linhas; desde 2026-09-14, sem a do anel de foco, são 12.
 
 | propriedade | valor | token |
 |---|---|---|
@@ -250,9 +265,6 @@ listando as mesmas 13 linhas.
 | entrelinha | 1.5 | **literal** — é o que faz a altura ser resultado (D11) |
 | ícone | 12px | **literal** `0.75rem`, fora do grid de 8, declarado como padrão visual de badge |
 | transição | fundo, cor, borda e sombra | `--duration-fast` |
-| anel de foco | halo 2px + anel 5px | `--background` e `--ring` a 50% |
-| anel de inválido | halo 2px + anel 5px | `--background` e `--destructive` a 40% |
-| anel de foco por variante | anel 5px na cor da variante a 40% | `--destructive`, `--warning`, `--success`; a `info` usa `--ring` a 50% |
 | contador · fundo | — | `--secondary` (D5) |
 | contador · texto | — | `--foreground` |
 | contador · raio | círculo | `--radius-full` |
@@ -269,6 +281,14 @@ superfícies flutuantes.
 12px do ícone (nota na própria regra) e a largura mínima do contador. Não há
 literal de COR na folha desde D4.
 
+**O token do anel de foco saiu da folha em 2026-09-14**, com os anéis de foco e de
+inválido (§6), e a linha dele saiu das cinco tabelas de tokens.
+
+**`.nds-badge-primary` continua na folha, e tem produtor**: o `toolCallBadgeClass`
+do tool-group emite `nds-badge nds-badge-primary` no estado de execução. A tela
+seria a mesma sem a classe, mas classe emitida sem regra é o que
+`unknown_class_reference` pega.
+
 **Um token lido e não listado nas tabelas de docs page**: `--radius-full`, que o
 contador lê. O instrumento o aponta como candidato; hoje as cinco páginas
 concordam em não listá-lo, e a linha do raio que elas listam é a da etiqueta.
@@ -281,29 +301,25 @@ concordam em não listá-lo, e a linha do raio que elas listam é a da etiqueta.
 | Com ícone | SVG filho com `data-icon` | padding do lado do ícone encurta; gap de 4px | sim, as cinco stories |
 | Com contador | `badge-counter` como último filho | pílula neutra à direita do rótulo | sim, as cinco |
 | Movimento reduzido | `prefers-reduced-motion: reduce` | `transition: none` | sim — bloco `@media` da própria folha, além da escada de `docs/shared/tokens/motion.css` |
-| Foco visível | `:focus-visible` na própria etiqueta | halo de 2px na cor do fundo + anel de 5px (da variante, ou `--ring`) | **não** |
-| Inválido | `[aria-invalid="true"]` | anel permanente em `--destructive` a 40%; com foco, soma `outline` sólido em `--ring` com offset de 5px | **não** |
-| Hover dentro de link | `a > .nds-badge` ou `a.nds-badge` | fundo sai do neutro para `--secondary` | **não** |
+| Hover dentro de link | `a > .nds-badge` ou `a.nds-badge` | fundo sai do neutro para `--secondary` | sim — `AsLink` das cinco |
 
-**Os três últimos não têm produtor em stack nenhuma**, e isso é medição de
-2026-09-13: `aria-invalid` não aparece em nenhum arquivo de badge das cinco (nem
+**Até 2026-09-14 a tabela tinha mais dois estados, e nenhum dos três últimos tinha
+produtor.** Por decisão da dona, o anel de foco e o de inválido SAÍRAM da folha — a
+etiqueta nunca recebe foco (D10) e nunca foi campo — e o hover dentro de link
+ficou, com a `AsLink`. A medição de 2026-09-13, que sustentou a decisão: `aria-invalid` não aparece em nenhum arquivo de badge das cinco (nem
 story, nem docs page), e não existe uma única etiqueta envolvida em `<a>` — as
 cinco composições de gatilho usam `<button>`. O `:focus-visible` da raiz é
 inalcançável por construção: um `<span>` sem `tabindex` não recebe foco, e a
 orientação do componente é que ele nunca receba (D10).
 
-Isso **não** faz das regras defeito: elas existem para o dia em que um consumidor
-puser a etiqueta dentro de um link, e a folha é consumida por outras cinco
-famílias (§1). Faz delas código sem cobertura — e é isso que o documento precisa
-dizer, porque `states` do conteúdo compartilhado publica **uma** configuração só
-(`countBadge`), e portanto as cinco docs pages descrevem uma linha de sete.
+O que fica de pé depois da decisão: `states` do conteúdo compartilhado publica
+**uma** configuração só (`countBadge`), e a tabela acima tem quatro linhas — as
+outras três são composição (ícone, contador, link) ou preferência do sistema, não
+configuração da etiqueta.
 
-A ordem das regras de foco e de inválido já foi defeito, e o conserto está na
-folha: o anel de inválido é PERMANENTE e era declarado depois do `:focus-visible`
-com a mesma especificidade, então focar um elemento inválido não mudava nada na
-tela (WCAG 2.4.7). Hoje os dois convivem — o destrutivo por dentro, o de foco por
-fora — e o anel de foco é opaco, porque translúcido sobre o fundo media 1.97:1 e
-não alcança os 3:1 de 1.4.11.
+A ordem das regras de foco e de inválido já tinha sido defeito — o anel de
+inválido, permanente, apagava o de foco (WCAG 2.4.7) —, e o conserto conviveu na
+folha até as duas regras saírem, em 2026-09-14.
 
 ## 7. API
 
@@ -327,7 +343,7 @@ pontual sobrescreve as vars internas escopadas (`--badge-bg`, `--badge-fg`,
 | react | `Badge` passa por `useRender` do base-ui: aceita `render` para trocar o elemento, e `data-slot`/`data-variant` saem do `state`. `className`. O `BadgeCounter` **não** passa por `useRender` — é folha, sem estado e sem `render` |
 | vue | `Badge` embrulha o `Primitive` da reka-ui: herda `as` e `as-child`, e o default `span` é calculado (`props.as ?? 'span'`) porque o `Primitive` renderiza `div`. `class`. O `as` sai do `v-bind` delegado de propósito — deixá-lo lá reinjetava `as: undefined` depois do default, apagando-o |
 | svelte | `variant`, `class`, `ref` bindável e `restProps`; `badgeVariants` e o tipo saem do bloco `module` do próprio `.svelte`. O índice reexporta as formas curtas `Root`/`Counter` ao lado de `Badge`/`BadgeCounter` |
-| vanilla | fábricas `createBadge(options)` e `createBadgeCounter(options)`; `children` aceita string, `HTMLElement` ou lista dos dois, e string entra por `textContent` (XSS-safe). Tem o alias legado **`text`**, mantido por compatibilidade — e ele está vivo: 14 chamadas em 10 arquivos ainda usam `createBadge({ text: … })`, incluindo `DocsHeader.ts` e `DocsTestes.ts`. O contador aceita **só** `text: string` |
+| vanilla | fábricas `createBadge(options)` e `createBadgeCounter(options)`; `children` aceita string, `HTMLElement`, `SVGElement` (desde 2026-09-14, para o ícone do snippet ser copiável) ou lista deles, e string entra por `textContent` (XSS-safe). Tem o alias legado **`text`**, mantido por compatibilidade — e ele está vivo: 13 chamadas em 9 arquivos ainda usam `createBadge({ text: … })` (medido em 2026-09-14), incluindo `DocsHeader.ts` e `DocsTestes.ts`. O contador aceita **só** `text: string` |
 | angular | diretivas de ATRIBUTO amarradas ao elemento: `span[ndsBadge]` (componente, com `<ng-content />`) e `span[ndsBadgeCounter]` (`@Directive`, porque não há nada a projetar). `variant` é `input()`; a classe extra é o `class` nativo, mesclado pelo Angular. **`data-slot` é lido do atributo estático na construção**, com `'badge'` de fallback: é o que deixa quem compõe nomear a peça (`data-slot="composer-queue-state"`) sem que o host binding apague o nome — a mesma raiz da regra de estilizar por classe e nunca por `[data-slot]` |
 
 **Onde a semântica é a mesma nas cinco**: a raiz é `<span>` sempre. No vue isso é
@@ -336,7 +352,13 @@ mudaria a semântica, não só o estilo; no svelte é literal, com o comentário
 dizendo que `href` saiu do contrato. Esta era a divergência mais visível do
 componente — o vue renderizava `div` — e fechou antes desta escrita.
 
-### Divergências medidas que NÃO são de framework
+### Divergências medidas que NÃO são de framework — FECHADAS em 2026-09-14, salvo V2 e V12
+
+V1, V3–V11 e V13 fecharam na passagem `/pipeline fix badge`. **V2 fica declarada**:
+a classe `nds-badge-default` só sai onde há `cva`, a tela é idêntica, e as sondas
+deixaram de depender dela — montam a referência com o componente. **V12 é do
+`DocsHeader`**, infraestrutura de todas as páginas, e fica fora desta passagem. A
+tabela abaixo é o estado de 2026-09-13.
 
 | # | o que difere | quem faz o quê | a maioria |
 |---|---|---|---|
@@ -364,10 +386,9 @@ componente — o vue renderizava `div` — e fechou antes desta escrita.
 | vanilla | `createBadge`, `createBadgeCounter`, tipos `BadgeOptions`, `BadgeCounterOptions`, `BadgeVariant` |
 | angular | `span[ndsBadge]` (`NdsBadge`), `span[ndsBadgeCounter]` (`NdsBadgeCounter`), tipo `BadgeVariant` |
 
-**`ndsBadgeIcon` não existe.** A anatomia compartilhada publica
-`<svg ndsBadgeIcon>` no snippet do angular, e a stack declara `ndsButtonIcon` —
-é o que a story `WithIcon` usa. Portão: `angular_anatomy_seletor_inexistente`,
-que reporta hoje.
+**`ndsBadgeIcon` não existia.** A anatomia compartilhada publicava
+`<svg ndsBadgeIcon>` no snippet do angular; desde 2026-09-14 ela ensina o
+`ndsButtonIcon` que a stack declara, com `data-icon="inline-start"`.
 
 ## 8. Acessibilidade
 
@@ -440,10 +461,10 @@ payload como `{ label, variant }` e o tipo declara quatro campos
 (`component`, `label`, `variant?`, `location?`), com `component` e `location`
 ausentes da tabela publicada.
 
-**Três guidelines dizem outro evento.** `07-feedback-components.md` de react, vue
-e vanilla fecha a seção do Badge com "Badge clicável (filtro, tag):
-`button_click` com `label`". Não é o que o código faz nem o que o conteúdo
-publica; svelte e angular não têm a linha.
+**As guidelines de stack não dizem mais outro evento**: o
+`07-feedback-components.md` só existe no vanilla e no angular (react, vue e svelte
+saíram com a migração do catálogo), e nenhum dos dois tem a linha de
+`button_click` que três cópias antigas carregavam.
 
 ## 10. Reconstruir do zero
 
@@ -464,8 +485,8 @@ Ordem: folha → primitivo → subpeça do contador → stories → docs page.
 - **Armadilha por stack**: no react o `data-slot` sai do `state` do `useRender`;
   no vue a prop de variante sem default deixa `data-variant` de fora (V1); no
   svelte o `restProps` entra depois do `class`, então a ordem importa; no vanilla o
-  alias legado `text` tem 14 consumidores vivos e não pode ser removido em
-  silêncio; no angular o `data-slot` estático precisa ser lido na construção,
+  alias legado `text` tem 13 chamadas vivas em 9 arquivos (medido em 2026-09-14) e
+  não pode ser removido em silêncio; no angular o `data-slot` estático precisa ser lido na construção,
   porque o host binding o apagaria.
 
 ## 11. Onde está a verdade
@@ -480,21 +501,19 @@ Ordem: folha → primitivo → subpeça do contador → stories → docs page.
 | instrumento de tokens | `node scripts/tabela-tokens.mjs badge` |
 | regra de CATEGORIA (feedback) | `nortear-design-system-<stack>/guidelines/07-feedback-components.md` |
 
-**O comentário do link do Figma está velho**: `docs/shared/figma/design-links.ts`
+**O comentário do link do Figma foi reescrito em 2026-09-14** para não afirmar o
+que não foi conferido: ele passou a dizer as cinco variantes do CÓDIGO e que o
+variant set do arquivo ainda precisa ser conferido contra elas. O texto antigo
+dizia: `docs/shared/figma/design-links.ts`
 descreve o variant set como "eixo único `variant` (default, secondary,
 destructive, outline)" — duas das quatro saíram do sistema (D7), e `warning`,
 `success` e `info` não aparecem.
 
-**Duas afirmações do conteúdo compartilhado contradizem as cinco stacks**, e as
-duas dizem `<div>`: `accessibility.item1` ("Badge é um `<div>` sem foco nem
+**Corrigidas em 2026-09-14 — duas afirmações do conteúdo compartilhado contradiziam
+as cinco stacks**, e as duas diziam `<div>`: `accessibility.item1` ("Badge é um `<div>` sem foco nem
 tabindex") e `notes.tip3` ("em vez de adicionar `onClick` no `<div>`"). A raiz é
 `<span>` nas cinco desde antes desta escrita, e o Playground das cinco mede
 exatamente isso (C1). É o resíduo da época em que o vue renderizava `div`.
-
-**A guideline do svelte contradiz a folha sobre o piso da `warning`**: ela diz que
-"a `warning` e a `info` ficam abaixo dele de propósito", e a folha mede a warning
-em 4.66:1 no claro e 5.22:1 no escuro — acima do piso —, com a própria story
-daquela stack cobrando `BORDER_FLOOR` da warning e isentando só a `info` (D3).
 
 **A migração do catálogo FECHOU em 2026-09-13**, no mesmo dia em que este PRD
 nasceu: a regra da categoria virou [`19-feedback.md`](../guidelines/19-feedback.md),
@@ -504,36 +523,41 @@ curto com a mecânica própria, e é lá que ficou a regra de que a etiqueta nã
 elemento interativo: `createBadge` dentro de um `<button>`, sem ouvinte no elemento
 devolvido pela fábrica.
 
-> **PENDÊNCIA · 2026-09-13** — react, vue e vanilla publicam 6 dos 7 itens
+> **FECHADA · 2026-09-14** — react, vue e vanilla publicam 6 dos 7 itens
 > funcionais e 4 dos 6 visuais, porque a lista é literal na página; svelte lista
 > todos à mão e o angular deriva do dicionário. O item que some é justamente o
 > `functional.item7`, que é o contrato C2/C6.
 > **Fecha quando**: `lista_mais_curta_que_o_conteudo` não reportar badge.
+> **Como fechou (2026-09-14)**: as cinco docs pages derivam as listas de teste do dicionário (hoje 8, 5 e 7 itens).
 
-> **PENDÊNCIA · 2026-09-13** — a anatomia compartilhada publica `ndsBadgeIcon`,
+> **FECHADA · 2026-09-14** — a anatomia compartilhada publica `ndsBadgeIcon`,
 > atributo que a stack Angular não declara: quem copiar o snippet recebe markup
 > que não compila. A story usa `ndsButtonIcon`.
 > **Fecha quando**: `angular_anatomy_seletor_inexistente` não reportar badge.
+> **Como fechou (2026-09-14)**: a anatomia compartilhada ensina `ndsButtonIcon` com `data-icon="inline-start"`.
 
-> **PENDÊNCIA · 2026-09-13** — o Angular tem um construtor de snippet só, sem
+> **FECHADA · 2026-09-14** — o Angular tem um construtor de snippet só, sem
 > teste, e os quatro stories de variantes e composições publicam o template da
 > story no painel Code, que é a única parte da página feita para ser copiada.
 > **Fecha quando**: `source_sem_teste` e `story_file_sem_transform` não reportarem
 > badge.
+> **Como fechou (2026-09-14)**: construtores por story e `badge.source.test.ts` no angular, com `transform` em toda story.
 
-> **PENDÊNCIA · 2026-09-13** — a demonstração usa conjuntos diferentes de rótulos:
+> **FECHADA · 2026-09-14** — a demonstração usa conjuntos diferentes de rótulos:
 > o svelte acrescenta `tagLabel` (e perde a variante `success`), o angular
 > acrescenta `categoryLabel`, e react, vue e vanilla escrevem o rótulo do gatilho
 > literal em vez de ler a chave publicada (V9, V10).
 > **Fecha quando**: `demonstration_labels_divergent` não reportar badge.
+> **Como fechou (2026-09-14)**: as cinco demonstrações usam o conjunto do vanilla — cinco variantes e uma com ícone — e o gatilho lê `categoryLabel` (`tagLabel` saiu do conteúdo).
 
 **FECHADA em 2026-09-13**: a dona decidiu REMOVER o `badge_click` em vez de
 disparar nas cinco. Saiu do tipo das cinco stacks, do call site do react, das cinco
 tabelas de analytics e do conteúdo compartilhado, com a descrição da seção
 reescrita nos três idiomas para dizer que o clique é do botão. Ver §9.
 
-> **PENDÊNCIA · 2026-09-13** — sem variante explícita o Vue não emite
+> **FECHADA · 2026-09-14** — sem variante explícita o Vue não emite
 > `data-variant`, e as outras quatro emitem `default` (V1). Há duas instâncias
 > vivas na demonstração da própria docs page daquela stack.
 > **Fecha quando**: o primitivo do vue passar a ter default de variante, ou a
 > divergência for aceita por escrito como API de framework.
+> **Como fechou (2026-09-14)**: o `Badge.vue` passou a ter `variant: 'default'` por padrão, e o `Playground` das cinco afirma `data-variant="default"` sem variante passada.

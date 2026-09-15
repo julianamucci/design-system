@@ -1,14 +1,22 @@
 import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { within, expect, userEvent } from "storybook/test";
 import { Check } from "lucide-react";
-import { backgroundEffective, noTransicao, ratio, resolveColor } from "@shared/testing/cor";
-import { Badge, BadgeCounter } from "./badge";
+import { noTransicao, resolveColor } from "@shared/testing/cor";
 import {
-  badgeWithIconSource,
+  badgeCounterMeasure,
+  badgeLinkHover,
+  badgeRoot,
+  iconPadding,
+} from "@shared/testing/badge-probe";
+import { Badge, BadgeCounter } from "./badge";
+import { Button } from "./button";
+import {
   badgeAsButtonSource,
-  badgeWithCounterSource,
+  badgeAsLinkSource,
   badgeSource,
+  badgeWithCounterSource,
+  badgeWithIconSource,
 } from "./badge.source";
 
 const meta = {
@@ -24,7 +32,7 @@ const meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          "Configurações contextuais do Badge: combinado com ícone, com contador dentro da etiqueta ou envolvido em <button> para virar gatilho clicável.",
+          "Configurações contextuais do Badge: combinado com ícone, com contador dentro da etiqueta, dentro do Button do design system como gatilho, ou dentro de um link.",
       },
     },
   },
@@ -46,25 +54,24 @@ export const WithIcon: Story = {
     </Badge>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText("Ativo");
+    const badge = badgeRoot(canvasElement);
 
-    // accessibility.item2 — o ícone é reforço visual: quem nomeia é o texto.
-    const icone = badge.querySelector("svg");
-    await expect(icone).not.toBeNull();
-    await expect(icone).toHaveAttribute("aria-hidden", "true");
+    // accessibility.item2 — o ícone é reforço visual: quem nomeia é só o texto.
+    const icon = badge.querySelector("svg");
+    await expect(icon).not.toBeNull();
+    await expect(icon).toHaveAttribute("aria-hidden", "true");
+    await expect(icon).toHaveAttribute("data-icon", "inline-start");
     await expect(badge.textContent?.trim()).toBe("Ativo");
 
-    // functional.item5 — o espaço entre ícone e texto é do container, não uma
-    // margem na story: o .nds-badge declara gap, e o data-icon encurta o padding
-    // daquele lado. Margem manual somaria ao gap e dobraria o respiro.
+    // functional.item5 — o espaço entre ícone e texto é do container: o
+    // .nds-badge declara gap, e o data-icon encurta o padding daquele lado.
+    // Margem manual somaria ao gap e dobraria o respiro.
     const style = getComputedStyle(badge);
     await expect(style.display).toBe("inline-flex");
     await expect(parseFloat(style.columnGap)).toBeGreaterThan(0);
-    await expect(getComputedStyle(icone!).marginRight).toBe("0px");
-    await expect(parseFloat(style.paddingInlineStart)).toBeLessThan(
-      parseFloat(style.paddingInlineEnd),
-    );
+    await expect(getComputedStyle(icon!).marginRight).toBe("0px");
+    const padding = iconPadding(badge);
+    await expect(padding.start).toBeLessThan(padding.end);
   },
 };
 
@@ -91,64 +98,29 @@ export const WithCounter: Story = {
     </Badge>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const counter = canvas.getByText("12");
-    const badge = counter.closest<HTMLElement>('[data-slot="badge"]')!;
+    const badge = badgeRoot(canvasElement);
+    const counter = within(badge).getByText("12");
 
-    // A peça publicada, e não uma classe solta na story: o markup tem de sair
-    // com a classe e o slot que a folha compartilhada documenta.
+    // A peça publicada, e não uma classe solta na story.
     await expect(counter).toHaveAttribute("data-slot", "badge-counter");
     await expect(counter.classList.contains("nds-badge-counter")).toBe(true);
-    await expect(badge.contains(counter)).toBe(true);
 
-    // ── Geometria: à direita do rótulo, na mesma linha ──────────────────────
-    // O rótulo é nó de texto, não elemento: quem dá a caixa dele é um Range.
-    // Comparar com a caixa do BADGE não provaria nada — o contador está dentro
-    // dele de qualquer jeito.
-    const label = Array.from(badge.childNodes).find(
-      (node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? "").trim().length > 0,
-    );
-    await expect(label, "o rótulo da etiqueta precisa ser texto próprio").toBeTruthy();
-    const range = document.createRange();
-    range.selectNodeContents(label!);
-    const labelBox = range.getBoundingClientRect();
-    const counterBox = counter.getBoundingClientRect();
-
-    await expect(counterBox.left).toBeGreaterThanOrEqual(labelBox.right - 1);
-    // Sobreposição vertical em vez de tolerância em pixel: prova a mesma linha
-    // sem depender de arredondamento, e ainda reprova se o contador quebrar
-    // para baixo do rótulo.
-    await expect(counterBox.top).toBeLessThan(labelBox.bottom);
-    await expect(labelBox.top).toBeLessThan(counterBox.bottom);
-
-    // ── O número é lido ─────────────────────────────────────────────────────
-    // Texto de verdade no DOM, dentro do rótulo e sem aria-hidden: contador
-    // desenhado por `content:` do CSS ou escondido do leitor reprova aqui.
-    await expect(counter.textContent?.trim()).toBe("12");
+    // O número é lido: texto de verdade no DOM, sem aria-hidden.
     await expect(counter.hasAttribute("aria-hidden")).toBe(false);
     await expect((badge.textContent ?? "").replace(/\s+/g, " ").trim()).toBe("Urgente12");
 
-    // ── Contraste do número contra o fundo do próprio contador ──────────────
     // A transição sai do caminho antes de medir: ler no primeiro quadro devolve
     // a cor anterior, e é assim que se inventa um contraste de ~1.0.
-    const contrast = noTransicao(counter, () => {
-      const counterBackgroundColor = backgroundEffective(counter);
-      return counterBackgroundColor
-        ? ratio(getComputedStyle(counter).color, counterBackgroundColor)
-        : null;
-    });
-    await expect(contrast, "não deu para medir a cor do contador").not.toBeNull();
-    await expect(
-      contrast!.ratio,
-      `número do contador em ${contrast!.ratio}:1 sobre ${contrast!.background}`,
-    ).toBeGreaterThanOrEqual(4.5);
+    const measure = noTransicao(counter, () => badgeCounterMeasure(badge));
+    await expect(measure.rightOfLabel, "o contador começa depois do rótulo").toBe(true);
+    await expect(measure.sameLine, "rótulo e contador na mesma linha").toBe(true);
+    await expect(measure.textRatio).toBeGreaterThanOrEqual(4.5);
 
-    // ── Neutro, e não tingido pela variante ─────────────────────────────────
-    // É a decisão medida da folha: preencher o contador com a cor da variante
-    // deixa o número abaixo de 4.5:1 em parte dos temas.
-    const counterBackground = getComputedStyle(counter).backgroundColor;
-    await expect(counterBackground).toBe(resolveColor(canvasElement, "hsl(var(--secondary))"));
-    await expect(counterBackground).not.toBe(resolveColor(canvasElement, "hsl(var(--destructive))"));
+    // Neutro, e não tingido pela variante.
+    await expect(measure.background).toBe(measure.expectedBackground);
+    await expect(measure.background).not.toBe(
+      resolveColor(canvasElement, "hsl(var(--destructive))"),
+    );
   },
 };
 
@@ -159,22 +131,61 @@ export const AsButton: Story = {
     docs: { source: { transform: badgeAsButtonSource } },
   },
   render: () => (
-    <button
-      type="button"
-      aria-label="Filtrar por React"
-      className="nds-cluster nds-rounded-md nds-focus-ring-inset"
-    >
-      <Badge variant="info">React</Badge>
-    </button>
+    <Button variant="ghost" size="sm" aria-label="Filtrar por Design">
+      <Badge variant="info">Design</Badge>
+    </Button>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole("button", { name: /Filtrar por React/i });
+    const button = canvas.getByRole("button", { name: "Filtrar por Design" });
+    await expect(button.classList.contains("nds-button-ghost")).toBe(true);
+    await expect(button.classList.contains("nds-button-sm")).toBe(true);
+
     // functional.item6 — o pai recebe o foco e o badge não compete por ele.
-    const badge = button.querySelector('[data-slot="badge"]');
-    await expect(badge).not.toBeNull();
-    await expect(badge!.hasAttribute("tabindex")).toBe(false);
-    button.focus();
+    const badge = badgeRoot(button);
+    await expect(badge).toHaveAttribute("data-variant", "info");
+    await expect(badge.textContent?.trim()).toBe("Design");
+    await expect(badge.hasAttribute("tabindex")).toBe(false);
+
+    await userEvent.tab();
     await expect(document.activeElement).toBe(button);
+
+    // accessibility.item4 — o foco é VISÍVEL, e o anel é do botão.
+    await expect(button.matches(":focus-visible")).toBe(true);
+    await expect(getComputedStyle(button).boxShadow).not.toBe("none");
+  },
+};
+
+export const AsLink: Story = {
+  parameters: {
+    covers: ["functional.item8", "visual.item7"],
+    docs: { source: { transform: badgeAsLinkSource } },
+  },
+  render: () => (
+    <a href="#">
+      <Badge variant="info">Design</Badge>
+    </a>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole("link", { name: "Design" });
+    const badge = badgeRoot(link);
+
+    // functional.item8 — o link é o controle: recebe o foco por Tab, e a
+    // etiqueta não tem tabindex.
+    await expect(badge).toHaveAttribute("data-variant", "info");
+    await expect(badge.hasAttribute("tabindex")).toBe(false);
+    await userEvent.tab();
+    await expect(document.activeElement).toBe(link);
+
+    // visual.item7 — com o ponteiro em cima, o fundo passa a --secondary.
+    // `:hover` não acende por evento sintético (medido no carousel e na AsLink
+    // do angular: o fundo continua neutro depois do `userEvent.hover`). A sonda
+    // prova as duas metades que, juntas, são o hover: a etiqueta está na
+    // relação que o seletor exige, e a regra desse seletor pinta `--secondary`.
+    const hover = badgeLinkHover(badge);
+    await expect(hover.insideLink, "a etiqueta tem de ser filha direta do link").toBe(true);
+    await expect(hover.declared, "a regra de hover dentro de link sumiu da folha").not.toBeNull();
+    await expect(hover.resolved).toBe(hover.expected);
   },
 };

@@ -90,9 +90,12 @@ export const figmaNodes = {
   avatarDocs: '323-17',
 
   /**
-   * Variant set do badge: eixo único `variant` (default, secondary,
-   * destructive, outline). Rótulo e ícone são propriedades. Sem eixo de estado:
-   * o foco é do <button> ou do <a> que envolve o badge, nunca dele.
+   * Variant set do badge. No CÓDIGO o eixo único `variant` tem cinco valores —
+   * default, destructive, warning, success e info —; `secondary` e `outline`
+   * saíram do sistema. Este comentário descrevia o arquivo com os quatro valores
+   * antigos, e o variant set do Figma ainda precisa ser conferido contra os cinco.
+   * Rótulo e ícone são propriedades. Sem eixo de estado: o foco é do botão ou do
+   * link que envolve o badge, nunca dele.
    */
   badge: '333-17',
   /** Página de documentação do componente. */

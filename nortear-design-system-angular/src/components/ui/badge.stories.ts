@@ -1,8 +1,10 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
+import { badgeRoot } from '@shared/testing/badge-probe';
 import { NdsBadge } from './badge';
-import { badgePlaygroundSource, type BadgeArgs } from './badge.source';
+import { badgePlaygroundSource, LABEL, type BadgeArgs } from './badge.source';
 import { NdsBadgeDocs } from '@/components/docs/BadgeDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -13,7 +15,9 @@ const meta: Meta<BadgeArgs> = {
   tags: ['autodocs', 'feedback'],
   decorators: [moduleMetadata({ imports: [NdsBadge] })],
   parameters: {
-    layout: 'padded',
+    design: figmaDesign('badge'),
+    actions: { disable: true },
+    layout: 'centered',
     docs: { page: withAutoDocsTab(NdsBadgeDocs) },
   },
   argTypes: {
@@ -24,7 +28,7 @@ const meta: Meta<BadgeArgs> = {
     },
     label: { control: 'text', description: 'Rótulo curto exibido no Badge.' },
   },
-  args: { variant: 'default', label: 'Ativo' },
+  args: { variant: 'default', label: LABEL.default() },
 };
 
 export default meta;
@@ -33,51 +37,52 @@ type Story = StoryObj<BadgeArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: badgePlaygroundSource } },
-    covers: ['functional.item1', 'accessibility.item1', 'accessibility.item4'],
+    covers: ['accessibility.item1', 'visual.item1'],
   },
   render: (args) => ({
     props: { ...args },
-    template: `<span ndsBadge [variant]="variant">{{ label }}</span>`,
+    // Com a variante no padrão o template NÃO liga `variant`: é o que prova, no
+    // passo abaixo, que a etiqueta declara `data-variant="default"` sozinha, sem
+    // depender de quem a usa escrever o valor padrão.
+    template:
+      args.variant && args.variant !== 'default'
+        ? `<span ndsBadge [variant]="variant">{{ label }}</span>`
+        : `<span ndsBadge>{{ label }}</span>`,
   }),
   play: async ({ canvasElement, step, args }) => {
-    const _canvas = within(canvasElement);
+    const badge = badgeRoot(canvasElement);
 
     await step('É um <span>, para caber dentro de frase e célula', async () => {
-      // Badge é etiqueta inline. Um <div> aqui quebraria o fluxo do texto —
-      // e é o que o CSS e as outras quatro stacks assumem.
-      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
+      // Badge é etiqueta inline. Um <div> aqui quebraria o fluxo do texto.
       await expect(badge.tagName).toBe('SPAN');
+      await expect(badge).toHaveAttribute('data-slot', 'badge');
     });
 
-    await step('A variante escolhida chega ao DOM', async () => {
-      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
-      await expect(badge).toHaveAttribute('data-variant', args.variant);
+    await step('A variante chega ao DOM — e o padrão também', async () => {
+      // Sem variante passada, `data-variant` continua `default`: a sonda e a
+      // folha leem o atributo, e ele não pode depender do call site.
+      await expect(badge).toHaveAttribute('data-variant', args.variant ?? 'default');
       await expect(badge).toHaveClass(/nds-badge/);
     });
 
     await step('Etiqueta inline, não bloco', async () => {
       // accessibility.item1 — o badge mora dentro de frase e de célula: se
       // virasse bloco, quebraria a linha do texto que o acompanha.
-      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
       const style = getComputedStyle(badge);
       await expect(style.display).toBe('inline-flex');
       await expect(style.whiteSpace).toBe('nowrap');
+      await expect(badge.textContent?.trim()).toBe(args.label);
     });
 
     await step('Tipografia compacta do componente', async () => {
-      // A etiqueta é rótulo curto: o corpo de 12px e o peso médio são o que a
-      // separam do texto ao redor — e a altura nasce daí, nunca de um valor
-      // cravado (WCAG 1.4.4).
-      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
+      // O corpo de 12px e o peso médio separam a etiqueta do texto ao redor — e
+      // a altura nasce daí, nunca de um valor cravado (WCAG 1.4.4).
       const style = getComputedStyle(badge);
       await expect(style.fontSize).toBe('12px');
       await expect(Number(style.fontWeight)).toBeGreaterThanOrEqual(500);
     });
 
     await step('Não é focável — é rótulo, não controle', async () => {
-      // Se um dia alguém puser tabindex aqui, o Tab passaria a parar num
-      // elemento sem ação, que é ruído de navegação por teclado.
-      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
       await expect(badge.hasAttribute('tabindex')).toBe(false);
     });
   },

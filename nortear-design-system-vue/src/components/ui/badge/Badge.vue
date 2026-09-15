@@ -8,10 +8,15 @@ import { Primitive } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { badgeVariants } from './index'
 
-const props = defineProps<PrimitiveProps & {
+// `variant` nasce `default` na PROP, e não só na cva: sem isto a classe saía
+// certa, mas o `data-variant` ficava ausente em toda etiqueta sem variante
+// escrita — e o DOM deixava de declarar o que a folha pinta.
+const props = withDefaults(defineProps<PrimitiveProps & {
   variant?: BadgeVariants['variant']
   class?: HTMLAttributes['class']
-}>()
+}>(), {
+  variant: 'default',
+})
 
 // `as` sai do delegate: o `Primitive` do reka o lê da própria prop, e deixá-lo
 // no v-bind reinjetava `as: undefined` DEPOIS do nosso default — apagando-o.

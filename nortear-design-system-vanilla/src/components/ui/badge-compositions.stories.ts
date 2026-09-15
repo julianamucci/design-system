@@ -1,14 +1,22 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
-import { Check } from 'lucide';
-import { backgroundEffective, noTransicao, ratio, resolveColor } from '@shared/testing/cor';
-import { createBadge, createBadgeCounter } from './badge';
+import { within, expect, userEvent } from 'storybook/test';
+import { Check, createElement } from 'lucide';
+import { noTransicao } from '@shared/testing/cor';
 import {
-  triggerSourceWithBadge,
+  badgeCounterMeasure,
+  badgeLinkHover,
+  badgeRoot,
+  iconPadding,
+} from '@shared/testing/badge-probe';
+import { createBadge, createBadgeCounter } from './badge';
+import { createButton } from './button';
+import {
+  badgeLinkSourceWith,
   badgeSource,
-  badgeSourceCom,
-  badgeWithCounterSourceCom,
+  badgeSourceWith,
+  badgeTriggerSourceWith,
+  badgeWithCounterSourceWith,
 } from './badge.source';
 
 const meta: Meta = {
@@ -23,8 +31,8 @@ const meta: Meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          'Configurações contextuais do Badge: combinado com ícone, com contador à direita do ' +
-          'rótulo, ou envolvido em <button> para trigger clicável.',
+          'Configurações contextuais do Badge: com ícone, com contador à direita do rótulo, ' +
+          'dentro do Button do design system como gatilho, ou dentro de um link.',
       },
     },
   },
@@ -33,31 +41,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers: ícones Lucide como SVG vanilla ─────────────────────────────────
-
-type LucideIconNode = [string, Record<string, string>];
-
-function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  svg.setAttribute('aria-hidden', 'true');
-  // Sem tamanho e sem margem aqui: `.nds-badge > svg` já dimensiona em 12px e o
-  // gap do container faz o espaçamento. Margem manual somava ao gap.
-  for (const [tag, attrs] of nodes) {
-    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
-    svg.appendChild(child);
-  }
-  return svg;
-}
-
-// ─── Composicoes ──────────────────────────────────────────────────────────────
+// ─── Composições ──────────────────────────────────────────────────────────────
 
 export const WithIcon: Story = {
   // Override de story: o ícone entra no MESMO `children`, junto com o texto —
@@ -65,41 +49,38 @@ export const WithIcon: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
     docs: {
-      source: { transform: badgeSourceCom({ withIcon: true, label: 'Ativo' }) },
+      source: { transform: badgeSourceWith({ withIcon: true, label: 'Ativo' }) },
     },
   },
   render: () => {
-    const icone = createIcon(Check as unknown as LucideIconNode[]);
-    icone.dataset.icon = 'inline-start';
-    return createBadge({ variant: 'default', children: [icone as unknown as HTMLElement, 'Ativo'] });
+    // O mesmo ícone que o snippet ensina a construir — sem tamanho e sem margem:
+    // `.nds-badge > svg` dimensiona e o gap do container espaça.
+    const icon = createElement(Check);
+    icon.setAttribute('aria-hidden', 'true');
+    icon.setAttribute('data-icon', 'inline-start');
+    return createBadge({ children: [icon, 'Ativo'] });
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText('Ativo');
+    const badge = badgeRoot(within(canvasElement).getByText('Ativo'));
 
     // accessibility.item2 — o ícone é reforço visual: quem nomeia é o texto.
-    const icone = badge.querySelector('svg');
-    await expect(icone).not.toBeNull();
-    await expect(icone).toHaveAttribute('aria-hidden', 'true');
-    await expect(badge.textContent?.trim()).toBe('Ativo');
+    const icon = badge.querySelector('svg');
+    await expect(icon).not.toBeNull();
+    await expect(icon).toHaveAttribute('aria-hidden', 'true');
+    await expect(icon).toHaveAttribute('data-icon', 'inline-start');
+    await expect((badge.textContent ?? '').trim()).toBe('Ativo');
 
-    // functional.item5 — o espaço entre ícone e texto é do container, não uma
-    // margem na story: o .nds-badge declara gap, e o data-icon encurta o padding
-    // daquele lado. Margem manual somaria ao gap e dobraria o respiro.
-    const style = getComputedStyle(badge);
-    await expect(style.display).toBe('inline-flex');
-    await expect(parseFloat(style.columnGap)).toBeGreaterThan(0);
-    await expect(getComputedStyle(icone!).marginRight).toBe('0px');
-    await expect(parseFloat(style.paddingInlineStart)).toBeLessThan(
-      parseFloat(style.paddingInlineEnd),
-    );
+    // functional.item5 — o respiro do lado do ícone é mais curto: é o
+    // `data-icon="inline-start"` que a folha lê, e não uma margem na story.
+    const padding = iconPadding(badge);
+    await expect(padding.start).toBeLessThan(padding.end);
+    await expect(getComputedStyle(icon!).marginRight).toBe('0px');
   },
 };
 
 /**
  * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. O número
- * entra na etiqueta, à direita do rótulo que lhe dá sentido: número solto, sem
- * rótulo em volta, não diz de que é a contagem.
+ * entra na etiqueta, à direita do rótulo que lhe dá sentido.
  */
 export const WithCounter: Story = {
   // Override de story: a FORMA é outra — `children` recebe a lista rótulo +
@@ -108,7 +89,7 @@ export const WithCounter: Story = {
     covers: ['visual.item6'],
     docs: {
       source: {
-        transform: badgeWithCounterSourceCom({
+        transform: badgeWithCounterSourceWith({
           variant: 'destructive',
           label: 'Urgente',
           count: '12',
@@ -126,103 +107,112 @@ export const WithCounter: Story = {
       children: ['Urgente', createBadgeCounter({ text: '12' })],
     }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const counter = canvas.getByText('12');
-    const badge = counter.closest<HTMLElement>('[data-slot="badge"]')!;
+    const counter = within(canvasElement).getByText('12');
+    const badge = badgeRoot(counter.closest<HTMLElement>('[data-slot="badge"]')!);
 
-    // A peça publicada, e não uma classe solta na story: o markup tem de sair
-    // com a classe e o slot que a folha compartilhada documenta.
+    // A peça publicada, e não uma classe solta na story.
     await expect(counter).toHaveAttribute('data-slot', 'badge-counter');
-    await expect(counter.classList.contains('nds-badge-counter')).toBe(true);
     await expect(badge.contains(counter)).toBe(true);
 
-    // ── Geometria: à direita do rótulo, na mesma linha ──────────────────────
-    // O rótulo é nó de texto, não elemento: quem dá a caixa dele é um Range.
-    // Comparar com a caixa do BADGE não provaria nada — o contador está dentro
-    // dele de qualquer jeito.
-    const label = Array.from(badge.childNodes).find(
-      (node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim().length > 0,
-    );
-    await expect(label, 'o rótulo da etiqueta precisa ser texto próprio').toBeTruthy();
-    const range = document.createRange();
-    range.selectNodeContents(label!);
-    const labelBox = range.getBoundingClientRect();
-    const counterBox = counter.getBoundingClientRect();
-
-    await expect(counterBox.left).toBeGreaterThanOrEqual(labelBox.right - 1);
-    // Sobreposição vertical em vez de tolerância em pixel: prova a mesma linha
-    // sem depender de arredondamento, e ainda reprova se o contador quebrar
-    // para baixo do rótulo.
-    await expect(counterBox.top).toBeLessThan(labelBox.bottom);
-    await expect(labelBox.top).toBeLessThan(counterBox.bottom);
-
-    // ── O número é lido ─────────────────────────────────────────────────────
-    // Texto de verdade no DOM, dentro do rótulo e sem aria-hidden: contador
-    // desenhado por `content:` do CSS ou escondido do leitor reprova aqui.
-    await expect(counter.textContent?.trim()).toBe('12');
+    // O número é lido: texto de verdade no DOM, sem aria-hidden.
     await expect(counter.hasAttribute('aria-hidden')).toBe(false);
-    await expect((badge.textContent ?? '').replace(/\s+/g, ' ').trim()).toBe('Urgente12');
+    await expect((counter.textContent ?? '').trim()).toBe('12');
 
-    // ── Contraste do número contra o fundo do próprio contador ──────────────
     // A transição sai do caminho antes de medir: ler no primeiro quadro devolve
     // a cor anterior, e é assim que se inventa um contraste de ~1.0.
-    const contrast = noTransicao(counter, () => {
-      const counterBackgroundColor = backgroundEffective(counter);
-      return counterBackgroundColor
-        ? ratio(getComputedStyle(counter).color, counterBackgroundColor)
-        : null;
-    });
-    await expect(contrast, 'não deu para medir a cor do contador').not.toBeNull();
-    await expect(
-      contrast!.ratio,
-      `número do contador em ${contrast!.ratio}:1 sobre ${contrast!.background}`,
-    ).toBeGreaterThanOrEqual(4.5);
+    const measure = noTransicao(counter, () => badgeCounterMeasure(badge));
 
-    // ── Neutro, e não tingido pela variante ─────────────────────────────────
-    // É a decisão medida da folha: preencher o contador com a cor da variante
-    // deixa o número abaixo de 4.5:1 em parte dos temas.
-    const counterBackground = getComputedStyle(counter).backgroundColor;
-    await expect(counterBackground).toBe(resolveColor(canvasElement, 'hsl(var(--secondary))'));
-    await expect(counterBackground).not.toBe(resolveColor(canvasElement, 'hsl(var(--destructive))'));
+    // Neutro, e não tingido pela variante — decisão medida de contraste.
+    await expect(measure.background).toBe(measure.expectedBackground);
+    await expect(measure.textRatio).toBeGreaterThanOrEqual(4.5);
+
+    // À direita do rótulo, na mesma linha.
+    await expect(measure.rightOfLabel).toBe(true);
+    await expect(measure.sameLine).toBe(true);
   },
 };
 
 export const AsButton: Story = {
-  // Override de story: quem recebe o clique e o foco é o botão em volta, e é
+  // Override de story: quem recebe o clique e o foco é o Button em volta, e é
   // dele o nome acessível — outra FORMA de snippet.
-  // A reinicialização da aparência do <button> que esta story faz em `style`
-  // não entra no snippet: não existe utilitária .nds-* para ela (relatado).
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     docs: {
       source: {
-        transform: triggerSourceWithBadge({
-          variant: 'info',
-          label: 'React',
-          accessibleName: 'Filtrar por React',
+        transform: badgeTriggerSourceWith({
+          label: 'Design',
+          accessibleName: 'Filtrar por Design',
         }),
       },
     },
   },
-  render: () => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
-    btn.style.background = 'transparent';
-    btn.style.border = '0';
-    btn.style.padding = '0';
-    btn.setAttribute('aria-label', 'Filtrar por React');
-    btn.appendChild(createBadge({ variant: 'info', children: 'React' }));
-    return btn;
-  },
-  play: async ({ canvasElement }) => {
+  render: () =>
+    createButton({
+      variant: 'ghost',
+      size: 'sm',
+      'aria-label': 'Filtrar por Design',
+      children: createBadge({ variant: 'info', children: 'Design' }),
+    }),
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: /Filtrar por React/i });
-    // functional.item6 — o pai recebe o foco e o badge não compete por ele.
-    const badge = button.querySelector('[data-slot="badge"]');
-    await expect(badge).not.toBeNull();
-    await expect(badge!.hasAttribute('tabindex')).toBe(false);
-    button.focus();
-    await expect(document.activeElement).toBe(button);
+    const button = canvas.getByRole('button', { name: 'Filtrar por Design' });
+    const badge = badgeRoot(button);
+
+    await step('O gatilho é o Button do design system, ghost e sm', async () => {
+      await expect(button.classList.contains('nds-button-ghost')).toBe(true);
+      await expect(button.classList.contains('nds-button-sm')).toBe(true);
+      await expect(badge).toHaveAttribute('data-variant', 'info');
+      await expect((badge.textContent ?? '').trim()).toBe('Design');
+    });
+
+    await step('O foco é do botão; a etiqueta não compete por ele', async () => {
+      // functional.item6 / accessibility.item4 — Tab chega ao botão, e a
+      // etiqueta dentro dele não tem tabindex.
+      await expect(badge.hasAttribute('tabindex')).toBe(false);
+      (document.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(button).toHaveFocus();
+    });
+  },
+};
+
+export const AsLink: Story = {
+  // Override de story: quem recebe foco e Enter é o <a> em volta.
+  parameters: {
+    covers: ['functional.item8', 'visual.item7'],
+    docs: {
+      source: { transform: badgeLinkSourceWith({ label: 'Design' }) },
+    },
+  },
+  render: () => {
+    const link = document.createElement('a');
+    link.href = '#';
+    link.append(createBadge({ variant: 'info', children: 'Design' }));
+    return link;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole('link', { name: 'Design' });
+    const badge = badgeRoot(link);
+
+    await step('O foco é do link; a etiqueta não compete por ele', async () => {
+      await expect(badge).toHaveAttribute('data-variant', 'info');
+      await expect(badge.hasAttribute('tabindex')).toBe(false);
+      (document.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(link).toHaveFocus();
+    });
+
+    await step('Com o ponteiro em cima, o fundo da etiqueta vai para --secondary', async () => {
+      // functional.item8 / visual.item7 — a medida NÃO é o fundo computado depois
+      // de um `userEvent.hover`: `:hover` só acende com ponteiro real, e o evento
+      // sintético deixa o fundo neutro (medido no angular em 2026-09-14). A sonda
+      // confere a estrutura que o seletor `a > .nds-badge:hover` exige e o fundo
+      // que a regra declara, resolvido pelo navegador na árvore da etiqueta.
+      const hover = badgeLinkHover(badge);
+      await expect(hover.insideLink).toBe(true);
+      await expect(hover.declared, 'a regra de hover da etiqueta dentro de link sumiu').not.toBeNull();
+      await expect(hover.resolved).toBe(hover.expected);
+    });
   },
 };

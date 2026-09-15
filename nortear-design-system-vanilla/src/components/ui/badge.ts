@@ -7,10 +7,14 @@ export interface BadgeOptions {
   /** Variante visual nativa do Badge. */
   variant?: BadgeVariant;
   /**
-   * Conteúdo do Badge: texto curto, número, ou `HTMLElement` (ex.: ícone SVG +
+   * Conteúdo do Badge: texto curto, número, ou elemento (ex.: ícone SVG +
    * texto). Quando string, é inserido via `textContent` (XSS-safe).
+   *
+   * Aceita `SVGElement`, e não só `HTMLElement` — mesma decisão do
+   * `createButton`: ícone é SVG, e sem isso o snippet copiável da composição com
+   * ícone precisaria de um `as unknown as HTMLElement` para compilar.
    */
-  children?: string | HTMLElement | Array<string | HTMLElement>;
+  children?: string | HTMLElement | SVGElement | Array<string | HTMLElement | SVGElement>;
   /** Alias legado para `children: string`. Mantido por compatibilidade. */
   text?: string;
   /** Classes adicionais concatenadas ao className base. */

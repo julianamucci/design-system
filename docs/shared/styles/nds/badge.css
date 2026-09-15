@@ -7,14 +7,15 @@
  *
  * Variantes: default (primary), destructive, warning, success, info
  *
- * Acessibilidade: badge não tem semântica nativa. Use texto descritivo
- * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
+ * Acessibilidade: badge não tem semântica nativa, e `aria-label` num <span>
+ * sem papel é atributo proibido. O rótulo é texto descritivo; quando a contagem
+ * precisa de contexto ("5 mensagens não lidas"), o nome vai no CONTAINER pai.
  *
  * Tokens: --background e --foreground (fundo e texto de TODAS as variantes),
  *         --primary, --destructive, --success, --warning, --border (cor da
  *         borda, uma por variante),
  *         --secondary (fundo do contador e do hover dentro de link),
- *         --ring, --radius-badge, --spacing-*
+ *         --radius-badge, --radius-full, --spacing-*
  *
  *         --info NÃO é lido aqui.
  */
@@ -28,7 +29,6 @@
      sempre o mesmo contraste, então ele não depende mais da variante. */
   --badge-bg: hsl(var(--background));
   --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--border));
 
   display: inline-flex;
   width: fit-content;
@@ -63,29 +63,15 @@
 }
 
 /* ── Estados ───────────────────────────────────────────────────────────────── */
-.nds-badge:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
-}
-.nds-badge[aria-invalid="true"] {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
-}
-/* O anel de estado inválido é PERMANENTE — não some quando o elemento perde o
- * foco — e era declarado depois do `:focus-visible` com a mesma
- * especificidade. Resultado: focar um elemento inválido não mudava nada na
- * tela, e com vários inválidos na página não dava para saber qual estava em
- * foco. WCAG 2.4.7 (Focus Visible, AA).
+/*
+ * A etiqueta NÃO tem anel de foco nem anel de inválido — saíram em 2026-09-14,
+ * por decisão da dona. Ela nunca recebe foco (D10: quem é controle é o botão ou o
+ * link que a envolve, e é NELE que o anel aparece) e nunca foi campo de
+ * formulário: não havia um único `aria-invalid` em etiqueta no repositório. As
+ * regras desenhavam dois estados sem produtor em stack nenhuma.
  *
- * Os dois anéis convivem: o destrutivo por dentro, o de foco por fora. Mesmo
- * remédio já aplicado no `toggle`, onde o defeito foi medido primeiro. */
-/* O foco num controle inválido só acrescentava anel TRANSLÚCIDO, e translúcido
- * sobre o fundo não alcança os 3:1 de 1.4.11 — o anel de foco a 0,5 media 1,97:1. O anel de foco
- * passou a ser opaco; ver a nota longa em `input.css`. */
-.nds-badge[aria-invalid="true"]:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 5px;
-}
+ * O único estado de interação que fica é o hover DENTRO de link, no fim da folha.
+ */
 
 
 /* ── Variantes ─────────────────────────────────────────────────────────────── */
@@ -106,7 +92,11 @@
  * cumpria.
  */
 
-/* Default = primary */
+/* Default = primary. `.nds-badge-primary` fica porque TEM produtor fora deste
+ * componente: `toolCallBadgeClass('running')` do tool-group emite
+ * `nds-badge nds-badge-primary` (medido em 2026-09-14). A tela seria a mesma sem
+ * ela — `.nds-badge` já aponta a borda para o primário —, mas classe emitida sem
+ * regra é o que `unknown_class_reference` existe para pegar. */
 .nds-badge,
 .nds-badge-default,
 .nds-badge-primary {
@@ -132,22 +122,6 @@
    o fundo — abaixo do piso de 3:1 —, e é a mesma hairline que input e card já
    desenham. */
 .nds-badge-info        { --badge-border: hsl(var(--border)); }
-
-/* O anel de foco continua sendo o da variante: ele é transitório e não compete
-   com o texto, então cor semântica ali não tem o problema de contraste que
-   tirou a cor do preenchimento. */
-.nds-badge-destructive:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
-}
-.nds-badge-warning:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--warning) / 0.4);
-}
-.nds-badge-success:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--success) / 0.4);
-}
-.nds-badge-info:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
-}
 
 /* ── Contador ──────────────────────────────────────────────────────────────── */
 /*

@@ -12,6 +12,8 @@ const meta = {
   tags: ["autodocs", "feedback"],
   parameters: {
     design: figmaDesign("badge"),
+    actions: { disable: true },
+    layout: "centered",
     docs: { page: withAutoDocsTab(BadgeDocs), source: { transform: badgeSource } },
   },
   argTypes: {
@@ -36,20 +38,25 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   parameters: { covers: ['accessibility.item1', 'visual.item1'] },
-  render: (args) => <Badge {...args} />,
+  // Com o control no padrão, a story NÃO passa `variant`: é o que prova que o
+  // padrão chega ao DOM como `data-variant="default"` sem ninguém pedir.
+  render: ({ variant, ...args }) => (
+    <Badge {...args} variant={variant === "default" ? undefined : variant} />
+  ),
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
     const badge = canvas.getByText(String(args.children));
 
     await step("Os controls chegam ao elemento", async () => {
       await expect(badge).toHaveAttribute("data-slot", "badge");
-      await expect(badge).toHaveAttribute("data-variant", String(args.variant));
+      // Sem variante escolhida no control, o padrão tem de sair declarado no
+      // DOM — a folha e a sonda leem `data-variant`, não a ausência dele.
+      await expect(badge).toHaveAttribute("data-variant", args.variant ?? "default");
     });
 
     await step("É um <span>, para caber dentro de frase e célula", async () => {
       // Um <div> aqui quebra o fluxo do texto que acompanha o badge, e
-      // <div> dentro de <p> é aninhamento inválido. Só o Angular afirmava
-      // isso — e era justamente a stack que sobrava que renderizava <div>.
+      // <div> dentro de <p> é aninhamento inválido.
       await expect(badge.tagName).toBe("SPAN");
     });
 
@@ -59,6 +66,8 @@ export const Playground: Story = {
       const style = getComputedStyle(badge);
       await expect(style.display).toBe("inline-flex");
       await expect(style.whiteSpace).toBe("nowrap");
+      // Etiqueta passiva: não entra na ordem de Tab.
+      await expect(badge.hasAttribute("tabindex")).toBe(false);
     });
 
     await step("Tipografia compacta do componente", async () => {

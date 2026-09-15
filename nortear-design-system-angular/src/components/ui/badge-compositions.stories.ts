@@ -1,192 +1,198 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
-import { backgroundEffective, noTransicao, ratio, resolveColor } from '@shared/testing/cor';
+import { noTransicao } from '@shared/testing/cor';
+import {
+  badgeCounterMeasure,
+  badgeLinkHover,
+  badgeRoot,
+  iconPadding,
+} from '@shared/testing/badge-probe';
 import { NdsBadge, NdsBadgeCounter } from './badge';
 import { NdsButton, NdsButtonIcon } from './button';
+import {
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeWithCounterSource,
+  badgeWithIconSource,
+  LABEL,
+} from './badge.source';
 
 const meta: Meta = {
   title: 'Components/Feedback/Badge/Compositions',
   tags: ['feedback'],
   decorators: [moduleMetadata({ imports: [NdsBadge, NdsBadgeCounter, NdsButton, NdsButtonIcon] })],
-  parameters: { layout: 'padded', controls: { disable: true } },
+  parameters: {
+    design: figmaDesign('badge'),
+    controls: { disable: true },
+    actions: { disable: true },
+    layout: 'centered',
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item2', 'visual.item3'] },
+  parameters: {
+    docs: { source: { transform: badgeWithIconSource } },
+    covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
+  },
   render: () => ({
-    // Variante default e rótulo curto: o assunto da story é o ícone dentro da
-    // etiqueta, e uma cor semântica aqui só acrescentaria variável.
+    props: { label: LABEL.status() },
     template: `
       <span ndsBadge>
         <svg ndsButtonIcon kind="check" size="sm" data-icon="inline-start"></svg>
-        Ativo
+        {{ label }}
       </span>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText('Ativo');
+    const badge = badgeRoot(canvasElement);
+    const icon = badge.querySelector<SVGElement>('svg');
 
     await step('O ícone é decorativo — quem nomeia é o texto', async () => {
-      // accessibility.item2 — ícone sem aria-hidden dentro de um badge faz o
-      // leitor anunciar um gráfico sem nome antes do rótulo. E o nome acessível
-      // da etiqueta é o texto e só ele: se o ícone virasse conteúdo lido, o
-      // rótulo deixaria de ser `Ativo`.
-      const icon = badge.querySelector('svg');
+      // accessibility.item2 — ícone sem aria-hidden faz o leitor anunciar um
+      // gráfico sem nome antes do rótulo.
       await expect(icon).not.toBeNull();
       await expect(icon).toHaveAttribute('aria-hidden', 'true');
-      await expect(badge.textContent?.trim()).toBe('Ativo');
+      await expect(icon).toHaveAttribute('data-icon', 'inline-start');
+      await expect(badge.textContent?.trim()).toBe(LABEL.status());
     });
 
-    await step('O respiro entre ícone e rótulo é do container', async () => {
-      // functional.item5 — o espaço entre ícone e texto é do container, não uma
-      // margem na story: o .nds-badge declara gap, e o data-icon encurta o
-      // padding daquele lado. Margem manual somaria ao gap e dobraria o respiro.
-      const icon = badge.querySelector('svg')!;
-      const style = getComputedStyle(badge);
-      await expect(style.display).toBe('inline-flex');
-      await expect(parseFloat(style.columnGap)).toBeGreaterThan(0);
-      await expect(getComputedStyle(icon).marginRight).toBe('0px');
-      await expect(parseFloat(style.paddingInlineStart)).toBeLessThan(
-        parseFloat(style.paddingInlineEnd),
-      );
-    });
-
-    await step('O ícone vem ANTES do rótulo', async () => {
-      // A ordem é o que a composição promete: ícone à esquerda reforçando o
-      // texto. Invertida, o leitor de tela continua igual e só a tela acusa.
-      await expect(badge.firstElementChild).toBe(badge.querySelector('svg'));
+    await step('O ícone vem antes, e encurta o respiro do lado dele', async () => {
+      // functional.item5 — `data-icon="inline-start"` reduz o padding inicial.
+      await expect(badge.firstElementChild).toBe(icon);
+      const padding = iconPadding(badge);
+      await expect(padding.start).toBeLessThan(padding.end);
+      // O respiro vem do `data-icon`, e não de uma margem no ícone.
+      await expect(getComputedStyle(icon!).marginRight).toBe('0px');
     });
   },
 };
 
 /**
  * Contador DENTRO da etiqueta — a peça que qualquer variante aceita: o número
- * entra na etiqueta, à direita do rótulo que lhe dá sentido.
- *
- * A composição do contador AVULSO — o badge que era só um número ao lado de um
- * ícone solto — saiu do sistema por ser redundante com esta: o número sem
- * rótulo já dependia de um `aria-label` no pai para significar alguma coisa.
+ * entra à direita do rótulo que lhe dá sentido.
  */
 export const WithCounter: Story = {
-  parameters: { covers: ['visual.item6'] },
+  parameters: {
+    docs: { source: { transform: badgeWithCounterSource } },
+    covers: ['visual.item6'],
+  },
   render: () => ({
+    props: { label: LABEL.destructive() },
     template: `
       <span ndsBadge variant="destructive">
-        Urgente
+        {{ label }}
         <span ndsBadgeCounter>12</span>
       </span>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const counter = canvas.getByText('12');
-    const badge = counter.closest<HTMLElement>('[data-slot="badge"]')!;
+    const badge = badgeRoot(canvasElement);
+    const counter = within(badge).getByText('12');
 
     await step('A peça sai com a classe e o slot que a folha documenta', async () => {
-      // A peça publicada, e não uma classe solta na story: sem a diretiva o
-      // <span> viraria texto sem estilo e a composição sumiria da tela.
       await expect(counter).toHaveAttribute('data-slot', 'badge-counter');
       await expect(counter).toHaveClass(/nds-badge-counter/);
-      await expect(badge.contains(counter)).toBe(true);
     });
 
-    await step('O número fica à direita do rótulo, na mesma linha', async () => {
-      // O rótulo é nó de texto, não elemento: quem dá a caixa dele é um Range.
-      // Comparar com a caixa do BADGE não provaria nada — o contador está
-      // dentro dele de qualquer jeito.
-      const label = Array.from(badge.childNodes).find(
-        (node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim().length > 0,
-      );
-      await expect(label, 'o rótulo da etiqueta precisa ser texto próprio').toBeTruthy();
-      const range = document.createRange();
-      range.selectNodeContents(label!);
-      const labelBox = range.getBoundingClientRect();
-      const counterBox = counter.getBoundingClientRect();
-
-      await expect(counterBox.left).toBeGreaterThanOrEqual(labelBox.right - 1);
-      // Sobreposição vertical em vez de tolerância em pixel: prova a mesma
-      // linha sem depender de arredondamento, e ainda reprova se o contador
-      // quebrar para baixo do rótulo.
-      await expect(counterBox.top).toBeLessThan(labelBox.bottom);
-      await expect(labelBox.top).toBeLessThan(counterBox.bottom);
+    await step('Neutro, legível, à direita do rótulo e na mesma linha', async () => {
+      // A sonda mede o que está na tela: fundo contra `--secondary`, contraste
+      // do número e a caixa do rótulo (um Range sobre os nós de texto).
+      // A transição sai do caminho antes de medir: ler no primeiro quadro
+      // devolve a cor anterior, e é assim que se inventa um contraste de ~1.0.
+      const m = noTransicao(counter, () => badgeCounterMeasure(badge));
+      await expect(m.background).toBe(m.expectedBackground);
+      await expect(m.textRatio).toBeGreaterThanOrEqual(4.5);
+      await expect(m.rightOfLabel).toBe(true);
+      await expect(m.sameLine).toBe(true);
     });
 
     await step('O número é lido, não desenhado', async () => {
-      // Texto de verdade no DOM, dentro do rótulo e sem aria-hidden: contador
-      // desenhado por `content:` do CSS ou escondido do leitor reprova aqui.
-      await expect(counter.textContent?.trim()).toBe('12');
       await expect(counter.hasAttribute('aria-hidden')).toBe(false);
-      // Regex e não igualdade literal: o Angular colapsa o espaço do template,
-      // e o que a asserção prova é a ORDEM do rótulo e do número, não quantos
-      // espaços sobraram entre eles.
-      await expect((badge.textContent ?? '').replace(/\s+/g, ' ').trim()).toMatch(/^Urgente ?12$/);
-    });
-
-    await step('O número alcança 4.5:1 contra o fundo do próprio contador', async () => {
-      // A transição sai do caminho antes de medir: ler no primeiro quadro
-      // devolve a cor anterior, e é assim que se inventa um contraste de ~1.0.
-      const contrast = noTransicao(counter, () => {
-        const counterBackgroundColor = backgroundEffective(counter);
-        return counterBackgroundColor
-          ? ratio(getComputedStyle(counter).color, counterBackgroundColor)
-          : null;
-      });
-      await expect(contrast, 'não deu para medir a cor do contador').not.toBeNull();
-      await expect(
-        contrast!.ratio,
-        `número do contador em ${contrast!.ratio}:1 sobre ${contrast!.background}`,
-      ).toBeGreaterThanOrEqual(4.5);
-    });
-
-    await step('O contador é neutro, e não tingido pela variante', async () => {
-      // É a decisão medida da folha: preencher o contador com a cor da
-      // variante deixa o número abaixo de 4.5:1 em parte dos temas.
-      const counterBackground = getComputedStyle(counter).backgroundColor;
-      await expect(counterBackground).toBe(resolveColor(canvasElement, 'hsl(var(--secondary))'));
-      await expect(counterBackground).not.toBe(
-        resolveColor(canvasElement, 'hsl(var(--destructive))'),
-      );
+      await expect(counter.textContent?.trim()).toBe('12');
     });
   },
 };
 
-export const AsTrigger: Story = {
-  parameters: { covers: ['functional.item6', 'visual.item4', 'accessibility.item1'] },
+export const AsButton: Story = {
+  parameters: {
+    docs: { source: { transform: badgeAsButtonSource } },
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+  },
   render: () => ({
-    // O Badge não vira o controle: quem carrega a interação é o <button> em
-    // volta. O badge segue sendo rótulo, e o Tab alcança um elemento com
-    // semântica de verdade.
+    // O Badge não vira o controle: quem carrega a interação é o Button do
+    // design system em volta, ghost e sm.
+    props: { label: LABEL.category(), filterLabel: LABEL.categoryFilter() },
     template: `
-      <div class="nds-cluster" data-spacing="md">
-        <button ndsButton variant="ghost" size="sm" aria-label="Filtrar por categoria Frontend">
-          <span ndsBadge variant="info">Frontend</span>
-        </button>
-      </div>
+      <button ndsButton variant="ghost" size="sm" [attr.aria-label]="filterLabel">
+        <span ndsBadge variant="info">{{ label }}</span>
+      </button>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: LABEL.categoryFilter() });
 
-    await step('O Tab alcança o botão, não o badge', async () => {
+    await step('O gatilho é o Button do design system, ghost e sm', async () => {
+      await expect(button.classList.contains('nds-button-ghost')).toBe(true);
+      await expect(button.classList.contains('nds-button-sm')).toBe(true);
+      await expect(badgeRoot(button)).toHaveAttribute('data-variant', 'info');
+    });
+
+    await step('O Tab alcança o botão, não a etiqueta', async () => {
+      // functional.item6 e accessibility.item4 — o foco é do botão.
       await userEvent.tab();
-      await expect(canvas.getByRole('button')).toHaveFocus();
+      await expect(button).toHaveFocus();
+      await expect(button.matches(':focus-visible')).toBe(true);
     });
 
-    await step('O badge continua fora da ordem de tabulação', async () => {
-      const badges = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="badge"]')];
-      for (const b of badges) await expect(b.hasAttribute('tabindex')).toBe(false);
+    await step('A etiqueta continua fora da ordem de tabulação', async () => {
+      const badge = badgeRoot(button);
+      await expect(badge.hasAttribute('tabindex')).toBe(false);
+      await expect(badge.textContent?.trim()).toBe(LABEL.category());
+    });
+  },
+};
+
+export const AsLink: Story = {
+  parameters: {
+    docs: { source: { transform: badgeAsLinkSource } },
+    covers: ['functional.item8', 'visual.item7'],
+  },
+  render: () => ({
+    props: { label: LABEL.category() },
+    template: `
+      <a href="#">
+        <span ndsBadge variant="info">{{ label }}</span>
+      </a>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole('link', { name: LABEL.category() });
+    const badge = badgeRoot(link);
+
+    await step('O Tab alcança o link, não a etiqueta', async () => {
+      await expect(badge).toHaveAttribute('data-variant', 'info');
+      await userEvent.tab();
+      await expect(link).toHaveFocus();
+      await expect(badge.hasAttribute('tabindex')).toBe(false);
     });
 
-    await step('O botão tem nome acessível além do rótulo do badge', async () => {
-      // "Frontend" sozinho não diz o que o botão faz; numa lista de filtros
-      // vira uma fileira de botões sem verbo.
-      const button = canvas.getByRole('button', { name: /Filtrar por categoria/ });
-      await expect(button).toBeTruthy();
+    await step('Com o ponteiro em cima, o fundo da etiqueta vira --secondary', async () => {
+      // functional.item8 — medido pela DECLARAÇÃO da folha, não pelo estado:
+      // `:hover` não acende por evento sintético (o `userEvent.hover` deixou o
+      // fundo neutro). A sonda confere que a etiqueta é filha direta do `<a>`,
+      // que a regra `a > .nds-badge:hover` declara um fundo, e que ele resolve
+      // para `--secondary`.
+      const hover = badgeLinkHover(badge);
+      await expect(hover.insideLink).toBe(true);
+      await expect(hover.declared).not.toBeNull();
+      await expect(hover.resolved).toBe(hover.expected);
     });
   },
 };
