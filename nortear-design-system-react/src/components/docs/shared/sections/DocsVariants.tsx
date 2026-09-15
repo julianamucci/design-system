@@ -49,7 +49,7 @@ function VariantCard({ item, componentSlug, language, copyLabel, copiedLabel }: 
   return (
     <Card className="nds-p-4">
       <div>
-        <p className="nds-text-body nds-font-semibold nds-m-0">{item.name}</p>
+        <h3 className="nds-text-body nds-font-semibold nds-m-0">{item.name}</h3>
         <p
           className="nds-text-body nds-mt-1 nds-leading-relaxed"
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.description) }}

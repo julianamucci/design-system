@@ -78,9 +78,9 @@ function trackId(item: DocsVariantItem): string | undefined {
         class="nds-p-4"
       >
         <div>
-          <p class="nds-text-body nds-font-semibold nds-m-0">
+          <h3 class="nds-text-body nds-font-semibold nds-m-0">
             {{ item.name }}
-          </p>
+          </h3>
           <p
             class="nds-text-body nds-mt-1 nds-leading-relaxed"
             v-html="DOMPurify.sanitize(item.description)"
