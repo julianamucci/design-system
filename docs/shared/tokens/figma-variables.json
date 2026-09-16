@@ -5886,6 +5886,18 @@
           "duration-stately": {
             "$type": "number",
             "$value": 800
+          },
+          "duration-cycle-fast": {
+            "$type": "number",
+            "$value": 1000
+          },
+          "duration-cycle": {
+            "$type": "number",
+            "$value": 1500
+          },
+          "duration-cycle-slow": {
+            "$type": "number",
+            "$value": 2000
           }
         },
         "curva": {

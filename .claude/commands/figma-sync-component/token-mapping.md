@@ -7,6 +7,25 @@ comparando as duas pontas por resumo determinístico (token, modo e valor, com o
 float32 do Figma arredondado dos dois lados). **As oito coleções batem token a
 token, nos seis modos.**
 
+**Corrigido em 2026-09-16, e o modo da falha é o mesmo que o parágrafo abaixo
+descreve — uma camada mais fundo.** Sincronizando a categoria de feedback, o
+`Movimento` do arquivo Figma não tinha `--duration-cycle` (1500ms, pulso do
+esqueleto), `--duration-cycle-fast` (1000ms, giro do spinner) nem
+`--duration-cycle-slow` (2000ms). Os três nascem em `docs/shared/tokens/motion.css`
+desde 2026-09-13, e `skeleton.css` e `sonner.css` os leem.
+
+O que os escondeu não foi o gerador: ele resolve os três sem tocar numa linha —
+`figma-variables.json` estava **DEFASADO**, gerado antes de 2026-09-13, e o
+`--check` reprovava desde então sem ninguém rodar. Então a frase acima era
+verdadeira entre as duas cópias locais e falsa contra o CSS: o export e o Figma
+concordavam em não ter os três. A regeneração mexeu em 12 linhas, exatamente as
+três durações — zero token perdido, zero valor alterado.
+
+A pergunta que fecha isto, e ela é diferente da do parágrafo seguinte: antes de
+comparar o export com o Figma, **rode `--check`**. Comparar duas cópias em que a
+primeira já está velha não mede nada, e a direção do erro é a perigosa — a
+ausência aparece como acordo.
+
 O `--ring-offset-color`, que sobrava no arquivo sem par no CSS, foi removido em
 2026-09-02 depois de medido sem uso três vezes — nenhum alias de outra variável,
 nenhum estilo local, e ausente nos 1262 nós das dez páginas.
@@ -53,6 +72,12 @@ nenhuma: `Texto` (54 variáveis × pt-BR/en/es) e `Opacidade` (8 × light/dark,
 nenhuma com `codeSyntax.WEB`). São feitas à mão no Figma; qualquer varredura que
 apague o que não está no export destrói as duas.
 
+Em 2026-09-16 as duas cresceram com a categoria de feedback: `Texto` foi a **91**
+(37 rótulos novos de alert, badge, progress, skeleton e sonner) e `Opacidade` a
+**12**, com os quatro alfas do Alert. Cresceram à mão, como manda a natureza
+delas — mas a contagem na tabela abaixo é o único lugar que as declara, então ela
+envelhece a cada componente sincronizado.
+
 Então o mapa não é uma tabela a decorar: é uma busca. Indexe por `codeSyntax.WEB`
 e procure pela própria string que está no CSS.
 
@@ -78,18 +103,20 @@ Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servind
 | Coleção | Vars | Modos |
 |---|---|---|
 | `Cor` | 54 | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` |
-| `Texto` | 54 | `pt-BR`, `en`, `es` |
+| `Texto` | 91 | `pt-BR`, `en`, `es` |
 | `Dimensao` | 31 | `default`, `condensado`, `confortavel` |
 | `Tipografia` | 25 | `minor-second`, `minor-third`, `major-second`, `major-third`, `perfect-fourth`, `augmented-fourth`, `perfect-fifth`, `golden` |
-| `Movimento` | 19 | `default` |
+| `Movimento` | 22 | `default` |
 | `Raio` | 13 | `default`, `warm`, `cold` |
 | `Camada` | 8 | `default` |
-| `Opacidade` | 8 | `light`, `dark` |
+| `Opacidade` | 12 | `light`, `dark` |
 | `Elevacao` | 11 | `light`, `dark` |
 | `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
 
-Os nomes e as contagens coincidem com os do export desde 2026-09-02. Se alguma
-linha divergir, é defasagem — não há mais exceção conhecida.
+Os nomes coincidem com os do export desde 2026-09-02. Se alguma linha divergir, é
+defasagem — não há mais exceção conhecida. As CONTAGENS de `Texto` e `Opacidade`
+não vêm do export e crescem por componente sincronizado (ver acima); as outras
+oito vêm, e `Movimento` foi a 22 em 2026-09-16.
 
 `Raio` ganhou os modos `warm` e `cold` na mesma data. Antes tinha só `default`,
 o que quer dizer que a identidade de raio de dois dos três temas simplesmente
@@ -373,6 +400,29 @@ alfa — os dois lados leem o mesmo número em vez de dois números parecidos.
 fundo; o valor é `10`. Não confie na aparência — leia `no.opacity` de volta
 depois de vincular, porque um fundo quase invisível passa por "sutil".
 
+**`setBoundVariable(campo, undefined)` NÃO RECLAMA — ele não faz nada.** A
+assinatura aceita `Variable | null`, e `undefined` cai no vazio sem exceção, sem
+aviso e sem efeito. Medido em 2026-09-16 nos oito alfas do Alert: o mapa de
+variáveis estava indexado por `Colecao/grupo/nome`
+(`Opacidade/alert/fundo-semantica`) e a tabela de destino procurava só
+`alert/fundo-semantica`, então as oito chamadas receberam `undefined` e a leitura
+de volta, em execução nova, mostrou `LITERAL` nos oito.
+
+Duas regras saem daí, e a segunda é a que importa:
+
+1. **Resolva a variável ANTES de tocar em nó, e reprove se ela não existir.** Uma
+   função `variavel(chave)` que lança é mais barata que oito vínculos fantasmas.
+2. **Relate a leitura DO NÓ, nunca o que você pediu.** O primeiro log daquela
+   rodada imprimia o nome da variável tirado da própria tabela de entrada, então
+   ele dizia `-> alert/fundo-destructive` para um nó que continuava literal. Log
+   que ecoa a intenção transforma falha silenciosa em sucesso declarado — foi o
+   log, e não o Figma, que escondeu o defeito.
+
+E o campo funciona: `opacity` está em `VariableBindableNodeField` e o Button tem
+40 vínculos vivos de `Opacidade` em nós `RECTANGLE` (`bg`, `bg-lift`,
+`hover-overlay`), resolvendo 0.100, 0.056 e 0.000. Se o seu não resolveu, o
+problema é a variável que você passou.
+
 `Opacidade` é coleção separada de `Cor`: para ver o componente no escuro é
 preciso trocar os dois modos. `Elevacao` tem a mesma exigência.
 
@@ -382,6 +432,17 @@ fonte, com as crases em volta de `--token`. Os dois são mutuamente exclusivos n
 escrita — mandar ambos reprova com *"Only one of label or labelMarkdown should be
 given"*, e é assim que se descobre que espalhar a anotação antiga (`{...a, label}`)
 não funciona.
+
+**E `node.annotations` é ATRIBUIÇÃO, não acréscimo.** Duas chamadas seguidas no
+mesmo nó deixam só a última, sem erro e sem aviso. Medido em 2026-09-16 no
+contador do Badge: uma função auxiliar `anotar(no, …)` foi chamada duas vezes — a
+nota de contrato (por que o contador é componente e não variante, com a medição de
+contraste) e a de armadilha —, e a leitura de volta mostrou UMA anotação. A de
+contrato tinha sido apagada pela segunda chamada.
+
+Quem escreve mais de uma nota no mesmo nó monta o ARRAY inteiro de uma vez. E vale
+conferir `annotations.length` contra o número de notas pretendidas: o nó com uma
+anotação parece um nó anotado.
 
 Os dois erros que isso produz são silenciosos. Casar um trecho lido de `label`
 contra o conteúdo real falha sempre que houver crase no meio, e a anotação passa
@@ -450,6 +511,17 @@ decorativa.
 **Retângulos sobrepostos viram um VECTOR.** Dois retângulos dentro de um
 componente saem fundidos num único nó `Vector`. Contar filhos para inferir o que
 existe leva a "reparar" o que não estava quebrado.
+
+**`COMPONENT_SET` com `layoutMode: 'NONE'` NÃO cresce para caber as variantes que
+você reposicionou.** Depois de `combineAsVariants` as variantes nascem empilhadas
+em (0,0) e a grade é manual — isso já se sabia. O que falta na receita é o passo
+seguinte: medido em 2026-09-16 no Progress, as seis variantes ficaram nas
+coordenadas certas (até x=864, y=144) e o quadro do conjunto continuou `400x8`, o
+tamanho de UMA variante. As cinco outras ficaram fora da moldura.
+
+Não é defasagem de getter — a leitura foi em execução nova. Depois de posicionar,
+`resize()` no conjunto com o extremo dos filhos mais a folga, e confira que todo
+filho cabe: `c.x + c.width <= set.width`.
 
 **Ao revincular, passe a cor resolvida junto.** `setBoundVariableForPaint` anexa o
 vínculo mas mantém a cor concreta que você mandou; se ela for preta, o nó fica
@@ -554,6 +626,18 @@ painel — o Popover com campos, o menu com outro conjunto de itens — se monta
 `detachInstance()`, e o rótulo do exemplo diz que aquilo é cópia destacada. O
 alternativo honesto é `INSTANCE_SWAP` com um componente de recheio; o que não
 vale é fingir que a instância montou o que ela não monta.
+
+**E `layoutWrap = 'WRAP'` NÃO é `flex-wrap` quando há filho `FILL`.** Medido em
+2026-09-16 na raiz composta do Progress. A folha é um flex container só: rótulo e
+valor dividem a primeira linha e a trilha desce para a segunda porque tem 100% de
+largura. No Figma, com `WRAP` ligado e a trilha em `FILL`, os três filhos ficaram
+na MESMA linha — `y=0` nos três — e a trilha saiu com 135px em vez de 400, porque
+os `FILL` repartem a sobra da linha em vez de forçar a quebra.
+
+A saída é montar em VERTICAL e dar à primeira linha um frame próprio. Ele é
+ANDAIME: não existe no DOM. Nomeie em português, como o `palco` do AlertDialog,
+justamente para não se passar por `data-slot` — e declare na anotação, porque quem
+porta lê dois contêineres no Figma e escreve um no CSS.
 
 **Auto-layout não tem margem negativa.** O separador do menu tem
 `margin-inline: calc(var(--spacing-1) * -1)`, ou seja RASGA os 4px de padding do
