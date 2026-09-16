@@ -508,6 +508,23 @@ terço da árvore por ver. Rode até a contagem repetir, e relate a contagem jun
 com o resultado — número de nós varridos é parte da resposta, não estatística
 decorativa.
 
+**E isto vale em dobro para override em instância ANINHADA.** Medido em
+2026-09-16, na sincronia de feedback: a varredura de consumidores da coleção
+`Texto` relatou `alert/warningAction` e `alert/saveNow` sem consumidor nenhum, e
+as duas estavam amarradas — no `Rótulo` da instância de Button dentro da
+instância de Alert, com o texto certo na tela. A varredura lia
+`componentProperties[...].boundVariables.value` em todo nó `INSTANCE`, o que
+parece bastar; o que faltou foi a subárvore da instância estar expandida no
+instante em que aquela página foi varrida. Na mesma sessão a página do Alert
+mediu 54 nós numa chamada e 136 noutra.
+
+Duas vezes nesta rodada uma varredura minha declarou órfã uma variável em uso —
+a primeira lendo `value.id` em vez de `boundVariables.value`, a segunda por
+subárvore não expandida. Por isso: **antes de apagar variável, confirme o caso
+POSITIVO**, lendo a instância que deveria consumi-la e o `characters` que ela
+mostra. "Não achei consumidor" é fraco demais para autorizar `remove()`; "li o
+nó e ele não tem" é o que basta.
+
 **Retângulos sobrepostos viram um VECTOR.** Dois retângulos dentro de um
 componente saem fundidos num único nó `Vector`. Contar filhos para inferir o que
 existe leva a "reparar" o que não estava quebrado.
