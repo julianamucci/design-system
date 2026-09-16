@@ -665,8 +665,12 @@ A página **Accordion** (`6:2`) é o precedente — siga o que está lá.
 - **A spec vive em anotação de Dev Mode, ancorada no nó a que se refere** — não
   num frame de texto. Ver "Anotações" na skill (Etapa 5b). O frame
   `<Componente> / Documentação` é o formato **antigo**: ainda existe em Accordion,
-  Alert, AlertDialog, AspectRatio, Avatar, Breadcrumb e Button, e deve ser
-  migrado quando a página for tocada. O Badge já está migrado e é o precedente.
+  AlertDialog, AspectRatio, Avatar, Breadcrumb e Button, e deve ser migrado
+  quando a página for tocada. Badge, Alert, Progress, Skeleton e Sonner já estão
+  no formato novo e são o precedente — **o Alert saiu desta lista em 2026-09-16**,
+  quando a página foi medida e não tinha frame de documentação nenhum: só o
+  component set e o frame de timeline do glow. A lista envelhece do lado
+  otimista, então confira a página antes de acreditar que ela tem o frame antigo.
 - Componentes nomeados por caminho: `Accordion`, `Accordion/Item`,
   `Accordion/Trigger`, `Accordion/Content`. Prefixo `.` marca componente privado
   (`.Accordion/Conteúdo padrão`), ícones em `Icon/*`.
