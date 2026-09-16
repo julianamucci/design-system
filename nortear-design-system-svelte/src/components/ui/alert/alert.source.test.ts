@@ -54,6 +54,41 @@ describe('regras que valem para todo snippet do alert', () => {
   });
 });
 
+describe('o snippet ENSINA o nível do heading do título', () => {
+  // O primitivo tem default `h5`, e snippet que omite o nível ensina a herdar o
+  // default — que quase nunca é o nível certo na página de quem copia. Toda
+  // story do Alert escreve `as="h4"`; o painel Code tem que escrever o mesmo.
+  /** Só as aberturas de AlertTitle: `</AlertTitle>` não casa. */
+  const titleTags = (output: string) => output.match(/<AlertTitle[^>]*>/g) ?? [];
+
+  it('todo snippet com título escreve o nível, e nenhum publica título sem nível', () => {
+    const comTitulo = ALL.map((build) => build()).filter((out) => titleTags(out).length > 0);
+    // Contagem declarada de propósito: só `alertNoTitleSource` fica de fora da
+    // varredura. Se um snippet perder o título, o portão reprova em vez de
+    // continuar verde medindo menos.
+    expect(comTitulo).toHaveLength(ALL.length - 1);
+    expect(titleTags(alertNoTitleSource())).toEqual([]);
+
+    for (const output of comTitulo) {
+      for (const tag of titleTags(output)) expect(tag).toContain('as="h4"');
+    }
+  });
+
+  it('o snippet do Playground ensina o nível em qualquer configuração dos controls', () => {
+    const configuracoes = [
+      {},
+      { dismissible: true },
+      { variant: 'destructive' as const },
+      { role: 'note' as const },
+    ];
+    for (const args of configuracoes) {
+      const tags = titleTags(alertSource('', { args }));
+      expect(tags).toHaveLength(1);
+      expect(tags[0]).toContain('as="h4"');
+    }
+  });
+});
+
 describe('alertSource', () => {
   it('sem args, entrega a forma canônica sem nenhum atributo padrão repetido', () => {
     expect(alertSource()).toBe(
@@ -64,7 +99,7 @@ describe('alertSource', () => {
 
 <Alert>
   <Info aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
 </Alert>`,
     );
@@ -133,7 +168,7 @@ describe('transforms das stories de estado', () => {
   it('sem ícone, o snippet não importa ícone nenhum e escreve o texto do estado', () => {
     const output = alertNoIconSource();
     expect(output).not.toContain('@lucide/svelte');
-    expect(output).toContain('<AlertTitle>Atenção</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Atenção</AlertTitle>');
     expect(output).toContain('Suas alterações serão aplicadas na próxima sessão.');
     expect(output).not.toContain('Sem ícone');
   });
@@ -161,7 +196,7 @@ describe('transforms das stories de composição', () => {
   it('a composição com ícone escreve o texto da própria story, não o do meta', () => {
     const output = alertWithIconSource();
     expect(output).toContain('<Info aria-hidden="true" />');
-    expect(output).toContain('<AlertTitle>Informação</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Informação</AlertTitle>');
     expect(output).toContain('Ícone SVG posicionado automaticamente.');
     expect(output).not.toContain('Atenção');
   });
@@ -169,7 +204,7 @@ describe('transforms das stories de composição', () => {
   it('a composição sem ícone escreve só o texto da própria story', () => {
     const output = alertLayoutWithoutIconSource();
     expect(output).not.toContain('@lucide/svelte');
-    expect(output).toContain('<AlertTitle>Sem ícone</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Sem ícone</AlertTitle>');
     expect(output).toContain('Alert sem ícone mantém layout de coluna única.');
     expect(output).not.toContain('Atenção');
   });
@@ -192,7 +227,7 @@ describe('transforms das stories de composição', () => {
   it('a classe adicional aparece na raiz e em cada subcomponente', () => {
     const output = alertAdditionalClassSource();
     expect(output).toContain('<Alert class="nds-w-full">');
-    expect(output).toContain('<AlertTitle class="nds-w-full">');
+    expect(output).toContain('<AlertTitle as="h4" class="nds-w-full">');
     expect(output).toContain('<AlertDescription class="nds-w-full">');
     expect(output).toContain('<AlertAction class="nds-w-auto">');
   });

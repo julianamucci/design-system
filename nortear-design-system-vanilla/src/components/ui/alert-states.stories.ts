@@ -23,7 +23,7 @@ export const Complete: Story = {
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Atenção' }));
+    alert.appendChild(createAlertTitle({ text: 'Atenção', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));
     return alert;
   },
@@ -79,7 +79,7 @@ export const WithoutIcon: Story = {
   },
   render: () => {
     const alert = createAlert();
-    alert.appendChild(createAlertTitle({ text: 'Atenção' }));
+    alert.appendChild(createAlertTitle({ text: 'Atenção', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));
     return alert;
   },
@@ -122,13 +122,13 @@ export const WithoutAnnouncement: Story = {
     // Estático: já está na tela quando a página carrega — não pode ser live region.
     const noteAlert = createAlert({ role: 'note' });
     noteAlert.appendChild(createAlertIcon('info'));
-    noteAlert.appendChild(createAlertTitle({ text: 'Nota de implementação' }));
+    noteAlert.appendChild(createAlertTitle({ text: 'Nota de implementação', as: 'h4' }));
     noteAlert.appendChild(createAlertDescription({ text: 'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.' }));
 
     // Sem `role`, a factory mantém o default 'alert'.
     const defaultAlert = createAlert({ variant: 'destructive' });
     defaultAlert.appendChild(createAlertIcon('error'));
-    defaultAlert.appendChild(createAlertTitle({ text: 'Falha no envio' }));
+    defaultAlert.appendChild(createAlertTitle({ text: 'Falha no envio', as: 'h4' }));
     defaultAlert.appendChild(createAlertDescription({ text: 'Mensagem urgente surgida em tempo de execução: anúncio imediato.' }));
 
     wrapper.appendChild(noteAlert);
@@ -189,7 +189,7 @@ export const DynamicInsertion: Story = {
         wrapper.querySelector('[data-slot="alert"]')?.remove();
         const alert = createAlert();
         alert.appendChild(createAlertIcon('success'));
-        alert.appendChild(createAlertTitle({ text: 'Operação concluída' }));
+        alert.appendChild(createAlertTitle({ text: 'Operação concluída', as: 'h4' }));
         alert.appendChild(createAlertDescription({ text: 'O relatório foi gerado com sucesso.' }));
         wrapper.appendChild(alert);
       },

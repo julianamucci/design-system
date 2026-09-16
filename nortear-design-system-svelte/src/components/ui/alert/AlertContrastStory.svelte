@@ -10,7 +10,7 @@
 <div class="nds-stack" data-spacing="sm">
   {#each variants as variant (variant)}
     <Alert {variant}>
-      <AlertTitle>Título {variant}</AlertTitle>
+      <AlertTitle as="h4">Título {variant}</AlertTitle>
       <AlertDescription>Texto corrido da variante {variant}.</AlertDescription>
     </Alert>
   {/each}

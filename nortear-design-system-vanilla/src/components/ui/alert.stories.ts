@@ -102,7 +102,10 @@ function buildAlert(args: AlertArgs): HTMLElement {
     dismissLabel: args.dismissLabel,
   });
   alert.appendChild(createAlertIcon(args.variant === 'destructive' ? 'error' : 'info'));
-  if (args.title) alert.appendChild(createAlertTitle({ text: args.title }));
+  // `as: 'h4'` explícito: o nível do título não passa por control, então render e
+  // snippet o escrevem igual — o painel Code ensina o nível em vez de esconder o
+  // default da fábrica.
+  if (args.title) alert.appendChild(createAlertTitle({ text: args.title, as: 'h4' }));
   alert.appendChild(createAlertDescription({ text: args.description }));
   return alert;
 }
@@ -138,11 +141,12 @@ export const Playground: Story = {
     });
 
     if (args.title) {
-      await step('AlertTitle é renderizado e é H5 por padrão', async () => {
+      await step('AlertTitle é renderizado no nível que a story declara', async () => {
         await waitFor(() => expect(canvas.getByText(args.title)).toBeVisible());
-        // Trava o default da factory: sem `as`, createAlertTitle rende <h5>.
+        // Trava o `as: 'h4'` do render: é o mesmo nível que o painel Code mostra,
+        // e é a asserção que reprova se uma das duas pontas mudar sozinha.
         const title = canvas.getByText(args.title);
-        await expect(title.tagName).toBe('H5');
+        await expect(title.tagName).toBe('H4');
         await expect(title).toHaveClass('nds-alert-title');
       });
     }

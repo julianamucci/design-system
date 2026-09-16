@@ -56,7 +56,7 @@
     <IconComponent aria-hidden="true" />
   {/if}
   {#if title}
-    <AlertTitle>{title}</AlertTitle>
+    <AlertTitle as="h4">{title}</AlertTitle>
   {/if}
   <AlertDescription class={descriptionClass}>{description}</AlertDescription>
   {#if action}

@@ -9,7 +9,7 @@
      prova a composição de classes sem mexer no snapshot visual. -->
 <Alert class="nds-w-full">
   <Info aria-hidden="true" />
-  <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
+  <AlertTitle as="h4" class="nds-w-full">Classe adicional</AlertTitle>
   <AlertDescription class="nds-w-full">
     A classe do consumidor convive com as do design system.
   </AlertDescription>

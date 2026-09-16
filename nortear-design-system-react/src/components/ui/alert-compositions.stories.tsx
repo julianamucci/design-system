@@ -38,7 +38,7 @@ export const WithIcon: Story = {
   render: () => (
     <Alert>
       <Info aria-hidden="true" />
-      <AlertTitle>Informação</AlertTitle>
+      <AlertTitle as="h4">Informação</AlertTitle>
       <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>
     </Alert>
   ),
@@ -56,7 +56,7 @@ export const WithAction: Story = {
   render: () => (
     <Alert>
       <Info aria-hidden="true" />
-      <AlertTitle>Atualização disponível</AlertTitle>
+      <AlertTitle as="h4">Atualização disponível</AlertTitle>
       <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
       <AlertAction>
         <Button size="sm" variant="default">
@@ -103,7 +103,7 @@ export const AdditionalClass: Story = {
   render: () => (
     <Alert className="nds-w-full">
       <Info aria-hidden="true" />
-      <AlertTitle className="nds-w-full">Classe adicional</AlertTitle>
+      <AlertTitle as="h4" className="nds-w-full">Classe adicional</AlertTitle>
       <AlertDescription className="nds-w-full">
         A classe do consumidor convive com as do design system.
       </AlertDescription>
@@ -141,7 +141,7 @@ export const WithoutIcon: Story = {
   },
   render: () => (
     <Alert>
-      <AlertTitle>Sem ícone</AlertTitle>
+      <AlertTitle as="h4">Sem ícone</AlertTitle>
       <AlertDescription>Alert sem ícone mantém layout de coluna única.</AlertDescription>
     </Alert>
   ),
@@ -167,7 +167,7 @@ export const WithActionAndDismiss: Story = {
   render: () => (
     <Alert dismissible>
       <Info aria-hidden="true" />
-      <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+      <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>
       <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
       <AlertAction>
         <Button size="sm" variant="default">

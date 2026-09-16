@@ -155,7 +155,9 @@ describe('dispensável', () => {
 describe('ausências e contêineres', () => {
   it('sem título: a descrição vira o conteúdo inteiro, e o import encolhe junto', () => {
     const output = alertNoTitleSource();
-    expect(output).not.toContain('<AlertTitle>');
+    // Sem o `>`: o título agora escreve o nível, e `<AlertTitle>` sozinho
+    // deixaria de reprovar um `<AlertTitle as="h4">` que voltasse ao snippet.
+    expect(output).not.toContain('<AlertTitle');
     expect(output).toContain('import { Alert, AlertDescription } from "@/components/ui/alert";');
     expect(output).toContain('<AlertDescription>');
   });
@@ -165,18 +167,18 @@ describe('ausências e contêineres', () => {
       const output = fn();
       expect(output).not.toContain('lucide-react');
       expect(output).not.toContain('aria-hidden');
-      expect(output).toContain('<AlertTitle>');
+      expect(output).toContain('<AlertTitle as="h4">');
     }
   });
 
   it('sem ícone: cada story ensina o próprio texto, sem misturar os dois', () => {
     const state = alertStateNoIconSource();
-    expect(state).toContain('<AlertTitle>Atenção</AlertTitle>');
+    expect(state).toContain('<AlertTitle as="h4">Atenção</AlertTitle>');
     expect(state).toContain('Suas alterações serão aplicadas na próxima sessão.');
     expect(state).not.toContain('coluna única');
 
     const composition = alertCompositionNoIconSource();
-    expect(composition).toContain('<AlertTitle>Sem ícone</AlertTitle>');
+    expect(composition).toContain('<AlertTitle as="h4">Sem ícone</AlertTitle>');
     expect(composition).toContain('Alert sem ícone mantém layout de coluna única.');
     expect(composition).not.toContain('Atenção');
   });
@@ -213,7 +215,7 @@ describe('composições', () => {
   it('com ícone: o painel ensina o texto que a story mostra, não o do meta', () => {
     const output = alertWithIconSource();
     expect(output).toContain('<Info aria-hidden="true" />');
-    expect(output).toContain('<AlertTitle>Informação</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Informação</AlertTitle>');
     expect(output).toContain('Ícone SVG posicionado automaticamente.');
     expect(output).not.toContain('Atenção');
   });
@@ -229,7 +231,7 @@ describe('composições', () => {
   it('classe adicional: o className aparece em cada subcomponente, não só na raiz', () => {
     const output = alertAdditionalClassSource();
     expect(output).toContain('<Alert className="nds-w-full">');
-    expect(output).toContain('<AlertTitle className="nds-w-full">');
+    expect(output).toContain('<AlertTitle as="h4" className="nds-w-full">');
     expect(output).toContain('<AlertDescription className="nds-w-full">');
     expect(output).toContain('<AlertAction className="nds-w-auto">');
   });
@@ -248,5 +250,45 @@ describe('composições', () => {
       // Região viva em volta de alerta aninharia duas.
       expect(output).not.toContain('aria-live');
     }
+  });
+});
+
+/**
+ * O nível do título é decisão de hierarquia da página, e o painel Code é onde o
+ * consumidor a encontra. O default do componente é `h5`; um snippet que o omite
+ * ensina a aceitar o default calado, e quem copia planta um `h5` no meio de uma
+ * página cujo contexto pedia outro nível.
+ *
+ * Este é o portão que faltava: ele mede TODOS os construtores, não só os que
+ * alguém lembrou de citar acima — foi assim que o snippet e a story puderam
+ * divergir sem nada reprovar.
+ */
+describe('nível do título', () => {
+  const TITLE_TAG = /<AlertTitle\b/g;
+  const TITLE_TAG_WITH_LEVEL = /<AlertTitle as="h[1-6]"/g;
+
+  it('todo título publicado escreve o nível, e nenhum o omite', () => {
+    for (const fn of ALL) {
+      const output = fn();
+      const titles = output.match(TITLE_TAG) ?? [];
+      const withLevel = output.match(TITLE_TAG_WITH_LEVEL) ?? [];
+      // Igualdade, não "pelo menos um": um snippet com dois títulos em que só o
+      // primeiro leva o nível passaria por qualquer asserção de presença.
+      expect(withLevel.length, `${fn.name} publica título sem nível`).toBe(titles.length);
+    }
+  });
+
+  it('a varredura não passa por vazio: há título medido de fato', () => {
+    // Sem isto, `body()` deixar de emitir título zeraria os dois lados da
+    // igualdade acima e o portão fecharia verde sem medir nada.
+    // `includes` e não `TITLE_TAG.test`: regex com /g guarda `lastIndex` entre
+    // chamadas, e dentro de um filter isso pula ocorrência de propósito nenhum.
+    const withTitle = ALL.filter((fn) => fn().includes('<AlertTitle'));
+    expect(withTitle.length).toBeGreaterThan(10);
+  });
+
+  it('o único snippet sem título é o que prova a ausência', () => {
+    const withoutTitle = ALL.filter((fn) => !fn().includes('<AlertTitle'));
+    expect(withoutTitle.map((fn) => fn.name)).toEqual(['alertNoTitleSource']);
   });
 });

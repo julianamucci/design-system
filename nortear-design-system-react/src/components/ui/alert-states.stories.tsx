@@ -33,7 +33,7 @@ export const Complete: Story = {
   render: () => (
     <Alert>
       <Info aria-hidden="true" />
-      <AlertTitle>Atenção</AlertTitle>
+      <AlertTitle as="h4">Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
@@ -89,7 +89,7 @@ export const WithoutIcon: Story = {
   parameters: { docs: { source: { transform: alertStateNoIconSource } } },
   render: () => (
     <Alert>
-      <AlertTitle>Atenção</AlertTitle>
+      <AlertTitle as="h4">Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
@@ -120,7 +120,7 @@ export const WithoutAnnouncement: Story = {
       {/* Estático: já está na tela quando a página carrega — não pode ser live region. */}
       <Alert role="note">
         <Info aria-hidden="true" />
-        <AlertTitle>Nota de implementação</AlertTitle>
+        <AlertTitle as="h4">Nota de implementação</AlertTitle>
         <AlertDescription>
           Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.
         </AlertDescription>
@@ -128,7 +128,7 @@ export const WithoutAnnouncement: Story = {
       {/* Sem a prop, o default segue sendo a live region assertiva. */}
       <Alert variant="destructive">
         <AlertCircle aria-hidden="true" />
-        <AlertTitle>Falha no envio</AlertTitle>
+        <AlertTitle as="h4">Falha no envio</AlertTitle>
         <AlertDescription>
           Mensagem urgente surgida em tempo de execução: anúncio imediato.
         </AlertDescription>
@@ -191,7 +191,7 @@ function DynamicInsertionExample() {
       {isGenerated && (
         <Alert>
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle>Operação concluída</AlertTitle>
+          <AlertTitle as="h4">Operação concluída</AlertTitle>
           <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
         </Alert>
       )}

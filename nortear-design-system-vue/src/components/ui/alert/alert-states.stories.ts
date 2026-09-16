@@ -35,7 +35,7 @@ export const Complete: Story = {
     template: `
       <Alert>
         <Info aria-hidden="true" />
-        <AlertTitle>Atenção</AlertTitle>
+        <AlertTitle as="h4">Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
@@ -98,7 +98,7 @@ export const WithoutIcon: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <AlertTitle>Atenção</AlertTitle>
+        <AlertTitle as="h4">Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
@@ -136,12 +136,12 @@ export const WithoutAnnouncement: Story = {
       <div class="nds-stack" data-spacing="md">
         <Alert role="note">
           <Info aria-hidden="true" />
-          <AlertTitle>Nota de implementação</AlertTitle>
+          <AlertTitle as="h4">Nota de implementação</AlertTitle>
           <AlertDescription>Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.</AlertDescription>
         </Alert>
         <Alert variant="destructive">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>Falha no envio</AlertTitle>
+          <AlertTitle as="h4">Falha no envio</AlertTitle>
           <AlertDescription>Mensagem urgente surgida em tempo de execução: anúncio imediato.</AlertDescription>
         </Alert>
       </div>
@@ -195,7 +195,7 @@ export const DynamicInsertion: Story = {
         </div>
         <Alert v-if="reportReady">
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle>Operação concluída</AlertTitle>
+          <AlertTitle as="h4">Operação concluída</AlertTitle>
           <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
         </Alert>
       </div>

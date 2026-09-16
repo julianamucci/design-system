@@ -486,7 +486,11 @@ interface AlertDescriptionProps {
             name: $tStore('variants.compositions.withIcon.name'),
             description: $tStore('variants.compositions.withIcon.description'),
             useWhen: $tStore('variants.compositions.withIcon.use'),
-            code: `<Alert><Info aria-hidden="true" /><AlertTitle as="h4">Informação</AlertTitle><AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription></Alert>`,
+            code: `<Alert>
+  <Info aria-hidden="true" />
+  <AlertTitle as="h4">Informação</AlertTitle>
+  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>
+</Alert>`,
             preview: compWithIcon,
           },
           {

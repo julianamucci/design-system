@@ -51,6 +51,30 @@ describe('regras que valem em todo snippet', () => {
   it('nenhum snippet envolve o alerta em região aria-live', () => {
     for (const build of ALL) expect(build()).not.toContain('aria-live');
   });
+
+  // O painel Code é onde se aprende a compor o alerta, e o nível do título é
+  // decisão de hierarquia da página — não detalhe de implementação. Snippet que
+  // publica `<AlertTitle>` cru ensina a aceitar o default, e foi assim que as
+  // duas pontas (story e snippet) ficaram mostrando `h5` sem ninguém escolher.
+  it('todo título publicado escreve o nível, e nenhum sai sem ele', () => {
+    // Casa `<AlertTitle` que NÃO traga `as="h1..h6"` antes de fechar a tag.
+    const titleWithoutLevel = /<AlertTitle(?![^>]*\bas="h[1-6]")/;
+    for (const build of ALL) {
+      const output = build();
+      expect(
+        titleWithoutLevel.test(output),
+        `${build.name || 'alertSource'} publica <AlertTitle> sem o nível:\n${output}`,
+      ).toBe(false);
+    }
+  });
+
+  // Guarda de vacuidade: o caso acima passa sozinho se um dia nenhum snippet
+  // escrever título. Só o sem-título pode ficar de fora, e ele se declara aqui.
+  it('só o snippet sem título fica fora da cobertura de nível', () => {
+    const buildersWithTitle = ALL.filter((build) => build().includes('<AlertTitle'));
+    expect(buildersWithTitle).toHaveLength(ALL.length - 1);
+    expect(alertNoTitleSource()).not.toContain('<AlertTitle');
+  });
 });
 
 describe('alertSource', () => {
@@ -64,7 +88,7 @@ import { Info } from 'lucide-vue-next'
 <template>
   <Alert>
     <Info aria-hidden="true" />
-    <AlertTitle>Atenção</AlertTitle>
+    <AlertTitle as="h4">Atenção</AlertTitle>
     <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
   </Alert>
 </template>`,
@@ -122,7 +146,7 @@ describe('transforms das stories de variante', () => {
     const output = alertDismissibleSource();
     expect(output).toContain('dismissible');
     expect(output).toContain('@dismiss="noticeVisible = false"');
-    expect(output).toContain('<AlertTitle>Preferências salvas</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Preferências salvas</AlertTitle>');
     expect(output).not.toContain('dismiss-label');
     // A remontagem por `:key` existe para a story não deixar o canvas vazio;
     // quem consome não escreve isso.
@@ -164,13 +188,13 @@ describe('transforms das stories de estado', () => {
   it('sem ícone, o import do ícone some junto', () => {
     const output = alertNoIconSource();
     expect(output).not.toContain('lucide-vue-next');
-    expect(output).toContain('<AlertTitle>Atenção</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Atenção</AlertTitle>');
   });
 
   it('o completo traz os três: ícone, título e descrição', () => {
     const output = alertCompleteSource();
     expect(output).toContain('<Info aria-hidden="true" />');
-    expect(output).toContain('<AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">');
     expect(output).toContain('<AlertDescription>');
   });
 
@@ -208,7 +232,7 @@ describe('transforms das stories de composição', () => {
   it('ação e fechar juntos: a prop na raiz e a ação no slot, sem prop de layout', () => {
     const output = alertWithActionAndDismissSource();
     expect(output).toContain('<Alert dismissible>');
-    expect(output).toContain('<AlertTitle>Sessão expira em 5 minutos</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>');
     expect(output).toContain(
       `    <AlertAction>
       <Button size="sm" variant="default">Salvar agora</Button>
@@ -219,7 +243,7 @@ describe('transforms das stories de composição', () => {
   it('a classe adicional aparece em cada subcomponente', () => {
     const output = alertAdditionalClassSource();
     expect(output).toContain('<Alert class="nds-w-full">');
-    expect(output).toContain('<AlertTitle class="nds-w-full">');
+    expect(output).toContain('<AlertTitle as="h4" class="nds-w-full">');
     expect(output).toContain('<AlertDescription class="nds-w-full">');
     expect(output).toContain('<AlertAction class="nds-w-auto">');
   });
@@ -233,6 +257,6 @@ describe('transforms das stories de composição', () => {
   it('a coluna única é a ausência do ícone, não uma prop de layout', () => {
     const output = alertLayoutNoIconSource();
     expect(output).not.toContain('lucide-vue-next');
-    expect(output).toContain('<AlertTitle>Sem ícone</AlertTitle>');
+    expect(output).toContain('<AlertTitle as="h4">Sem ícone</AlertTitle>');
   });
 });

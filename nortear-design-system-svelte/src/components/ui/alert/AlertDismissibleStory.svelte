@@ -47,7 +47,7 @@
 {#key instance}
   <Alert {variant} dismissible {dismissLabel} onDismiss={handleDismiss}>
     <IconComponent aria-hidden="true" />
-    <AlertTitle>{title}</AlertTitle>
+    <AlertTitle as="h4">{title}</AlertTitle>
     <AlertDescription>{description}</AlertDescription>
   </Alert>
 {/key}

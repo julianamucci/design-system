@@ -24,7 +24,7 @@ export const Default: Story = {
   render: () => {
     const alert = createAlert({ variant: 'default' });
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Atenção' }));
+    alert.appendChild(createAlertTitle({ text: 'Atenção', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));
     return alert;
   },
@@ -69,7 +69,7 @@ export const Destructive: Story = {
   render: () => {
     const alert = createAlert({ variant: 'destructive' });
     alert.appendChild(createAlertIcon('error'));
-    alert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+    alert.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));
     return alert;
   },
@@ -99,7 +99,7 @@ export const Success: Story = {
   render: () => {
     const alert = createAlert({ variant: 'success' });
     alert.appendChild(createAlertIcon('success'));
-    alert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
+    alert.appendChild(createAlertTitle({ text: 'Perfil atualizado', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
     return alert;
   },
@@ -128,7 +128,7 @@ export const Warning: Story = {
   render: () => {
     const alert = createAlert({ variant: 'warning' });
     alert.appendChild(createAlertIcon('warning'));
-    alert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));
+    alert.appendChild(createAlertTitle({ text: 'Assinatura expirando', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));
     return alert;
   },
@@ -157,7 +157,7 @@ export const Info: Story = {
   render: () => {
     const alert = createAlert({ variant: 'info' });
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Dica' }));
+    alert.appendChild(createAlertTitle({ text: 'Dica', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Você pode fixar os filtros mais usados para acessá-los mais rápido.' }));
     return alert;
   },
@@ -218,7 +218,7 @@ export const Dismissible: Story = {
     return mountRemountingAlert(onDismissClick, (onDismiss) => {
       const el = createAlert({ variant: 'default', dismissible: true, onDismiss });
       el.appendChild(createAlertIcon('info'));
-      el.appendChild(createAlertTitle({ text: 'Preferências salvas' }));
+      el.appendChild(createAlertTitle({ text: 'Preferências salvas', as: 'h4' }));
       el.appendChild(createAlertDescription({ text: 'Você pode fechar este aviso quando quiser.' }));
       return el;
     });
@@ -331,7 +331,7 @@ export const DismissibleByKeyboard: Story = {
         onDismiss,
       });
       el.appendChild(createAlertIcon('success'));
-      el.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
+      el.appendChild(createAlertTitle({ text: 'Perfil atualizado', as: 'h4' }));
       el.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
       return el;
     });
@@ -397,7 +397,7 @@ export const Contrast: Story = {
     for (const v of ['default', 'destructive', 'success', 'warning', 'info'] as const) {
       const alerta = createAlert({ variant: v });
       alerta.append(
-        createAlertTitle({ text: `Título ${v}` }),
+        createAlertTitle({ text: `Título ${v}`, as: 'h4' }),
         createAlertDescription({ text: `Texto corrido da variante ${v}.` }),
       );
       stack.appendChild(alerta);

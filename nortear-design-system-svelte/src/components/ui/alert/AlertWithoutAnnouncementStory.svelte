@@ -15,7 +15,7 @@
        live region, e o leitor de tela lê na ordem do documento. -->
   <Alert role="note">
     <Info aria-hidden="true" />
-    <AlertTitle>Nota de implementação</AlertTitle>
+    <AlertTitle as="h4">Nota de implementação</AlertTitle>
     <AlertDescription>
       Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.
     </AlertDescription>
@@ -24,7 +24,7 @@
   <!-- Sem a prop, o padrão continua `role="alert"`. -->
   <Alert variant="destructive">
     <AlertCircle aria-hidden="true" />
-    <AlertTitle>Falha no envio</AlertTitle>
+    <AlertTitle as="h4">Falha no envio</AlertTitle>
     <AlertDescription>
       Mensagem urgente surgida em tempo de execução: anúncio imediato.
     </AlertDescription>

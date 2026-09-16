@@ -45,7 +45,7 @@ export const Complete: Story = {
     template: `
       <div ndsAlert>
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>Atenção</h5>
+        <h4 ndsAlertTitle>Atenção</h4>
         <section ndsAlertDescription>Suas alterações serão aplicadas na próxima sessão.</section>
       </div>
     `,
@@ -114,7 +114,7 @@ export const WithoutIcon: Story = {
   render: () => ({
     template: `
       <div ndsAlert>
-        <h5 ndsAlertTitle>Atenção</h5>
+        <h4 ndsAlertTitle>Atenção</h4>
         <section ndsAlertDescription>Suas alterações serão aplicadas na próxima sessão.</section>
       </div>
     `,
@@ -141,13 +141,13 @@ export const WithoutAnnouncement: Story = {
         <!-- Estático: já está na tela quando a página carrega — não pode ser live region. -->
         <div ndsAlert role="note">
           <svg ndsAlertIcon kind="info"></svg>
-          <h5 ndsAlertTitle>Nota de implementação</h5>
+          <h4 ndsAlertTitle>Nota de implementação</h4>
           <section ndsAlertDescription>Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.</section>
         </div>
         <!-- Sem o input, o default segue sendo a live region assertiva. -->
         <div ndsAlert variant="destructive">
           <svg ndsAlertIcon kind="error"></svg>
-          <h5 ndsAlertTitle>Falha no envio</h5>
+          <h4 ndsAlertTitle>Falha no envio</h4>
           <section ndsAlertDescription>Mensagem urgente surgida em tempo de execução: anúncio imediato.</section>
         </div>
       </div>
@@ -200,7 +200,7 @@ export const DynamicInsertion: Story = {
         @if (generated()) {
           <div ndsAlert>
             <svg ndsAlertIcon kind="success"></svg>
-            <h5 ndsAlertTitle>Operação concluída</h5>
+            <h4 ndsAlertTitle>Operação concluída</h4>
             <section ndsAlertDescription>O relatório foi gerado com sucesso.</section>
           </div>
         }

@@ -56,7 +56,7 @@ export function alertSource(_generated?: string, ctx?: { args?: Partial<AlertArg
 ${IMPORT_INFO}${dismissible ? `\n\n${DISMISS_HANDLER}` : ''}`,
     `<Alert${props}>
   <Info aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
 </Alert>`,
   );
@@ -69,7 +69,7 @@ export function alertDestructiveSource(): string {
 import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
     `<Alert variant="destructive">
   <AlertCircle aria-hidden="true" />
-  <AlertTitle>Erro ao salvar</AlertTitle>
+  <AlertTitle as="h4">Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
@@ -84,7 +84,7 @@ export function alertSuccessSource(): string {
 ${IMPORT_SUCCESS}`,
     `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
-  <AlertTitle>Perfil atualizado</AlertTitle>
+  <AlertTitle as="h4">Perfil atualizado</AlertTitle>
   <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
 </Alert>`,
   );
@@ -97,7 +97,7 @@ export function alertWarningSource(): string {
 import TriangleAlert from "@lucide/svelte/icons/triangle-alert";`,
     `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
-  <AlertTitle>Assinatura expirando</AlertTitle>
+  <AlertTitle as="h4">Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
   </AlertDescription>
@@ -112,7 +112,7 @@ export function alertInfoSource(): string {
 ${IMPORT_INFO}`,
     `<Alert variant="info">
   <Info aria-hidden="true" />
-  <AlertTitle>Dica</AlertTitle>
+  <AlertTitle as="h4">Dica</AlertTitle>
   <AlertDescription>
     Você pode fixar os filtros mais usados para acessá-los mais rápido.
   </AlertDescription>
@@ -129,7 +129,7 @@ ${IMPORT_INFO}
 ${DISMISS_HANDLER}`,
     `<Alert dismissible onDismiss={handleDismiss}>
   <Info aria-hidden="true" />
-  <AlertTitle>Preferências salvas</AlertTitle>
+  <AlertTitle as="h4">Preferências salvas</AlertTitle>
   <AlertDescription>Você pode fechar este aviso quando quiser.</AlertDescription>
 </Alert>`,
   );
@@ -152,7 +152,7 @@ ${DISMISS_HANDLER}`,
   onDismiss={handleDismiss}
 >
   <CheckCircle2 aria-hidden="true" />
-  <AlertTitle>Perfil atualizado</AlertTitle>
+  <AlertTitle as="h4">Perfil atualizado</AlertTitle>
   <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
 </Alert>`,
   );
@@ -177,7 +177,7 @@ const variants: AlertVariant[] = [
     `<div class="nds-stack" data-spacing="sm">
   {#each variants as variant (variant)}
     <Alert {variant}>
-      <AlertTitle>Título {variant}</AlertTitle>
+      <AlertTitle as="h4">Título {variant}</AlertTitle>
       <AlertDescription>Texto corrido da variante {variant}.</AlertDescription>
     </Alert>
   {/each}
@@ -202,7 +202,7 @@ export function alertNoIconSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
     `<Alert>
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h4">Atenção</AlertTitle>
   <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
 </Alert>`,
   );
@@ -215,7 +215,7 @@ export function alertWithIconSource(): string {
 ${IMPORT_INFO}`,
     `<Alert>
   <Info aria-hidden="true" />
-  <AlertTitle>Informação</AlertTitle>
+  <AlertTitle as="h4">Informação</AlertTitle>
   <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>
 </Alert>`,
   );
@@ -226,7 +226,7 @@ export function alertLayoutWithoutIconSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
     `<Alert>
-  <AlertTitle>Sem ícone</AlertTitle>
+  <AlertTitle as="h4">Sem ícone</AlertTitle>
   <AlertDescription>Alert sem ícone mantém layout de coluna única.</AlertDescription>
 </Alert>`,
   );
@@ -244,7 +244,7 @@ import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
     `<div class="nds-stack" data-spacing="md">
   <Alert role="note">
     <Info aria-hidden="true" />
-    <AlertTitle>Nota de implementação</AlertTitle>
+    <AlertTitle as="h4">Nota de implementação</AlertTitle>
     <AlertDescription>
       Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.
     </AlertDescription>
@@ -252,7 +252,7 @@ import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
 
   <Alert variant="destructive">
     <AlertCircle aria-hidden="true" />
-    <AlertTitle>Falha no envio</AlertTitle>
+    <AlertTitle as="h4">Falha no envio</AlertTitle>
     <AlertDescription>
       Mensagem urgente surgida em tempo de execução: anúncio imediato.
     </AlertDescription>
@@ -278,7 +278,7 @@ let generated = $state(false);`,
 {#if generated}
   <Alert>
     <CheckCircle2 aria-hidden="true" />
-    <AlertTitle>Operação concluída</AlertTitle>
+    <AlertTitle as="h4">Operação concluída</AlertTitle>
     <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
   </Alert>
 {/if}`,
@@ -292,7 +292,7 @@ export function alertWithActionSource(): string {
 ${IMPORT_INFO}`,
     `<Alert>
   <Info aria-hidden="true" />
-  <AlertTitle>Atualização disponível</AlertTitle>
+  <AlertTitle as="h4">Atualização disponível</AlertTitle>
   <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
   <AlertAction>
     <Button size="sm" variant="default">Atualizar</Button>
@@ -311,7 +311,7 @@ export function alertWithActionAndDismissSource(): string {
 ${IMPORT_INFO}`,
     `<Alert dismissible>
   <Info aria-hidden="true" />
-  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+  <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>
   <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
   <AlertAction>
     <Button size="sm" variant="default">Salvar agora</Button>
@@ -330,7 +330,7 @@ export function alertAdditionalClassSource(): string {
 ${IMPORT_INFO}`,
     `<Alert class="nds-w-full">
   <Info aria-hidden="true" />
-  <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
+  <AlertTitle as="h4" class="nds-w-full">Classe adicional</AlertTitle>
   <AlertDescription class="nds-w-full">
     A classe do consumidor convive com as do design system.
   </AlertDescription>

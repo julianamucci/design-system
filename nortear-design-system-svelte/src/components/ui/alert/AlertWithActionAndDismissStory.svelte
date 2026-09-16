@@ -8,7 +8,7 @@
      grid e o X segue na própria calha, à direita dela. -->
 <Alert dismissible>
   <Info aria-hidden="true" />
-  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+  <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>
   <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
   <AlertAction>
     <Button size="sm" variant="default">Salvar agora</Button>

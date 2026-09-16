@@ -51,7 +51,11 @@ function header(icons: string[], extra?: string): string {
 function body(icon: string | null, title: string, description: string, indent = '  '): string {
   const lines: string[] = [];
   if (icon) lines.push(`${indent}<${icon} aria-hidden="true" />`);
-  if (title) lines.push(`${indent}<AlertTitle>${title}</AlertTitle>`);
+  // O nível vai EXPLÍCITO: o default do componente é `h5`, e quem copia o
+  // snippet precisa decidir o nível pela hierarquia da página onde o alerta
+  // entra. As stories renderizam o mesmo `as`, para painel e canvas não
+  // divergirem.
+  if (title) lines.push(`${indent}<AlertTitle as="h4">${title}</AlertTitle>`);
   lines.push(`${indent}<AlertDescription>${description}</AlertDescription>`);
   return lines.join('\n');
 }
@@ -202,7 +206,7 @@ export function alertContrastSource(): string {
     const attrs = name === 'default' ? '' : ` variant="${name}"`;
     return [
       `  <Alert${attrs}>`,
-      `    <AlertTitle>Título ${name}</AlertTitle>`,
+      `    <AlertTitle as="h4">Título ${name}</AlertTitle>`,
       `    <AlertDescription>Texto corrido da variante ${name}.</AlertDescription>`,
       '  </Alert>',
     ].join('\n');
@@ -387,7 +391,7 @@ import { Info } from "lucide-react";`,
       ' className="nds-w-full"',
       [
         '  <Info aria-hidden="true" />',
-        '  <AlertTitle className="nds-w-full">Classe adicional</AlertTitle>',
+        '  <AlertTitle as="h4" className="nds-w-full">Classe adicional</AlertTitle>',
         '  <AlertDescription className="nds-w-full">',
         '    A classe do consumidor convive com as do design system.',
         '  </AlertDescription>',

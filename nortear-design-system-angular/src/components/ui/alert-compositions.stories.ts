@@ -53,7 +53,7 @@ export const WithIcon: Story = {
     template: `
       <div ndsAlert>
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>Informação</h5>
+        <h4 ndsAlertTitle>Informação</h4>
         <section ndsAlertDescription>Ícone SVG posicionado automaticamente.</section>
       </div>
     `,
@@ -86,7 +86,7 @@ export const WithAction: Story = {
     template: `
       <div ndsAlert>
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>Atualização disponível</h5>
+        <h4 ndsAlertTitle>Atualização disponível</h4>
         <section ndsAlertDescription>Uma nova versão está pronta para instalação.</section>
         <div ndsAlertAction>
           <button ndsButton variant="default" size="sm">Atualizar</button>
@@ -134,7 +134,7 @@ export const AdditionalClass: Story = {
     template: `
       <div ndsAlert class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle class="nds-w-full">Classe adicional</h5>
+        <h4 ndsAlertTitle class="nds-w-full">Classe adicional</h4>
         <section ndsAlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</section>
         <div ndsAlertAction class="nds-w-auto">
           <button ndsButton variant="default" size="sm">Ação</button>
@@ -169,7 +169,7 @@ export const WithoutIcon: Story = {
   render: () => ({
     template: `
       <div ndsAlert>
-        <h5 ndsAlertTitle>Sem ícone</h5>
+        <h4 ndsAlertTitle>Sem ícone</h4>
         <section ndsAlertDescription>Alert sem ícone mantém layout de coluna única.</section>
       </div>
     `,
@@ -206,7 +206,7 @@ export const WithActionAndDismiss: Story = {
     template: `
       <div ndsAlert dismissible>
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>Sessão expira em 5 minutos</h5>
+        <h4 ndsAlertTitle>Sessão expira em 5 minutos</h4>
         <section ndsAlertDescription>Salve seu trabalho para não perder as alterações.</section>
         <div ndsAlertAction>
           <button ndsButton variant="default" size="sm">Salvar agora</button>

@@ -85,7 +85,7 @@ describe('alertSource', () => {
     });
     expect(noArgs).not.toBe(withArgs);
     expect(withArgs).toContain("variant: 'success'");
-    expect(withArgs).toContain("createAlertTitle({ text: 'Perfil atualizado' })");
+    expect(withArgs).toContain("createAlertTitle({ text: 'Perfil atualizado', as: 'h4' })");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -132,5 +132,52 @@ describe('alertDynamicInsertionSnippet', () => {
     expect(code).toContain('function showResult(container: HTMLElement): void {');
     expect(code).toContain('  container.appendChild(alerta);');
     expect(code).toContain("  alerta.appendChild(createAlertIcon('success'));");
+  });
+});
+
+// ─── Nível do heading do título ──────────────────────────────────────────────
+
+/**
+ * O painel Code tem de ENSINAR o nível do título: snippet que publica
+ * `createAlertTitle({ text })` sem `as` esconde a decisão atrás do default da
+ * fábrica, e o leitor copia um alerta cujo nível ele não escolheu.
+ *
+ * A varredura é por CHAMADA, não por arquivo: uma forma nova de snippet que
+ * monte o título sem nível reprova aqui, que é onde a decisão fica guardada.
+ */
+function titleCalls(code: string): string[] {
+  return code.match(/createAlertTitle\(\{[^}]*\}\)/g) ?? [];
+}
+
+describe('nível do heading no snippet', () => {
+  it('toda forma de snippet que publica título escreve o nível', () => {
+    const forms: Array<[string, string]> = [
+      ['alertSnippet', alertSnippet()],
+      ['alertSnippet com variante', alertSnippet({ variant: 'destructive', title: 'Erro ao salvar' })],
+      ['alertSnippet sem ícone', alertSnippet({ icon: false })],
+      ['alertWithActionSnippet', alertWithActionSnippet({ action: 'Atualizar' })],
+      [
+        'alertWithActionSnippet com dismissible',
+        alertWithActionSnippet({ dismissible: true, action: 'Salvar agora' }),
+      ],
+      [
+        'alertDynamicInsertionSnippet',
+        alertDynamicInsertionSnippet({ icon: 'success', title: 'Operação concluída' }),
+      ],
+      ['alertSource', alertSource('', { args: { title: 'Atenção' } })],
+      ['alertSourceWith', alertSourceWith({ variant: 'warning' })('', {})],
+    ];
+
+    for (const [name, code] of forms) {
+      const calls = titleCalls(code);
+      expect(calls, `${name}: não publicou chamada de título nenhuma`).toHaveLength(1);
+      expect(calls[0], `${name}: título publicado sem nível de heading`).toContain("as: 'h4'");
+    }
+  });
+
+  it('a composição sem título não publica chamada de título nenhuma', () => {
+    // O contrapeso do caso acima: `toHaveLength(1)` só tem dentes se a ausência
+    // de título de fato zerar a contagem, em vez de o regex nunca casar nada.
+    expect(titleCalls(alertSnippet({ title: '' }))).toEqual([]);
   });
 });

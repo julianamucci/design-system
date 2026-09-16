@@ -38,7 +38,7 @@ export const Default: Story = {
   render: () => (
     <Alert>
       <InfoIcon aria-hidden="true" />
-      <AlertTitle>Atenção</AlertTitle>
+      <AlertTitle as="h4">Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
@@ -75,7 +75,7 @@ export const Destructive: Story = {
   render: () => (
     <Alert variant="destructive">
       <AlertCircle aria-hidden="true" />
-      <AlertTitle>Erro ao salvar</AlertTitle>
+      <AlertTitle as="h4">Erro ao salvar</AlertTitle>
       <AlertDescription>
         Não foi possível salvar. Verifique sua conexão e tente novamente.
       </AlertDescription>
@@ -98,7 +98,7 @@ export const Success: Story = {
   render: () => (
     <Alert variant="success">
       <CheckCircle2 aria-hidden="true" />
-      <AlertTitle>Perfil atualizado</AlertTitle>
+      <AlertTitle as="h4">Perfil atualizado</AlertTitle>
       <AlertDescription>
         Suas informações foram salvas com sucesso.
       </AlertDescription>
@@ -118,7 +118,7 @@ export const Warning: Story = {
   render: () => (
     <Alert variant="warning">
       <TriangleAlert aria-hidden="true" />
-      <AlertTitle>Assinatura expirando</AlertTitle>
+      <AlertTitle as="h4">Assinatura expirando</AlertTitle>
       <AlertDescription>
         Sua assinatura expira em 3 dias. Renove para evitar interrupções.
       </AlertDescription>
@@ -138,7 +138,7 @@ export const Info: Story = {
   render: () => (
     <Alert variant="info">
       <InfoIcon aria-hidden="true" />
-      <AlertTitle>Dica</AlertTitle>
+      <AlertTitle as="h4">Dica</AlertTitle>
       <AlertDescription>
         Você pode fixar os filtros mais usados para acessá-los mais rápido.
       </AlertDescription>
@@ -188,7 +188,7 @@ function RemountingDismissibleAlert({
       }}
     >
       {icon}
-      <AlertTitle>{title}</AlertTitle>
+      <AlertTitle as="h4">{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>
     </Alert>
   );
@@ -362,23 +362,23 @@ export const Contrast: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       <Alert>
-        <AlertTitle>Título default</AlertTitle>
+        <AlertTitle as="h4">Título default</AlertTitle>
         <AlertDescription>Texto corrido da variante default.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
-        <AlertTitle>Título destructive</AlertTitle>
+        <AlertTitle as="h4">Título destructive</AlertTitle>
         <AlertDescription>Texto corrido da variante destructive.</AlertDescription>
       </Alert>
       <Alert variant="success">
-        <AlertTitle>Título success</AlertTitle>
+        <AlertTitle as="h4">Título success</AlertTitle>
         <AlertDescription>Texto corrido da variante success.</AlertDescription>
       </Alert>
       <Alert variant="warning">
-        <AlertTitle>Título warning</AlertTitle>
+        <AlertTitle as="h4">Título warning</AlertTitle>
         <AlertDescription>Texto corrido da variante warning.</AlertDescription>
       </Alert>
       <Alert variant="info">
-        <AlertTitle>Título info</AlertTitle>
+        <AlertTitle as="h4">Título info</AlertTitle>
         <AlertDescription>Texto corrido da variante info.</AlertDescription>
       </Alert>
     </div>

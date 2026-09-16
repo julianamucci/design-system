@@ -50,7 +50,7 @@ export const Default: Story = {
     template: `
       <div ndsAlert>
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>Atenção</h5>
+        <h4 ndsAlertTitle>Atenção</h4>
         <section ndsAlertDescription>Suas alterações serão aplicadas na próxima sessão.</section>
       </div>
     `,
@@ -88,7 +88,7 @@ export const Destructive: Story = {
     template: `
       <div ndsAlert variant="destructive">
         <svg ndsAlertIcon kind="error"></svg>
-        <h5 ndsAlertTitle>Erro ao salvar</h5>
+        <h4 ndsAlertTitle>Erro ao salvar</h4>
         <section ndsAlertDescription>Não foi possível salvar. Verifique sua conexão e tente novamente.</section>
       </div>
     `,
@@ -129,7 +129,7 @@ export const Success: Story = {
     template: `
       <div ndsAlert variant="success">
         <svg ndsAlertIcon kind="success"></svg>
-        <h5 ndsAlertTitle>Perfil atualizado</h5>
+        <h4 ndsAlertTitle>Perfil atualizado</h4>
         <section ndsAlertDescription>Suas informações foram salvas com sucesso.</section>
       </div>
     `,
@@ -148,7 +148,7 @@ export const Warning: Story = {
     template: `
       <div ndsAlert variant="warning">
         <svg ndsAlertIcon kind="warning"></svg>
-        <h5 ndsAlertTitle>Assinatura expirando</h5>
+        <h4 ndsAlertTitle>Assinatura expirando</h4>
         <section ndsAlertDescription>Sua assinatura expira em 3 dias. Renove para evitar interrupções.</section>
       </div>
     `,
@@ -167,7 +167,7 @@ export const Info: Story = {
     template: `
       <div ndsAlert variant="info">
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>Dica</h5>
+        <h4 ndsAlertTitle>Dica</h4>
         <section ndsAlertDescription>Você pode fixar os filtros mais usados para acessá-los mais rápido.</section>
       </div>
     `,
@@ -213,7 +213,7 @@ function remountingDismissibleAlert(onDismiss: () => void, o: RemountingAlertOpt
       @for (i of [instance()]; track i) {
         <div ndsAlert [variant]="variant" dismissible [dismissLabel]="dismissLabel" (dismiss)="handleDismiss()">
           <svg ndsAlertIcon [kind]="kind"></svg>
-          <h5 ndsAlertTitle>{{ title }}</h5>
+          <h4 ndsAlertTitle>{{ title }}</h4>
           <section ndsAlertDescription>{{ description }}</section>
         </div>
       }
@@ -253,7 +253,7 @@ export const Dismissible: Story = {
           ${remounting.template}
           <div ndsAlert role="status" dismissible dismissLabel="Fechar lembrete">
             <svg ndsAlertIcon kind="info"></svg>
-            <h5 ndsAlertTitle>Lembrete</h5>
+            <h4 ndsAlertTitle>Lembrete</h4>
             <section ndsAlertDescription>Este aviso sai da tela ao fechar e não volta.</section>
           </div>
         </div>
@@ -424,23 +424,23 @@ export const Contrast: Story = {
     template: `
       <div class="nds-stack" data-spacing="sm">
         <div ndsAlert>
-          <h5 ndsAlertTitle>Título default</h5>
+          <h4 ndsAlertTitle>Título default</h4>
           <section ndsAlertDescription>Texto corrido da variante default.</section>
         </div>
         <div ndsAlert variant="destructive">
-          <h5 ndsAlertTitle>Título destructive</h5>
+          <h4 ndsAlertTitle>Título destructive</h4>
           <section ndsAlertDescription>Texto corrido da variante destructive.</section>
         </div>
         <div ndsAlert variant="success">
-          <h5 ndsAlertTitle>Título success</h5>
+          <h4 ndsAlertTitle>Título success</h4>
           <section ndsAlertDescription>Texto corrido da variante success.</section>
         </div>
         <div ndsAlert variant="warning">
-          <h5 ndsAlertTitle>Título warning</h5>
+          <h4 ndsAlertTitle>Título warning</h4>
           <section ndsAlertDescription>Texto corrido da variante warning.</section>
         </div>
         <div ndsAlert variant="info">
-          <h5 ndsAlertTitle>Título info</h5>
+          <h4 ndsAlertTitle>Título info</h4>
           <section ndsAlertDescription>Texto corrido da variante info.</section>
         </div>
       </div>

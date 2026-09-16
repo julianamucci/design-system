@@ -114,9 +114,11 @@ export const Playground: Story = {
       await waitFor(() => expect(canvas.getByText('Atenção')).toBeVisible());
     });
 
-    await step('AlertTitle é H5 por padrão', async () => {
+    // A story escreve `as="h4"` e o painel Code mostra o mesmo: o nível é
+    // ENSINADO, não herdado do default `h5` do primitivo.
+    await step('AlertTitle renderiza no nível que a story declara', async () => {
       const title = canvas.getByText('Atenção');
-      await expect(title.tagName).toBe('H5');
+      await expect(title.tagName).toBe('H4');
       await expect(title).toHaveClass('nds-alert-title');
     });
 

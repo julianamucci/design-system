@@ -38,7 +38,7 @@ export const WithIcon: Story = {
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Informação' }));
+    alert.appendChild(createAlertTitle({ text: 'Informação', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Ícone SVG posicionado automaticamente.' }));
     return alert;
   },
@@ -70,7 +70,7 @@ export const WithAction: Story = {
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Atualização disponível' }));
+    alert.appendChild(createAlertTitle({ text: 'Atualização disponível', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Uma nova versão está pronta para instalação.' }));
 
     const action = createAlertAction();
@@ -130,7 +130,7 @@ export const AdditionalClass: Story = {
   render: () => {
     const alert = createAlert({ className: 'nds-w-full' });
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Classe adicional', className: 'nds-w-full' }));
+    alert.appendChild(createAlertTitle({ text: 'Classe adicional', as: 'h4', className: 'nds-w-full' }));
     alert.appendChild(createAlertDescription({
       text: 'A classe do consumidor convive com as do design system.',
       className: 'nds-w-full',
@@ -178,7 +178,7 @@ export const WithoutIcon: Story = {
   },
   render: () => {
     const alert = createAlert();
-    alert.appendChild(createAlertTitle({ text: 'Sem ícone' }));
+    alert.appendChild(createAlertTitle({ text: 'Sem ícone', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Alert sem ícone mantém layout de coluna única.' }));
     return alert;
   },
@@ -218,7 +218,7 @@ export const WithActionAndDismiss: Story = {
   render: () => {
     const alert = createAlert({ dismissible: true });
     alert.appendChild(createAlertIcon('info'));
-    alert.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos' }));
+    alert.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos', as: 'h4' }));
     alert.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));
 
     const action = createAlertAction();

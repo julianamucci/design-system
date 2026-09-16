@@ -6,7 +6,7 @@
 
 <Alert>
   <Info aria-hidden="true" />
-  <AlertTitle>Atualização disponível</AlertTitle>
+  <AlertTitle as="h4">Atualização disponível</AlertTitle>
   <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
   <AlertAction>
     <Button size="sm" variant="default">Atualizar</Button>

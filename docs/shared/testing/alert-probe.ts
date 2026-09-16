@@ -146,102 +146,18 @@ function measureText(el: Element | null, background: string): TextMeasurement | 
   return { cor, contraste: contraste(cor, background) };
 }
 
-export function measureAlert(root: HTMLElement) {
-  const alerta = root.querySelector<HTMLElement>('.nds-alert');
-  if (!alerta) return { finding: false };
-  return measureAlertIn(alerta);
-}
-
-/** Mede UM alert já localizado — é o que a story usa quando há vários na tela. */
-export function measureAlertIn(alerta: HTMLElement) {
-
-  const background = backgroundEffective(alerta);
-  const cs = getComputedStyle(alerta);
-  const title = alerta.querySelector('.nds-alert-title, h1, h2, h3, h4, h5, h6, [data-title], strong');
-  const descricao = alerta.querySelector('.nds-alert-description, section');
-  const icone = alerta.querySelector<HTMLElement>(':scope > svg');
-  const close = alerta.querySelector<HTMLElement>('.nds-alert-dismiss');
-
-  return {
-    finding: true,
-    classes: alerta.className.split(/\s+/).filter((c) => c.startsWith('nds-alert')).sort().join(' '),
-    papel: alerta.getAttribute('role'),
-    aoVivo: alerta.getAttribute('aria-live'),
-    background,
-    border: cs.borderTopColor,
-    borderWidth: Math.round(parseFloat(cs.borderTopWidth) || 0),
-    title: measureText(title, background),
-    descricao: measureText(descricao, background),
-    icone: icone ? getComputedStyle(icone).color : null,
-    close: close
-      ? { label: close.getAttribute('aria-label'), tag: close.tagName.toLowerCase() }
-      : null,
-    /** Estrutura: quem é filho direto, na ordem. */
-    children: Array.from(alerta.children)
-      .map((f) => f.tagName.toLowerCase() + (f.className ? '.' + String(f.className).split(/\s+/)[0] : ''))
-      .join(' > '),
-  };
-}
-
-export interface ContrastFailure {
-  variant: string;
-  parte: 'título' | 'texto';
-  contraste: number;
-}
-
 /** Nome da variante a partir da classe — "default" quando não há modificador. */
 function variantOf(alerta: HTMLElement): string {
   const m = alerta.className.match(/nds-alert-(destructive|success|warning|info)\b/);
   return m ? m[1] : 'default';
 }
 
-function failures(root: HTMLElement, minimum: number, theme: string): ContrastFailure[] {
-  const encontradas: ContrastFailure[] = [];
-  for (const alerta of root.querySelectorAll<HTMLElement>('.nds-alert')) {
-    const m = measureAlertIn(alerta);
-    const variant = `${variantOf(alerta)} (${theme})`;
-    if (m.title && m.title.contraste < minimum) {
-      encontradas.push({ variant, parte: 'título', contraste: m.title.contraste });
-    }
-    if (m.descricao && m.descricao.contraste < minimum) {
-      encontradas.push({ variant, parte: 'texto', contraste: m.descricao.contraste });
-    }
-  }
-  return encontradas;
-}
-
-/**
- * Contraste de TODOS os alerts da tela, nos DOIS temas.
- *
- * O tema escuro é metade do produto e não era medido em lugar nenhum: o `info`
- * ficou com o título em 3.19:1 sem ninguém ver, enquanto no claro marcava 6.16.
- * O limite é 4.5 porque o título é 14px semibold — pela WCAG isso não é texto
- * grande (precisaria de 18.66px em negrito), então os 3:1 não valem aqui.
- *
- * A classe `.dark` é removida no fim mesmo se a medição falhar: deixá-la posta
- * envenenaria a story seguinte e a foto do Chromatic.
- */
-export function contrastNosDoisThemes(root: HTMLElement, minimum = 4.5): ContrastFailure[] {
-  const light = failures(root, minimum, 'claro');
-  const desfazer = darkLigarTheme(root.ownerDocument);
-  try {
-    return [...light, ...failures(root, minimum, 'escuro')];
-  } finally {
-    desfazer();
-  }
-}
-
-/** Mensagem de falha legível, com o número medido. */
-export function describeFailures(fs: ContrastFailure[]): string {
-  return fs.map((f) => `  · ${f.variant} — ${f.parte} em ${f.contraste}:1`).join('\n');
-}
-
 // ─── Sonda: os três temas de marca, não só claro × escuro ────────────────────
 //
-// `contrastNosDoisThemes` mede o tema VIGENTE em claro e escuro — e o vigente é
-// sempre o `default`, porque é o que a toolbar entrega ao test-runner. Warm e
-// Cold re-declaram `--destructive`, `--success`, `--warning` e `--info` com
-// outros matizes, então cada um é um par de cores diferente sobre um fundo
+// A primeira versão desta sonda media o tema VIGENTE em claro e escuro — e o
+// vigente é sempre o `default`, porque é o que a toolbar entrega ao test-runner.
+// Warm e Cold re-declaram `--destructive`, `--success`, `--warning` e `--info`
+// com outros matizes, então cada um é um par de cores diferente sobre um fundo
 // diferente. Seis combinações, não duas.
 //
 // A varredura por tema vem de `cor.ts` (`byTheme`) para não existir um segundo
@@ -292,32 +208,6 @@ export function documentByTheme<T>(
   return saida;
 }
 
-/**
- * As camadas de fundo entre o elemento e a primeira superfície opaca, com o
- * elemento que pinta cada uma.
- *
- * Serve para responder "contra o que este texto está sendo medido?" — pergunta
- * que decide se um contraste baixo é defeito de paleta ou artefato de harness.
- */
-export function backgroundCamadas(el: HTMLElement): string[] {
-  const camadas: string[] = [];
-  let current: HTMLElement | null = el;
-  while (current) {
-    const cor = getComputedStyle(current).backgroundColor;
-    const quem =
-      current.tagName.toLowerCase() +
-      (current.id ? `#${current.id}` : '') +
-      (typeof current.className === 'string' && current.className
-        ? `.${current.className.trim().split(/\s+/).join('.')}`
-        : '');
-    if (cor !== 'rgba(0, 0, 0, 0)') camadas.push(`${quem} → ${cor}`);
-    const [, , , alfa = 1] = (cor.match(/-?[\d.]+/g) ?? []).map(Number);
-    if (cor !== 'rgba(0, 0, 0, 0)' && alfa >= 1) break;
-    current = current.parentElement;
-  }
-  return camadas;
-}
-
 export interface VariantMeasurement {
   theme: string;
   mode: 'claro' | 'escuro';
@@ -355,15 +245,6 @@ export function themeContrast(root: HTMLElement): VariantMeasurement[] {
   ).flat();
 }
 
-/** Uma linha por medida — a tabela inteira, para o diff campo a campo. */
-export function themeResumir(measurements: VariantMeasurement[]): string[] {
-  const n = (m: TextMeasurement | null) => (m ? String(m.contraste) : 'null');
-  return measurements.map(
-    (m) =>
-      `${m.variant}|${m.theme}/${m.mode}|fundo=${m.background}|titulo=${n(m.title)}|texto=${n(m.descricao)}|icone=${n(m.icone)}`,
-  );
-}
-
 /** Só as linhas que reprovam o mínimo, já legíveis. */
 export function themeReprovas(measurements: VariantMeasurement[], minimum = 4.5): string[] {
   const saida: string[] = [];
@@ -381,74 +262,15 @@ export function themeReprovas(measurements: VariantMeasurement[], minimum = 4.5)
   return saida;
 }
 
-// ─── Sonda: semântica de anúncio e ordem de leitura ──────────────────────────
-
-export interface SemanticaDoAlert {
-  variant: string;
-  /** Tag da raiz — o contrato do design system é `div`. */
-  tag: string;
-  papel: string | null;
-  ariaLive: string | null;
-  ariaAtomic: string | null;
-  /** `null` quando não há `<svg>` filho direto. */
-  icone: { ariaHidden: string | null; role: string | null; focusable: string | null } | null;
-  /** Tag do título — `null` quando `.nds-alert-title` não casou. */
-  tituloTag: string | null;
-  descricaoTag: string | null;
-  /** O que o leitor de tela percorre, na ordem do DOM. */
-  leituraOrder: string[];
-  dismiss: { tag: string; label: string | null; ehUltimoFilho: boolean; tabIndex: number } | null;
-}
-
-/**
- * Texto que o leitor de tela realmente percorre, na ordem do DOM.
- *
- * Filho com `aria-hidden="true"` sai da árvore de acessibilidade e não entra na
- * lista — é assim que se vê se o ícone está mudo e se o botão de fechar é
- * anunciado antes ou depois da mensagem.
- */
-function leituraOrder(alerta: HTMLElement): string[] {
-  return Array.from(alerta.children)
-    .filter((f) => f.getAttribute('aria-hidden') !== 'true')
-    .map((f) => {
-      const label = f.getAttribute('aria-label');
-      const text = (f.textContent ?? '').trim().replace(/\s+/g, ' ');
-      return label ? `[${label}]` : text;
-    })
-    .filter((t) => t.length > 0);
-}
-
-export function measureSemantica(root: HTMLElement): SemanticaDoAlert[] {
-  return Array.from(root.querySelectorAll<HTMLElement>('.nds-alert')).map((alerta) => {
-    const svg = alerta.querySelector<SVGElement>(':scope > svg');
-    const close = alerta.querySelector<HTMLElement>('[data-slot="alert-dismiss"]');
-    return {
-      variant: variantOf(alerta),
-      tag: alerta.tagName.toLowerCase(),
-      papel: alerta.getAttribute('role'),
-      ariaLive: alerta.getAttribute('aria-live'),
-      ariaAtomic: alerta.getAttribute('aria-atomic'),
-      icone: svg
-        ? {
-            ariaHidden: svg.getAttribute('aria-hidden'),
-            role: svg.getAttribute('role'),
-            focusable: svg.getAttribute('focusable'),
-          }
-        : null,
-      tituloTag: alerta.querySelector('.nds-alert-title')?.tagName.toLowerCase() ?? null,
-      descricaoTag: alerta.querySelector('.nds-alert-description')?.tagName.toLowerCase() ?? null,
-      leituraOrder: leituraOrder(alerta),
-      dismiss: close
-        ? {
-            tag: close.tagName.toLowerCase(),
-            label: close.getAttribute('aria-label'),
-            ehUltimoFilho: alerta.lastElementChild === close,
-            tabIndex: close.tabIndex,
-          }
-        : null,
-    };
-  });
-}
+// ─── REMOVIDO em 2026-09-15: a sonda de "semântica de anúncio" ───────────────
+//
+// `measureSemantica` e `leituraOrder` devolviam papel, `aria-*`, tags de título
+// e descrição e a ordem de leitura — e nenhuma story das cinco stacks as
+// chamava. Quem cobre isso são as plays, que afirmam o comportamento em vez de
+// colher uma tabela: `Playground` (papel pelo control), `WithoutAnnouncement`
+// (contagem de papéis), `DynamicInsertion` (sem `aria-live` em volta),
+// `Dismissible` (o X como último filho) e `WithoutTitle` (sem heading nenhum).
+// Colhedor que ninguém chama envelhece sem reprovar nada.
 
 // ─── Ação e botão de fechar juntos ─────────────────────────────────────────────
 

@@ -83,7 +83,7 @@ export const Playground: Story = {
     template: `
       <Alert v-bind="args">
         <Info aria-hidden="true" />
-        <AlertTitle>Atenção</AlertTitle>
+        <AlertTitle as="h4">Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
@@ -112,8 +112,12 @@ export const Playground: Story = {
       await waitFor(() => expect(canvas.getByText('Atenção')).toBeVisible());
     });
 
-    await step('AlertTitle é H5 por padrão', async () => {
-      await expect(canvas.getByText('Atenção').tagName).toBe('H5');
+    // O nível é ESCOLHA de quem compõe a página, e a story escolhe `h4` — o
+    // default `h5` do componente segue provado no teste unitário do primitivo.
+    // Aqui o que se mede é que o `as` chega ao DOM: sem ele o título voltaria a
+    // ser H5 e o painel Code estaria ensinando o que a story não faz.
+    await step('O nível pedido em `as` é o que chega ao DOM', async () => {
+      await expect(canvas.getByText('Atenção').tagName).toBe('H4');
     });
 
     await step('AlertDescription é renderizado corretamente', async () => {

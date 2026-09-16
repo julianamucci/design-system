@@ -57,7 +57,10 @@ function alertBlock(parts: Array<string | false | undefined>, children: string[]
 function body(iconName: string | null, title: string, description: string): string[] {
   const children = [];
   if (iconName) children.push(icon(iconName));
-  if (title) children.push(`<AlertTitle>${title}</AlertTitle>`);
+  // `as="h4"` escrito de propósito, mesmo sendo o título o default `h5`: o
+  // painel Code ensina que o nível é ESCOLHA de quem compõe a página, e escreve
+  // o mesmo que a story renderiza.
+  if (title) children.push(`<AlertTitle as="h4">${title}</AlertTitle>`);
   children.push(`<AlertDescription>${description}</AlertDescription>`);
   return children;
 }
@@ -348,7 +351,7 @@ import { Button } from '@/components/ui/button'
 ${importIcon('Info')}`,
     `<Alert class="nds-w-full">
   ${icon('Info')}
-  <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
+  <AlertTitle as="h4" class="nds-w-full">Classe adicional</AlertTitle>
   <AlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</AlertDescription>
   <AlertAction class="nds-w-auto">
     <Button size="sm" variant="default">Ação</Button>

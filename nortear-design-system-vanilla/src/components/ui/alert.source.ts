@@ -83,7 +83,10 @@ function alertParts(o: AlertSnippetOptions): AlertParts {
     creation: `const alerta = ${lines.length ? callLine('createAlert', lines) : 'createAlert()'};`,
     body: [
       icon ? `alerta.appendChild(createAlertIcon(${text(icon)}));` : '',
-      title ? `alerta.appendChild(createAlertTitle({ text: ${text(title)} }));` : '',
+      // O nível do heading entra SEMPRE que há título: o painel Code ensina o
+      // nível em vez de deixar o leitor herdar o default da fábrica sem saber.
+      // É o mesmo `as` que as stories renderizam — as duas pontas se movem juntas.
+      title ? `alerta.appendChild(createAlertTitle({ text: ${text(title)}, as: 'h4' }));` : '',
       description
         ? `alerta.appendChild(createAlertDescription({ text: ${text(description)} }));`
         : '',

@@ -43,12 +43,18 @@ type AlertMarkupOptions = {
   dismissLabel?: string;
   /** Rótulo do botão no slot de ação; omitido, sem ação. */
   action?: string;
-  /**
-   * Nível do título. As stories ficam no default `h5`; os cards da docs page
-   * abrem em `h3`, então o snippet deles ensina `h4`.
-   */
-  titleTag?: 'h4' | 'h5';
 };
+
+/**
+ * Nível do título, um só para todo snippet.
+ *
+ * No Angular o nível É o elemento — não existe prop de nível —, então quem
+ * ensina a hierarquia é a tag escrita aqui. Tanto os cards da docs page quanto
+ * as stories abrem num `h3`, então o título do alerta desce um degrau e fica em
+ * `h4`. Não há opção para variar: o snippet tem de escrever a MESMA tag que a
+ * story renderiza, e é isso que o `alert.source.test.ts` cobra nos dois lados.
+ */
+const TITLE_TAG = 'h4';
 
 const TITLE_DEFAULT = 'Atenção';
 const DESCRIPTION_DEFAULT = 'Suas alterações serão aplicadas na próxima sessão.';
@@ -100,7 +106,6 @@ function alertMarkup(o: AlertMarkupOptions = {}): string {
   const icon = o.icon === undefined ? variantIcon(variant) : o.icon;
   const title = o.title ?? TITLE_DEFAULT;
   const description = o.description ?? DESCRIPTION_DEFAULT;
-  const titleTag = o.titleTag ?? 'h5';
 
   const attrs = [
     variant === 'default' ? '' : `variant="${variant}"`,
@@ -115,7 +120,7 @@ function alertMarkup(o: AlertMarkupOptions = {}): string {
 
   const children = [
     icon ? `<svg ndsAlertIcon kind="${icon}"></svg>` : '',
-    title ? `<${titleTag} ndsAlertTitle>${title}</${titleTag}>` : '',
+    title ? `<${TITLE_TAG} ndsAlertTitle>${title}</${TITLE_TAG}>` : '',
     `<section ndsAlertDescription>${description}</section>`,
     o.action
       ? `<div ndsAlertAction>\n  <button ndsButton variant="default" size="sm">${o.action}</button>\n</div>`
@@ -183,12 +188,12 @@ const ACTION_AND_DISMISS: AlertMarkupOptions = {
  * do preview do card (`infoTitle`/`infoDesc`), como nas outras stacks.
  */
 export function alertDismissibleTemplateSnippet(): string {
-  return alertMarkup({ dismissible: true, titleTag: 'h4' });
+  return alertMarkup({ dismissible: true });
 }
 
 /** Card "Ação e botão de fechar" da docs page. */
 export function alertActionAndDismissTemplateSnippet(): string {
-  return alertMarkup({ ...ACTION_AND_DISMISS, titleTag: 'h4' });
+  return alertMarkup({ ...ACTION_AND_DISMISS });
 }
 
 // ─── Playground ───────────────────────────────────────────────────────────────
@@ -376,7 +381,7 @@ export function alertAdditionalClassSource(): string {
     ['NdsAlert', 'NdsAlertTitle', 'NdsAlertDescription', 'NdsAlertAction', 'NdsAlertIcon', 'NdsButton'],
     `<div ndsAlert class="nds-w-full">
   <svg ndsAlertIcon kind="info"></svg>
-  <h5 ndsAlertTitle class="nds-w-full">Classe adicional</h5>
+  <h4 ndsAlertTitle class="nds-w-full">Classe adicional</h4>
   <section ndsAlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</section>
   <div ndsAlertAction class="nds-w-auto">
     <button ndsButton variant="default" size="sm">Ação</button>

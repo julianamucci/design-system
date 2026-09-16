@@ -507,12 +507,15 @@ remoção do nó no vanilla, evento que o componente de story escuta no svelte, 
 o estado só se reinicia de dentro do componente. É divergência de API, não de
 contrato: as cinco afirmam as mesmas três coisas depois do reinício.
 
-**O painel Code das STORIES não ensina o `as`, nas cinco**: os construtores de
-snippet escrevem o título no default (`<AlertTitle>` em react, vue e svelte,
-`createAlertTitle({ text })` no vanilla, `<h5 ndsAlertTitle>` no angular),
-enquanto os snippets das docs pages mostram `h4` (D4). Não é divergência entre
-stacks — as cinco fazem igual —, é a decisão da D4 alcançando uma superfície e não
-a outra. Nenhum `alert.source.test.ts` cobra o nível.
+**O painel Code das stories ensina o nível desde 2026-09-15**, nas cinco: as 18
+stories que renderizam título usam `h4` (a `WithoutTitle` não tem título), e o
+construtor de snippet de cada uma escreve o mesmo — o painel ensina sem mentir
+sobre o que está na tela. Antes as duas pontas mostravam o default `h5`, e a
+decisão da D4 alcançava só as docs pages. Cada `alert.source.test.ts` ganhou o
+caso que cobra o nível em todo snippet com título, com a `WithoutTitle` como
+exceção nomeada e contrapeso contra varredura vazia — o portão que faltava para a
+decisão não se perder de novo. As plays que afirmavam `H5` passaram a afirmar
+`H4`: asserção presa ao default passava com a mudança pela metade.
 
 ### Inconsistências entre stacks, medidas em 2026-09-15
 
@@ -532,12 +535,9 @@ cinco páginas, e o mesmo tipo nos cinco `analytics.ts`; `role="note"` e título
 `h3` no `DocsNotes` das cinco; título `h3` na demonstração e no Do & Don't e
 `h4` nos cards. `audit.mjs alert` devolve zero achados.
 
-1. **O snippet da composição "Com ícone" sai numa linha só na docs page do
-   svelte.** `AlertDocs.svelte:489` publica
-   `<Alert><Info …/><AlertTitle as="h4">…</AlertTitle><AlertDescription>…</AlertDescription></Alert>`
-   sem quebra; react (`AlertDocs.tsx:557`) e vue (`AlertDocs.vue:257`) publicam o
-   mesmo exemplo indentado, e vanilla e angular o geram por construtor em
-   `alert.source.ts`, também indentado. Maioria (4): indentado.
+**Nenhuma**, depois da rodada de 2026-09-15. A última era o snippet da composição
+"Com ícone" saindo numa linha só na docs page do svelte (`AlertDocs.svelte:489`),
+contra o mesmo exemplo indentado nas outras quatro; foi reindentado.
 
 ## 8. Acessibilidade
 
@@ -704,7 +704,7 @@ próprio primitivo escreve que não remove.
 > `AlertDismissivelStory` → `AlertDismissibleStory` e afins), embora nenhum
 > portão os cobrasse.
 
-> **PENDÊNCIA · 2026-09-15** — seis exportações de `docs/shared/testing/alert-probe.ts`
+> **FECHADA · 2026-09-15** — seis exportações de `docs/shared/testing/alert-probe.ts`
 > não são usadas em lugar nenhum do repositório: `measureAlert`, `measureAlertIn`,
 > `contrastNosDoisThemes`, `backgroundCamadas`, `themeResumir` e
 > `measureSemantica`. As stories do Alert importam só `themeContrast`,
@@ -715,10 +715,25 @@ próprio primitivo escreve que não remove.
 > plays (`WithoutAnnouncement`, `DynamicInsertion`, `Playground`).
 > **Fecha quando**: as seis saem do arquivo, ou uma story das cinco stacks passa a
 > usá-las.
+> **Como fechou**: as seis saíram, e com elas o que só as servia — `describeFailures`
+> e a interface `ContrastFailure` (o `describeFailures` das stories do carousel é
+> outro, de `carousel-probe.ts`), a função interna `failures`, a interface
+> `SemanticaDoAlert` e a `leituraOrder`. Ficaram os quatro utilitários que as
+> outras seis sondas importam (`contraste`, `backgroundEffective`,
+> `darkLigarTheme`, `superficieDoApp`) e o que as stories do Alert usam
+> (`themeContrast`, `themeReprovas`, `measureActionDismiss`, mais `documentByTheme`
+> e `measureText` por baixo deles). O arquivo passou a dizer, onde ficava a sonda
+> de semântica, quais plays cobrem papel e estrutura.
 
-> **PENDÊNCIA · 2026-09-15** — o painel Code das stories mostra o título no nível
+> **FECHADA · 2026-09-15** — o painel Code das stories mostra o título no nível
 > default nas cinco stacks, e o snippet "Com ícone" da docs page do svelte sai numa
 > linha só (§7, inconsistência 1).
 > **Fecha quando**: os construtores de snippet das cinco escrevem o nível do título
 > como as docs pages (`as="h4"`, `as: 'h4'` ou `<h4 ndsAlertTitle>`) com asserção
 > no `alert.source.test.ts`, e `AlertDocs.svelte` publica o snippet indentado.
+> **Como fechou**: por decisão da dona as stories passaram a RENDERIZAR `h4`, e não
+> só o snippet — snippet que ensina um nível e story que mostra outro seria a mesma
+> mentira ao contrário. 18 stories por stack, os construtores junto, e um caso novo
+> em cada `alert.source.test.ts` cobrando o nível, provado com defeito plantado nas
+> cinco. No angular a opção `titleTag` do `alertMarkup` perdeu o chamador e virou
+> constante. O snippet do svelte foi reindentado.

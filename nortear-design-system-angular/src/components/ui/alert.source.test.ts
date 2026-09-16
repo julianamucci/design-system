@@ -59,7 +59,7 @@ describe('alertPlaygroundSource', () => {
     const code = alertPlaygroundSource();
     expect(code).toContain('<div ndsAlert>');
     expect(code).toContain('<svg ndsAlertIcon kind="info"></svg>');
-    expect(code).toContain('<h5 ndsAlertTitle>Atenção</h5>');
+    expect(code).toContain('<h4 ndsAlertTitle>Atenção</h4>');
     expect(code).toContain(
       '<section ndsAlertDescription>Suas alterações serão aplicadas na próxima sessão.</section>',
     );
@@ -73,7 +73,7 @@ describe('alertPlaygroundSource', () => {
       args: { variant: 'destructive', role: 'note', title: 'Erro' },
     });
     expect(code).toContain('<div ndsAlert variant="destructive" role="note">');
-    expect(code).toContain('<h5 ndsAlertTitle>Erro</h5>');
+    expect(code).toContain('<h4 ndsAlertTitle>Erro</h4>');
   });
 
   it('com dismissible, ensina o @if sobre o (dismiss) e declara o signal', () => {
@@ -186,7 +186,7 @@ describe('composições', () => {
   it('AdditionalClass: a classe em cada peça', () => {
     const code = alertAdditionalClassSource();
     expect(code).toContain('<div ndsAlert class="nds-w-full">');
-    expect(code).toContain('<h5 ndsAlertTitle class="nds-w-full">');
+    expect(code).toContain('<h4 ndsAlertTitle class="nds-w-full">');
     expect(code).toContain('<section ndsAlertDescription class="nds-w-full">');
     expect(code).toContain('<div ndsAlertAction class="nds-w-auto">');
   });
@@ -210,6 +210,83 @@ describe('snippets de template da docs page', () => {
     for (const code of [alertDismissibleTemplateSnippet(), alertActionAndDismissTemplateSnippet()]) {
       expect(code.startsWith('@if (visible()) {')).toBe(true);
       expect(code).not.toContain('@Component');
+    }
+  });
+});
+
+/**
+ * O NÍVEL do título, cobrado nos dois lados.
+ *
+ * No Angular o nível é o ELEMENTO — não há prop de nível —, então a tag É o
+ * ensinamento. Story e snippet abrem num card `h3`, e o título do alerta desce
+ * um degrau: `h4`. Sem este bloco o par podia divergir em silêncio (era o que
+ * havia: story em `h5`, snippet da docs page em `h4`), porque nenhum compilador
+ * lê tag dentro de string de template e a diferença não quebra nada.
+ */
+describe('o nível do título é h4, e a story mostra o mesmo que o snippet', () => {
+  /** A única composição sem heading — declarada para o resto ter de ter título. */
+  const SEM_TITULO = ['alertWithoutTitleSource'];
+
+  const builders: Array<[string, () => string]> = [
+    ['alertPlaygroundSource', alertPlaygroundSource],
+    ['alertDefaultSource', alertDefaultSource],
+    ['alertDestructiveSource', alertDestructiveSource],
+    ['alertSuccessSource', alertSuccessSource],
+    ['alertWarningSource', alertWarningSource],
+    ['alertInfoSource', alertInfoSource],
+    ['alertDismissibleSource', alertDismissibleSource],
+    ['alertDismissibleByKeyboardSource', alertDismissibleByKeyboardSource],
+    ['alertContrastSource', alertContrastSource],
+    ['alertCompleteSource', alertCompleteSource],
+    ['alertWithoutTitleSource', alertWithoutTitleSource],
+    ['alertWithoutIconSource', alertWithoutIconSource],
+    ['alertWithoutAnnouncementSource', alertWithoutAnnouncementSource],
+    ['alertDynamicInsertionSource', alertDynamicInsertionSource],
+    ['alertWithIconSource', alertWithIconSource],
+    ['alertWithActionSource', alertWithActionSource],
+    ['alertAdditionalClassSource', alertAdditionalClassSource],
+    ['alertLayoutWithoutIconSource', alertLayoutWithoutIconSource],
+    ['alertWithActionAndDismissSource', alertWithActionAndDismissSource],
+    ['alertDismissibleTemplateSnippet', alertDismissibleTemplateSnippet],
+    ['alertActionAndDismissTemplateSnippet', alertActionAndDismissTemplateSnippet],
+  ];
+
+  for (const [name, build] of builders) {
+    it(`${name} publica <h4 ndsAlertTitle> e nenhum outro nível`, () => {
+      const code = build();
+      const aberturas = code.match(/<h[1-6] ndsAlertTitle/g) ?? [];
+
+      if (SEM_TITULO.includes(name)) {
+        expect(aberturas).toEqual([]);
+        return;
+      }
+
+      expect(aberturas.length, `${name} não escreve título nenhum`).toBeGreaterThan(0);
+      expect(aberturas.filter((tag) => tag !== '<h4 ndsAlertTitle')).toEqual([]);
+      // O fechamento também: `<h4 …></h5>` é HTML que o leitor copiaria quebrado.
+      expect((code.match(/<\/h[1-6]>/g) ?? []).filter((tag) => tag !== '</h4>')).toEqual([]);
+    });
+  }
+
+  it('o Playground mantém o nível com os controls mexidos', () => {
+    const code = alertPlaygroundSource('', {
+      args: { variant: 'info', title: 'Erro', dismissible: true },
+    });
+    expect(code).toContain('<h4 ndsAlertTitle>Erro</h4>');
+  });
+
+  it('as stories renderizam o mesmo nível que os snippets publicam', () => {
+    for (const [file, text] of Object.entries(stories)) {
+      // Comentário fora antes de medir: o portão é de MARCAÇÃO, e uma prosa que
+      // cite `<h5 ndsAlertTitle>` para explicar a decisão não é defeito.
+      const markup = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+      const aberturas = markup.match(/<h[1-6] ndsAlertTitle/g) ?? [];
+      expect(aberturas.length, `${file} não renderiza título nenhum`).toBeGreaterThan(0);
+      expect(
+        aberturas.filter((tag) => tag !== '<h4 ndsAlertTitle'),
+        `${file} renderiza um nível que o snippet não ensina`,
+      ).toEqual([]);
+      expect((markup.match(/<\/h[1-6]>/g) ?? []).filter((tag) => tag !== '</h4>')).toEqual([]);
     }
   });
 });

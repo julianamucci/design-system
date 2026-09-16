@@ -33,7 +33,7 @@
   {#if generated}
     <Alert>
       <CheckCircle2 aria-hidden="true" />
-      <AlertTitle>Operação concluída</AlertTitle>
+      <AlertTitle as="h4">Operação concluída</AlertTitle>
       <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
     </Alert>
   {/if}

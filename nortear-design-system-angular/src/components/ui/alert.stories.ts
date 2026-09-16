@@ -100,7 +100,7 @@ export const Playground: Story = {
         (dismiss)="onDismiss()"
       >
         <svg ndsAlertIcon kind="info"></svg>
-        <h5 ndsAlertTitle>{{ title }}</h5>
+        <h4 ndsAlertTitle>{{ title }}</h4>
         <section ndsAlertDescription>{{ description }}</section>
       </div>
     `,
@@ -131,9 +131,11 @@ export const Playground: Story = {
     });
 
     await step('O título é o heading que quem escreve escolheu', async () => {
-      // Aqui o nível é do ELEMENTO, não de uma prop: `<h5 ndsAlertTitle>`.
+      // Aqui o nível é do ELEMENTO, não de uma prop: `<h4 ndsAlertTitle>`. A
+      // story abre num card `h3`, então o título do alerta desce um degrau — e
+      // o snippet do painel Code escreve exatamente esta tag.
       const title = canvas.getByText(args.title);
-      await expect(title.tagName).toBe('H5');
+      await expect(title.tagName).toBe('H4');
       await expect(title).toHaveClass('nds-alert-title');
     });
 

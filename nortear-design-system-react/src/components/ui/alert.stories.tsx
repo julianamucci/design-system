@@ -79,7 +79,7 @@ export const Playground: Story = {
   render: (args) => (
     <Alert {...args}>
       <Info aria-hidden="true" />
-      <AlertTitle>Atenção</AlertTitle>
+      <AlertTitle as="h4">Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
@@ -110,9 +110,12 @@ export const Playground: Story = {
       await waitFor(() => expect(canvas.getByText("Atenção")).toBeVisible());
     });
 
-    await step("AlertTitle é H5 por padrão", async () => {
+    // O nível do título é decisão de hierarquia da página, não do componente: a
+    // story pede `as="h4"` e o painel Code ensina o mesmo. Medir a tag é o que
+    // impede a story e o snippet de divergirem em silêncio.
+    await step("AlertTitle renderiza no nível pedido", async () => {
       const title = canvas.getByText("Atenção");
-      await expect(title.tagName).toBe("H5");
+      await expect(title.tagName).toBe("H4");
     });
 
     await step("AlertDescription é renderizado corretamente", async () => {

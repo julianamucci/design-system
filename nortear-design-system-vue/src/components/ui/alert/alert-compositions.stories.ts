@@ -36,7 +36,7 @@ export const WithIcon: Story = {
     template: `
       <Alert>
         <Info aria-hidden="true" />
-        <AlertTitle>Informação</AlertTitle>
+        <AlertTitle as="h4">Informação</AlertTitle>
         <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>
       </Alert>
     `,
@@ -61,7 +61,7 @@ export const WithAction: Story = {
     template: `
       <Alert>
         <Info aria-hidden="true" />
-        <AlertTitle>Atualização disponível</AlertTitle>
+        <AlertTitle as="h4">Atualização disponível</AlertTitle>
         <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
         <AlertAction>
           <Button size="sm" variant="default">Atualizar</Button>
@@ -113,7 +113,7 @@ export const AdditionalClass: Story = {
     template: `
       <Alert class="nds-w-full">
         <Info aria-hidden="true" />
-        <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
+        <AlertTitle as="h4" class="nds-w-full">Classe adicional</AlertTitle>
         <AlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</AlertDescription>
         <AlertAction class="nds-w-auto">
           <Button size="sm" variant="default">Ação</Button>
@@ -151,7 +151,7 @@ export const WithoutIcon: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <AlertTitle>Sem ícone</AlertTitle>
+        <AlertTitle as="h4">Sem ícone</AlertTitle>
         <AlertDescription>Alert sem ícone mantém layout de coluna única.</AlertDescription>
       </Alert>
     `,
@@ -184,7 +184,7 @@ export const WithActionAndDismiss: Story = {
     template: `
       <Alert dismissible>
         <Info aria-hidden="true" />
-        <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+        <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>
         <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
         <AlertAction>
           <Button size="sm" variant="default">Salvar agora</Button>
