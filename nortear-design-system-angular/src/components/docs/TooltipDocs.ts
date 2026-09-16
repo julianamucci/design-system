@@ -157,7 +157,9 @@ export class NdsTooltipContent {
 // portal, e quem escreve é dono do TEMPLATE, não do elemento. A
 // extensibilidade real deste stack é o delay por gatilho e o conteúdo rico
 // dentro do template.
-const EXTENSIBILITY_CODE = `<!-- delay por gatilho: vence o do provider só neste botão -->
+const EXTENSIBILITY_CODE = `<!-- delay por gatilho: vence o do provider só neste botão.
+     O valor é maior que o do grupo, e não zero: espera zero acende balão a cada
+     passada do mouse, e o que a página publica é o que quem lê vai copiar -->
 <span ndsTooltip>
   <button
     ndsTooltipTrigger
@@ -165,7 +167,7 @@ const EXTENSIBILITY_CODE = `<!-- delay por gatilho: vence o do provider só nest
     variant="outline"
     size="icon"
     aria-label="Salvar"
-    [delay]="0"
+    [delay]="800"
   >
     <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
   </button>
@@ -221,7 +223,7 @@ const VARIANT_CODE = {
       {{ lado.label }}
     </button>
 
-    <ng-template ndsTooltipContent [side]="lado.side">Tooltip {{ lado.side }}</ng-template>
+    <ng-template ndsTooltipContent [side]="lado.side">Tooltip {{ lado.label }}</ng-template>
   </span>
 }`,
 };
@@ -256,7 +258,7 @@ function buildCompositionCode(): Record<
     ><kbd class="nds-kbd" data-slot="kbd">S</kbd
   ></ng-template>
 </span>`,
-  formFieldHelp: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+  formFieldHelp: `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-spacing="sm">
     <label ndsLabel for="token-api">${t('demonstration.labels.apiTokenLabel')}</label>
 
@@ -479,7 +481,7 @@ function buildCompositionCode(): Record<
             <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado.label">
               {{ lado.label }}
             </button>
-            <ng-template ndsTooltipContent [side]="lado.side">Tooltip {{ lado.side }}</ng-template>
+            <ng-template ndsTooltipContent [side]="lado.side">Tooltip {{ lado.label }}</ng-template>
           </span>
         }
       </div>
@@ -548,7 +550,7 @@ function buildCompositionCode(): Record<
     </ng-template>
 
     <ng-template #tplCompCampo>
-      <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <label ndsLabel for="tooltip-token-api">{{ t('demonstration.labels.apiTokenLabel') }}</label>
           <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'formFieldHelp', $event)">
@@ -808,10 +810,11 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
    * de ONDE veio o evento, e cravá-lo em `docs_demo` fazia toda a página
    * responder a mesma coisa. Vocabulário na guideline 07 de analytics.
    *
-   * E o alcance não era só o `location`: dos 10 tooltips VIVOS desta página,
-   * só os 3 da demonstração disparavam evento. Variantes e Composições
-   * renderizam o componente de verdade, e um hover ali é tão real quanto na
-   * demo. O Do & Dont daqui não tem tooltip vivo — no vue e no svelte tem.
+   * E o alcance não era só o `location`: quando esta nota foi escrita, só os
+   * tooltips da demonstração disparavam evento. Variantes, Composições e o
+   * Do & Dont renderizam o componente de verdade, e um hover ali é tão real
+   * quanto na demo — os quatro quadros do Do & Dont (dois pares, todos com
+   * tooltip VIVO no template acima) disparam com `location: 'docs_do_dont'`.
    */
   protected aoAlternar(location: string, trigger: string, isOpen: boolean): void {
     if (!isOpen) return;
@@ -1020,11 +1023,14 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
 
   protected readonly stateItems = computed(() => {
     dict();
-    // `states.delayed` fica de fora: ele descreve `data-state="delayed-open"`,
-    // que este stack não emite — durante a espera não existe balão nenhum no
-    // DOM, então não há atributo a inspecionar. Documentar seria descrever um
-    // gancho de CSS que não vai casar.
-    return ['closed', 'open', 'hover', 'focus'].map((k) => ({
+    // As CINCO linhas, `delayed` incluída. Ela ficava de fora com o argumento de
+    // que esta stack não emite `data-state="delayed-open"` — e isso é verdade,
+    // mas o que a tabela publica é o ESTADO, não o atributo: durante a espera o
+    // ponteiro já está sobre o gatilho e o balão ainda não existe, o que vale
+    // igual nas cinco. O argumento deixava esta página com quatro estados onde
+    // as outras quatro publicam cinco, e a linha some justamente para quem lê
+    // sobre a espera.
+    return ['closed', 'open', 'hover', 'focus', 'delayed'].map((k) => ({
       label: t(`states.${k}.label`),
       trigger: toPlainText(t(`states.${k}.trigger`)),
       behavior: toPlainText(t(`states.${k}.behavior`)),

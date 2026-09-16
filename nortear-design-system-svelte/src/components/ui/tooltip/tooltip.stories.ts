@@ -1,16 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, fitsOnSide, sideOf, waitForSide } from './tooltip.fixtures';
 import TooltipDocs from '@/components/docs/TooltipDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipSource } from './tooltip.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
-/** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
-function sideOf(balao: HTMLElement | null): string | null {
-  return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
-}
 
 const meta: Meta = {
   title: 'Components/Overlay/Tooltip',
@@ -159,14 +155,24 @@ export const Playground: Story = {
     });
 
     await step('O lado pedido chega ao balão como data-side', async () => {
-      // É o gancho que o CSS compartilhado lê. Auto-flip por colisão pode
-      // devolver o lado oposto quando falta espaço — comportamento, não defeito.
-      const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
-      const side = (args.side ?? 'top') as keyof typeof oposto;
-      await waitFor(async () => {
-        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
-      });
-      await expect([side, oposto[side]]).toContain(sideOf(balaoDe(trigger)));
+      // É o gancho que o CSS compartilhado lê, e a asserção é do lado EXATO.
+      //
+      // Aqui estava `expect([side, oposto]).toContain(...)`, que aceita os dois
+      // lados e portanto passa com ou sem o posicionamento funcionando — o
+      // defeito canônico desta rodada. A cena é centrada e sobra espaço nos
+      // quatro lados, então não há colisão de que fugir; quem exige a virada é
+      // a story `Collision`, que encosta o gatilho na borda e cobra o oposto.
+      const side = String(args.side ?? 'top');
+      // Espera o VALOR, e não a existência do atributo: ele nasce com o lado
+      // pedido e só assenta no quadro em que o posicionador mede.
+      await waitForSide(trigger, side, 2000);
+      // E a PREMISSA é MEDIDA, não confiada ao andaime por comentário: quem
+      // afirma lado exato precisa provar que havia sala naquele eixo. Se a
+      // folga do `TooltipStory` sumir, esta linha reprova dizendo quanto
+      // faltou — antes de a asserção do lado acusar um defeito que não há.
+      const { slack, needed, message } = fitsOnSide(trigger, balaoDe(trigger)!, side);
+      await expect(slack, message).toBeGreaterThanOrEqual(needed);
+      await expect(sideOf(balaoDe(trigger))).toBe(side);
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {

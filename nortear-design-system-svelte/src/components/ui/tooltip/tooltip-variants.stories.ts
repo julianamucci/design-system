@@ -1,13 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, fitsOnSide, sideOf, waitForSide } from './tooltip.fixtures';
 import { tooltipSource } from './tooltip.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
 // visual capturar o balão, que só existe no DOM enquanto está aberto.
+//
+// Os LADOS não moram aqui: `variants.items.positioningSides` é o card da docs
+// page, não a story. A cena dos quatro lados é `PlacementSides`, no arquivo de
+// composições, onde os quatro `Side*` sempre viveram — mover o arquivo trocaria
+// o id da story e a baseline da regressão visual junto.
 
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {
@@ -67,7 +72,12 @@ export const Default: Story = {
     variant: 'default',
     triggerLabel: 'Salvar',
     ariaLabel: 'Salvar',
-    contentText: 'Salvar item',
+    // "Salvar", que é o que o conteúdo compartilhado publica
+    // (`demonstration.labels.saveButton`) e o que as outras stacks mostram.
+    // "Salvar item" era texto só desta stack — e é o rótulo de OUTRA ação
+    // (`demonstration.labels.delete`), o que fazia a mesma variante contar duas
+    // histórias conforme a página aberta.
+    contentText: 'Salvar',
   },
   parameters: { covers: ['visual.item1', 'accessibility.item2'] },
   play: async ({ canvasElement, step }) => {
@@ -79,7 +89,20 @@ export const Default: Story = {
       });
       const balao = balaoDe(trigger)!;
       await expect(balao).toHaveClass(/nds-tooltip-content/);
-      await expect(balao.textContent).toContain('Salvar item');
+      await expect(balao.textContent?.trim()).toBe('Salvar');
+    });
+
+    await step('E no lado pedido — a foto da regressão visual é do balão ACIMA', async () => {
+      // `visual.item1` afirma "side top", e sem esta asserção a baseline podia
+      // estar registrando `bottom`: com a fuga de colisão ligada, uma cena sem
+      // folga acima faz a lib virar o balão — corretamente —, e nada reprovava.
+      await waitForSide(trigger, 'top', 2000);
+      // A folga vem do andaime (`nds-min-h-100`, 400 px) e agora é MEDIDA aqui:
+      // em comentário ela não reprovava nada, e andaime que encolhesse deixaria
+      // esta story culpando o posicionamento por falta de sala.
+      const { slack, needed, message } = fitsOnSide(trigger, balaoDe(trigger)!, 'top');
+      await expect(slack, message).toBeGreaterThanOrEqual(needed);
+      await expect(sideOf(balaoDe(trigger))).toBe('top');
     });
 
     await step('O texto do balão passa dos 4.5:1 exigidos', async () => {
@@ -112,6 +135,18 @@ export const WithShortcut: Story = {
       const teclas = balaoDe(trigger)!.querySelectorAll('kbd');
       await expect(teclas.length).toBe(2);
       await expect(teclas[0].textContent).toBe('Ctrl');
+    });
+
+    await step('E no lado pedido — a foto da regressão visual é do balão ACIMA', async () => {
+      // Mesma razão da `Default`: `visual.item2` fotografa esta cena, e sem a
+      // asserção do lado exato a baseline podia registrar um balão virado. E a
+      // premissa de folga vem medida do andaime, não do comentário — o balão
+      // daqui é mais largo (leva as teclas), então a conta precisa ser feita
+      // com ESTE balão, e não herdada da `Default`.
+      await waitForSide(trigger, 'top', 2000);
+      const { slack, needed, message } = fitsOnSide(trigger, balaoDe(trigger)!, 'top');
+      await expect(slack, message).toBeGreaterThanOrEqual(needed);
+      await expect(sideOf(balaoDe(trigger))).toBe('top');
     });
 
     await step('A folha compartilhada reconhece a tecla e encurta o respiro', async () => {

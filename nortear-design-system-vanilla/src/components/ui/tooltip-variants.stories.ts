@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
-import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
+import { aguardarLado, balaoDe, clearPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
 
@@ -9,6 +9,22 @@ import { figmaDesign } from '@shared/figma/design-links';
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
 // visual capturar o balão, que só existe no DOM enquanto está aberto.
+
+/**
+ * Altura da moldura destas stories, e ela é FOLGA, não enfeite.
+ *
+ * Com o flip ligado, balão sem espaço acima vira para baixo — e estas stories
+ * são justamente as que o Chromatic fotografa afirmando "side top"
+ * (`visual.item1`). Na moldura de 180px o gatilho ficava perto do topo do
+ * quadro, e a foto podia registrar `bottom` enquanto a documentação dizia `top`,
+ * sem nada reprovando.
+ *
+ * O `.nds-cluster` de `wrap` centra no eixo transversal por padrão, então altura
+ * aqui VIRA folga: o gatilho fica no meio e sobra metade dela acima dele. É o
+ * degrau que o resto da rodada usou (~400px), e o mesmo que a cena dos quatro
+ * lados passou a usar.
+ */
+const VARIANT_HEIGHT = '400px';
 
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {
@@ -55,18 +71,19 @@ export const Default: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar' });
     queueMicrotask(() => trigger.focus());
-    return wrap(el);
+    return wrap(el, VARIANT_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
-    await step('Nasce aberto, com o texto curto no balão', async () => {
+    await step('Nasce aberto, do lado de cima, com o texto curto no balão', async () => {
       trigger.blur();
       trigger.focus();
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
-      const balao = balaoDe(trigger)!;
+      // O lado é AFIRMADO, e é por isso que a moldura tem folga: `visual.item1`
+      // promete "side top" ao Chromatic, e sem asserção a story podia fotografar
+      // um balão virado enquanto a documentação afirmava o contrário.
+      const balao = await aguardarLado(trigger, 'top');
+      await expect(balao).toHaveAttribute('data-side', 'top');
       await expect(balao).toHaveClass(/nds-tooltip-content/);
       await expect(balao.textContent?.trim()).toBe('Salvar');
     });
@@ -84,25 +101,66 @@ export const Default: Story = {
 };
 
 export const WithShortcut: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      source: {
+        transform: tooltipSourceWith({ content: 'Salvar', contentComMarcacao: true }),
+      },
+    },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
-    const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });
+
+    // Uma tecla por `<kbd>`, como nas outras quatro stacks — e não a string
+    // "Salvar (Ctrl+S)", que era o que estava aqui. A variante existe para
+    // demonstrar o TRATAMENTO do atalho, e texto solto não demonstra nenhum: sem
+    // `<kbd>` não há caixa de tecla, e sem `data-slot="kbd"` a folha não encurta
+    // o respiro à direita do balão.
+    const content = document.createElement('span');
+    content.style.display = 'contents';
+    const label = document.createElement('span');
+    label.textContent = 'Salvar';
+    content.appendChild(label);
+    for (const nome of ['Ctrl', 'S']) {
+      const tecla = document.createElement('kbd');
+      tecla.dataset.slot = 'kbd';
+      tecla.className = 'nds-kbd';
+      tecla.textContent = nome;
+      content.appendChild(tecla);
+    }
+
+    const el = createTooltip({ trigger, content });
     queueMicrotask(() => trigger.focus());
-    return wrap(el);
+    return wrap(el, VARIANT_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
-    await step('O balão traz o texto e o atalho', async () => {
+    await step('O atalho vai em <kbd>, não solto no texto', async () => {
       trigger.blur();
       trigger.focus();
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
-      const balao = balaoDe(trigger)!;
+      // Mesmo motivo da `Default`: `visual.item2` fotografa este balão, e o lado
+      // afirmado impede que a foto e a documentação divirjam em silêncio.
+      const balao = await aguardarLado(trigger, 'top');
+      await expect(balao).toHaveAttribute('data-side', 'top');
       await expect(balao.textContent).toContain('Salvar');
-      await expect(balao.textContent).toMatch(/Ctrl\+S/);
+      const teclas = balao.querySelectorAll('kbd');
+      await expect(teclas.length).toBe(2);
+      await expect(teclas[0].textContent).toBe('Ctrl');
+      await expect(teclas[1].textContent).toBe('S');
+    });
+
+    await step('A folha compartilhada reconhece a tecla e encurta o respiro', async () => {
+      // A prova de que o gancho `data-slot="kbd"` chegou: sem ele o balão fica
+      // com o respiro simétrico do `padding-inline`, e a regra
+      // `.nds-tooltip-content:has([data-slot="kbd"])` não pinta nada.
+      const balao = balaoDe(trigger)!;
+      await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
+      const computedStyle = getComputedStyle(balao);
+      await expect(parseFloat(computedStyle.paddingInlineEnd)).toBeLessThan(
+        parseFloat(computedStyle.paddingInlineStart),
+      );
     });
 
     await step('O atalho não vira nome do botão — ele já tem o seu', async () => {
@@ -115,15 +173,22 @@ export const WithShortcut: Story = {
   },
 };
 
+// O par gatilho + texto é o do CONTEÚDO COMPARTILHADO (`shareButton` e
+// `shareHint`), e é o mesmo nas cinco stacks. Aqui era outro par, inventado só
+// para esta story: comparar as cinco páginas lado a lado deixava de responder se
+// a diferença era do componente ou do exemplo.
+const LONG_TRIGGER = 'Compartilhar';
+const LONG_TEXT =
+  'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo';
+
 export const LongText: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
       source: {
         transform: tooltipSourceWith({
-          triggerLabel: 'Mais informação',
-          content:
-            'Esta ação salva todas as alterações localmente e sincroniza com o servidor quando houver conexão.',
+          triggerLabel: LONG_TRIGGER,
+          content: LONG_TEXT,
         }),
       },
     },
@@ -131,19 +196,19 @@ export const LongText: Story = {
   render: () => {
     const trigger = createButton({
       variant: 'outline',
-      label: 'Mais informação',
-      'aria-label': 'Mais informação',
+      label: LONG_TRIGGER,
+      'aria-label': LONG_TRIGGER,
     });
-    const el = createTooltip({
-      trigger,
-      content:
-        'Esta ação salva todas as alterações localmente e sincroniza com o servidor quando houver conexão.',
-    });
+    const el = createTooltip({ trigger, content: LONG_TEXT });
     queueMicrotask(() => trigger.focus());
-    return wrap(el);
+    // A mesma folga das irmãs: o balão longo é o MAIS alto dos três, logo o
+    // primeiro a não caber acima do gatilho e virar. A story não afirma lado —
+    // ela mede largura —, então uma virada aqui não reprovaria: só trocaria a
+    // foto do Chromatic sem ninguém ver.
+    return wrap(el, VARIANT_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
-    const trigger = within(canvasElement).getByRole('button', { name: /mais informação/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /compartilhar/i });
 
     await step('O texto quebra dentro do limite de largura do balão', async () => {
       trigger.blur();
@@ -152,7 +217,7 @@ export const LongText: Story = {
         await expect(balaoDe(trigger)).not.toBeNull();
       });
       const balao = balaoDe(trigger)!;
-      await expect(balao.textContent).toMatch(/sincroniza/);
+      await expect(balao.textContent).toMatch(/link público/);
       // O limite vem da folha compartilhada; medir a largura real prova que o
       // texto respeitou o teto em vez de esticar o balão pela viewport. A classe
       // utilitária que ficava aqui saiu do projeto e não pintava nada.

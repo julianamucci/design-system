@@ -43,6 +43,29 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+/**
+ * Quantos itens a seção de Testes tem — pergunta ao DICIONÁRIO, não a um
+ * intervalo cravado.
+ *
+ * O `[1, 2, 3, 4, 5, 6]` que morava nas listas abaixo estava certo no dia em
+ * que foi escrito, e é exatamente esse o mecanismo do defeito: quando o
+ * conteúdo compartilhado ganhou colisão e espera de grupo, a lista à mão seguiu
+ * publicando quatro dos seis sem nada ficar vermelho. Os dois que faltavam não
+ * existiam para quem lê a página.
+ *
+ * Contar pelas chaves faz a página acompanhar o conteúdo nos dois sentidos: um
+ * item novo aparece sozinho, e um item removido some em vez de imprimir a chave
+ * crua no lugar do texto.
+ */
+function testCount(locale: string, group: "functional" | "accessibility" | "visual"): number[] {
+  const dict = (tooltipTranslations as unknown as Record<
+    string,
+    { testes?: Record<string, Record<string, unknown>> }
+  >)[locale]?.testes?.[group] ?? {};
+  const count = Object.keys(dict).filter((key) => /^item\d+$/.test(key)).length;
+  return Array.from({ length: count }, (_, index) => index + 1);
+}
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -188,20 +211,24 @@ export function TooltipDocs() {
   const structureCode = tContent("anatomy.structureCode");
 
   const codeDefault = `<Tooltip>
-  <TooltipTrigger asChild>
-    <Button variant="outline" size="icon" aria-label="Salvar">
-      <Save aria-hidden="true" />
-    </Button>
-  </TooltipTrigger>
+  <TooltipTrigger
+    render={(props) => (
+      <Button {...props} variant="outline" size="icon" aria-label="Salvar">
+        <Save aria-hidden="true" />
+      </Button>
+    )}
+  />
   <TooltipContent>Salvar</TooltipContent>
 </Tooltip>`;
 
   const codeWithShortcut = `<Tooltip>
-  <TooltipTrigger asChild>
-    <Button variant="outline" size="icon" aria-label="Salvar">
-      <Save aria-hidden="true" />
-    </Button>
-  </TooltipTrigger>
+  <TooltipTrigger
+    render={(props) => (
+      <Button {...props} variant="outline" size="icon" aria-label="Salvar">
+        <Save aria-hidden="true" />
+      </Button>
+    )}
+  />
   <TooltipContent>
     Salvar <kbd>Ctrl</kbd>+<kbd>S</kbd>
   </TooltipContent>
@@ -230,10 +257,14 @@ interface TooltipContentProps {
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
 
+  // Os rótulos saem do CONTEÚDO compartilhado, não de um ternário de locale.
+  // Traduzidos à mão aqui, eles divergiam do dicionário sem nada acusar — o
+  // `pt-BR` publicava "Disparo" onde o conteúdo diz "Trigger", e uma correção
+  // no dicionário nunca chegaria à página.
   const analyticsCols = {
-    event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    payload: "Payload",
+    event: tContent("analytics.table.event"),
+    trigger: tContent("analytics.table.trigger"),
+    payload: tContent("analytics.table.payload"),
   };
 
   const labelSave = tContent("demonstration.labels.save");
@@ -261,15 +292,17 @@ interface TooltipContentProps {
   // Snippets que mostram os MESMOS rótulos dos previews — texto de exemplo sai
   // de chave também aqui, senão o código publicado descreve outra tela.
   const codeLongText = `<Tooltip>
-  <TooltipTrigger asChild>
-    <Button variant="outline">${labelShareBtn}</Button>
-  </TooltipTrigger>
+  <TooltipTrigger
+    render={(props) => (
+      <Button {...props} variant="outline">${labelShareBtn}</Button>
+    )}
+  />
   <TooltipContent side="bottom">
     ${labelShareHint}
   </TooltipContent>
 </Tooltip>`;
 
-  const codeFormFieldHelp = `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+  const codeFormFieldHelp = `<div className="nds-stack nds-w-sm" data-spacing="xs">
   <div className="nds-cluster" data-spacing="sm">
     <label htmlFor="api-token" className="nds-text-body nds-font-medium">${labelApiToken}</label>
     <Tooltip>
@@ -280,7 +313,7 @@ interface TooltipContentProps {
           </Button>
         )}
       />
-      <TooltipContent side="right" className="nds-max-w-xs">
+      <TooltipContent side="right">
         ${labelApiTokenHint}
       </TooltipContent>
     </Tooltip>
@@ -299,7 +332,7 @@ interface TooltipContentProps {
           </Button>
         )}
       />
-      <TooltipContent side="top" className="nds-max-w-xs nds-whitespace-normal">
+      <TooltipContent side="top" className="nds-whitespace-normal">
         ${labelLcpHint}
       </TooltipContent>
     </Tooltip>
@@ -536,7 +569,13 @@ interface TooltipContentProps {
                       )}
                     />
                     
-                    <TooltipContent side="bottom" className="nds-max-w-xs">
+                    {/* Sem `nds-max-w-xs`: medido, a utilitária vale
+                        `max-width: 20rem` e `.nds-tooltip-content` já vale
+                        exatamente isso — no balão ela não pinta nada, e num
+                        contêiner estreitaria o quadro, não o balão. Quem ensina
+                        a lição aqui é o TEXTO longo. O angular nunca a usou;
+                        sem ela as cinco convergem. */}
+                    <TooltipContent side="bottom">
                       {labelLongBalloonDont}
                     </TooltipContent>
                   </Tooltip>
@@ -759,7 +798,7 @@ interface TooltipContentProps {
               useWhen: tContent("variants.compositions.formFieldHelp.use"),
               code: codeFormFieldHelp,
               preview: (
-                <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style={{ alignItems: "flex-start" }}>
+                <div className="nds-stack nds-w-sm" data-spacing="xs" style={{ alignItems: "flex-start" }}>
                   <div className="nds-cluster" data-spacing="sm">
                     <label htmlFor="api-token-react-comp" className="nds-text-body nds-font-medium">
                       {labelApiToken}
@@ -777,7 +816,7 @@ interface TooltipContentProps {
                           </Button>
                         )}
                       />
-                      <TooltipContent side="right" className="nds-max-w-xs">
+                      <TooltipContent side="right">
                         {labelApiTokenHint}
                       </TooltipContent>
                     </Tooltip>
@@ -814,7 +853,7 @@ interface TooltipContentProps {
                           </Button>
                         )}
                       />
-                      <TooltipContent side="top" className="nds-max-w-xs nds-whitespace-normal">
+                      <TooltipContent side="top" className="nds-whitespace-normal">
                         {labelLcpHint}
                       </TooltipContent>
                     </Tooltip>
@@ -1058,28 +1097,18 @@ interface TooltipContentProps {
               result: tNav("common.expectedResult"),
               priority: tNav("common.priority"),
             },
-            items: [
-              {
-                action: tContent("testes.functional.item1.action"),
-                result: tContent("testes.functional.item1.result"),
-                priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
-              },
-              {
-                action: tContent("testes.functional.item2.action"),
-                result: tContent("testes.functional.item2.result"),
-                priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
-              },
-              {
-                action: tContent("testes.functional.item3.action"),
-                result: tContent("testes.functional.item3.result"),
-                priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
-              },
-              {
-                action: tContent("testes.functional.item4.action"),
-                result: tContent("testes.functional.item4.result"),
-                priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.medium"),
-              },
-            ],
+            // DERIVADA do dicionário, e não de um intervalo cravado: o conteúdo
+            // compartilhado ganhou colisão (item5) e espera de grupo (item6), e
+            // a lista à mão seguiu publicando quatro dos seis sem nada
+            // reclamar. Os dois que faltavam não existiam para quem lê.
+            items: testCount(locale, "functional").map((i) => ({
+              action: tContent(`testes.functional.item${i}.action`),
+              result: tContent(`testes.functional.item${i}.result`),
+              priority: tNav(
+                priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ??
+                  "common.medium",
+              ),
+            })),
           }}
           accessibility={{
             title: tContent("testes.accessibility.title"),
@@ -1102,12 +1131,18 @@ interface TooltipContentProps {
               story: tNav("common.storyState"),
               priority: tNav("common.priority"),
             },
-            items: [
-              { story: tContent("testes.visual.item1.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item1.priority")] ?? "common.high") },
-              { story: tContent("testes.visual.item2.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item2.priority")] ?? "common.high") },
-              { story: tContent("testes.visual.item3.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.medium") },
-              { story: tContent("testes.visual.item4.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium") },
-            ],
+            // Mesma derivação da tabela funcional, pelo mesmo motivo: quatro
+            // linhas cravadas são quatro linhas que não sabem quando o conteúdo
+            // muda. Aqui a contagem bate hoje — é justamente quando o defeito é
+            // invisível, e foi assim que a tabela funcional chegou a publicar
+            // quatro de seis.
+            items: testCount(locale, "visual").map((i) => ({
+              story: tContent(`testes.visual.item${i}.story`),
+              priority: tNav(
+                priorityKeyMap[tContent(`testes.visual.item${i}.priority`)] ??
+                  "common.medium",
+              ),
+            })),
           }}
         />
       </DocsPageLayout>

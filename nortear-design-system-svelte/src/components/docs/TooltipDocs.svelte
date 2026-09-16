@@ -133,6 +133,21 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  // ─── Testes: quantos itens existem é do DICIONÁRIO ───────────────────────────
+  //
+  // A contagem sai do conteúdo, e não de um intervalo cravado. O `[1, 2, 3, 4]`
+  // que morava nas duas listas abaixo não tinha como saber que o conteúdo
+  // ganhou dois critérios funcionais — colisão e espera de grupo —, e a página
+  // seguiu publicando quatro: os dois últimos não existiam para quem lê.
+  function testCount(group: 'functional' | 'accessibility' | 'visual'): number[] {
+    const dict = (tooltipTranslations as unknown as Record<
+      string,
+      { testes?: Record<string, Record<string, unknown>> }
+    >)[$locale]?.testes?.[group] ?? {};
+    const count = Object.keys(dict).filter((key) => /^item\d+$/.test(key)).length;
+    return Array.from({ length: count }, (_, index) => index + 1);
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -423,9 +438,12 @@ interface TooltipTriggerProps {
     <TooltipProvider>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
         <!-- Vivo de propósito: a lição é o TAMANHO do balão, e só renderizado
-             ele mostra o que o texto longo faz. O limite de largura é o mesmo
-             das outras stacks — sem ele o balão estica numa linha só e a lição
-             desaparece. -->
+             ele mostra o que o texto longo faz. Quem ensina a lição é o TEXTO
+             longo, e não uma classe de largura: medido em 2026-09-16, a
+             `nds-max-w-xs` vale `max-width: 20rem` e a `.nds-tooltip-content`
+             já vale exatamente isso — no balão ela não pintava nada, e num
+             contêiner estreitaria o quadro em vez do balão. O angular nunca a
+             teve; sem ela as cinco convergem. -->
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-dont', o)}>
           <TooltipTrigger>
             {#snippet child({ props })}
@@ -434,7 +452,7 @@ interface TooltipTriggerProps {
               </Button>
             {/snippet}
           </TooltipTrigger>
-          <TooltipContent side="bottom" class="nds-max-w-xs">{$tStore('demonstration.labels.longBalloonDont')}</TooltipContent>
+          <TooltipContent side="bottom">{$tStore('demonstration.labels.longBalloonDont')}</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
@@ -574,7 +592,7 @@ interface TooltipTriggerProps {
         name: $tStore('variants.compositions.formFieldHelp.name'),
         description: $tStore('variants.compositions.formFieldHelp.description'),
         useWhen: $tStore('variants.compositions.formFieldHelp.use'),
-        code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+        code: `<div class="nds-stack nds-w-sm" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
     <label for="api-token" class="nds-text-body nds-font-medium">${$tStore('demonstration.labels.apiTokenLabel')}</label>
     <Tooltip>
@@ -583,7 +601,7 @@ interface TooltipTriggerProps {
           <Button variant="outline" size="icon-sm" aria-label="${$tStore('demonstration.labels.apiTokenHelp')}" {...props}>?</Button>
         {/snippet}
       </TooltipTrigger>
-      <TooltipContent side="right" class="nds-max-w-xs">
+      <TooltipContent side="right">
         ${$tStore('demonstration.labels.apiTokenHint')}
       </TooltipContent>
     </Tooltip>
@@ -606,7 +624,7 @@ interface TooltipTriggerProps {
           <Button variant="outline" size="icon-sm" aria-label="${$tStore('demonstration.labels.lcpHelp')}" {...props}>i</Button>
         {/snippet}
       </TooltipTrigger>
-      <TooltipContent side="top" class="nds-max-w-xs">
+      <TooltipContent side="top">
         ${$tStore('demonstration.labels.lcpHint')}
       </TooltipContent>
     </Tooltip>
@@ -685,7 +703,7 @@ interface TooltipTriggerProps {
 
   {#snippet compFormHelp()}
     <TooltipProvider>
-      <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style="align-items: flex-start">
+      <div class="nds-stack nds-w-sm" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
           <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">{$tStore('demonstration.labels.apiTokenLabel')}</label>
           <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'formFieldHelp', o)}>
@@ -694,7 +712,7 @@ interface TooltipTriggerProps {
                 <Button variant="outline" size="icon-sm" aria-label={$tStore('demonstration.labels.apiTokenHelp')} {...props}>?</Button>
               {/snippet}
             </TooltipTrigger>
-            <TooltipContent side="right" class="nds-max-w-xs">{$tStore('demonstration.labels.apiTokenHint')}</TooltipContent>
+            <TooltipContent side="right">{$tStore('demonstration.labels.apiTokenHint')}</TooltipContent>
           </Tooltip>
         </div>
         <input
@@ -718,7 +736,7 @@ interface TooltipTriggerProps {
                 <Button variant="outline" size="icon-sm" aria-label={$tStore('demonstration.labels.lcpHelp')} {...props}>i</Button>
               {/snippet}
             </TooltipTrigger>
-            <TooltipContent side="top" class="nds-max-w-xs">{$tStore('demonstration.labels.lcpHint')}</TooltipContent>
+            <TooltipContent side="top">{$tStore('demonstration.labels.lcpHint')}</TooltipContent>
           </Tooltip>
         </div>
         <p class="nds-text-h3 nds-m-0">{$tStore('demonstration.labels.lcpValue')}</p>
@@ -787,7 +805,11 @@ interface TooltipTriggerProps {
       {
         cols: propsTableCols,
         items: [
-          { name: 'delay',        type: $tStore('props.table.delay.type'),        defaultValue: $tStore('props.table.delay.default'),        required: $tStore('props.table.delay.required'),        description: toPlainText($tStore('props.table.delay.description'))        },
+          // `delayDuration`, que é o nome REAL da prop nesta stack
+          // (`tooltip-provider.svelte`). A tabela publicava `delay` — o nome de
+          // uma stack irmã —, e quem copiasse da página passaria uma prop que o
+          // provedor daqui ignora, sem erro e sem espera.
+          { name: 'delayDuration', type: $tStore('props.table.delay.type'),        defaultValue: $tStore('props.table.delay.default'),        required: $tStore('props.table.delay.required'),        description: toPlainText($tStore('props.table.delay.description'))        },
           { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: toPlainText($tStore('props.table.open.description'))         },
           { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: toPlainText($tStore('props.table.defaultOpen.description'))  },
           { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: toPlainText($tStore('props.table.onOpenChange.description')) },
@@ -840,7 +862,7 @@ interface TooltipTriggerProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',       description: toPlainText($tStore('accessibility.keyboard.tab'))      },
-      { key: 'Escape',    description: toPlainText($tStore('accessibility.keyboard.escape'))   },
+      { key: 'Esc',       description: toPlainText($tStore('accessibility.keyboard.escape'))   },
       { key: 'Shift+Tab', description: toPlainText($tStore('accessibility.keyboard.shiftTab')) },
     ]}
   />
@@ -887,7 +909,7 @@ interface TooltipTriggerProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4].map((i) => ({
+      items: testCount('functional').map((i) => ({
         action: toPlainText($tStore(`testes.functional.item${i}.action`)),
         result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
@@ -914,7 +936,7 @@ interface TooltipTriggerProps {
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4].map((i) => ({
+      items: testCount('visual').map((i) => ({
         story: $tStore(`testes.visual.item${i}.story`),
         priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
       })),

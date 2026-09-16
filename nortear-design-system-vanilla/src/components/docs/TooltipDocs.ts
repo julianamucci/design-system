@@ -45,6 +45,31 @@ function screenReaderItems(): string[] {
     .filter(([k]) => k !== 'title')
     .map(([, v]) => v);
 }
+/**
+ * Os índices dos `itemN` que o dicionário publica sob um caminho.
+ *
+ * Cravar `[1, 2, 3, 4, 5, 6]` acerta hoje e envelhece CALADO: quando o conteúdo
+ * compartilhado ganha um item, a página segue publicando seis de sete, sem nada
+ * reprovando — é o mecanismo que já fez docs pages publicarem 4 de 6. Derivar do
+ * dicionário é o que as outras quatro stacks fazem, e faz a tabela crescer junto
+ * com o conteúdo em vez de esperar alguém reparar.
+ *
+ * A filtragem por `item<N>` é de propósito: `testes.visual` também carrega
+ * `title`, `description` e `required`, que não são linhas da tabela.
+ */
+function itemIndices(path: string): number[] {
+  const locale = getLocale();
+  const root = (tooltipTranslations as unknown as Record<string, unknown>)[locale];
+  const node = path
+    .split('.')
+    .reduce<unknown>((current, key) => (current as Record<string, unknown> | undefined)?.[key], root);
+  return Object.keys((node ?? {}) as Record<string, unknown>)
+    .map((key) => /^item(\d+)$/.exec(key))
+    .filter((match): match is RegExpExecArray => match !== null)
+    .map((match) => Number(match[1]))
+    .sort((a, b) => a - b);
+}
+
 // As opções de `createTooltip` e de `createTooltipProvider` são da FÁBRICA
 // desta stack — não existem na API das outras quatro, então a descrição delas
 // não cabe no conteúdo compartilhado. O lugar sancionado é o override por
@@ -63,7 +88,7 @@ const LOCAL_OVERRIDES = {
     'props.local.content.description':
       'Texto do balão. String vira textContent — o caminho seguro para dado de fora; marcação (uma tecla em <kbd>, uma palavra em <strong>) entra como elemento já montado.',
     'props.local.side.description':
-      'Lado preferido de abertura em relação ao gatilho. Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.',
+      'Lado preferido de abertura em relação ao gatilho. Sai no markup como data-side. Sem espaço do lado pedido, o balão vira para o oposto e o data-side traz o lado final.',
     'props.local.delayDuration.description':
       'Espera em ms entre o ponteiro entrar no gatilho e o balão abrir. Ajusta um balão em particular; dentro de um grupo, o padrão vem do provedor. O foco abre na hora, sem espera: quem chega por teclado não tem como parar em cima.',
     'props.local.onShow.description':
@@ -82,7 +107,7 @@ const LOCAL_OVERRIDES = {
     'props.local.content.description':
       'Balloon text. A string becomes textContent — the safe path for outside data; markup (a key in <kbd>, a word in <strong>) comes in as a ready-made element.',
     'props.local.side.description':
-      'Preferred opening side relative to the trigger. It reaches the markup as data-side. The position is fixed: there is no automatic repositioning on collision.',
+      'Preferred opening side relative to the trigger. It reaches the markup as data-side. With no room on the requested side the balloon flips to the opposite one, and data-side carries the final side.',
     'props.local.delayDuration.description':
       'Wait in ms between the pointer entering the trigger and the balloon opening. It tunes one balloon in particular; inside a group the default comes from the provider. Focus opens it right away, with no wait: whoever arrives by keyboard has no way to rest on top of it.',
     'props.local.onShow.description':
@@ -101,7 +126,7 @@ const LOCAL_OVERRIDES = {
     'props.local.content.description':
       'Texto del globo. Una cadena se vuelve textContent — el camino seguro para datos externos; el marcado (una tecla en <kbd>, una palabra en <strong>) entra como elemento ya montado.',
     'props.local.side.description':
-      'Lado preferido de apertura respecto al disparador. Sale en el marcado como data-side. La posición es fija: no hay reposicionamiento automático por colisión.',
+      'Lado preferido de apertura respecto al disparador. Sale en el marcado como data-side. Sin espacio del lado pedido, el globo gira al opuesto y el data-side trae el lado final.',
     'props.local.delayDuration.description':
       'Espera en ms entre la entrada del puntero en el disparador y la apertura del globo. Ajusta un globo en particular; dentro de un grupo, el valor por defecto viene del proveedor. El foco abre de inmediato, sin espera: quien llega por teclado no puede detenerse encima.',
     'props.local.onShow.description':
@@ -140,7 +165,23 @@ function priorityLabel(raw: string): string {
  * outro: pedem ícones que não são de botão (Bold, Italic, Search, Star), e
  * ampliar um mapa de botão com eles seria pior.
  */
-/** Preview vivo do Do & Don't: botão de ícone com balão, numa moldura centrada. */
+/**
+ * Preview vivo do Do & Don't: botão de ícone com balão, numa moldura centrada.
+ *
+ * SEM classe de largura no balão — e isto vale para TODO balão desta página, não
+ * só para este par. Medido: `.nds-max-w-xs` vale `max-width: 20rem` e
+ * `.nds-tooltip-content` já vale exatamente o mesmo, então a utilitária não
+ * pintava nada — era classe morta com cara de decisão, em seis pontos daqui
+ * (as prévias de `longText`, `formFieldHelp` e `metricDescription`, mais os três
+ * snippets que elas publicam).
+ *
+ * Em SNIPPET o custo é maior que o de uma classe inerte: quem copia leva o no-op
+ * achando que limita a largura, e vai procurar o defeito no lugar errado no dia
+ * em que precisar de um limite de verdade. Quem ensina a lição do segundo par é
+ * o TEXTO LONGO, que estoura o limite do balão sozinho.
+ *
+ * O angular nunca a usou; sem ela, as cinco convergem.
+ */
 function buildDoDont(id: string, text: string): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-cluster nds-w-full nds-min-h-20';
@@ -233,7 +274,7 @@ function buildLongTextTooltip(): HTMLElement {
     trigger,
     content: t('demonstration.labels.shareHint'),
     side: 'bottom',
-    class: 'nds-max-w-xs nds-whitespace-normal',
+    class: 'nds-whitespace-normal',
     onShow: trackTooltipView('docs_variantes', 'longText'),
   });
 }
@@ -526,7 +567,7 @@ createTooltip({ trigger, content: conteudo, side: 'bottom' });`;
   trigger,
   content: 'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
   side: 'bottom',
-  class: 'nds-max-w-xs nds-whitespace-normal',
+  class: 'nds-whitespace-normal',
 });`;
 
         const codeSides = `for (const side of ['top', 'right', 'bottom', 'left'] as const) {
@@ -645,7 +686,7 @@ createTooltip({
   trigger: help,
   content: '${t('demonstration.labels.apiTokenHint')}',
   side: 'right',
-  class: 'nds-max-w-xs nds-whitespace-normal',
+  class: 'nds-whitespace-normal',
 });`;
 
         const codeMetric = `const help = createButton({
@@ -659,7 +700,7 @@ createTooltip({
   trigger: help,
   content: '${t('demonstration.labels.lcpHint')}',
   side: 'top',
-  class: 'nds-max-w-xs nds-whitespace-normal',
+  class: 'nds-whitespace-normal',
 });`;
 
         function buildActionBarPreview(): HTMLElement {
@@ -698,7 +739,7 @@ createTooltip({
 
         function buildFormHelpPreview(): HTMLElement {
           const root = document.createElement('div');
-          root.className = 'nds-stack nds-w-full nds-max-w-sm';
+          root.className = 'nds-stack nds-w-sm';
           root.dataset.spacing = 'xs';
           root.style.alignItems = 'flex-start';
 
@@ -723,7 +764,7 @@ createTooltip({
             content: t('demonstration.labels.apiTokenHint'),
             side: 'right',
             onShow: trackTooltipView('docs_composicoes', 'formFieldHelp'),
-            class: 'nds-max-w-xs nds-whitespace-normal',
+            class: 'nds-whitespace-normal',
           });
 
           labelRow.append(label, tooltip);
@@ -764,7 +805,7 @@ createTooltip({
             content: t('demonstration.labels.lcpHint'),
             side: 'top',
             onShow: trackTooltipView('docs_composicoes', 'metricDescription'),
-            class: 'nds-max-w-xs nds-whitespace-normal',
+            class: 'nds-whitespace-normal',
           });
 
           headerRow.append(title, tooltip);
@@ -898,7 +939,7 @@ export function createTooltipProvider(
           // linha colapsariam. Snippet vai para o CodeBlock.
           extensibilityCode:
             t('props.extensibilityCode') +
-            '\n\n// O balão não tem estado controlado nem seta apontando para o gatilho, e\n// a posição escolhida em `side` é a final — não há reposicionamento\n// automático quando falta espaço na tela.',
+            '\n\n// O balão não tem estado controlado: quem decide a abertura é o ponteiro ou\n// o foco. O `side` é uma PREFERÊNCIA — sem espaço desse lado, o balão vira\n// para o oposto e publica o lado final em `data-side`.',
         });
       }
 
@@ -949,15 +990,17 @@ export function createTooltipProvider(
 
       case 'notas': {
         const extraNote = getLocale() === 'en'
-          ? '<strong>What the balloon does not do</strong>: there is no controlled state and no arrow pointing back at the trigger, and the chosen <code>side</code> is final — nothing repositions the balloon when the screen runs out of room, so pick a side that fits. Everything else is here: per-call <code>delayDuration</code>, a shared wait across a group through <code>createTooltipProvider</code>, Escape to dismiss without moving the focus, and markup in <code>content</code> as a ready-made element (a key inside <code>&lt;kbd&gt;</code>, a word inside <code>&lt;strong&gt;</code>).'
+          ? '<strong>What the balloon does not do</strong>: there is no controlled state — nothing opens or closes it from an outside variable, and there is no change callback. Everything else is here: per-call <code>delayDuration</code>, a shared wait across a group through <code>createTooltipProvider</code>, Escape to dismiss without moving the focus, an arrow pointing back at the trigger, a flip to the opposite side when the requested one runs out of room, and markup in <code>content</code> as a ready-made element (a key inside <code>&lt;kbd&gt;</code>, a word inside <code>&lt;strong&gt;</code>).'
           : getLocale() === 'es'
-          ? '<strong>Lo que el globo no hace</strong>: no hay estado controlado ni flecha apuntando al disparador, y el <code>side</code> elegido es el definitivo — nada reposiciona el globo cuando falta espacio en pantalla, así que elija un lado que quepa. Todo lo demás está: <code>delayDuration</code> por llamada, espera compartida por grupo con <code>createTooltipProvider</code>, Escape para descartar sin mover el foco, y marcado en <code>content</code> como elemento ya montado (una tecla en <code>&lt;kbd&gt;</code>, una palabra en <code>&lt;strong&gt;</code>).'
-          : '<strong>O que o balão não faz</strong>: não há estado controlado nem seta apontando para o gatilho, e o <code>side</code> escolhido é o final — nada reposiciona o balão quando falta espaço na tela, então escolha um lado que caiba. O resto está aqui: <code>delayDuration</code> por chamada, espera compartilhada por grupo com <code>createTooltipProvider</code>, Escape para dispensar sem tirar o foco do lugar, e marcação em <code>content</code> como elemento já montado (uma tecla em <code>&lt;kbd&gt;</code>, uma palavra em <code>&lt;strong&gt;</code>).';
+          ? '<strong>Lo que el globo no hace</strong>: no hay estado controlado — nada lo abre ni lo cierra desde una variable externa, y no hay callback de cambio. Todo lo demás está: <code>delayDuration</code> por llamada, espera compartida por grupo con <code>createTooltipProvider</code>, Escape para descartar sin mover el foco, flecha apuntando al disparador, giro al lado opuesto cuando falta espacio del lado pedido, y marcado en <code>content</code> como elemento ya montado (una tecla en <code>&lt;kbd&gt;</code>, una palabra en <code>&lt;strong&gt;</code>).'
+          : '<strong>O que o balão não faz</strong>: não há estado controlado — nada o abre ou fecha por variável de fora, e não há aviso de mudança. O resto está aqui: <code>delayDuration</code> por chamada, espera compartilhada por grupo com <code>createTooltipProvider</code>, Escape para dispensar sem tirar o foco do lugar, seta apontando para o gatilho, virada para o lado oposto quando falta espaço do lado pedido, e marcação em <code>content</code> como elemento já montado (uma tecla em <code>&lt;kbd&gt;</code>, uma palavra em <code>&lt;strong&gt;</code>).';
 
         return createDocsNotes({
           componentSlug: 'tooltip',
           items: [
-            ...[1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
+            // Mesmo mecanismo das tabelas de teste, e o mesmo motivo: uma nota
+            // nova no conteúdo compartilhado tem de aparecer aqui sozinha.
+            ...itemIndices('notes').map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
             { title: '', content: DOMPurify.sanitize(extraNote) },
           ],
         });
@@ -988,7 +1031,7 @@ export function createTooltipProvider(
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemIndices('testes.functional').map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -1001,7 +1044,7 @@ export function createTooltipProvider(
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: itemIndices('testes.accessibility').map(i => ({
               criterion: t(`testes.accessibility.item${i}`),
               level: 'AA',
               how: 'axe-core / manual',
@@ -1013,7 +1056,7 @@ export function createTooltipProvider(
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemIndices('testes.visual').map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

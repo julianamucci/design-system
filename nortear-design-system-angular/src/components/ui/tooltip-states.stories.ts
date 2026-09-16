@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP, NDS_TOOLTIP_DELAY } from './tooltip';
-import { balaoDe, SAVE_ICON } from './tooltip.fixtures';
+import { balaoDe, openedAfter, pointerAt, SAVE_ICON, wait } from './tooltip.fixtures';
 import { NdsButton } from './button';
 import {
   tooltipClosedSource,
@@ -30,39 +30,6 @@ const LONG_DELAY = 600;
  * que a decisão mudasse — que é exatamente como o 600 desta stack sobreviveu.
  */
 const DECLARED_DELAY = Number(tooltipTranslations['pt-BR'].props.table.delay.default);
-
-/** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function wait(ms: number): Promise<void> {
-  return new Promise((resolver) => setTimeout(resolver, ms));
-}
-
-/**
- * Quanto tempo, a partir de `start`, levou para `condition()` ficar verdadeira.
- *
- * NÃO É `waitFor`, e a diferença é a armadilha desta casa: o `waitFor` da suíte
- * reagenda por observador de mutação, então uma condição que MEXE no DOM provoca
- * a própria tentativa seguinte — o prazo nunca chega, o navegador crava um
- * núcleo e o arquivo morre sem resultado nem falha. Aqui a condição é leitura
- * pura (`getAttribute` + `getElementById`) e a espera é de relógio, com prazo
- * que ESTOURA em erro nomeado em vez de pendurar.
- *
- * O relógio é marcado pelo chamador, antes do gesto, porque o que se mede é o
- * tempo desde o hover — não desde o começo da espera.
- */
-async function openedAfter(
-  condition: () => boolean,
-  start: number,
-  deadline: number,
-): Promise<number> {
-  for (;;) {
-    const elapsed = performance.now() - start;
-    if (condition()) return elapsed;
-    if (elapsed > deadline) {
-      throw new Error(`nada abriu em ${Math.round(elapsed)}ms (prazo de ${deadline}ms)`);
-    }
-    await wait(8);
-  }
-}
 
 const meta: Meta = {
   title: 'Components/Overlay/Tooltip/States',
@@ -92,7 +59,7 @@ export const Closed: Story = {
   parameters: { docs: { source: { transform: tooltipClosedSource } } },
   render: () => ({
     template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-p-8">
+      <div ndsTooltipProvider class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${SAVE_ICON}
@@ -107,6 +74,11 @@ export const Closed: Story = {
 
     await step('O balão não está no DOM, nem no canvas nem no portal', async () => {
       await expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull();
+      // E a consulta por PAPEL, no body, que é o que as outras quatro stacks
+      // afirmam aqui: o `data-slot` é convenção desta casa, o `role="tooltip"` é
+      // o contrato que o leitor de tela percorre. Um balão que perdesse a
+      // convenção e mantivesse o papel passaria pela primeira asserção sozinha.
+      await expect(within(document.body).queryByRole('tooltip')).not.toBeInTheDocument();
     });
 
     await step('Sem balão, não há describedby apontando para o vazio', async () => {
@@ -122,7 +94,7 @@ export const Open: Story = {
   render: () => ({
     props: { isOpen: true },
     template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-p-8">
+      <div ndsTooltipProvider class="nds-p-8">
         <span ndsTooltip [open]="isOpen" (openChange)="isOpen = $event">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${SAVE_ICON}
@@ -266,7 +238,7 @@ export const HoverDefaultDelay: Story = {
   },
 };
 
-export const Focus: Story = {
+export const KeyboardFocus: Story = {
   parameters: { covers: ['functional.item2'], docs: { source: { transform: tooltipDelaySource } } },
   render: () => ({
     props: { delay: LONG_DELAY },
@@ -319,7 +291,7 @@ export const PersistenceInBubble: Story = {
   parameters: { covers: ['functional.item4'], docs: { source: { transform: tooltipPersistenceSource } } },
   render: () => ({
     template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-p-8">
+      <div ndsTooltipProvider class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="outline">Compartilhar</button>
           <ng-template ndsTooltipContent side="bottom"
@@ -332,22 +304,50 @@ export const PersistenceInBubble: Story = {
   play: async ({ canvasElement, step }) => {
     const trigger = within(canvasElement).getByRole('button');
 
-    await step('O hover abre o balão', async () => {
+    await step('O hover abre o balão depois da espera da casa', async () => {
+      // Hover, e não foco: o que se mede aqui é o trajeto do PONTEIRO do gatilho
+      // até o balão, e ele precisa começar sobre o gatilho.
+      const start = performance.now();
       await userEvent.hover(trigger);
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
+      await openedAfter(() => balaoDe(trigger) !== null, start, DECLARED_DELAY * 8);
     });
 
-    await step('Levar o mouse até o balão não fecha nada', async () => {
+    await step('Levar o ponteiro até o balão não fecha nada', async () => {
       const balao = balaoDe(trigger)!;
-      // `pointerEventsCheck: 0` porque a folha compartilhada deixa o balão
-      // `pointer-events: none` — quem segura a abertura é a área de tolerância
-      // entre gatilho e balão, calculada por coordenada, não por hover no
-      // elemento.
-      await userEvent.hover(balao, { pointerEventsCheck: 0 });
-      await wait(200);
+      const triggerBox = trigger.getBoundingClientRect();
+      const bubbleBox = balao.getBoundingClientRect();
+
+      // A SAÍDA do gatilho é o que arma a área de tolerância — ela é construída
+      // no `pointerleave`, a partir do ponto de saída e da caixa do balão. Sem
+      // este passo não há área nenhuma, e o "continua aberto" abaixo não
+      // provaria coisa alguma: nada teria pedido para fechar.
+      pointerAt(
+        trigger,
+        'pointerleave',
+        triggerBox.left + triggerBox.width / 2,
+        triggerBox.bottom + 1,
+      );
+      // E o ponteiro no CENTRO do balão, ditado por coordenada.
+      pointerAt(
+        document.body,
+        'pointermove',
+        bubbleBox.left + bubbleBox.width / 2,
+        bubbleBox.top + bubbleBox.height / 2,
+      );
+
+      await wait(400);
       await expect(balaoDe(trigger)).not.toBeNull();
+    });
+
+    await step('Levar o ponteiro para longe FECHA — a tolerância tem limite', async () => {
+      // O par com o passo anterior é o que impede a asserção de passar por
+      // acidente: se a tolerância nunca fechasse, "continua aberto" seria
+      // verdade com ou sem componente, e tolerância infinita passaria no lugar
+      // da que a WCAG 1.4.13 pede.
+      pointerAt(document.body, 'pointermove', 0, 0);
+      await waitFor(async () => {
+        await expect(balaoDe(trigger)).toBeNull();
+      });
     });
   },
 };

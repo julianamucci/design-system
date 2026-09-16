@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import * as tooltipSource from './tooltip.source';
 import {
   tooltipClosedSource,
+  tooltipCollisionSource,
   tooltipDefaultDelaySource,
   tooltipDefaultSource,
   tooltipDelaySource,
   tooltipFormFieldHelpSource,
+  tooltipGroupWaitSource,
   tooltipIconButtonShortcutSource,
   tooltipLongTextSource,
   tooltipMetricDescriptionSource,
@@ -15,6 +17,10 @@ import {
   tooltipPlaygroundSource,
   tooltipWithShortcutSource,
 } from './tooltip.source';
+import tooltipTranslations from '@shared/content/tooltip/translations.json';
+
+/** A espera que o conteúdo compartilhado publica na tabela de props, em ms. */
+const DECLARED_DELAY = tooltipTranslations['pt-BR'].props.table.delay.default;
 
 /**
  * O painel Code imprime o `template` da story literalmente, com os bindings
@@ -91,6 +97,18 @@ describe('tooltipPlaygroundSource', () => {
     expect(code).not.toContain('[delay]="0"');
   });
 
+  it('sem control nenhum, publica a espera que a casa declara — nunca zero', () => {
+    // O padrão do control era `0`, e o painel publicava `[delay]="0"` como se
+    // fosse decisão de projeto (D5 do PRD): espera zero acende balão a cada
+    // passada do mouse por uma barra de ferramentas. Agora o padrão é o número
+    // que o conteúdo compartilhado documenta — o mesmo que a tabela de props da
+    // docs page publica —, e foi essa troca que dispensou a exceção
+    // `argsDriven` que a lista de construtores carregava.
+    const code = tooltipPlaygroundSource();
+    expect(code).toContain(`<div ndsTooltipProvider [delay]="${DECLARED_DELAY}">`);
+    expect(code).not.toContain('[delay]="0"');
+  });
+
   it('o botão só-ícone carrega o próprio nome — o balão não é o único portador', () => {
     // Quem chega pelo toque nunca vê o balão: sem o `aria-label` no botão, o
     // gatilho fica anônimo para quem não usa mouse.
@@ -113,24 +131,8 @@ const CONSTRUCTORS: Array<{
   name: string;
   story: string;
   build: () => string;
-  /**
-   * Construtor que IMPRIME o valor de um control, e por isso não responde pela
-   * regra da espera lá embaixo.
-   *
-   * Exceção única e declarada: chamado sem args, o Playground cai no padrão do
-   * próprio control (`delay: 0`) e publica `[delay]="0"` — ali o zero não é
-   * andaime, é o que a pessoa acabou de escolher na barra. Nos outros
-   * snippets o valor é FIXO no construtor, e um zero só poderia ter vindo da
-   * story.
-   */
-  argsDriven?: true;
 }> = [
-  {
-    name: 'tooltipPlaygroundSource',
-    story: 'Playground',
-    build: tooltipPlaygroundSource,
-    argsDriven: true,
-  },
+  { name: 'tooltipPlaygroundSource', story: 'Playground', build: tooltipPlaygroundSource },
   { name: 'tooltipDefaultSource', story: 'Variants/Default', build: tooltipDefaultSource },
   {
     name: 'tooltipWithShortcutSource',
@@ -143,7 +145,11 @@ const CONSTRUCTORS: Array<{
   // Serve DUAS stories: Hover e Focus renderizam este mesmo markup, e a
   // diferença entre elas é de interação, não de código. Um segundo construtor
   // idêntico seria a cópia que envelhece sozinha.
-  { name: 'tooltipDelaySource', story: 'States/Hover + States/Focus', build: tooltipDelaySource },
+  {
+    name: 'tooltipDelaySource',
+    story: 'States/Hover + States/KeyboardFocus',
+    build: tooltipDelaySource,
+  },
   {
     name: 'tooltipDefaultDelaySource',
     story: 'States/HoverDefaultDelay',
@@ -174,6 +180,8 @@ const CONSTRUCTORS: Array<{
     story: 'Compositions/PlacementSides',
     build: tooltipPlacementSidesSource,
   },
+  { name: 'tooltipCollisionSource', story: 'Compositions/Collision', build: tooltipCollisionSource },
+  { name: 'tooltipGroupWaitSource', story: 'Compositions/GroupWait', build: tooltipGroupWaitSource },
 ];
 
 describe('cobertura das quatro stories', () => {
@@ -185,17 +193,18 @@ describe('cobertura das quatro stories', () => {
     expect(exportados).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, argsDriven } of CONSTRUCTORS) {
+  for (const { name, story, build } of CONSTRUCTORS) {
     it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
       // `nds-p-8` dá ao balão portalizado contra o que se posicionar dentro do
-      // quadro do Storybook, e `[delay]="0"` faz o hover abrir na hora para a
-      // `play`. Nenhum dos dois é do componente — o único snippet de valor fixo
-      // que fala de espera é o da própria story de espera, e ele diz 600. O da
-      // espera PADRÃO fala pela ausência do atributo, e por isso passa aqui sem
-      // exceção nenhuma.
+      // quadro do Storybook, e `[delay]="0"` fazia o hover abrir na hora para a
+      // `play`. Nenhum dos dois é do componente — falam de espera apenas o
+      // snippet da story de espera (600 explícito), o da espera PADRÃO (pela
+      // AUSÊNCIA do atributo) e o do grupo. A regra do zero vale agora para
+      // TODOS, inclusive o Playground: desde que o control passou a nascer na
+      // espera declarada, nenhum caminho publica zero.
       expect(code).not.toContain('nds-p-8');
-      if (!argsDriven) expect(code).not.toContain('[delay]="0"');
+      expect(code).not.toContain('[delay]="0"');
       expect(code).not.toContain('args.');
       // A diretiva escreve os `data-slot` do tooltip em runtime; o único que se
       // ESCREVE é o da tecla, que é gancho da folha compartilhada.
@@ -330,5 +339,34 @@ describe('composições', () => {
     expect(code).toContain(
       '<ng-template ndsTooltipContent [side]="side">Tooltip {{ side }}</ng-template>',
     );
+  });
+
+  it('tooltipCollisionSource ensina o uso comum — o espaço que força a virada é do QUADRO', () => {
+    // A virada não tem prop: quem a liga é a falta de espaço. O bloco alto que
+    // a story empilha abaixo do gatilho é andaime da moldura, e publicá-lo
+    // faria quem copia achar que o tooltip precisa de um espaçador para virar.
+    const code = tooltipCollisionSource();
+    expect(code).toContain('<span ndsTooltip [defaultOpen]="true">');
+    expect(code).toContain(
+      '<ng-template ndsTooltipContent side="top">Salvar (Ctrl+S)</ng-template>',
+    );
+    expect(code).not.toContain('nds-min-h-60');
+    expect(code).not.toContain('aria-hidden');
+  });
+
+  it('tooltipGroupWaitSource põe espera E janela no provedor, uma vez, para os dois balões', () => {
+    // As duas medidas são do GRUPO: declará-las por balão é o erro que o
+    // comentário dentro do snippet existe para evitar, e é o que faria a
+    // dispensa do vizinho nunca acontecer.
+    const code = tooltipGroupWaitSource();
+    expect(code.match(/ndsTooltipProvider/g)).toHaveLength(1);
+    expect(code).toContain('[timeout]="5000"');
+    expect(code.match(/<span ndsTooltip>/g)).toHaveLength(2);
+    expect(code).toContain(
+      '<ng-template ndsTooltipContent side="bottom">Abrir a central de ajuda</ng-template>',
+    );
+    // É a barra de ações do card `actionBar`: cada gatilho é um botão de ícone
+    // com nome PRÓPRIO, porque em toque não há hover e o balão não nomeia nada.
+    expect(code.match(/aria-label=/g)).toHaveLength(2);
   });
 });

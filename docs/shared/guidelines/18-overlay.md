@@ -148,21 +148,24 @@ Os dois atravessam mais que esta categoria, e moram na guideline do assunto:
 - **Movimento reduzido**: quem para o movimento é a camada de token, que zera a
   escada de `--duration-*` sob a preferência. Toda folha desta categoria que
   anima declara duração só por token — medido em 2026-09-15, nenhuma duração
-  literal —, e a do Popover não anima nada desde 2026-09-12, por decisão da dona,
-  nem para entrar nem para sair. Regra em [`13-animacao.md`](13-animacao.md); o
+  literal. Duas não animam nada: a do Popover desde 2026-09-12 e a do Tooltip
+  desde 2026-09-16, as duas por decisão da dona — no Tooltip a saída pendurava em
+  `[data-ending-style]`, atributo de lib que não chegava às cinco, então o balão
+  saía animado em algumas stacks e seco nas outras. Regra em [`13-animacao.md`](13-animacao.md); o
   mecanismo, medido, na §8 do [`hover-card.md`](../prd/hover-card.md), onde a
   leitura errada pousou duas vezes.
 
-  **As guardas por folha são redundância, e quatro delas não seguram nada.**
+  **As guardas por folha são redundância, e três delas não seguram nada.**
   `@media` não acrescenta especificidade, então guarda que mira a classe nua
   (0,1,0) perde para a animação declarada num seletor de atributo (0,2,0).
   Medido em 2026-09-15: o `animation: none` perde no Dialog
   (`[data-state="open"]`, `[data-closed]`), no Sheet (`[data-side="…"]`) e no
-  DropdownMenu (`[data-state="open"]`), e o `transition: none` do Tooltip perde
-  para `[data-ending-style]`. Vencem as do AlertDialog e do Drawer, que repetem
-  o seletor de atributo, e as do Command e do Menubar, que miram a mesma classe
-  nua da transição. Nada disso deixa movimento na tela — a camada de token
-  alcança as quatro —, e é por isso que ninguém tinha visto.
+  DropdownMenu (`[data-state="open"]`). Eram quatro: a do Tooltip perdia para
+  `[data-ending-style]`, e saiu junto com a transição em 2026-09-16 — folha que
+  não anima não precisa de guarda. Vencem as do AlertDialog e do Drawer, que
+  repetem o seletor de atributo, e as do Command e do Menubar, que miram a mesma
+  classe nua da transição. Nada disso deixa movimento na tela — a camada de token
+  alcança as três —, e é por isso que ninguém tinha visto.
 
 ---
 

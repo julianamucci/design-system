@@ -55,14 +55,30 @@ const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const priorityKeyMap: Record<string, string> = {
-  high: 'Alta',
-  medium: 'Média',
-  low: 'Baixa',
-};
+// A prioridade chega do conteúdo compartilhado como CHAVE estável (`high`,
+// `medium`, `low`), e o rótulo sai do vocabulário comum da interface. Traduzido
+// à mão aqui, ele ficava preso ao português: a tabela inteira mudava de idioma
+// menos esta coluna, que seguia dizendo "Alta/Média/Baixa" em en e es.
+const PRIORITY_KEYS = new Set(['high', 'medium', 'low']);
 
 function localPriority(raw: string): string {
-  return priorityKeyMap[raw] ?? raw;
+  return PRIORITY_KEYS.has(raw) ? tNav(`common.${raw}`) : raw;
+}
+
+// Os itens saem das chaves `itemN` do dicionário do locale vigente: item novo no
+// conteúdo aparece na página sem ninguém lembrar de estender uma lista à mão.
+// Foi exatamente o que faltou aqui — `testes.functional` ganhou dois itens
+// (colisão e janela do grupo) e a página seguiu publicando quatro.
+function testItemIndexes(group: 'functional' | 'accessibility' | 'visual'): number[] {
+  const testes = (componentTranslations as unknown as Record<
+    string,
+    { testes?: Record<string, Record<string, unknown>> }
+  >)[locale.value]?.testes;
+  return Object.keys(testes?.[group] ?? {})
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((n): n is string => n !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
 }
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
@@ -211,7 +227,7 @@ const codeLongText = `<Tooltip>
   <TooltipTrigger as-child>
     <Button variant="outline">Compartilhar</Button>
   </TooltipTrigger>
-  <TooltipContent side="bottom" class="nds-max-w-xs">
+  <TooltipContent side="bottom">
     Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo
   </TooltipContent>
 </Tooltip>`;
@@ -274,14 +290,14 @@ const codeCompIconShortcut = `<Tooltip>
 // português, o leitor em inglês ou espanhol via um preview traduzido e, embaixo,
 // um código que descrevia outra tela. Como o texto vem de chave, o snippet é
 // `computed`: uma constante avaliaria uma vez e ficaria presa ao idioma inicial.
-const codeCompFormHelp = computed(() => `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+const codeCompFormHelp = computed(() => `<div class="nds-stack nds-w-sm" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
     <label for="api-token" class="nds-text-body nds-font-medium">${tContent('demonstration.labels.apiTokenLabel')}</label>
     <Tooltip>
       <TooltipTrigger as-child>
         <Button variant="outline" size="icon-sm" aria-label="${tContent('demonstration.labels.apiTokenHelp')}">?</Button>
       </TooltipTrigger>
-      <TooltipContent side="right" class="nds-max-w-xs">
+      <TooltipContent side="right">
         ${tContent('demonstration.labels.apiTokenHint')}
       </TooltipContent>
     </Tooltip>
@@ -296,7 +312,7 @@ const codeCompMetric = computed(() => `<div class="nds-stack" data-spacing="xs">
       <TooltipTrigger as-child>
         <Button variant="outline" size="icon-sm" aria-label="${tContent('demonstration.labels.lcpHelp')}">i</Button>
       </TooltipTrigger>
-      <TooltipContent side="top" class="nds-max-w-xs nds-whitespace-normal">
+      <TooltipContent side="top" class="nds-whitespace-normal">
         ${tContent('demonstration.labels.lcpHint')}
       </TooltipContent>
     </Tooltip>
@@ -428,11 +444,13 @@ const analyticsItems = computed(() => [
   { event: 'tooltip_view', trigger: stripHtml(tContent('analytics.table.tooltip_view.trigger')), payload: tContent('analytics.table.tooltip_view.payload') },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
-  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
-  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
-  priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
-})));
+const functionalTestItems = computed(() =>
+  testItemIndexes('functional').map((i) => ({
+    action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+    result: toPlainText(tContent(`testes.functional.item${i}.result`)),
+    priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
+  })),
+);
 
 const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item1'), level: 'AA',     how: 'axe-core'           },
@@ -442,10 +460,12 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item5'), level: '4.1.2',  how: 'Manual review'      },
 ]);
 
-const visualTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
-  story: tContent(`testes.visual.item${i}.story`),
-  priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
-})));
+const visualTestItems = computed(() =>
+  testItemIndexes('visual').map((i) => ({
+    story: tContent(`testes.visual.item${i}.story`),
+    priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
+  })),
+);
 
 const a11yCritCols = computed(() => ({
   criterion: tNav('common.criterion'),
@@ -600,7 +620,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">
+              <TooltipContent>
                 {{ tContent('demonstration.labels.save') }}
               </TooltipContent>
             </Tooltip>
@@ -625,7 +645,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">
+              <TooltipContent>
                 {{ tContent('demonstration.labels.saveButton') }}
               </TooltipContent>
             </Tooltip>
@@ -650,7 +670,7 @@ const a11yCritCols = computed(() => ({
               </TooltipTrigger>
               <!-- Texto puro: aqui a lição é o TAMANHO da mensagem. A tecla
                    marcada com <Kbd> é assunto da variante `withShortcut`. -->
-              <TooltipContent side="bottom">
+              <TooltipContent>
                 {{ tContent('demonstration.labels.save') }}
               </TooltipContent>
             </Tooltip>
@@ -671,7 +691,11 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" class="nds-max-w-xs">
+              <!-- Sem `nds-max-w-xs`: a utilitária vale `max-width: 20rem` e a
+                   `.nds-tooltip-content` já vale exatamente isso, então a classe
+                   não pinta nada no balão. Quem ensina a lição aqui é o
+                   comprimento do texto. -->
+              <TooltipContent>
                 {{ tContent('demonstration.labels.longBalloonDont') }}
               </TooltipContent>
             </Tooltip>
@@ -710,7 +734,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">
+              <TooltipContent>
                 {{ tContent('demonstration.labels.saveButton') }}
               </TooltipContent>
             </Tooltip>
@@ -733,7 +757,7 @@ const a11yCritCols = computed(() => ({
                   <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">
+              <TooltipContent>
                 {{ tContent('demonstration.labels.saveButton') }}
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -756,10 +780,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.shareButton') }}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                class="nds-max-w-xs"
-              >
+              <TooltipContent side="bottom">
                 {{ tContent('demonstration.labels.shareHint') }}
               </TooltipContent>
             </Tooltip>
@@ -884,7 +905,7 @@ const a11yCritCols = computed(() => ({
             data-align="start"
           >
             <div
-              class="nds-stack nds-w-full nds-max-w-sm"
+              class="nds-stack nds-w-sm"
               data-spacing="sm"
               style="align-items: flex-start"
             >
@@ -908,10 +929,7 @@ const a11yCritCols = computed(() => ({
                       ?
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent
-                    side="right"
-                    class="nds-max-w-xs"
-                  >
+                  <TooltipContent side="right">
                     {{ tContent('demonstration.labels.apiTokenHint') }}
                   </TooltipContent>
                 </Tooltip>
@@ -956,7 +974,7 @@ const a11yCritCols = computed(() => ({
                   </TooltipTrigger>
                   <TooltipContent
                     side="top"
-                    class="nds-max-w-xs nds-whitespace-normal"
+                    class="nds-whitespace-normal"
                   >
                     {{ tContent('demonstration.labels.lcpHint') }}
                   </TooltipContent>

@@ -3,7 +3,9 @@
 > **Estado descrito**: 2026-09-15. **Revisão serial fechada em** 2026-09-06.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
-> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
+> **Revisado contra o código em 2026-09-15**, e **corrigido na passagem de `fix`
+> de 2026-09-16**, que fechou a maior parte da §7 e três das seis pendências. A §7
+> abaixo descreve o que sobrou, medido depois da passagem.
 
 ## 1. Identidade
 
@@ -32,7 +34,7 @@ tooltip — nem que seja um link.
 | C5 | `aria-describedby` liga o gatilho ao balão | `testes.accessibility.item4`, declarado no `Playground` das cinco; a ligação id→balão é afirmada na story `States/Open` das cinco |
 | C6 | Não é interativo: nada clicável dentro | `accessibility.items.item4` — julgamento |
 | C7 | Botão só de ícone tem `aria-label` PRÓPRIO; o tooltip é complementar | `testes.accessibility.item5`, declarado no `Playground` das cinco |
-| C8 | Sem espaço no `side` pedido, vira para o lado oposto | **sem portão, e não vale no vanilla.** Nenhuma story das cinco força colisão; as de lado (`PlacementSides`, `FourSides`, `SideTop…SideRight`, passo de `data-side` do `Playground`) ou aceitam `[side, oposto]` — o que passa com ou sem flip — ou exigem o lado exato. O vanilla não chama `flip` — ver §7, item 5 |
+| C8 | Sem espaço no `side` pedido, vira para o lado oposto | `testes.functional.item5` — story `Compositions/Collision` nas cinco: o gatilho encosta na borda, a play afirma a PREMISSA (folga acima menor que a altura do balão mais o vão) e só então o lado FINAL, esperando o VALOR de `data-side`. Vale nas cinco desde 2026-09-16, quando o vanilla passou a chamar `positionFloating` com `{ flip: true }` |
 
 ## 3. Decisões fixadas
 
@@ -193,15 +195,20 @@ regra em `04-padroes-design-sistema.md` §Qual degrau, cobrada por
 `elevacao_fora_do_mapa`. O que separa `md` de `lg` ali é interativo × passivo, e
 o tooltip é o caso extremo do segundo lado — nem foco recebe.
 
-**Animação**: só a saída anima (opacidade e `scale(0.95)`), para evitar corrida
-entre opacidade zero na entrada e a checagem síncrona de visibilidade das plays.
-É a mesma forma do hover-card.
-**Mas a regra pendura em `[data-ending-style]`, e esse atributo não chega às
-cinco** — medido em 2026-09-15 nas fontes instaladas: o base-ui (react) o
-escreve; a `reka-ui` (vue) não o cita em arquivo nenhum; o vanilla remove o nó
-na hora (`tooltip.ts:281`). No bits-ui e no radix-ng o atributo existe no
-pacote, mas o módulo do tooltip não o cita — não medido no navegador. Ver §7,
-item 9.
+**Animação: nenhuma, desde 2026-09-16.** A entrada nunca animou — opacidade zero
+na entrada corre com a checagem síncrona de visibilidade das plays —, e a saída
+deixou de animar por decisão da dona.
+**O que a saída era, e por que saiu**: opacidade e `scale(0.95)` pendurados em
+`[data-ending-style]`, atributo de LIB que não chega às cinco — medido em
+2026-09-15 nas fontes instaladas: o base-ui (react) o escreve; a `reka-ui` (vue)
+não o cita em arquivo nenhum; o vanilla remove o nó na hora (`tooltip.ts:281`);
+no bits-ui e no radix-ng o atributo existe no pacote e o módulo do tooltip não o
+cita. No máximo três das cinco animavam, e a stack de referência não era uma
+delas. Regra de acabamento que depende de atributo de lib produz saída diferente
+por stack, em silêncio.
+**Consequência**: a folha não declara movimento nenhum, e por isso não tem guarda
+de `prefers-reduced-motion` — ela saiu da lista de guardas inertes de
+`hover-card.md` §8, que passou de quatro para três.
 
 **Até 2026-09-12 esta linha dizia "pelo mesmo motivo do popover e do
 hover-card"**, e o popover saiu do exemplo: em 2026-09-12 ele deixou de animar por
@@ -214,7 +221,7 @@ completo, por decisão da dona, e com isso não há mais lado dele para comparar
 | Closed | inicial | balão fora do documento |
 | Opening | hover, durante o atraso do provedor | nada visível |
 | Open | atraso cumprido, ou foco por Tab | balão montado, seta apontando o gatilho |
-| Transitioning | saída | opacidade e escala até terminar — só onde a lib escreve `data-ending-style` (§5) |
+| Closing | saída | o balão sai sem transição, nas cinco — ver §5 |
 
 O atributo de estado no balão também não é um só: `data-state="open"` no
 vanilla (`tooltip.ts:225`) e no angular (`tooltip.ts:270`, que acrescenta o
@@ -262,12 +269,21 @@ primitivo), e `delayDuration` em vue (`TooltipProvider.vue`), svelte
 (`tooltip-provider.svelte`) e vanilla (`createTooltipProvider`). Os cinco valem
 `300`. Divergência de forma de API não tem fonte de verdade: fica registrada.
 
+**E a CHAVE do conteúdo se chama `props.table.delay` nas cinco, o que não é defeito** —
+medido em 2026-09-16, depois de duas agentes o relatarem como tal na mesma rodada. A
+chave carrega `type`, `default`, `required` e `description`, e **não carrega `name`**:
+quem escreve o nome da prop é cada docs page, e é por isso que a página do vue publica
+`delayDuration` lendo `props.table.delay.*`. O id da chave é interno; o que o leitor vê
+é o nome que a stack dele usa. O defeito real desta família era outro, e foi corrigido
+nesta rodada: a página do svelte PUBLICAVA `delay` onde a prop é `delayDuration`.
+
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
 | vanilla | fábrica `createTooltip`, com `onShow` disparado na exibição REAL — registrado em `PATCHES.md#vanilla-tooltip-onshow`, e existe para o evento não depender de duplicar o timer privado da fábrica. A fábrica é também a única sem `open`/`defaultOpen`/`onOpenChange`/`align`/`sideOffset` — ver a tabela acima |
 | vanilla | o grupo é `createTooltipProvider`, uma fábrica que devolve o próprio `createTooltip` já amarrado ao padrão do grupo; nas outras quatro o provedor é contexto |
+| vanilla, react | a constante do atraso tem nome por stack — `SHOW_DELAY` no vanilla, `TOOLTIP_DEFAULT_DELAY` no react, `NDS_TOOLTIP_DELAY` no angular —, e o do vanilla é **fixado pelo portão**: `ATRASO_DE_TOOLTIP`, em `scripts/audit.mjs`, procura o nome para comparar o valor do primitivo com o que a tabela de props publica. Medido em 2026-09-16: renomear o do vanilla para o do react reprova *high*, porque a regra passa a ler "a stack não declara mais o atraso". A constante do vanilla é EXPORTADA desde esta data, para a story que mede o padrão não redigitar o número |
 | vue, svelte, vanilla | a espera se chama `delayDuration`; em react e angular é `delay` |
 | react, angular | nomeiam o positioner; vue e svelte usam wrapper anônimo da lib |
 | angular | a lib projeta um `<svg>` dentro da seta (D3) |
@@ -312,13 +328,28 @@ Este componente **não tem título de cabeçalho**, então não há seletor `h2[
 nem `h3[…]` aqui — a nota de nível de cabeçalho vale para dialog, sheet, drawer
 e alert-dialog, que são os que nomeiam o painel com um cabeçalho.
 
-### Inconsistências entre stacks, medidas em 2026-09-15
+### Inconsistências entre stacks — medidas em 2026-09-15, corrigidas em 2026-09-16
 
-Medidas arquivo a arquivo no código desta data, sem suíte de navegador. O
-`node scripts/audit.mjs tooltip --json` fechou com **0 violações** — nenhum dos
-itens abaixo é visto por regra do auditor. Caminhos relativos a
-`nortear-design-system-<stack>/src/components/`; `ui/` do vue e do svelte é
-`ui/tooltip/`.
+A numeração de 1 a 17 é a da medição original e **fica**, porque C4, D2 e §5
+apontam para itens por número. O texto de cada um passou a dizer o estado de
+hoje. Caminhos relativos a `nortear-design-system-<stack>/src/components/`;
+`ui/` do vue e do svelte é `ui/tooltip/`.
+
+**O que sobra**: os itens 1 e 2, que são divergência de API registrada e não se
+alinham, e o 14, que é a PENDÊNCIA do bloco do Provider (§10).
+
+**O que a passagem mediu, e o auditor não via**: nenhum dos dezessete era visto
+por regra do auditor — ele fechou com 0 violações antes e depois. E dois defeitos
+só apareceram no NAVEGADOR, depois de o flip entrar na referência: as stories de
+lado afirmavam o lado pedido sem garantir folga, e liam `data-side` no primeiro
+paint, antes de o posicionador medir. Compilação, lint, unitários e auditor
+passavam com os dois de pé, em quatro stacks. Por isso duas regras novas valem
+para toda story de lado: **a folga é garantida por EIXO e MEDIDA como premissa**
+(não declarada em comentário), e **espera-se o VALOR do `data-side`**, nunca a
+existência dele.
+
+Suítes de navegador ao fim da passagem: react 39, vue 36, svelte 36, vanilla 31 e
+angular 53, todas verdes, mais a fumaça das docs pages nas cinco.
 
 1. **`data-slot="tooltip"` na raiz só existe no DOM de duas.** vanilla escreve no
    wrapper `display: contents` (`ui/tooltip.ts:180`) e o `Playground` afirma
@@ -343,121 +374,92 @@ itens abaixo é visto por regra do auditor. Caminhos relativos a
    angular não (`ui/tooltip.fixtures.ts:20-22` react, `:23-25` angular). Maioria
    (3): o id está no próprio balão com o papel. Mecânica de lib — registrar.
 
-3. **Atraso de hover nas plays: o `0` de decorator sobreviveu em três.** O svelte
-   tirou o `0` morto dos args (`ui/tooltip/tooltip-compositions.stories.ts:44-49`,
-   `tooltip-variants.stories.ts:53-57`), mantendo-o só onde há ponteiro real. react
-   crava `delay={0}` no decorator de meta de `tooltip.stories.tsx:35`,
-   `-states:68`, `-variants:45`, `-compositions:42`; vue `:delay-duration="0"` em
-   `tooltip.stories.ts:29`, `-states:75`, `-variants:46`, `-compositions:38`;
-   angular `[delay]="0"` em cada story de `-variants`, `-compositions` e
-   `-states` (`:95,125,322…`) e no arg do `Playground` (`tooltip.stories.ts:62`).
-   vanilla não usa provedor nas stories. Maioria (3) mantém o zero; a política
-   de 2026-09-12 (D5) é a do svelte.
+3. **FECHADO · o `0` de decorator saiu das cinco.** Era o resíduo que a D5
+   condena: react o cravava nos quatro decorators de meta, vue idem, angular em
+   cada story e no arg do `Playground`. Hoje o zero sobrevive só onde há ponteiro
+   real — a `PersistenceInBubble`, que precisa do balão aberto para medir a
+   tolerância. Story que quer o balão aberto na hora usa foco ou `defaultOpen`,
+   que não passam pelo temporizador. O angular ainda publicava `[delay]="0"` no
+   `EXTENSIBILITY_CODE` da docs page, ou seja ENSINAVA a desligar a espera; agora
+   publica um valor por gatilho, que é a lição real do bloco.
 
-4. **O conjunto de stories diverge arquivo a arquivo.** `Playground`, `Variants`
-   (`Default`, `WithShortcut`, `LongText`) e `States` `Closed`/`Open`/`Hover`/
-   `PersistenceInBubble` existem nas cinco. O resto:
-   - estado de foco com cinco nomes: `Focused` (react), `WithFocus` (vue),
-     `KeyboardFocus` (svelte, vanilla), `Focus` (angular);
-   - medição do atraso padrão: `HoverDefaultDelay` (react, svelte, angular),
-     `Delayed` (vue), nenhuma (vanilla);
-   - `Controlled`: react, vue, svelte — falta no angular, que tem `open`;
-     no vanilla não há API;
-   - `ListenerCleanup`: só vanilla;
-   - `Compositions`: react `IconBarToolbar`, `WithKeyboardShortcut`,
-     `PlacementSides`; vue `IconOnlyButton`, `ActionBar`, `KeyboardShortcut`,
-     `FourSides`; svelte `KeyboardShortcut`, `SideTop`/`SideBottom`/`SideLeft`/
-     `SideRight`, `ActionDescription`; vanilla `IconButtonWithShortcut`,
-     `HelpInFormField`, `MetricDescription`, `PlacementSides`,
-     `ProviderWithMarkup`; angular os mesmos quatro primeiros do vanilla.
-   Referência: vanilla, que o angular já segue, e que casa com as composições
-   que as cinco docs pages publicam (`iconButtonWithShortcut`, `actionBar`,
-   `formFieldHelp`, `metricDescription`). O nome de story não é API de
-   framework: alinhar.
+4. **FECHADO · o conjunto de stories é o mesmo nas cinco.** `-compositions` traz
+   `IconButtonWithShortcut`, `HelpInFormField`, `MetricDescription`,
+   `PlacementSides`, `Collision` e `GroupWait`; o estado de foco, que tinha cinco
+   nomes, é `KeyboardFocus`; a medição do atraso padrão é `HoverDefaultDelay`. Os
+   nomes saem do vanilla. `ActionBar`/`IconBarToolbar` saiu: a barra de ícones
+   existia para mostrar espera de grupo e só contava rótulos — quem mede isso
+   agora é a `GroupWait`, que é também a story do card `actionBar` do conteúdo
+   compartilhado, para nenhuma docs page publicar card sem story. Extras
+   declarados: `ProviderWithMarkup` e `ListenerCleanup`, no vanilla; `Controlled`
+   não existe no angular, que tem `open`, nem no vanilla, que não tem a API.
+   **Renomear não é mover**: story trocada de arquivo muda de id e leva junto a
+   baseline do Chromatic, então as renomeações ficaram no arquivo de origem.
 
-5. **Flip de lado (C8).** react, vue, svelte e angular herdam o flip da lib;
-   vanilla chama `positionFloating(trigger, panelEl, side, 'center', GAP)` sem
-   `{ flip: true }` (`ui/tooltip.ts:231`; opt-in em `lib/floating.ts:261-271`), e
-   a docs page do vanilla declara em literal que "nada reposiciona o balão"
-   (`docs/TooltipDocs.ts:955`). Asserções: react (`-compositions:239`,
-   `tooltip.stories.tsx:191`), vue (`-compositions:301`, `tooltip.stories.ts:185`),
-   angular (`-compositions:219`, `tooltip.stories.ts:172`) e o `Playground` do
-   svelte (`:169`) aceitam `[side, oposto]` — passam com ou sem flip; svelte
-   `Side*` (`-compositions:106,133,160,187`) e vanilla (`-compositions:280`,
-   `tooltip.stories.ts:156`) exigem o lado exato. Nenhuma das cinco força colisão.
-   Maioria (4) vira; a referência não vira — decisão da dona (§10).
+5. **FECHADO · o flip vale nas cinco, e C8 ganhou portão.** Por decisão da dona o
+   vanilla passou a chamar `positionFloating` com `{ flip: true }` e a reconciliar
+   `data-side` E a seta com o lado devolvido — virar o painel e esquecer a seta é
+   defeito que compila e renderiza. Os literais da docs page que negavam
+   reposicionamento saíram nos três idiomas. Nasceu a `Compositions/Collision` nas
+   cinco, e as seis asserções que aceitavam `[lado, oposto]` — que passavam com ou
+   sem o recurso — passaram a exigir o lado exato. Prova de dentes: sem a folga do
+   palco, a premissa reprova nomeando os números (`0px livres para um balão que
+   precisa de 38px, quadro 1200×900`).
 
-6. **Persistência no balão (C4): o controle negativo só existe no vanilla.**
-   vanilla dita a coordenada do centro do balão e depois leva o ponteiro a 0,0
-   esperando o fechamento (`ui/tooltip-states.stories.ts:220-242`). react
-   (`-states:391-399`), vue (`-states:406-414`), svelte (`-states:266-274`) e
-   angular (`-states:343-351`) fazem `userEvent.hover(balao, { pointerEventsCheck: 0 })`
-   e só afirmam "continua aberto" após 200 ms — a forma que D2 mede como
-   ponteiro em 0,0. Maioria (4) sem dentes; referência: vanilla. Alinhar.
+6. **FECHADO · a persistência tem as duas metades nas cinco.** As quatro que
+   faziam `userEvent.hover(balao, { pointerEventsCheck: 0 })` — a forma que a D2
+   mede como ponteiro em 0,0 — passaram a ditar `clientX/clientY` do centro do
+   balão e a afirmar que levar o ponteiro para longe FECHA. Cada lib pediu um
+   caminho: no reka o ouvinte recusa evento cujo alvo não é elemento, então a
+   coordenada vai no `body`; no base-ui o balão só solta quando o ponteiro sai do
+   GATILHO; no bits a chegada por coordenada limpa o rastreio do polígono. Prova
+   de dentes: com `toleranciaInside` sempre verdadeira, a story reprova.
 
-7. **Espera de grupo: provada numa stack só.** vanilla `ProviderWithMarkup`
-   mostra o vizinho abrindo sem esperar dentro da janela
-   (`ui/tooltip-compositions.stories.ts:369-386`). react `IconBarToolbar`
-   (`-compositions:126-129`) e vue `ActionBar` (`-compositions:167-173`) contam
-   rótulos e não tocam o ponteiro; svelte e angular não têm story de grupo. E o
-   atraso padrão: react afirma fechado aos 150 ms e aberto antes de 600
-   (`-states:275-288`, sem piso); vue piso de 270 sem teto (`-states:294`); svelte
-   lê `data-delay-duration="300"` da lib e piso de 240 (`-states:175,201`);
-   angular piso 270 e teto 510, com o número tirado do conteúdo
-   (`-states:238,252-253`); vanilla `Hover` só afirma "não abre na hora" e
-   "abre em até 2400 ms" (`-states:127,135`). Referência para grupo: vanilla;
-   para o padrão, a do angular é a única com as duas bordas.
+7. **FECHADO · a espera de grupo é provada nas cinco, com as duas metades.**
+   Nasceu a `GroupWait`, e o vanilla ganhou a `HoverDefaultDelay` que faltava, com
+   piso e teto (0,9× e 1,7×). **A metade que dá dentes é a primeira**: o primeiro
+   balão abre por PONTEIRO e PAGA a espera; só então o vizinho abre sem esperar.
+   Vue e angular abriam o primeiro por `focus()`, que por contrato abre na hora —
+   provavam que o vizinho não espera e nunca que alguém espera, e uma janela que
+   jamais esfriasse passaria igual. Prova de dentes: com `[delay]="0"` plantado, a
+   `GroupWait` reprova no piso.
 
-8. **Foco abre sem atraso (C2): três forças de asserção.** vanilla
-   síncrona — `focus()` e o balão já existe, sem `waitFor`
-   (`ui/tooltip-states.stories.ts:161-163`); react `< 300` ms com provedor de 600
-   (`-states:338-339`); svelte `< 300` (`-states:231`); angular `< 150` e
-   `data-instant="focus"` (`-states:299,306`); vue sem relógio, só
-   `data-state="instant-open"` depois de `waitFor` (`-states:351,357`).
-   Maioria (3) mede relógio.
+8. **FECHADO · o foco abre sem atraso, medido por relógio.** O vue era o único sem
+   relógio — só `data-state="instant-open"` depois de `waitFor`, o que passaria com
+   o foco preso aos 600 ms — e passou a medir com teto. As cinco medem tempo.
 
-9. **Animação de saída.** A folha anima em `[data-ending-style]`
-   (`docs/shared/styles/nds/tooltip.css:81-85`). react recebe o atributo do
-   base-ui; vue nunca (a `reka-ui` instalada não o cita); vanilla remove o nó
-   sem transição (`ui/tooltip.ts:281`); svelte e angular não medidos no
-   navegador. No máximo três de cinco animam a saída; referência (vanilla) não
-   anima. Decisão da dona (§10).
+9. **Animação de saída — RESOLVIDO em 2026-09-16.** A folha animava em
+   `[data-ending-style]`, atributo que no máximo três das cinco recebiam: react
+   pelo base-ui; vue nunca (a `reka-ui` instalada não o cita); vanilla remove o
+   nó sem transição (`ui/tooltip.ts:281`); svelte e angular tinham o atributo no
+   pacote sem o módulo do tooltip citá-lo. Por decisão da dona a transição saiu
+   da folha, com o motivo no lugar dela — nenhuma stack anima a saída, que é o
+   que a referência já fazia. Nenhum arquivo de tooltip das cinco stacks cita o
+   atributo, então a remoção não deixou story nem sonda órfã.
 
-10. **Atributo de estado e o que as stories afirmam dele.** `data-state="open"`
-    no vanilla (`ui/tooltip.ts:225`) e no angular (`ui/tooltip.ts:270`);
-    `instant-open`/`delayed-open` em vue e svelte; ausente no react. A story
-    `Open` afirma `open` no vanilla (`-states:98`) e no angular (`-states:144`),
-    `instant-open` no vue (`-states:175`) e nada no react nem no svelte.
-    Mecânica de lib — registrar; a asserção faltante em react e svelte é o que
-    se alinha.
+10. **Atributo de estado: a mecânica diverge, a asserção não.** `data-state="open"`
+    no vanilla e no angular; `instant-open`/`delayed-open` em vue e svelte; no
+    react só `data-open`/`data-instant` do base-ui. Isso é lib, e fica
+    registrado. O que se alinhou foi a asserção: a story `Open` afirma o estado
+    da lib nas cinco — react e svelte não afirmavam nenhum.
 
-11. **Asserções que existem numa e faltam noutra, fora dos itens acima.**
-    - padding encurtado com `kbd` (D7): `WithShortcut` afirma
-      `paddingInlineEnd` em react (`-variants:171`), vue (`:166`), svelte
-      (`:122`) e angular (`:132`); vanilla não (`-variants:104-111`), e usa uma
-      tecla `Ctrl+S` onde as quatro usam duas (`Ctrl`, `S`).
-    - espião de mudança de abertura no `Playground`: react (`:168`), vue
-      (`:162`), angular (`:143-144`); svelte tem `onOpenChange` e não espiona;
-      vanilla não tem a API.
-    - `Closed` do angular não afirma `role="tooltip"` ausente por consulta ao
-      body, como as outras quatro (`-states:109-115`).
+11. **FECHADO · as asserções avulsas.** O `WithShortcut` do vanilla usava a
+    string `'Salvar (Ctrl+S)'`, sem `<kbd>` nenhum, e não media nada; a
+    `IconButtonWithShortcut` dele também não. As duas passaram a montar as duas
+    teclas com `data-slot="kbd"` e a afirmar o `paddingInlineEnd` encurtado, que
+    é o D7 — a referência não demonstrava o assunto da própria story. O `Closed`
+    do angular passou a consultar `role="tooltip"` no body, como as outras
+    quatro. O espião de mudança de abertura continua onde a API existe.
 
-12. **Docs page — seção Estados.** react, vue, svelte e vanilla publicam as
-    cinco linhas, incluindo `states.delayed`; angular publica quatro e tira
-    `delayed` (`docs/TooltipDocs.ts:1023-1030`) com o argumento de que não há
-    balão durante a espera — o que vale igual nas cinco. Maioria (4):
-    publicar.
+12. **FECHADO · a linha `delayed` é publicada nas cinco.** O angular a tirava
+    com o argumento de que não há balão durante a espera — o que vale igual nas
+    cinco, e portanto não justificava a diferença.
 
-13. **Docs page — tabela de props publica nomes que não são os da stack.**
-    react `delay…className`, com `onOpenChange`; vue `delayDuration`, `class`,
-    sem linha de evento (`docs/TooltipDocs.vue:378`); svelte publica **`delay`**
-    (`docs/TooltipDocs.svelte:790`) — a prop dele é `delayDuration`
-    (`ui/tooltip/tooltip-provider.svelte:24`) —, com `class` e `onOpenChange`;
-    angular `delay`, `openChange`, sem `class`; vanilla a tabela da fábrica
-    (`trigger`, `content`, `side`, `delayDuration`, `onShow`, `class`) e a do
-    provedor (`delayDuration`, `skipDelayDuration`) (`docs/TooltipDocs.ts:879-889`).
-    Os nomes são divergência de API já registrada acima; o `delay` do svelte é
-    defeito da página.
+13. **FECHADO · a tabela de props publica o nome REAL de cada stack.** O svelte
+    publicava `delay` onde a prop é `delayDuration`, e era defeito de página, não
+    divergência de API. Os nomes seguem diferentes entre stacks de propósito
+    (`delay` em react e angular, `delayDuration` em vue, svelte e vanilla), e a
+    CHAVE do conteúdo (`props.table.delay`) é id interno, não nome publicado.
 
 14. **Docs page — o segundo bloco da Importação ensina três coisas.** react
     monta o provedor com `timeout={300}` (`docs/TooltipDocs.tsx:182-186`); vue com
@@ -468,14 +470,20 @@ itens abaixo é visto por regra do auditor. Caminhos relativos a
     `imports: [...NDS_TOOLTIP, NdsButton]` (`docs/TooltipDocs.ts:110-117`). Todos
     constantes locais: é a PENDÊNCIA de 2026-09-12 (§10).
 
-15. **Docs page — literais que contradizem o código.** vanilla afirma "não há
-    […] seta apontando para o gatilho" nas notas, nos três idiomas
-    (`docs/TooltipDocs.ts:952-955`), e a fábrica desenha a seta desde 2026-09-04
-    (`ui/tooltip.ts:246-257`). angular diz em comentário que "o Do & Dont daqui não
-    tem tooltip vivo" (`docs/TooltipDocs.ts:815`) e a página tem quatro
-    (`:385-422`); o comentário final de `ui/tooltip.ts:314` diz
-    `display: none` onde a folha usa `visibility: hidden`
-    (`tooltip.css:150-152`).
+15. **FECHADO · os literais que contradiziam o código.** Saíram os três: a nota
+    do vanilla que negava a seta e o reposicionamento (três idiomas, mais o
+    override de `props.local.side.description` e o comentário do
+    `extensibilityCode`), o comentário do angular que dizia não haver tooltip
+    vivo no Do & Dont quando a página tem quatro, e o `display: none` do
+    comentário do angular onde a folha usa `visibility: hidden`.
+    **Na mesma varredura saiu uma classe que não pintava nada**: o
+    `nds-max-w-xs` das prévias e dos snippets publicados vale `max-width: 20rem`,
+    exatamente o que `.nds-tooltip-content` já declara. Quatro stacks a
+    aplicavam, o angular nunca; em snippet publicado é o caso pior, porque quem
+    copia leva o no-op achando que limita. Quem ensina a lição do balão largo é o
+    texto longo. O `nds-max-w-sm` do CONTÊINER do campo ficou — ele é a largura
+    do formulário de exemplo, e virou `nds-w-sm` nas cinco, que declara a largura
+    e funciona também sob `layout: 'centered'`.
 
 16. **Analytics — tipo igual, disparo por dois mecanismos.** O tipo
     `tooltip_view { component; trigger_id?; location? }` é idêntico nas cinco
@@ -483,18 +491,21 @@ itens abaixo é visto por regra do auditor. Caminhos relativos a
     angular `:513`). Disparo: react `rastrearTooltip` (`docs/TooltipDocs.tsx:99`),
     vue (`.vue:159`), svelte (`.svelte:28`) e angular `aoAlternar` (`:816`) na
     mudança de abertura; vanilla `trackTooltipView` no `onShow` (`:197`). Os cinco
-    cobrem demo, do-dont, variantes e composições com o mesmo `trigger_id`. O
-    snippet de Importação do vanilla ensina o evento SEM `trigger_id` nem
-    `location` (`:493`), e o `props.extensibilityCode.vanilla` do conteúdo
-    compartilhado repete a forma.
+    cobrem demo, do-dont, variantes e composições com o mesmo `trigger_id`.
+    **O snippet publicado ensinava o evento SEM `trigger_id` nem `location`**, no
+    `props.extensibilityCode.vanilla` do conteúdo compartilhado e na docs page que
+    o espelha; corrigido em 2026-09-16 — snippet é o que se copia, e ensinar
+    payload incompleto produz evento que não responde "de onde veio este clique".
 
-17. **Construtores de snippet e seus testes.** react 12 construtores e 20 `it`;
-    vue 13 e 16; svelte 3 (`tooltipSource`, `tooltipOpenSource`,
-    `tooltipControlledSource`) e 13 — as composições e os lados usam o
-    `tooltipSource` do meta com args; vanilla 5 e 13; angular 13 e 20 `it` (um
-    deles gerado por construtor), o único
-    cujo teste local cobra que todo construtor exportado entra na varredura
-    (`ui/tooltip.source.test.ts:179-186`). A granularidade acompanha o item 4.
+17. **Construtores de snippet e seus testes**, medidos em 2026-09-16: angular 15
+    construtores e 23 `it`; vue 14 e 19; react 13 e 22; svelte 8 e 19; vanilla 3
+    e 13. A granularidade acompanha o item 4 e a forma de cada stack: o vanilla
+    serve as stories por builders parametrizados, o svelte usa o construtor do
+    meta com args, e o angular é o único cujo teste local cobra que todo
+    construtor exportado entra na varredura. O que importa é que as stories novas
+    desta passagem (`Collision`, `GroupWait`) nasceram com construtor e teste nas
+    cinco — a catraca do painel Code não tem linha de base para o angular, onde
+    story sem `transform` reprova.
 
 ## 8. Acessibilidade
 
@@ -510,20 +521,21 @@ está. O balão não entra na ordem de tabulação.
   `aria-label` é obrigatório no botão, e o balão é complemento;
 - em touch não há hover, então nenhuma informação essencial mora aqui.
 
-**Movimento reduzido**: o balão para sob `prefers-reduced-motion`, e quem o para
-é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
-`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
-mecanismo está por extenso em `hover-card.md` §8.
+**Movimento reduzido: não há o que parar.** Desde 2026-09-16 a folha não declara
+movimento nenhum — a entrada nunca animou e a saída deixou de animar (§5) —,
+então ela também não tem bloco `@media (prefers-reduced-motion)`. Folha que não
+anima não precisa de guarda, e guarda sem declaração é enfeite que se lê como
+proteção.
 
-**E aqui a leitura é literal: o bloco `@media` desta folha NÃO é quem segura.**
-Medido em 2026-09-12: a guarda no fim de `tooltip.css` mira `.nds-tooltip-content`
-(0,1,0) e a transição de saída está em `.nds-tooltip-content[data-ending-style]`
-(0,2,0) — a declaração vence, e `@media` não acrescenta especificidade. O balão
-para de qualquer forma, pela camada de token, e é por isso que ninguém notou. Esta
-folha é uma das quatro nessa situação, junto com `dialog.css`,
-`dropdown-menu.css` e `sheet.css`; a pendência aberta que as conta está em
-`hover-card.md` §8, e o `tooltip.css` foi acrescentado a ela em 2026-09-12 —
-tinha a mesma forma desde sempre e nunca havia sido listado.
+**A guarda que existia era, ela própria, inerte**, e vale registrar porque é o
+mecanismo que ainda vale para outras folhas: medido em 2026-09-12, ela mirava
+`.nds-tooltip-content` (0,1,0) contra a transição em
+`.nds-tooltip-content[data-ending-style]` (0,2,0) — a declaração vencia, e
+`@media` não acrescenta especificidade. O balão parava de qualquer forma, pela
+camada de token (`docs/shared/tokens/motion.css` zera a escada de
+`--duration-*`), e é por isso que ninguém tinha notado. Esta folha era uma das
+QUATRO nessa situação; com a saída dela, a pendência de `hover-card.md` §8 conta
+três — `dialog.css`, `dropdown-menu.css` e `sheet.css`.
 
 ## 9. Analytics
 
@@ -581,29 +593,62 @@ Ordem: folha → provedor → primitivo → seta → stories → docs page.
 > das quatro stacks com provedor também o cravam, angular incluído
 > (`ui/message-timing-compositions.stories.ts:127`).
 
-> **PENDÊNCIA · 2026-09-15** — C8 (flip) não tem portão em stack nenhuma e não
+> **FECHADA · 2026-09-16** — C8 (flip) não tem portão em stack nenhuma e não
 > vale no vanilla, que posiciona sem `flip` e declara isso na docs page; as
 > asserções de lado das outras quatro passam com ou sem o recurso (§7, item 5).
 > **Fecha quando**: a dona decidir se o tooltip do vanilla liga `flip` ou se C8
 > ganha "não vale no vanilla", e as cinco tiverem uma story que force colisão e
 > afirme o lado final.
+> **Como fechou**: a dona mandou LIGAR o flip na referência. O vanilla passa
+> `{ flip: true }` e reconcilia `data-side` e a SETA com o lado devolvido — virar o
+> painel e esquecer a seta é defeito que compila e renderiza. Os literais da docs
+> page que negavam reposicionamento saíram, nos três idiomas. A story `Collision`
+> nasceu nas cinco, e as asserções de lado que aceitavam `[lado, oposto]` — seis
+> pontos, que passavam com ou sem o recurso — passaram a exigir o lado exato.
+> **E ligar o flip foi o que tornou visíveis dois defeitos que nenhum portão via**:
+> as stories de lado afirmavam o lado pedido sem garantir folga (react, vue, svelte
+> e vanilla reprovaram em navegador, cada uma por um lado), e liam `data-side` no
+> primeiro paint, antes de o posicionador medir. Compilação, lint, unitários e
+> auditor passavam com as duas coisas de pé.
 
-> **PENDÊNCIA · 2026-09-15** — a `PersistenceInBubble` de react, vue, svelte e
+> **FECHADA · 2026-09-16** — a `PersistenceInBubble` de react, vue, svelte e
 > angular usa o hover sintético que D2 mede como ponteiro em 0,0 e não tem o
 > passo negativo (§7, item 6).
+> **Como fechou**: as quatro passaram a ditar `clientX/clientY` do centro do balão
+> e a afirmar que levar o ponteiro para longe FECHA, como a referência. Cada lib
+> exigiu um caminho próprio para armar a área de tolerância — no reka o ouvinte
+> recusa evento cujo alvo não é elemento, então a coordenada vai no `body`; no
+> base-ui o balão só solta quando o ponteiro sai do GATILHO; no bits a chegada por
+> coordenada limpa o rastreio do polígono. O contrato é o mesmo nas cinco, e agora
+> a metade que dá dentes existe em todas: sem ela, tolerância infinita passaria.
 > **Fecha quando**: as quatro ditarem coordenada e afirmarem que levar o
 > ponteiro para longe fecha, como `nortear-design-system-vanilla/src/components/ui/tooltip-states.stories.ts:220-242`.
 
-> **PENDÊNCIA · 2026-09-15** — a espera de grupo só é provada no vanilla, e o
+> **FECHADA · 2026-09-16** — a espera de grupo só é provada no vanilla, e o
 > atraso padrão não é medido em relógio no vanilla (§7, item 7).
 > **Fecha quando**: as cinco tiverem story de grupo que mostre o vizinho abrindo
 > sem espera, e o vanilla tiver story que meça o padrão com piso e teto.
+> **Como fechou**: nasceu a `Compositions/GroupWait` nas cinco, e o vanilla ganhou
+> a `HoverDefaultDelay` que faltava, com piso e teto (0,9× e 1,7× do padrão).
+> **A story de grupo precisou de DUAS metades, e a segunda é a que dá dentes**: o
+> primeiro balão abre por PONTEIRO e paga a espera (piso antes do prazo), e só
+> então o vizinho abre sem esperar. Vue e angular abriam o primeiro por `focus()`,
+> que por contrato abre na hora — assim provavam que o vizinho não espera, e nunca
+> que alguém espera; uma janela de grupo que jamais esfriasse passaria igual.
+> Provado no angular plantando `[delay]="0"`: a `GroupWait` reprova no piso
+> (`expected 10.2 to be greater than or equal to 2700`), plantado e restaurado na
+> mesma chamada.
 
-> **PENDÊNCIA · 2026-09-15** — a animação de saída depende de
+> **FECHADA · 2026-09-16** — a animação de saída depende de
 > `[data-ending-style]`, que no máximo três das cinco recebem; vue e vanilla não
 > animam (§7, item 9).
 > **Fecha quando**: a dona decidir entre animar a saída nas cinco ou tirar a
 > transição da folha, e §5 e §6 descreverem o resultado.
+> **Como fechou**: a dona escolheu TIRAR a transição — animar exigiria código de
+> saída novo no vanilla e no vue, com risco de corrida com as plays, que é o
+> motivo de a entrada já não animar. A regra saiu de `tooltip.css` com o motivo
+> escrito no lugar dela, a guarda de movimento reduzido saiu junto (não havia mais
+> o que guardar), e §5 e §6 descrevem balão que some sem transição nas cinco.
 
 > **PENDÊNCIA · 2026-09-15** — conjunto de stories, nomes e asserções
 > divergentes (§7, itens 3, 4, 8, 10 e 11), docs pages com a linha `delayed`

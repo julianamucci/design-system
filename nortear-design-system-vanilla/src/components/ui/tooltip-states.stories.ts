@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createTooltip } from './tooltip';
+import { createTooltip, SHOW_DELAY } from './tooltip';
 import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
+import tooltipTranslations from '@shared/content/tooltip/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
@@ -12,12 +13,46 @@ import { figmaDesign } from '@shared/figma/design-links';
 // diferença entre os dois últimos é o que a WCAG 1.4.13 cobra: o tooltip não
 // pode depender do mouse.
 
-/** Espera interna da factory antes de abrir no hover, em ms. */
-const HOVER_WAIT = 300;
+/**
+ * A espera que o CONTEÚDO COMPARTILHADO declara, em ms.
+ *
+ * Sai do JSON, e não de um número escrito aqui: a decisão é da dona e vale para
+ * as cinco stacks. Um número copiado para esta linha continuaria verde no dia em
+ * que a decisão mudasse — que é exatamente como o 600 do angular sobreviveu, sem
+ * estar escrito em lugar nenhum do repositório para alguém comparar.
+ */
+const DECLARED_DELAY = Number(tooltipTranslations['pt-BR'].props.table.delay.default);
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
+}
+
+/**
+ * Quanto tempo, a partir de `start`, levou para `condition()` ficar verdadeira.
+ *
+ * NÃO É `waitFor`, e a diferença é a armadilha desta casa: o `waitFor` da suíte
+ * reagenda por observador de mutação, então uma condição que MEXE no DOM provoca
+ * a própria tentativa seguinte — o prazo nunca chega, o navegador crava um
+ * núcleo e o arquivo morre sem resultado nem falha. Aqui a condição é leitura
+ * pura e a espera é de relógio, com prazo que ESTOURA em erro nomeado.
+ *
+ * O relógio é marcado por quem chama, antes do gesto, porque o que se mede é o
+ * tempo desde o hover — não desde o começo da espera.
+ */
+async function openedAfter(
+  condition: () => boolean,
+  start: number,
+  deadline: number,
+): Promise<number> {
+  for (;;) {
+    const elapsed = performance.now() - start;
+    if (condition()) return elapsed;
+    if (elapsed > deadline) {
+      throw new Error(`nada abriu em ${Math.round(elapsed)}ms (prazo de ${deadline}ms)`);
+    }
+    await wait(8);
+  }
 }
 
 /** Põe o ponteiro no centro de um elemento e devolve a coordenada usada. */
@@ -125,6 +160,14 @@ export const Hover: Story = {
       trigger.blur();
       await userEvent.hover(trigger);
       await expect(balaoDe(trigger)).toBeNull();
+
+      // O PISO, e sem ele esta story passava com abertura instantânea: o teto do
+      // passo seguinte só diz "abriu em algum momento", e balão que nasce na
+      // hora cabe nele com folga. Ainda fechado a 0,9× da espera é o que prova
+      // que HÁ espera — com zero, todo movimento do ponteiro por uma barra de
+      // ferramentas acenderia balão.
+      await wait(DECLARED_DELAY * 0.9);
+      await expect(balaoDe(trigger)).toBeNull();
     });
 
     await step('Parado sobre o gatilho, o balão abre depois da espera', async () => {
@@ -132,12 +175,81 @@ export const Hover: Story = {
         async () => {
           await expect(balaoDe(trigger)).not.toBeNull();
         },
-        { timeout: HOVER_WAIT * 8 },
+        { timeout: DECLARED_DELAY * 8 },
       );
       await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
     });
 
     await step('Cleanup antes do postVisit', async () => {
+      clearPortal();
+    });
+  },
+};
+
+/**
+ * O VALOR da espera padrão, medido em relógio, com piso e teto.
+ *
+ * A `Hover` acima prova que existe espera; esta prova que a espera é ESTA. As
+ * três pernas reprovam defeitos diferentes:
+ *
+ *   · o número que o código declara é o mesmo que o conteúdo compartilhado
+ *     publica na tabela de props — código e documentação não podem divergir em
+ *     silêncio, que era o estado das cinco stacks antes de 2026-09-12;
+ *   · o balão não aparece antes de 0,9× a espera (prova que HÁ espera);
+ *   · e aparece antes de 1,7× (prova que a espera é a da casa, e não a de uma
+ *     biblioteca, que nem sob carga cabe nesse teto).
+ *
+ * A margem é proporcional, e não um ponto fixo: prazo fixo compete com o relógio
+ * do navegador e erra para o lado da intermitência.
+ */
+export const HoverDefaultDelay: Story = {
+  parameters: {
+    covers: ['functional.item1'],
+    // Transform PRÓPRIO: herdar o do meta faz o painel Code publicar o exemplo
+    // de outra story e acertar por coincidência. Aqui a ausência de
+    // `delayDuration` no snippet é a lição — quem copia herda a espera da casa.
+    docs: { source: { transform: tooltipSourceWith({ content: 'Salvar (Ctrl+S)' }) } },
+  },
+  render: () => {
+    // Sem `delayDuration`: a espera é a da fábrica, que é justamente o assunto.
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
+    return wrap(createTooltip({ trigger, content: 'Salvar (Ctrl+S)' }));
+  },
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
+
+    await step('O que o código declara é o que a documentação publica', async () => {
+      await expect(SHOW_DELAY).toBe(DECLARED_DELAY);
+    });
+
+    await step('Sem espera escrita, o balão abre na que a casa declara', async () => {
+      // O relógio parte ANTES do gesto: o que se mede é o tempo entre levar o
+      // ponteiro ao gatilho e o balão existir.
+      const start = performance.now();
+      await userEvent.hover(trigger);
+      const elapsed = await openedAfter(
+        () => balaoDe(trigger) !== null,
+        start,
+        DECLARED_DELAY * 8,
+      );
+
+      await expect(elapsed).toBeGreaterThanOrEqual(DECLARED_DELAY * 0.9);
+      await expect(elapsed).toBeLessThan(DECLARED_DELAY * 1.7);
+    });
+
+    await step('E o que abriu é o balão do contrato, no lado padrão', async () => {
+      // A prova sem relógio, ao lado da medição: o nó que apareceu no portal é o
+      // do contrato — papel, slot e estado —, e o lado é o padrão da fábrica.
+      // Sem isto, a medição acima passaria por acidente se qualquer outro nó
+      // tivesse sido montado no `body` dentro da janela de tempo.
+      const balao = balaoDe(trigger)!;
+      await expect(balao).toHaveAttribute('role', 'tooltip');
+      await expect(balao).toHaveAttribute('data-state', 'open');
+      await expect(balao).toHaveAttribute('data-side', 'top');
+    });
+
+    await step('Cleanup antes do postVisit', async () => {
+      trigger.blur();
       clearPortal();
     });
   },

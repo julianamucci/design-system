@@ -21,3 +21,38 @@ export function balaoDe(trigger: HTMLElement): HTMLElement | null {
   const target = id ? document.getElementById(id) : null;
   return target?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
 }
+
+/**
+ * De que lado o balão nasceu — o gancho `data-side` que o CSS lê.
+ *
+ * Aqui pelo mesmo motivo do `balaoDe`: eram três cópias, uma por arquivo de
+ * story. O atributo pode estar no próprio balão ou no invólucro que o
+ * posicionador escreve, e `closest` cobre os dois — detalhe de lib, que muda
+ * num lugar só no dia em que a lib mudar.
+ */
+export function sideOf(balao: HTMLElement | null): string | null {
+  return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
+}
+
+/** O vão que `side-offset` e seta somam entre o gatilho e o balão. */
+export const ARROW_GAP = 9;
+
+/**
+ * Espaço livre entre o gatilho e a borda da JANELA, do lado pedido.
+ *
+ * Contra a janela, e não contra o contêiner da story: é a janela que o
+ * posicionador usa como limite para decidir se vira o balão.
+ */
+export function spaceOnSide(trigger: HTMLElement, side: string): number {
+  const r = trigger.getBoundingClientRect();
+  if (side === 'top') return r.top;
+  if (side === 'bottom') return window.innerHeight - r.bottom;
+  if (side === 'left') return r.left;
+  return window.innerWidth - r.right;
+}
+
+/** Quanto o balão ocupa no eixo do lado pedido — altura ou largura. */
+export function sizeOnAxis(balao: HTMLElement, side: string): number {
+  const r = balao.getBoundingClientRect();
+  return side === 'top' || side === 'bottom' ? r.height : r.width;
+}

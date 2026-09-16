@@ -69,6 +69,19 @@ function triggerIcon(options: { label: string; icone: string; variant?: string }
 </TooltipTrigger>`;
 }
 
+/**
+ * Gatilho de GLIFO: um botão pequeno com "?" ou "i" ao lado do que ele explica.
+ *
+ * O glifo não nomeia nada — é desenho feito de letra, e quem lê por áudio ouve
+ * "ponto de interrogação". O nome acessível vem do `aria-label`, e é por isso
+ * que ele é obrigatório aqui, não enfeite.
+ */
+function triggerGlyph(options: { glyph: string; ariaLabel: string }): string {
+  return `<TooltipTrigger as-child>
+  <Button variant="ghost" size="icon-sm" aria-label="${options.ariaLabel}">${options.glyph}</Button>
+</TooltipTrigger>`;
+}
+
 /** Gatilho com rótulo visível: o texto do botão já é o nome acessível. */
 function triggerText(label: string, extra = ''): string {
   return `<TooltipTrigger as-child>
@@ -146,7 +159,6 @@ export function tooltipTextCurtoSource(): string {
       balao({
         root: ['default-open'],
         trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
-        content: ['side="bottom"'],
         contentText: 'Salvar',
       }),
     ),
@@ -164,7 +176,6 @@ export function tooltipWithShortcutSource(): string {
       balao({
         root: ['default-open'],
         trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
-        content: ['side="bottom"'],
         contentText: `<span>Salvar</span>
 <Kbd>Ctrl</Kbd>
 <Kbd>S</Kbd>`,
@@ -212,7 +223,6 @@ export function tooltipOpenSource(): string {
       balao({
         root: ['default-open'],
         trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
-        content: ['side="bottom"'],
         contentText: 'Salvar (Ctrl+S)',
       }),
     ),
@@ -297,38 +307,62 @@ export function tooltipButtonIconSource(): string {
 }
 
 /**
- * Barra de ações: vários botões icon-only, cada um com nome próprio e balão de
- * reforço. Um Provider só serve a todos — a espera é compartilhada.
+ * Ajuda ao lado do rótulo de um campo.
+ *
+ * Quem nomeia o campo é o `label` ligado por `for`/`id` — o balão explica ONDE
+ * achar o valor, que é informação complementar: pode faltar sem quebrar o
+ * formulário. À direita, e não acima, porque acima ele cobriria o próprio
+ * rótulo que o campo usa para se nomear.
  */
-export function actionsTooltipBarSource(): string {
-  const actions: Array<{ label: string; icone: string }> = [
-    { label: 'Salvar', icone: 'Save' },
-    { label: 'Copiar', icone: 'Copy' },
-    { label: 'Editar', icone: 'Pencil' },
-    { label: 'Compartilhar', icone: 'Share2' },
-    { label: 'Excluir', icone: 'Trash2' },
-  ];
+export function tooltipHelpInFormFieldSource(): string {
   return vueSnippet(
-    script({ icons: actions.map((acao) => acao.icone) }),
+    script(),
     withProvider(
       blockWith(
         'div',
-        [
-          'role="toolbar"',
-          'aria-label="Ações do documento"',
-          'class="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-p-1"',
-          'data-align="center"',
-          'data-spacing="sm"',
-        ],
-        actions
-          .map((acao) =>
-            balao({
-              trigger: triggerIcon({ ...acao, variant: 'ghost' }),
-              content: ['side="bottom"'],
-              contentText: acao.label,
-            }),
-          )
-          .join('\n\n'),
+        ['class="nds-stack"', 'data-spacing="sm"'],
+        `<div class="nds-cluster" data-spacing="sm">
+  <label for="api-token-input" class="nds-text-body nds-font-medium">Token de API</label>
+${indentar(
+  balao({
+    trigger: triggerGlyph({ glyph: '?', ariaLabel: 'Onde encontrar o Token de API' }),
+    content: ['side="right"'],
+    contentText: 'Gere em Configurações › Acesso › Tokens.',
+  }),
+)}
+</div>
+
+<input id="api-token-input" type="text" class="nds-input" placeholder="ndsk_..." />`,
+      ),
+    ),
+  );
+}
+
+/**
+ * Sigla de métrica com a expansão no balão.
+ *
+ * A sigla fica VISÍVEL e o balão só a expande: quem não abre o tooltip ainda lê
+ * a métrica e o valor. Tooltip que carregasse a única cópia do significado
+ * esconderia o conteúdo de quem navega por toque.
+ */
+export function tooltipMetricDescriptionSource(): string {
+  return vueSnippet(
+    script(),
+    withProvider(
+      blockWith(
+        'div',
+        ['class="nds-stack"', 'data-spacing="xs"'],
+        `<div class="nds-cluster" data-spacing="sm">
+  <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
+${indentar(
+  balao({
+    trigger: triggerGlyph({ glyph: 'i', ariaLabel: 'O que é LCP' }),
+    contentText: 'LCP — Largest Contentful Paint',
+  }),
+)}
+</div>
+
+<p class="nds-text-h3 nds-font-semibold">1,8 s</p>`,
       ),
     ),
   );
@@ -346,6 +380,80 @@ export function actionsTooltipBarSource(): string {
  * quatro gatilhos se chamam pelo próprio lado, e o painel Code publica a
  * composição que está na tela, não uma variação dela.
  */
+/**
+ * Colisão: o gatilho encostado na borda, e o balão pedindo o lado sem espaço.
+ *
+ * O pedido continua sendo `top`; quem muda é o resultado. Sem espaço acima, o
+ * posicionador vira o balão para o lado oposto em vez de deixá-lo sair do campo
+ * de visão, e `data-side` passa a trazer o lado FINAL — é dele que a folha
+ * compartilhada desenha a seta e a origem da animação.
+ *
+ * A barra presa ao topo entra no snippet de propósito: ela não é andaime de
+ * canvas, é o que põe o gatilho contra a borda. Sem ela não há colisão nenhuma
+ * a demonstrar, e o exemplo ensinaria outra tela.
+ */
+export function tooltipCollisionSource(): string {
+  return vueSnippet(
+    script(),
+    withProvider(
+      blockWith(
+        'div',
+        [
+          'class="nds-cluster"',
+          'data-justify="center"',
+          'style="position: fixed; inset-block-start: 0; inset-inline: 0"',
+        ],
+        balao({
+          root: ['default-open'],
+          trigger: triggerText('Compartilhar'),
+          content: ['side="top"'],
+          contentText: 'Cria um link público de leitura',
+        }),
+      ),
+    ),
+  );
+}
+
+/**
+ * A janela do grupo: um Provider só servindo dois gatilhos.
+ *
+ * O primeiro balão cumpre a espera inteira. Enquanto a janela de cortesia não
+ * expira, o vizinho abre NA HORA — é ela que faz percorrer uma barra parecer um
+ * movimento só, em vez de uma espera a cada parada.
+ *
+ * Os dois valores vão largos porque é a diferença entre eles que o exemplo
+ * ensina: com a espera padrão, "abriu sem esperar" e "abriu depois de esperar"
+ * ficam a 300ms um do outro, e o leitor não vê o que a prop faz.
+ */
+export function tooltipGroupWaitSource(): string {
+  const actions: Array<{ label: string; key: string }> = [
+    { label: 'Copiar', key: 'C' },
+    { label: 'Colar', key: 'V' },
+  ];
+  return vueSnippet(
+    script({ kbd: true }),
+    withProvider(
+      blockWith(
+        'div',
+        ['class="nds-cluster"', 'data-spacing="md"'],
+        actions
+          .map((action) =>
+            balao({
+              trigger: triggerText(action.label),
+              content: ['side="bottom"'],
+              contentText: `<span>${action.label}</span>
+<Kbd>Ctrl</Kbd>
+<Kbd>${action.key}</Kbd>`,
+            }),
+          )
+          .join('\n\n'),
+      ),
+      ':delay-duration="3000"',
+      ':skip-delay-duration="5000"',
+    ),
+  );
+}
+
 export function tooltipQuatroLadosSource(): string {
   const lados = ['top', 'right', 'bottom', 'left'];
   return vueSnippet(
@@ -353,7 +461,7 @@ export function tooltipQuatroLadosSource(): string {
     withProvider(
       blockWith(
         'div',
-        ['class="nds-grid nds-p-8"', 'data-spacing="xl"', 'data-cols="2"'],
+        ['class="nds-grid nds-w-full nds-p-8"', 'data-spacing="xl"', 'data-cols="2"'],
         lados
           .map((side) =>
             balao({

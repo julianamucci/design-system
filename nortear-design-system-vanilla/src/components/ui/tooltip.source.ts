@@ -33,6 +33,14 @@ export type TooltipSnippetOptions = {
   contentComMarcacao?: boolean;
   /** Espera padrão do grupo; presença troca a fábrica pelo provedor. */
   provider?: { delayDuration?: number; skipDelayDuration?: number };
+  /**
+   * As teclas do atalho, quando `contentComMarcacao` está ligado.
+   *
+   * Existe para o snippet publicar as MESMAS teclas que a story monta: com um
+   * valor fixo aqui, a composição do grupo mostrava `Ctrl+S` embaixo de um balão
+   * que dizia `Ctrl+C`.
+   */
+  teclas?: string[];
   /** Expressão do callback de exibição, quando a story o exercita. */
   onShow?: string;
 };
@@ -79,9 +87,16 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
       ? `// Marcação entra como ELEMENTO já montado, nunca como HTML em string.
 const conteudo = document.createElement('span');
 conteudo.append(${text(content + ' ')});
-const tecla = document.createElement('kbd');
-tecla.textContent = 'Ctrl+S';
-conteudo.appendChild(tecla);`
+for (const nome of [${(o.teclas ?? ['Ctrl', 'S']).map((t) => text(t)).join(', ')}]) {
+  const tecla = document.createElement('kbd');
+  // O gancho que a folha casa: \`.nds-tooltip-content:has([data-slot="kbd"])\`
+  // encurta o respiro à direita do balão, que sem isso abre um vão ao lado da
+  // caixa da tecla e lê como erro de alinhamento.
+  tecla.dataset.slot = 'kbd';
+  tecla.className = 'nds-kbd';
+  tecla.textContent = nome;
+  conteudo.appendChild(tecla);
+}`
       : undefined,
     `const dica = ${callLine(fabrica, lines)};`,
     appendLine('dica'),

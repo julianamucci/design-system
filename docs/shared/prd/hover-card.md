@@ -544,14 +544,19 @@ alcança.
 > `movimento_sem_guarda_eficaz`, que reprova exatamente a guarda que perde. O que
 > sobra é enfeite: blocos que anunciam proteção sobre movimento que o token já
 > para, e que o portão não acusa porque ali não há duração literal.
-> **Remedida em 2026-09-15, folha a folha nas nove, sem ler esta lista: continuam
-> QUATRO, as mesmas.** A varredura de 2026-09-12 já tinha tirado o `popover.css`
-> (deixou de animar, e a guarda saiu junto) e somado `tooltip.css` e `sheet.css`,
-> que nunca tinham sido contados. Nenhuma duração literal nas nove.
+> **Remedida em 2026-09-15, folha a folha nas nove, sem ler esta lista: eram
+> QUATRO.** A varredura de 2026-09-12 já tinha tirado o `popover.css` (deixou de
+> animar, e a guarda saiu junto) e somado `tooltip.css` e `sheet.css`, que nunca
+> tinham sido contados. Nenhuma duração literal nas nove.
+>
+> **São TRÊS desde 2026-09-16**: o `tooltip.css` saiu pelo mesmo caminho do
+> `popover.css` — por decisão da dona a transição de saída foi removida (o
+> `[data-ending-style]` é atributo de lib e não chegava às cinco), e a guarda saiu
+> junto, com o motivo escrito na folha. Aquela folha não declara mais movimento
+> nenhum.
 >
 > | folha | a guarda mira | a declaração que ela deveria desligar | quem vence |
 > |---|---|---|---|
-> | `tooltip.css` | `.nds-tooltip-content` (`:176-180`) | `.nds-tooltip-content[data-ending-style]` — a transição de saída (`:81-85`); a classe nua não declara transição | a declaração; a guarda é INERTE por inteiro |
 > | `dialog.css` | `.nds-dialog-overlay`, `.nds-dialog-content` (`:293-298`) | `…[data-open]`, `…[data-state="open"]`, `…[data-closed]` — as quatro animações (`:231-246`) | a declaração; a guarda é inerte por inteiro |
 > | `dropdown-menu.css` | `.nds-dropdown-menu-item`, `.nds-dropdown-menu-content` (`:414-420`) | `.nds-dropdown-menu-content[data-open]`, `…[data-state="open"]` — a animação de entrada (`:410-412`) | a declaração; **metade** da guarda serve, porque a transição do ITEM está na classe nua (`:89`) e a guarda vem depois |
 > | `sheet.css` | `.nds-sheet-overlay`, `.nds-sheet-content` (`:347-353`) | `.nds-sheet-content[data-side="…"]` — as quatro animações de entrada, uma por lado (`:129-163`) | a declaração; **metade** da guarda serve, porque a animação do VÉU (`:94`) e as duas transições (`:296`, `:305`) estão na classe nua |
@@ -562,7 +567,7 @@ alcança.
 > `command.css` (declaração e guarda na mesma classe nua, `:129` × `:298-302`).
 > `hover-card.css` e `popover.css` não têm guarda, de propósito. Quem fechar isto
 > varre as nove folhas de novo, e não relê esta lista.
-> **Fecha quando**: as quatro guardas (`tooltip.css`, `dialog.css`,
+> **Fecha quando**: as guardas que sobram (`dialog.css`,
 > `dropdown-menu.css` e `sheet.css`) forem removidas com o motivo escrito na
 > folha, ou passarem a mirar seletor que vença a declaração — e quando a varredura
 > que decide isso for a das nove folhas da categoria, não a leitura desta lista.

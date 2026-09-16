@@ -274,7 +274,7 @@
         "angular": "<!-- TooltipProvider no root da app (uma vez) -->\n<div ndsTooltipProvider>\n  <app-root />\n</div>\n\n<!-- Tooltip com atalho de teclado em botão icon-only -->\n<div ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</div>",
         "vue": "<!-- TooltipProvider no root da app (uma vez) -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Tooltip com atalho de teclado em botão só de ícone -->\n<Tooltip>\n  <TooltipTrigger as-child>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Salvar <kbd data-slot=\"kbd\" class=\"nds-kbd\">Ctrl</kbd><kbd data-slot=\"kbd\" class=\"nds-kbd\">S</kbd>\n  </TooltipContent>\n</Tooltip>",
         "svelte": "<!-- TooltipProvider no root da app (uma vez) -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Tooltip com atalho de teclado em botão só de ícone -->\n<Tooltip>\n  <TooltipTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    {/snippet}\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Salvar <kbd data-slot=\"kbd\" class=\"nds-kbd\">Ctrl</kbd><kbd data-slot=\"kbd\" class=\"nds-kbd\">S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "vanilla": "// Um grupo de balões com espera compartilhada.\nconst { createTooltip } = createTooltipProvider({\n  delayDuration: 400,\n  skipDelayDuration: 250,   // dentro da janela, o próximo balão abre sem esperar\n});\n\n// Marcação entra como ELEMENTO já montado, nunca como HTML em string.\nconst text = document.createElement('span');\ntext.append('Salvar ');\nconst key = document.createElement('kbd');\nkey.textContent = 'Ctrl+S';\ntext.appendChild(key);\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: text,\n  side: 'bottom',\n  delayDuration: 200,   // sobrepõe a espera do grupo neste balão\n  // Disparado quando o balão aparece de fato, depois da espera.\n  onShow: () => track('tooltip_view', { component: 'tooltip' }),\n});"
+        "vanilla": "// Um grupo de balões com espera compartilhada.\nconst { createTooltip } = createTooltipProvider({\n  delayDuration: 400,\n  skipDelayDuration: 250,   // dentro da janela, o próximo balão abre sem esperar\n});\n\n// Marcação entra como ELEMENTO já montado, nunca como HTML em string.\nconst text = document.createElement('span');\ntext.append('Salvar ');\nconst key = document.createElement('kbd');\nkey.dataset.slot = 'kbd';   // a folha encurta o padding do balão por este gancho\nkey.textContent = 'Ctrl+S';\ntext.appendChild(key);\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: text,\n  side: 'bottom',\n  delayDuration: 200,   // sobrepõe a espera do grupo neste balão\n  // Disparado quando o balão aparece de fato, depois da espera.\n  onShow: () => track('tooltip_view', {\n    component: 'tooltip',\n    trigger_id: 'save',\n    location: 'toolbar',\n  }),\n});"
       }
     },
     "tokens": {
@@ -299,7 +299,7 @@
           "part": "Raio do balão"
         },
         "zIndex": {
-          "class": "nds-tooltip-positioner",
+          "class": "nds-tooltip-content",
           "part": "Camada do portal (acima de overlays)"
         }
       },
@@ -397,6 +397,16 @@
           "action": "Mover mouse para o tooltip",
           "result": "Tooltip permanece aberto (WCAG 1.4.13)",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Abrir o balão com o gatilho encostado na borda da janela",
+          "result": "O balão vira para o lado oposto ao pedido, e `data-side` traz o lado final",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Abrir um segundo balão do mesmo provedor logo depois de fechar o primeiro",
+          "result": "O segundo abre sem esperar, dentro da janela compartilhada do grupo",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -472,8 +482,8 @@
       "item4": "<strong>TooltipContent</strong> — portal popover with explanatory text; renders Arrow automatically.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "{/* At app root — once */}\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- Uma vez, no root da app -->\n<div ndsTooltipProvider>\n  <router-outlet />\n</div>\n\n<!-- Onde precisar -->\n<span ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"outline\" size=\"icon\" aria-label=\"Salvar\">\n    <svg class=\"nds-icon nds-shrink-0\" aria-hidden=\"true\">…</svg>\n  </button>\n\n  <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>\n</span>",
+        "react": "{/* At app root — once */}\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger\n    render={(props) => (\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    )}\n  />\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
+        "angular": "<!-- Once, at app root -->\n<div ndsTooltipProvider>\n  <router-outlet />\n</div>\n\n<!-- Where needed -->\n<span ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"outline\" size=\"icon\" aria-label=\"Save\">\n    <svg class=\"nds-icon nds-shrink-0\" aria-hidden=\"true\">…</svg>\n  </button>\n\n  <ng-template ndsTooltipContent>Save (Ctrl+S)</ng-template>\n</span>",
         "vue": "<!-- At app root — once -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Where needed -->\n<Tooltip>\n  <TooltipTrigger as-child>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
         "svelte": "<!-- At app root — once -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Where needed -->\n<Tooltip>\n  <TooltipTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    {/snippet}\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
         "vanilla": "// The trigger is an element that already exists; the bubble attaches to it.\nconst trigger = createButton({\n  variant: 'ghost',\n  size: 'icon',\n  ariaLabel: 'Save',\n  children: iconeSalvar,\n});\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: 'Save (Ctrl+S)',   // a string becomes text; for markup, pass an element\n  side: 'top',                    // top | bottom | left | right\n});\n\n// Releases the portal and the trigger listeners.\nbubble.destroy();"
@@ -702,11 +712,11 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// TooltipProvider at app root (once)\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n// Tooltip with keyboard shortcut on icon-only button\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- TooltipProvider at app root (once) -->\n<div ndsTooltipProvider>\n  <app-root />\n</div>\n\n<!-- Tooltip with keyboard shortcut on an icon-only button -->\n<div ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</div>",
+        "react": "// TooltipProvider at app root (once)\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n// Tooltip with keyboard shortcut on icon-only button\n<Tooltip>\n  <TooltipTrigger\n    render={(props) => (\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    )}\n  />\n  <TooltipContent side=\"bottom\">\n    Save <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
+        "angular": "<!-- TooltipProvider at app root (once) -->\n<div ndsTooltipProvider>\n  <app-root />\n</div>\n\n<!-- Tooltip with keyboard shortcut on an icon-only button -->\n<div ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Save <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</div>",
         "vue": "<!-- TooltipProvider at app root (once) -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Tooltip with keyboard shortcut on icon-only button -->\n<Tooltip>\n  <TooltipTrigger as-child>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd data-slot=\"kbd\" class=\"nds-kbd\">Ctrl</kbd><kbd data-slot=\"kbd\" class=\"nds-kbd\">S</kbd>\n  </TooltipContent>\n</Tooltip>",
         "svelte": "<!-- TooltipProvider at app root (once) -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Tooltip with keyboard shortcut on icon-only button -->\n<Tooltip>\n  <TooltipTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    {/snippet}\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd data-slot=\"kbd\" class=\"nds-kbd\">Ctrl</kbd><kbd data-slot=\"kbd\" class=\"nds-kbd\">S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "vanilla": "// A group of bubbles that share one wait.\nconst { createTooltip } = createTooltipProvider({\n  delayDuration: 400,\n  skipDelayDuration: 250,   // inside the window, the next bubble opens with no wait\n});\n\n// Markup goes in as a READY-MADE element, never as an HTML string.\nconst text = document.createElement('span');\ntext.append('Save ');\nconst key = document.createElement('kbd');\nkey.textContent = 'Ctrl+S';\ntext.appendChild(key);\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: text,\n  side: 'bottom',\n  delayDuration: 200,   // overrides the group wait for this bubble\n  // Fires when the bubble is actually shown, after the wait.\n  onShow: () => track('tooltip_view', { component: 'tooltip' }),\n});"
+        "vanilla": "// A group of bubbles that share one wait.\nconst { createTooltip } = createTooltipProvider({\n  delayDuration: 400,\n  skipDelayDuration: 250,   // inside the window, the next bubble opens with no wait\n});\n\n// Markup goes in as a READY-MADE element, never as an HTML string.\nconst text = document.createElement('span');\ntext.append('Save ');\nconst key = document.createElement('kbd');\nkey.dataset.slot = 'kbd';   // a folha encurta o padding do balão por este gancho\nkey.textContent = 'Ctrl+S';\ntext.appendChild(key);\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: text,\n  side: 'bottom',\n  delayDuration: 200,   // overrides the group wait for this bubble\n  // Fires when the bubble is actually shown, after the wait.\n  onShow: () => track('tooltip_view', {\n    component: 'tooltip',\n    trigger_id: 'save',\n    location: 'toolbar',\n  }),\n});"
       }
     },
     "tokens": {
@@ -731,7 +741,7 @@
           "part": "Bubble radius"
         },
         "zIndex": {
-          "class": "nds-tooltip-positioner",
+          "class": "nds-tooltip-content",
           "part": "Portal layer (above overlays)"
         }
       },
@@ -829,6 +839,16 @@
           "action": "Move mouse into tooltip",
           "result": "Tooltip stays open (WCAG 1.4.13)",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Open the tooltip with the trigger against the viewport edge",
+          "result": "The bubble flips to the opposite side, and `data-side` carries the final side",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Open a second tooltip from the same provider right after closing the first",
+          "result": "The second one opens with no delay, inside the group’s shared window",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -904,8 +924,8 @@
       "item4": "<strong>TooltipContent</strong> — popover en portal con el texto explicativo; renderiza Arrow automáticamente.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "{/* En el root de la app — una vez */}\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- Uma vez, no root da app -->\n<div ndsTooltipProvider>\n  <router-outlet />\n</div>\n\n<!-- Onde precisar -->\n<span ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"outline\" size=\"icon\" aria-label=\"Salvar\">\n    <svg class=\"nds-icon nds-shrink-0\" aria-hidden=\"true\">…</svg>\n  </button>\n\n  <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>\n</span>",
+        "react": "{/* En el root de la app — una vez */}\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger\n    render={(props) => (\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    )}\n  />\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
+        "angular": "<!-- Una vez, en el root de la app -->\n<div ndsTooltipProvider>\n  <router-outlet />\n</div>\n\n<!-- Donde necesario -->\n<span ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"outline\" size=\"icon\" aria-label=\"Guardar\">\n    <svg class=\"nds-icon nds-shrink-0\" aria-hidden=\"true\">…</svg>\n  </button>\n\n  <ng-template ndsTooltipContent>Guardar (Ctrl+S)</ng-template>\n</span>",
         "vue": "<!-- En el root de la app — una vez -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Donde necesario -->\n<Tooltip>\n  <TooltipTrigger as-child>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
         "svelte": "<!-- En el root de la app — una vez -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Donde necesario -->\n<Tooltip>\n  <TooltipTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    {/snippet}\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
         "vanilla": "// El gatillo es un elemento que ya existe; el globo se ancla a él.\nconst trigger = createButton({\n  variant: 'ghost',\n  size: 'icon',\n  ariaLabel: 'Guardar',\n  children: iconeSalvar,\n});\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: 'Guardar (Ctrl+S)',   // una string se vuelve texto; para markup, pasa un elemento\n  side: 'top',                    // top | bottom | left | right\n});\n\n// Suelta el portal y los listeners del gatillo.\nbubble.destroy();"
@@ -1134,11 +1154,11 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// TooltipProvider en el root de la app (una vez)\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n// Tooltip con atajo de teclado en botón icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- TooltipProvider en el root de la app (una vez) -->\n<div ndsTooltipProvider>\n  <app-root />\n</div>\n\n<!-- Tooltip con atajo de teclado en botón icon-only -->\n<div ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</div>",
+        "react": "// TooltipProvider en el root de la app (una vez)\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n// Tooltip con atajo de teclado en botón icon-only\n<Tooltip>\n  <TooltipTrigger\n    render={(props) => (\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    )}\n  />\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
+        "angular": "<!-- TooltipProvider en el root de la app (una vez) -->\n<div ndsTooltipProvider>\n  <app-root />\n</div>\n\n<!-- Tooltip con atajo de teclado en botón icon-only -->\n<div ndsTooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Guardar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</div>",
         "vue": "<!-- TooltipProvider en el root de la app (una vez) -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Tooltip con atajo de teclado en botón solo de ícono -->\n<Tooltip>\n  <TooltipTrigger as-child>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd data-slot=\"kbd\" class=\"nds-kbd\">Ctrl</kbd><kbd data-slot=\"kbd\" class=\"nds-kbd\">S</kbd>\n  </TooltipContent>\n</Tooltip>",
         "svelte": "<!-- TooltipProvider en el root de la app (una vez) -->\n<TooltipProvider>\n  <App />\n</TooltipProvider>\n\n<!-- Tooltip con atajo de teclado en botón solo de ícono -->\n<Tooltip>\n  <TooltipTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n        <Save aria-hidden=\"true\" />\n      </Button>\n    {/snippet}\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd data-slot=\"kbd\" class=\"nds-kbd\">Ctrl</kbd><kbd data-slot=\"kbd\" class=\"nds-kbd\">S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "vanilla": "// Un grupo de globos con espera compartida.\nconst { createTooltip } = createTooltipProvider({\n  delayDuration: 400,\n  skipDelayDuration: 250,   // dentro de la ventana, el siguiente globo abre sin esperar\n});\n\n// El markup entra como ELEMENTO ya armado, nunca como HTML en string.\nconst text = document.createElement('span');\ntext.append('Guardar ');\nconst key = document.createElement('kbd');\nkey.textContent = 'Ctrl+S';\ntext.appendChild(key);\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: text,\n  side: 'bottom',\n  delayDuration: 200,   // sobrescribe la espera del grupo en este globo\n  // Se dispara cuando el globo aparece de verdad, tras la espera.\n  onShow: () => track('tooltip_view', { component: 'tooltip' }),\n});"
+        "vanilla": "// Un grupo de globos con espera compartida.\nconst { createTooltip } = createTooltipProvider({\n  delayDuration: 400,\n  skipDelayDuration: 250,   // dentro de la ventana, el siguiente globo abre sin esperar\n});\n\n// El markup entra como ELEMENTO ya armado, nunca como HTML en string.\nconst text = document.createElement('span');\ntext.append('Guardar ');\nconst key = document.createElement('kbd');\nkey.dataset.slot = 'kbd';   // a folha encurta o padding do balão por este gancho\nkey.textContent = 'Ctrl+S';\ntext.appendChild(key);\n\nconst bubble = createTooltip({\n  trigger: trigger,\n  content: text,\n  side: 'bottom',\n  delayDuration: 200,   // sobrescribe la espera del grupo en este globo\n  // Se dispara cuando el globo aparece de verdad, tras la espera.\n  onShow: () => track('tooltip_view', {\n    component: 'tooltip',\n    trigger_id: 'save',\n    location: 'toolbar',\n  }),\n});"
       }
     },
     "tokens": {
@@ -1163,7 +1183,7 @@
           "part": "Radio del globo"
         },
         "zIndex": {
-          "class": "nds-tooltip-positioner",
+          "class": "nds-tooltip-content",
           "part": "Capa del portal (por encima de overlays)"
         }
       },
@@ -1260,6 +1280,16 @@
         "item4": {
           "action": "Mover mouse al tooltip",
           "result": "El tooltip permanece abierto (WCAG 1.4.13)",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Abrir el globo con el disparador pegado al borde de la ventana",
+          "result": "El globo gira al lado opuesto al pedido, y `data-side` trae el lado final",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Abrir un segundo globo del mismo proveedor justo después de cerrar el primero",
+          "result": "El segundo abre sin esperar, dentro de la ventana compartida del grupo",
           "priority": "medium"
         }
       },

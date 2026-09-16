@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
-import { balaoDe, SAVE_ICON } from './tooltip.fixtures';
+import { balaoDe, fitsOnSide, SAVE_ICON, sideSettledAs } from './tooltip.fixtures';
 import { NdsButton } from './button';
 import {
   tooltipDefaultSource,
@@ -61,7 +61,16 @@ export const Default: Story = {
   parameters: { covers: ['visual.item1', 'accessibility.item2'], docs: { source: { transform: tooltipDefaultSource } } },
   render: () => ({
     template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-p-8">
+      <!-- Moldura alta com o gatilho no meio: ANDAIME, e com motivo. O balão
+           nasce no lado padrão, que é o topo; sem folga acima a lib vira para
+           baixo — corretamente —, e a foto do Chromatic passa a registrar um
+           lado que a documentação não afirma. -->
+      <div
+        ndsTooltipProvider
+        class="nds-cluster nds-w-full nds-min-h-100 nds-p-8"
+        data-justify="center"
+        data-align="center"
+      >
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${SAVE_ICON}
@@ -83,6 +92,19 @@ export const Default: Story = {
       await expect(balao.textContent?.trim()).toBe('Salvar');
     });
 
+    await step('E nasce EXATAMENTE do lado padrão, que é o topo', async () => {
+      const balao = balaoDe(trigger)!;
+      // A precondição é MEDIDA, e por EIXO: lado vertical precisa de espaço
+      // vertical, e é para isso que existe a moldura alta acima do gatilho.
+      await expect(fitsOnSide(trigger, balao, 'top')).toBe(true);
+      // Esperar o VALOR assentar, e não a existência do atributo: o `data-side`
+      // nasce com o lado pedido e só é reescrito quando o posicionador mede.
+      await sideSettledAs(trigger, 'top');
+      // Sem esta asserção a story fotografava o que desse: `visual.item1`
+      // afirma "side top", e nada reprovava uma baseline com o balão abaixo.
+      await expect(balao).toHaveAttribute('data-side', 'top');
+    });
+
     await step('O texto do balão passa dos 4.5:1 exigidos', async () => {
       const balao = balaoDe(trigger)!;
       // Medido no elemento real, não na tabela de tokens: é a combinação
@@ -98,7 +120,15 @@ export const WithShortcut: Story = {
   parameters: { covers: ['visual.item2'], docs: { source: { transform: tooltipWithShortcutSource } } },
   render: () => ({
     template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-p-8">
+      <!-- Mesma moldura alta da Default, e pelo mesmo motivo: o balão nasce no
+           topo, e sem folga acima a virada por colisão trocaria o lado que a
+           foto registra. -->
+      <div
+        ndsTooltipProvider
+        class="nds-cluster nds-w-full nds-min-h-100 nds-p-8"
+        data-justify="center"
+        data-align="center"
+      >
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${SAVE_ICON}
@@ -133,6 +163,16 @@ export const WithShortcut: Story = {
         getComputedStyle(balao).paddingInlineStart,
       );
     });
+
+    await step('E o balão nasce EXATAMENTE do lado padrão, que é o topo', async () => {
+      const balao = balaoDe(trigger)!;
+      // Precondição por EIXO, espera pelo VALOR e então o lado exato — a mesma
+      // sequência da Default, e pelo mesmo motivo: sem folga garantida acima, a
+      // virada por colisão troca o lado que a regressão visual fotografa.
+      await expect(fitsOnSide(trigger, balao, 'top')).toBe(true);
+      await sideSettledAs(trigger, 'top');
+      await expect(balao).toHaveAttribute('data-side', 'top');
+    });
   },
 };
 
@@ -140,7 +180,7 @@ export const LongText: Story = {
   parameters: { covers: ['visual.item4'], docs: { source: { transform: tooltipLongTextSource } } },
   render: () => ({
     template: `
-      <div ndsTooltipProvider [delay]="0" class="nds-p-8">
+      <div ndsTooltipProvider class="nds-p-8">
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="outline">Compartilhar</button>
           <ng-template ndsTooltipContent side="bottom"

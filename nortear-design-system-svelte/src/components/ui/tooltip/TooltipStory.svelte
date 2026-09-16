@@ -50,7 +50,25 @@
   }: Props = $props();
 </script>
 
-<div class="nds-p-8" style="contain: layout;">
+<!--
+  A FOLGA faz parte do andaime, e o número é medido, não estimado.
+
+  Medido em 2026-09-16 nas stacks irmãs: com ~280 px de quadro sobram ~36 px
+  acima do gatilho, menos do que balão, seta e afastamento somam (~38 px), e a
+  lib vira o balão para baixo — corretamente. Quem afirma o lado PEDIDO (o
+  `Playground`) reprovava então por falta de sala, e não por defeito de
+  posicionamento. Com 400 px e o gatilho centrado na altura, o lado pedido cabe.
+
+  Quem EXIGE o aperto é a story `Collision`, que tem cena própria encostada na
+  borda e mede a premissa antes de afirmar a virada.
+-->
+<div
+  class="nds-cluster nds-w-full nds-min-h-100 nds-p-8"
+  data-justify="center"
+  data-align="center"
+  data-spacing="md"
+  style="contain: layout;"
+>
   <TooltipProvider {delayDuration}>
     {#key `${side}-${align}-${sideOffset}-${defaultOpen}-${variant}-${delayDuration}`}
         <Tooltip bind:open>

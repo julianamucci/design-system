@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
-import { balaoDe } from "./tooltip.fixtures";
+import { balaoDe, cabeNoLado, esperarLado, type Side } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 import { TooltipDocs } from "@/components/docs/TooltipDocs";
@@ -14,25 +14,17 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { tooltipSource } from "./tooltip.source";
 
 import { figmaDesign } from "@shared/figma/design-links";
-/**
- * De que lado o balão nasceu.
- *
- * Divergência de lib, registrada e não "alinhada": o `@base-ui/react` publica
- * `data-side` no POSICIONADOR (`.nds-tooltip-positioner`), enquanto reka-ui,
- * bits-ui, radix-ng e a factory do Vanilla publicam no próprio balão. Subir
- * até o `[data-side]` mais próximo lê o gancho onde quer que ele esteja.
- */
-function sideOf(balao: HTMLElement | null): string | null {
-  return balao?.closest("[data-side]")?.getAttribute("data-side") ?? null;
-}
-
 const meta = {
   title: "Components/Overlay/Tooltip",
   component: Tooltip,
   tags: ["autodocs", "overlay"],
   decorators: [
+    // Sem `delay={0}`: zero não é atraso, é a AUSÊNCIA dele, e um decorator que
+    // o crava faz toda story do arquivo medir um componente que o design system
+    // não entrega (D5 do PRD). Story que precisa do balão aberto na hora abre
+    // por FOCO ou por `defaultOpen`, que não passam pela espera do ponteiro.
     (Story) => (
-      <TooltipProvider delay={0}>
+      <TooltipProvider>
         <Story />
       </TooltipProvider>
     ),
@@ -102,7 +94,17 @@ export const Playground: Story = {
         sideOffset?: number;
       };
     return (
-      <div className="nds-min-h-50" style={{ contain: "layout", position: "relative" }}>
+      // Gatilho CENTRADO no palco, e não encostado no topo dele: a folga acima
+      // passa a ser metade da janela em vez do resto de um palco de 200px, e é
+      // o que permite afirmar o lado exato sem depender do tamanho da janela de
+      // quem roda a suíte. Antes, o balão virava para `bottom` — corretamente —
+      // porque sobravam ~38px para um balão de ~29px mais o vão.
+      <div
+        className="nds-cluster nds-min-h-50"
+        data-align="center"
+        data-justify="center"
+        style={{ contain: "layout", position: "relative" }}
+      >
         <Tooltip
           key={String(defaultOpen)}
           defaultOpen={defaultOpen}
@@ -181,14 +183,26 @@ export const Playground: Story = {
     });
 
     await step("O lado pedido chega ao balão como data-side", async () => {
-      // É o gancho que o CSS compartilhado lê. Auto-flip por colisão pode
-      // devolver o lado oposto quando falta espaço — comportamento, não defeito.
-      const oposto = { top: "bottom", bottom: "top", left: "right", right: "left" } as const;
-      const side = (args as { side?: keyof typeof oposto }).side ?? "top";
-      await waitFor(async () => {
-        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
-      });
-      await expect([side, oposto[side]]).toContain(sideOf(balaoDe(trigger)));
+      // É o gancho que o CSS compartilhado lê, e a asserção afirma o lado
+      // EXATO. Aceitar `[side, oposto]` passava com ou sem reposicionamento —
+      // asserção que não pode reprovar. Aqui não há colisão a provocar virada:
+      // o palco tem folga nos quatro lados, então o lado pedido é o lado final.
+      // Quem prova a virada é a story `Collision`, no arquivo de composições.
+      const side = ((args as { side?: Side }).side ?? "top") as Side;
+      const balao = balaoDe(trigger)!;
+      // Esperar o VALOR, e não a existência do atributo: ele nasce com o lado
+      // pedido e só assenta quando o posicionador mede, no quadro seguinte.
+      const lado = await esperarLado(balao, side);
+      // A PREMISSA antes do resultado: sem folga, o base-ui vira o balão e está
+      // certo, e a story estaria medindo a janela do runner. Com os números na
+      // mensagem — palco apertado reprova dizendo o que faltou, em vez de
+      // voltar para `[lado, oposto]`, que passa de qualquer jeito.
+      const { folga, preciso, viewport } = cabeNoLado(trigger, balao, side);
+      await expect(
+        folga,
+        `sem folga em "${side}": ${Math.round(folga)}px livres para um balão que precisa de ${Math.round(preciso)}px (janela ${viewport}) — abra espaço em volta do gatilho`,
+      ).toBeGreaterThanOrEqual(preciso);
+      await expect(lado).toBe(side);
     });
 
     await step("Escape fecha e o foco fica onde estava", async () => {

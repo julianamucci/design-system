@@ -29,9 +29,16 @@ const forwarded = useForwardPropsEmits(props, emits)
 </script>
 
 <template>
+  <!-- SEM `data-slot="tooltip"`, e não por esquecimento: o `TooltipRoot` do
+       reka-ui não renderiza elemento nenhum — é contexto mais o `PopperRoot`,
+       que só devolve o slot. O atributo não tinha onde pousar: com dois filhos
+       (gatilho e balão) o fragmento descarta os atributos, então a escrita era
+       MORTA — nada na página a carregava, e uma consulta por ela nunca casava.
+       O que o contrato cobra nas cinco é o `data-slot="tooltip-content"` do
+       balão, que o `TooltipContent.vue` escreve num elemento de verdade.
+       Divergência de API de framework: registrada, não "alinhada". -->
   <TooltipRoot
     v-slot="slotProps"
-    data-slot="tooltip"
     v-bind="forwarded"
   >
     <slot v-bind="slotProps" />

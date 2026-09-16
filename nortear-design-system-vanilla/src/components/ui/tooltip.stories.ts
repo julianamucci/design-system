@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
-import { balaoDe, clearPortal } from './tooltip.fixtures';
+import { aguardarLado, balaoDe, cabeNoLado, clearPortal } from './tooltip.fixtures';
 import { createButton, createButtonIcon } from './button';
 import { tooltipSourceWith } from './tooltip.source';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
@@ -152,8 +152,27 @@ export const Playground: Story = {
 
     await step('O lado pedido chega ao balão como data-side', async () => {
       // É o gancho que o CSS compartilhado lê, e o mesmo atributo que as outras
-      // stacks publicam.
-      await expect(balaoDe(trigger)).toHaveAttribute('data-side', args.side);
+      // stacks publicam. O lado afirmado é o EXATO: aceitar `[lado, oposto]`
+      // passa com ou sem reposicionamento, que é a asserção sem dentes.
+      //
+      // A PREMISSA vem antes do resultado, e MEDIDA. Com o flip ligado, palco
+      // sem folga faz o balão virar — e estar CERTO —, e a story passaria a
+      // medir a janela do runner em vez do componente. Aqui isto era só um
+      // comentário confiando no andaime; agora, se o palco encolher, reprova
+      // dizendo quanto faltou. A folga é por EIXO, e quem prova a virada é a
+      // `Collision`, nas composições, que declara a premissa oposta.
+      const { folga, preciso, viewport } = cabeNoLado(trigger, balaoDe(trigger)!, args.side);
+      await expect(
+        folga,
+        `sem folga em "${args.side}": ${Math.round(folga)}px livres para um balão que precisa de ${Math.round(preciso)}px (quadro ${viewport}) — abra espaço em volta do gatilho`,
+      ).toBeGreaterThanOrEqual(preciso);
+
+      // Esperar o VALOR, e não a existência do atributo: ele nasce com o lado
+      // PEDIDO (`tooltip.ts` o escreve ao montar) e só assenta quando
+      // `positionFloating` mede, no quadro seguinte. Ler na hora fotografa o
+      // primeiro paint — e foi esse o defeito que reprovou nas outras quatro.
+      const balao = await aguardarLado(trigger, args.side);
+      await expect(balao).toHaveAttribute('data-side', args.side);
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {

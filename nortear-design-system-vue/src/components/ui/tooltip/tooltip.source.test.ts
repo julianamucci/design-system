@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   tooltipOpenSource,
-  actionsTooltipBarSource,
   tooltipButtonIconSource,
+  tooltipHelpInFormFieldSource,
+  tooltipMetricDescriptionSource,
   tooltipWithShortcutSource,
   tooltipWithWaitSource,
   tooltipControlledSource,
@@ -12,6 +13,8 @@ import {
   tooltipSource,
   tooltipTextCurtoSource,
   tooltipTextLongSource,
+  tooltipCollisionSource,
+  tooltipGroupWaitSource,
 } from './tooltip.source';
 
 describe('tooltipSource', () => {
@@ -80,7 +83,11 @@ import { Save } from 'lucide-vue-next'
 
 describe('transforms das stories de variante', () => {
   it('o texto curto cabe em linha, dentro do próprio balão', () => {
-    expect(tooltipTextCurtoSource()).toContain('<TooltipContent side="bottom">Salvar</TooltipContent>');
+    const saida = tooltipTextCurtoSource();
+    expect(saida).toContain('<TooltipContent>Salvar</TooltipContent>');
+    // Sem `side`: o balão nasce no `top` padrão, como nas outras stacks. Cravar
+    // `bottom` aqui publicava um lado que a story não pede mais.
+    expect(saida).not.toContain('side=');
   });
 
   it('o atalho vai em Kbd, e o balão vira bloco para caber a estrutura', () => {
@@ -92,6 +99,7 @@ describe('transforms das stories de variante', () => {
     // Solto no texto o atalho perderia a tecla que a folha compartilhada
     // reconhece pelo componente.
     expect(saida).not.toContain('Salvar (Ctrl+S)');
+    expect(saida).not.toContain('side=');
   });
 
   it('o texto longo troca o gatilho por um botão com rótulo visível', () => {
@@ -113,7 +121,9 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a abertura de saída é uma prop da raiz', () => {
-    expect(tooltipOpenSource()).toContain('<Tooltip default-open>');
+    const saida = tooltipOpenSource();
+    expect(saida).toContain('<Tooltip default-open>');
+    expect(saida).not.toContain('side=');
   });
 
   it('a espera mora no Provider, não na raiz do balão', () => {
@@ -149,20 +159,31 @@ describe('transforms das stories de composição', () => {
     expect(tooltipButtonIconSource()).toBe(tooltipTextCurtoSource());
   });
 
-  it('a barra de ações serve cinco gatilhos com um Provider só', () => {
-    const saida = actionsTooltipBarSource();
-    expect(saida.match(/<Tooltip>/g)).toHaveLength(5);
-    expect(saida.match(/<TooltipProvider>/g)).toHaveLength(1);
-    expect(saida).toContain('role="toolbar"');
-    expect(saida).toContain('aria-label="Ações do documento"');
-    // O respiro é o da story: publicar `xs` desenhava uma barra mais apertada
-    // do que a que está na tela logo acima do painel.
-    expect(saida).toContain('data-spacing="sm"');
-    // Dentro de uma barra o botão perde o contorno próprio.
-    expect(saida).toContain('<Button variant="ghost" size="icon" aria-label="Excluir">');
+  it('a ajuda do campo mantém o rótulo ligado ao input, e o balão à direita', () => {
+    const saida = tooltipHelpInFormFieldSource();
+    // O `for`/`id` é o que nomeia o campo; o balão é complementar.
     expect(saida).toContain(
-      `import { Save, Copy, Pencil, Share2, Trash2 } from 'lucide-vue-next'`,
+      '<label for="api-token-input" class="nds-text-body nds-font-medium">Token de API</label>',
     );
+    expect(saida).toContain(
+      '<input id="api-token-input" type="text" class="nds-input" placeholder="ndsk_..." />',
+    );
+    // O glifo "?" é desenho feito de letra: quem nomeia o botão é o aria-label.
+    expect(saida).toContain(
+      '<Button variant="ghost" size="icon-sm" aria-label="Onde encontrar o Token de API">?</Button>',
+    );
+    expect(saida).toContain(
+      '<TooltipContent side="right">Gere em Configurações › Acesso › Tokens.</TooltipContent>',
+    );
+  });
+
+  it('a métrica publica a sigla visível e a expansão no balão', () => {
+    const saida = tooltipMetricDescriptionSource();
+    expect(saida).toContain('>LCP</p>');
+    expect(saida).toContain('<Button variant="ghost" size="icon-sm" aria-label="O que é LCP">i</Button>');
+    expect(saida).toContain('<TooltipContent>LCP — Largest Contentful Paint</TooltipContent>');
+    // `top` é o padrão: declarar o lado ensinaria a escrever o que já vem.
+    expect(saida).not.toContain('side=');
   });
 
   it('os quatro lados aparecem juntos, cada um declarando o seu', () => {
@@ -177,6 +198,44 @@ describe('transforms das stories de composição', () => {
         `<Button variant="outline" size="sm" aria-label="${side}">${side}</Button>`,
       );
     }
-    expect(saida).toContain('<div class="nds-grid nds-p-8" data-spacing="xl" data-cols="2">');
+    // `nds-w-full` entra: sem largura declarada a grade encolhe para o
+    // conteúdo, as colunas colapsam e o exemplo deixa de mostrar os quatro
+    // lados lado a lado.
+    //
+    // Por expressão, e não por texto literal: com o `nds-w-full` a fila de
+    // atributos passou dos 60 caracteres e o construtor quebra a tag em uma
+    // linha por atributo. O `\s+` aceita as duas formas sem afrouxar o que se
+    // cobra — a tag INTEIRA, com os três atributos na ordem e o `>` que fecha.
+    // Asserção por pedaço já aprovou markup errado nesta casa.
+    expect(saida).toMatch(
+      /<div\s+class="nds-grid nds-w-full nds-p-8"\s+data-spacing="xl"\s+data-cols="2"\s*>/,
+    );
+  });
+
+  it('a colisão publica a barra presa ao topo — é ela que encosta o gatilho na borda', () => {
+    const saida = tooltipCollisionSource();
+    // O andaime de canvas fica de fora dos snippets desta casa; este NÃO é
+    // andaime: sem a barra na borda não há colisão, e o exemplo viraria um
+    // tooltip comum que nunca vira.
+    expect(saida).toContain('position: fixed; inset-block-start: 0; inset-inline: 0');
+    // O PEDIDO continua sendo `top`. O snippet ensina o que se escreve, e a
+    // virada é o que o posicionador faz com isso — publicar `bottom` ensinaria
+    // a pedir o resultado, que não é o que ninguém escreve.
+    expect(saida).toContain(
+      '<TooltipContent side="top">Cria um link público de leitura</TooltipContent>',
+    );
+    expect(saida).toContain('<Button variant="outline">Compartilhar</Button>');
+  });
+
+  it('a janela do grupo publica os dois valores no mesmo Provider', () => {
+    const saida = tooltipGroupWaitSource();
+    expect(saida).toContain('<TooltipProvider :delay-duration="3000" :skip-delay-duration="5000">');
+    // Dois gatilhos e um Provider só: a janela é do GRUPO, e um gatilho sozinho
+    // não teria vizinho para abrir sem esperar.
+    expect(saida.match(/<Tooltip>/g)).toHaveLength(2);
+    expect(saida.match(/<TooltipProvider/g)).toHaveLength(1);
+    expect(saida).toContain(`import { Kbd } from '@/components/ui/kbd'`);
+    expect(saida).toContain('<Kbd>C</Kbd>');
+    expect(saida).toContain('<Kbd>V</Kbd>');
   });
 });

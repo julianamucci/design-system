@@ -2,11 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   tooltipOpenSource,
   barTooltipShortcutSource,
-  iconsTooltipBarSource,
+  tooltipHelpInFormFieldSource,
+  tooltipMetricDescriptionSource,
   tooltipWithShortcutSource,
   tooltipWithDelaySource,
   tooltipControlledSource,
+  tooltipCollisionSource,
   tooltipCurtoSource,
+  tooltipGroupWaitSource,
   tooltipLadosSource,
   tooltipPersistenteSource,
   tooltipSource,
@@ -22,9 +25,12 @@ const ALL = [
   tooltipWithDelaySource,
   tooltipPersistenteSource,
   tooltipControlledSource,
-  iconsTooltipBarSource,
   barTooltipShortcutSource,
   tooltipLadosSource,
+  tooltipCollisionSource,
+  tooltipGroupWaitSource,
+  tooltipHelpInFormFieldSource,
+  tooltipMetricDescriptionSource,
 ];
 
 describe('tooltipSource', () => {
@@ -92,17 +98,6 @@ describe('o gatilho é o botão de verdade', () => {
       '<Button {...props} variant="outline" size="icon" aria-label="Salvar">',
     );
     expect(tooltipSource()).not.toContain('variant="ghost"');
-  });
-
-  it('a barra de ações segue em ghost, porque é o que a story dela renderiza', () => {
-    // O par do caso acima: dentro de uma barra o botão perde o contorno
-    // próprio. É este caso que prova que a correção foi cirúrgica no Playground
-    // e não uma troca global de variante nos oito usos do construtor.
-    const saida = iconsTooltipBarSource();
-    for (const label of ['Salvar', 'Compartilhar', 'Excluir']) {
-      expect(saida).toContain(`<Button {...props} variant="ghost" size="icon" aria-label="${label}">`);
-    }
-    expect(saida).not.toContain('variant="outline"');
   });
 
   it('o botão só-ícone carrega o próprio nome — o balão não é o único portador', () => {
@@ -175,19 +170,44 @@ describe('estados', () => {
 });
 
 describe('composições', () => {
-  it('a barra repete o par rótulo do botão + texto do balão em cada ação', () => {
-    const saida = iconsTooltipBarSource();
-    for (const label of ['Salvar', 'Compartilhar', 'Excluir']) {
-      expect(saida).toContain(`aria-label="${label}"`);
-      expect(saida).toContain(`<TooltipContent>${label}</TooltipContent>`);
-    }
-    expect(saida).toContain('import { Save, Share2, Trash2 } from "lucide-react";');
+  it('a ajuda do campo não rouba o nome de ninguém', () => {
+    const saida = tooltipHelpInFormFieldSource();
+    // O ícone tem nome PRÓPRIO, e o campo continua rotulado pelo <label>: o
+    // balão acrescenta contexto, nunca sustenta o nome acessível.
+    expect(saida).toContain('aria-label="Ajuda sobre Token de API"');
+    expect(saida).toContain('<label htmlFor="api-token"');
+    expect(saida).toContain('<input id="api-token"');
+  });
+
+  it('a métrica explica a sigla e não promete lado', () => {
+    const saida = tooltipMetricDescriptionSource();
+    expect(saida).toContain('aria-label="O que é LCP"');
+    expect(saida).toContain('Largest Contentful Paint');
+    // `side` fica no padrão: escrever o lado prometeria o que a borda desmente.
+    expect(saida).not.toContain('side=');
   });
 
   it('os quatro lados aparecem juntos, porque side é preferência e não garantia', () => {
     const saida = tooltipLadosSource();
     expect(saida).toContain('const lados = ["top", "right", "bottom", "left"] as const;');
     expect(saida).toContain('<TooltipContent side={lado}>');
+  });
+
+  it('a colisão ensina o lado PEDIDO, porque o final é a lib que decide', () => {
+    const saida = tooltipCollisionSource();
+    expect(saida).toContain('side="top"');
+    // O andaime que encosta o gatilho na borda é da story, não do componente:
+    // quem copia escolhe onde o gatilho vive.
+    expect(saida).not.toContain('position');
+  });
+
+  it('a espera do grupo publica as DUAS medidas do provedor', () => {
+    const saida = tooltipGroupWaitSource();
+    // `delay` é quanto o primeiro espera; `timeout` é a janela em que o
+    // vizinho abre na hora. Ensinar só a primeira esconde metade do provedor.
+    expect(saida).toContain('<TooltipProvider delay={800} timeout={5000}>');
+    expect(saida).toContain('Copiar');
+    expect(saida).toContain('Colar');
   });
 });
 

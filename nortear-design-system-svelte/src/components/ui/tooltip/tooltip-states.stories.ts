@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, wait, waitForBubble } from './tooltip.fixtures';
 import { tooltipOpenSource, tooltipControlledSource, tooltipSource } from './tooltip.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -24,28 +24,9 @@ const LONG_DELAY = 600;
  */
 const DEFAULT_DELAY = 300;
 
-/** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function wait(ms: number): Promise<void> {
-  return new Promise((resolver) => setTimeout(resolver, ms));
-}
-
-/**
- * Espera o balão aparecer por RELÓGIO, com prazo, e diz se apareceu.
- *
- * Não é `waitFor` de propósito, e o motivo é de mecanismo: o `waitFor` reagenda
- * por observador de mutação, então condição que toca o DOM provoca a própria
- * retentativa, o prazo nunca chega e o arquivo morre sem resultado nem falha.
- * Aqui a leitura é pura — `balaoDe` só consulta —, e o laço de relógio é o que
- * deixa o TEMPO ser medido em vez de apenas tolerado.
- */
-async function waitForBubble(trigger: HTMLElement, timeout: number): Promise<boolean> {
-  const deadline = performance.now() + timeout;
-  while (performance.now() < deadline) {
-    if (balaoDe(trigger) !== null) return true;
-    await wait(25);
-  }
-  return false;
-}
+// A pausa de relógio e a espera pelo balão moram em `tooltip.fixtures.ts`: a
+// cena de grupo, no arquivo de composições, faz a mesma pergunta, e duas cópias
+// de uma medida de tempo são duas versões de uma regra só.
 
 const meta: Meta = {
   title: 'Components/Overlay/Tooltip/States',
@@ -101,7 +82,11 @@ export const Closed: Story = {
 
 export const Open: Story = {
   name: 'Open (defaultOpen)',
-  args: { ...baseArgs, defaultOpen: true, delayDuration: 0 },
+  // Sem `delayDuration`: quem abre esta cena é o ESTADO INICIAL, que não passa
+  // pelo temporizador do ponteiro — nenhum passo da play faz hover, então o `0`
+  // que morava aqui era arg morto. Arg morto de espera é o resíduo que a D5 do
+  // PRD condena: ele não muda a cena e ensina espera desligada a quem lê.
+  args: { ...baseArgs, defaultOpen: true },
   parameters: { docs: { source: { transform: tooltipOpenSource } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -122,6 +107,16 @@ export const Open: Story = {
     await step('E o gatilho passa a apontar para ele', async () => {
       const target = document.getElementById(trigger.getAttribute('aria-describedby')!);
       await expect(balaoDe(trigger)!.contains(target)).toBe(true);
+    });
+
+    await step('A abertura foi IMEDIATA, e o primitivo diz isso em data-state', async () => {
+      // O primitivo publica dois valores de abertura — imediata e por espera —
+      // e esta story não afirmava nenhum: passava com qualquer um. Abrir pelo
+      // estado inicial não passa pelo temporizador, então aqui só pode ser a
+      // imediata; a outra metade do par é medida pela `Hover (provider
+      // default)`, que exige o valor de espera.
+      await expect(balaoDe(trigger)).toHaveAttribute('data-state', 'instant-open');
+      await expect(trigger).toHaveAttribute('data-state', 'instant-open');
     });
   },
 };
@@ -200,6 +195,10 @@ export const HoverDefaultDelay: Story = {
       // de alguns milissegundos. A folga de 20% absorve a granularidade do laço.
       await expect(elapsed).toBeGreaterThanOrEqual(DEFAULT_DELAY * 0.8);
       await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
+      // E o primitivo diz que a abertura veio do TEMPORIZADOR. É o par da
+      // `Open (defaultOpen)`, que exige o valor imediato: com só um dos dois,
+      // `data-state` seria atributo que ninguém confere.
+      await expect(balaoDe(trigger)).toHaveAttribute('data-state', 'delayed-open');
     });
   },
 };
@@ -241,6 +240,42 @@ export const KeyboardFocus: Story = {
   },
 };
 
+/** O centro de um elemento, em coordenada de viewport. */
+function centerOf(el: HTMLElement): { x: number; y: number } {
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}
+
+/**
+ * Um passo de ponteiro DITADO por coordenada.
+ *
+ * `userEvent.hover(balao)` não serve aqui, e o motivo é D2 do PRD: a folha
+ * compartilhada deixa o balão `pointer-events: none`, e o hover sintético sobre
+ * um nó assim chega com `clientX/clientY` em 0,0 — mediria o ponteiro no canto
+ * da tela, não sobre o balão. A área de tolerância entre gatilho e balão é
+ * calculada por COORDENADA, então é coordenada que o teste precisa fornecer.
+ */
+function pointerAt(
+  target: EventTarget,
+  type: 'pointermove' | 'pointerleave',
+  x: number,
+  y: number,
+): void {
+  target.dispatchEvent(
+    new PointerEvent(type, {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      clientX: x,
+      clientY: y,
+      // `pointerleave` não borbulha na vida real, e o ouvinte da lib está no
+      // próprio nó; `pointermove` é ouvido no documento.
+      bubbles: type === 'pointermove',
+      cancelable: true,
+    }),
+  );
+}
+
 export const PersistenceInBubble: Story = {
   args: {
     ...baseArgs,
@@ -257,6 +292,9 @@ export const PersistenceInBubble: Story = {
     const trigger = canvas.getByRole('button', { name: /compartilhar/i });
 
     await step('O hover abre o balão', async () => {
+      // Ponteiro, e não foco: o que se mede aqui é o TRAJETO do ponteiro do
+      // gatilho até o balão, e ele precisa começar sobre o gatilho.
+      trigger.blur();
       await userEvent.hover(trigger);
       await waitFor(async () => {
         await expect(balaoDe(trigger)).not.toBeNull();
@@ -265,19 +303,46 @@ export const PersistenceInBubble: Story = {
 
     await step('Levar o ponteiro até o balão não fecha nada', async () => {
       const balao = balaoDe(trigger)!;
-      // `pointerEventsCheck: 0` porque a folha compartilhada deixa o balão
-      // `pointer-events: none` — quem segura a abertura é a área de tolerância
-      // entre gatilho e balão, calculada por coordenada, não por hover no nó.
-      await userEvent.hover(balao, { pointerEventsCheck: 0 });
-      await wait(200);
+      const exitPoint = centerOf(trigger);
+      const bubbleCenter = centerOf(balao);
+
+      // Sair do gatilho sem dizer para onde é o que ARMA a tolerância: a lib
+      // guarda o ponto de saída e passa a decidir pelo próximo movimento.
+      pointerAt(trigger, 'pointerleave', exitPoint.x, exitPoint.y);
+      // E o ponteiro chega ao balão por coordenada, que é o que a tolerância lê.
+      pointerAt(document, 'pointermove', bubbleCenter.x, bubbleCenter.y);
+
+      // 400 ms cobre com folga as duas saídas automáticas da lib — o quadro
+      // seguinte e a janela de intenção de trânsito. Se a coordenada não fosse
+      // reconhecida como "cheguei ao balão", o balão teria fechado aqui.
+      await wait(400);
       await expect(balaoDe(trigger)).not.toBeNull();
+    });
+
+    await step('Levar o ponteiro para longe FECHA — a tolerância tem limite', async () => {
+      // O par com o passo anterior é o que impede a asserção de passar por
+      // acidente: se a tolerância nunca fechasse, "continua aberto" não
+      // provaria nada. Sem este passo, tolerância infinita passa.
+      const balao = balaoDe(trigger)!;
+      const exitPoint = centerOf(balao);
+      pointerAt(balao, 'pointerleave', exitPoint.x, exitPoint.y);
+      pointerAt(document, 'pointermove', 0, 0);
+
+      await waitFor(async () => {
+        await expect(balaoDe(trigger)).toBeNull();
+      });
     });
   },
 };
 
 export const Controlled: Story = {
   name: 'Controlled (open prop)',
-  args: { ...baseArgs, open: true, delayDuration: 0 },
+  // Mesma razão da `Open (defaultOpen)`: a abertura vem do estado EXTERNO e
+  // nenhum passo toca em ponteiro, então a espera nunca corre nesta cena. Quem
+  // ainda passa `0` nesta stack é a `PersistenceInBubble`, e lá há ponteiro de
+  // verdade — é a diferença entre desligar a espera por necessidade e por
+  // resíduo.
+  args: { ...baseArgs, open: true },
   parameters: { docs: { source: { transform: tooltipControlledSource } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

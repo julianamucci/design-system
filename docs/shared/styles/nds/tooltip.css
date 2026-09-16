@@ -76,13 +76,22 @@
   padding-inline-end: var(--spacing-1-5);
 }
 
-/* Saída apenas — entrada aparece direto (evita corrida com checagem de
- * visibilidade síncrona que leria opacity:0 como invisível). */
-.nds-tooltip-content[data-ending-style] {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity var(--duration-fast) ease-in, transform var(--duration-fast) ease-in;
-}
+/* SEM animação de saída, e isso é decisão de 2026-09-16.
+ *
+ * Aqui havia `.nds-tooltip-content[data-ending-style]` com opacidade e
+ * `scale(0.95)`. O atributo é de LIB, e medido em 2026-09-15 ele não chega às
+ * cinco: o base-ui (react) o escreve; a `reka-ui` instalada (vue) não o cita em
+ * arquivo nenhum; o vanilla remove o nó na hora. A regra produzia saída
+ * diferente conforme a stack — no máximo três das cinco animavam —, e o balão
+ * da stack de REFERÊNCIA nunca animou.
+ *
+ * A entrada também não anima, e por motivo próprio: opacidade zero na entrada
+ * corre com a checagem síncrona de visibilidade das plays.
+ *
+ * Com isso esta folha não declara movimento nenhum, e por isso não tem (nem
+ * precisa de) guarda de `prefers-reduced-motion`. Ela era uma das quatro com
+ * guarda INERTE listadas na pendência de `hover-card.md` §8 — sai da lista por
+ * não ter mais o que guardar. */
 
 .nds-tooltip-positioner {
   isolation: isolate;
@@ -171,10 +180,4 @@
   left: 0;
   transform-origin: 0 0;
   transform: translateY(50%) rotate(90deg) translateX(-50%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .nds-tooltip-content {
-    transition: none;
-  }
 }

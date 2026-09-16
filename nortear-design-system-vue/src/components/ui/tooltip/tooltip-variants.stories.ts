@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save } from 'lucide-vue-next';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, sideOf, spaceOnSide, sizeOnAxis, ARROW_GAP } from './tooltip.fixtures';
 import {
   tooltipWithShortcutSource,
   tooltipTextCurtoSource,
@@ -43,7 +43,7 @@ const meta = {
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },
-      template: '<TooltipProvider :delay-duration="0"><story /></TooltipProvider>',
+      template: '<TooltipProvider><story /></TooltipProvider>',
     }),
   ],
   parameters: {
@@ -79,14 +79,14 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-100" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
               <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Salvar</TooltipContent>
+          <TooltipContent>Salvar</TooltipContent>
         </Tooltip>
       </div>
     `,
@@ -103,6 +103,27 @@ export const Default: Story = {
       // `toContain` e não igualdade: a lib acrescenta uma cópia acessível do
       // texto dentro do balão, então `textContent` traz o rótulo duas vezes.
       await expect(balao.textContent).toContain('Salvar');
+    });
+
+    await step('E nasce do lado padrão, acima do gatilho', async () => {
+      // Esta story É a foto de `visual.item1`, que diz "side top". Sem asserção
+      // de lado, a baseline do Chromatic podia registrar um balão VIRADO para
+      // baixo e ninguém notar — a foto ficaria certa em relação a si mesma.
+      //
+      // A folga é a premissa: sem espaço acima a lib vira por projeto, e aí a
+      // story reprovaria acusando defeito onde só falta enquadramento.
+      const balao = balaoDe(trigger)!;
+      await expect(spaceOnSide(trigger, 'top')).toBeGreaterThan(
+        sizeOnAxis(balao, 'top') + ARROW_GAP,
+      );
+      // Esperar o VALOR: `data-side` nasce com o lado pedido e o posicionador
+      // mede no quadro seguinte, quando pode trocá-lo.
+      await waitFor(
+        async () => {
+          await expect(sideOf(balao)).toBe('top');
+        },
+        { timeout: 2000 },
+      );
     });
 
     await step('O texto do balão passa dos 4.5:1 exigidos', async () => {
@@ -130,14 +151,14 @@ export const WithShortcut: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-100" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
               <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">
+          <TooltipContent>
             <span>Salvar</span>
             <Kbd>Ctrl</Kbd>
             <Kbd>S</Kbd>
@@ -156,6 +177,21 @@ export const WithShortcut: Story = {
       const teclas = balaoDe(trigger)!.querySelectorAll('kbd');
       await expect(teclas.length).toBe(2);
       await expect(teclas[0].textContent).toBe('Ctrl');
+    });
+
+    await step('O balão nasce do lado padrão, acima do gatilho', async () => {
+      // `visual.item2` também fotografa o balão aberto: mesma razão da variante
+      // de texto curto — foto sem asserção de lado registra o que vier.
+      const balao = balaoDe(trigger)!;
+      await expect(spaceOnSide(trigger, 'top')).toBeGreaterThan(
+        sizeOnAxis(balao, 'top') + ARROW_GAP,
+      );
+      await waitFor(
+        async () => {
+          await expect(sideOf(balao)).toBe('top');
+        },
+        { timeout: 2000 },
+      );
     });
 
     await step('A folha compartilhada reconhece a tecla e encurta o respiro', async () => {

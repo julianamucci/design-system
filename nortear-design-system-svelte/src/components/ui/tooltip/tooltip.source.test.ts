@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { tooltipOpenSource, tooltipControlledSource, tooltipSource } from './tooltip.source';
+import {
+  tooltipOpenSource,
+  tooltipControlledSource,
+  tooltipSource,
+  tooltipPlacementSidesSource,
+  tooltipCollisionSource,
+  tooltipFormFieldHelpSource,
+  tooltipMetricDescriptionSource,
+  tooltipGroupWaitSource,
+} from './tooltip.source';
 
 describe('tooltipSource', () => {
   it('sem args, entrega o gatilho só de ícone com o balão complementar', () => {
@@ -126,5 +135,57 @@ describe('transforms das stories de abertura', () => {
     const saida = tooltipControlledSource();
     expect(saida).toContain('let aberto = $state(true);');
     expect(saida).toContain('<Tooltip bind:open={aberto}>');
+  });
+});
+
+describe('transforms das stories de posicionamento e de grupo', () => {
+  it('os quatro lados saem de uma lista declarada no próprio exemplo', () => {
+    const saida = tooltipPlacementSidesSource();
+    // O `{#each}` só resolve se a lista viajar DENTRO do snippet: uma constante
+    // do módulo fica para trás na mão de quem copia.
+    expect(saida).toContain('const SIDES = [');
+    expect(saida).toContain('{#each SIDES as item (item.side)}');
+    expect(saida).toContain('<TooltipContent side={item.side}>');
+  });
+
+  it('o exemplo dos lados ensina UM provedor, e não o andaime da cena', () => {
+    const saida = tooltipPlacementSidesSource();
+    // A story dá um provedor a cada balão para mostrar os quatro abertos ao
+    // mesmo tempo — andaime de regressão visual. Em produção o provedor é
+    // único, e a abertura vem do ponteiro ou do foco.
+    expect(saida.match(/<TooltipProvider/g)).toHaveLength(1);
+    expect(saida).not.toContain('defaultOpen');
+  });
+
+  it('a colisão não se configura — o que o snippet ensina é que o lado é preferência', () => {
+    const saida = tooltipCollisionSource();
+    expect(saida).toContain('<TooltipContent side="top">');
+    // Fuga de colisão é o padrão: um exemplo que ligasse alguma coisa ensinaria
+    // que ela precisa ser ligada.
+    expect(saida).not.toContain('avoidCollisions');
+    expect(saida).toContain('data-side');
+  });
+
+  it('a ajuda do campo nomeia o ícone e deixa o rótulo com o campo', () => {
+    const saida = tooltipFormFieldHelpSource();
+    // O `for`/`id` é o que mantém o rótulo ligado ao CAMPO: trocar isso pelo
+    // balão deixaria o input sem nome em touch, onde não há ponteiro.
+    expect(saida).toContain('<label for="api-token"');
+    expect(saida).toContain('id="api-token"');
+    expect(saida).toContain('aria-label="Ajuda sobre Token de API"');
+  });
+
+  it('a descrição de métrica define a sigla que o cabeçalho abrevia', () => {
+    const saida = tooltipMetricDescriptionSource();
+    expect(saida).toContain('aria-label="O que é LCP"');
+    expect(saida).toContain('Largest Contentful Paint');
+  });
+
+  it('a espera de grupo publica os DOIS números, que só se leem juntos', () => {
+    const saida = tooltipGroupWaitSource();
+    expect(saida).toContain('<TooltipProvider delayDuration={600} skipDelayDuration={1000}>');
+    expect(saida).toContain('const ACTIONS = [');
+    expect(saida).toContain('{#each ACTIONS as action (action.id)}');
+    expect(saida).toContain('aria-label={action.label}');
   });
 });

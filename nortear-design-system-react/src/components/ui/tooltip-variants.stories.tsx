@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
-import { balaoDe } from "./tooltip.fixtures";
+import { balaoDe, cabeNoLado, esperarLado } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 import {
@@ -41,8 +41,11 @@ const meta = {
   tags: ["overlay"],
   component: Tooltip,
   decorators: [
+    // Sem `delay={0}` (D5): as três variantes nascem por `defaultOpen`, que não
+    // passa pela espera do ponteiro — o zero não servia a nenhuma delas e só
+    // fazia o arquivo medir um atraso que o design system não entrega.
     (Story) => (
-      <TooltipProvider delay={0}>
+      <TooltipProvider>
         <Story />
       </TooltipProvider>
     ),
@@ -65,11 +68,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const wrapperStyle: React.CSSProperties = {
-  contain: "layout",
-  minHeight: 150,
-  position: "relative",
-};
+// Palco que CENTRA o gatilho, e não só reserva altura.
+//
+// As três stories daqui nascem abertas, e duas delas são a foto do Chromatic
+// para `visual.item1` ("side top"). Medido: o `layout: "centered"` não centra na
+// vertical neste runner — o palco encosta no topo do quadro, e a folga acima do
+// gatilho vira só o padding. Com 150px de altura e o gatilho no topo não havia
+// folga para o balão, e o base-ui virava para `bottom`, CORRETAMENTE: a
+// baseline registraria o oposto do que a lista de testes afirma.
+//
+// A altura saiu do `style` inline para `nds-min-h-100`: altura é valor de
+// design, e inline ela escapa do tema e da densidade.
 
 export const Default: Story = {
   parameters: {
@@ -85,7 +94,12 @@ export const Default: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div
+      className="nds-cluster nds-min-h-100"
+      data-align="center"
+      data-justify="center"
+      style={{ contain: "layout", position: "relative" }}
+    >
       <Tooltip defaultOpen>
         <TooltipTrigger
           render={(props) => (
@@ -108,6 +122,21 @@ export const Default: Story = {
       const balao = balaoDe(trigger)!;
       await expect(balao).toHaveClass(/nds-tooltip-content/);
       await expect(balao.textContent?.trim()).toBe("Salvar");
+    });
+
+    await step("O balão nasce do lado pedido — é esta a foto do Chromatic", async () => {
+      // `visual.item1` afirma "side top". Sem folga garantida acima, a baseline
+      // podia registrar um balão VIRADO para baixo, e a foto passaria a provar
+      // o contrário do que a lista de testes diz — sem nada ficar vermelho.
+      // Premissa antes do resultado, com os números na mensagem.
+      const balao = balaoDe(trigger)!;
+      const lado = await esperarLado(balao, "top");
+      const { folga, preciso, viewport } = cabeNoLado(trigger, balao, "top");
+      await expect(
+        folga,
+        `sem folga em "top": ${Math.round(folga)}px livres para um balão que precisa de ${Math.round(preciso)}px (janela ${viewport}) — abra espaço acima do gatilho`,
+      ).toBeGreaterThanOrEqual(preciso);
+      await expect(lado).toBe("top");
     });
 
     await step("O texto do balão passa dos 4.5:1 exigidos", async () => {
@@ -133,7 +162,12 @@ export const WithShortcut: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div
+      className="nds-cluster nds-min-h-100"
+      data-align="center"
+      data-justify="center"
+      style={{ contain: "layout", position: "relative" }}
+    >
       <Tooltip defaultOpen>
         <TooltipTrigger
           render={(props) => (
@@ -165,6 +199,19 @@ export const WithShortcut: Story = {
       await expect(teclas[0].textContent).toBe("Ctrl");
     });
 
+    await step("O balão nasce do lado pedido — é esta a foto do Chromatic", async () => {
+      // Mesma razão da `Default`: `visual.item2` fotografa o balão com a tecla,
+      // e um balão virado por falta de espaço viraria baseline sem aviso.
+      const balao = balaoDe(trigger)!;
+      const lado = await esperarLado(balao, "top");
+      const { folga, preciso, viewport } = cabeNoLado(trigger, balao, "top");
+      await expect(
+        folga,
+        `sem folga em "top": ${Math.round(folga)}px livres para um balão que precisa de ${Math.round(preciso)}px (janela ${viewport}) — abra espaço acima do gatilho`,
+      ).toBeGreaterThanOrEqual(preciso);
+      await expect(lado).toBe("top");
+    });
+
     await step("A folha compartilhada reconhece a tecla e encurta o respiro", async () => {
       const balao = balaoDe(trigger)!;
       await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
@@ -188,7 +235,12 @@ export const LongText: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div
+      className="nds-cluster nds-min-h-100"
+      data-align="center"
+      data-justify="center"
+      style={{ contain: "layout", position: "relative" }}
+    >
       <Tooltip defaultOpen>
         <TooltipTrigger
           render={(props) => (

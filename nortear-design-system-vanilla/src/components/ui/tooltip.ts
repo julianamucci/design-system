@@ -103,7 +103,23 @@ type GroupState = {
 };
 
 let _tooltipCounter = 0;
-const SHOW_DELAY = 300;
+
+/**
+ * Espera padrão antes de o balão abrir no hover, em ms.
+ *
+ * EXPORTADA, e não mais privada, pelo mesmo motivo que o react publica
+ * `TOOLTIP_DEFAULT_DELAY` e o angular, `NDS_TOOLTIP_DELAY`: a story que MEDE a
+ * espera não pode redigitar o número. Número copiado para dentro de uma
+ * asserção continua verde no dia em que a decisão muda — foi assim que o 600 do
+ * angular sobreviveu sem estar escrito em lugar nenhum do repositório.
+ *
+ * O NOME fica `SHOW_DELAY` porque é por ele que o portão
+ * `atraso_de_tooltip_divergente` acha esta declaração (`ATRASO_DE_TOOLTIP` em
+ * `scripts/audit.mjs`). Rebatizar aqui sem atualizar o mapa faz a regra parar de
+ * enxergar a stack — e a mensagem dela é "a stack não declara mais o atraso",
+ * que é o estado em que o angular herdou 600 da lib sem ninguém ter escolhido.
+ */
+export const SHOW_DELAY = 300;
 const SKIP_DELAY = 300;
 
 /**
@@ -228,7 +244,15 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     else panelEl.appendChild(content);
 
     document.body.appendChild(panelEl);
-    positionFloating(trigger, panelEl, side, 'center', GAP);
+    // `flip` LIGADO, e com ele `positionFloating` passa a escrever o `data-side`
+    // final no painel — o `dataset.side` escrito acima é o lado PEDIDO, e vale
+    // só até esta linha.
+    //
+    // O lado devolvido é o que a seta tem de seguir. Sem reconciliar, o balão
+    // viraria para baixo e a seta continuaria desenhada para cima: defeito que
+    // compila, renderiza e nenhum portão desta casa reprova. É a razão pela qual
+    // `lib/floating.ts` mantém o recurso opt-in.
+    const finalSide = positionFloating(trigger, panelEl, side, 'center', GAP, { flip: true });
 
     // A seta, e o que esta stack faz que as outras quatro recebem de graça.
     //
@@ -245,13 +269,13 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     // largura → `left: 24px`; de 29px de altura → `top: 12px`).
     const arrowEl = document.createElement('div');
     arrowEl.className = 'nds-tooltip-arrow';
-    arrowEl.dataset.side = side;
+    arrowEl.dataset.side = finalSide;
     // `position` é da fábrica, não da folha: nas outras quatro stacks quem a
     // escreve é a lib, e numa delas o elemento posicionado nem é este.
     arrowEl.style.position = 'absolute';
     panelEl.appendChild(arrowEl);
 
-    const verticalAxis = side === 'top' || side === 'bottom';
+    const verticalAxis = finalSide === 'top' || finalSide === 'bottom';
     const panelSpan = verticalAxis ? panelEl.offsetWidth : panelEl.offsetHeight;
     const arrowSpan = verticalAxis ? ARROW_WIDTH : ARROW_HEIGHT;
     arrowEl.style[verticalAxis ? 'left' : 'top'] = `${(panelSpan - arrowSpan) / 2}px`;

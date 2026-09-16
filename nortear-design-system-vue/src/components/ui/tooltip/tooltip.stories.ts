@@ -8,16 +8,12 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
-import { balaoDe } from './tooltip.fixtures';
+import { balaoDe, sideOf, spaceOnSide, sizeOnAxis, ARROW_GAP } from './tooltip.fixtures';
 import TooltipDocs from '@/components/docs/TooltipDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipSource } from './tooltip.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
-/** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
-function sideOf(balao: HTMLElement | null): string | null {
-  return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
-}
 
 const meta = {
   title: 'Components/Overlay/Tooltip',
@@ -26,7 +22,7 @@ const meta = {
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },
-      template: '<TooltipProvider :delay-duration="0"><story /></TooltipProvider>',
+      template: '<TooltipProvider><story /></TooltipProvider>',
     }),
   ],
   parameters: {
@@ -103,7 +99,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div style="contain: layout" class="nds-cluster nds-min-h-50" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-60" data-align="center" data-justify="center">
         <Tooltip
           :key="String(args.defaultOpen)"
           :default-open="args.defaultOpen"
@@ -175,14 +171,32 @@ export const Playground: Story = {
     });
 
     await step('O lado pedido chega ao balão como data-side', async () => {
-      // É o gancho que o CSS compartilhado lê. Auto-flip por colisão pode
-      // devolver o lado oposto quando falta espaço — comportamento, não defeito.
-      const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
-      const side = ((args as { side?: keyof typeof oposto }).side ?? 'top');
-      await waitFor(async () => {
-        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
-      });
-      await expect([side, oposto[side]]).toContain(sideOf(balaoDe(trigger)));
+      // É o gancho que o CSS compartilhado lê. Aqui o gatilho fica no meio de um
+      // contêiner com folga dos quatro lados, então NÃO há colisão: o lado que
+      // chega é o lado pedido, exato. Aceitar também o oposto era asserção que
+      // passava com ou sem reposicionamento — não podia reprovar, e por isso não
+      // media nada. A virada por colisão tem story própria (`Collision`).
+      const side = (args as { side?: string }).side ?? 'top';
+
+      // PREMISSA antes do resultado, e ela é POR EIXO: só faz sentido cobrar o
+      // lado pedido se ele COUBER naquele eixo. Sem esta medida a asserção
+      // depende do tamanho da janela do runner — a lib vira o balão,
+      // corretamente, e a story manda procurar defeito no componente.
+      await expect(spaceOnSide(trigger, side)).toBeGreaterThan(
+        sizeOnAxis(balaoDe(trigger)!, side) + ARROW_GAP,
+      );
+
+      // Esperar o VALOR, e não a existência do atributo: `data-side` nasce com
+      // o lado pedido e o posicionador mede no quadro seguinte, quando pode
+      // trocá-lo. O `toBeTruthy` de antes devolvia na primeira leitura e
+      // fotografava o primeiro paint. A condição só lê o DOM, que é o que a
+      // torna segura dentro de `waitFor`.
+      await waitFor(
+        async () => {
+          await expect(sideOf(balaoDe(trigger))).toBe(side);
+        },
+        { timeout: 2000 },
+      );
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {

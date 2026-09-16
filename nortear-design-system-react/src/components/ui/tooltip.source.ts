@@ -244,36 +244,74 @@ ${triggerIcon()}
 }
 
 /**
- * Barra de ações só-ícone: cada botão carrega o próprio `aria-label`, e o balão
- * repete a mesma palavra. Quem usa toque nunca vê o balão, e é o rótulo do
- * botão que sustenta o nome acessível sozinho.
+ * Ajuda ao lado do rótulo de um campo.
+ *
+ * O ícone "?" carrega o próprio `aria-label` — o balão explica ONDE achar o
+ * valor, e não o que o botão é. O campo continua rotulado pelo `<label>`: o
+ * tooltip acrescenta contexto, nunca sustenta o nome de ninguém.
  */
-export function iconsTooltipBarSource(): string {
-  const acao = (label: string, icone: string) => `    <Tooltip>
-      <TooltipTrigger
-        render={(props) => (
-          <Button {...props} variant="ghost" size="icon" aria-label="${label}">
-            <${icone} aria-hidden="true" />
-          </Button>
-        )}
-      />
-      <TooltipContent>${label}</TooltipContent>
-    </Tooltip>`;
-
+export function tooltipHelpInFormFieldSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOOLTIP}
-import { Save, Share2, Trash2 } from "lucide-react";`,
+    IMPORT_TOOLTIP,
     withProvider(
-      `  <div
-    className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card"
-    data-align="center"
-    data-spacing="xs"
-  >
-${acao('Salvar', 'Save')}
+      `  <div className="nds-stack nds-w-sm" data-spacing="xs" data-align="start">
+    <div className="nds-cluster" data-spacing="sm">
+      <label htmlFor="api-token" className="nds-text-body nds-font-medium">
+        Token de API
+      </label>
 
-${acao('Compartilhar', 'Share2')}
+      <Tooltip>
+        <TooltipTrigger
+          render={(props) => (
+            <Button {...props} variant="outline" size="icon-sm" aria-label="Ajuda sobre Token de API">
+              ?
+            </Button>
+          )}
+        />
+        <TooltipContent side="right">
+          Gere em Configurações › Acesso › Tokens
+        </TooltipContent>
+      </Tooltip>
+    </div>
 
-${acao('Excluir', 'Trash2')}
+    <input id="api-token" type="text" className="nds-input" placeholder="sk-..." />
+  </div>`,
+    ),
+  );
+}
+
+/**
+ * Sigla de métrica explicada no cabeçalho de um número.
+ *
+ * O balão define a sigla sem ocupar espaço vertical no painel. `side` fica no
+ * padrão: num cabeçalho de KPI o espaço de sobra é acima, e escrever o lado
+ * aqui prometeria o que a borda pode desmentir.
+ */
+export function tooltipMetricDescriptionSource(): string {
+  return jsxSnippet(
+    IMPORT_TOOLTIP,
+    withProvider(
+      `  <div className="nds-stack" data-spacing="xs" data-align="start">
+    <div className="nds-cluster" data-spacing="sm">
+      <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
+        LCP
+      </p>
+
+      <Tooltip>
+        <TooltipTrigger
+          render={(props) => (
+            <Button {...props} variant="outline" size="icon-sm" aria-label="O que é LCP">
+              i
+            </Button>
+          )}
+        />
+        <TooltipContent className="nds-whitespace-normal">
+          Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+        </TooltipContent>
+      </Tooltip>
+    </div>
+
+    <p className="nds-text-h3 nds-m-0">1,8 s</p>
   </div>`,
     ),
   );
@@ -298,6 +336,62 @@ ${triggerIcon()}
     </Tooltip>
   </div>`,
     ),
+  );
+}
+
+/**
+ * Colisão: `side` é preferência, e a borda decide.
+ *
+ * Sem espaço acima, o balão nasce ABAIXO do gatilho em vez de sair da tela, e
+ * `data-side` passa a trazer o lado final — que é o que o CSS compartilhado lê.
+ * Quem escreve `side="top"` escreve uma preferência, nunca uma garantia.
+ */
+export function tooltipCollisionSource(): string {
+  return jsxSnippet(
+    IMPORT_TOOLTIP,
+    withProvider(
+      `  {/* Encostado no topo da janela, o balão vira para baixo sozinho:
+      \`side\` é preferência, e \`data-side\` traz o lado FINAL. */}
+  <Tooltip>
+    <TooltipTrigger
+      render={(props) => <Button {...props} variant="outline">Salvar</Button>}
+    />
+    <TooltipContent side="top">Salvar</TooltipContent>
+  </Tooltip>`,
+    ),
+  );
+}
+
+/**
+ * Espera compartilhada do grupo.
+ *
+ * O provedor guarda duas medidas diferentes: `delay` é quanto o PRIMEIRO balão
+ * faz o ponteiro esperar, e `timeout` é por quanto tempo, depois de um fechar,
+ * o vizinho abre NA HORA. É o que torna uma barra de ações percorrível sem
+ * acender um balão a cada milímetro e sem cobrar a espera de novo em cada item.
+ */
+export function tooltipGroupWaitSource(): string {
+  return jsxSnippet(
+    IMPORT_TOOLTIP,
+    `<TooltipProvider delay={800} timeout={5000}>
+  {/* \`delay\`: o primeiro balão espera. \`timeout\`: fechado o primeiro, o
+      vizinho abre sem esperar enquanto a janela do grupo durar. */}
+  <div className="nds-cluster" data-spacing="md">
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => <Button {...props} variant="outline">Copiar</Button>}
+      />
+      <TooltipContent>Copiar</TooltipContent>
+    </Tooltip>
+
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => <Button {...props} variant="outline">Colar</Button>}
+      />
+      <TooltipContent>Colar</TooltipContent>
+    </Tooltip>
+  </div>
+</TooltipProvider>`,
   );
 }
 

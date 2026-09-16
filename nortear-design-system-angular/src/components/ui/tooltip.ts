@@ -311,7 +311,11 @@ export class NdsTooltip {
 // O segundo motivo continua verdadeiro e é tratado na folha, não aqui: o
 // `RdxArrow` projeta um `<svg>` de polígono com `fill="currentColor"`, que
 // pegaria a cor do TEXTO do balão. É conteúdo de fallback de um `<ng-content>`,
-// e `.nds-tooltip-arrow > svg { display: none }` o cala.
+// e `.nds-tooltip-arrow > svg { visibility: hidden }` o cala — `visibility`, e
+// não `display`, porque o `<svg>` do `RdxArrow` já traz `style="display: block"`
+// INLINE, e inline vence folha: `display: none` ali foi escrito, medido e não
+// pintou nada (sonda de 2026-09-04). A folha não declara `visibility` no svg,
+// então essa ganha sem precisar de `!important`.
 
 /** As quatro peças — conveniência para o `imports` de quem compõe. */
 export const NDS_TOOLTIP = [

@@ -8,7 +8,13 @@ import {
   TooltipTrigger,
   TOOLTIP_DEFAULT_DELAY,
 } from "./tooltip";
-import { balaoDe } from "./tooltip.fixtures";
+import {
+  balaoDe,
+  bubbleHiddenBy,
+  bubbleShownAt,
+  movePointer,
+  wait,
+} from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 import {
@@ -28,44 +34,16 @@ import { figmaDesign } from "@shared/figma/design-links";
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
 const LONG_DELAY = 600;
 
-/** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function wait(ms: number): Promise<void> {
-  return new Promise((resolver) => setTimeout(resolver, ms));
-}
-
-/**
- * Instante em que o balão apareceu, por relógio.
- *
- * Laço de relógio, e não `waitFor`: o que se afirma aqui é TEMPO, e o `waitFor`
- * reagenda por observador de mutação — um prazo dele diria "apareceu em algum
- * momento", que é justamente o que não distingue 300 ms de 600. O laço só LÊ
- * (`aria-describedby` + `getElementById`), sem tocar no DOM, então não há como
- * a própria tentativa provocar a seguinte.
- *
- * Passo de 10 ms porque a medição é de borda: o limite superior da asserção é o
- * default de 600 da biblioteca, e granularidade grossa comeria a margem.
- */
-async function bubbleShownAt(
-  trigger: HTMLElement,
-  budget: number,
-): Promise<number> {
-  const deadline = performance.now() + budget;
-  while (performance.now() < deadline) {
-    if (balaoDe(trigger) !== null) {
-      return performance.now();
-    }
-    await wait(10);
-  }
-  return Number.POSITIVE_INFINITY;
-}
-
 const meta = {
   title: "Components/Overlay/Tooltip/States",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [
+    // Sem `delay={0}` (D5): o zero era resíduo, e as stories que precisam de
+    // espera declarada trazem provedor próprio logo abaixo. Quem abre na hora
+    // abre por foco ou por `defaultOpen`, que não esperam o ponteiro.
     (Story) => (
-      <TooltipProvider delay={0}>
+      <TooltipProvider>
         <Story />
       </TooltipProvider>
     ),
@@ -176,6 +154,22 @@ export const Open: Story = {
       });
     });
 
+    await step("O balão publica o estado de aberto da própria lib", async () => {
+      // `role` e `data-slot` acima são atributos que ESTE design system
+      // escreve: afirmá-los prova o nosso markup, não que a lib abriu. O
+      // `data-open`/`data-closed` é o par que o base-ui publica no balão, e é
+      // ele que o CSS de estado lê. Sem este passo a story não afirmava estado
+      // nenhum.
+      //
+      // `data-instant` fica de fora de propósito: ele só ganha valor quando uma
+      // INTERAÇÃO no gatilho o define (espera, dispensa, foco), e um balão que
+      // nasce aberto por `defaultOpen` não passa por nenhuma delas — cobrá-lo
+      // aqui seria afirmar um atributo que a lib não tem por que escrever.
+      const balao = balaoDe(trigger)!;
+      await expect(balao).toHaveAttribute("data-open");
+      await expect(balao).not.toHaveAttribute("data-closed");
+    });
+
     await step("E o gatilho passa a apontar para ele", async () => {
       await expect(
         document.getElementById(trigger.getAttribute("aria-describedby")!),
@@ -272,9 +266,10 @@ export const HoverDefaultDelay: Story = {
     await userEvent.hover(trigger);
 
     await step("Antes de cumprir o atraso padrão, o balão não existe", async () => {
-      await wait(TOOLTIP_DEFAULT_DELAY / 2);
-      // Se o padrão voltasse a ser zero, o balão já estaria aqui: com espera
-      // nenhuma a lib abre no primeiro movimento do ponteiro.
+      // PISO em 0,9× o padrão, e não em metade dele: com 150 ms a story passava
+      // igual se o atraso caísse para 200, que é praticamente o zero que a D5
+      // condena. O piso só tem dentes quando encosta no valor declarado.
+      await wait(TOOLTIP_DEFAULT_DELAY * 0.9);
       await expect(balaoDe(trigger)).toBeNull();
     });
 
@@ -282,16 +277,17 @@ export const HoverDefaultDelay: Story = {
       const openedAfter =
         (await bubbleShownAt(trigger, TOOLTIP_DEFAULT_DELAY * 6)) - start;
       await expect(openedAfter).toBeLessThan(Number.POSITIVE_INFINITY);
-      // O teto é o `OPEN_DELAY` do base-ui, que é 600: se o default do wrapper
-      // desaparecer, o valor que assume o lugar é esse, e a story reprova em
-      // vez de continuar verde medindo "abriu em algum momento".
-      await expect(openedAfter).toBeLessThan(TOOLTIP_DEFAULT_DELAY * 2);
+      // TETO em 1,7×, abaixo do `OPEN_DELAY` de 600 do base-ui: se o default
+      // deste wrapper sumir, quem assume o lugar é o da lib, e a story reprova
+      // em vez de seguir verde medindo "abriu em algum momento". Um teto
+      // cravado em 2× encostaria justamente nos 600 e passaria por um triz.
+      await expect(openedAfter).toBeLessThan(TOOLTIP_DEFAULT_DELAY * 1.7);
       await expect(balaoDe(trigger)).toHaveAttribute("role", "tooltip");
     });
   },
 };
 
-export const Focused: Story = {
+export const KeyboardFocus: Story = {
   parameters: {
     covers: ["functional.item2"],
     docs: {
@@ -382,20 +378,52 @@ export const PersistenceInBubble: Story = {
     const trigger = canvas.getByRole("button", { name: /Compartilhar/i });
 
     await step("O hover abre o balão", async () => {
+      // Hover, e não foco: o que se mede aqui é o trajeto do PONTEIRO do
+      // gatilho até o balão, e ele precisa começar sobre o gatilho. O prazo
+      // acomoda a espera do provedor, que agora é a real e não mais zero.
+      trigger.blur();
       await userEvent.hover(trigger);
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
+      await waitFor(
+        async () => {
+          await expect(balaoDe(trigger)).not.toBeNull();
+        },
+        { timeout: TOOLTIP_DEFAULT_DELAY * 5 },
+      );
     });
 
     await step("Levar o ponteiro até o balão não fecha nada", async () => {
-      const balao = balaoDe(trigger)!;
-      // `pointerEventsCheck: 0` porque a folha compartilhada deixa o balão
-      // `pointer-events: none` — quem segura a abertura é a área de tolerância
-      // entre gatilho e balão, calculada por coordenada, não por hover no nó.
-      await userEvent.hover(balao, { pointerEventsCheck: 0 });
-      await wait(200);
+      // Coordenada ditada à mão, e não `userEvent.hover(balao)`: a folha deixa
+      // o balão `pointer-events: none`, e um hover sintético sobre um nó assim
+      // chega com clientX/clientY em 0,0 — mediria o ponteiro no canto da tela,
+      // não sobre o balão (D2). A tolerância do floating-ui lê COORDENADA.
+      const centro = movePointer(balaoDe(trigger)!);
+      await expect(centro.x).toBeGreaterThan(0);
+      await wait(400);
       await expect(balaoDe(trigger)).not.toBeNull();
+    });
+
+    await step("Levar o ponteiro para longe fecha — a tolerância tem limite", async () => {
+      // O par com o passo anterior é o que impede a asserção de passar por
+      // acidente: se a tolerância nunca fechasse, "continua aberto" não
+      // provaria nada, e uma tolerância infinita seria aprovada como acerto.
+      //
+      // DUAS metades, e as duas são necessárias — medido: o `useHover` do
+      // base-ui só solta o balão quando o ponteiro SAI DO GATILHO
+      // (`mouseleave`), e a tolerância do floating-ui decide pela COORDENADA.
+      // Só o mousemove para longe deixava o gatilho ainda "sob o ponteiro" para
+      // a lib, e o balão seguia aberto — foi exatamente assim que este passo
+      // reprovou.
+      await userEvent.unhover(trigger);
+      document.dispatchEvent(
+        new MouseEvent("mousemove", { clientX: 0, clientY: 0, bubbles: true }),
+      );
+      // Relógio com leitura pura, e não `waitFor`: o que se espera é o fim de
+      // uma tolerância medida em tempo, e o laço só lê o DOM.
+      const fechou = await bubbleHiddenBy(trigger, TOOLTIP_DEFAULT_DELAY * 6);
+      await expect(
+        fechou,
+        "o balão seguiu aberto depois de o ponteiro sair do gatilho e ir para longe — tolerância sem limite",
+      ).toBe(true);
     });
   },
 };

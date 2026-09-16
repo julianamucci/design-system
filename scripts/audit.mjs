@@ -7475,9 +7475,18 @@ function lastroNoCodigo(prop, corpus) {
  * no valor pretendido; encurte um rótulo e a mesma marcação colapsa. Nenhuma
  * suíte alcança isso, porque o runner do vitest não aplica `layout`.
  *
- * A forma correta é `.nds-w-cap-*`, que declara a largura. As duas são
- * EQUIVALENTES em qualquer pai de largura definida — só diferem no pai que
- * encolhe, que é o caso quebrado.
+ * A forma correta é `.nds-w-*` (`.nds-w-xs` … `.nds-w-docs` em
+ * `utilities.css`), que declara a largura e ainda traz `max-width: 100%`. As
+ * duas são EQUIVALENTES em qualquer pai de largura definida — só diferem no pai
+ * que encolhe, que é o caso quebrado.
+ *
+ * **Até 2026-09-16 esta regra mandava usar `.nds-w-cap-*`, que não existe.**
+ * Medido naquela data, a pedido de quem tentou seguir o conselho: `nds-w-cap`
+ * não aparece em folha nenhuma do repositório — só aqui, em três pontos deste
+ * arquivo. É o nome ANTIGO da escada, e os números o confirmam (`nds-w-lg` é
+ * 32rem, os mesmos 512px que o exemplo do `host_inline_com_largura` abaixo
+ * atribuía a `nds-w-cap-lg`). Portão que ensina classe morta faz o leitor
+ * trocar um defeito silencioso por outro.
  */
 function auditLarguraFluidaSobCentered(slug) {
   const violations = [];
@@ -7497,7 +7506,7 @@ function auditLarguraFluidaSobCentered(slug) {
       violations.push({
         category: 'quality', severity: 'high', slug, stack,
         file: relative(ROOT, file), rule: 'largura_fluida_sob_centered',
-        message: `\`nds-w-full nds-max-w-${[...achadas].join('/')}\` sob \`layout: 'centered'\`: o ancestral encolhe para o conteúdo e \`width: 100%\` não resolve contra nada — a caixa fica do tamanho do texto. Use \`nds-w-cap-${[...achadas][0]}\`, que declara a largura`,
+        message: `\`nds-w-full nds-max-w-${[...achadas].join('/')}\` sob \`layout: 'centered'\`: o ancestral encolhe para o conteúdo e \`width: 100%\` não resolve contra nada — a caixa fica do tamanho do texto. Use \`nds-w-${[...achadas][0]}\`, que declara a largura`,
       });
     }
   }
@@ -7510,7 +7519,7 @@ function auditLarguraFluidaSobCentered(slug) {
  *
  * `<nds-carousel>` é elemento que o navegador não conhece: sem `display` na
  * folha, ele é `inline`, e largura em elemento inline é IGNORADA. Medido: com
- * `nds-w-cap-lg` (512px) declarado, o host media 1200px — a largura inteira do
+ * `nds-w-lg` (512px) declarado, o host media 1200px — a largura inteira do
  * pai. Toda story de carrossel do Angular vinha larga demais desde sempre, e as
  * outras quatro respeitavam a medida.
  *

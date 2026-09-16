@@ -14,9 +14,11 @@
  *
  * O que é ANDAIME e por isso não entra em nenhum snippet: o `nds-p-8` que dá ao
  * balão portalizado contra o que se posicionar dentro do quadro do Storybook, e
- * o `[delay]="0"` que faz o hover abrir na hora para a `play` — espera zero não
- * é o padrão que se ensina, é o que o teste precisa. O único snippet que fala
- * de espera é o da própria story de espera.
+ * o bloco alto que a story de colisão põe abaixo do gatilho. O `[delay]="0"`
+ * saiu das stories em 2026-09-16 (D5 do PRD) — espera zero não era o padrão que
+ * se ensina, era o que a `play` precisava, e o painel Code ao lado a publicava
+ * como se fosse decisão de projeto. Falam de espera apenas a story de espera
+ * (600 explícito), a da espera PADRÃO (pela ausência do atributo) e a do grupo.
  *
  * O que o snippet ensina: o `ndsTooltipProvider` entra UMA VEZ, no root da
  * aplicação, e é ele que guarda o atraso comum a todos os balões. O gatilho
@@ -24,6 +26,18 @@
  * o substitui, e um botão de ícone sem rótulo continua mudo mesmo com tooltip.
  */
 import { HELP_ICON, INFO_ICON, SAVE_ICON } from './tooltip.fixtures';
+import tooltipTranslations from '@shared/content/tooltip/translations.json';
+
+/**
+ * A espera que o CONTEÚDO COMPARTILHADO declara, em ms.
+ *
+ * Sai do JSON, e não de um número escrito aqui, pelo mesmo motivo da story que
+ * a mede: a decisão é da dona e vale para as cinco stacks. Este módulo não
+ * importa a constante do componente porque ele é lido no projeto `unit`, em
+ * node, sem compilador de template no caminho — e o JSON é a mesma fonte que a
+ * tabela de props da docs page publica.
+ */
+const DECLARED_DELAY = Number(tooltipTranslations['pt-BR'].props.table.delay.default);
 
 export type TooltipArgs = {
   label: string;
@@ -134,7 +148,7 @@ export function tooltipPlaygroundSource(
     side = 'top',
     align = 'center',
     sideOffset = 4,
-    delay = 0,
+    delay = DECLARED_DELAY,
   } = ctx.args ?? {};
 
   // Só o que difere do default entra no snippet — documentação que repete valor
@@ -479,4 +493,61 @@ import { NdsButton } from '@/components/ui/button';
 export class Exemplo {
   readonly sides: TooltipSide[] = ['top', 'right', 'bottom', 'left'];
 }`;
+}
+
+/**
+ * Colisão — o lado é preferência, e o componente resolve o resto.
+ *
+ * Não há prop para ligar ou desligar a virada: perto da borda o balão troca
+ * para o lado oposto em vez de sair da tela, e publica em `data-side` o lado
+ * FINAL. Por isso o snippet é o uso comum, sem nada de especial — o que a story
+ * acrescenta (ancorar no topo, empilhar um bloco alto embaixo) é andaime do
+ * quadro, e ensiná-lo faria quem copia achar que o tooltip precisa de um
+ * espaçador para virar.
+ */
+export function tooltipCollisionSource(): string {
+  return example(
+    [TOOLTIP_IMPORT, BUTTON_IMPORT],
+    '...NDS_TOOLTIP, NdsButton',
+    withProvider(`      <span ndsTooltip [defaultOpen]="true">
+        <button ndsTooltipTrigger ndsButton variant="outline">Salvar</button>
+
+        <ng-template ndsTooltipContent side="top">Salvar (Ctrl+S)</ng-template>
+      </span>`),
+  );
+}
+
+/**
+ * A barra de ações, e a janela compartilhada do grupo.
+ *
+ * As duas medidas moram no provedor e valem para todos os balões dele:
+ * `[delay]` é quanto o primeiro espera, `[timeout]` é por quanto tempo depois
+ * do último fechamento os vizinhos abrem sem esperar de novo. É o que faz uma
+ * barra de ferramentas parecer uma coisa só — e é a única coisa que se declara,
+ * porque a dispensa em si é do componente.
+ *
+ * Cada botão carrega o PRÓPRIO `aria-label`: numa barra de ícones o balão é
+ * complementar, e em toque ninguém o vê.
+ */
+export function tooltipGroupWaitSource(): string {
+  return example(
+    [TOOLTIP_IMPORT, BUTTON_IMPORT],
+    '...NDS_TOOLTIP, NdsButton',
+    withProvider(
+      `      <!-- Números exagerados para a diferença ficar visível: na aplicação
+           vale a espera que o design system já declara -->
+      <span ndsTooltip>
+${iconTrigger('Salvar', SAVE_ICON, 'icon', '        ')}
+
+        <ng-template ndsTooltipContent side="bottom">Salvar (Ctrl+S)</ng-template>
+      </span>
+
+      <span ndsTooltip>
+${iconTrigger('Ajuda', HELP_ICON, 'icon', '        ')}
+
+        <ng-template ndsTooltipContent side="bottom">Abrir a central de ajuda</ng-template>
+      </span>`,
+      ' [delay]="3000" [timeout]="5000" class="nds-cluster" data-spacing="sm"',
+    ),
+  );
 }

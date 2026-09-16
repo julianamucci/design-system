@@ -67,13 +67,15 @@ function TooltipProvider({
   delay = TOOLTIP_DEFAULT_DELAY,
   ...props
 }: TooltipPrimitive.Provider.Props) {
-  return (
-    <TooltipPrimitive.Provider
-      data-slot="tooltip-provider"
-      delay={delay}
-      {...props}
-    />
-  )
+  // Sem `data-slot="tooltip-provider"` de propósito, e não por esquecimento: o
+  // `Provider` do base-ui não renderiza elemento nenhum — ele devolve um
+  // contexto em volta do `FloatingDelayGroup`. O atributo não tinha onde
+  // pousar, e o JSX o aceitava calado porque o TypeScript não confere nome de
+  // atributo com hífen: escrita MORTA, invisível nas buscas de quem procura o
+  // gancho na página. Criar um wrapper só para carimbá-lo colocaria uma caixa
+  // no fluxo que as classes `.nds-tooltip-*` não preveem. Mesma razão na raiz,
+  // logo abaixo. Divergência de API de framework: registrada, não "alinhada".
+  return <TooltipPrimitive.Provider delay={delay} {...props} />
 }
 
 function Tooltip({
@@ -105,8 +107,12 @@ function Tooltip({
 
   return (
     <TooltipDescriptionContext.Provider value={value}>
+      {/* Sem `data-slot="tooltip"`: a raiz do base-ui agrupa as peças e não
+          renderiza elemento próprio (`TooltipRoot` — "Doesn't render its own
+          HTML element"), então o atributo era escrita morta, igual à do
+          provedor. O gancho que o contrato cobra nas cinco é o
+          `data-slot="tooltip-content"` do balão, esse sim num elemento real. */}
       <TooltipPrimitive.Root
-        data-slot="tooltip"
         open={open}
         defaultOpen={defaultOpen}
         onOpenChange={handleOpenChange}

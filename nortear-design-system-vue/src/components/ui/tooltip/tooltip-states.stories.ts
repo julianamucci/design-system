@@ -38,14 +38,45 @@ const LONG_DELAY = 600;
  * A espera que o Provider desta stack entrega SEM atributo nenhum.
  *
  * Valor do design system, igual nas cinco stacks (PRD do tooltip, D5). Está aqui
- * para a story `Delayed` medi-lo: o default é justamente o que ninguém escreve e,
- * por isso, o que muda sem nada ficar vermelho.
+ * para a story `HoverDefaultDelay` medi-lo: o default é justamente o que ninguém
+ * escreve e, por isso, o que muda sem nada ficar vermelho.
  */
 const DEFAULT_DELAY = 300;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
+}
+
+/**
+ * Um `pointermove` ditado por COORDENADA.
+ *
+ * A folha compartilhada deixa o balão `pointer-events: none`, e um hover
+ * sintético sobre um nó assim chega com clientX/clientY em 0,0 — mediria o
+ * ponteiro no canto da tela, não sobre o balão. A área de tolerância da lib lê
+ * COORDENADA, então é coordenada que o teste precisa fornecer.
+ *
+ * O evento vai no `body`, e não no `document`: o ouvinte recusa o que chega sem
+ * alvo de elemento, e evento despachado no documento é justamente isso. Do
+ * `body` ele borbulha até o mesmo ouvinte, com a coordenada intacta.
+ */
+function pointerMoveTo(x: number, y: number): void {
+  document.body.dispatchEvent(
+    new PointerEvent('pointermove', {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      clientX: x,
+      clientY: y,
+      bubbles: true,
+    }),
+  );
+}
+
+/** O centro de um elemento, em coordenada de janela. */
+function centerOf(target: HTMLElement): { x: number; y: number } {
+  const r = target.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 }
 
 /**
@@ -72,7 +103,7 @@ const meta = {
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },
-      template: '<TooltipProvider :delay-duration="0"><story /></TooltipProvider>',
+      template: '<TooltipProvider><story /></TooltipProvider>',
     }),
   ],
   parameters: {
@@ -156,7 +187,7 @@ export const Open: Story = {
               <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Salvar (Ctrl+S)</TooltipContent>
+          <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
         </Tooltip>
       </div>
     `,
@@ -203,7 +234,8 @@ export const Hover: Story = {
     setup() {
       return { delay: LONG_DELAY };
     },
-    // Provider próprio: o delay do decorator é 0, e sem espera não há o que medir.
+    // Provider próprio: o do decorator entrega a espera padrão, e é curta demais
+    // para a asserção "o mouse passando não abre" ter janela sem intermitência.
     template: `
       <TooltipProvider :delay-duration="delay">
         <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
@@ -243,7 +275,7 @@ export const Hover: Story = {
   },
 };
 
-export const Delayed: Story = {
+export const HoverDefaultDelay: Story = {
   parameters: {
     docs: {
       // O Provider SEM atributo é o assunto — e é exatamente o que o snippet do
@@ -256,8 +288,8 @@ export const Delayed: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    // Provider próprio e SEM `delay-duration`: o decorator do meta crava 0 para
-    // as outras stories não esperarem, e é justamente o default que esta mede.
+    // Provider próprio e SEM `delay-duration`: é justamente o default que esta
+    // story mede, e declarar o valor aqui mediria o número redigitado.
     template: `
       <TooltipProvider>
         <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
@@ -292,6 +324,12 @@ export const Delayed: Story = {
       // erra só para o lado seguro — o temporizador nunca dispara adiantado.
       await expect(Number.isNaN(elapsed)).toBe(false);
       await expect(elapsed).toBeGreaterThanOrEqual(DEFAULT_DELAY * 0.9);
+      // E um TETO, que é a metade que faltava: sem ele, "pelo menos 270ms"
+      // também aprova uma espera de dois segundos, e o padrão do design system
+      // podia dobrar sem nada ficar vermelho. A folga de 1,7x é a mesma das
+      // outras stacks — larga o bastante para a carga da suíte, curta o
+      // bastante para reprovar quem trocasse o valor.
+      await expect(elapsed).toBeLessThanOrEqual(DEFAULT_DELAY * 1.7);
     });
 
     await step('Cumprida a espera, o balão abre — e abre pelo temporizador', async () => {
@@ -305,7 +343,7 @@ export const Delayed: Story = {
   },
 };
 
-export const WithFocus: Story = {
+export const KeyboardFocus: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
@@ -345,11 +383,21 @@ export const WithFocus: Story = {
 
     await step('O foco abre na hora, mesmo com o provider pedindo espera', async () => {
       trigger.blur();
+      // Marcado ANTES do `focus()`: o relógio começa fora da chamada, então
+      // medir daqui só pode SUPERESTIMAR — o teto abaixo fica conservador por
+      // construção, que é o que o tira de intermitência.
+      const focusStart = performance.now();
       trigger.focus();
       await expect(trigger).toHaveFocus();
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
+
+      // RELÓGIO, e não `waitFor`: aqui o assunto É o tempo. O `waitFor` só
+      // pergunta se o balão chegou, nunca QUANDO — com ele, um foco que
+      // esperasse os 600ms do ponteiro (a espera herdada por engano, que é o
+      // defeito desta família) passava exatamente igual. WCAG 1.4.13.
+      const elapsed = await msUntilBubble(trigger, focusStart, LONG_DELAY * 4);
+      await expect(Number.isNaN(elapsed)).toBe(false);
+      await expect(elapsed).toBeLessThan(LONG_DELAY / 2);
+
       await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
       // `instant-open` é o contrário do `delayed-open` que o hover carrega: diz
       // que a abertura NÃO passou pelo temporizador. É a leitura sem relógio de
@@ -405,12 +453,37 @@ export const PersistenceInBubble: Story = {
 
     await step('Levar o ponteiro até o balão não fecha nada', async () => {
       const balao = balaoDe(trigger)!;
-      // `pointerEventsCheck: 0` porque a folha compartilhada deixa o balão
-      // `pointer-events: none` — quem segura a abertura é a área de tolerância
-      // entre gatilho e balão, calculada por coordenada, não por hover no nó.
-      await userEvent.hover(balao, { pointerEventsCheck: 0 });
+
+      // A tolerância só existe DEPOIS de o ponteiro sair do gatilho: é a saída
+      // que define o polígono entre os dois. A coordenada é a borda de baixo do
+      // gatilho, que é por onde o ponteiro sai rumo ao balão — `hover(balao)`
+      // sozinho não arma nada, e por isso a asserção antiga passava mesmo sem
+      // tolerância nenhuma.
+      const rect = trigger.getBoundingClientRect();
+      trigger.dispatchEvent(
+        new PointerEvent('pointerleave', {
+          pointerId: 1,
+          pointerType: 'mouse',
+          isPrimary: true,
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.bottom,
+        }),
+      );
+
+      const center = centerOf(balao);
+      pointerMoveTo(center.x, center.y);
       await wait(200);
       await expect(balaoDe(trigger)).not.toBeNull();
+    });
+
+    await step('Levar o ponteiro para longe fecha — a tolerância tem limite', async () => {
+      // O par com o passo anterior é o que impede a asserção de passar por
+      // acidente: se a tolerância nunca fechasse, "continua aberto" não provaria
+      // nada, e tolerância infinita passaria nos dois passos.
+      pointerMoveTo(0, 0);
+      await waitFor(async () => {
+        await expect(balaoDe(trigger)).toBeNull();
+      });
     });
   },
 };

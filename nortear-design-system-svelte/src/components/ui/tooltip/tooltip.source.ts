@@ -162,6 +162,153 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
   });
 }
 
+/**
+ * PlacementSides (Compositions): os quatro lados, um provedor só.
+ *
+ * O snippet ensina a FORMA de produção — provedor único no root, um balão por
+ * gatilho, abertura por ponteiro ou foco. A cena da story abre os quatro ao
+ * mesmo tempo e por isso dá um provedor a cada um; isso é andaime de regressão
+ * visual, e andaime não entra no que alguém copia.
+ */
+export function tooltipPlacementSidesSource(): string {
+  return svelteSnippet(
+    `${IMPORT}
+
+const SIDES = [
+  { side: "top", label: "Top" },
+  { side: "right", label: "Right" },
+  { side: "bottom", label: "Bottom" },
+  { side: "left", label: "Left" },
+] as const;`,
+    `<TooltipProvider>
+  {#each SIDES as item (item.side)}
+    <Tooltip>
+      <TooltipTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{item.label}</Button>
+        {/snippet}
+      </TooltipTrigger>
+      <TooltipContent side={item.side}>Tooltip {item.label}</TooltipContent>
+    </Tooltip>
+  {/each}
+</TooltipProvider>`,
+  );
+}
+
+/**
+ * Collision (Compositions): o lado pedido não cabe, e a lib vira o balão.
+ *
+ * Nada a configurar — a fuga de colisão é o padrão. O que o snippet ensina é
+ * que `side` é PREFERÊNCIA, e que o lado final chega ao balão em `data-side`,
+ * que é o gancho lido pela folha compartilhada.
+ */
+export function tooltipCollisionSource(): string {
+  return svelteSnippet(
+    IMPORT,
+    `<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>
+      {#snippet child({ props })}
+        <Button variant="outline" {...props}>Sem espaço acima</Button>
+      {/snippet}
+    </TooltipTrigger>
+    <!-- side é preferência: sem espaço acima, o balão nasce embaixo e
+         publica o lado final em data-side. -->
+    <TooltipContent side="top">Viro para baixo sozinho</TooltipContent>
+  </Tooltip>
+</TooltipProvider>`,
+  );
+}
+
+/** HelpInFormField (Compositions): ajuda ao lado do rótulo de um campo. */
+export function tooltipFormFieldHelpSource(): string {
+  return svelteSnippet(
+    IMPORT,
+    `<TooltipProvider>
+  <div class="nds-stack nds-w-sm" data-spacing="xs">
+    <div class="nds-cluster" data-spacing="sm">
+      <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
+      <Tooltip>
+        <TooltipTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="icon-sm" aria-label="Ajuda sobre Token de API" {...props}>
+              ?
+            </Button>
+          {/snippet}
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          Gere em Configurações › Acesso › Tokens
+        </TooltipContent>
+      </Tooltip>
+    </div>
+    <input id="api-token" type="text" class="nds-input" placeholder="sk-..." />
+  </div>
+</TooltipProvider>`,
+  );
+}
+
+/** MetricDescription (Compositions): a sigla da métrica, definida no balão. */
+export function tooltipMetricDescriptionSource(): string {
+  return svelteSnippet(
+    IMPORT,
+    `<TooltipProvider>
+  <div class="nds-stack" data-spacing="xs">
+    <div class="nds-cluster" data-spacing="sm">
+      <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase">LCP</p>
+      <Tooltip>
+        <TooltipTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="icon-sm" aria-label="O que é LCP" {...props}>i</Button>
+          {/snippet}
+        </TooltipTrigger>
+        <TooltipContent>
+          Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+        </TooltipContent>
+      </Tooltip>
+    </div>
+    <p class="nds-text-h3 nds-m-0">1,8 s</p>
+  </div>
+</TooltipProvider>`,
+  );
+}
+
+/**
+ * GroupWait (Compositions): a janela de cortesia do grupo, com os dois números
+ * à vista — o par só se lê junto.
+ */
+export function tooltipGroupWaitSource(): string {
+  return svelteSnippet(
+    `${IMPORT}
+import Save from "@lucide/svelte/icons/save";
+import Trash2 from "@lucide/svelte/icons/trash-2";
+import Share2 from "@lucide/svelte/icons/share-2";
+
+const ACTIONS = [
+  { id: "save", label: "Salvar", hint: "Salvar (Ctrl+S)", icon: Save },
+  { id: "delete", label: "Excluir", hint: "Excluir item", icon: Trash2 },
+  { id: "share", label: "Compartilhar", hint: "Compartilhar link", icon: Share2 },
+] as const;`,
+    `<!-- O primeiro balão espera os 600 ms; enquanto a janela de 1000 ms está
+     quente, o vizinho abre na hora. Os dois números só se leem juntos. -->
+<TooltipProvider delayDuration={600} skipDelayDuration={1000}>
+  <div class="nds-cluster" data-spacing="lg">
+    {#each ACTIONS as action (action.id)}
+      <Tooltip>
+        <TooltipTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="icon" aria-label={action.label} {...props}>
+              <action.icon aria-hidden="true" class="nds-size-4" />
+            </Button>
+          {/snippet}
+        </TooltipTrigger>
+        <TooltipContent>{action.hint}</TooltipContent>
+      </Tooltip>
+    {/each}
+  </div>
+</TooltipProvider>`,
+  );
+}
+
 /** Open (States): o balão nasce aberto, sem interação e sem estado externo. */
 export function tooltipOpenSource(): string {
   return montar({

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
-import { NDS_TOOLTIP } from './tooltip';
-import { balaoDe, SAVE_ICON } from './tooltip.fixtures';
+import { NDS_TOOLTIP, NDS_TOOLTIP_DELAY } from './tooltip';
+import { balaoDe, fitsOnSide, SAVE_ICON, sideSettledAs } from './tooltip.fixtures';
 import { NdsButton } from './button';
 import { NdsTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -59,7 +59,12 @@ const meta: Meta<TooltipArgs> = {
     side: 'top',
     align: 'center',
     sideOffset: 4,
-    delay: 0,
+    // A espera que a casa declara, e não `0`. O zero era andaime de teste
+    // publicado como se fosse decisão de projeto: ele abre balão a cada passada
+    // do mouse, e o painel Code ao lado ensinava justamente isso a quem copia
+    // (D5 do PRD). Esta story não precisa dele — a `play` abre por FOCO, que
+    // não espera atraso nenhum.
+    delay: NDS_TOOLTIP_DELAY,
     open: false,
     onOpenChange: fn(),
   },
@@ -80,7 +85,19 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <div ndsTooltipProvider [delay]="delay" class="nds-p-8">
+      <!-- Moldura alta com o gatilho no meio, e ela é ANDAIME com motivo: a
+           asserção de lado EXATO da play só é honesta onde o lado pedido cabe.
+           No quadro do runner sobram cerca de 38px acima do gatilho contra 29px
+           de balão, e a lib vira para baixo — corretamente —, o que reprovaria a
+           story pelo tamanho da moldura em vez de por defeito. Quem encosta na
+           borda de propósito é a story Collision, em Compositions. -->
+      <div
+        ndsTooltipProvider
+        [delay]="delay"
+        class="nds-cluster nds-w-full nds-min-h-100 nds-p-8"
+        data-justify="center"
+        data-align="center"
+      >
         <span ndsTooltip [open]="open" (openChange)="onOpenChange($event)">
           <button
             ndsTooltipTrigger
@@ -160,18 +177,19 @@ export const Playground: Story = {
     });
 
     await step('O lado pedido chega ao balão como data-side', async () => {
-      // É o gancho que o CSS compartilhado lê. Auto-flip por colisão pode
-      // devolver o lado oposto quando falta espaço, e isso é comportamento, não
-      // defeito — por isso os dois valores passam.
-      const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
-      // Esperar o atributo, e não só o elemento: o balão entra no DOM antes de
-      // o posicionador medir, e nesse intervalo o `data-side` ainda é nulo.
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)?.getAttribute('data-side')).toBeTruthy();
-      });
-      await expect([args.side, oposto[args.side]]).toContain(
-        balaoDe(trigger)!.getAttribute('data-side'),
-      );
+      // É o gancho que o CSS compartilhado lê.
+      const balao = balaoDe(trigger)!;
+      // A precondição é MEDIDA, e por EIXO: o lado exato só se cobra onde há
+      // espaço para ele. Sem ela, uma janela de teste mais baixa reprovaria por
+      // tamanho de quadro em vez de por defeito do componente.
+      await expect(fitsOnSide(trigger, balao, args.side, args.sideOffset)).toBe(true);
+      // Esperar o VALOR assentar, e não a existência do atributo: o `data-side`
+      // nasce com o lado pedido e só é reescrito quando o posicionador mede.
+      await sideSettledAs(trigger, args.side);
+      // E então o lado EXATO. Aceitar `[side, oposto]` — o que estava aqui —
+      // passa com ou sem auto-flip: é a asserção que não pode reprovar. Quem
+      // prova a virada por colisão é a story Collision, em Compositions.
+      await expect(balao).toHaveAttribute('data-side', args.side);
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {
