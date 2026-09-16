@@ -339,3 +339,46 @@ describe('cada story liga o próprio construtor', () => {
     expect(Object.values(stories).join('\n')).not.toMatch(/aria-live="/);
   });
 });
+
+// ─── O snippet descreve a story INTEIRA, e a story não inventa peça ──────────
+//
+// Duas divergências medidas em 2026-09-16, nos dois sentidos: o snippet da
+// `DynamicInsertion` publicava um botão de tamanho default e nenhum dos dois
+// contêineres, e a `Dismissible` RENDERIZAVA um segundo alerta fixo que nem o
+// snippet mostrava nem as outras quatro stacks tinham.
+
+describe('DynamicInsertion publica o gatilho, a linha dele e o contêiner', () => {
+  it('o botão é `sm` e vem dentro do nds-stack', () => {
+    const code = alertDynamicInsertionSource();
+    expect(code).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(code).toContain(
+      '<button ndsButton variant="default" size="sm" (click)="generated.set(true)">Gerar relatório</button>',
+    );
+    expect(code).toContain('@if (generated()) {');
+  });
+
+  it('a story renderiza o mesmo contêiner e o mesmo tamanho de botão', () => {
+    const block = storyBlock('alert-states', 'DynamicInsertion');
+    expect(block, 'a story DynamicInsertion não foi encontrada').not.toBe('');
+    expect(block).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(block).toContain('size="sm"');
+  });
+});
+
+describe('Dismissible mostra UM alerta, como as outras quatro stacks', () => {
+  /** Sem comentário: a prosa que EXPLICA o alerta retirado não é render. */
+  const withoutComments = (source: string) =>
+    source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+
+  it('a story não renderiza um segundo alerta que o snippet não ensina', () => {
+    const block = withoutComments(storyBlock('alert-variants', 'Dismissible'));
+    expect(block, 'a story Dismissible não foi encontrada').not.toBe('');
+    // O render era de uma stack só: um segundo alerta fixo, de papel polido e
+    // rótulo próprio, que o painel Code não publicava.
+    expect(block).not.toContain('role="status"');
+    expect(block).not.toContain('<div ndsAlert');
+    // Ele delega ao andaime de remontagem, que é o único alerta da story.
+    expect(block).toContain('remountingDismissibleAlert(onDismiss, {');
+    expect(alertDismissibleSource()).not.toContain('role="status"');
+  });
+});

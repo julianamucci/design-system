@@ -13,7 +13,12 @@ import {
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 import BadgeSemanticsStory from './BadgeSemanticsStory.svelte';
-import { badgeDestructiveSource, badgeSemanticsSource, badgeSource } from './badge.source';
+import {
+  badgeDefaultSource,
+  badgeDestructiveSource,
+  badgeSemanticsSource,
+  badgeSource,
+} from './badge.source';
 
 const meta: Meta = {
   title: 'Components/Feedback/Badge/Variants',
@@ -48,7 +53,13 @@ type Story = StoryObj;
  */
 
 export const Default: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item2'] },
+  // Declarada AQUI, e não herdada do `meta`: a herança acertava por
+  // coincidência — o `badgeSource` do `meta` serve o Playground, e mudá-lo
+  // trocaria o painel desta story em silêncio.
+  parameters: {
+    covers: ['functional.item1', 'visual.item2'],
+    docs: { source: { transform: badgeDefaultSource } },
+  },
   render: () => ({ Component: BadgeStory, props: { variant: 'default', label: 'Novo' } }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

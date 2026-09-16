@@ -75,7 +75,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  parameters: { covers: ["accessibility.item1", "accessibility.item4", "visual.item1"] },
+  parameters: {
+    covers: ["accessibility.item1", "accessibility.item4", "visual.item1"],
+    // Própria, e não herdada do meta: herança acerta por coincidência, e a
+    // coincidência não sobrevive à próxima edição do render.
+    docs: { source: { transform: alertSource } },
+  },
   render: (args) => (
     <Alert {...args}>
       <Info aria-hidden="true" />

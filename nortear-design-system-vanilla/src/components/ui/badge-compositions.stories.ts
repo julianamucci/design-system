@@ -18,6 +18,10 @@ import {
   badgeTriggerSourceWith,
   badgeWithCounterSourceWith,
 } from './badge.source';
+import badgeTranslations from '@shared/content/badge/translations.json';
+
+/** Os mesmos rótulos que os construtores do painel leem — uma fonte só. */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -49,7 +53,7 @@ export const WithIcon: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
     docs: {
-      source: { transform: badgeSourceWith({ withIcon: true, label: 'Ativo' }) },
+      source: { transform: badgeSourceWith({ withIcon: true, label: LABELS.statusLabel }) },
     },
   },
   render: () => {
@@ -58,17 +62,17 @@ export const WithIcon: Story = {
     const icon = createElement(Check);
     icon.setAttribute('aria-hidden', 'true');
     icon.setAttribute('data-icon', 'inline-start');
-    return createBadge({ children: [icon, 'Ativo'] });
+    return createBadge({ children: [icon, LABELS.statusLabel] });
   },
   play: async ({ canvasElement }) => {
-    const badge = badgeRoot(within(canvasElement).getByText('Ativo'));
+    const badge = badgeRoot(within(canvasElement).getByText(LABELS.statusLabel));
 
     // accessibility.item2 — o ícone é reforço visual: quem nomeia é o texto.
     const icon = badge.querySelector('svg');
     await expect(icon).not.toBeNull();
     await expect(icon).toHaveAttribute('aria-hidden', 'true');
     await expect(icon).toHaveAttribute('data-icon', 'inline-start');
-    await expect((badge.textContent ?? '').trim()).toBe('Ativo');
+    await expect((badge.textContent ?? '').trim()).toBe(LABELS.statusLabel);
 
     // functional.item5 — o respiro do lado do ícone é mais curto: é o
     // `data-icon="inline-start"` que a folha lê, e não uma margem na story.
@@ -91,7 +95,7 @@ export const WithCounter: Story = {
       source: {
         transform: badgeWithCounterSourceWith({
           variant: 'destructive',
-          label: 'Urgente',
+          label: LABELS.destructiveLabel,
           count: '12',
         }),
       },
@@ -104,7 +108,7 @@ export const WithCounter: Story = {
   render: () =>
     createBadge({
       variant: 'destructive',
-      children: ['Urgente', createBadgeCounter({ text: '12' })],
+      children: [LABELS.destructiveLabel, createBadgeCounter({ text: '12' })],
     }),
   play: async ({ canvasElement }) => {
     const counter = within(canvasElement).getByText('12');
@@ -140,8 +144,8 @@ export const AsButton: Story = {
     docs: {
       source: {
         transform: badgeTriggerSourceWith({
-          label: 'Design',
-          accessibleName: 'Filtrar por Design',
+          label: LABELS.categoryLabel,
+          accessibleName: LABELS.categoryFilterLabel,
         }),
       },
     },
@@ -150,19 +154,19 @@ export const AsButton: Story = {
     createButton({
       variant: 'ghost',
       size: 'sm',
-      'aria-label': 'Filtrar por Design',
-      children: createBadge({ variant: 'info', children: 'Design' }),
+      'aria-label': LABELS.categoryFilterLabel,
+      children: createBadge({ variant: 'info', children: LABELS.categoryLabel }),
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: 'Filtrar por Design' });
+    const button = canvas.getByRole('button', { name: LABELS.categoryFilterLabel });
     const badge = badgeRoot(button);
 
     await step('O gatilho é o Button do design system, ghost e sm', async () => {
       await expect(button.classList.contains('nds-button-ghost')).toBe(true);
       await expect(button.classList.contains('nds-button-sm')).toBe(true);
       await expect(badge).toHaveAttribute('data-variant', 'info');
-      await expect((badge.textContent ?? '').trim()).toBe('Design');
+      await expect((badge.textContent ?? '').trim()).toBe(LABELS.categoryLabel);
     });
 
     await step('O foco é do botão; a etiqueta não compete por ele', async () => {
@@ -181,18 +185,18 @@ export const AsLink: Story = {
   parameters: {
     covers: ['functional.item8', 'visual.item7'],
     docs: {
-      source: { transform: badgeLinkSourceWith({ label: 'Design' }) },
+      source: { transform: badgeLinkSourceWith({ label: LABELS.categoryLabel }) },
     },
   },
   render: () => {
     const link = document.createElement('a');
     link.href = '#';
-    link.append(createBadge({ variant: 'info', children: 'Design' }));
+    link.append(createBadge({ variant: 'info', children: LABELS.categoryLabel }));
     return link;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: 'Design' });
+    const link = canvas.getByRole('link', { name: LABELS.categoryLabel });
     const badge = badgeRoot(link);
 
     await step('O foco é do link; a etiqueta não compete por ele', async () => {

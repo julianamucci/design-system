@@ -643,10 +643,13 @@ Ordem: folha → primitivo e peça de região → stories → docs page.
   fixos escritos DEPOIS de qualquer spread, para que ninguém troque papel ou
   estado. Story nenhuma monta o trio à mão.
 - **`fill` sozinho nasce com altura zero.** Qualquer superfície que o mostre
-  precisa de um container que estabeleça a caixa; é por isso que o Playground das
-  cinco troca para a classe de proporção de mídia quando a forma é `fill`, e o
-  painel Code das cinco ensina o esqueleto dentro de `AspectRatio` — a classe é
-  da docs page, não da API.
+  precisa de um container que estabeleça a caixa, e esse container é o
+  `AspectRatio` — nas STORIES e no painel Code das cinco, desde 2026-09-16. Até
+  ali o Playground e a `Rectangle` das cinco trocavam para a classe de proporção
+  de mídia da docs page quando a forma era `fill`, enquanto o snippet ao lado
+  ensinava `AspectRatio`: o painel mostrava um elemento que a story não tinha, e
+  a classe — que não é API — era o que de fato dava a caixa no exemplo. A classe
+  continua onde ela é legítima, na demonstração das cinco docs pages.
 - **Percentual precisa de base de largura** (D7). Num cluster sem `nds-flex-1` as
   linhas resolvem para zero e o esqueleto desaparece — e a story renderiza,
   vazia.
@@ -661,7 +664,7 @@ Ordem: folha → primitivo e peça de região → stories → docs page.
 | texto, tabela de props, critérios de teste | `docs/shared/content/skeleton/translations.json` |
 | medição compartilhada (caixa desenhada, pulso ativo, distinção do fundo) | `docs/shared/testing/skeleton-probe.ts` |
 | o esqueleto do menu lateral, que é outra peça | `docs/shared/styles/nds/sidebar.css` (`.nds-sidebar-menu-skeleton*`) — ver D10 |
-| a proporção de mídia que dá caixa ao `fill` | `docs/shared/styles/nds/docs-demo.css` (`.nds-docs-skeleton-media`) |
+| a proporção de mídia da DEMONSTRAÇÃO da docs page (nas stories quem dá caixa ao `fill` é o `AspectRatio`) | `docs/shared/styles/nds/docs-demo.css` (`.nds-docs-skeleton-media`) |
 | a grade da demonstração, e por que `data-min` é inerte | `docs/shared/styles/nds/layout.css` (`.nds-grid`) |
 | a escada de movimento e o override do preview | `docs/shared/tokens/motion.css` |
 | portões determinísticos | `node scripts/audit.mjs skeleton --json` |

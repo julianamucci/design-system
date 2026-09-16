@@ -196,6 +196,20 @@ export function sonnerAutoDismissSource(): string {
 }
 
 /**
+ * Pausa na leitura: não há prop a escrever, porque o relógio congela sozinho
+ * enquanto o ponteiro ou o foco estiverem dentro da região (WCAG 2.2.1).
+ *
+ * Construtor PRÓPRIO, e é o que esta story não tinha até 2026-09-16: sem ele a
+ * pausa herdava o snippet do `meta` — o do AutoDismiss — e publicava
+ * `toast.error(…)` enquanto a `play` disparava `toast.info(…)`. O prazo de
+ * 1200ms que a story usa não entra aqui: é relógio de suíte, e quem manda no
+ * exemplo é o padrão de 4000ms da região.
+ */
+export function sonnerPauseSource(): string {
+  return simpleType('info', 'Nova versão disponível.');
+}
+
+/**
  * Pilha aberta: `expand` mantém as anteriores visíveis. Sem ele a mais nova
  * cobre as outras, e uma mensagem ainda não lida some por baixo da seguinte.
  */

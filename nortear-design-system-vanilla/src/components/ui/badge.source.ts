@@ -10,6 +10,21 @@ import {
   type SourceTransform,
 } from '@/lib/story-source';
 import type { BadgeVariant } from './badge';
+import badgeTranslations from '@shared/content/badge/translations.json';
+
+/**
+ * Rótulos padrão: saem do conteúdo compartilhado (pt-BR), o MESMO dicionário que
+ * as stories deste componente leem.
+ *
+ * Cravar o texto aqui deixava DUAS cópias de cada exemplo — uma no construtor do
+ * snippet, outra no `render` da story — e a que envelhecia primeiro era sempre a
+ * do painel, porque nada a compara com a tela. A docs page continua passando os
+ * rótulos do idioma ativo por opção; sem opção, cai neste bloco.
+ */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
+
+/** Número do contador nas stories e na docs page — texto pronto, já truncado. */
+const COUNT = '12';
 
 export type BadgeSnippetOptions = {
   variant?: BadgeVariant;
@@ -22,7 +37,7 @@ export type BadgeSnippetOptions = {
 
 /** A chamada real de `createBadge` com as opções da story. */
 export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
-  const label = o.label ?? 'Novo';
+  const label = o.label ?? LABELS.defaultLabel;
 
   const lines = options([
     // `default` é o padrão da fábrica: só as outras variantes entram.
@@ -73,11 +88,11 @@ export type BadgeGroupSnippetOptions = {
 };
 
 const DEFAULT_GROUP: readonly BadgeGroupItem[] = [
-  { variant: 'default', label: 'Novo' },
-  { variant: 'destructive', label: 'Urgente' },
-  { variant: 'warning', label: 'Vence hoje' },
-  { variant: 'success', label: 'Aprovado' },
-  { variant: 'info', label: 'Novidade' },
+  { variant: 'default', label: LABELS.defaultLabel },
+  { variant: 'destructive', label: LABELS.destructiveLabel },
+  { variant: 'warning', label: LABELS.warningLabel },
+  { variant: 'success', label: LABELS.successLabel },
+  { variant: 'info', label: LABELS.infoLabel },
 ];
 
 /**
@@ -132,8 +147,8 @@ export type BadgeWithCounterSnippetOptions = {
  */
 export function badgeWithCounterSnippet(o: BadgeWithCounterSnippetOptions = {}): string {
   const variant = o.variant ?? 'destructive';
-  const label = o.label ?? 'Urgente';
-  const count = o.count ?? '12';
+  const label = o.label ?? LABELS.destructiveLabel;
+  const count = o.count ?? COUNT;
 
   return snippet(
     importing('badge', 'createBadge', 'createBadgeCounter'),
@@ -168,8 +183,8 @@ export type BadgeTriggerSnippetOptions = {
  * Button do design system já traz foco visível, alvo e estados.
  */
 export function badgeTriggerSnippet(o: BadgeTriggerSnippetOptions = {}): string {
-  const label = o.label ?? 'Design';
-  const name = o.accessibleName ?? 'Filtrar por Design';
+  const label = o.label ?? LABELS.categoryLabel;
+  const name = o.accessibleName ?? LABELS.categoryFilterLabel;
   const variant = o.variant ?? 'info';
 
   return snippet(
@@ -205,7 +220,7 @@ export type BadgeLinkSnippetOptions = {
  * fundo reagir ao ponteiro.
  */
 export function badgeLinkSnippet(o: BadgeLinkSnippetOptions = {}): string {
-  const label = o.label ?? 'Design';
+  const label = o.label ?? LABELS.categoryLabel;
   const href = o.href ?? '#';
   const variant = o.variant ?? 'info';
 

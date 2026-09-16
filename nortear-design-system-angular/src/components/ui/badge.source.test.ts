@@ -156,3 +156,79 @@ describe('cada story liga o próprio construtor', () => {
     expect(storyBlock('WithCounter')).toContain('<span ndsBadgeCounter>12</span>');
   });
 });
+
+describe('o painel diz o que a tela mostra', () => {
+  // Cada linha é: story, o trecho que o snippet precisa conter — com o texto e a
+  // variante que o template renderiza — e o acessor de rótulo que a story usa.
+  // As duas metades juntas provam a fonte única: o snippet traz o texto do
+  // conteúdo compartilhado, e a story lê a MESMA chave em vez de um literal.
+  const pairs: Array<[string, () => string, string, string]> = [
+    ['Default', badgeDefaultSource, `<span ndsBadge>${label('defaultLabel')}</span>`, 'LABEL.default()'],
+    [
+      'Destructive',
+      badgeDestructiveSource,
+      `<span ndsBadge variant="destructive">${label('destructiveLabel')}</span>`,
+      'LABEL.destructive()',
+    ],
+    ['WithIcon', badgeWithIconSource, label('statusLabel'), 'LABEL.status()'],
+    ['WithCounter', badgeWithCounterSource, label('destructiveLabel'), 'LABEL.destructive()'],
+    [
+      'AsButton',
+      badgeAsButtonSource,
+      `<span ndsBadge variant="info">${label('categoryLabel')}</span>`,
+      'LABEL.category()',
+    ],
+    [
+      'AsLink',
+      badgeAsLinkSource,
+      `<span ndsBadge variant="info">${label('categoryLabel')}</span>`,
+      'LABEL.category()',
+    ],
+  ];
+
+  for (const [story, fn, fragmento, acessor] of pairs) {
+    it(`${story}: o snippet traz o texto e a variante que a story renderiza`, () => {
+      expect(fn()).toContain(fragmento);
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block, `${story} não lê o rótulo do conteúdo compartilhado`).toContain(acessor);
+    });
+  }
+
+  it('Semantics traz as cinco variantes, cada uma com o rótulo que a story mostra', () => {
+    const code = badgeSemanticsSource();
+    expect(code).toContain(`<span ndsBadge>${label('defaultLabel')}</span>`);
+    for (const v of ['destructive', 'warning', 'success', 'info']) {
+      expect(code).toContain(`<span ndsBadge variant="${v}">${label(`${v}Label`)}</span>`);
+    }
+  });
+
+  it('o Playground acompanha o control e cai no rótulo do conteúdo', () => {
+    expect(badgePlaygroundSource()).toContain(`<span ndsBadge>${label('defaultLabel')}</span>`);
+    expect(badgePlaygroundSource('', { args: { variant: 'info', label: 'Novidade' } })).toContain(
+      '<span ndsBadge variant="info">Novidade</span>',
+    );
+  });
+
+  it('toda story declara a própria transform, sem herdar a do meta', () => {
+    // Nenhum `meta` desta stack declara transform, e é o que se quer: a story
+    // que esquecesse a sua cairia no `outerHTML` do renderer em vez de herdar um
+    // exemplo errado em silêncio. O caso documenta e cobra esse estado.
+    for (const story of [
+      'Playground',
+      'Default',
+      'Destructive',
+      'Semantics',
+      'WithIcon',
+      'WithCounter',
+      'AsButton',
+      'AsLink',
+    ]) {
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block, `${story} não declara a própria transform`).toMatch(
+        /source:\s*\{\s*transform:/,
+      );
+    }
+  });
+});

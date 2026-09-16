@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Skeleton, SkeletonRegion } from "./skeleton";
+import { AspectRatio } from "./aspect-ratio";
 import {
   skeletonAvatarSource,
   midiaSkeletonBlockSource,
@@ -34,8 +35,8 @@ export const Rectangle: Story = {
   parameters: {
     covers: ["visual.item1"],
     docs: {
-      // `fill` não tem medida própria: quem estabelece a caixa é a proporção
-      // de mídia em volta, e sem ela o snippet ensinaria altura zero.
+      // `fill` não tem medida própria: quem estabelece a caixa é o `AspectRatio`
+      // em volta — na story e no snippet, que por isso mostram o mesmo exemplo.
       source: { transform: midiaSkeletonBlockSource },
       description: {
         story:
@@ -45,16 +46,24 @@ export const Rectangle: Story = {
   },
   render: () => (
     <SkeletonRegion label="Carregando bloco" className="nds-w-sm">
-      <Skeleton data-shape="fill" className="nds-docs-skeleton-media" />
+      <AspectRatio ratio={16 / 9}>
+        <Skeleton data-shape="fill" />
+      </AspectRatio>
     </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
+    const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
-    await step("Preenche a caixa do container na proporção de mídia", async () => {
-      const box = sk.getBoundingClientRect();
-      await expect(box.width).toBeGreaterThan(0);
-      await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.05);
+    await step("Preenche a caixa que o AspectRatio estabelece", async () => {
+      // A proporção é do CONTAINER: medir só o retângulo do esqueleto passava
+      // com a classe de docs page que dava a caixa por fora da API.
+      const c = caixa.getBoundingClientRect();
+      const s = sk.getBoundingClientRect();
+      await expect(c.width).toBeGreaterThan(0);
+      await expect(Math.abs(c.width / c.height - 16 / 9)).toBeLessThan(0.05);
+      await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
+      await expect(Math.abs(s.width - c.width)).toBeLessThan(2);
     });
 
     await step("Continua fora da árvore de acessibilidade", async () => {

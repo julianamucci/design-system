@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Skeleton, SkeletonRegion, type SkeletonRegionProps } from "./skeleton";
+import { AspectRatio } from "./aspect-ratio";
 import { skeletonSource } from "./skeleton.source";
 import { SkeletonDocs } from "@/components/docs/SkeletonDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -71,6 +72,11 @@ type Story = StoryObj<PlaygroundArgs>;
 
 export const Playground: Story = {
   parameters: {
+    docs: {
+      // Declarada na story, e não só herdada do meta: quem lê o painel desta
+      // story tem de ver o que ela monta, mesmo se o meta passar a outra forma.
+      source: { transform: skeletonSource },
+    },
     covers: [
       "functional.item2",
       "functional.item3",
@@ -80,19 +86,26 @@ export const Playground: Story = {
       "accessibility.item3",
     ],
   },
-  render: ({ shape, width }) => (
-    <SkeletonRegion {...OVERRIDE_ATTEMPT} label={REGION_LABEL}>
-      <Skeleton
-        {...SKELETON_OVERRIDE_ATTEMPT}
-        data-shape={shape}
-        data-width={shape === "text" || shape === "heading" ? width : undefined}
-        // `fill` preenche a caixa que o container estabelece; aqui quem
-        // estabelece é a proporção de mídia, senão o bloco nasce com altura
-        // zero e o Playground mostra um esqueleto invisível.
-        className={shape === "fill" ? "nds-docs-skeleton-media" : undefined}
-      />
-    </SkeletonRegion>
-  ),
+  // `fill` preenche a caixa que o CONTAINER estabelece, e quem a estabelece é o
+  // `AspectRatio` — o mesmo que o painel Code ensina e que a composição
+  // `ImageInAspectRatio` usa. A classe de proporção é da docs page, não API: ela
+  // daria a caixa sem aparecer no exemplo de ninguém.
+  render: ({ shape, width }) =>
+    shape === "fill" ? (
+      <SkeletonRegion {...OVERRIDE_ATTEMPT} label={REGION_LABEL} className="nds-w-sm">
+        <AspectRatio ratio={16 / 9}>
+          <Skeleton {...SKELETON_OVERRIDE_ATTEMPT} data-shape="fill" />
+        </AspectRatio>
+      </SkeletonRegion>
+    ) : (
+      <SkeletonRegion {...OVERRIDE_ATTEMPT} label={REGION_LABEL}>
+        <Skeleton
+          {...SKELETON_OVERRIDE_ATTEMPT}
+          data-shape={shape}
+          data-width={shape === "text" || shape === "heading" ? width : undefined}
+        />
+      </SkeletonRegion>
+    ),
   play: async ({ canvasElement, step, args }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
     const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]')!;

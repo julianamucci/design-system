@@ -29,6 +29,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Complete: Story = {
+  // Própria, e não herdada do meta: a composição completa é o assunto desta
+  // story, e painel herdado acerta por coincidência.
+  parameters: { docs: { source: { transform: alertCompleteSource } } },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },
@@ -189,7 +192,7 @@ export const DynamicInsertion: Story = {
       return { reportReady };
     },
     template: `
-      <div class="nds-stack" data-spacing="md">
+      <div class="nds-stack" data-spacing="sm">
         <div>
           <Button size="sm" @click="reportReady = true">Gerar relatório</Button>
         </div>

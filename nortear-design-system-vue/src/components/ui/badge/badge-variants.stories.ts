@@ -55,7 +55,13 @@ const render = (variant: BadgeVariant, text: string) => () => ({
 });
 
 export const Default: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item2'] },
+  // Declarada AQUI, e não herdada do `meta`: a herança acertava por
+  // coincidência — o `meta` deste arquivo aponta justamente para a transform
+  // desta story, e trocá-lo mudaria o painel de todas as outras em silêncio.
+  parameters: {
+    covers: ['functional.item1', 'visual.item2'],
+    docs: { source: { transform: badgeDefaultSource } },
+  },
   render: render('default', 'Novo'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

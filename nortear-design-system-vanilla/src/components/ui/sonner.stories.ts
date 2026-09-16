@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { toast, createSonnerToaster, type ToastOptions, type ToastPosition, type ToastType } from './sonner';
-import { sonnerSource } from './sonner.source';
+import { sonnerSource, sonnerSourceWith } from './sonner.source';
 import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
 import { expectAnuncioNaRegiao, expectNotificacaoForaDoTab } from '@shared/testing/anuncio';
 import { createButton } from './button';
@@ -20,6 +20,16 @@ type SonnerArgs = {
   closeButton: boolean;
   duration: number;
 };
+
+/**
+ * Nome acessível da região DESTA demonstração.
+ *
+ * O padrão da fábrica é "Notificações"; aqui ele é sobreposto porque a página
+ * tem outras regiões e a `play` afirma este nome. Um lugar só: ele é prop real
+ * da região, então o `render`, a `play` e o snippet do painel Code leem a mesma
+ * constante — três literais divergiriam na primeira revisão de texto.
+ */
+const DEMO_REGION_LABEL = 'Notificações da demonstração';
 
 const meta: Meta<SonnerArgs> = {
   title: 'Components/Feedback/Sonner',
@@ -95,6 +105,10 @@ type Story = StoryObj<SonnerArgs>;
 export const Playground: Story = {
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item3'],
+    // Declarada aqui, e não herdada do `meta`: os args cascateiam, mas o nome
+    // acessível desta região não é arg nenhum — sem isto o painel publicava uma
+    // região sem nome enquanto a `play` afirmava o nome.
+    docs: { source: { transform: sonnerSourceWith({ ariaLabel: DEMO_REGION_LABEL }) } },
   },
   render: (args) => {
     const wrapper = document.createElement('div');
@@ -126,7 +140,7 @@ export const Playground: Story = {
         richColors: args.richColors,
         closeButton: args.closeButton,
         duration: args.duration,
-        'aria-label': 'Notificações da demonstração',
+        'aria-label': DEMO_REGION_LABEL,
       }),
     );
 
@@ -177,7 +191,7 @@ export const Playground: Story = {
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {
       // Um marco de página nomeado: o leitor de tela chega até as notificações
       // pela lista de regiões, e não só no instante em que elas são anunciadas.
-      const region = within(document.body).getByRole('region', { name: 'Notificações da demonstração' });
+      const region = within(document.body).getByRole('region', { name: DEMO_REGION_LABEL });
       await expect(region).toHaveClass('nds-toaster');
     });
 
@@ -213,7 +227,7 @@ export const Playground: Story = {
           richColors: args.richColors,
           closeButton: args.closeButton,
           duration: args.duration,
-          'aria-label': 'Notificações da demonstração',
+          'aria-label': DEMO_REGION_LABEL,
         }),
       );
     });

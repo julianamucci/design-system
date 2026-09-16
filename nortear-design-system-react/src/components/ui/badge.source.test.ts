@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import badgeTranslations from '@shared/content/badge/translations.json';
 import {
   badgeAsButtonSnippet,
   badgeAsButtonSource,
@@ -154,5 +155,132 @@ describe('todas as stories', () => {
       expect(fn()).not.toContain('fixtures');
       expect(fn()).not.toContain('args.');
     }
+  });
+});
+
+/** Rótulos do conteúdo compartilhado — a fonte que story e construtor leem. */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
+
+/** Os arquivos de story, como texto: cada story tem de ligar a PRÓPRIA transform. */
+const stories = import.meta.glob<string>('./badge*.stories.tsx', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const allStories = Object.values(stories).join('\n');
+
+/** O bloco de uma story, do `export const Nome` até o próximo export. */
+function storyBlock(name: string): string {
+  const match = new RegExp(`export const ${name}: Story = \\{([\\s\\S]*?)(?=\\nexport |$)`).exec(
+    allStories,
+  );
+  return match?.[1] ?? '';
+}
+
+const STORIES = [
+  'Playground',
+  'Default',
+  'Destructive',
+  'Semantics',
+  'WithIcon',
+  'WithCounter',
+  'AsButton',
+  'AsLink',
+] as const;
+
+describe('o painel diz o que a tela mostra', () => {
+  it('os três arquivos de story foram lidos', () => {
+    // Contagem gerada some sem deixar rastro: se o glob deixar de alcançar um
+    // arquivo, os casos abaixo passariam medindo menos.
+    expect(Object.keys(stories)).toHaveLength(3);
+  });
+
+  // Cada linha é: story, o construtor que ela declara, e o trecho que o snippet
+  // precisa conter — o MESMO texto e a MESMA variante que o `render` monta.
+  const pairs: Array<[string, string, () => string, string]> = [
+    ['Default', 'badgeDefaultSource', badgeDefaultSource, `<Badge>${LABELS.defaultLabel}</Badge>`],
+    [
+      'Destructive',
+      'badgeDestructiveSource',
+      badgeDestructiveSource,
+      `<Badge variant="destructive">${LABELS.destructiveLabel}</Badge>`,
+    ],
+    ['WithIcon', 'badgeWithIconSource', badgeWithIconSource, LABELS.statusLabel],
+    ['WithCounter', 'badgeWithCounterSource', badgeWithCounterSource, LABELS.destructiveLabel],
+    [
+      'AsButton',
+      'badgeAsButtonSource',
+      badgeAsButtonSource,
+      `<Badge variant="info">${LABELS.categoryLabel}</Badge>`,
+    ],
+    [
+      'AsLink',
+      'badgeAsLinkSource',
+      badgeAsLinkSource,
+      `<Badge variant="info">${LABELS.categoryLabel}</Badge>`,
+    ],
+  ];
+
+  for (const [story, builder, fn, fragmento] of pairs) {
+    it(`${story}: o snippet traz o texto e a variante que a story renderiza`, () => {
+      expect(fn()).toContain(fragmento);
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block).toContain(`transform: ${builder}`);
+    });
+  }
+
+  it('Semantics traz as cinco variantes, cada uma com o rótulo que a story mostra', () => {
+    const code = badgeSemanticsSource();
+    expect(code).toContain(`<Badge>${LABELS.defaultLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="destructive">${LABELS.destructiveLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="warning">${LABELS.warningLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="success">${LABELS.successLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="info">${LABELS.infoLabel}</Badge>`);
+    expect(storyBlock('Semantics')).toContain('transform: badgeSemanticsSource');
+  });
+
+  it('toda story declara a própria transform, sem herdar a do meta', () => {
+    // Herança acerta por coincidência: no dia em que o `meta` trocar de
+    // transform, a story que não declara a sua publica outro exemplo em
+    // silêncio — e nada compara o painel com a tela.
+    for (const story of STORIES) {
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block, `${story} herda a transform do meta`).toMatch(/source:\s*\{\s*transform:/);
+    }
+  });
+
+  it('o rótulo sai do conteúdo compartilhado, e não de um literal no construtor', () => {
+    // Story e construtor leem o MESMO bloco do JSON: é o que impede o painel de
+    // envelhecer sozinho no dia em que o texto do exemplo mudar.
+    expect(badgeDefaultSource()).toContain(LABELS.defaultLabel);
+    expect(badgeDestructiveSource()).toContain(LABELS.destructiveLabel);
+    expect(badgeWithIconSource()).toContain(LABELS.statusLabel);
+    expect(badgeAsButtonSource()).toContain(LABELS.categoryFilterLabel);
+    expect(badgeAsLinkSource()).toContain(LABELS.categoryLabel);
+  });
+});
+
+describe('Playground: o painel nunca inventa texto que a tela não mostra', () => {
+  it('control esvaziado deixa a etiqueta vazia no painel, como no render', () => {
+    // O `childText` compartilhado cairia em "Novo" aqui, e o render mostraria
+    // uma etiqueta VAZIA — painel e tela dizendo coisas diferentes.
+    for (const vazio of ['', '   ', '\n\t']) {
+      const output = badgeSource(undefined, { args: { children: vazio } });
+      expect(output, `control ${JSON.stringify(vazio)}`).toContain('<Badge></Badge>');
+      expect(output, `control ${JSON.stringify(vazio)}`).not.toContain(LABELS.defaultLabel);
+    }
+  });
+
+  it('control ausente continua caindo no padrão do meta', () => {
+    expect(badgeSource(undefined, { args: {} })).toContain(`<Badge>${LABELS.defaultLabel}</Badge>`);
+    expect(badgeSource()).toContain(`<Badge>${LABELS.defaultLabel}</Badge>`);
+  });
+
+  it('o texto do control entra aparado, e não com o espaço em volta', () => {
+    expect(badgeSource(undefined, { args: { children: '  Rascunho  ' } })).toContain(
+      '<Badge>Rascunho</Badge>',
+    );
   });
 });

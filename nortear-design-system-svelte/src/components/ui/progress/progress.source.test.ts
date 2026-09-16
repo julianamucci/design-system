@@ -151,6 +151,44 @@ describe('progressSource', () => {
   });
 });
 
+describe('cada story sai dos PRÓPRIOS args', () => {
+  it('os estados escrevem o valor e o nome que aquela story renderiza', () => {
+    // A transform do meta cascateia, mas o que ela lê são os `args` de cada
+    // story: o painel de uma não pode sair no lugar do da outra.
+    expect(progressSource('', { args: { value: 0, 'aria-label': 'Progresso do upload' } })).toContain(
+      '<Progress value={0} aria-label="Progresso do upload" />',
+    );
+    expect(progressSource('', { args: { value: 50, 'aria-label': 'Carregando dados' } })).toContain(
+      '<Progress value={50} aria-label="Carregando dados" />',
+    );
+    expect(progressSource('', { args: { value: 100, 'aria-label': 'Concluído' } })).toContain(
+      '<Progress value={100} aria-label="Concluído" />',
+    );
+    expect(
+      progressSource('', { args: { value: null, 'aria-label': 'Processando dados' } }),
+    ).toContain('<Progress value={null} aria-label="Processando dados" />');
+  });
+
+  it('a Animated traz o bloco inteiro: rótulo, região polite e o laço', () => {
+    const saida = progressSource('', {
+      args: {
+        value: 0,
+        'aria-label': 'Progresso do upload',
+        label: 'Enviando arquivo',
+        showValue: true,
+        animated: true,
+        intervalMs: 400,
+        step: 5,
+      },
+    });
+    expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
+    expect(saida).toContain('<span class="nds-text-foreground">Enviando arquivo</span>');
+    expect(saida).toContain('aria-live="polite">{value}%</span>');
+    expect(saida).toContain('const id = setInterval(() => {');
+    expect(saida).toContain('<Progress value={value} aria-label="Progresso do upload" />');
+  });
+});
+
 describe('progressValueTextSource', () => {
   it('CustomValueText: ensina a função com a assinatura do wrapper', () => {
     const saida = progressValueTextSource();

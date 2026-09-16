@@ -84,6 +84,18 @@ export function sonnerSource(_gerado?: string, ctx?: { args?: Partial<SonnerArgs
   // Chamada com opções vira função nomeada: um objeto dentro de `onclick` em
   // linha única rola para fora do painel e deixa de ser copiável.
   if (options.length) {
+    // A ação some junto com a notificação, então o manipulador precisa existir
+    // FORA dela — e o exemplo só se reproduz ao ser colado se ele estiver
+    // declarado aqui. Citar `desfazer` sem declará-lo entregava um snippet que
+    // não compila.
+    const undo = actionLabel
+      ? `
+
+function desfazer() {
+  toast.success("Item restaurado.");
+}`
+      : '';
+
     return nextFrame(
       `${IMPORTS}
 
@@ -91,7 +103,7 @@ function avisar() {
   ${call}("${title}", {
 ${options.join('\n')}
   });
-}`,
+}${undo}`,
       'Disparar notificação',
       'avisar',
       props,
@@ -167,6 +179,26 @@ export function sonnerDurationSource(): string {
     'Salvar',
     '() => toast.error("Não foi possível salvar. Tente novamente.")',
     ' position="top-right" richColors duration={4000}',
+  );
+}
+
+/**
+ * Estado PauseOnHover: a pausa não se liga — o relógio congela sozinho enquanto
+ * o ponteiro ou o foco estiverem dentro da região (WCAG 2.2.1).
+ *
+ * Construtor PRÓPRIO, e é o que faltava até 2026-09-16: a story herdava o
+ * `sonnerSource` do `meta`, que lê os args dela e publicava
+ * `toast.success("Alterações salvas.")` com `duration={1200}` — a chamada de
+ * outra notificação e o relógio encurtado da suíte —, enquanto a `play` dispara
+ * `toast.info(…)`. O prazo fica no padrão de 4000ms da região, que é o do
+ * design system.
+ */
+export function sonnerPauseSource(): string {
+  return nextFrame(
+    IMPORTS,
+    'Procurar atualização',
+    '() => toast.info("Nova versão disponível.")',
+    DEFAULT_REGION,
   );
 }
 
@@ -266,6 +298,10 @@ function excluir() {
   toast("Item excluído.", {
     action: { label: "Desfazer", onClick: desfazer },
   });
+}
+
+function desfazer() {
+  toast.success("Item restaurado.");
 }`,
     'Excluir item',
     'excluir',
@@ -287,6 +323,10 @@ function enviar() {
     success: "Arquivo enviado com sucesso.",
     error: "Erro ao enviar. Tente novamente.",
   });
+}
+
+async function enviarArquivo(): Promise<void> {
+  await fetch("/api/arquivos", { method: "POST" });
 }`,
     'Enviar arquivo',
     'enviar',

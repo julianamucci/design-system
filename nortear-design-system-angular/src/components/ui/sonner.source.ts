@@ -38,11 +38,23 @@ export type SonnerArgs = {
 const DEFAULT_POSITION: ToastPosition = 'top-right';
 const DEFAULT_DURATION = 4000;
 
+/**
+ * Nome acessível que a região da DEMONSTRAÇÃO carrega.
+ *
+ * O padrão do `input()` é "Notificações", e este não é o padrão: a página do
+ * Playground tem outras regiões, então a dela se nomeia para ser distinguível —
+ * e a `play` afirma esse nome. Está no snippet porque é prop real da região que
+ * a story monta; omiti-lo fazia o painel publicar uma região que a story não
+ * tem.
+ */
+const DEMO_REGION_LABEL = 'Notificações da demonstração';
+
 type RegionOptions = {
   position?: ToastPosition;
   richColors?: boolean;
   closeButton?: boolean;
   duration?: number;
+  label?: string;
 };
 
 /**
@@ -60,6 +72,8 @@ function regionTag(o: RegionOptions = {}): string {
     o.duration !== undefined && o.duration !== DEFAULT_DURATION
       ? `[duration]="${o.duration}"`
       : '',
+    // Atributo estático, e não binding: o rótulo é um `input()` de string.
+    o.label ? `label="${o.label}"` : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -139,6 +153,9 @@ export function sonnerPlaygroundSource(
     position = DEFAULT_POSITION,
     richColors = true,
     closeButton = false,
+    // O control de prazo também descreve a REGIÃO: sem ler este arg, mexer no
+    // painel Controls não mudava uma vírgula do painel Code.
+    duration = DEFAULT_DURATION,
   } = ctx.args ?? {};
 
   const options = [
@@ -149,7 +166,7 @@ export function sonnerPlaygroundSource(
   ].filter(Boolean);
 
   return example({
-    region: regionTag({ position, richColors, closeButton }),
+    region: regionTag({ position, richColors, closeButton, duration, label: DEMO_REGION_LABEL }),
     body: [
       'confirmar(): void {',
       `    ${queueCall(type, title, options)}`,
@@ -361,11 +378,15 @@ export function sonnerPromiseSource(): string {
 
 export function sonnerPersistentSource(): string {
   return example({
-    region: regionTag({ richColors: true, closeButton: true }),
+    // O fechar vem da OPÇÃO da chamada, e não da região — é o que a story faz.
+    // Ligá-lo nos dois lugares ensinava botão de fechar em toda notificação da
+    // aplicação para conseguir um em UMA.
+    region: regionTag({ richColors: true }),
     nota: [
       'Prazo infinito, reservado a falha crítica que exige decisão — e SEMPRE',
       'com botão de fechar: uma notificação que não sai sozinha e não pode ser',
-      'fechada vira obstáculo.',
+      'fechada vira obstáculo. Aqui os dois vão na MESMA chamada, porque é só',
+      'esta notificação que precisa deles.',
     ],
     body: [
       'avisarFalhaCritica(): void {',

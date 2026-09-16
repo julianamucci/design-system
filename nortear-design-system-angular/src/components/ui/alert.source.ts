@@ -341,6 +341,11 @@ export function alertWithoutAnnouncementSource(): string {
  * Story `DynamicInsertion` — o alerta SURGE depois de uma ação, e o anúncio vem
  * do `role="alert"` da própria raiz. Nenhum contêiner `aria-live` em volta: ele
  * aninharia duas regiões vivas.
+ *
+ * O contêiner e a linha do botão são parte do exemplo: é o `nds-stack` que
+ * separa o gatilho do alerta que surge, e é a linha própria que impede o stack
+ * de esticar o botão na largura toda. O botão é `sm`, como o da story — o painel
+ * publicava um botão de tamanho default e nenhum dos dois contêineres.
  */
 export function alertDynamicInsertionSource(): string {
   const block = alertMarkup({
@@ -350,10 +355,14 @@ export function alertDynamicInsertionSource(): string {
   });
   return example(
     ['NdsAlert', 'NdsAlertTitle', 'NdsAlertDescription', 'NdsAlertIcon', 'NdsButton'],
-    `<button ndsButton variant="default" (click)="generated.set(true)">Gerar relatório</button>
-@if (generated()) {
-${indent(block, 2)}
-}`,
+    `<div class="nds-stack" data-spacing="sm">
+  <div>
+    <button ndsButton variant="default" size="sm" (click)="generated.set(true)">Gerar relatório</button>
+  </div>
+  @if (generated()) {
+${indent(block, 4)}
+  }
+</div>`,
     { imports: [IMPORT_SIGNAL, IMPORT_BUTTON], members: ['  readonly generated = signal(false);'] },
   );
 }

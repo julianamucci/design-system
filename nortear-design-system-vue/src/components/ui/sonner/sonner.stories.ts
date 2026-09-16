@@ -83,6 +83,10 @@ type Story = StoryObj<SonnerArgs>;
 export const Playground: Story = {
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item3'],
+    // Declarada aqui, e não herdada do `meta`: story que herda transform acerta
+    // por coincidência — foi assim que a PauseOnHover deste stack publicou por
+    // meses a chamada de outra story.
+    docs: { source: { transform: sonnerPlaygroundSource } },
   },
   render: (args) => ({
     components: { Toaster, Button },

@@ -4,7 +4,7 @@ import { createProgress } from './progress';
 import {
   progressSource,
   progressSourceWith,
-  progressSourceLista,
+  progressSourceList,
   progressSourceLabel,
 } from './progress.source';
 import {
@@ -42,7 +42,17 @@ type Story = StoryObj;
 // ─── Determinate ─────────────────────────────────────────────────────────────
 
 export const Determinate: Story = {
-  parameters: { covers: ['accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item2'],
+    // Declarada aqui, e não herdada do meta: o valor é o assunto desta story, e
+    // bater com o padrão do snippet do meta é coincidência — no dia em que o
+    // padrão mudar, o painel passaria a ensinar outra barra sem ninguém ver.
+    docs: {
+      source: {
+        transform: progressSourceWith({ value: 42, 'aria-label': 'Progresso do upload' }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-md';
@@ -187,7 +197,7 @@ export const SemanticColor: Story = {
     // Override de story: são duas barras, e `variant` é o assunto de cada uma.
     docs: {
       source: {
-        transform: progressSourceLista([
+        transform: progressSourceList([
           { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
           {
             value: 92,

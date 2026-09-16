@@ -30,6 +30,12 @@ export type AlertSnippetOptions = {
    */
   onDismiss?: string;
   className?: string;
+  /**
+   * Classe do consumidor nas SUB-FÁBRICAS de título e descrição, separada da
+   * `className` da raiz de propósito: a story de classe adicional prova que a
+   * classe SOMA em cada peça, e um campo só mostraria metade da composição.
+   */
+  partClassName?: string;
 };
 
 const TITLE_DEFAULT = 'Atenção';
@@ -53,11 +59,14 @@ type AlertParts = {
   body: string[];
 };
 
-function alertParts(o: AlertSnippetOptions): AlertParts {
+function alertParts(o: AlertSnippetOptions, variable = 'alerta'): AlertParts {
   const variant = o.variant ?? 'default';
   const title = o.title ?? TITLE_DEFAULT;
   const description = o.description ?? DESCRIPTION_DEFAULT;
   const icon = o.icon === undefined ? variantIcon(variant) : o.icon;
+  // A classe da peça entra na MESMA chamada que o texto — é assim que o leitor
+  // vê que ela soma à do design system em cada sub-fábrica, não só na raiz.
+  const part = o.partClassName ? `, className: ${text(o.partClassName)}` : '';
 
   const lines = options([
     ['variant', variant !== 'default' ? text(variant) : undefined],
@@ -80,15 +89,17 @@ function alertParts(o: AlertSnippetOptions): AlertParts {
     names,
     // Sem nenhuma opção a chamada é `createAlert()`: a fábrica tem parâmetro
     // com valor padrão, e um `{}` vazio seria ruído.
-    creation: `const alerta = ${lines.length ? callLine('createAlert', lines) : 'createAlert()'};`,
+    creation: `const ${variable} = ${lines.length ? callLine('createAlert', lines) : 'createAlert()'};`,
     body: [
-      icon ? `alerta.appendChild(createAlertIcon(${text(icon)}));` : '',
+      icon ? `${variable}.appendChild(createAlertIcon(${text(icon)}));` : '',
       // O nível do heading entra SEMPRE que há título: o painel Code ensina o
       // nível em vez de deixar o leitor herdar o default da fábrica sem saber.
       // É o mesmo `as` que as stories renderizam — as duas pontas se movem juntas.
-      title ? `alerta.appendChild(createAlertTitle({ text: ${text(title)}, as: 'h4' }));` : '',
+      title
+        ? `${variable}.appendChild(createAlertTitle({ text: ${text(title)}, as: 'h4'${part} }));`
+        : '',
       description
-        ? `alerta.appendChild(createAlertDescription({ text: ${text(description)} }));`
+        ? `${variable}.appendChild(createAlertDescription({ text: ${text(description)}${part} }));`
         : '',
     ].filter(Boolean),
   };
@@ -112,11 +123,92 @@ export function alertSourceWith(fixed: AlertSnippetOptions): SourceTransform<Ale
   return (_generated, ctx) => alertSnippet({ ...ctx.args, ...fixed });
 }
 
+// ─── Composições de mais de UM alerta ────────────────────────────────────────
+//
+// O construtor genérico sabe montar UM alerta. Duas stories mostram vários, e
+// nelas a comparação entre eles É o assunto — então elas têm forma própria, em
+// vez de uma opção que o `alertSnippet` não teria como expressar.
+
+/**
+ * As cinco variantes empilhadas, que é o que a story `Contrast` renderiza.
+ *
+ * Sem ícone de propósito: o que se mede aqui é título e texto corrido sobre o
+ * fundo que cada variante pinta, e um alerta sozinho esconderia a comparação.
+ */
+export function alertContrastSource(): string {
+  return snippet(
+    [
+      importing('alert', 'createAlert', 'createAlertTitle', 'createAlertDescription'),
+      `import type { AlertVariant } from '@/components/ui/alert';`,
+    ].join('\n'),
+    `const variants: AlertVariant[] = ['default', 'destructive', 'success', 'warning', 'info'];
+
+const stack = document.createElement('div');
+stack.className = 'nds-stack';
+stack.dataset.spacing = 'sm';
+
+for (const variant of variants) {
+  const alerta = createAlert({ variant });
+  alerta.append(
+    createAlertTitle({ text: \`Título \${variant}\`, as: 'h4' }),
+    createAlertDescription({ text: \`Texto corrido da variante \${variant}.\` }),
+  );
+  stack.appendChild(alerta);
+}`,
+    appendLine('stack'),
+  );
+}
+
+/**
+ * A nota estática ao lado da mensagem que interrompe — o par que a story
+ * `WithoutAnnouncement` renderiza.
+ *
+ * `role: 'note'` NÃO é live region, e é o valor certo para conteúdo já presente
+ * no carregamento. O segundo alerta não escreve papel nenhum: é ele que mostra
+ * que o default `alert` continua assertivo, e a escolha é de conteúdo.
+ */
+export function alertNoAnnouncementSource(): string {
+  const note = alertParts(
+    {
+      role: 'note',
+      title: 'Nota de implementação',
+      description: 'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.',
+    },
+    'noteAlert',
+  );
+  const urgent = alertParts(
+    {
+      variant: 'destructive',
+      title: 'Falha no envio',
+      description: 'Mensagem urgente surgida em tempo de execução: anúncio imediato.',
+    },
+    'defaultAlert',
+  );
+
+  return snippet(
+    importing('alert', ...new Set([...note.names, ...urgent.names])),
+    `const stack = document.createElement('div');
+stack.className = 'nds-stack';
+stack.dataset.spacing = 'md';
+
+// Estático, já na tela quando a página carrega: não pode ser live region.
+${[note.creation, ...note.body].join('\n')}
+
+// Sem opção de papel, a fábrica mantém o default 'alert', que interrompe.
+${[urgent.creation, ...urgent.body].join('\n')}
+
+stack.append(noteAlert, defaultAlert);`,
+    appendLine('stack'),
+  );
+}
+
 // ─── Com botão de ação ───────────────────────────────────────────────────────
 
 export type AlertWithActionSnippetOptions = AlertSnippetOptions & {
   /** Rótulo do botão que entra no slot de ação. */
   action?: string;
+  /** Classe do consumidor no slot de ação — irmã de `partClassName`. */
+  actionClassName?: string;
 };
 
 /**
@@ -137,7 +229,9 @@ export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): s
       '\n',
     ),
     [creation, ...body].join('\n'),
-    `const action = createAlertAction();
+    `const action = createAlertAction(${
+      o.actionClassName ? `{ className: ${text(o.actionClassName)} }` : ''
+    });
 action.appendChild(createButton({ label: ${text(action)}, variant: 'default', size: 'sm' }));
 alerta.appendChild(action);`,
     appendLine('alerta'),
@@ -157,6 +251,11 @@ export function alertWithActionSourceWith(
  * só interrompe o leitor de tela quando a mensagem SURGE — o alerta que já está
  * na página ao carregar é anunciado na ordem do documento e nada mais.
  *
+ * O GATILHO faz parte do exemplo, e não é enfeite: é ele que marca o instante da
+ * inserção. Sem ele o painel publicaria uma função que ninguém chama, e a story
+ * mostra o botão. A linha própria dele impede o `nds-stack` de esticá-lo na
+ * largura toda.
+ *
  * Sem contêiner `aria-live` em volta: a raiz do alerta já é a região viva, e
  * envolvê-la aninharia duas regiões anunciando a mesma mensagem.
  */
@@ -165,13 +264,26 @@ export function alertDynamicInsertionSnippet(o: AlertSnippetOptions = {}): strin
   const indented = [creation, ...body].join('\n').replace(/^/gm, '  ');
 
   return snippet(
-    importing('alert', ...names),
-    `// Em tempo de execução — quando a operação termina, por exemplo. O alerta
+    [importing('alert', ...names), importing('button', 'createButton')].join('\n'),
+    `const stack = document.createElement('div');
+stack.className = 'nds-stack';
+stack.dataset.spacing = 'sm';
+
+// Em tempo de execução — quando a operação termina, por exemplo. O alerta
 // surge com role="alert" na própria raiz, e é isso que dispara o anúncio.
-function showResult(container: HTMLElement): void {
+function showResult(): void {
+  // Um alerta por vez: acionar de novo substitui, em vez de empilhar.
+  stack.querySelector('[data-slot="alert"]')?.remove();
 ${indented}
-  container.appendChild(alerta);
-}`,
+  stack.appendChild(alerta);
+}
+
+const triggerRow = document.createElement('div');
+triggerRow.appendChild(
+  createButton({ label: 'Gerar relatório', variant: 'default', size: 'sm', onClick: showResult }),
+);
+stack.appendChild(triggerRow);`,
+    appendLine('stack'),
   );
 }
 

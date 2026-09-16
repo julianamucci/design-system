@@ -120,6 +120,10 @@ export const AdditionalClass: Story = {
       source: {
         transform: alertWithActionSourceWith({
           className: 'nds-w-full',
+          // A classe em CADA peça é o que a story prova. Só na raiz, o painel
+          // ensinava metade da composição — e a metade que não é o assunto.
+          partClassName: 'nds-w-full',
+          actionClassName: 'nds-w-auto',
           action: 'Ação',
           title: 'Classe adicional',
           description: 'A classe do consumidor convive com as do design system.',

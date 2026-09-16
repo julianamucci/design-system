@@ -9,6 +9,21 @@
  * o painel é a parte da página feita para ser copiada.
  */
 import { attrs, childText, jsxSnippet, propOption, type SourceTransform } from '@/lib/story-source';
+import badgeTranslations from '@shared/content/badge/translations.json';
+
+/**
+ * Rótulos padrão: saem do conteúdo compartilhado (pt-BR), o MESMO dicionário que
+ * as stories deste componente leem.
+ *
+ * Cravar o texto aqui deixava DUAS cópias de cada exemplo — uma no construtor do
+ * snippet, outra no `render` da story — e a que envelhecia primeiro era sempre a
+ * do painel, porque nada a compara com a tela. A docs page continua passando os
+ * rótulos do idioma ativo por opção; sem opção, cai neste bloco.
+ */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
+
+/** Número do contador nas stories e na docs page — texto pronto, já truncado. */
+const COUNT = '12';
 
 export type BadgeArgs = {
   variant: 'default' | 'destructive' | 'warning' | 'success' | 'info';
@@ -28,6 +43,28 @@ function badgeSnippet(variant: BadgeArgs['variant'] | undefined, content: string
 }
 
 /**
+ * O rótulo do Playground, e por que ele NÃO usa o `childText` compartilhado.
+ *
+ * O `childText` de `@/lib/story-source` cai no padrão para qualquer valor que
+ * não seja string ÚTIL — e a string vazia entra nesse balaio. Isso é correto lá
+ * e é de propósito: nove componentes desta stack dependem dele (`button`,
+ * `label`, `sheet`, `slider`, `sonner`, `alert-dialog`, `context-menu`,
+ * `hover-card` e este), porque o control de action chega como FUNÇÃO e o corpo
+ * do mock não pode vazar para o painel. Mexer no helper para consertar o badge
+ * mudaria o fallback dos outros oito.
+ *
+ * Aqui ele resolvia o problema errado: esvaziar o control de texto deixa o
+ * render com uma etiqueta VAZIA, e o painel dizia "Novo" — o snippet ensinando
+ * um exemplo que a tela ao lado não mostra. Então a distinção é feita
+ * localmente: o que É string é o que a tela mostra, mesmo vazia; o que NÃO é
+ * string é control ausente ou espião de action, e só nesse caso entra o padrão
+ * do `meta`.
+ */
+function playgroundLabel(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : LABELS.defaultLabel;
+}
+
+/**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
  * do Playground; nas stories sem args cai no padrão do componente, que é
  * exatamente o uso canônico. O `variant` só aparece quando difere do padrão:
@@ -37,18 +74,18 @@ export const badgeSource: SourceTransform<BadgeArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return badgeSnippet(
     typeof args.variant === 'string' ? (args.variant as BadgeArgs['variant']) : undefined,
-    childText(args.children, 'Novo'),
+    playgroundLabel(args.children),
   );
 };
 
 /** Ênfase alta: o padrão, e por isso sem atributo nenhum no snippet. */
 export function badgeDefaultSource(): string {
-  return badgeSnippet('default', 'Novo');
+  return badgeSnippet('default', LABELS.defaultLabel);
 }
 
 /** Ênfase de alerta, reservada ao que exige reação. */
 export function badgeDestructiveSource(): string {
-  return badgeSnippet('destructive', 'Urgente');
+  return badgeSnippet('destructive', LABELS.destructiveLabel);
 }
 
 /**
@@ -60,11 +97,11 @@ export function badgeSemanticsSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-cluster" data-spacing="sm">
-  <Badge>Novo</Badge>
-  <Badge variant="destructive">Urgente</Badge>
-  <Badge variant="warning">Vence hoje</Badge>
-  <Badge variant="success">Aprovado</Badge>
-  <Badge variant="info">Novidade</Badge>
+  <Badge>${LABELS.defaultLabel}</Badge>
+  <Badge variant="destructive">${LABELS.destructiveLabel}</Badge>
+  <Badge variant="warning">${LABELS.warningLabel}</Badge>
+  <Badge variant="success">${LABELS.successLabel}</Badge>
+  <Badge variant="info">${LABELS.infoLabel}</Badge>
 </div>`,
   );
 }
@@ -94,7 +131,7 @@ export function badgeWithIconSnippet(o: BadgeCompositionSnippetOptions = {}): st
 import { Check } from "lucide-react";`,
     `<Badge${attrs(propOption('variant', o.variant, VARIANTS, 'default'))}>
   <Check aria-hidden="true" data-icon="inline-start" />
-  ${childText(o.label, 'Ativo')}
+  ${childText(o.label, LABELS.statusLabel)}
 </Badge>`,
   );
 }
@@ -114,8 +151,8 @@ export function badgeWithCounterSnippet(o: BadgeCompositionSnippetOptions = {}):
   return jsxSnippet(
     'import { Badge, BadgeCounter } from "@/components/ui/badge";',
     `<Badge${attrs(propOption('variant', o.variant ?? 'destructive', VARIANTS, 'default'))}>
-  ${childText(o.label, 'Urgente')}
-  <BadgeCounter>${childText(o.count, '12')}</BadgeCounter>
+  ${childText(o.label, LABELS.destructiveLabel)}
+  <BadgeCounter>${childText(o.count, COUNT)}</BadgeCounter>
 </Badge>`,
   );
 }
@@ -134,8 +171,8 @@ export function badgeAsButtonSnippet(o: BadgeCompositionSnippetOptions = {}): st
   return jsxSnippet(
     `${IMPORT}
 import { Button } from "@/components/ui/button";`,
-    `<Button variant="ghost" size="sm" aria-label="${childText(o.accessibleName, 'Filtrar por Design')}">
-  <Badge${attrs(propOption('variant', o.variant ?? 'info', VARIANTS, 'default'))}>${childText(o.label, 'Design')}</Badge>
+    `<Button variant="ghost" size="sm" aria-label="${childText(o.accessibleName, LABELS.categoryFilterLabel)}">
+  <Badge${attrs(propOption('variant', o.variant ?? 'info', VARIANTS, 'default'))}>${childText(o.label, LABELS.categoryLabel)}</Badge>
 </Button>`,
   );
 }
@@ -153,7 +190,7 @@ export function badgeAsLinkSnippet(o: BadgeCompositionSnippetOptions = {}): stri
   return jsxSnippet(
     IMPORT,
     `<a href="#">
-  <Badge${attrs(propOption('variant', o.variant ?? 'info', VARIANTS, 'default'))}>${childText(o.label, 'Design')}</Badge>
+  <Badge${attrs(propOption('variant', o.variant ?? 'info', VARIANTS, 'default'))}>${childText(o.label, LABELS.categoryLabel)}</Badge>
 </a>`,
   );
 }

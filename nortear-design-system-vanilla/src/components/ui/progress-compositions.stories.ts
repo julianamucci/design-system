@@ -4,7 +4,8 @@ import { createProgress, type ProgressVariant } from './progress';
 import {
   progressSource,
   progressSourceCustomText,
-  progressSourceLista,
+  progressSourceEtapas,
+  progressSourceList,
   progressSourceOcupado,
   progressSourceLabel,
 } from './progress.source';
@@ -137,10 +138,12 @@ export const FileUpload: Story = {
 export const WizardSteps: Story = {
   parameters: {
     // Override de story: aqui a região `polite` anuncia o nome da etapa, e não
-    // a porcentagem.
+    // a porcentagem — e é por isso que o bloco tem forma própria, com o rótulo
+    // em peso médio, o espaçamento `sm` e o texto da direita sem numeral
+    // tabular, que só serve a número.
     docs: {
       source: {
-        transform: progressSourceLabel({
+        transform: progressSourceEtapas({
           value: 60,
           label: 'Etapa 3 de 5',
           valueText: 'Endereço',
@@ -206,7 +209,7 @@ export const MultipleUploads: Story = {
     // acessível próprio.
     docs: {
       source: {
-        transform: progressSourceLista([
+        transform: progressSourceList([
           { value: 100, label: 'foto-1.jpg', 'aria-label': 'Upload de foto-1.jpg concluído' },
           { value: 74, label: 'foto-2.jpg', 'aria-label': 'Progresso do upload de foto-2.jpg' },
           { value: 32, label: 'foto-3.jpg', 'aria-label': 'Progresso do upload de foto-3.jpg' },
@@ -264,7 +267,7 @@ export const CustomColor: Story = {
   parameters: {
     docs: {
       source: {
-        transform: progressSourceLista([
+        transform: progressSourceList([
           {
             value: 100,
             variant: 'success',

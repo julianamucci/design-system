@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { createApp } from 'vue';
 import { Skeleton, SkeletonRegion } from './index';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
@@ -53,6 +54,11 @@ type Story = StoryObj<PlaygroundArgs>;
 
 export const Playground: Story = {
   parameters: {
+    docs: {
+      // Declarada na story, e não só herdada do meta: o painel desta story tem
+      // de publicar o que ela monta, mesmo se o meta mudar de forma.
+      source: { transform: skeletonPlaygroundSource },
+    },
     covers: [
       'functional.item2',
       'functional.item3',
@@ -63,20 +69,24 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    components: { Skeleton, SkeletonRegion },
+    components: { Skeleton, SkeletonRegion, AspectRatio },
     setup() {
       const widthAplicada = () =>
         args.shape === 'text' || args.shape === 'heading' ? args.width : null;
       return { args, widthAplicada };
     },
-    // Dois ramos em vez de uma classe ligada: `fill` preenche a caixa que o
-    // container estabelece, e aqui quem estabelece é a proporção de mídia —
-    // senão o bloco nasce com altura zero e o Playground mostra um esqueleto
-    // invisível. A classe entra literal para não virar expressão no atributo.
+    // Dois ramos com classe literal em cada um, em vez de classe ligada: `fill`
+    // não tem medida própria e preenche a caixa que o container estabelece —
+    // aqui o `AspectRatio`, que é o mesmo que o painel Code ensina. A classe de
+    // proporção da docs page daria a caixa sem ser API do design system.
     template: `
-      <SkeletonRegion label="Carregando conteúdo">
-        <Skeleton v-if="args.shape === 'fill'" data-shape="fill" class="nds-docs-skeleton-media" />
-        <Skeleton v-else :data-shape="args.shape" :data-width="widthAplicada()" />
+      <SkeletonRegion v-if="args.shape === 'fill'" label="Carregando conteúdo" class="nds-w-sm">
+        <AspectRatio :ratio="16 / 9">
+          <Skeleton data-shape="fill" />
+        </AspectRatio>
+      </SkeletonRegion>
+      <SkeletonRegion v-else label="Carregando conteúdo">
+        <Skeleton :data-shape="args.shape" :data-width="widthAplicada()" />
       </SkeletonRegion>
     `,
   }),

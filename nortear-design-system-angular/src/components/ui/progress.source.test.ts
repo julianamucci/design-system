@@ -2,11 +2,17 @@ import { describe, expect, it } from 'vitest';
 import * as progressSource from './progress.source';
 import {
   progressAnimatedSource,
+  progressCompleteSource,
   progressCustomValueTextSource,
+  progressDefaultSource,
+  progressDeterminateSource,
+  progressFileUploadSource,
   progressIndeterminateSource,
   progressIndeterminateStateSource,
+  progressLoadingSource,
   progressPlaygroundSource,
   progressWithLabelSource,
+  progressWizardStepsSource,
 } from './progress.source';
 
 /**
@@ -124,6 +130,41 @@ describe('valor desconhecido', () => {
     const code = progressIndeterminateStateSource();
     expect(code).toContain('[value]="null"');
     expect(code).not.toContain('[value]="0"');
+  });
+});
+
+describe('cada story ensina os valores e os textos que renderiza', () => {
+  it('os estados e a variante determinada levam o valor e o nome de cada um', () => {
+    expect(progressDeterminateSource()).toContain('[value]="42"');
+    expect(progressDeterminateSource()).toContain('aria-label="Progresso do upload"');
+    expect(progressDefaultSource()).toContain('[value]="0"');
+    expect(progressLoadingSource()).toContain('[value]="50"');
+    expect(progressLoadingSource()).toContain('aria-label="Carregando dados"');
+    expect(progressCompleteSource()).toContain('[value]="100"');
+    expect(progressCompleteSource()).toContain('aria-label="Concluído"');
+  });
+
+  it('a barra que avança ensina o relógio do render, e não um encurtado', () => {
+    const code = progressAnimatedSource();
+    expect(code).toContain('pct >= 100 ? 0 : pct + 5');
+    expect(code).toContain(', 400)');
+    expect(code).toContain('{{ progress() }}%');
+    expect(code).toContain('aria-live="polite"');
+  });
+
+  it('as etapas anunciam o nome da etapa, em peso médio e sem numeral tabular', () => {
+    const code = progressWizardStepsSource();
+    expect(code).toContain('<span class="nds-text-foreground nds-font-medium">Etapa 3 de 5</span>');
+    expect(code).toContain('<span class="nds-text-muted-foreground" aria-live="polite">Endereço</span>');
+    expect(code).toContain('[value]="60"');
+  });
+
+  it('o upload ensina o cartão do arquivo, com o percentual em região polite', () => {
+    const code = progressFileUploadSource();
+    expect(code).toContain('<div class="nds-text-body nds-font-medium">documento-final.pdf</div>');
+    expect(code).toContain('2.4 MB de 5.0 MB');
+    expect(code).toContain('aria-live="polite">48%</span>');
+    expect(code).toContain('[value]="48"');
   });
 });
 

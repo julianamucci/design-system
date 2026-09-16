@@ -53,7 +53,7 @@ describe('Default e Destructive', () => {
     expect(badgeDestructiveSource()).toContain('<Badge variant="destructive">Urgente</Badge>');
   });
 
-  it('nenhuma variante pinta o texto por fora: a cor vem do componente', () => {
+  it('nenhuma variante pinta o rótulo por fora: a cor vem do componente', () => {
     for (const fn of [badgeDefaultSource, badgeDestructiveSource, badgeSemanticsSource]) {
       expect(fn()).not.toContain('nds-text-destructive');
       expect(fn()).not.toContain('class="nds-badge');
@@ -175,5 +175,103 @@ describe('AsLink', () => {
     // O hover é da folha: escrever classe ou estilo ensinaria a contorná-la.
     expect(output).not.toContain('class=');
     expect(output).not.toContain('style=');
+  });
+});
+
+/** Rótulos do conteúdo compartilhado — a fonte que story e construtor leem. */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
+
+/** Os arquivos de story, em forma crua: cada story tem de ligar a PRÓPRIA transform. */
+const stories = import.meta.glob<string>('./badge*.stories.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const allStories = Object.values(stories).join('\n');
+
+/** O bloco de uma story, do `export const Nome` até o próximo export. */
+function storyBlock(name: string): string {
+  const match = new RegExp(`export const ${name}: Story = \\{([\\s\\S]*?)(?=\\nexport |$)`).exec(
+    allStories,
+  );
+  return match?.[1] ?? '';
+}
+
+describe('o painel diz o que a tela mostra', () => {
+  it('os três arquivos de story foram lidos', () => {
+    // Contagem gerada some sem deixar rastro: se o glob deixar de alcançar um
+    // arquivo, os casos abaixo passariam medindo menos.
+    expect(Object.keys(stories)).toHaveLength(3);
+  });
+
+  // Cada linha é: story, o construtor que ela declara, e o trecho que o snippet
+  // precisa conter — o MESMO rótulo e a MESMA variante que o template monta.
+  const pairs: Array<[string, string, () => string, string]> = [
+    ['Playground', 'badgeSource', () => badgeSource(), `<Badge>${LABELS.defaultLabel}</Badge>`],
+    [
+      'Default',
+      'badgeDefaultSource',
+      badgeDefaultSource,
+      `<Badge>${LABELS.defaultLabel}</Badge>`,
+    ],
+    [
+      'Destructive',
+      'badgeDestructiveSource',
+      badgeDestructiveSource,
+      `<Badge variant="destructive">${LABELS.destructiveLabel}</Badge>`,
+    ],
+    ['WithIcon', 'badgeWithIconSource', badgeWithIconSource, 'Ativo'],
+    ['WithCounter', 'badgeWithCounterSource', badgeWithCounterSource, 'Urgente'],
+    [
+      'AsButton',
+      'badgeAsButtonSource',
+      badgeAsButtonSource,
+      `<Badge variant="info">${LABELS.categoryLabel}</Badge>`,
+    ],
+    [
+      'AsLink',
+      'badgeAsLinkSource',
+      badgeAsLinkSource,
+      `<Badge variant="info">${LABELS.categoryLabel}</Badge>`,
+    ],
+  ];
+
+  for (const [story, builder, fn, fragmento] of pairs) {
+    it(`${story}: o snippet traz o rótulo e a variante que a story renderiza`, () => {
+      expect(fn()).toContain(fragmento);
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block).toContain(builder);
+    });
+  }
+
+  it('Semantics traz as cinco variantes, cada uma com o rótulo que a story mostra', () => {
+    const code = badgeSemanticsSource();
+    expect(code).toContain('<Badge>Novo</Badge>');
+    expect(code).toContain('<Badge variant="destructive">Urgente</Badge>');
+    expect(code).toContain('<Badge variant="warning">Vence hoje</Badge>');
+    expect(code).toContain('<Badge variant="success">Aprovado</Badge>');
+    expect(code).toContain('<Badge variant="info">Novidade</Badge>');
+    expect(storyBlock('Semantics')).toContain('badgeSemanticsSource');
+  });
+
+  it('toda story declara a própria transform, sem herdar a do meta', () => {
+    // Herança acerta por coincidência: o `meta` de cada arquivo aponta para a
+    // transform de UMA das stories dele, e trocá-lo mudaria o painel das outras
+    // em silêncio — nada compara o painel com a tela.
+    for (const story of [
+      'Playground',
+      'Default',
+      'Destructive',
+      'Semantics',
+      'WithIcon',
+      'WithCounter',
+      'AsButton',
+      'AsLink',
+    ]) {
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block, `${story} herda a transform do meta`).toMatch(/source:\s*\{\s*transform:/);
+    }
   });
 });

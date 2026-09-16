@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NDS_SKELETON } from './skeleton';
+import { NdsAspectRatio } from './aspect-ratio';
 import { NdsSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
@@ -16,7 +17,7 @@ const REGION_LABEL = 'Carregando conteúdo';
 const meta: Meta<SkeletonArgs> = {
   title: 'Components/Feedback/Skeleton',
   tags: ['autodocs', 'feedback'],
-  decorators: [moduleMetadata({ imports: [...NDS_SKELETON] })],
+  decorators: [moduleMetadata({ imports: [...NDS_SKELETON, NdsAspectRatio] })],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(NdsSkeletonDocs) },
@@ -63,16 +64,24 @@ export const Playground: Story = {
     props: {
       ...args,
       width: args.shape === 'text' || args.shape === 'heading' ? args.width : null,
-      // `fill` preenche a caixa que o container estabelece; aqui quem
-      // estabelece é a proporção de mídia, senão o bloco nasce com altura zero
-      // e o Playground mostra um esqueleto invisível.
-      className: args.shape === 'fill' ? 'nds-docs-skeleton-media' : '',
       regionLabel: REGION_LABEL,
     },
+    // Dois ramos com classe estática em cada um: `fill` não tem medida própria e
+    // preenche a caixa que o container estabelece — aqui o `ndsAspectRatio`, que
+    // é o mesmo que o painel Code ensina. A classe de proporção da docs page
+    // dava a caixa sem ser API do design system.
     template: `
-      <div ndsSkeletonRegion [label]="regionLabel">
-        <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="width" [class]="className"></div>
-      </div>
+      @if (shape === 'fill') {
+        <div ndsSkeletonRegion [label]="regionLabel" class="nds-w-sm">
+          <div ndsAspectRatio [ratio]="16 / 9">
+            <div ndsSkeleton data-shape="fill"></div>
+          </div>
+        </div>
+      } @else {
+        <div ndsSkeletonRegion [label]="regionLabel">
+          <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="width"></div>
+        </div>
+      }
     `,
   }),
   play: async ({ canvasElement, step, args }) => {

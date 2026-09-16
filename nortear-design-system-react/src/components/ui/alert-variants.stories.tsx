@@ -34,7 +34,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  parameters: { covers: ["functional.item1", "accessibility.item3", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item1", "accessibility.item3", "visual.item2"],
+    // Própria, e não herdada do meta: a composição canônica é o assunto desta
+    // story, e painel herdado acerta por coincidência.
+    docs: { source: { transform: alertSource } },
+  },
   render: () => (
     <Alert>
       <InfoIcon aria-hidden="true" />

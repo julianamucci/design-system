@@ -2,7 +2,12 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { alertDynamicInsertionSourceWith, alertSource, alertSourceWith } from './alert.source';
+import {
+  alertDynamicInsertionSourceWith,
+  alertNoAnnouncementSource,
+  alertSource,
+  alertSourceWith,
+} from './alert.source';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -20,6 +25,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Complete: Story = {
+  // Própria, e não herdada do meta: a composição completa é o assunto desta
+  // story, e painel herdado acerta por coincidência.
+  parameters: { docs: { source: { transform: alertSource } } },
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
@@ -99,20 +107,12 @@ export const WithoutIcon: Story = {
 };
 
 export const WithoutAnnouncement: Story = {
-  // Override de story: a semântica de anúncio é o assunto, e `role` não passa
-  // por control neste arquivo. O snippet mostra a nota estática — o alerta
-  // padrão ao lado dela é a comparação, e já é o que o meta produz.
+  // Override de story, e de FORMA: a semântica de anúncio só se mostra no PAR —
+  // a nota estática ao lado da mensagem que interrompe. O construtor genérico
+  // monta um alerta só, e o painel publicava apenas a nota, sem o segundo
+  // alerta que é metade do assunto.
   parameters: {
-    docs: {
-      source: {
-        transform: alertSourceWith({
-          role: 'note',
-          title: 'Nota de implementação',
-          description:
-            'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.',
-        }),
-      },
-    },
+    docs: { source: { transform: alertNoAnnouncementSource } },
   },
   render: () => {
     const wrapper = document.createElement('div');

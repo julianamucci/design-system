@@ -234,31 +234,19 @@ export const Dismissible: Story = {
   args: { onDismiss: fn() },
   render: (args) => {
     const onDismiss = args['onDismiss'] as () => void;
-    const remounting = remountingDismissibleAlert(onDismiss, {
+    // UM alerta, como nas outras quatro stacks. Até 2026-09-16 esta story
+    // renderizava também um segundo alerta fixo, de papel polido e rótulo
+    // próprio, que nenhuma das outras quatro tinha e que o snippet não mostrava:
+    // comparar a mesma story entre as cinco deixava de responder o que o
+    // Dismissible ensina. A guarda `.nds-alert[hidden]` que ele provava continua
+    // medida na play, no próprio alerta.
+    return remountingDismissibleAlert(onDismiss, {
       variant: 'default',
       kind: 'info',
       title: 'Preferências salvas',
       description: 'Você pode fechar este aviso quando quiser.',
       dismissLabel: 'Fechar alerta',
     });
-    return {
-      props: remounting.props,
-      // O segundo alerta NÃO remonta: é a prova de que o alerta fechado sai da
-      // tela sem ninguém remover o nó. O `close()` grava `hidden`, e o
-      // `display: grid` da folha venceria a regra `[hidden]` do navegador se a
-      // folha não tivesse `.nds-alert[hidden] { display: none }`. `role="status"`
-      // e rótulo próprio para não disputar as consultas do alerta de cima.
-      template: `
-        <div class="nds-stack" data-spacing="sm">
-          ${remounting.template}
-          <div ndsAlert role="status" dismissible dismissLabel="Fechar lembrete">
-            <svg ndsAlertIcon kind="info"></svg>
-            <h4 ndsAlertTitle>Lembrete</h4>
-            <section ndsAlertDescription>Este aviso sai da tela ao fechar e não volta.</section>
-          </div>
-        </div>
-      `,
-    };
   },
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
@@ -340,16 +328,23 @@ export const Dismissible: Story = {
       await expect(onDismiss).toHaveBeenCalledTimes(1);
     });
 
-    await step('Sem remontagem, o alerta fechado não fica visível', async () => {
-      const fixed = canvas.getByRole('status');
-      await userEvent.click(within(fixed).getByRole('button', { name: 'Fechar lembrete' }));
-      await waitFor(() => expect(fixed).toHaveAttribute('hidden'));
-      // O nó continua no DOM — ninguém o removeu —, e quem o tira da tela é a
-      // guarda `.nds-alert[hidden]` da folha. `toBeVisible` sozinho não prova
-      // isso (ele já reprova pelo atributo); o `display` computado prova.
-      await expect(fixed).toBeInTheDocument();
-      await expect(getComputedStyle(fixed).display).toBe('none');
-      await expect(fixed).not.toBeVisible();
+    await step('Alerta com `hidden` sai da tela: a folha vence o display: grid', async () => {
+      // C16, e ele é só desta stack: o componente não remove o próprio host — o
+      // `close()` grava `hidden` nele —, e o `display: grid` da raiz venceria a
+      // regra `[hidden]` do navegador se `alert.css` não trouxesse
+      // `.nds-alert[hidden] { display: none }`.
+      //
+      // O atributo é escrito aqui, na mão, e não observado depois do
+      // fechamento: quando o `@for` do consumidor tira o nó do DOM, o `hidden`
+      // que o `close()` escreveu deixa de ser observável, e estilo computado de
+      // nó destacado não mede nada. O que esta asserção cobra é a guarda da
+      // folha, que é o que sumia sem ninguém ver.
+      const alerta = canvas.getByRole('alert');
+      alerta.hidden = true;
+      await expect(getComputedStyle(alerta).display).toBe('none');
+      await expect(alerta).not.toBeVisible();
+      alerta.hidden = false;
+      await expect(alerta).toBeVisible();
     });
   },
 };

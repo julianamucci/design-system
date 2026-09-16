@@ -134,6 +134,15 @@ export const progressSource: SourceTransform<ProgressArgs> = (_generated, ctx) =
 // ─── Variants ─────────────────────────────────────────────────────────────────
 
 /**
+ * Valor conhecido, que é o caso comum: o número entra na prop e o componente
+ * cuida do resto — anúncio, limite e desenho. Nada de escala aqui, porque 0 a
+ * 100 é o padrão.
+ */
+export function progressDeterminateSource(): string {
+  return jsxSnippet(IMPORT, inWidth(bar('42', LABEL_DEFAULT)));
+}
+
+/**
  * Valor desconhecido pela forma mais curta: sem `value`. Omitir NÃO é zero —
  * zero anuncia "0%", a ausência anuncia "Em andamento" e apaga o
  * `aria-valuenow` em vez de mentir um número.

@@ -17,6 +17,10 @@ import {
   badgeSemanticsSource,
   badgeSource,
 } from "./badge.source";
+import badgeTranslations from "@shared/content/badge/translations.json";
+
+/** Os mesmos rótulos que os construtores do painel leem — uma fonte só. */
+const LABELS = badgeTranslations["pt-BR"].demonstration.labels;
 
 const meta = {
   title: "Components/Feedback/Badge/Variants",
@@ -60,11 +64,11 @@ export const Default: Story = {
     covers: ["functional.item1", "visual.item2"],
     docs: { source: { transform: badgeDefaultSource } },
   },
-  render: () => <Badge>Novo</Badge>,
+  render: () => <Badge>{LABELS.defaultLabel}</Badge>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const badge = badgeRoot(canvasElement);
-    await expect(canvas.getByText("Novo")).toBe(badge);
+    await expect(canvas.getByText(LABELS.defaultLabel)).toBe(badge);
     await expect(badgeVariant(badge)).toBe("default");
 
     // functional.item1 — a ênfase alta vem da borda em --primary.
@@ -84,11 +88,11 @@ export const Destructive: Story = {
     covers: ["functional.item3", "accessibility.item3", "visual.item2"],
     docs: { source: { transform: badgeDestructiveSource } },
   },
-  render: () => <Badge variant="destructive">Urgente</Badge>,
+  render: () => <Badge variant="destructive">{LABELS.destructiveLabel}</Badge>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const badge = badgeRoot(canvasElement);
-    await expect(canvas.getByText("Urgente")).toBe(badge);
+    await expect(canvas.getByText(LABELS.destructiveLabel)).toBe(badge);
     await expect(badgeVariant(badge)).toBe("destructive");
 
     // functional.item3 — a cor sinaliza pela borda.
@@ -135,11 +139,11 @@ export const Semantics: Story = {
   },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
-      <Badge>Novo</Badge>
-      <Badge variant="destructive">Urgente</Badge>
-      <Badge variant="warning">Vence hoje</Badge>
-      <Badge variant="success">Aprovado</Badge>
-      <Badge variant="info">Novidade</Badge>
+      <Badge>{LABELS.defaultLabel}</Badge>
+      <Badge variant="destructive">{LABELS.destructiveLabel}</Badge>
+      <Badge variant="warning">{LABELS.warningLabel}</Badge>
+      <Badge variant="success">{LABELS.successLabel}</Badge>
+      <Badge variant="info">{LABELS.infoLabel}</Badge>
     </div>
   ),
   play: async ({ canvasElement }) => {

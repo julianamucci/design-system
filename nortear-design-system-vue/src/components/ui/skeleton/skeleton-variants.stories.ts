@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Skeleton, SkeletonRegion } from './index';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import {
   avatarIgnoresWidth,
   boxDesenhada,
@@ -47,20 +48,28 @@ export const Rectangle: Story = {
     },
   },
   render: () => ({
-    components: { Skeleton, SkeletonRegion },
+    components: { Skeleton, SkeletonRegion, AspectRatio },
     template: `
       <SkeletonRegion label="Carregando bloco" class="nds-w-sm">
-        <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
+        <AspectRatio :ratio="16 / 9">
+          <Skeleton data-shape="fill" />
+        </AspectRatio>
       </SkeletonRegion>
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]') as HTMLElement;
     const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
 
-    await step('Preenche a caixa do container na proporção de mídia', async () => {
-      const box = boxDesenhada(sk);
-      await expect(box.width).toBeGreaterThan(0);
-      await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.05);
+    await step('Preenche a caixa que o AspectRatio estabelece', async () => {
+      // A proporção é do CONTAINER: medir só o retângulo do esqueleto passava
+      // com a classe de docs page que dava a caixa por fora da API.
+      const c = caixa.getBoundingClientRect();
+      const s = sk.getBoundingClientRect();
+      await expect(c.width).toBeGreaterThan(0);
+      await expect(Math.abs(c.width / c.height - 16 / 9)).toBeLessThan(0.05);
+      await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
+      await expect(Math.abs(s.width - c.width)).toBeLessThan(2);
     });
 
     await step('Continua fora da árvore de acessibilidade', async () => {

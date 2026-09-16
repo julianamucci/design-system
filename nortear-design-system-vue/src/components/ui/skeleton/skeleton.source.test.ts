@@ -186,3 +186,163 @@ describe('transforms das stories de composição', () => {
     expect(saida).not.toContain('avatar');
   });
 });
+
+/**
+ * O painel ensina o que a story MOSTRA — uma entrada por story, com o nome da
+ * região, as peças que ela renderiza e o container que dá a caixa ao `fill`.
+ *
+ * É o caso que faltava: o render do Playground e do `Rectangle` davam a caixa com
+ * `nds-docs-skeleton-media`, classe da docs page, enquanto o snippet ensinava
+ * `AspectRatio` — e no Playground o nome da região ainda divergia. Nenhum dos
+ * dois lados estava errado sozinho, e nada acusava a diferença.
+ */
+const POR_STORY: Array<{
+  story: string;
+  build: () => string;
+  label: string;
+  partes: string[];
+  ratio: boolean;
+}> = [
+  {
+    story: 'Playground (text/3-4)',
+    build: () => skeletonPlaygroundSource(),
+    label: 'Carregando conteúdo',
+    partes: ['<Skeleton data-shape="text" data-width="3-4" />'],
+    ratio: false,
+  },
+  {
+    story: 'Playground (heading/1-2)',
+    build: () => skeletonPlaygroundSource('', { args: { shape: 'heading', width: '1-2' } }),
+    label: 'Carregando conteúdo',
+    partes: ['<Skeleton data-shape="heading" data-width="1-2" />'],
+    ratio: false,
+  },
+  {
+    story: 'Playground (avatar)',
+    build: () => skeletonPlaygroundSource('', { args: { shape: 'avatar' } }),
+    label: 'Carregando conteúdo',
+    partes: ['<Skeleton data-shape="avatar" />'],
+    ratio: false,
+  },
+  {
+    story: 'Playground (fill)',
+    build: () => skeletonPlaygroundSource('', { args: { shape: 'fill', width: '1-3' } }),
+    label: 'Carregando conteúdo',
+    partes: ['<Skeleton data-shape="fill" />'],
+    ratio: true,
+  },
+  {
+    story: 'Variants/Rectangle',
+    build: skeletonRectangleSource,
+    label: 'Carregando bloco',
+    partes: ['<Skeleton data-shape="fill" />'],
+    ratio: true,
+  },
+  {
+    story: 'Variants/Circle',
+    build: skeletonCircleSource,
+    label: 'Carregando avatar',
+    partes: ['<Skeleton data-shape="avatar" />'],
+    ratio: false,
+  },
+  {
+    story: 'Variants/TextLine',
+    build: skeletonLineTextSource,
+    label: 'Carregando linhas de texto',
+    partes: [
+      '<Skeleton data-shape="text" data-width="full" />',
+      '<Skeleton data-shape="text" data-width="3-4" />',
+      '<Skeleton data-shape="text" data-width="1-2" />',
+    ],
+    ratio: false,
+  },
+  {
+    story: 'States/Pulsing',
+    build: skeletonPulsingSource,
+    label: 'Carregando conteúdo',
+    partes: [
+      '<Skeleton data-shape="text" data-width="full" />',
+      '<Skeleton data-shape="text" data-width="3-4" />',
+    ],
+    ratio: false,
+  },
+  {
+    story: 'States/ReducedMotion',
+    build: skeletonReducedMotionSource,
+    label: 'Carregando conteúdo',
+    partes: [
+      '<Skeleton data-shape="text" data-width="full" />',
+      '<Skeleton data-shape="text" data-width="3-4" />',
+    ],
+    ratio: false,
+  },
+  {
+    story: 'Compositions/ProfileCard',
+    build: skeletonProfileCardSource,
+    label: 'Carregando card de perfil',
+    partes: [
+      '<Skeleton data-shape="avatar" />',
+      '<Skeleton data-shape="text" data-width="2-3" />',
+      '<Skeleton data-shape="text" data-width="1-2" />',
+    ],
+    ratio: false,
+  },
+  {
+    story: 'Compositions/ListWithAvatar',
+    build: skeletonListSource,
+    label: 'Carregando lista de pedidos',
+    partes: [
+      '<Skeleton data-shape="avatar" data-size="sm" />',
+      '<Skeleton data-shape="text" data-width="2-3" />',
+      '<Skeleton data-shape="text" data-width="1-3" />',
+    ],
+    ratio: false,
+  },
+  {
+    story: 'Compositions/ImageInAspectRatio',
+    build: skeletonImageRatioSource,
+    label: 'Carregando imagem',
+    partes: ['<Skeleton data-shape="fill" />'],
+    ratio: true,
+  },
+  {
+    story: 'Compositions/Paragraph',
+    build: skeletonParagraphSource,
+    label: 'Carregando parágrafo',
+    partes: [
+      '<Skeleton data-shape="text" data-width="full" />',
+      '<Skeleton data-shape="text" data-width="3-4" />',
+      '<Skeleton data-shape="text" data-width="1-2" />',
+    ],
+    ratio: false,
+  },
+];
+
+describe('o painel ensina o que a story mostra', () => {
+  for (const { story, build, label, partes, ratio } of POR_STORY) {
+    it(`${story}: a região, as peças e o container batem com o render`, () => {
+      const saida = build();
+      expect(saida).toContain(`label="${label}"`);
+      for (const parte of partes) expect(saida).toContain(parte);
+      if (ratio) {
+        // Quem dá a caixa ao `fill` é o container, e ele aparece no exemplo.
+        expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+        expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
+      } else {
+        expect(saida).not.toContain('AspectRatio');
+      }
+      // A classe de proporção é da docs page: ela daria a caixa sem ser API.
+      expect(saida).not.toContain('nds-docs-skeleton-media');
+    });
+  }
+
+  it('a região do Playground só ganha layout na forma que precisa de container', () => {
+    // Nas formas de texto e no avatar o render não põe classe na região, então o
+    // snippet também não pode pôr.
+    expect(skeletonPlaygroundSource()).not.toContain('class=');
+    expect(skeletonPlaygroundSource('', { args: { shape: 'avatar' } })).not.toContain('class=');
+    expect(skeletonPlaygroundSource('', { args: { shape: 'fill' } })).toContain(
+      'class="nds-w-sm"',
+    );
+  });
+});

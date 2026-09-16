@@ -138,35 +138,60 @@ export function progressSourceCustomText(
 const CARD_CLASSES =
   'nds-stack nds-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
 
+/** Opções da linha de rótulo e valor acima de uma barra. */
+type BlocoOptions = {
+  /** Texto visível à esquerda. */
+  label: string;
+  /** O que a região `polite` mostra: a porcentagem, ou o nome da etapa. */
+  anunciado: string;
+  /** Expressão que produz a barra — a chamada da fábrica, ou uma variável. */
+  barra: string;
+  /** Classe de largura do bloco. */
+  width: string;
+  /** Ritmo vertical entre a linha e a trilha, como a story o desenha. */
+  spacing?: 'xs' | 'sm';
+  /** Rótulo em peso médio, onde ele é o assunto da linha. */
+  strongLabel?: boolean;
+  /**
+   * Numeral tabular. Serve a NÚMERO, que muda de largura quando o dígito muda;
+   * nome de etapa não dança, e a classe ali só ensinaria ruído.
+   */
+  tabular?: boolean;
+};
+
 /**
  * A linha de rótulo e valor acima de uma barra, como bloco de código.
  *
- * O valor vive numa região `polite` — `assertive` interromperia quem escuta a
- * cada avanço. `width` é a classe do bloco: solto ele tem a própria medida,
- * dentro de um cartão ocupa a do cartão.
+ * O texto da direita vive numa região `polite` — `assertive` interromperia quem
+ * escuta a cada mudança. `width` é a classe do bloco: solto ele tem a própria
+ * medida, dentro de um cartão ocupa a do cartão.
  */
-function labeledBlock(label: string, anunciado: string, barra: string, width: string): string {
+function labeledBlock(o: BlocoOptions): string {
+  const labelClass = o.strongLabel ? 'nds-text-foreground nds-font-medium' : 'nds-text-foreground';
+  const valueClass =
+    o.tabular === false ? 'nds-text-muted-foreground' : 'nds-text-muted-foreground nds-tabular-nums';
   return `const bloco = document.createElement('div');
-bloco.className = 'nds-stack ${width}';
-bloco.dataset.spacing = 'xs';
+bloco.className = 'nds-stack ${o.width}';
+bloco.dataset.spacing = '${o.spacing ?? 'xs'}';
 
 const linha = document.createElement('div');
 linha.className = 'nds-cluster nds-text-body';
 linha.dataset.justify = 'between';
 
 const nome = document.createElement('span');
-nome.className = 'nds-text-foreground';
-nome.textContent = ${text(label)};
+nome.className = '${labelClass}';
+nome.textContent = ${text(o.label)};
 
 const valor = document.createElement('span');
-valor.className = 'nds-text-muted-foreground nds-tabular-nums';
-// \`polite\` e nunca \`assertive\`: o valor muda o tempo todo, e interromper a
-// cada avanço deixaria quem usa leitor de tela sem ouvir o resto da tela.
+valor.className = '${valueClass}';
+// \`polite\` e nunca \`assertive\`: este texto muda enquanto a operação corre, e
+// interromper a cada mudança deixaria quem usa leitor de tela sem ouvir o resto
+// da tela.
 valor.setAttribute('aria-live', 'polite');
-valor.textContent = ${text(anunciado)};
+valor.textContent = ${text(o.anunciado)};
 
 linha.append(nome, valor);
-bloco.append(linha, ${barra});`;
+bloco.append(linha, ${o.barra});`;
 }
 
 /**
@@ -184,7 +209,7 @@ export function progressComRotuloSnippet(o: ProgressSnippetOptions = {}): string
   if (o.title === undefined) {
     return snippet(
       importing('progress', 'createProgress'),
-      labeledBlock(label, anunciado, barra, 'nds-w-md'),
+      labeledBlock({ label, anunciado, barra, width: 'nds-w-md' }),
       appendLine('bloco'),
     );
   }
@@ -203,10 +228,40 @@ titulo.textContent = ${text(o.title)};`,
       : `const meta = document.createElement('div');
 meta.className = 'nds-text-caption nds-text-muted-foreground';
 meta.textContent = ${text(o.meta)};`,
-    labeledBlock(label, anunciado, barra, 'nds-w-full'),
+    labeledBlock({ label, anunciado, barra, width: 'nds-w-full' }),
     `cartao.append(${o.meta === undefined ? 'titulo' : 'titulo, meta'}, bloco);`,
     appendLine('cartao'),
   );
+}
+
+/**
+ * Assistente de várias telas: a linha diz a ETAPA, em peso médio, e a região
+ * `polite` anuncia o nome dela em vez da porcentagem — por isso o texto da
+ * direita não leva numeral tabular, que existe para número que troca de dígito.
+ * O bloco respira em `sm`, porque a linha aqui é título de etapa e não legenda
+ * da trilha.
+ */
+export function progressEtapasSnippet(o: ProgressSnippetOptions = {}): string {
+  return snippet(
+    importing('progress', 'createProgress'),
+    labeledBlock({
+      label: o.label ?? 'Etapa 3 de 5',
+      anunciado: o.valueText ?? 'Endereço',
+      barra: callLine('createProgress', linhasDaBarra(o)),
+      width: 'nds-w-md',
+      spacing: 'sm',
+      strongLabel: true,
+      tabular: false,
+    }),
+    appendLine('bloco'),
+  );
+}
+
+/** Transform de story para o assistente de etapas. */
+export function progressSourceEtapas(
+  fixas: ProgressSnippetOptions = {},
+): SourceTransform<ProgressSnippetOptions> {
+  return (_gerado, ctx) => progressEtapasSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Função do snippet que põe rótulo e valor acima de cada barra da lista. */
@@ -275,36 +330,74 @@ ${calls.join('\n')}
  * Transform de story para a lista de barras. O espaçamento acompanha o da story:
  * a `SemanticColor` junta duas barras com `sm`, as listas de upload usam `md`.
  */
-export function progressSourceLista(
+export function progressSourceList(
   items: ProgressSnippetItem[],
   spacing: 'sm' | 'md' = 'md',
 ): SourceTransform<ProgressSnippetOptions> {
   return () => progressListaSnippet(items, spacing);
 }
 
+/** O relógio do render: 5% a cada 400ms, voltando a zero ao chegar em 100. */
+const ANIMADO_STEP = 5;
+const ANIMADO_INTERVAL_MS = 400;
+
 /**
- * Barra que avança.
+ * O laço que faz a barra andar, com o relógio REAL do render.
+ *
+ * Montado em linhas citadas, e não num template: as três linhas com crase
+ * (`${pct}`) desalinhariam a máscara de snippet do `audit.mjs` se ficassem
+ * dentro de outra crase — é a mesma razão de `VALUETEXT_LINE` existir.
+ */
+function loopDoAvanco(): string {
+  return [
+    'let pct = 0;',
+    'const timer = setInterval(() => {',
+    `  pct = pct >= 100 ? 0 : pct + ${ANIMADO_STEP};`,
+    '  // O número visível e o anunciado andam na MESMA volta: parado, um deles',
+    '  // contaria uma história diferente da do outro.',
+    '  valor.textContent = `${pct}%`;',
+    "  barra.setAttribute('aria-valuenow', String(pct));",
+    VALUETEXT_LINE,
+    '  // A mesma custom property que a fábrica alimenta. `width` ou `transform`',
+    '  // aqui sobrescreveriam a regra do design system.',
+    "  indicador?.style.setProperty('--value', String(pct));",
+    `}, ${ANIMADO_INTERVAL_MS});`,
+    '',
+    '// Quem tira o bloco da tela para o relógio: um `setInterval` sobrevivente',
+    '// continua escrevendo numa barra que já saiu.',
+    'function pararDeAvancar() {',
+    '  clearInterval(timer);',
+    '}',
+  ].join('\n');
+}
+
+/**
+ * Barra que avança — e aqui a animação é o ASSUNTO da story, não moldura.
  *
  * A fábrica desenha um valor, não uma animação: quem faz a barra andar reescreve
  * `aria-valuenow`, `aria-valuetext` e a MESMA custom property que a fábrica
- * alimenta. Escrever `width` ou `transform` no lugar dela passaria por cima da
- * folha compartilhada; esquecer o texto anunciaria "0%" numa barra em 80%.
+ * alimenta, e move o número visível ao lado na mesma volta. Escrever `width` ou
+ * `transform` no lugar dela passaria por cima da folha compartilhada; esquecer o
+ * texto anunciaria "0%" numa barra em 80%; esquecer o número visível deixaria a
+ * tela dizendo uma coisa e o leitor de tela outra.
+ *
+ * O laço entra no snippet porque sem ele o painel mostraria uma barra parada ao
+ * lado de uma story que anda — e era o que mostrava enquanto publicava uma
+ * função `avancar(pct)` que ninguém chamava.
  */
 export function progressAnimadoSnippet(o: ProgressSnippetOptions = {}): string {
   return snippet(
     importing('progress', 'createProgress'),
     `const barra = ${callLine('createProgress', linhasDaBarra({ ...o, value: o.value ?? 0 }))};
-const indicador = barra.querySelector('[data-slot="progress-indicator"]');
-
-function avancar(pct) {
-  barra.setAttribute('aria-valuenow', String(pct));
-  // O texto anunciado anda junto: ele substitui a leitura do número.
-${VALUETEXT_LINE}
-  // A mesma custom property que a fábrica alimenta. \`width\` ou \`transform\`
-  // aqui sobrescreveriam a regra do design system.
-  indicador?.style.setProperty('--value', String(pct));
-}`,
-    appendLine('barra'),
+const indicador = barra.querySelector('[data-slot="progress-indicator"]');`,
+    labeledBlock({
+      label: o.label ?? 'Enviando arquivo',
+      anunciado: o.valueText ?? `${o.value ?? 0}%`,
+      barra: 'barra',
+      width: 'nds-w-md',
+    }),
+    loopDoAvanco(),
+    appendLine('bloco'),
   );
 }
 
@@ -341,7 +434,12 @@ titulo.textContent = ${text(o.title ?? 'Processando relatório')};
 const descricao = document.createElement('div');
 descricao.className = 'nds-text-caption nds-text-muted-foreground';
 descricao.textContent = ${text(o.description ?? 'Isso pode levar alguns minutos.')};`,
-    labeledBlock(label, anunciado, callLine('createProgress', linhasDaBarra(o)), 'nds-w-full'),
+    labeledBlock({
+      label,
+      anunciado,
+      barra: callLine('createProgress', linhasDaBarra(o)),
+      width: 'nds-w-full',
+    }),
     'cartao.append(titulo, descricao, bloco);',
     appendLine('cartao'),
   );

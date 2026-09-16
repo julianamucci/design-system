@@ -38,7 +38,14 @@ const twoFrames = () =>
   new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 
 export const Default: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    // Declarada aqui, e não herdada do meta: o zero é o assunto desta story, e
+    // coincidir com o padrão do meta é sorte, não contrato.
+    docs: {
+      source: { transform: () => progressBarSnippet({ value: 0, label: 'Progresso do upload' }) },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `
@@ -167,7 +174,13 @@ export const Indeterminate: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
-      source: { transform: () => progressBarSnippet({ value: null, label: 'Processando…' }) },
+      // O `null` ESCRITO é o assunto: é a forma de quem tem o número numa
+      // variável que ainda não chegou. Sem `nullExplicit` o painel sairia igual
+      // ao da variante, que ensina a outra forma — omitir o valor.
+      source: {
+        transform: () =>
+          progressBarSnippet({ value: null, nullExplicit: true, label: 'Processando…' }),
+      },
     },
   },
   render: () => ({

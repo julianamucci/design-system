@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import badgeTranslations from '@shared/content/badge/translations.json';
 import {
   badgeAsButtonSource,
   badgeAsLinkSource,
+  badgeDefaultSource,
   badgeDestructiveSource,
   badgeSemanticsSource,
   badgeSource,
@@ -127,4 +129,127 @@ describe('badgeAsLinkSource (AsLink)', () => {
     expect(output).not.toContain('tabindex');
     expect(output).not.toContain('<Badge href');
   });
+});
+
+/** Rótulos do conteúdo compartilhado — a fonte que story e construtor leem. */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
+
+/** Os arquivos de story, como texto: cada story tem de ligar a PRÓPRIA transform. */
+const stories = import.meta.glob<string>('./badge*.stories.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const allStories = Object.values(stories).join('\n');
+
+/** O bloco de uma story, do `export const Nome` até o próximo export. */
+function storyBlock(name: string): string {
+  const match = new RegExp(`export const ${name}: Story = \\{([\\s\\S]*?)(?=\\nexport |$)`).exec(
+    allStories,
+  );
+  return match?.[1] ?? '';
+}
+
+describe('o painel diz o que a tela mostra', () => {
+  it('os três arquivos de story foram lidos', () => {
+    // Contagem gerada some sem deixar rastro: se o glob deixar de alcançar um
+    // arquivo, os casos abaixo passariam medindo menos.
+    expect(Object.keys(stories)).toHaveLength(3);
+  });
+
+  // Cada linha é: story, o construtor que ela declara, e o trecho que o snippet
+  // precisa conter — o MESMO texto e a MESMA variante que a story monta.
+  const pairs: Array<[string, string, () => string, string]> = [
+    ['Playground', 'badgeSource', () => badgeSource(), `<Badge>${LABELS.defaultLabel}</Badge>`],
+    ['Default', 'badgeDefaultSource', badgeDefaultSource, `<Badge>${LABELS.defaultLabel}</Badge>`],
+    [
+      'Destructive',
+      'badgeDestructiveSource',
+      badgeDestructiveSource,
+      `<Badge variant="destructive">${LABELS.destructiveLabel}</Badge>`,
+    ],
+    ['WithIcon', 'badgeWithIconSource', badgeWithIconSource, LABELS.statusLabel],
+    ['WithCounter', 'badgeWithCounterSource', badgeWithCounterSource, LABELS.destructiveLabel],
+    [
+      'AsButton',
+      'badgeAsButtonSource',
+      badgeAsButtonSource,
+      `<Badge variant="info">${LABELS.categoryLabel}</Badge>`,
+    ],
+    [
+      'AsLink',
+      'badgeAsLinkSource',
+      badgeAsLinkSource,
+      `<Badge variant="info">${LABELS.categoryLabel}</Badge>`,
+    ],
+  ];
+
+  for (const [story, builder, fn, fragmento] of pairs) {
+    it(`${story}: o snippet traz o texto e a variante que a story renderiza`, () => {
+      expect(fn()).toContain(fragmento);
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block).toContain(builder);
+    });
+  }
+
+  it('Semantics traz as cinco variantes, cada uma com o rótulo que a story mostra', () => {
+    const code = badgeSemanticsSource();
+    expect(code).toContain(`<Badge>${LABELS.defaultLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="destructive">${LABELS.destructiveLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="warning">${LABELS.warningLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="success">${LABELS.successLabel}</Badge>`);
+    expect(code).toContain(`<Badge variant="info">${LABELS.infoLabel}</Badge>`);
+    expect(storyBlock('Semantics')).toContain('badgeSemanticsSource');
+  });
+
+  it('toda story declara a própria transform, sem herdar a do meta', () => {
+    // Herança acerta por coincidência: o `badgeSource` do `meta` serve o
+    // Playground, e trocá-lo mudaria o painel das outras stories em silêncio.
+    for (const story of [
+      'Playground',
+      'Default',
+      'Destructive',
+      'Semantics',
+      'WithIcon',
+      'WithCounter',
+      'AsButton',
+      'AsLink',
+    ]) {
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block, `${story} herda a transform do meta`).toMatch(/source:\s*\{\s*transform:/);
+    }
+  });
+});
+
+describe('as composições recebem OPÇÕES, nunca o código gerado', () => {
+  // O Storybook chama `transform(codigoGerado, ctx)`. Estes construtores recebem
+  // um objeto de opções no primeiro parâmetro, então passá-los DIRETO como
+  // transform entregava a string do código gerado no lugar das opções —
+  // funcionava por acaso, porque `.label` de uma string é `undefined` e o `??`
+  // caía no JSON. Acidente não é contrato: a story embrulha numa função.
+  const compositions: Array<[string, (o?: { label?: string }) => string]> = [
+    ['WithIcon', badgeWithIconSource],
+    ['WithCounter', badgeWithCounterSource],
+    ['AsButton', badgeAsButtonSource],
+    ['AsLink', badgeAsLinkSource],
+  ];
+
+  for (const [story, fn] of compositions) {
+    it(`${story}: a story embrulha o construtor numa função`, () => {
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      // `transform: () => badgeXSource()`, e não `transform: badgeXSource`.
+      expect(block, `${story} passa o construtor direto como transform`).toMatch(
+        /transform:\s*\(\)\s*=>\s*badge\w+Source\(\)/,
+      );
+    });
+
+    it(`${story}: o código gerado no primeiro argumento não vira rótulo`, () => {
+      const comoTransform = fn as unknown as (gerado: string) => string;
+      expect(comoTransform('<Gerado />')).not.toContain('Gerado');
+      expect(comoTransform('<Gerado />')).toBe(fn());
+    });
+  }
 });

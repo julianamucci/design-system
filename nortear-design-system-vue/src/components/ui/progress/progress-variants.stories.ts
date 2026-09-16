@@ -37,7 +37,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Determinate: Story = {
-  parameters: { covers: ['accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item2'],
+    // Declarada aqui, e não herdada do meta: o valor conhecido é o assunto, e
+    // bater com o padrão do meta é coincidência.
+    docs: {
+      source: { transform: () => progressBarSnippet({ value: 42, label: 'Progresso do upload' }) },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `

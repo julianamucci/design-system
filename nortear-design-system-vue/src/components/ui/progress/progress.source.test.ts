@@ -29,9 +29,9 @@ ${IMPORT}
   });
 
   it('omitir o valor é o indeterminado: null não escreve atributo de valor', () => {
-    const saida = progressSource('', { args: { modelValue: null } });
-    expect(saida).not.toContain(':model-value');
-    expect(saida).toContain('<Progress aria-label="Progresso do upload" />');
+    const output = progressSource('', { args: { modelValue: null } });
+    expect(output).not.toContain(':model-value');
+    expect(output).toContain('<Progress aria-label="Progresso do upload" />');
   });
 
   it('o zero sai escrito — é o que o separa do indeterminado', () => {
@@ -40,9 +40,9 @@ ${IMPORT}
 
   it('min e max só aparecem quando diferem do padrão', () => {
     expect(progressSource('', { args: { min: 0, max: 100 } })).not.toMatch(/:min=|:max=/);
-    const saida = progressSource('', { args: { min: 20, max: 60 } });
-    expect(saida).toContain(':min="20"');
-    expect(saida).toContain(':max="60"');
+    const output = progressSource('', { args: { min: 20, max: 60 } });
+    expect(output).toContain(':min="20"');
+    expect(output).toContain(':max="60"');
   });
 
   it('a variante vira data-variant, e o vazio do control não escreve nada', () => {
@@ -57,13 +57,13 @@ ${IMPORT}
   });
 
   it('ignora control que não é número nem string — o espião vira ruído', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: { modelValue: (() => {}) as never, max: (() => {}) as never, ariaLabel: (() => {}) as never },
     });
-    expect(saida).not.toContain('=>');
-    expect(saida).not.toContain('NaN');
-    expect(saida).not.toContain(':max=');
-    expect(saida).toContain('aria-label="Progresso do upload"');
+    expect(output).not.toContain('=>');
+    expect(output).not.toContain('NaN');
+    expect(output).not.toContain(':max=');
+    expect(output).toContain('aria-label="Progresso do upload"');
   });
 });
 
@@ -75,9 +75,20 @@ describe('barra sozinha — variantes e estados', () => {
   });
 
   it('o indeterminado não escreve valor nem aria-valuenow', () => {
-    const saida = progressBarSnippet({ label: 'Processando…' });
-    expect(saida).toContain('<Progress aria-label="Processando…" />');
-    expect(saida).not.toContain('aria-valuenow');
+    const output = progressBarSnippet({ label: 'Processando…' });
+    expect(output).toContain('<Progress aria-label="Processando…" />');
+    expect(output).not.toContain('aria-valuenow');
+  });
+
+  it('as duas formas do valor desconhecido saem DIFERENTES no painel', () => {
+    // A story de estado usa `:model-value="null"` e a de variante omite o
+    // valor: duas telas iguais por caminhos diferentes. Com o `null` descartado,
+    // os dois painéis ficavam idênticos e a página deixava de ensinar uma delas.
+    const state = progressBarSnippet({ value: null, nullExplicit: true, label: 'Processando…' });
+    const variante = progressBarSnippet({ label: 'Processando…' });
+    expect(state).toContain('<Progress :model-value="null" aria-label="Processando…" />');
+    expect(variante).toContain('<Progress aria-label="Processando…" />');
+    expect(state).not.toBe(variante);
   });
 
   it('Default, Loading e Complete batem com as stories', () => {
@@ -92,26 +103,26 @@ describe('barra sozinha — variantes e estados', () => {
 
 describe('formas com texto em volta', () => {
   it('com rótulo, o número repete o valor em região polite e tabular', () => {
-    const saida = progressWithLabelSource();
-    expect(saida).toContain('>42%</span>');
-    expect(saida).toContain('aria-live="polite"');
-    expect(saida).not.toContain('assertive');
-    expect(saida).toContain('nds-tabular-nums');
+    const output = progressWithLabelSource();
+    expect(output).toContain('>42%</span>');
+    expect(output).toContain('aria-live="polite"');
+    expect(output).not.toContain('assertive');
+    expect(output).toContain('nds-tabular-nums');
   });
 
   it('a cor semântica sai de atributo', () => {
-    const saida = progressSemanticColorSource();
-    expect(saida).toContain('data-variant="success"');
-    expect(saida).toContain('data-variant="destructive"');
-    expect(saida).not.toContain(':class=');
+    const output = progressSemanticColorSource();
+    expect(output).toContain('data-variant="success"');
+    expect(output).toContain('data-variant="destructive"');
+    expect(output).not.toContain(':class=');
   });
 
   it('a barra que avança desliga o relógio no desmonte', () => {
-    const saida = progressAnimatedSource();
-    expect(saida).toContain('const value = ref(0)');
-    expect(saida).toContain(':model-value="value"');
-    expect(saida).toContain('{{ value }}%');
-    expect(saida).toContain('onUnmounted(() => clearInterval(timer))');
+    const output = progressAnimatedSource();
+    expect(output).toContain('const value = ref(0)');
+    expect(output).toContain(':model-value="value"');
+    expect(output).toContain('{{ value }}%');
+    expect(output).toContain('onUnmounted(() => clearInterval(timer))');
   });
 });
 
@@ -120,22 +131,30 @@ describe('composições — o conjunto da referência', () => {
     expect(progressFileUploadSource()).toContain('aria-label="Progresso do upload de documento-final.pdf"');
   });
 
+  it('o upload ensina o cartão inteiro: arquivo, tamanho e a linha polite', () => {
+    const output = progressFileUploadSource();
+    expect(output).toContain('<div class="nds-text-body nds-font-medium">documento-final.pdf</div>');
+    expect(output).toContain('2.4 MB de 5.0 MB');
+    expect(output).toContain('aria-live="polite">48%</span>');
+    expect(output).toContain(':model-value="48"');
+  });
+
   it('as etapas anunciam o nome da etapa', () => {
-    const saida = progressWizardStepsSource();
-    expect(saida).toContain('aria-live="polite">Endereço</span>');
-    expect(saida).toContain(':model-value="60"');
+    const output = progressWizardStepsSource();
+    expect(output).toContain('aria-live="polite">Endereço</span>');
+    expect(output).toContain(':model-value="60"');
   });
 
   it('cada upload tem nome acessível próprio', () => {
-    const nomes = progressMultipleUploadsSource().match(/aria-label="[^"]+"/g) ?? [];
-    expect(nomes).toHaveLength(4);
-    expect(new Set(nomes).size).toBe(4);
+    const names = progressMultipleUploadsSource().match(/aria-label="[^"]+"/g) ?? [];
+    expect(names).toHaveLength(4);
+    expect(new Set(names).size).toBe(4);
   });
 
   it('das três medidas, só as semânticas levam variante', () => {
-    const saida = progressCustomColorSource();
-    expect(saida.match(/data-variant=/g)).toHaveLength(2);
-    expect(saida).toContain('<Progress :model-value="72" aria-label="Progresso do backup" />');
+    const output = progressCustomColorSource();
+    expect(output.match(/data-variant=/g)).toHaveLength(2);
+    expect(output).toContain('<Progress :model-value="72" aria-label="Progresso do backup" />');
   });
 
   it('o contêiner ocupado declara aria-busy', () => {
@@ -143,10 +162,10 @@ describe('composições — o conjunto da referência', () => {
   });
 
   it('o texto anunciado próprio usa get-value-text com a assinatura da lib', () => {
-    const saida = progressCustomValueTextSource();
-    expect(saida).toContain(':get-value-text="filesText"');
-    expect(saida).toContain('const filesText = (value: number | null | undefined, max: number) =>');
-    expect(saida).toContain('aria-label="Processamento de arquivos"');
+    const output = progressCustomValueTextSource();
+    expect(output).toContain(':get-value-text="filesText"');
+    expect(output).toContain('const filesText = (value: number | null | undefined, max: number) =>');
+    expect(output).toContain('aria-label="Processamento de arquivos"');
   });
 });
 
@@ -167,16 +186,16 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
 
   it('nenhuma crava medida em style inline', () => {
     for (const fn of all) {
-      const saida = fn();
-      expect(saida).not.toContain('style=');
-      expect(saida).not.toMatch(/\d+px/);
+      const output = fn();
+      expect(output).not.toContain('style=');
+      expect(output).not.toMatch(/\d+px/);
     }
   });
 
   it('toda barra tem nome acessível', () => {
     for (const fn of all) {
-      const saida = fn();
-      const barras = saida.match(/<Progress\b[^>]*>/g) ?? [];
+      const output = fn();
+      const barras = output.match(/<Progress\b[^>]*>/g) ?? [];
       expect(barras.length).toBeGreaterThan(0);
       for (const barra of barras) expect(barra).toContain('aria-label="');
     }

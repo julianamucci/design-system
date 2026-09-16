@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { alertSource, alertSourceWith } from './alert.source';
+import { alertContrastSource, alertSource, alertSourceWith } from './alert.source';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
 
@@ -20,7 +20,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  parameters: { covers: ['functional.item1', 'accessibility.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item1', 'accessibility.item3', 'visual.item2'],
+    // Própria, e não herdada do meta: a composição canônica é o que esta story
+    // mostra, e herdar acerta por coincidência.
+    docs: { source: { transform: alertSource } },
+  },
   render: () => {
     const alert = createAlert({ variant: 'default' });
     alert.appendChild(createAlertIcon('info'));
@@ -374,16 +379,12 @@ export const DismissibleByKeyboard: Story = {
 export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
-    // Override de story: as cinco variantes aparecem sem ícone, e é a
-    // composição título + texto corrido que está sendo medida.
+    // Override de story, e de FORMA: o construtor genérico monta UM alerta, e a
+    // story empilha as cinco sem ícone — a comparação entre elas é o que está
+    // sendo medido. O painel mostrava um alerta default com textos que não
+    // existem na tela.
     docs: {
-      source: {
-        transform: alertSourceWith({
-          icon: false,
-          title: 'Título da variante',
-          description: 'Texto corrido da variante.',
-        }),
-      },
+      source: { transform: alertContrastSource },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',

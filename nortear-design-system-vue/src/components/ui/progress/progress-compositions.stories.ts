@@ -55,6 +55,11 @@ function labeled(o: { value: number; label: string; ariaLabel: string; variant?:
 }
 
 export const FileUpload: Story = {
+  parameters: {
+    // Declarada aqui, e não herdada do meta: o cartão do arquivo é o assunto
+    // desta story, e o meta apontar para o mesmo construtor é coincidência.
+    docs: { source: { transform: progressFileUploadSource } },
+  },
   render: () => ({
     components: { Progress },
     template: `

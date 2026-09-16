@@ -111,10 +111,9 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
     return jsxSnippet(IMPORT, regiao('Carregando conteúdo', '  <Skeleton data-shape="avatar" />'));
   }
 
-  return jsxSnippet(
-    IMPORT,
-    regiao('Carregando conteúdo', line(width(args.width), box), { className: 'nds-w-sm' }),
-  );
+  // Sem classe de layout na região: o Playground não põe nenhuma, e o painel
+  // ensina o que a story mostra. A largura de leitura é assunto de quem compõe.
+  return jsxSnippet(IMPORT, regiao('Carregando conteúdo', line(width(args.width), box)));
 };
 
 /**

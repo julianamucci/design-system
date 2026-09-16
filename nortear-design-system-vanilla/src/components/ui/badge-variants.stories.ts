@@ -11,6 +11,10 @@ import {
 } from '@shared/testing/badge-probe';
 import { createBadge } from './badge';
 import { badgeGroupSourceWith, badgeSource, badgeSourceWith } from './badge.source';
+import badgeTranslations from '@shared/content/badge/translations.json';
+
+/** Os mesmos rótulos que os construtores do painel leem — uma fonte só. */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -49,12 +53,17 @@ type Story = StoryObj;
 // ─── Variantes ────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
+  // Override de story: a transform é declarada AQUI, e não herdada do `meta` —
+  // herança acerta por coincidência e cala no dia em que o `meta` mudar.
   parameters: {
     covers: ['functional.item1', 'visual.item2'],
+    docs: {
+      source: { transform: badgeSourceWith({ label: LABELS.defaultLabel }) },
+    },
   },
-  render: () => createBadge({ variant: 'default', children: 'Novo' }),
+  render: () => createBadge({ variant: 'default', children: LABELS.defaultLabel }),
   play: async ({ canvasElement }) => {
-    const badge = badgeRoot(within(canvasElement).getByText('Novo'));
+    const badge = badgeRoot(within(canvasElement).getByText(LABELS.defaultLabel));
     await expect(badge).toHaveAttribute('data-variant', 'default');
 
     // functional.item1 — a ênfase alta vem da borda em --primary; fundo e texto
@@ -76,12 +85,14 @@ export const Destructive: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
     docs: {
-      source: { transform: badgeSourceWith({ variant: 'destructive', label: 'Urgente' }) },
+      source: {
+        transform: badgeSourceWith({ variant: 'destructive', label: LABELS.destructiveLabel }),
+      },
     },
   },
-  render: () => createBadge({ variant: 'destructive', children: 'Urgente' }),
+  render: () => createBadge({ variant: 'destructive', children: LABELS.destructiveLabel }),
   play: async ({ canvasElement }) => {
-    const badge = badgeRoot(within(canvasElement).getByText('Urgente'));
+    const badge = badgeRoot(within(canvasElement).getByText(LABELS.destructiveLabel));
     await expect(badge).toHaveAttribute('data-variant', 'destructive');
 
     // functional.item3 — a cor sinaliza pela borda e o contraste vem do texto
@@ -99,11 +110,11 @@ export const Destructive: Story = {
 };
 
 const SEMANTICS: ReadonlyArray<{ variant: BadgeVariant; label: string }> = [
-  { variant: 'default', label: 'Novo' },
-  { variant: 'destructive', label: 'Urgente' },
-  { variant: 'warning', label: 'Vence hoje' },
-  { variant: 'success', label: 'Aprovado' },
-  { variant: 'info', label: 'Novidade' },
+  { variant: 'default', label: LABELS.defaultLabel },
+  { variant: 'destructive', label: LABELS.destructiveLabel },
+  { variant: 'warning', label: LABELS.warningLabel },
+  { variant: 'success', label: LABELS.successLabel },
+  { variant: 'info', label: LABELS.infoLabel },
 ];
 
 /**

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import badgeTranslations from '@shared/content/badge/translations.json';
 import {
   badgeGroupSnippet,
   badgeLinkSnippet,
@@ -171,5 +172,130 @@ describe('AsLink — badgeLinkSnippet', () => {
     expect(badgeLinkSnippet({ href: '/categorias/design' })).toContain(
       "link.href = '/categorias/design';",
     );
+  });
+});
+
+/** Rótulos do conteúdo compartilhado — a fonte que story e construtor leem. */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
+
+/** Os arquivos de story, como texto: cada story tem de ligar a PRÓPRIA transform. */
+const stories = import.meta.glob<string>('./badge*.stories.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const allStories = Object.values(stories).join('\n');
+
+/** O bloco de uma story, do `export const Nome` até o próximo export. */
+function storyBlock(name: string): string {
+  const match = new RegExp(`export const ${name}: Story = \\{([\\s\\S]*?)(?=\\nexport |$)`).exec(
+    allStories,
+  );
+  return match?.[1] ?? '';
+}
+
+const STORIES = [
+  'Playground',
+  'Default',
+  'Destructive',
+  'Semantics',
+  'WithIcon',
+  'WithCounter',
+  'AsButton',
+  'AsLink',
+] as const;
+
+describe('o painel diz o que a tela mostra', () => {
+  it('os três arquivos de story foram lidos', () => {
+    // Contagem gerada some sem deixar rastro: se o glob deixar de alcançar um
+    // arquivo, os casos abaixo passariam medindo menos.
+    expect(Object.keys(stories)).toHaveLength(3);
+  });
+
+  // Cada linha é: story, o código que o painel dela publica, e o trecho que ele
+  // precisa conter — o MESMO texto e a MESMA variante que o `render` monta.
+  const pairs: Array<[string, string, string]> = [
+    ['Default', badgeSourceWith({ label: LABELS.defaultLabel })('', {}), `children: '${LABELS.defaultLabel}'`],
+    [
+      'Destructive',
+      badgeSourceWith({ variant: 'destructive', label: LABELS.destructiveLabel })('', {}),
+      `variant: 'destructive'`,
+    ],
+    [
+      'WithIcon',
+      badgeSourceWith({ withIcon: true, label: LABELS.statusLabel })('', {}),
+      `children: [icon, '${LABELS.statusLabel}']`,
+    ],
+    [
+      'WithCounter',
+      badgeWithCounterSourceWith({
+        variant: 'destructive',
+        label: LABELS.destructiveLabel,
+        count: '12',
+      })('', {}),
+      `children: ['${LABELS.destructiveLabel}', createBadgeCounter({ text: '12' })],`,
+    ],
+    [
+      'AsButton',
+      badgeTriggerSourceWith({
+        label: LABELS.categoryLabel,
+        accessibleName: LABELS.categoryFilterLabel,
+      })('', {}),
+      `children: createBadge({ variant: 'info', children: '${LABELS.categoryLabel}' }),`,
+    ],
+    [
+      'AsLink',
+      badgeLinkSourceWith({ label: LABELS.categoryLabel })('', {}),
+      `link.append(createBadge({ variant: 'info', children: '${LABELS.categoryLabel}' }));`,
+    ],
+  ];
+
+  for (const [story, code, fragmento] of pairs) {
+    it(`${story}: o snippet traz o texto e a variante que a story renderiza`, () => {
+      expect(code).toContain(fragmento);
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block).toMatch(/transform:\s*badge/);
+    });
+  }
+
+  it('Semantics traz as cinco variantes, cada uma com o rótulo que a story mostra', () => {
+    const code = badgeGroupSourceWith({})('', {});
+    expect(code).toContain(`createBadge({ children: '${LABELS.defaultLabel}' }),`);
+    expect(code).toContain(
+      `createBadge({ variant: 'destructive', children: '${LABELS.destructiveLabel}' }),`,
+    );
+    expect(code).toContain(
+      `createBadge({ variant: 'warning', children: '${LABELS.warningLabel}' }),`,
+    );
+    expect(code).toContain(
+      `createBadge({ variant: 'success', children: '${LABELS.successLabel}' }),`,
+    );
+    expect(code).toContain(`createBadge({ variant: 'info', children: '${LABELS.infoLabel}' }),`);
+    expect(storyBlock('Semantics')).toMatch(/transform:\s*badgeGroupSourceWith/);
+  });
+
+  it('toda story declara a própria transform, sem herdar a do meta', () => {
+    // Herança acerta por coincidência: no dia em que o `meta` trocar de
+    // transform, a story que não declara a sua publica outro exemplo em
+    // silêncio — e nada compara o painel com a tela.
+    for (const story of STORIES) {
+      const block = storyBlock(story);
+      expect(block, `a story ${story} não foi encontrada`).not.toBe('');
+      expect(block, `${story} herda a transform do meta`).toMatch(/source:\s*\{[\s\S]{0,160}?transform:/);
+      // Nunca lambda: só função exportada de `.source` tem como ser testada, e é
+      // o que o `story-source-wiring.test.ts` cobra da stack inteira.
+      expect(block, `${story} declara a transform como lambda`).not.toMatch(/transform:\s*\(/);
+    }
+  });
+
+  it('o rótulo sai do conteúdo compartilhado, e não de um literal no construtor', () => {
+    // Story e construtor leem o MESMO bloco do JSON: é o que impede o painel de
+    // envelhecer sozinho no dia em que o texto do exemplo mudar.
+    expect(badgeSnippet()).toContain(`children: '${LABELS.defaultLabel}'`);
+    expect(badgeWithCounterSnippet()).toContain(`'${LABELS.destructiveLabel}'`);
+    expect(badgeTriggerSnippet()).toContain(`'aria-label': '${LABELS.categoryFilterLabel}',`);
+    expect(badgeTriggerSnippet()).toContain(`children: '${LABELS.categoryLabel}'`);
+    expect(badgeLinkSnippet()).toContain(`children: '${LABELS.categoryLabel}'`);
   });
 });

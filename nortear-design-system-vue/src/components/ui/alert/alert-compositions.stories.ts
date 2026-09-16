@@ -29,7 +29,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item2'],
+    // Própria, e não herdada do meta: o texto desta composição é o assunto, e
+    // painel herdado acerta por coincidência.
+    docs: { source: { transform: alertWithIconSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },

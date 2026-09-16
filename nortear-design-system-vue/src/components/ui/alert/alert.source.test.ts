@@ -260,3 +260,89 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('<AlertTitle as="h4">Sem ícone</AlertTitle>');
   });
 });
+
+// ─── O snippet descreve a story INTEIRA ──────────────────────────────────────
+//
+// Medido em 2026-09-16: a `DynamicInsertion` publicava Button e Alert SOLTOS,
+// sem o `nds-stack` nem a linha do botão, e o render desta stack usava
+// `data-spacing="md"` onde as outras quatro usam `sm`. As duas pontas são
+// medidas juntas de propósito — a saída do painel não chega ao DOM durante a
+// `play`, então nenhuma suíte de navegador vê a diferença.
+
+describe('o painel publica a composição que a story renderiza', () => {
+  const stories = import.meta.glob<string>(
+    [
+      './alert.stories.ts',
+      './alert-variants.stories.ts',
+      './alert-states.stories.ts',
+      './alert-compositions.stories.ts',
+    ],
+    { query: '?raw', import: 'default', eager: true },
+  );
+
+  /** O bloco de uma story, do `export const Nome` até o próximo export. */
+  const storyBlock = (file: string, name: string): string => {
+    const text = stories[`./${file}.stories.ts`] ?? '';
+    return (
+      new RegExp(`export const ${name}: Story = \\{([\\s\\S]*?)(?=\\nexport |$)`).exec(text)?.[1] ??
+      ''
+    );
+  };
+
+  it('os quatro arquivos de story foram lidos', () => {
+    expect(Object.keys(stories)).toHaveLength(4);
+  });
+
+  it('DynamicInsertion: contêiner, linha do botão e o MESMO espaçamento da story', () => {
+    const output = alertDynamicInsertionSource();
+    expect(output).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(output).toContain(
+      '<Button size="sm" @click="reportReady = true">Gerar relatório</Button>',
+    );
+    expect(output).toContain('<Alert v-if="reportReady">');
+
+    // O render usava `md` onde as outras quatro stacks usam `sm`: divergência de
+    // TELA, não de snippet, e é por isso que o par é medido junto.
+    const block = storyBlock('alert-states', 'DynamicInsertion');
+    expect(block, 'a story DynamicInsertion não foi encontrada').not.toBe('');
+    expect(block).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(block).not.toContain('data-spacing="md"');
+  });
+
+  it('Contrast: as cinco variantes e o contêiner que as empilha', () => {
+    const output = alertContrastSource();
+    expect(output.match(/<Alert[ >]/g)).toHaveLength(5);
+    expect(output).toContain('<div class="nds-stack" data-spacing="sm">');
+    for (const name of ['default', 'destructive', 'success', 'warning', 'info']) {
+      expect(output).toContain(`Título ${name}`);
+    }
+  });
+
+  it('WithoutAnnouncement: os DOIS alertas, no contêiner', () => {
+    const output = alertNoAnnouncementSource();
+    expect(output.match(/<Alert[ >]/g)).toHaveLength(2);
+    expect(output).toContain('<div class="nds-stack" data-spacing="md">');
+  });
+
+  it('AdditionalClass: a classe na raiz e em cada peça', () => {
+    const output = alertAdditionalClassSource();
+    expect(output.match(/nds-w-full/g)).toHaveLength(3);
+    expect(output).toContain('<AlertAction class="nds-w-auto">');
+  });
+
+  it('nenhuma story do alerta herda o snippet do meta', () => {
+    // Herança acerta por COINCIDÊNCIA, e a coincidência não sobrevive à próxima
+    // edição do render.
+    for (const [file, text] of Object.entries(stories)) {
+      const declaracoes = [...text.matchAll(/^export const ([A-Z]\w*): Story = \{/gm)];
+      expect(declaracoes.length, `${file}: nenhuma story encontrada`).toBeGreaterThan(0);
+      declaracoes.forEach((m, i) => {
+        const fim = i + 1 < declaracoes.length ? declaracoes[i + 1].index : text.length;
+        expect(
+          text.slice(m.index, fim),
+          `${file} › ${m[1]} herda o snippet do meta`,
+        ).toContain('transform:');
+      });
+    }
+  });
+});

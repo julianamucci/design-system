@@ -578,7 +578,7 @@ type Chamavel = (...args: never[]) => unknown;
  */
 const ARGUMENTOS: Record<string, readonly unknown[]> = {
   progressListaSnippet: [[{ value: 40, 'aria-label': 'Progresso do upload' }]],
-  progressSourceLista: [[{ value: 40, 'aria-label': 'Progresso do upload' }]],
+  progressSourceList: [[{ value: 40, 'aria-label': 'Progresso do upload' }]],
   radioGroupWithDescriptionSnippet: [
     [{ value: 'padrao', label: 'Padrão', description: 'Chega em cinco dias úteis.' }],
   ],

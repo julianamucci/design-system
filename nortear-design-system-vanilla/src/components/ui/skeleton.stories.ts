@@ -7,6 +7,7 @@ import {
   type SkeletonWidth,
 } from './skeleton';
 import { skeletonSource } from './skeleton.source';
+import { createAspectRatio } from './aspect-ratio';
 import { createSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
@@ -61,6 +62,11 @@ type Story = StoryObj<SkeletonArgs>;
 
 export const Playground: Story = {
   parameters: {
+    docs: {
+      // Declarada na story, e não só herdada do meta: o painel desta story tem
+      // de publicar o que ela monta, mesmo se o meta mudar de forma.
+      source: { transform: skeletonSource },
+    },
     covers: [
       'functional.item2',
       'functional.item3',
@@ -70,18 +76,27 @@ export const Playground: Story = {
       'accessibility.item3',
     ],
   },
+  // `fill` não tem medida própria: preenche a caixa que o CONTAINER estabelece,
+  // e quem a estabelece é o `createAspectRatio` — o mesmo que o painel Code
+  // ensina e que a composição de imagem usa. A classe de proporção é da docs
+  // page, não API do design system: ela dava a caixa sem aparecer no exemplo.
   render: ({ shape, width }) =>
-    createSkeletonRegion({
-      label: REGION_LABEL,
-      children: createSkeleton({
-        shape,
-        width: shape === 'text' || shape === 'heading' ? width : undefined,
-        // `fill` preenche a caixa que o container estabelece; aqui quem
-        // estabelece é a proporção de mídia, senão o bloco nasce com altura
-        // zero e o Playground mostra um esqueleto invisível.
-        className: shape === 'fill' ? 'nds-docs-skeleton-media' : undefined,
-      }),
-    }),
+    shape === 'fill'
+      ? createSkeletonRegion({
+          label: REGION_LABEL,
+          class: 'nds-w-sm',
+          children: createAspectRatio({
+            ratio: 16 / 9,
+            content: createSkeleton({ shape: 'fill' }),
+          }),
+        })
+      : createSkeletonRegion({
+          label: REGION_LABEL,
+          children: createSkeleton({
+            shape,
+            width: shape === 'text' || shape === 'heading' ? width : undefined,
+          }),
+        }),
   play: async ({ canvasElement, step, args }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
     const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]')!;

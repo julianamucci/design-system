@@ -15,10 +15,13 @@
  *
  * A decisão de composição é a que o componente realmente exige, e são DUAS
  * peças em lugares diferentes: `<Toaster />` uma vez na raiz da aplicação, e a
- * chamada `toast(...)` lá onde a operação termina. O botão que as stories
- * montam para o Storybook conseguir disparar a notificação só entra no snippet
- * quando ele é o gatilho honesto do exemplo — um botão "Disparar notificação"
- * não existe em produto nenhum.
+ * chamada `toast(...)` lá onde a operação termina. O gatilho que entra no
+ * snippet é o que a story mostra: o Playground tem um botão rotulado "Disparar
+ * notificação", e o painel publica ESSE rótulo — o "Salvar alterações" que
+ * estava aqui até 2026-09-16 descrevia uma tela que a story não tem, e o painel
+ * é a única parte da página feita para ser copiada. Onde a story não tem botão
+ * nenhum (a `play` chama a fila direto), o snippet monta o gatilho honesto do
+ * exemplo, com o rótulo da ação que a notificação relata.
  *
  * `toast` vem do pacote `sonner`, não de `@/components/ui/sonner`: o arquivo do
  * design system exporta a REGIÃO (com os ícones, os rótulos em pt-BR e os
@@ -121,8 +124,9 @@ ${body}`;
  * que descrevem a MENSAGEM viram argumentos da chamada. É a divisão que o
  * componente impõe, e o painel escondia ao imprimir só a árvore do `render`.
  *
- * Aqui o botão entra: o gatilho honesto de uma notificação é a ação que ela
- * relata, e o Playground existe justamente para disparar uma.
+ * Aqui o botão entra, e com o rótulo da story: o Playground existe justamente
+ * para disparar uma notificação, e é o botão "Disparar notificação" que a
+ * pessoa vê na tela quando lê este painel.
  *
  * Nada de `onClick` do espião é interpolado: o Storybook o entrega como função,
  * e o corpo do mock apareceria no painel como se fosse código do design system.
@@ -166,10 +170,10 @@ ${fired
   .join('\n')}
   }}
 >
-  Salvar alterações
+  Disparar notificação
 </Button>`
     : `<Button variant="outline" onClick={() => ${fired.replace(/;$/, '')}}>
-  Salvar alterações
+  Disparar notificação
 </Button>`;
 
   return jsxSnippet(
@@ -360,6 +364,10 @@ ${call('success', 'Alterações salvas.')}`,
  * Tema escuro. `theme` só entra quando o projeto força um tema fixo: sem a
  * prop, a região acompanha o tema do documento, que é o que se quer em quase
  * todo caso.
+ *
+ * As CINCO chamadas, na ordem em que a `play` as dispara: a story existe para
+ * mostrar os cinco tipos recoloridos ao mesmo tempo, e um snippet com três
+ * publicava uma tela diferente da que está logo acima dele.
  */
 export function sonnerDarkThemeSource(): string {
   return jsxSnippet(
@@ -367,8 +375,10 @@ export function sonnerDarkThemeSource(): string {
     queueUsage(
       ' position="top-right" richColors expand theme="dark"',
       'Sem a prop theme, a região acompanha sozinha o tema do documento.',
-      `${call('success', 'Alterações salvas.')}
+      `${call('default', 'Código copiado.')}
+${call('success', 'Alterações salvas.')}
 ${call('error', 'Não foi possível salvar. Tente novamente.')}
+${call('warning', 'Sua sessão expira em 5 minutos.')}
 ${call('info', 'Nova versão disponível.')}`,
     ),
   );
@@ -388,7 +398,7 @@ export function sonnerWithDescriptionSource(): string {
       REGION_TYPES,
       'A descrição complementa o título, e vai na mesma chamada.',
       call('success', 'Preferências atualizadas.', [
-        'description: "Suas configurações entrarão em vigor na próxima sessão.",',
+        'description: "Suas configurações foram salvas e entrarão em vigor na próxima sessão.",',
       ]),
     ),
   );

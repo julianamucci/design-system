@@ -43,7 +43,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item2', 'visual.item3'] },
+  // Declarada AQUI, e não herdada do `meta`: a herança acertava por
+  // coincidência — o `meta` deste arquivo aponta justamente para a transform
+  // desta story, e trocá-lo mudaria o painel de todas as outras em silêncio.
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
+    docs: { source: { transform: badgeWithIconSource } },
+  },
   render: () => ({
     components: { Badge, Check },
     template: `

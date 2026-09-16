@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
-import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant, type AlertRole } from './alert';
+import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertIconType, type AlertVariant, type AlertRole } from './alert';
 import { alertSource } from './alert.source';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -93,6 +93,20 @@ type Story = StoryObj<AlertArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
+/**
+ * O ícone que acompanha cada variante — o MESMO mapa que o painel Code aplica
+ * (`variantIcon`, em `alert.source.ts`).
+ *
+ * As duas pontas escolhem o ícone pela mesma regra de propósito: com o mapa só
+ * de um lado, o painel prometia `createAlertIcon('success')` enquanto a tela
+ * mostrava o informativo em toda variante que não fosse `destructive`.
+ */
+function variantIcon(variant: AlertVariant): AlertIconType {
+  if (variant === 'destructive') return 'error';
+  if (variant === 'default') return 'info';
+  return variant;
+}
+
 function buildAlert(args: AlertArgs): HTMLElement {
   const alert = createAlert({
     variant: args.variant,
@@ -101,7 +115,7 @@ function buildAlert(args: AlertArgs): HTMLElement {
     onDismiss: args.onDismiss,
     dismissLabel: args.dismissLabel,
   });
-  alert.appendChild(createAlertIcon(args.variant === 'destructive' ? 'error' : 'info'));
+  alert.appendChild(createAlertIcon(variantIcon(args.variant)));
   // `as: 'h4'` explícito: o nível do título não passa por control, então render e
   // snippet o escrevem igual — o painel Code ensina o nível em vez de esconder o
   // default da fábrica.
@@ -117,6 +131,10 @@ export const Playground: Story = {
   // título, descrição e o botão de fechar.
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
+    // A story declara o PRÓPRIO transform em vez de herdar o do meta: herança
+    // acerta por coincidência, e a coincidência não sobrevive à próxima edição
+    // do render.
+    docs: { source: { transform: alertSource } },
   },
   render: (args) => buildAlert(args),
   play: async ({ canvasElement, args, step }) => {

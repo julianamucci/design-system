@@ -49,6 +49,11 @@ type Story = StoryObj<SkeletonArgs>;
 
 export const Playground: Story = {
   parameters: {
+    docs: {
+      // Declarada na story, e não só herdada do meta: o painel desta story tem
+      // de publicar o que ela monta, mesmo se o meta mudar de forma.
+      source: { transform: skeletonSource },
+    },
     covers: [
       'functional.item2',
       'functional.item3',

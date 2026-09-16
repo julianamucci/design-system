@@ -60,6 +60,16 @@ export function badgeVariantSnippet(
   return svelteSnippet(IMPORT, badgeTag(variant, label));
 }
 
+/**
+ * Variante padrão: a borda em `primary`, e a prop omitida porque `default` é o
+ * padrão do componente. Existe como construtor PRÓPRIO para que a story
+ * `Default` declare a transform dela em vez de herdar a do `meta` — a herança
+ * acertava por coincidência, já que o `meta` deste arquivo serve o Playground.
+ */
+export function badgeDefaultSource(): string {
+  return badgeVariantSnippet('default');
+}
+
 /** Variante destrutiva: a borda em `destructive`; o texto fica neutro, como em todas. */
 export function badgeDestructiveSource(): string {
   return badgeVariantSnippet('destructive');

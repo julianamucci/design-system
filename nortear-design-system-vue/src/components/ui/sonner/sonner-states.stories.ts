@@ -14,6 +14,7 @@ import {
   sonnerStackSource,
   sonnerPositionSource,
   sonnerAutoDismissSource,
+  sonnerPauseSource,
   sonnerNoRegionSource,
   sonnerDarkThemeSource,
 } from './sonner.source';
@@ -45,6 +46,10 @@ const meta = {
       },
     },
     docs: {
+      // Fica pelo arquivo (o portão `story_file_sem_transform` mede o `meta`),
+      // mas não serve mais story nenhuma: cada uma declara a sua abaixo. Foi
+      // este `transform` que a PauseOnHover herdava — e com ele publicava a
+      // chamada do AutoDismiss.
       source: { transform: sonnerAutoDismissSource },
       description: {
         component: 'Prazo, pausa na leitura, empilhamento, posição e o caso sem Toaster montado.',
@@ -76,6 +81,9 @@ export const AutoDismiss: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      // O prazo é o assunto, e ele vive na região: o snippet mostra a chamada
+      // sem prazo nenhum, porque quem manda é o da região.
+      source: { transform: sonnerAutoDismissSource },
       description: {
         story:
           'A notificação sai sozinha quando o prazo vence. É o que a separa do Alert: aqui a mensagem é passageira, e nada fica esperando uma decisão.',
@@ -113,6 +121,9 @@ export const AutoDismiss: Story = {
 export const PauseOnHover: Story = {
   parameters: {
     docs: {
+      // Construtor próprio: sem ele a story herdava o do `meta` e publicava
+      // `toast.error(…)` enquanto a `play` dispara `toast.info(…)`.
+      source: { transform: sonnerPauseSource },
       description: {
         story:
           'O relógio congela enquanto o ponteiro estiver dentro da região. Sem isso, o tempo de leitura seria o mesmo para todo mundo — e quem lê devagar perderia a mensagem (WCAG 2.2.1).',

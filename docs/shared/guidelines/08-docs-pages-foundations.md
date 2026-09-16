@@ -828,6 +828,50 @@ A Demonstração amarrada ao Playground evita a deriva que já aconteceu duas
 vezes neste repositório: a seção vira um exemplo próprio, ninguém compara, e a
 página passa a ensinar uma coisa e a story a exercitar outra.
 
+### O painel Code
+
+O painel Code de uma story publica o que quem lê vai COPIAR, e por isso ele tem
+uma obrigação só: **mostrar o código da story em que está sendo exibido.**
+
+Três regras, cada uma nascida de um defeito medido:
+
+1. **Toda story declara o próprio `parameters.docs.source.transform`.** Um
+   `transform` no `meta` cobre o arquivo inteiro, e aí a story herda o snippet de
+   outra — ou um genérico que só acerta por coincidência. Medido em 2026-09-16 na
+   categoria de feedback: as três divergências de exemplo que a varredura achou
+   eram heranças (`States/PauseOnHover` no vue e no svelte mostrando a
+   notificação de outra story, `Variants/Contrast` do vanilla mostrando um alerta
+   onde a tela tem cinco). Portão: `story_sem_transform_proprio`, uma catraca com
+   linha de base em `docs/shared/primitives/story-transform-baseline.json` —
+   reprova quem CRESCE, e a dívida antiga (1618 stories em 1012 arquivos, medida
+   em 2026-09-16 dentro de `src/components/ui`) só encolhe.
+
+   **Uma herança é legítima, e por isso fica declarada na linha de base**: quando
+   o `transform` do `meta` é FUNÇÃO dos args da story — como o `progressSource`
+   do svelte, que lê `args.value`, `args.min` e `args.max` —, o snippet é
+   derivado daquela story e não do exemplo de outra. É o caso das sete entradas
+   de `progress` que sobraram ali depois da rodada de 2026-09-16. A regra não
+   sabe distinguir as duas heranças (ela conta, não lê), então o que separa uma
+   da outra é o caso no `<slug>.source.test.ts` provando que cada conjunto de
+   args produz o próprio snippet.
+2. **O snippet ensina o que a story mostra, e nada mais.** Andaime de teste não
+   entra: prazo encurtado para medir, espião de control, limpeza de fila,
+   contêiner de captura. E o que a tela mostra não pode faltar: se a story monta
+   duas peças, anima um valor ou passa um nome acessível, o snippet traz isso —
+   senão quem copia não reproduz o que viu. Portões: `story_file_sem_transform`
+   (arquivo sem transform nenhum) e a varredura `source-snippets.test.ts`
+   (snippet que usa o que não declara).
+3. **Classe de docs page não é API.** `nds-docs-*` existe para enquadrar o
+   exemplo na página; ela não pode ser o que dá a caixa ao componente na story,
+   nem aparecer no snippet. Quando a story precisa de caixa, use o componente que
+   a fornece — foi a correção do `Variants/Rectangle` do skeleton nas cinco
+   stacks, que trocou a classe de proporção pelo `AspectRatio`.
+
+**O que nenhum portão vê**: se o snippet declarado é o CERTO para aquela story.
+Isso é leitura, e quem a cobra é um caso no `<slug>.source.test.ts` afirmando que
+o snippet de cada story contém os textos, as peças e as props que aquela story
+renderiza. Sem esse caso, a regra 1 garante apenas que existe um snippet próprio.
+
 ### Overlay na docs page nasce FECHADO
 
 Componente que abre em camada — `dialog`, `alert-dialog`, `sheet`, `drawer`,

@@ -30,6 +30,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Complete: Story = {
+  // Própria, e não herdada do meta: a composição completa é o assunto desta
+  // story, e painel herdado acerta por coincidência.
+  parameters: { docs: { source: { transform: alertSource } } },
   render: () => (
     <Alert>
       <Info aria-hidden="true" />

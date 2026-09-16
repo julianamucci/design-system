@@ -73,7 +73,7 @@ export const skeletonPlaygroundSource: SourceTransform<SkeletonArgs> = (_gerado,
   // `fill` não traz caixa própria: ele preenche a que o container estabelece, e
   // sem container com medida o bloco nasce com altura zero. Quem dá a caixa no
   // snippet é o `AspectRatio` — a classe de mídia da docs page não é API.
-  if (shape === 'fill') return ratioBlock('Carregando imagem');
+  if (shape === 'fill') return ratioBlock('Carregando conteúdo');
   return vueSnippet(IMPORT, region({ label: 'Carregando conteúdo', body: part(shape, width) }));
 };
 

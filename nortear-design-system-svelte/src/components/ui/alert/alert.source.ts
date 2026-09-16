@@ -265,6 +265,11 @@ import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
  * Mensagem que surge depois de uma ação: é o caso em que o `role="alert"`
  * padrão vale a pena, porque o leitor de tela anuncia na hora. O papel fica na
  * própria raiz — sem contêiner `aria-live` em volta, que aninharia duas regiões.
+ *
+ * O contêiner e a linha do botão são parte do exemplo: é o `nds-stack` que
+ * separa o gatilho do alerta que surge, e é a linha própria que impede o stack
+ * de esticar o botão na largura toda. Sem os dois, o painel publicava duas peças
+ * soltas e quem copiasse não teria o espaçamento da tela.
  */
 export function alertDynamicInsertionSource(): string {
   return svelteSnippet(
@@ -273,15 +278,18 @@ import { Button } from "@/components/ui/button";
 ${IMPORT_SUCCESS}
 
 let generated = $state(false);`,
-    `<Button variant="default" size="sm" onclick={() => (generated = true)}>Gerar relatório</Button>
-
-{#if generated}
-  <Alert>
-    <CheckCircle2 aria-hidden="true" />
-    <AlertTitle as="h4">Operação concluída</AlertTitle>
-    <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
-  </Alert>
-{/if}`,
+    `<div class="nds-stack" data-spacing="sm">
+  <div>
+    <Button variant="default" size="sm" onclick={() => (generated = true)}>Gerar relatório</Button>
+  </div>
+  {#if generated}
+    <Alert>
+      <CheckCircle2 aria-hidden="true" />
+      <AlertTitle as="h4">Operação concluída</AlertTitle>
+      <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
+    </Alert>
+  {/if}
+</div>`,
   );
 }
 

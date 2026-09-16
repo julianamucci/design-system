@@ -37,6 +37,8 @@ export const Pulsing: Story = {
   parameters: {
     covers: ['functional.item1', 'accessibility.item5'],
     docs: {
+      // Declarada na story, não só herdada do meta.
+      source: { transform: skeletonStateSource },
       description: {
         story:
           'Estado padrão: pulso por opacidade, cantos arredondados e fundo distinto do container.',
@@ -71,6 +73,8 @@ export const ReducedMotion: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item4'],
     docs: {
+      // O MESMO markup do pulso: o que muda é a preferência do sistema.
+      source: { transform: skeletonStateSource },
       description: {
         story:
           'Com movimento reduzido o pulso para. O esqueleto continua visível — o que some é a animação, não o placeholder.',

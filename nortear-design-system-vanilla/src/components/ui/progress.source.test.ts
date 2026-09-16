@@ -3,13 +3,15 @@ import {
   progressAnimadoSnippet,
   progressComRotuloSnippet,
   progressCustomTextSnippet,
+  progressEtapasSnippet,
   progressListaSnippet,
   progressOcupadoSnippet,
   progressSnippet,
   progressSource,
   progressSourceCustomText,
+  progressSourceEtapas,
   progressSourceWith,
-  progressSourceLista,
+  progressSourceList,
   progressSourceLabel,
 } from './progress.source';
 
@@ -166,6 +168,13 @@ describe('progressListaSnippet', () => {
 });
 
 describe('progressAnimadoSnippet', () => {
+  /** Os mesmos valores que a story `Animated` renderiza. */
+  const animado = progressAnimadoSnippet({
+    value: 0,
+    label: 'Enviando arquivo',
+    'aria-label': 'Progresso do upload',
+  });
+
   it('avança pela mesma custom property que a fábrica alimenta', () => {
     const code = progressAnimadoSnippet({ value: 0 });
     expect(code).toContain("setProperty('--value'");
@@ -175,6 +184,80 @@ describe('progressAnimadoSnippet', () => {
     // Escrever largura ou transform passaria por cima da folha compartilhada.
     expect(code).not.toContain('style.width');
     expect(code).not.toContain('style.transform');
+  });
+
+  it('ensina o bloco que a story desenha: rótulo, valor polite e a barra', () => {
+    expect(animado).toContain("bloco.className = 'nds-stack nds-w-md';");
+    expect(animado).toContain("bloco.dataset.spacing = 'xs';");
+    expect(animado).toContain("nome.textContent = 'Enviando arquivo';");
+    expect(animado).toContain("valor.textContent = '0%';");
+    expect(animado).toContain("valor.setAttribute('aria-live', 'polite');");
+    expect(animado).toContain("'aria-label': 'Progresso do upload'");
+    expect(animado).toContain('bloco.append(linha, barra);');
+  });
+
+  it('ensina o LAÇO, com o relógio do render e não um encurtado para medir', () => {
+    expect(animado).toContain('const timer = setInterval(() => {');
+    expect(animado).toContain('pct = pct >= 100 ? 0 : pct + 5;');
+    expect(animado).toContain('}, 400);');
+    expect(animado).toContain('clearInterval(timer);');
+  });
+
+  it('cada volta move os TRÊS: número visível, anúncio e desenho', () => {
+    // Mover só dois é o defeito silencioso: a tela conta uma história e quem
+    // ouve recebe outra.
+    expect(animado).toContain('valor.textContent = `${pct}%`;');
+    expect(animado).toContain("barra.setAttribute('aria-valuenow', String(pct));");
+    expect(animado).toContain("barra.setAttribute('aria-valuetext', `${pct}%`);");
+    expect(animado).toContain("indicador?.style.setProperty('--value', String(pct));");
+  });
+
+  it('não publica no lugar do laço uma função que ninguém chama', () => {
+    // Era o estado anterior: o snippet declarava `avancar(pct)` e parava ali, e
+    // o painel mostrava uma barra parada ao lado de uma story que anda.
+    expect(animado).not.toContain('function avancar(');
+  });
+});
+
+describe('progressEtapasSnippet', () => {
+  /** Os mesmos valores que a story `WizardSteps` renderiza. */
+  const etapas = progressEtapasSnippet({
+    value: 60,
+    label: 'Etapa 3 de 5',
+    valueText: 'Endereço',
+    'aria-label': 'Progresso do cadastro: etapa 3 de 5',
+  });
+
+  it('descreve o bloco da story: espaçamento sm e rótulo em peso médio', () => {
+    expect(etapas).toContain("bloco.dataset.spacing = 'sm';");
+    expect(etapas).toContain("nome.className = 'nds-text-foreground nds-font-medium';");
+    expect(etapas).toContain("nome.textContent = 'Etapa 3 de 5';");
+  });
+
+  it('a região polite anuncia a etapa, e sem numeral tabular', () => {
+    // `nds-tabular-nums` serve a número que troca de dígito; "Endereço" não
+    // dança de largura, e a classe ali ensinaria ruído.
+    expect(etapas).toContain("valor.textContent = 'Endereço';");
+    expect(etapas).toContain("valor.setAttribute('aria-live', 'polite');");
+    expect(etapas).not.toContain('nds-tabular-nums');
+  });
+
+  it('a barra leva o valor e o nome acessível da etapa', () => {
+    expect(etapas).toContain('value: 60');
+    expect(etapas).toContain("'aria-label': 'Progresso do cadastro: etapa 3 de 5'");
+  });
+
+  it('a transform entrega a mesma forma', () => {
+    expect(progressSourceEtapas({ value: 60 })('', {})).toContain("bloco.dataset.spacing = 'sm';");
+  });
+
+  it('as outras formas seguem em xs, com o percentual em numeral tabular', () => {
+    // A linha de rótulo passou a ter opções; sem esta contraprova, ligar `sm` e
+    // o peso médio para as etapas poderia mudar as outras cinco composições.
+    const label = progressComRotuloSnippet({ value: 48, label: 'Enviando arquivo' });
+    expect(label).toContain("bloco.dataset.spacing = 'xs';");
+    expect(label).toContain("nome.className = 'nds-text-foreground';");
+    expect(label).toContain("valor.className = 'nds-text-muted-foreground nds-tabular-nums';");
   });
 });
 
@@ -233,15 +316,15 @@ describe('as transforms das formas alternativas', () => {
   it('entregam a forma que a story pede', () => {
     expect(progressSourceLabel({ value: 48 })('', {})).toContain("aria-live', 'polite'");
     expect(
-      progressSourceLista([{ value: 10, 'aria-label': 'Uma barra' }])('', {}),
+      progressSourceList([{ value: 10, 'aria-label': 'Uma barra' }])('', {}),
     ).toContain("'aria-label': 'Uma barra'");
   });
 });
 
-describe('progressSourceLista — espaçamento', () => {
+describe('progressSourceList — espaçamento', () => {
   it('a lista usa o espaçamento que a story renderiza', () => {
     const items = [{ value: 100, 'aria-label': 'Uma barra' }];
-    expect(progressSourceLista(items)('', {})).toContain("lista.dataset.spacing = 'md';");
-    expect(progressSourceLista(items, 'sm')('', {})).toContain("lista.dataset.spacing = 'sm';");
+    expect(progressSourceList(items)('', {})).toContain("lista.dataset.spacing = 'md';");
+    expect(progressSourceList(items, 'sm')('', {})).toContain("lista.dataset.spacing = 'sm';");
   });
 });

@@ -34,7 +34,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  parameters: { covers: ['accessibility.item1', 'visual.item1'] },
+  // A transform é declarada AQUI, e não herdada do `meta`: herança acerta por
+  // coincidência, e no dia em que o `meta` trocar de transform esta story passa
+  // a publicar outro exemplo sem ninguém ver.
+  parameters: {
+    covers: ['accessibility.item1', 'visual.item1'],
+    docs: { source: { transform: badgeSource } },
+  },
   render: (args) => ({
     components: { Badge },
     // Na variante padrão a prop NÃO é passada: a play cobra que a etiqueta

@@ -18,6 +18,10 @@ import {
   badgeWithCounterSource,
   badgeWithIconSource,
 } from "./badge.source";
+import badgeTranslations from "@shared/content/badge/translations.json";
+
+/** Os mesmos rótulos que os construtores do painel leem — uma fonte só. */
+const LABELS = badgeTranslations["pt-BR"].demonstration.labels;
 
 const meta = {
   title: "Components/Feedback/Badge/Compositions",
@@ -50,7 +54,7 @@ export const WithIcon: Story = {
   render: () => (
     <Badge>
       <Check aria-hidden="true" data-icon="inline-start" />
-      Ativo
+      {LABELS.statusLabel}
     </Badge>
   ),
   play: async ({ canvasElement }) => {
@@ -61,7 +65,7 @@ export const WithIcon: Story = {
     await expect(icon).not.toBeNull();
     await expect(icon).toHaveAttribute("aria-hidden", "true");
     await expect(icon).toHaveAttribute("data-icon", "inline-start");
-    await expect(badge.textContent?.trim()).toBe("Ativo");
+    await expect(badge.textContent?.trim()).toBe(LABELS.statusLabel);
 
     // functional.item5 — o espaço entre ícone e texto é do container: o
     // .nds-badge declara gap, e o data-icon encurta o padding daquele lado.
@@ -93,7 +97,7 @@ export const WithCounter: Story = {
   },
   render: () => (
     <Badge variant="destructive">
-      Urgente
+      {LABELS.destructiveLabel}
       <BadgeCounter>12</BadgeCounter>
     </Badge>
   ),
@@ -107,7 +111,9 @@ export const WithCounter: Story = {
 
     // O número é lido: texto de verdade no DOM, sem aria-hidden.
     await expect(counter.hasAttribute("aria-hidden")).toBe(false);
-    await expect((badge.textContent ?? "").replace(/\s+/g, " ").trim()).toBe("Urgente12");
+    await expect((badge.textContent ?? "").replace(/\s+/g, " ").trim()).toBe(
+      `${LABELS.destructiveLabel}12`,
+    );
 
     // A transição sai do caminho antes de medir: ler no primeiro quadro devolve
     // a cor anterior, e é assim que se inventa um contraste de ~1.0.
@@ -131,20 +137,20 @@ export const AsButton: Story = {
     docs: { source: { transform: badgeAsButtonSource } },
   },
   render: () => (
-    <Button variant="ghost" size="sm" aria-label="Filtrar por Design">
-      <Badge variant="info">Design</Badge>
+    <Button variant="ghost" size="sm" aria-label={LABELS.categoryFilterLabel}>
+      <Badge variant="info">{LABELS.categoryLabel}</Badge>
     </Button>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole("button", { name: "Filtrar por Design" });
+    const button = canvas.getByRole("button", { name: LABELS.categoryFilterLabel });
     await expect(button.classList.contains("nds-button-ghost")).toBe(true);
     await expect(button.classList.contains("nds-button-sm")).toBe(true);
 
     // functional.item6 — o pai recebe o foco e o badge não compete por ele.
     const badge = badgeRoot(button);
     await expect(badge).toHaveAttribute("data-variant", "info");
-    await expect(badge.textContent?.trim()).toBe("Design");
+    await expect(badge.textContent?.trim()).toBe(LABELS.categoryLabel);
     await expect(badge.hasAttribute("tabindex")).toBe(false);
 
     await userEvent.tab();
@@ -163,12 +169,12 @@ export const AsLink: Story = {
   },
   render: () => (
     <a href="#">
-      <Badge variant="info">Design</Badge>
+      <Badge variant="info">{LABELS.categoryLabel}</Badge>
     </a>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole("link", { name: "Design" });
+    const link = canvas.getByRole("link", { name: LABELS.categoryLabel });
     const badge = badgeRoot(link);
 
     // functional.item8 — o link é o controle: recebe o foco por Tab, e a

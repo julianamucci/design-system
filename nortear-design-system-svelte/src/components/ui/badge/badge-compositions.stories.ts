@@ -53,7 +53,12 @@ const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
 export const WithIcon: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
-    docs: { source: { transform: badgeWithIconSource } },
+    // Embrulhada numa função: o Storybook chama `transform(codigoGerado, ctx)`,
+    // e estes construtores recebem um OBJETO DE OPÇÕES no primeiro parâmetro.
+    // Passá-los direto entregava o código gerado (uma string) no lugar das
+    // opções — funcionava por acaso, porque `.label` de uma string é
+    // `undefined` e o `??` caía no JSON. Acidente não é contrato.
+    docs: { source: { transform: () => badgeWithIconSource() } },
   },
   render: () => ({
     Component: BadgeStory,
@@ -87,7 +92,8 @@ export const WithCounter: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
-      source: { transform: badgeWithCounterSource },
+      // Embrulhada numa função, pelo mesmo motivo da `WithIcon` acima.
+      source: { transform: () => badgeWithCounterSource() },
       description: {
         story:
           'O contador é neutro de propósito: a cor da variante fica na borda ao redor. Pintá-lo com ela derrubaria o número abaixo de 4.5:1 em parte dos temas.',
@@ -122,7 +128,8 @@ export const WithCounter: Story = {
 export const AsButton: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
-    docs: { source: { transform: badgeAsButtonSource } },
+    // Embrulhada numa função, pelo mesmo motivo da `WithIcon` acima.
+    docs: { source: { transform: () => badgeAsButtonSource() } },
   },
   render: () => ({
     Component: BadgeStory,
@@ -159,7 +166,8 @@ export const AsButton: Story = {
 export const AsLink: Story = {
   parameters: {
     covers: ['functional.item8', 'visual.item7'],
-    docs: { source: { transform: badgeAsLinkSource } },
+    // Embrulhada numa função, pelo mesmo motivo da `WithIcon` acima.
+    docs: { source: { transform: () => badgeAsLinkSource() } },
   },
   render: () => ({
     Component: BadgeStory,

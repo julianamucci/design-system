@@ -11414,6 +11414,150 @@ function auditStoryFileSemTransform(slug) {
   return violations;
 }
 
+const SEP_WIN = String.fromCharCode(92);
+const NL = String.fromCharCode(10);
+
+/**
+ * Conta as stories de um arquivo que NAO declaram o próprio `transform`.
+ *
+ * O mesmo contador serve a regra e o gerador da linha de base: contador
+ * duplicado é como a catraca mede uma coisa e a regeneração outra.
+ */
+function storiesSemTransformProprio(file) {
+  const bruto = readFile(file);
+  if (!bruto) return null;
+  const content = stripComments(bruto);
+  // SÓ declaração de story: `export const X: Story = {` ou `satisfies Story`.
+  // A `story_file_sem_transform` casa qualquer `export const` de inicial
+  // maiúscula, e ali a folga não custa — ela só pergunta se o ARQUIVO tem algum
+  // transform. Aqui custaria o portão inteiro: medido em 2026-09-16, o regex
+  // largo contava `TEXTS`, `SEMANTICS`, `PERSISTENT` e `DEMO_REGION_LABEL` como
+  // stories, inflava a linha de base de 1657 para 2417 e — pior — faria a
+  // catraca reprovar quem só acrescentasse uma CONSTANTE exportada ao arquivo.
+  //
+  // `Story` e `StoryObj`: a segunda forma existe em 14 arquivos, e sem ela a
+  // catraca deixaria essas stories fora sem dizer.
+  const declaracoes = [
+    ...content.matchAll(/^export const ([A-Z][\w]*)\s*(?::\s*Story(?:Obj)?\b|=[\s\S]{0,400}?satisfies\s+Story(?:Obj)?\b)/gm),
+  ];
+  if (!declaracoes.length) return null;
+  const cruas = [];
+  declaracoes.forEach((m, i) => {
+    const fim = i + 1 < declaracoes.length ? declaracoes[i + 1].index : content.length;
+    if (!/transform\s*:/.test(content.slice(m.index, fim))) cruas.push(m[1]);
+  });
+  return { total: declaracoes.length, cruas };
+}
+
+/**
+ * Regenera a linha de base da catraca do painel Code.
+ *
+ *   node scripts/audit.mjs --gerar-baseline-transform
+ *
+ * Rode depois de PAGAR dívida, para a catraca descer. Rodar para calar uma
+ * reprovação de story nova é usar a chave de fenda como martelo.
+ */
+function gerarBaselineTransform() {
+  const base = {};
+  const varrer = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) { if (e.name !== 'node_modules') varrer(p); continue; }
+      if (!/\.stories\.tsx?$/.test(e.name)) continue;
+      // SÓ `src/components/ui`: é onde o painel Code documenta COMPONENTE. Em
+      // `src/components/docs` vivem as stories das seções e a `docs-smoke`, que
+      // não ensinam uso de componente — medido em 2026-09-16, eram 784 das 2402
+      // da primeira linha de base, inflando a dívida com o que a regra não
+      // deveria cobrar. A regra abaixo lê `filesForSlug(...).ui`, então já é
+      // limitada ao mesmo diretório: contador e varredura têm de concordar.
+      if (!relative(ROOT, p).split(SEP_WIN).join('/').includes('/src/components/ui/')) continue;
+      const medida = storiesSemTransformProprio(p);
+      if (medida && medida.cruas.length) {
+        base[relative(ROOT, p).split(SEP_WIN).join('/')] = medida.cruas.length;
+      }
+    }
+  };
+  for (const stack of STACKS) varrer(join(ROOT, 'nortear-design-system-' + stack, 'src'));
+  const ordenado = Object.fromEntries(Object.entries(base).sort(([a], [b]) => a.localeCompare(b)));
+  const total = Object.values(ordenado).reduce((a, b) => a + b, 0);
+  writeFileSync(
+    join(ROOT, 'docs', 'shared', 'primitives', 'story-transform-baseline.json'),
+    JSON.stringify({
+      $descricao:
+        'Catraca do painel Code (regra story_sem_transform_proprio). Por ARQUIVO de story, '
+        + 'quantas stories ainda herdam o snippet do meta em vez de declarar o próprio. '
+        + 'A regra reprova quem CRESCE, e arquivo fora desta lista reprova com qualquer uma. '
+        + 'Regenere com: node scripts/audit.mjs --gerar-baseline-transform, e só depois de PAGAR dívida. '
+        + 'Motivo em docs/shared/guidelines/08-docs-pages-foundations.md, secao O painel Code.',
+      arquivos: ordenado,
+    }, null, 2) + NL,
+  );
+  console.log('linha de base do painel Code: ' + Object.keys(ordenado).length + ' arquivos, ' + total + ' stories');
+}
+
+/**
+ * Story que herda o snippet do `meta` em vez de declarar o próprio.
+ *
+ * A `story_file_sem_transform` já cobra o arquivo sem transform em lugar
+ * nenhum, e ela PARA no `meta`: um `transform` ali cobre o arquivo inteiro e a
+ * regra segue em frente. Medido em 2026-09-16 na categoria de feedback, é
+ * exatamente onde o painel mostra OUTRO exemplo: as três divergências achadas
+ * (PauseOnHover no vue e no svelte, Contrast no vanilla) eram stories herdando
+ * um construtor genérico ou o de outra story. Herança acerta por coincidência,
+ * e coincidência não sobrevive à próxima edição do render.
+ *
+ * Catraca, não varredura: a dívida antiga são 1657 stories em 418 pares
+ * slug x stack, e reprovar tudo afogaria o sinal. A linha de base em
+ * `docs/shared/primitives/story-transform-baseline.json` guarda quantas cada
+ * arquivo já tinha; reprova quem CRESCE, e arquivo fora da lista reprova com
+ * qualquer uma.
+ *
+ * O que ela NÃO alcança, declarado para não virar cobertura fantasma:
+ *   - se o snippet declarado é o CERTO para aquela story: isso é leitura, e
+ *     quem a cobra é o caso no `<slug>.source.test.ts`;
+ *   - CONTAGEM, não identidade: trocar QUAL story herda mantém o total e passa.
+ */
+function auditStorySemTransformProprio(slug) {
+  const violations = [];
+  const basePath = join(ROOT, 'docs', 'shared', 'primitives', 'story-transform-baseline.json');
+  // Arquivo AUSENTE significa catraca não instalada, e a regra se cala. A
+  // primeira versão caía no `|| '{}'` e tratava ausência como "zero permitido":
+  // provado no tooltip, reprovou 13 arquivos de uma vez, e no repositório
+  // inteiro seriam 418 — a dívida antiga afogando o sinal que a catraca existe
+  // para dar. JSON inválido continua se calando pelo `catch`, pelo mesmo motivo.
+  if (!existsSync(basePath)) return violations;
+  let base = {};
+  try {
+    base = (JSON.parse(readFile(basePath) || '{}').arquivos) || {};
+  } catch {
+    return violations;
+  }
+
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui.filter((f) => /\.stories\.tsx?$/.test(f))) {
+      const medida = storiesSemTransformProprio(file);
+      if (!medida || !medida.cruas.length) continue;
+
+      const rel = relative(ROOT, file).split(SEP_WIN).join('/');
+      const permitido = base[rel] ?? 0;
+      if (medida.cruas.length <= permitido) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: rel, rule: 'story_sem_transform_proprio',
+        message:
+          medida.cruas.length + ' de ' + medida.total + ' stories herdam o snippet do meta ('
+          + medida.cruas.slice(0, 6).join(', ') + '), contra ' + permitido + ' na linha de base — '
+          + 'painel que herda mostra o exemplo de outra story, e acerta por coincidência: '
+          + 'declare `parameters.docs.source.transform` na própria story. Se a dívida foi PAGA, '
+          + 'regenere docs/shared/primitives/story-transform-baseline.json.',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditSourceSemTeste(slug) {
   const violations = [];
   for (const stack of STACKS) {
@@ -11804,6 +11948,7 @@ function runAudit(slug, category) {
       ...auditIdentificadorPtEmSnippet(alvo),
       ...auditSourceSemTeste(alvo),
       ...auditStoryFileSemTransform(alvo),
+      ...auditStorySemTransformProprio(alvo),
     ],
     seo: auditSeo,
   };
@@ -11824,6 +11969,7 @@ function runAudit(slug, category) {
     ...auditIdentificadorPtEmSnippet(slug),
     ...auditSourceSemTeste(slug),
     ...auditStoryFileSemTransform(slug),
+    ...auditStorySemTransformProprio(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
     ...auditSnippetSemLastro(slug),
@@ -11976,6 +12122,10 @@ if (args.includes('--contract-status')) {
 }
 if (args.includes('--gerar-baseline-pt')) {
   gerarBaselinePt();
+  process.exit(0);
+}
+if (args.includes('--gerar-baseline-transform')) {
+  gerarBaselineTransform();
   process.exit(0);
 }
 

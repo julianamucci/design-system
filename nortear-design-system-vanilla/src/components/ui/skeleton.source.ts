@@ -84,7 +84,11 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   // `fill` preenche a caixa que o CONTAINER estabelece: sozinho ele nasce com
   // altura zero, e um snippet que o mostrasse solto ensinaria um esqueleto
   // invisível. Quem dá a caixa é a proporção.
-  if (!o.lines && o.shape === 'fill') return ratioSkeletonSnippet(o);
+  // O nome da região é o da story que pediu o snippet — no Playground,
+  // "Carregando conteúdo", e não o padrão da composição de imagem.
+  if (!o.lines && o.shape === 'fill') {
+    return ratioSkeletonSnippet({ ...o, regionLabel: o.regionLabel ?? 'Carregando conteúdo' });
+  }
 
   const parts = o.lines ?? [
     {

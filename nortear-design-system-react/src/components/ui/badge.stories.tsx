@@ -5,6 +5,14 @@ import { Badge } from "./badge";
 import { BadgeDocs } from "@/components/docs/BadgeDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { badgeSource } from "./badge.source";
+import badgeTranslations from "@shared/content/badge/translations.json";
+
+/**
+ * Rótulos do bloco pt-BR, lidos DIRETO do JSON compartilhado — o mesmo que o
+ * construtor do snippet lê. A story é fixture: o texto que ela monta e o que ela
+ * procura têm de ser o mesmo, e não podem mudar com o idioma do navegador.
+ */
+const LABELS = badgeTranslations["pt-BR"].demonstration.labels;
 
 const meta = {
   title: "Components/Feedback/Badge",
@@ -29,7 +37,7 @@ const meta = {
   },
   args: {
     variant: "default",
-    children: "Novo",
+    children: LABELS.defaultLabel,
   },
 } satisfies Meta<typeof Badge>;
 
@@ -37,7 +45,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  parameters: { covers: ['accessibility.item1', 'visual.item1'] },
+  // A transform é declarada AQUI, e não herdada do `meta`: herança acerta por
+  // coincidência, e no dia em que o `meta` trocar de transform esta story passa
+  // a publicar outro exemplo sem ninguém ver.
+  parameters: {
+    covers: ['accessibility.item1', 'visual.item1'],
+    docs: { source: { transform: badgeSource } },
+  },
   // Com o control no padrão, a story NÃO passa `variant`: é o que prova que o
   // padrão chega ao DOM como `data-variant="default"` sem ninguém pedir.
   render: ({ variant, ...args }) => (

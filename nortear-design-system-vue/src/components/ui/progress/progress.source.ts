@@ -27,10 +27,17 @@ const IMPORT = `import { Progress } from '@/components/ui/progress'`;
 
 /**
  * O valor. OMITIR é o modo indeterminado (a regra compartilhada segue o
- * `<progress>` nativo), então `null` e ausência não escrevem nada — e o `0`
- * sai escrito, porque é o que separa "zero por cento" de "não sei quanto falta".
+ * `<progress>` nativo), então a ausência não escreve nada — e o `0` sai escrito,
+ * porque é o que separa "zero por cento" de "não sei quanto falta".
+ *
+ * `null` tem as DUAS formas, e a diferença é de quem escreve: omitir é a forma
+ * curta, e `:model-value="null"` é a de quem tem o número numa variável que
+ * ainda não chegou. `nullExplicit` diz qual delas a story é sobre — sem ele o
+ * snippet do estado indeterminado ficaria idêntico ao da variante, e a página
+ * deixaria de ensinar uma das duas.
  */
-function valueAttr(raw: unknown): string {
+function valueAttr(raw: unknown, nullExplicit = false): string {
+  if (raw === null) return nullExplicit ? ':model-value="null"' : '';
   if (typeof raw !== 'number' || !Number.isFinite(raw)) return '';
   return `:model-value="${raw}"`;
 }
@@ -46,6 +53,8 @@ function variantAttr(raw: unknown): string {
 
 type BarOptions = {
   value?: number | null;
+  /** Escreve `:model-value="null"` em vez de omitir o valor — ver `valueAttr`. */
+  nullExplicit?: boolean;
   min?: number;
   max?: number;
   variant?: '' | 'success' | 'destructive';
@@ -55,7 +64,7 @@ type BarOptions = {
 /** Uma barra, só com o que difere do padrão. O nome acessível é obrigatório. */
 function bar(o: BarOptions): string {
   return `<Progress${attrs(
-    valueAttr(o.value),
+    valueAttr(o.value, o.nullExplicit),
     numberAttr('min', o.min, MIN_DEFAULT),
     numberAttr('max', o.max, MAX_DEFAULT),
     variantAttr(o.variant),

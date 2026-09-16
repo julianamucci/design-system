@@ -69,6 +69,10 @@ export const WithDescription: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Declarada, e não herdada do `meta` que traz a mesma função: herdar
+      // acerta por coincidência, e a coincidência não sobrevive à próxima
+      // edição do `meta`.
+      source: { transform: sonnerWithDescriptionSource },
       description: {
         story:
           'Título mais descrição, para quando o título sozinho não orienta. A descrição é uma frase completa — se precisar de três linhas, o lugar da mensagem não é uma notificação.',

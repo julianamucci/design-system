@@ -64,6 +64,10 @@ export const Default: Story = {
   parameters: {
     covers: ['accessibility.item4', 'visual.item1'],
     docs: {
+      // Declarada, e não herdada do `meta` que traz a mesma função: herdar
+      // acerta por coincidência, e a coincidência não sobrevive à próxima
+      // edição do `meta`.
+      source: { transform: sonnerNeutralSource },
       description: {
         story:
           'Notificação neutra, sem tipo semântico: nenhum ícone e as cores base do tema. Serve a confirmações que não são nem êxito nem falha.',

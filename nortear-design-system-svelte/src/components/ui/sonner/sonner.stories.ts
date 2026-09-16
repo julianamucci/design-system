@@ -77,6 +77,10 @@ type Story = StoryObj;
 export const Playground: Story = {
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item3'],
+    // Declarada aqui, e não herdada do `meta`: story que herda transform acerta
+    // por coincidência — foi assim que a PauseOnHover publicou por meses a
+    // chamada de outra story, com o relógio da suíte junto.
+    docs: { source: { transform: sonnerSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

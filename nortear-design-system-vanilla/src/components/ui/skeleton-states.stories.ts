@@ -9,6 +9,16 @@ import {
   radiusAgainstToken,
 } from '@shared/testing/skeleton-probe';
 
+// As duas stories montam a MESMA região de duas linhas: o que muda entre elas é
+// a preferência do sistema, que opção nenhuma da fábrica controla. Cada story
+// declara a transform, em vez de herdá-la do meta.
+const STATES_SOURCE = skeletonSourceWith({
+  lines: [
+    { shape: 'text', width: 'full' },
+    { shape: 'text', width: '3-4' },
+  ],
+});
+
 const meta: Meta = {
   tags: ['feedback'],
   title: 'Components/Feedback/Skeleton/States',
@@ -17,16 +27,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
-      // As duas stories montam a MESMA região de duas linhas: o que muda entre
-      // elas é a preferência do sistema, que opção nenhuma da fábrica controla.
-      source: {
-        transform: skeletonSourceWith({
-          lines: [
-            { shape: 'text', width: 'full' },
-            { shape: 'text', width: '3-4' },
-          ],
-        }),
-      },
+      source: { transform: STATES_SOURCE },
       description: {
         component:
           'Os dois estados que o conteúdo compartilhado documenta: o pulso padrão enquanto o conteúdo carrega, e o pulso desligado quando o sistema pede movimento reduzido.',
@@ -57,6 +58,7 @@ export const Pulsing: Story = {
   parameters: {
     covers: ['functional.item1', 'accessibility.item5'],
     docs: {
+      source: { transform: STATES_SOURCE },
       description: {
         story:
           'Estado padrão: pulso por opacidade, cantos arredondados e fundo distinto do container.',
@@ -94,6 +96,7 @@ export const ReducedMotion: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item4'],
     docs: {
+      source: { transform: STATES_SOURCE },
       description: {
         story:
           'Com movimento reduzido o pulso para. O esqueleto continua visível — o que some é a animação, não o placeholder.',

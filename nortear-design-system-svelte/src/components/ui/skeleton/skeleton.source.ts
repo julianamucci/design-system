@@ -58,9 +58,10 @@ export function skeletonSource(_gerado?: string, ctx?: { args?: Partial<Skeleton
 }
 
 /**
- * Variante Rectangle: `fill` preenche a caixa que o container estabelece. A
- * story desenha a proporção com a classe da docs page, que não é API; o snippet
- * ensina quem de fato dá a caixa.
+ * Variante Rectangle: `fill` preenche a caixa que o container estabelece — e
+ * quem a estabelece, na story e no snippet, é o `AspectRatio`. A classe de
+ * proporção da docs page saiu do render em 2026-09-16: ela não é API, e por isso
+ * não podia ser o que dá a caixa no exemplo.
  */
 export function skeletonRetanguloSource(): string {
   return ratioSnippet('Carregando bloco');

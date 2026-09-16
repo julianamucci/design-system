@@ -26,6 +26,12 @@ export type SonnerSnippetOptions = {
   closeButton?: boolean;
   duration?: number;
   /**
+   * Nome acessível da região, quando "Notificações" não serve — é o caso da
+   * demonstração, cuja página tem outras regiões e cuja `play` afirma o nome.
+   * É prop REAL da região que a story monta, então entra no snippet.
+   */
+  ariaLabel?: string;
+  /**
    * Prazo infinito — reservado a falha crítica que exige decisão, e sempre com
    * botão de fechar: uma notificação que não sai sozinha e não pode ser fechada
    * vira obstáculo.
@@ -63,6 +69,7 @@ function regionBlock(o: SonnerSnippetOptions): string {
       'duration',
       o.duration !== undefined && o.duration !== DEFAULT_DURATION ? String(o.duration) : undefined,
     ],
+    ['aria-label', o.ariaLabel ? text(o.ariaLabel) : undefined],
   ]);
 
   const body =
@@ -102,6 +109,17 @@ function notificationOptions(o: SonnerSnippetOptions): string[] {
   ]);
 }
 
+/**
+ * O manipulador da ação embutida.
+ *
+ * A notificação some, e o que só existia nela some junto: `desfazer` precisa
+ * existir em outro lugar da interface. Aqui ele é DECLARADO porque o snippet o
+ * cita — exemplo que chama função que não declara não se reproduz ao ser colado.
+ */
+const UNDO_HANDLER = `function desfazer() {
+  toast.success('Item restaurado.');
+}`;
+
 /** A região montada uma vez, mais a chamada da fila que a story dispara. */
 export function sonnerSnippet(o: SonnerSnippetOptions = {}): string {
   const type = o.type ?? 'success';
@@ -109,6 +127,7 @@ export function sonnerSnippet(o: SonnerSnippetOptions = {}): string {
   return snippet(
     importing('sonner', 'createSonnerToaster', 'toast'),
     regionBlock(o),
+    o.actionLabel ? UNDO_HANDLER : undefined,
     queueCall(type, o.title || DEFAULT_TITLE[type], notificationOptions(o)),
   );
 }
@@ -125,6 +144,7 @@ export function sonnerNoRegionSnippet(o: SonnerSnippetOptions = {}): string {
 
   return snippet(
     importing('sonner', 'toast'),
+    o.actionLabel ? UNDO_HANDLER : undefined,
     queueCall(type, o.title || DEFAULT_TITLE[type], notificationOptions(o)),
   );
 }
@@ -157,6 +177,11 @@ export function sonnerPromiseSnippet(o: SonnerSnippetOptions = {}): string {
   return snippet(
     importing('sonner', 'createSonnerToaster', 'toast'),
     regionBlock(o),
+    // A operação vai DECLARADA: o snippet a chama, e um exemplo que cita função
+    // inexistente não se reproduz ao ser colado.
+    `function enviarArquivo(): Promise<void> {
+  return fetch('/api/arquivos', { method: 'POST' }).then(() => undefined);
+}`,
     `toast.promise(enviarArquivo(), {
   loading: 'Enviando arquivo...',
   success: 'Arquivo enviado com sucesso.',

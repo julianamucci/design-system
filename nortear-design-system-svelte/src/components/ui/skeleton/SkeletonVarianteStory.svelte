@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Skeleton, SkeletonRegion } from './index';
+  import { AspectRatio } from '@/components/ui/aspect-ratio';
 
   type Variant = 'rectangle' | 'circle' | 'textLine';
 
@@ -11,8 +12,11 @@
 </script>
 
 {#if variant === 'rectangle'}
+  <!-- Quem dá a caixa ao `fill` é o AspectRatio, e é ele que o painel ensina. -->
   <SkeletonRegion label="Carregando bloco" class="nds-w-sm">
-    <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
+    <AspectRatio ratio={16 / 9}>
+      <Skeleton data-shape="fill" />
+    </AspectRatio>
   </SkeletonRegion>
 {:else if variant === 'circle'}
   <SkeletonRegion label="Carregando avatar">

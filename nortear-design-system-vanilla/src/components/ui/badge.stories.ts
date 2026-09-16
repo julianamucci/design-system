@@ -4,6 +4,14 @@ import { within, expect } from 'storybook/test';
 import { badgeRoot, badgeVariant } from '@shared/testing/badge-probe';
 import { createBadge, type BadgeVariant } from './badge';
 import { badgeSource } from './badge.source';
+import badgeTranslations from '@shared/content/badge/translations.json';
+
+/**
+ * Rótulos do bloco pt-BR, lidos DIRETO do JSON compartilhado — o mesmo que o
+ * construtor do snippet lê. A story é fixture: o texto que ela monta e o que ela
+ * procura têm de ser o mesmo, e não podem mudar com o idioma do navegador.
+ */
+const LABELS = badgeTranslations['pt-BR'].demonstration.labels;
 import { createBadgeDocs } from '@/components/docs/BadgeDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -36,7 +44,7 @@ const meta: Meta<BadgeArgs> = {
   },
   args: {
     variant: 'default',
-    label: 'Novo',
+    label: LABELS.defaultLabel,
   },
 };
 
@@ -46,7 +54,13 @@ type Story = StoryObj<BadgeArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
-  parameters: { covers: ['accessibility.item1', 'visual.item1'] },
+  // A transform é declarada AQUI, e não herdada do `meta`: herança acerta por
+  // coincidência, e no dia em que o `meta` trocar de transform esta story passa
+  // a publicar outro exemplo sem ninguém ver.
+  parameters: {
+    covers: ['accessibility.item1', 'visual.item1'],
+    docs: { source: { transform: badgeSource } },
+  },
   render: (args) => createBadge({ variant: args.variant, children: args.label }),
   play: async ({ canvasElement, args, step }) => {
     const badge = badgeRoot(within(canvasElement).getByText(args.label));

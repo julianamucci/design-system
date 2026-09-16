@@ -15,6 +15,7 @@ import {
   sonnerStackedSource,
   sonnerPositionSource,
   sonnerDurationSource,
+  sonnerPauseSource,
   sonnerNoRegionSource,
   sonnerSource,
   sonnerDarkThemeSource,
@@ -48,8 +49,10 @@ const meta: Meta = {
       },
     },
     docs: {
-      // Cascateia para PauseOnHover, cuja pausa é comportamento da região e não
-      // tem marcação própria; as demais sobrescrevem logo abaixo.
+      // Fica pelo arquivo (o portão `story_file_sem_transform` mede o `meta`),
+      // mas não serve mais story nenhuma: cada uma declara a sua abaixo. Era a
+      // PauseOnHover que cascateava para cá, e `sonnerSource` lê os ARGS dela —
+      // então publicava `toast.success(…)` e o `duration={1200}` da suíte.
       source: { transform: sonnerSource },
       description: {
         component: 'Prazo, pausa na leitura, empilhamento, posição e o caso sem Toaster montado.',
@@ -111,6 +114,9 @@ export const AutoDismiss: Story = {
 export const PauseOnHover: Story = {
   parameters: {
     docs: {
+      // Construtor próprio: a pausa não tem marcação, mas a CHAMADA é a desta
+      // story, e o prazo do exemplo é o do design system, não o da suíte.
+      source: { transform: sonnerPauseSource },
       description: {
         story:
           'O relógio congela enquanto o ponteiro estiver dentro da região. Sem isso, o tempo de leitura seria o mesmo para todo mundo — e quem lê devagar perderia a mensagem (WCAG 2.2.1).',

@@ -232,3 +232,85 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('<AlertAction class="nds-w-auto">');
   });
 });
+
+// ─── O snippet descreve a story INTEIRA ──────────────────────────────────────
+//
+// Medido em 2026-09-16: a `DynamicInsertion` publicava Button e `{#if}` SOLTOS,
+// sem o `nds-stack` nem a linha do botão que o componente de story monta. O par
+// é medido junto porque a saída do painel não chega ao DOM durante a `play` —
+// nenhuma suíte de navegador vê esta diferença.
+
+describe('o painel publica a composição que a story renderiza', () => {
+  const stories = import.meta.glob<string>(
+    [
+      './alert.stories.ts',
+      './alert-variants.stories.ts',
+      './alert-states.stories.ts',
+      './alert-compositions.stories.ts',
+    ],
+    { query: '?raw', import: 'default', eager: true },
+  );
+
+  /** Os componentes de story: nesta stack o render mora num `.svelte`. */
+  const storyComponents = import.meta.glob<string>('./Alert*Story.svelte', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  });
+
+  it('os quatro arquivos de story foram lidos', () => {
+    expect(Object.keys(stories)).toHaveLength(4);
+  });
+
+  it('DynamicInsertion: contêiner e linha do botão, como no componente de story', () => {
+    const output = alertDynamicInsertionSource();
+    expect(output).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(output).toContain(
+      '<Button variant="default" size="sm" onclick={() => (generated = true)}>Gerar relatório</Button>',
+    );
+    expect(output).toContain('{#if generated}');
+
+    // O par tem de bater com o componente que a story renderiza de verdade.
+    const componente = storyComponents['./AlertDynamicInsertionStory.svelte'] ?? '';
+    expect(componente, 'o componente da story não foi lido').not.toBe('');
+    expect(componente).toContain('data-spacing="sm"');
+    expect(componente).toContain('Gerar relatório');
+  });
+
+  it('Contrast: as cinco variantes e o contêiner que as empilha', () => {
+    const output = alertContrastSource();
+    expect(output).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(output).toContain('{#each variants as variant (variant)}');
+    for (const name of ['default', 'destructive', 'success', 'warning', 'info']) {
+      expect(output).toContain(`"${name}"`);
+    }
+  });
+
+  it('WithoutAnnouncement: os DOIS alertas, no contêiner', () => {
+    const output = alertNoAnnouncementSource();
+    expect(output.match(/<Alert[ >]/g)).toHaveLength(2);
+    expect(output).toContain('<div class="nds-stack" data-spacing="md">');
+  });
+
+  it('AdditionalClass: a classe na raiz e em cada peça', () => {
+    const output = alertAdditionalClassSource();
+    expect(output.match(/nds-w-full/g)).toHaveLength(3);
+    expect(output).toContain('<AlertAction class="nds-w-auto">');
+  });
+
+  it('nenhuma story do alerta herda o snippet do meta', () => {
+    // Herança acerta por COINCIDÊNCIA, e a coincidência não sobrevive à próxima
+    // edição do render.
+    for (const [file, text] of Object.entries(stories)) {
+      const declaracoes = [...text.matchAll(/^export const ([A-Z]\w*): Story = \{/gm)];
+      expect(declaracoes.length, `${file}: nenhuma story encontrada`).toBeGreaterThan(0);
+      declaracoes.forEach((m, i) => {
+        const fim = i + 1 < declaracoes.length ? declaracoes[i + 1].index : text.length;
+        expect(
+          text.slice(m.index, fim),
+          `${file} › ${m[1]} herda o snippet do meta`,
+        ).toContain('transform:');
+      });
+    }
+  });
+});

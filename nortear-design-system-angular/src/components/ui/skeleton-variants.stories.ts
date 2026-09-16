@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NDS_SKELETON } from './skeleton';
+import { NdsAspectRatio } from './aspect-ratio';
 import {
   skeletonCircleSource,
   skeletonRectangleSource,
@@ -16,7 +17,7 @@ import {
 const meta: Meta = {
   title: 'Components/Feedback/Skeleton/Variants',
   tags: ['feedback'],
-  decorators: [moduleMetadata({ imports: [...NDS_SKELETON] })],
+  decorators: [moduleMetadata({ imports: [...NDS_SKELETON, NdsAspectRatio] })],
   parameters: {
     layout: 'padded',
     controls: { disable: true },
@@ -36,8 +37,9 @@ export const Rectangle: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
-      // O snippet mostra quem dá a caixa ao `fill` no uso real — a proporção.
-      // A classe de mídia do preview é da docs page, não API do design system.
+      // Quem dá a caixa ao `fill` é a proporção — no snippet e na story, que por
+      // isso mostram o mesmo exemplo. A classe de mídia da docs page saiu do
+      // render em 2026-09-16: ela não é API do design system.
       source: { transform: skeletonRectangleSource },
       description: {
         story:
@@ -48,17 +50,25 @@ export const Rectangle: Story = {
   render: () => ({
     template: `
       <div ndsSkeletonRegion label="Carregando bloco" class="nds-w-sm">
-        <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
+        <div ndsAspectRatio [ratio]="16 / 9">
+          <div ndsSkeleton data-shape="fill"></div>
+        </div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const caixa = canvasElement.querySelector<HTMLElement>('.nds-aspect-ratio')!;
     const sk = canvasElement.querySelector<HTMLElement>('.nds-skeleton')!;
 
-    await step('Preenche a caixa do container na proporção de mídia', async () => {
-      const box = boxDesenhada(sk);
-      await expect(box.width).toBeGreaterThan(0);
-      await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.05);
+    await step('Preenche a caixa que o AspectRatio estabelece', async () => {
+      // A proporção é do CONTAINER: medir só o retângulo do esqueleto passava
+      // com a classe de docs page que dava a caixa por fora da API.
+      const c = caixa.getBoundingClientRect();
+      const s = sk.getBoundingClientRect();
+      await expect(c.width).toBeGreaterThan(0);
+      await expect(Math.abs(c.width / c.height - 16 / 9)).toBeLessThan(0.05);
+      await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
+      await expect(Math.abs(s.width - c.width)).toBeLessThan(2);
     });
 
     await step('Continua fora da árvore de acessibilidade', async () => {

@@ -3,6 +3,7 @@ import {
   progressAnimatedSource,
   progressAriaBusySource,
   progressCompleteSource,
+  progressDeterminateSource,
   progressCustomColorSource,
   progressCustomValueTextSource,
   progressFileUploadSource,
@@ -25,6 +26,7 @@ const ALL = [
   progressCompleteSource,
   progressCustomColorSource,
   progressCustomValueTextSource,
+  progressDeterminateSource,
   progressFileUploadSource,
   progressIndeterminateSource,
   progressLoadingSource,
@@ -141,6 +143,15 @@ describe('estados', () => {
 });
 
 describe('variantes', () => {
+  it('a determinada tem construtor PRÓPRIO, com o valor e o nome da story', () => {
+    // Antes ela herdava a transform do meta e acertava por coincidência: o
+    // padrão dos controls é o mesmo 42. No dia em que o padrão mudasse, o painel
+    // passaria a ensinar outra barra sem nada ficar vermelho.
+    expect(progressDeterminateSource()).toContain(
+      '<Progress value={42} aria-label="Progresso do upload" />',
+    );
+  });
+
   it('com ProgressLabel, o nome sai do rótulo e não de um aria-label repetido', () => {
     const code = progressWithLabelSource();
     expect(code).toContain('<ProgressLabel>Enviando arquivo</ProgressLabel>');

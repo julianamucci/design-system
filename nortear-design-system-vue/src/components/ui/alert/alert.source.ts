@@ -272,6 +272,11 @@ ${indentar(
  * Inserção em tempo de execução: o alerta só monta depois de uma ação, e o
  * anúncio vem do papel na PRÓPRIA raiz. Nenhum contêiner `aria-live` em volta —
  * ele aninharia duas regiões vivas, e o leitor anunciaria duas vezes ou nenhuma.
+ *
+ * O contêiner e a linha do botão fazem parte do exemplo: é o `nds-stack` que
+ * separa o gatilho do alerta que surge, e é a linha própria que impede o stack
+ * de esticar o botão na largura toda. Sem os dois, o painel publicava duas
+ * peças soltas e quem copiasse não teria o espaçamento da tela.
  */
 export function alertDynamicInsertionSource(): string {
   return vueSnippet(
@@ -281,11 +286,17 @@ ${importIcon('CheckCircle2')}
 import { ref } from 'vue'
 
 const reportReady = ref(false)`,
-    `<Button size="sm" @click="reportReady = true">Gerar relatório</Button>
-${alertBlock(
-  ['v-if="reportReady"'],
-  body('CheckCircle2', 'Operação concluída', 'O relatório foi gerado com sucesso.'),
-)}`,
+    `<div class="nds-stack" data-spacing="sm">
+  <div>
+    <Button size="sm" @click="reportReady = true">Gerar relatório</Button>
+  </div>
+${indentar(
+  alertBlock(
+    ['v-if="reportReady"'],
+    body('CheckCircle2', 'Operação concluída', 'O relatório foi gerado com sucesso.'),
+  ),
+)}
+</div>`,
   );
 }
 

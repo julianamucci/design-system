@@ -19,6 +19,7 @@ import {
   progressWithLabelSource,
   progressSemanticColorSource,
   progressOmittedValueSource,
+  progressDeterminateSource,
   progressSource,
 } from "./progress.source";
 
@@ -44,7 +45,12 @@ export default meta;
 type Story = StoryObj<typeof Progress>;
 
 export const Determinate: Story = {
-  parameters: { covers: ["accessibility.item2"] },
+  parameters: {
+    covers: ["accessibility.item2"],
+    // Declarada aqui, e não herdada do meta: o valor é o assunto desta story, e
+    // coincidir com o padrão que o meta lê dos controls é sorte, não contrato.
+    docs: { source: { transform: progressDeterminateSource } },
+  },
   render: () => (
     <div className="nds-w-md">
       <Progress value={42} aria-label="Progresso do upload" />
