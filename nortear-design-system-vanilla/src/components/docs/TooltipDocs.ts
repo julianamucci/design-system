@@ -97,7 +97,6 @@ const LOCAL_OVERRIDES = {
       'Espera padrão de todos os balões criados pelo grupo. Cada balão pode sobrescrevê-la na própria chamada.',
     'props.local.skipDelayDuration.description':
       'Janela, depois de um balão fechar, em que o próximo do grupo abre na hora. É o que faz percorrer uma barra de ícones parecer um movimento só. Zero desliga.',
-    'import.local.secondaryDescription': 'Espera compartilhada por grupo e marcação no conteúdo:',
     'accessibility.local.escape.description':
       'Fecha o balão; o foco fica onde está: sair do gatilho é papel do Tab, não do Escape.',
   },
@@ -116,7 +115,6 @@ const LOCAL_OVERRIDES = {
       'Default wait for every balloon the group creates. Each balloon can override it in its own call.',
     'props.local.skipDelayDuration.description':
       'Window, after one balloon closes, in which the next one in the group opens right away. It is what makes running along an icon bar feel like a single movement. Zero turns it off.',
-    'import.local.secondaryDescription': 'Shared wait across a group, and markup in the content:',
     'accessibility.local.escape.description':
       'Closes the balloon; the focus stays where it is: leaving the trigger is the Tab key’s job, not Escape’s.',
   },
@@ -135,7 +133,6 @@ const LOCAL_OVERRIDES = {
       'Espera por defecto de todos los globos creados por el grupo. Cada globo puede sobrescribirla en su propia llamada.',
     'props.local.skipDelayDuration.description':
       'Ventana, después de que un globo cierra, en la que el siguiente del grupo abre de inmediato. Es lo que hace que recorrer una barra de iconos parezca un solo movimiento. Cero lo desactiva.',
-    'import.local.secondaryDescription': 'Espera compartida por grupo y marcado en el contenido:',
     'accessibility.local.escape.description':
       'Cierra el globo; el foco se queda donde está: salir del disparador es tarea del Tab, no del Escape.',
   },
@@ -511,28 +508,13 @@ export function createTooltipDocs(): HTMLElement {
         return createDocsImport({
           componentSlug: 'tooltip',
           code: `import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';`,
-          secondaryDescription: t('import.local.secondaryDescription'),
-          secondaryCode: `// Uma barra de ícones: quem já parou uma vez não espera de novo no vizinho.
-// A espera de abertura fica de fora de propósito — sem ela o grupo herda o
-// padrão da casa, e é ele que se quer aqui.
-const { createTooltip: comEspera } = createTooltipProvider({
-  skipDelayDuration: 300,   // a janela de cortesia do vizinho é assunto próprio
-});
-
-comEspera({ trigger: botaoCopiar, content: 'Copiar' });
-comEspera({ trigger: botaoColar,  content: 'Colar'  });
-
-// Marcação entra como ELEMENTO já montado, nunca como HTML em string.
-const atalho = document.createElement('span');
-atalho.append('Salvar (', Object.assign(document.createElement('kbd'), { textContent: 'Ctrl+S' }), ')');
-
-createTooltip({
-  trigger: botaoSalvar,
-  content: atalho,
-  side: 'bottom',
-  delayDuration: 0,          // este abre na hora
-  onShow: () => track('tooltip_view', { component: 'tooltip' }),
-});`,
+          secondaryDescription: t('import.provider'),
+          // Vem do conteúdo compartilhado desde 2026-09-16
+          // (`import.providerCode`): era constante local, e o bloco daqui
+          // misturava três assuntos — o grupo, a marcação como elemento e um
+          // `delayDuration: 0` que ensinava a desligar a espera. A marcação como
+          // elemento segue ensinada em `props.extensibilityCode`.
+          secondaryCode: t('import.providerCode'),
         });
 
       case 'variantes': {

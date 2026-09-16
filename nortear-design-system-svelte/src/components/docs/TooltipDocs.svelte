@@ -157,22 +157,10 @@
   TooltipProvider,
 } from "@/components/ui/tooltip";`;
 
-  const codeImportUsage = `<!-- No root da app — uma única vez -->
-<TooltipProvider>
-  <App />
-</TooltipProvider>
-
-<!-- Onde precisar -->
-<Tooltip>
-  <TooltipTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-        <Save aria-hidden="true" class="nds-icon" />
-      </Button>
-    {/snippet}
-  </TooltipTrigger>
-  <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
-</Tooltip>`;
+  // O segundo bloco da Importação — onde o Provider é montado — vem do conteúdo
+  // compartilhado desde 2026-09-16 (`import.providerCode`). Era constante local
+  // nas cinco docs pages, e esta repetia o uso do balão em vez de ensinar a
+  // janela do grupo.
 
   const codeDefault = `<Tooltip>
   <TooltipTrigger>
@@ -461,7 +449,8 @@ interface TooltipTriggerProps {
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
     code={codeImportBasic}
-    secondaryCode={codeImportUsage}
+    secondaryDescription={$tStore('import.provider')}
+    secondaryCode={$tStore('import.providerCode')}
     componentSlug="tooltip"
   />
 

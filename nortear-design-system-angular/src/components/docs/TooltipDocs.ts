@@ -107,13 +107,10 @@ import {
   NdsTooltipContent,
 } from '@/components/ui/tooltip';`;
 
-const IMPORT_CODE_BUTTON = `import { NDS_TOOLTIP } from '@/components/ui/tooltip';
-import { NdsButton } from '@/components/ui/button';
-
-@Component({
-  imports: [...NDS_TOOLTIP, NdsButton],
-})
-export class Exemplo {}`;
+// O segundo bloco da Importação — onde o Provider é montado — vem do conteúdo
+// compartilhado desde 2026-09-16 (`import.providerCode`). Aqui havia uma
+// constante local que publicava a lista de `imports` do componente: outro
+// assunto, e esta era a única das cinco que não ensinava onde montar o provedor.
 
 const INTERFACE_CODE = `// As quatro peças compõem os primitivos do Radix NG.
 @Directive({
@@ -677,7 +674,8 @@ function buildCompositionCode(): Record<
 
         <nds-docs-import
           [code]="importCode"
-          [secondaryCode]="importCodeButton"
+          [secondaryDescription]="importProviderDescription()"
+          [secondaryCode]="importProviderCode()"
           componentSlug="tooltip"
           language="ts"
         />
@@ -760,7 +758,10 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;
-  protected readonly importCodeButton = IMPORT_CODE_BUTTON;
+  // `dict()` entra para os dois acompanharem a troca de idioma, como as demais
+  // leituras de conteúdo desta página.
+  protected readonly importProviderDescription = computed(() => { dict(); return t('import.provider'); });
+  protected readonly importProviderCode = computed(() => { dict(); return t('import.providerCode'); });
   protected readonly tokensCode = TOKENS_CODE;
 
   /**

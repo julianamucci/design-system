@@ -193,20 +193,9 @@ export function TooltipDocs() {
   TooltipContent,
 } from "@/components/ui/tooltip";`;
 
-  // Segundo bloco da seção Importação: onde o Provider é montado. Ele vai UMA
-  // vez, no topo da árvore que compartilha a espera — é ele que faz percorrer
-  // uma barra de ícones parecer um movimento só, e sem ele cada balão espera
-  // do zero.
-  //
-  // Sem `delay`: quem copia herda o padrão da casa (300 ms) em vez de redigitar
-  // um número que envelhece longe da tabela de props. O `timeout` fica, porque
-  // é a janela de cortesia do grupo — assunto próprio, sem padrão implícito
-  // para herdar.
-  const codeImportProvider = `// Uma vez, no topo da árvore que compartilha a espera.
-<TooltipProvider timeout={300}>
-  {/* \`timeout\`: janela em que o vizinho abre na hora, depois de um fechar. */}
-  <App />
-</TooltipProvider>`;
+  // O segundo bloco da Importação — onde o Provider é montado — vem do conteúdo
+  // compartilhado desde 2026-09-16 (`import.providerCode`). Era constante local
+  // nas cinco docs pages, e as cinco ensinavam coisas diferentes.
 
   const structureCode = tContent("anatomy.structureCode");
 
@@ -588,7 +577,8 @@ interface TooltipContentProps {
         />
         <DocsImport
           code={codeImport}
-          secondaryCode={codeImportProvider}
+          secondaryDescription={tContent("import.provider")}
+          secondaryCode={tContent("import.providerCode")}
           componentSlug="tooltip"
         />
 

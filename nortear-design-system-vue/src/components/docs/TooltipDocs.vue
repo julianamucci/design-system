@@ -185,21 +185,9 @@ const codeImportBasic = `import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";`;
 
-// Segundo bloco da seção Importação: onde o Provider é montado. Ele vai UMA
-// vez, no topo da árvore que compartilha a espera — é ele que faz percorrer
-// uma barra de ícones parecer um movimento só, e sem ele cada balão espera
-// do zero.
-//
-// SEM `delay-duration`, e isso é a lição: o atraso de abertura é o padrão da
-// casa, e o exemplo canônico o ensina pela AUSÊNCIA — quem copia herda os 300ms
-// do wrapper em vez de redigitar um número que envelhece à parte. O
-// `skip-delay-duration` fica porque é assunto próprio, sem padrão implícito a
-// herdar: é a janela de cortesia do vizinho, e só escrito ele existe.
-const codeImportProvider = `<!-- Uma vez, no topo da árvore que compartilha a espera. -->
-<!-- skip-delay-duration: janela em que o vizinho abre na hora, depois de um fechar. -->
-<TooltipProvider :skip-delay-duration="300">
-  <App />
-</TooltipProvider>`;
+// O segundo bloco da Importação — onde o Provider é montado — vem do conteúdo
+// compartilhado desde 2026-09-16 (`import.providerCode`). Era constante local
+// nas cinco docs pages, e as cinco ensinavam coisas diferentes.
 
 const codeDefault = `<Tooltip>
   <TooltipTrigger as-child>
@@ -706,7 +694,8 @@ const a11yCritCols = computed(() => ({
       <!-- ── Importação ───────────────────────────────────────────── -->
       <DocsImport
         :code="codeImportBasic"
-        :secondary-code="codeImportProvider"
+        :secondary-description="tContent('import.provider')"
+        :secondary-code="tContent('import.providerCode')"
         component-slug="tooltip"
       />
 

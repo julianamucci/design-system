@@ -461,14 +461,18 @@ angular 53, todas verdes, mais a fumaça das docs pages nas cinco.
     (`delay` em react e angular, `delayDuration` em vue, svelte e vanilla), e a
     CHAVE do conteúdo (`props.table.delay`) é id interno, não nome publicado.
 
-14. **Docs page — o segundo bloco da Importação ensina três coisas.** react
-    monta o provedor com `timeout={300}` (`docs/TooltipDocs.tsx:182-186`); vue com
-    `:skip-delay-duration="300"` (`docs/TooltipDocs.vue:182-186`); svelte monta o
-    provedor sem janela e repete o uso (`docs/TooltipDocs.svelte:145-159`); vanilla
-    monta grupo com `skipDelayDuration: 300` e um balão com `delayDuration: 0`
-    (`docs/TooltipDocs.ts:474-494`); angular não mostra provedor nenhum — o bloco é
-    `imports: [...NDS_TOOLTIP, NdsButton]` (`docs/TooltipDocs.ts:110-117`). Todos
-    constantes locais: é a PENDÊNCIA de 2026-09-12 (§10).
+14. **FECHADO · o segundo bloco da Importação virou chave compartilhada.** Ele
+    ensina onde montar o Provider, e era constante LOCAL nas cinco docs pages —
+    cinco cópias do mesmo código publicado, mantidas à mão, que já ensinavam
+    cinco coisas diferentes: react com `timeout={300}`, vue com
+    `:skip-delay-duration="300"`, svelte sem janela e repetindo o uso do balão,
+    vanilla misturando grupo, marcação como elemento e um `delayDuration: 0` que
+    ensinava a DESLIGAR a espera, e o angular sem provedor nenhum — publicava a
+    lista de `imports` do componente, que é outro assunto. Agora as cinco leem
+    `import.provider` (a prosa) e `import.providerCode` (as cinco variantes), e o
+    angular ensina o provedor no root como as outras quatro, por decisão da dona.
+    O atraso segue ensinado pela AUSÊNCIA (D5) e a janela do grupo escrita, por
+    ser assunto sem padrão implícito a herdar.
 
 15. **FECHADO · os literais que contradiziam o código.** Saíram os três: a nota
     do vanilla que negava a seta e o reposicionamento (três idiomas, mais o
@@ -559,7 +563,7 @@ Ordem: folha → provedor → primitivo → seta → stories → docs page.
 - **vanilla** — `positionFloating` escreve o `position` no próprio painel, e a
   área de tolerância lê coordenada (D2).
 
-> **PENDÊNCIA · 2026-09-12** — o segundo bloco da seção **Importação**, que
+> **FECHADA · 2026-09-16** — o segundo bloco da seção **Importação**, que
 > ensina onde montar o Provider, é uma constante LOCAL em cada uma das cinco
 > docs pages, sem chave no conteúdo compartilhado. São cinco cópias do mesmo
 > código publicado, mantidas à mão, e pela regra da casa snippet publicado com
@@ -575,6 +579,19 @@ Ordem: folha → provedor → primitivo → seta → stories → docs page.
 > conteúdo compartilhado não tem chave em `import` (objeto vazio), as cinco
 > páginas seguem com constante local, e o bloco do angular nem ensina onde
 > montar o provedor: é a lista de `imports` do componente. Ver §7, item 14.
+> **Como fechou**: nasceram `import.provider` (prosa) e `import.providerCode`
+> (cinco variantes, três idiomas), e as cinco páginas passaram a consumi-las — o
+> objeto `import` do conteúdo estava vazio. Por decisão da dona o angular passou a
+> ensinar o provedor no root, como as outras quatro; a lição virou uma só.
+> **Duas coisas saíram junto, e as duas eram do tipo que ninguém vê**: o bloco do
+> vanilla publicava `delayDuration: 0`, ou seja ENSINAVA a desligar a espera que a
+> D5 fixou, e usava identificadores em português (`comEspera`, `botaoCopiar`) —
+> invisíveis enquanto o snippet era constante local, e contra a regra da casa
+> assim que ele entrou no conteúdo compartilhado.
+> **Portões**: `--only soltos` devolve "Nenhum.", `audit.mjs tooltip` fica em
+> zero, os cinco builds passam (o `ngc` é o único que type-checa o template do
+> angular, que trocou constante por `computed`), e a docs-smoke do Tooltip fecha
+> verde nas cinco — é ela que renderiza a página e veria chave faltando.
 
 > **PENDÊNCIA · 2026-09-12** — o `message-timing` publica `delayDuration={0}` no
 > painel Code em react, vue e svelte. É o mesmo resíduo que saiu do trilho do

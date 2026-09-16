@@ -140,7 +140,16 @@
         "dont": "Não use Tooltip para conteúdo longo ou interativo."
       }
     },
-    "import": {},
+    "import": {
+      "provider": "Onde montar o Provider — uma vez, no topo da árvore que compartilha a espera:",
+      "providerCode": {
+        "react": "// Uma vez, no topo da árvore que compartilha a espera.\n<TooltipProvider timeout={300}>\n  {/* `timeout`: janela em que o vizinho abre na hora, depois de um fechar. */}\n  <App />\n</TooltipProvider>",
+        "vue": "<!-- Uma vez, no topo da árvore que compartilha a espera. -->\n<!-- skip-delay-duration: janela em que o vizinho abre na hora, depois de um fechar. -->\n<TooltipProvider :skip-delay-duration=\"300\">\n  <App />\n</TooltipProvider>",
+        "svelte": "<!-- Uma vez, no topo da árvore que compartilha a espera. -->\n<!-- skipDelayDuration: janela em que o vizinho abre na hora, depois de um fechar. -->\n<TooltipProvider skipDelayDuration={300}>\n  <App />\n</TooltipProvider>",
+        "vanilla": "// Uma vez, no topo da árvore que compartilha a espera.\n// A fábrica devolve o createTooltip já amarrado ao grupo.\nconst { createTooltip: withGroupWait } = createTooltipProvider({\n  skipDelayDuration: 300,   // janela em que o vizinho abre na hora, depois de um fechar\n});\n\nwithGroupWait({ trigger: copyButton,  content: 'Copiar' });\nwithGroupWait({ trigger: pasteButton, content: 'Colar'  });",
+        "angular": "<!-- Uma vez, no topo da árvore que compartilha a espera. -->\n<!-- timeout: janela em que o vizinho abre na hora, depois de um fechar. -->\n<div ndsTooltipProvider [timeout]=\"300\">\n  <router-outlet />\n</div>"
+      }
+    },
     "variants": {
       "items": {
         "default": "Default",
@@ -582,7 +591,16 @@
         "dont": "Don't use Tooltip for long or interactive content."
       }
     },
-    "import": {},
+    "import": {
+      "provider": "Where to mount the Provider — once, at the top of the tree that shares the wait:",
+      "providerCode": {
+        "react": "// Once, at the top of the tree that shares the wait.\n<TooltipProvider timeout={300}>\n  {/* `timeout`: window in which the neighbour opens instantly, after one closes. */}\n  <App />\n</TooltipProvider>",
+        "vue": "<!-- Once, at the top of the tree that shares the wait. -->\n<!-- skip-delay-duration: window in which the neighbour opens instantly, after one closes. -->\n<TooltipProvider :skip-delay-duration=\"300\">\n  <App />\n</TooltipProvider>",
+        "svelte": "<!-- Once, at the top of the tree that shares the wait. -->\n<!-- skipDelayDuration: window in which the neighbour opens instantly, after one closes. -->\n<TooltipProvider skipDelayDuration={300}>\n  <App />\n</TooltipProvider>",
+        "vanilla": "// Once, at the top of the tree that shares the wait.\n// The factory returns createTooltip already bound to the group.\nconst { createTooltip: withGroupWait } = createTooltipProvider({\n  skipDelayDuration: 300,   // window in which the neighbour opens instantly, after one closes\n});\n\nwithGroupWait({ trigger: copyButton,  content: 'Copy' });\nwithGroupWait({ trigger: pasteButton, content: 'Paste'  });",
+        "angular": "<!-- Once, at the top of the tree that shares the wait. -->\n<!-- timeout: window in which the neighbour opens instantly, after one closes. -->\n<div ndsTooltipProvider [timeout]=\"300\">\n  <router-outlet />\n</div>"
+      }
+    },
     "variants": {
       "items": {
         "default": "Default",
@@ -1024,7 +1042,16 @@
         "dont": "No uses Tooltip para contenido largo o interactivo."
       }
     },
-    "import": {},
+    "import": {
+      "provider": "Dónde montar el Provider — una vez, en la cima del árbol que comparte la espera:",
+      "providerCode": {
+        "react": "// Una vez, en la cima del árbol que comparte la espera.\n<TooltipProvider timeout={300}>\n  {/* `timeout`: ventana en la que el vecino abre al instante, después de que uno cierra. */}\n  <App />\n</TooltipProvider>",
+        "vue": "<!-- Una vez, en la cima del árbol que comparte la espera. -->\n<!-- skip-delay-duration: ventana en la que el vecino abre al instante, después de que uno cierra. -->\n<TooltipProvider :skip-delay-duration=\"300\">\n  <App />\n</TooltipProvider>",
+        "svelte": "<!-- Una vez, en la cima del árbol que comparte la espera. -->\n<!-- skipDelayDuration: ventana en la que el vecino abre al instante, después de que uno cierra. -->\n<TooltipProvider skipDelayDuration={300}>\n  <App />\n</TooltipProvider>",
+        "vanilla": "// Una vez, en la cima del árbol que comparte la espera.\n// La fábrica devuelve createTooltip ya vinculado al grupo.\nconst { createTooltip: withGroupWait } = createTooltipProvider({\n  skipDelayDuration: 300,   // ventana en la que el vecino abre al instante, después de que uno cierra\n});\n\nwithGroupWait({ trigger: copyButton,  content: 'Copiar' });\nwithGroupWait({ trigger: pasteButton, content: 'Pegar'  });",
+        "angular": "<!-- Una vez, en la cima del árbol que comparte la espera. -->\n<!-- timeout: ventana en la que el vecino abre al instante, después de que uno cierra. -->\n<div ndsTooltipProvider [timeout]=\"300\">\n  <router-outlet />\n</div>"
+      }
+    },
     "variants": {
       "items": {
         "default": "Default",
