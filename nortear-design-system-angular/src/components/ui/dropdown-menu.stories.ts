@@ -2,7 +2,12 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
-import { dropdownMenuPlaygroundSource, type DropdownMenuArgs } from './dropdown-menu.source';
+import {
+  dropdownMenuPlaygroundSource,
+  dropdownMenuTabAtPageEndSource,
+  dropdownMenuTabLeavesMenuSource,
+  type DropdownMenuArgs,
+} from './dropdown-menu.source';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
@@ -212,6 +217,7 @@ export const TabLeavesMenu: Story = {
     // menu inteiro; a última parada da página está em `TabAtPageEnd`.
     covers: ['functional.item9'],
     controls: { disable: true },
+    docs: { source: { transform: dropdownMenuTabLeavesMenuSource } },
   },
   render: () => ({
     template: `
@@ -297,6 +303,7 @@ export const TabAtPageEnd: Story = {
   parameters: {
     covers: ['functional.item9'],
     controls: { disable: true },
+    docs: { source: { transform: dropdownMenuTabAtPageEndSource } },
   },
   render: () => ({
     template: `

@@ -9,6 +9,8 @@ import {
   dropdownMenuItemDisabledSource,
   dropdownMenuOpenSource,
   dropdownMenuPlaygroundSource,
+  dropdownMenuTabAtPageEndSource,
+  dropdownMenuTabLeavesMenuSource,
   dropdownMenuWithCheckboxSource,
   dropdownMenuWithLabelSource,
   dropdownMenuWithRadioSource,
@@ -40,6 +42,71 @@ const STORY_PROPS = ['onSelect', 'onOpenChange', 'isOpen', 'name', 'email', 'the
 
 /** O espião da `play` ligado ao item — andaime, nunca lição do menu. */
 const STORY_SPY = new RegExp(`\\((?:${STORY_PROPS.join('|')})\\)="`);
+
+// ─── O TEXTO das stories ─────────────────────────────────────────────────────
+//
+// Lido, e não importado: importar um arquivo de story fora do compilador Angular
+// quebra, e a pergunta aqui não precisa de execução — é sobre o que o arquivo
+// ESCREVE. Mesma leitura por `?raw` do `popover.source.test.ts`, que fechou esta
+// forma em 2026-09-17.
+
+const storySources = import.meta.glob<string>('./dropdown-menu*.stories.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+const STORY_START = /^export const (\w+): Story = \{/gm;
+
+/** Story que ainda publica o template cru — dívida declarada, não silêncio. */
+const SEM_TRANSFORM = '(nenhum)';
+
+/** O bloco de texto de uma story, do `export const` até o próximo. */
+function storyBlock(source: string, name: string): string {
+  const marks = [...source.matchAll(STORY_START)];
+  const i = marks.findIndex((m) => m[1] === name);
+  if (i === -1) return '';
+  const end = i + 1 < marks.length ? marks[i + 1]!.index! : source.length;
+  return source.slice(marks[i]!.index!, end);
+}
+
+/** O `template` que a story renderiza, como ela o escreve. */
+function storyTemplate(file: string, name: string): string {
+  const block = storyBlock(storySources[file] ?? '', name);
+  return /template:\s*`([\s\S]*?)`/.exec(block)?.[1] ?? '';
+}
+
+/**
+ * A transform que cada story publica no painel — a dela, ou a que o `meta`
+ * declarou para o arquivo inteiro.
+ */
+function transformsByStory(source: string): Map<string, string> {
+  const marks = [...source.matchAll(STORY_START)];
+  const header = marks.length ? source.slice(0, marks[0]!.index) : source;
+  const fromMeta = /transform:\s*(\w+)/.exec(header)?.[1] ?? SEM_TRANSFORM;
+
+  const out = new Map<string, string>();
+  marks.forEach((m, i) => {
+    const end = i + 1 < marks.length ? marks[i + 1]!.index! : source.length;
+    const block = source.slice(m.index!, end);
+    out.set(m[1]!, /transform:\s*(\w+)/.exec(block)?.[1] ?? fromMeta);
+  });
+  return out;
+}
+
+/** Markup comparável: sem comentário de template e sem espaço em branco à toa. */
+function normalize(markup: string): string {
+  return markup
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/> </g, '><')
+    .trim();
+}
+
+/** O `template` que um snippet ensina, tirado o invólucro do `@Component`. */
+function snippetTemplate(code: string): string {
+  return /template: `([\s\S]*?)`,/.exec(code)?.[1] ?? '';
+}
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
@@ -110,81 +177,117 @@ describe('dropdownMenuPlaygroundSource', () => {
 
 // ─── Cobertura das quatro stories ─────────────────────────────────────────────
 
+const ROOT = './dropdown-menu.stories.ts';
+const VARIANTS = './dropdown-menu-variants.stories.ts';
+const STATES = './dropdown-menu-states.stories.ts';
+const COMPOSITIONS = './dropdown-menu-compositions.stories.ts';
+
 /**
- * Os treze construtores e a story que cada um serve.
+ * Os quinze construtores e a story que cada um serve.
  *
- * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
- * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
- * sair calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde
- * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
+ * A lista existe para ser COBRADA nos DOIS sentidos: um caso a compara com o que
+ * o módulo exporta, e outro com o que os quatro arquivos de story publicam no
+ * painel. Construtor novo que não entre aqui reprova, e story nova sem
+ * `transform` também — em vez de saírem calados da varredura, que é como o
+ * `source-snippets.test.ts` do Vue perdeu 28 exports e seguiu verde medindo
+ * menos.
  *
- * NENHUMA das treze stories fica sem construtor próprio. As duas variantes
- * chegaram perto de compartilhar um — o markup é quase o mesmo —, mas o painel
- * Code é por story: um construtor comum publicaria "Excluir conta" embaixo do
- * menu que só tem ações neutras.
+ * NENHUMA das quinze stories fica sem construtor próprio, e não há exclusão a
+ * declarar. As duas variantes chegaram perto de compartilhar um — o markup é
+ * quase o mesmo —, mas o painel Code é por story: um construtor comum
+ * publicaria "Excluir conta" embaixo do menu que só tem ações neutras. As duas
+ * de Tab quase reaproveitaram `dropdownMenuClosedSource`, que monta o mesmo
+ * menu; o que as separa é a FILEIRA de pontos de tabulação, que ali é o assunto.
  */
 const CONSTRUCTORS: Array<{
   name: string;
+  file: string;
   story: string;
   build: () => string;
   /** O único snippet com estado externo: raiz ligada a um sinal de fora. */
   controlled?: true;
   /** O único snippet que publica `defaultOpen` — ali estar aberto É o assunto. */
   bornOpen?: true;
+  /** Os dois snippets que publicam a fileira com vizinhos de tabulação. */
+  neighbors?: 'both' | 'before';
 }> = [
-  { name: 'dropdownMenuPlaygroundSource', story: 'Playground', build: dropdownMenuPlaygroundSource },
-  { name: 'dropdownMenuDefaultSource', story: 'Variants/Default', build: dropdownMenuDefaultSource },
+  { name: 'dropdownMenuPlaygroundSource', file: ROOT, story: 'Playground', build: dropdownMenuPlaygroundSource },
+  {
+    name: 'dropdownMenuTabLeavesMenuSource',
+    file: ROOT,
+    story: 'TabLeavesMenu',
+    build: dropdownMenuTabLeavesMenuSource,
+    neighbors: 'both',
+  },
+  {
+    name: 'dropdownMenuTabAtPageEndSource',
+    file: ROOT,
+    story: 'TabAtPageEnd',
+    build: dropdownMenuTabAtPageEndSource,
+    neighbors: 'before',
+  },
+  { name: 'dropdownMenuDefaultSource', file: VARIANTS, story: 'Default', build: dropdownMenuDefaultSource },
   {
     name: 'dropdownMenuDestructiveSource',
-    story: 'Variants/Destructive',
+    file: VARIANTS,
+    story: 'Destructive',
     build: dropdownMenuDestructiveSource,
   },
-  { name: 'dropdownMenuClosedSource', story: 'States/Closed', build: dropdownMenuClosedSource },
+  { name: 'dropdownMenuClosedSource', file: STATES, story: 'Closed', build: dropdownMenuClosedSource },
   {
     name: 'dropdownMenuOpenSource',
-    story: 'States/Open',
+    file: STATES,
+    story: 'Open',
     build: dropdownMenuOpenSource,
     bornOpen: true,
   },
   {
     name: 'dropdownMenuControlledSource',
-    story: 'States/Controlled',
+    file: STATES,
+    story: 'Controlled',
     build: dropdownMenuControlledSource,
     controlled: true,
   },
   {
     name: 'dropdownMenuItemDisabledSource',
-    story: 'States/ItemDisabled',
+    file: STATES,
+    story: 'ItemDisabled',
     build: dropdownMenuItemDisabledSource,
   },
   {
     name: 'dropdownMenuCheckboxIndeterminateSource',
-    story: 'States/CheckboxIndeterminate',
+    file: STATES,
+    story: 'CheckboxIndeterminate',
     build: dropdownMenuCheckboxIndeterminateSource,
   },
   {
     name: 'dropdownMenuWithLabelSource',
-    story: 'Compositions/WithLabel',
+    file: COMPOSITIONS,
+    story: 'WithLabel',
     build: dropdownMenuWithLabelSource,
   },
   {
     name: 'dropdownMenuWithCheckboxSource',
-    story: 'Compositions/WithCheckboxItems',
+    file: COMPOSITIONS,
+    story: 'WithCheckboxItems',
     build: dropdownMenuWithCheckboxSource,
   },
   {
     name: 'dropdownMenuWithRadioSource',
-    story: 'Compositions/WithRadioGroup',
+    file: COMPOSITIONS,
+    story: 'WithRadioGroup',
     build: dropdownMenuWithRadioSource,
   },
   {
     name: 'dropdownMenuWithSubmenuSource',
-    story: 'Compositions/WithSubmenu',
+    file: COMPOSITIONS,
+    story: 'WithSubmenu',
     build: dropdownMenuWithSubmenuSource,
   },
   {
     name: 'dropdownMenuWithShortcutsSource',
-    story: 'Compositions/WithShortcuts',
+    file: COMPOSITIONS,
+    story: 'WithShortcuts',
     build: dropdownMenuWithShortcutsSource,
   },
 ];
@@ -198,8 +301,33 @@ describe('cobertura das quatro stories', () => {
     expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, controlled, bornOpen } of CONSTRUCTORS) {
-    it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
+  it('os quatro arquivos de story chegaram à varredura', () => {
+    // Sem esta linha, um glob que deixasse de casar apagaria o caso abaixo em
+    // silêncio — e uma suíte verde medindo zero é pior que vermelha.
+    expect(Object.keys(storySources).sort()).toEqual([COMPOSITIONS, STATES, VARIANTS, ROOT].sort());
+  });
+
+  it('toda story publica o construtor que esta tabela declara', () => {
+    // O outro sentido da tabela: story sem `transform` (que publicaria o
+    // template cru, e é a regra `story_file_sem_transform` do audit) e story que
+    // herdou o transform do `meta` sem ninguém decidir isso caem aqui.
+    const declared = new Map<string, string>();
+    for (const { name, file, story } of CONSTRUCTORS) declared.set(`${file}#${story}`, name);
+
+    const actual = new Map<string, string>();
+    for (const [file, source] of Object.entries(storySources)) {
+      for (const [story, transform] of transformsByStory(source)) {
+        actual.set(`${file}#${story}`, transform);
+      }
+    }
+
+    expect(Object.fromEntries([...actual].sort())).toEqual(
+      Object.fromEntries([...declared].sort()),
+    );
+  });
+
+  for (const { name, file, story, build, controlled, bornOpen, neighbors } of CONSTRUCTORS) {
+    it(`${name} (${file}#${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
       expect(code).not.toContain('args.');
@@ -251,8 +379,74 @@ describe('cobertura das quatro stories', () => {
         expect(code).not.toContain('[open]=');
         expect(code).not.toContain('(openChange)');
       }
+
+      // A fileira de pontos de tabulação é de DOIS snippets, e neles é o
+      // assunto. Nos demais, um vizinho ali seria cenário emprestado: quem copia
+      // passaria a achar que o menu pede um botão ao lado para funcionar.
+      if (neighbors) {
+        expect(code).toContain('<div class="nds-cluster" data-spacing="md">');
+        expect(code).toContain('<button ndsButton variant="ghost">Antes</button>');
+        // `both` é a story que tem para onde mandar o foco; `before` é a que não
+        // tem, e é a ausência do vizinho depois que a torna a última parada.
+        if (neighbors === 'both') {
+          expect(code).toContain('<button ndsButton variant="ghost">Depois</button>');
+        } else {
+          expect(code).not.toContain('Depois');
+        }
+      } else {
+        // A fileira em si não é exclusiva — `States/Controlled` também usa uma,
+        // para pôr o botão de estado ao lado do menu. O que os outros snippets
+        // não podem ter é o VIZINHO de tabulação.
+        expect(code).not.toContain('variant="ghost"');
+        expect(code).not.toContain('>Antes</button>');
+        expect(code).not.toContain('>Depois</button>');
+      }
     });
   }
+});
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+describe('Tab sai do menu', () => {
+  // As duas stories do arquivo-raiz não têm andaime nenhum a recortar — nem
+  // espião, nem binding de arg, nem invólucro de medição —, e por isso o que o
+  // snippet publica é o template INTEIRO da story. Isso deixa cobrar a forma
+  // forte: igualdade. Se o template da story mudar de forma, é aqui que reprova,
+  // em vez de o painel Code ensinar um menu que o preview ao lado não mostra.
+  const TAB_STORIES: Array<{ name: string; story: string; build: () => string }> = [
+    { name: 'dropdownMenuTabLeavesMenuSource', story: 'TabLeavesMenu', build: dropdownMenuTabLeavesMenuSource },
+    { name: 'dropdownMenuTabAtPageEndSource', story: 'TabAtPageEnd', build: dropdownMenuTabAtPageEndSource },
+  ];
+
+  for (const { name, story, build } of TAB_STORIES) {
+    it(`${name} publica o MESMO markup que ${story} renderiza`, () => {
+      const rendered = storyTemplate(ROOT, story);
+      // Sem esta linha, um `template:` que deixasse de casar compararia string
+      // vazia com string vazia e o caso passaria medindo nada.
+      expect(rendered, `${ROOT}#${story}`).toContain('nds-dropdown-menu');
+      expect(normalize(snippetTemplate(build())), `${name} divergiu de ${story}`).toBe(
+        normalize(rendered),
+      );
+    });
+  }
+
+  it('TabLeavesMenu ensina o submenu, e TabAtPageEnd não — é o que separa as duas', () => {
+    // A premissa de haver DOIS construtores em vez de um. O segundo nível existe
+    // na primeira porque o Tab de dentro dele fecha o menu INTEIRO; a segunda
+    // mostra o gatilho como última parada, e um submenu ali só encheria a cena.
+    const leaves = dropdownMenuTabLeavesMenuSource();
+    const atEnd = dropdownMenuTabAtPageEndSource();
+    expect(leaves).toContain('<nds-dropdown-menu-sub>');
+    expect(leaves).toContain('<div ndsDropdownMenuSubTrigger>Exportar</div>');
+    expect(leaves).toContain('<ng-template ndsDropdownMenuSubContent>');
+    expect(atEnd).not.toContain('nds-dropdown-menu-sub');
+    // E os dois itens do menu raiz são os mesmos nas duas, como nas stories.
+    for (const code of [leaves, atEnd]) {
+      expect(code).toContain('<div ndsDropdownMenuItem>Perfil</div>');
+      expect(code).toContain('<div ndsDropdownMenuItem>Configurações</div>');
+      expect(code).toContain('<button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>');
+    }
+  });
 });
 
 // ─── Variantes ────────────────────────────────────────────────────────────────

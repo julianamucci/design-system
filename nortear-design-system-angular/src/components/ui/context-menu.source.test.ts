@@ -9,6 +9,7 @@ import {
   contextMenuItemDisabledSource,
   contextMenuItemInsetSource,
   contextMenuPlaygroundSource,
+  contextMenuTabLeavesMenuSource,
   contextMenuWithCheckboxSource,
   contextMenuWithRadioGroupSource,
   contextMenuWithShortcutSource,
@@ -40,6 +41,70 @@ const STORY_PROPS = ['onSelect', 'onOpenChange'];
 
 /** O espião da `play` ligado ao item — andaime, nunca lição do menu. */
 const STORY_SPY = new RegExp(`\\((?:${STORY_PROPS.join('|')})\\)="`);
+
+// ─── O TEXTO das stories ─────────────────────────────────────────────────────
+//
+// Lido, e não importado: importar um arquivo de story fora do compilador Angular
+// quebra, e a pergunta aqui não precisa de execução — é sobre o que o arquivo
+// ESCREVE. Mesma leitura por `?raw` do `popover.source.test.ts`.
+
+const storySources = import.meta.glob<string>('./context-menu*.stories.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+const STORY_START = /^export const (\w+): Story = \{/gm;
+
+/** Story que ainda publica o template cru — dívida declarada, não silêncio. */
+const SEM_TRANSFORM = '(nenhum)';
+
+/** O bloco de texto de uma story, do `export const` até o próximo. */
+function storyBlock(source: string, name: string): string {
+  const marks = [...source.matchAll(STORY_START)];
+  const i = marks.findIndex((m) => m[1] === name);
+  if (i === -1) return '';
+  const end = i + 1 < marks.length ? marks[i + 1]!.index! : source.length;
+  return source.slice(marks[i]!.index!, end);
+}
+
+/** O `template` que a story renderiza, como ela o escreve. */
+function storyTemplate(file: string, name: string): string {
+  const block = storyBlock(storySources[file] ?? '', name);
+  return /template:\s*`([\s\S]*?)`/.exec(block)?.[1] ?? '';
+}
+
+/**
+ * A transform que cada story publica no painel — a dela, ou a que o `meta`
+ * declarou para o arquivo inteiro.
+ */
+function transformsByStory(source: string): Map<string, string> {
+  const marks = [...source.matchAll(STORY_START)];
+  const header = marks.length ? source.slice(0, marks[0]!.index) : source;
+  const fromMeta = /transform:\s*(\w+)/.exec(header)?.[1] ?? SEM_TRANSFORM;
+
+  const out = new Map<string, string>();
+  marks.forEach((m, i) => {
+    const end = i + 1 < marks.length ? marks[i + 1]!.index! : source.length;
+    const block = source.slice(m.index!, end);
+    out.set(m[1]!, /transform:\s*(\w+)/.exec(block)?.[1] ?? fromMeta);
+  });
+  return out;
+}
+
+/** Markup comparável: sem comentário de template e sem espaço em branco à toa. */
+function normalize(markup: string): string {
+  return markup
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/> </g, '><')
+    .trim();
+}
+
+/** O `template` que um snippet ensina, tirado o invólucro do `@Component`. */
+function snippetTemplate(code: string): string {
+  return /template: `([\s\S]*?)`,/.exec(code)?.[1] ?? '';
+}
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
@@ -117,81 +182,111 @@ describe('contextMenuPlaygroundSource', () => {
 
 // ─── Cobertura das três stories ───────────────────────────────────────────────
 
+const ROOT = './context-menu.stories.ts';
+const STATES = './context-menu-states.stories.ts';
+const COMPOSITIONS = './context-menu-compositions.stories.ts';
+
 /**
- * Os onze construtores e a story que cada um serve.
+ * Os doze construtores e a story que cada um serve.
  *
- * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
- * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
- * sair calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde
- * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
+ * A lista existe para ser COBRADA nos DOIS sentidos: um caso a compara com o que
+ * o módulo exporta, e outro com o que os três arquivos de story publicam no
+ * painel. Construtor novo que não entre aqui reprova, e story nova sem
+ * `transform` também — em vez de saírem calados da varredura, que é a lição do
+ * `source-snippets.test.ts` do Vue, onde 28 exports saíram do alcance e a suíte
+ * seguiu verde medindo menos.
  *
- * NENHUMA das onze stories fica sem construtor próprio — não há exclusão a
+ * NENHUMA das doze stories fica sem construtor próprio — não há exclusão a
  * declarar aqui. A tentação era juntar `ItemDestructive` e `WithShortcut`, que
  * têm markup parecido, mas o painel Code é por story: um construtor comum
- * publicaria "Excluir permanentemente" embaixo do menu que mostra "Desfazer".
+ * publicaria "Excluir permanentemente" embaixo do menu que mostra "Desfazer". A
+ * `TabLeavesMenu` quase reaproveitou `contextMenuWithSubmenuSource`, que monta o
+ * mesmo menu; o que as separa é a FILEIRA de pontos de tabulação, que ali é o
+ * assunto.
  */
 const CONSTRUCTORS: Array<{
   name: string;
+  file: string;
   story: string;
   build: () => string;
   /** Os três snippets com estado próprio: sinal na classe, par ligado no item. */
   stateful?: true;
+  /** O único snippet que publica a fileira com vizinhos de tabulação. */
+  neighbors?: true;
 }> = [
   {
     name: 'contextMenuPlaygroundSource',
+    file: ROOT,
     story: 'Playground',
     build: contextMenuPlaygroundSource,
   },
   {
+    name: 'contextMenuTabLeavesMenuSource',
+    file: ROOT,
+    story: 'TabLeavesMenu',
+    build: contextMenuTabLeavesMenuSource,
+    neighbors: true,
+  },
+  {
     name: 'contextMenuItemDisabledSource',
-    story: 'States/ItemDisabled',
+    file: STATES,
+    story: 'ItemDisabled',
     build: contextMenuItemDisabledSource,
   },
   {
     name: 'contextMenuItemInsetSource',
-    story: 'States/ItemInset',
+    file: STATES,
+    story: 'ItemInset',
     build: contextMenuItemInsetSource,
   },
   {
     name: 'contextMenuItemDestructiveSource',
-    story: 'States/ItemDestructive',
+    file: STATES,
+    story: 'ItemDestructive',
     build: contextMenuItemDestructiveSource,
   },
   {
     name: 'contextMenuCheckboxIndeterminateSource',
-    story: 'States/CheckboxIndeterminate',
+    file: STATES,
+    story: 'CheckboxIndeterminate',
     build: contextMenuCheckboxIndeterminateSource,
   },
   {
     name: 'contextMenuDarkPaletteSource',
-    story: 'States/DarkPalette',
+    file: STATES,
+    story: 'DarkPalette',
     build: contextMenuDarkPaletteSource,
   },
   {
     name: 'contextMenuWithShortcutSource',
-    story: 'Compositions/WithShortcut',
+    file: COMPOSITIONS,
+    story: 'WithShortcut',
     build: contextMenuWithShortcutSource,
   },
   {
     name: 'contextMenuWithCheckboxSource',
-    story: 'Compositions/WithCheckbox',
+    file: COMPOSITIONS,
+    story: 'WithCheckbox',
     build: contextMenuWithCheckboxSource,
     stateful: true,
   },
   {
     name: 'contextMenuWithRadioGroupSource',
-    story: 'Compositions/WithRadioGroup',
+    file: COMPOSITIONS,
+    story: 'WithRadioGroup',
     build: contextMenuWithRadioGroupSource,
     stateful: true,
   },
   {
     name: 'contextMenuWithSubmenuSource',
-    story: 'Compositions/WithSubmenu',
+    file: COMPOSITIONS,
+    story: 'WithSubmenu',
     build: contextMenuWithSubmenuSource,
   },
   {
     name: 'contextMenuCompleteCompositionSource',
-    story: 'Compositions/CompleteComposition',
+    file: COMPOSITIONS,
+    story: 'CompleteComposition',
     build: contextMenuCompleteCompositionSource,
     stateful: true,
   },
@@ -206,8 +301,33 @@ describe('cobertura das três stories', () => {
     expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, stateful } of CONSTRUCTORS) {
-    it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
+  it('os três arquivos de story chegaram à varredura', () => {
+    // Sem esta linha, um glob que deixasse de casar apagaria o caso abaixo em
+    // silêncio — e uma suíte verde medindo zero é pior que vermelha.
+    expect(Object.keys(storySources).sort()).toEqual([COMPOSITIONS, STATES, ROOT].sort());
+  });
+
+  it('toda story publica o construtor que esta tabela declara', () => {
+    // O outro sentido da tabela: story sem `transform` (que publicaria o
+    // template cru, e é a regra `story_file_sem_transform` do audit) e story que
+    // herdou o transform do `meta` sem ninguém decidir isso caem aqui.
+    const declared = new Map<string, string>();
+    for (const { name, file, story } of CONSTRUCTORS) declared.set(`${file}#${story}`, name);
+
+    const actual = new Map<string, string>();
+    for (const [file, source] of Object.entries(storySources)) {
+      for (const [story, transform] of transformsByStory(source)) {
+        actual.set(`${file}#${story}`, transform);
+      }
+    }
+
+    expect(Object.fromEntries([...actual].sort())).toEqual(
+      Object.fromEntries([...declared].sort()),
+    );
+  });
+
+  for (const { name, file, story, build, stateful, neighbors } of CONSTRUCTORS) {
+    it(`${name} (${file}#${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
       expect(code).not.toContain('args.');
@@ -245,7 +365,25 @@ describe('cobertura das três stories', () => {
 
       // O import que todo snippet ensina, e o `imports` do componente.
       expect(code).toContain("import { NDS_CONTEXT_MENU } from '@/components/ui/context-menu';");
-      expect(code).toContain('imports: [NDS_CONTEXT_MENU],');
+
+      // A fileira de pontos de tabulação é de UM snippet, e nele é o assunto.
+      // Nos demais, um vizinho ali seria cenário emprestado: quem copia passaria
+      // a achar que a área pede um botão ao lado para funcionar. O botão do
+      // design system entra no `imports` junto — sem ele o exemplo não compila,
+      // e é por isso que a checagem cobra os dois lados.
+      if (neighbors) {
+        expect(code).toContain("import { NdsButton } from '@/components/ui/button';");
+        expect(code).toContain('imports: [NDS_CONTEXT_MENU, NdsButton],');
+        expect(code).toContain('<div class="nds-cluster" data-spacing="md">');
+        expect(code).toContain('<button ndsButton variant="ghost">Antes</button>');
+        expect(code).toContain('<button ndsButton variant="ghost">Depois</button>');
+      } else {
+        expect(code).not.toContain('NdsButton');
+        expect(code).toContain('imports: [NDS_CONTEXT_MENU],');
+        expect(code).not.toContain('variant="ghost"');
+        expect(code).not.toContain('>Antes</button>');
+        expect(code).not.toContain('>Depois</button>');
+      }
 
       // O que o componente já entrega e escrever à mão ensinaria API que não
       // existe: o sub-gatilho anuncia `aria-haspopup`, `aria-expanded` e —
@@ -277,6 +415,77 @@ describe('cobertura das três stories', () => {
       }
     });
   }
+});
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * O andaime da `TabLeavesMenu` — e SÓ ele.
+ *
+ * Duas peças, e as duas são do renderer ou do teste, nunca do menu. Cada uma tem
+ * de aparecer EXATAMENTE uma vez no template da story: peça que sumiu ou mudou
+ * de forma reprova aqui, em vez de a comparação passar a engolir outra coisa.
+ */
+const TAB_SCAFFOLD: Array<{ name: string; piece: string; becomes: string; why: string }> = [
+  {
+    name: 'binding de classe contra o objeto de props',
+    piece: '[class]="areaClasse"',
+    becomes: `class="${AREA_CLICK_DIREITO}"`,
+    why:
+      'é o mesmo vocabulário de classe escrito por binding só porque o renderer '
+      + 'monta um objeto de props. O snippet escreve a classe por extenso.',
+  },
+  {
+    name: 'endereço do teste',
+    piece: ' data-testid="area"',
+    becomes: '',
+    why: 'a `play` consulta a área por ele. Não é lição de menu nenhum.',
+  },
+];
+
+describe('Tab sai do menu', () => {
+  it('contextMenuTabLeavesMenuSource publica o MESMO markup que TabLeavesMenu renderiza', () => {
+    // Tirado o andaime declarado, o que sobra do template da story é EXATAMENTE
+    // o que o snippet ensina. Se o template mudar de forma, é aqui que reprova,
+    // em vez de o painel Code ensinar um menu que o preview ao lado não mostra.
+    const rendered = storyTemplate(ROOT, 'TabLeavesMenu');
+    // Sem esta linha, um `template:` que deixasse de casar compararia string
+    // vazia com string vazia e o caso passaria medindo nada.
+    expect(rendered, `${ROOT}#TabLeavesMenu`).toContain('ndsContextMenuTrigger');
+
+    let storyMarkup = normalize(rendered);
+    for (const { name, piece, becomes, why } of TAB_SCAFFOLD) {
+      expect(
+        storyMarkup.split(piece).length - 1,
+        `andaime "${name}" da TabLeavesMenu não aparece exatamente uma vez — a `
+          + `exceção declarada ("${why}") perdeu a premissa e precisa ser reexaminada`,
+      ).toBe(1);
+      storyMarkup = storyMarkup.replace(piece, becomes);
+    }
+
+    expect(
+      normalize(snippetTemplate(contextMenuTabLeavesMenuSource())),
+      'contextMenuTabLeavesMenuSource divergiu de TabLeavesMenu além do andaime declarado',
+    ).toBe(storyMarkup);
+  });
+
+  it('e o submenu é o que separa a story de Tab da área sozinha do Playground', () => {
+    // A premissa de ter construtor próprio. O segundo nível existe aqui porque o
+    // Tab de dentro dele fecha o menu INTEIRO; o Playground, que é a área como
+    // última parada, não tem submenu nenhum.
+    const code = contextMenuTabLeavesMenuSource();
+    expect(code).toContain('<div ndsContextMenuSub>');
+    expect(code).toContain('<div ndsContextMenuSubTrigger>Compartilhar</div>');
+    expect(code).toContain('<ng-template ndsContextMenuSubContent>');
+    expect(code).toContain('<div ndsContextMenuItem>Por e-mail</div>');
+    expect(code).toContain('<div ndsContextMenuItem>Por link</div>');
+    expect(contextMenuPlaygroundSource()).not.toContain('ndsContextMenuSub');
+    // QUATRO itens: os dois do menu raiz e os dois do submenu. Sem divisória e
+    // sem ação destrutiva, como a story.
+    expect(code.match(/<div ndsContextMenuItem[ >]/g)).toHaveLength(4);
+    expect(code).not.toContain('ndsContextMenuSeparator');
+    expect(code).not.toContain('variant="destructive"');
+  });
 });
 
 // ─── Estados ──────────────────────────────────────────────────────────────────

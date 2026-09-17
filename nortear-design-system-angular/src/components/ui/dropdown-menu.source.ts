@@ -13,6 +13,11 @@
  * `email` que são campos do objeto de props do renderer e não existem em
  * componente nenhum. Quem lê a docs page copia o snippet, não o preview.
  *
+ * Em 2026-09-17 fecharam as DUAS últimas, `TabLeavesMenu` e `TabAtPageEnd`: elas
+ * nasceram depois daquela rodada, no arquivo-raiz, e a regra
+ * `story_file_sem_transform` as pegou publicando template cru. São quinze
+ * construtores para quinze stories, sem exclusão declarada.
+ *
  * O que é ANDAIME e por isso não entra em snippet nenhum:
  *
  *  · `(openChange)="onOpenChange($event)"` do Playground, ligado ao espião;
@@ -108,9 +113,29 @@ ${p2}</ng-template>
 ${pad}</nds-dropdown-menu>`;
 }
 
-/** Menu sem estado externo nenhum — a forma de doze dos treze snippets. */
+/** Menu sem estado externo nenhum — a forma de doze dos quinze snippets. */
 function simpleMenu(trigger: string, items: string, rootAttrs = ''): string {
   return example(menuMarkup({ rootAttrs, trigger, items }));
+}
+
+/**
+ * A fileira em que o menu é UMA parada de tabulação entre outras.
+ *
+ * Os vizinhos não são andaime aqui, e a diferença é do assunto: nas duas stories
+ * de Tab o que se ensina é PARA ONDE o foco vai quando o menu fecha, e sem um
+ * ponto de tabulação ao lado não há destino nenhum a mostrar. É o contrário do
+ * que vale na `States/Focused` do popover, onde a mesma fileira existe só para a
+ * play ter onde medir e por isso fica fora do snippet.
+ *
+ * `hasAfter` é o que separa as duas: com vizinho depois, o Tab sai para ele; sem
+ * vizinho, o gatilho é a última parada da página e o foco volta para ele.
+ */
+function tabRow(menu: string, hasAfter: boolean): string {
+  const after = hasAfter ? '\n      <button ndsButton variant="ghost">Depois</button>' : '';
+  return `    <div class="nds-cluster" data-spacing="md">
+      <button ndsButton variant="ghost">Antes</button>
+${menu}${after}
+    </div>`;
 }
 
 // ─── Playground ───────────────────────────────────────────────────────────────
@@ -154,6 +179,64 @@ export function dropdownMenuPlaygroundSource(
           <div ndsDropdownMenuItem variant="destructive">Sair</div>
         </div>`,
     }),
+  );
+}
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * O menu entre dois pontos de tabulação da página.
+ *
+ * Menu não é diálogo: o Tab fecha e o foco segue a página a partir do GATILHO —
+ * o vizinho depois dele, ou o de antes no Shift+Tab —, e de dentro do submenu
+ * fecha o menu INTEIRO. Nada disso pede prop: é o que o componente faz, e o que
+ * o snippet ensina é o CONTEXTO em que dá para ver isso acontecer.
+ *
+ * O submenu está aqui pelo mesmo motivo: sem o segundo nível não haveria como
+ * mostrar que o Tab de dentro dele não fecha só o filho.
+ */
+export function dropdownMenuTabLeavesMenuSource(): string {
+  return example(
+    tabRow(
+      menuMarkup({
+        trigger: 'Abrir menu',
+        items: `          <div ndsDropdownMenuItem>Perfil</div>
+          <div ndsDropdownMenuItem>Configurações</div>
+
+          <nds-dropdown-menu-sub>
+            <div ndsDropdownMenuSubTrigger>Exportar</div>
+
+            <ng-template ndsDropdownMenuSubContent>
+              <div ndsDropdownMenuItem>PDF</div>
+              <div ndsDropdownMenuItem>CSV</div>
+            </ng-template>
+          </nds-dropdown-menu-sub>`,
+        pad: '      ',
+      }),
+      true,
+    ),
+  );
+}
+
+/**
+ * O gatilho como ÚLTIMA parada da página.
+ *
+ * Construtor próprio, e não um reaproveitamento de `dropdownMenuClosedSource`:
+ * o menu é o mesmo, mas o snippet daquela story publica o menu SOZINHO, e aqui
+ * é justamente a fileira — com vizinho antes e nenhum depois — que faz a lição
+ * existir. Markup diferente não compartilha construtor.
+ */
+export function dropdownMenuTabAtPageEndSource(): string {
+  return example(
+    tabRow(
+      menuMarkup({
+        trigger: 'Abrir menu',
+        items: `          <div ndsDropdownMenuItem>Perfil</div>
+          <div ndsDropdownMenuItem>Configurações</div>`,
+        pad: '      ',
+      }),
+      false,
+    ),
   );
 }
 

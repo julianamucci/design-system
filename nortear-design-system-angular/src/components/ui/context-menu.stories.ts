@@ -3,7 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { dispatchContextMenu, gestoOpen, realKeyboard } from './context-menu.fixtures';
-import { contextMenuPlaygroundSource, type ContextMenuArgs } from './context-menu.source';
+import {
+  contextMenuPlaygroundSource,
+  contextMenuTabLeavesMenuSource,
+  type ContextMenuArgs,
+} from './context-menu.source';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
@@ -377,6 +381,7 @@ export const TabLeavesMenu: Story = {
   parameters: {
     covers: ['functional.item12'],
     controls: { disable: true },
+    docs: { source: { transform: contextMenuTabLeavesMenuSource } },
   },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },

@@ -422,6 +422,55 @@ move foco nem o destaque do item.
 `window` e `document`; os de contêiner rolável e o observador ficam provados
 pelo teste unitário do utilitário.
 
+### D14 · No painel Code, o vizinho de tabulação é LIÇÃO — não andaime
+
+**Fixada em** 2026-09-17, ao pagar a dívida de `story_file_sem_transform` no
+Angular.
+**Medição**: cinco stories dos três membros publicavam no painel Code o
+**template da story**, com binding do renderer — `TabLeavesMenu` e `TabAtPageEnd`
+do DropdownMenu, `TabLeavesMenubar` e `TabAtPageEnd` do Menubar, e
+`TabLeavesMenu` do ContextMenu. O painel é a única parte da página feita para ser
+COPIADA, e ali ele entregava o andaime do Storybook.
+
+**A decisão que o conserto fixou, e é ela que precisa estar escrita**: quando o
+ASSUNTO da story é o destino do foco, os vizinhos de tabulação — os controles
+antes e depois do gatilho — **entram no snippet**. Sem vizinho não há o que
+demonstrar: "o Tab sai do menu e vai para o vizinho" não se lê num snippet que
+não tem vizinho.
+
+**É o INVERSO do que vale no Popover**, e as duas leituras convivem: na
+`States/Focused` do `popover.md` os vizinhos "Antes"/"Depois" são **andaime de
+teste** — existem para dar dentes à asserção de destino (D11, D15) e ficam FORA
+do snippet, porque o uso canônico do popover não tem vizinho nenhum. Aqui eles
+são o exemplo. O que separa os dois casos é o assunto da story, não o elemento.
+Sem este registro, a próxima rodada "limpa andaime" nas cinco e desfaz a lição.
+
+**O que fica fora**: só o que é do renderer — no ContextMenu, `[class]="areaClasse"`
+e `data-testid="area"` —, declarado em `TAB_SCAFFOLD` com a premissa cobrada
+peça por peça. Plantar a remoção de uma peça faz o teste reprovar dizendo que o
+andaime "perdeu a premissa e precisa ser reexaminada".
+
+**Reuso de construtor: nenhum, e a recusa está escrita.** Dois eram tentadores —
+`dropdownMenuClosedSource` e `contextMenuWithSubmenuSource` montam o mesmo menu
+das stories de Tab, sem a fileira de vizinhos. Dividir construtor ali exigiria
+exceção declarada; escrever construtor próprio saiu mais honesto, e o motivo
+ficou na tabela de cada teste.
+
+**O ContextMenu NÃO tem construtor para "área como última parada"** — esse caso
+vive no Playground, por decisão e não por esquecimento.
+
+**Portão**: os três `*.source.test.ts` leem as stories por `?raw` e cobram a
+tabela nos DOIS sentidos (todo export usado por uma story; toda story dos 11
+arquivos com o construtor que a tabela declara), comparando snippet e template
+por **igualdade** — a forma forte, que só cabe porque não há andaime a recortar.
+Provado com oito defeitos plantados, restaurados na mesma chamada.
+
+**Por que não havia catraca a mexer**: a regra `story_file_sem_transform` não tem
+baseline, de propósito — o docblock dela registra que catraca esconderia a
+dívida de quem foi consertá-la. Ou a story ganha snippet, ou o `meta` cobre o
+arquivo inteiro porque todas publicam o mesmo; mover para o `meta` stories que
+renderizam coisas diferentes cala a regra sem pagar nada.
+
 ## 4. Anatomia
 
 Três árvores, porque os três membros divergem justamente na moldura: o que muda é

@@ -11,6 +11,8 @@ import {
   menubarItemDisabledSource,
   menubarOpenSource,
   menubarPlaygroundSource,
+  menubarTabAtPageEndSource,
+  menubarTabLeavesMenubarSource,
   menubarWithCheckboxSource,
   menubarWithRadioSource,
   menubarWithShortcutsSource,
@@ -38,6 +40,70 @@ const STORY_PROPS = ['onSelect', 'onOpenChange', 'menus', 'items', 'shortcuts', 
 
 /** O espião da `play` ou a lista da story ligados ao template — andaime, nunca lição. */
 const STORY_BINDING = new RegExp(`(?:\\((?:onSelect|onOpenChange)\\)="|\\b(?:${STORY_PROPS.join('|')})\\[)`);
+
+// ─── O TEXTO das stories ─────────────────────────────────────────────────────
+//
+// Lido, e não importado: importar um arquivo de story fora do compilador Angular
+// quebra, e a pergunta aqui não precisa de execução — é sobre o que o arquivo
+// ESCREVE. Mesma leitura por `?raw` do `popover.source.test.ts`.
+
+const storySources = import.meta.glob<string>('./menubar*.stories.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+const STORY_START = /^export const (\w+): Story = \{/gm;
+
+/** Story que ainda publica o template cru — dívida declarada, não silêncio. */
+const SEM_TRANSFORM = '(nenhum)';
+
+/** O bloco de texto de uma story, do `export const` até o próximo. */
+function storyBlock(source: string, name: string): string {
+  const marks = [...source.matchAll(STORY_START)];
+  const i = marks.findIndex((m) => m[1] === name);
+  if (i === -1) return '';
+  const end = i + 1 < marks.length ? marks[i + 1]!.index! : source.length;
+  return source.slice(marks[i]!.index!, end);
+}
+
+/** O `template` que a story renderiza, como ela o escreve. */
+function storyTemplate(file: string, name: string): string {
+  const block = storyBlock(storySources[file] ?? '', name);
+  return /template:\s*`([\s\S]*?)`/.exec(block)?.[1] ?? '';
+}
+
+/**
+ * A transform que cada story publica no painel — a dela, ou a que o `meta`
+ * declarou para o arquivo inteiro.
+ */
+function transformsByStory(source: string): Map<string, string> {
+  const marks = [...source.matchAll(STORY_START)];
+  const header = marks.length ? source.slice(0, marks[0]!.index) : source;
+  const fromMeta = /transform:\s*(\w+)/.exec(header)?.[1] ?? SEM_TRANSFORM;
+
+  const out = new Map<string, string>();
+  marks.forEach((m, i) => {
+    const end = i + 1 < marks.length ? marks[i + 1]!.index! : source.length;
+    const block = source.slice(m.index!, end);
+    out.set(m[1]!, /transform:\s*(\w+)/.exec(block)?.[1] ?? fromMeta);
+  });
+  return out;
+}
+
+/** Markup comparável: sem comentário de template e sem espaço em branco à toa. */
+function normalize(markup: string): string {
+  return markup
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/> </g, '><')
+    .trim();
+}
+
+/** O `template` que um snippet ensina, tirado o invólucro do `@Component`. */
+function snippetTemplate(code: string): string {
+  return /template: `([\s\S]*?)`,/.exec(code)?.[1] ?? '';
+}
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
@@ -79,46 +145,75 @@ describe('menubarPlaygroundSource', () => {
 
 // ─── Cobertura das quatro stories ─────────────────────────────────────────────
 
+const ROOT = './menubar.stories.ts';
+const VARIANTS = './menubar-variants.stories.ts';
+const STATES = './menubar-states.stories.ts';
+const COMPOSITIONS = './menubar-compositions.stories.ts';
+
 /**
- * Os catorze construtores e a story que cada um serve.
+ * Os dezesseis construtores e a story que cada um serve.
  *
- * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
- * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
- * sair calado da varredura — a lição do `source-snippets.test.ts` do Vue, onde
- * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
+ * A lista existe para ser COBRADA nos DOIS sentidos: um caso a compara com o que
+ * o módulo exporta, e outro com o que os quatro arquivos de story publicam no
+ * painel. Construtor novo que não entre aqui reprova, e story nova sem
+ * `transform` também — em vez de saírem calados da varredura, que é a lição do
+ * `source-snippets.test.ts` do Vue, onde 28 exports saíram do alcance e a suíte
+ * seguiu verde medindo menos.
+ *
+ * NENHUMA das dezesseis fica sem construtor próprio, e não há exclusão a
+ * declarar.
  */
 const CONSTRUCTORS: Array<{
   name: string;
+  file: string;
   story: string;
   build: () => string;
   /** O único snippet com estado externo: um menu ligado a um sinal de fora. */
   controlled?: true;
   /** O único snippet que publica `defaultOpen` — ali estar aberto É o assunto. */
   bornOpen?: true;
+  /** Os dois snippets que publicam a fileira com vizinhos de tabulação. */
+  neighbors?: 'both' | 'before';
 }> = [
-  { name: 'menubarPlaygroundSource', story: 'Playground', build: menubarPlaygroundSource },
-  { name: 'menubarDefaultSource', story: 'Variants/Default', build: menubarDefaultSource },
-  { name: 'menubarDestructiveSource', story: 'Variants/Destructive', build: menubarDestructiveSource },
-  { name: 'menubarClosedSource', story: 'States/Closed', build: menubarClosedSource },
-  { name: 'menubarOpenSource', story: 'States/Open', build: menubarOpenSource, bornOpen: true },
-  { name: 'menubarItemDisabledSource', story: 'States/ItemDisabled', build: menubarItemDisabledSource },
-  { name: 'menubarCheckboxCheckedSource', story: 'States/CheckboxChecked', build: menubarCheckboxCheckedSource },
+  { name: 'menubarPlaygroundSource', file: ROOT, story: 'Playground', build: menubarPlaygroundSource },
+  {
+    name: 'menubarTabLeavesMenubarSource',
+    file: ROOT,
+    story: 'TabLeavesMenubar',
+    build: menubarTabLeavesMenubarSource,
+    neighbors: 'both',
+  },
+  {
+    name: 'menubarTabAtPageEndSource',
+    file: ROOT,
+    story: 'TabAtPageEnd',
+    build: menubarTabAtPageEndSource,
+    neighbors: 'before',
+  },
+  { name: 'menubarDefaultSource', file: VARIANTS, story: 'Default', build: menubarDefaultSource },
+  { name: 'menubarDestructiveSource', file: VARIANTS, story: 'Destructive', build: menubarDestructiveSource },
+  { name: 'menubarClosedSource', file: STATES, story: 'Closed', build: menubarClosedSource },
+  { name: 'menubarOpenSource', file: STATES, story: 'Open', build: menubarOpenSource, bornOpen: true },
+  { name: 'menubarItemDisabledSource', file: STATES, story: 'ItemDisabled', build: menubarItemDisabledSource },
+  { name: 'menubarCheckboxCheckedSource', file: STATES, story: 'CheckboxChecked', build: menubarCheckboxCheckedSource },
   {
     name: 'menubarCheckboxIndeterminateSource',
-    story: 'States/CheckboxIndeterminate',
+    file: STATES,
+    story: 'CheckboxIndeterminate',
     build: menubarCheckboxIndeterminateSource,
   },
   {
     name: 'menubarControlledSource',
-    story: 'States/ControlledOpen',
+    file: STATES,
+    story: 'ControlledOpen',
     build: menubarControlledSource,
     controlled: true,
   },
-  { name: 'menubarWithShortcutsSource', story: 'Compositions/WithShortcuts', build: menubarWithShortcutsSource },
-  { name: 'menubarWithSubmenuSource', story: 'Compositions/WithSubmenu', build: menubarWithSubmenuSource },
-  { name: 'menubarWithCheckboxSource', story: 'Compositions/WithCheckboxItems', build: menubarWithCheckboxSource },
-  { name: 'menubarWithRadioSource', story: 'Compositions/WithRadioGroup', build: menubarWithRadioSource },
-  { name: 'menubarEditorSource', story: 'Compositions/EditorCompleto', build: menubarEditorSource },
+  { name: 'menubarWithShortcutsSource', file: COMPOSITIONS, story: 'WithShortcuts', build: menubarWithShortcutsSource },
+  { name: 'menubarWithSubmenuSource', file: COMPOSITIONS, story: 'WithSubmenu', build: menubarWithSubmenuSource },
+  { name: 'menubarWithCheckboxSource', file: COMPOSITIONS, story: 'WithCheckboxItems', build: menubarWithCheckboxSource },
+  { name: 'menubarWithRadioSource', file: COMPOSITIONS, story: 'WithRadioGroup', build: menubarWithRadioSource },
+  { name: 'menubarEditorSource', file: COMPOSITIONS, story: 'EditorCompleto', build: menubarEditorSource },
 ];
 
 describe('cobertura das quatro stories', () => {
@@ -130,8 +225,33 @@ describe('cobertura das quatro stories', () => {
     expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, controlled, bornOpen } of CONSTRUCTORS) {
-    it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
+  it('os quatro arquivos de story chegaram à varredura', () => {
+    // Sem esta linha, um glob que deixasse de casar apagaria o caso abaixo em
+    // silêncio — e uma suíte verde medindo zero é pior que vermelha.
+    expect(Object.keys(storySources).sort()).toEqual([COMPOSITIONS, STATES, VARIANTS, ROOT].sort());
+  });
+
+  it('toda story publica o construtor que esta tabela declara', () => {
+    // O outro sentido da tabela: story sem `transform` (que publicaria o
+    // template cru, e é a regra `story_file_sem_transform` do audit) e story que
+    // herdou o transform do `meta` sem ninguém decidir isso caem aqui.
+    const declared = new Map<string, string>();
+    for (const { name, file, story } of CONSTRUCTORS) declared.set(`${file}#${story}`, name);
+
+    const actual = new Map<string, string>();
+    for (const [file, source] of Object.entries(storySources)) {
+      for (const [story, transform] of transformsByStory(source)) {
+        actual.set(`${file}#${story}`, transform);
+      }
+    }
+
+    expect(Object.fromEntries([...actual].sort())).toEqual(
+      Object.fromEntries([...declared].sort()),
+    );
+  });
+
+  for (const { name, file, story, build, controlled, bornOpen, neighbors } of CONSTRUCTORS) {
+    it(`${name} (${file}#${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
       expect(code).not.toContain('args.');
@@ -153,6 +273,31 @@ describe('cobertura das quatro stories', () => {
       expect(code.match(/<ng-template ndsMenubarContent[ >]/g)).toHaveLength(menus.length);
 
       expect(code).toContain("import { NDS_MENUBAR } from '@/components/ui/menubar';");
+
+      // A fileira de pontos de tabulação é de DOIS snippets, e neles é o
+      // assunto. Nos demais, um vizinho ali seria cenário emprestado: quem copia
+      // passaria a achar que a barra pede um botão ao lado para funcionar. O
+      // botão do design system entra no `imports` junto — sem ele o exemplo não
+      // compila, e é por isso que a checagem cobra os dois lados.
+      if (neighbors) {
+        expect(code).toContain("import { NdsButton } from '@/components/ui/button';");
+        expect(code).toContain('imports: [...NDS_MENUBAR, NdsButton],');
+        expect(code).toContain('<div class="nds-cluster" data-spacing="md">');
+        expect(code).toContain('<button ndsButton variant="ghost">Antes</button>');
+        // `both` é a story que tem para onde mandar o foco; `before` é a que não
+        // tem, e é a ausência do vizinho depois que a torna a última parada.
+        if (neighbors === 'both') {
+          expect(code).toContain('<button ndsButton variant="ghost">Depois</button>');
+        } else {
+          expect(code).not.toContain('Depois');
+        }
+      } else {
+        // `States/ControlledOpen` também traz o botão do design system, mas para
+        // mexer no estado — nunca como vizinho de tabulação.
+        expect(code).not.toContain('variant="ghost"');
+        expect(code).not.toContain('>Antes</button>');
+        expect(code).not.toContain('>Depois</button>');
+      }
 
       // `[modal]="false"` é andaime do quadro — ele destrava o canvas por trás
       // do painel. Nenhum snippet o publica com os args no padrão.
@@ -176,6 +321,55 @@ describe('cobertura das quatro stories', () => {
       expect(code).not.toMatch(/<nds-menubar\s[^>]*\[open\]/);
     });
   }
+});
+
+// ─── Tab sai da barra ─────────────────────────────────────────────────────────
+
+describe('Tab sai da barra', () => {
+  // As duas stories do arquivo-raiz não têm andaime nenhum a recortar — nem
+  // espião, nem `@for` sobre a lista, nem binding de arg —, e por isso o que o
+  // snippet publica é o template INTEIRO da story. Isso deixa cobrar a forma
+  // forte: igualdade. Se o template da story mudar de forma, é aqui que reprova,
+  // em vez de o painel Code ensinar uma barra que o preview ao lado não mostra.
+  const TAB_STORIES: Array<{ name: string; story: string; build: () => string }> = [
+    {
+      name: 'menubarTabLeavesMenubarSource',
+      story: 'TabLeavesMenubar',
+      build: menubarTabLeavesMenubarSource,
+    },
+    { name: 'menubarTabAtPageEndSource', story: 'TabAtPageEnd', build: menubarTabAtPageEndSource },
+  ];
+
+  for (const { name, story, build } of TAB_STORIES) {
+    it(`${name} publica o MESMO markup que ${story} renderiza`, () => {
+      const rendered = storyTemplate(ROOT, story);
+      // Sem esta linha, um `template:` que deixasse de casar compararia string
+      // vazia com string vazia e o caso passaria medindo nada.
+      expect(rendered, `${ROOT}#${story}`).toContain('nds-menubar');
+      expect(normalize(snippetTemplate(build())), `${name} divergiu de ${story}`).toBe(
+        normalize(rendered),
+      );
+    });
+  }
+
+  it('TabLeavesMenubar ensina o submenu, e TabAtPageEnd não — é o que separa as duas', () => {
+    // A premissa de haver DOIS construtores em vez de um. O segundo nível existe
+    // na primeira porque o Tab de dentro dele fecha o menu INTEIRO; a segunda
+    // mostra a barra como última parada, e cena a mais só disputaria atenção.
+    const leaves = menubarTabLeavesMenubarSource();
+    const atEnd = menubarTabAtPageEndSource();
+    expect(leaves).toContain('<nds-menubar-sub>');
+    expect(leaves).toContain('<div ndsMenubarSubTrigger>Exportar</div>');
+    expect(leaves).toContain('<ng-template ndsMenubarSubContent>');
+    expect(atEnd).not.toContain('nds-menubar-sub');
+    // Os DOIS menus da barra nas duas: é o vizinho "Editar" que prova que o Tab
+    // não anda dentro da barra, porque ela é uma parada só.
+    for (const code of [leaves, atEnd]) {
+      expect(code).toContain('<button ndsMenubarTrigger>Arquivo</button>');
+      expect(code).toContain('<button ndsMenubarTrigger>Editar</button>');
+      expect(code.match(/<nds-menubar-menu>/g)).toHaveLength(2);
+    }
+  });
 });
 
 // ─── Variantes ────────────────────────────────────────────────────────────────

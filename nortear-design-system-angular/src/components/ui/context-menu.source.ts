@@ -14,6 +14,11 @@
  * `play`, `data-testid` que só o teste consulta. Quem lê a docs page copia o
  * snippet, não o preview.
  *
+ * Em 2026-09-17 fechou a ÚLTIMA, `TabLeavesMenu`: ela nasceu depois daquela
+ * rodada, no arquivo-raiz, e a regra `story_file_sem_transform` a pegou
+ * publicando template cru. São doze construtores para doze stories, sem exclusão
+ * declarada.
+ *
  * O que é ANDAIME e por isso não entra em snippet nenhum:
  *
  *  · `(onSelect)="onSelect(…)"`, que existe para a `play` provar que o item
@@ -77,13 +82,23 @@ export type ContextMenuArgs = {
 const LABEL_DEFAULT = 'Clique com o botão direito aqui';
 
 const MENU_IMPORT = "import { NDS_CONTEXT_MENU } from '@/components/ui/context-menu';";
+const BUTTON_IMPORT = "import { NdsButton } from '@/components/ui/button';";
 
-/** O componente que se escreve: import, template e — quando há estado — corpo. */
-function example(template: string, body?: string): string {
-  return `${MENU_IMPORT}
+/**
+ * O componente que se escreve: import, template e — quando há estado — corpo.
+ *
+ * `withButton` existe por um snippet só, o da story de Tab: ali a lição é o
+ * destino do foco, e o vizinho de tabulação é um botão do design system. Import
+ * e `imports` andam juntos — snippet que usa `ndsButton` sem declará-lo não
+ * compila para quem copia.
+ */
+function example(template: string, body?: string, withButton = false): string {
+  const imports = withButton ? `${MENU_IMPORT}\n${BUTTON_IMPORT}` : MENU_IMPORT;
+  const components = withButton ? 'NDS_CONTEXT_MENU, NdsButton' : 'NDS_CONTEXT_MENU';
+  return `${imports}
 
 @Component({
-  imports: [NDS_CONTEXT_MENU],
+  imports: [${components}],
   template: \`
 ${template}
   \`,
@@ -103,19 +118,20 @@ export class Exemplo {${body ? `\n${body}\n` : ''}}`;
  * `items` chega pronto e já indentado com oito espaços — cada story tem um
  * miolo diferente, e é justamente o miolo o assunto de quase todas elas.
  */
-function menu(items: string, label = LABEL_DEFAULT): string {
-  return `    <div ndsContextMenu>
-      <div
-        ndsContextMenuTrigger
-        class="${AREA_CLICK_DIREITO}"
-        data-align="center"
-        data-justify="center"
-      >${label}</div>
+function menu(items: string, label = LABEL_DEFAULT, pad = '    '): string {
+  const p2 = `${pad}  `;
+  return `${pad}<div ndsContextMenu>
+${p2}<div
+${p2}  ndsContextMenuTrigger
+${p2}  class="${AREA_CLICK_DIREITO}"
+${p2}  data-align="center"
+${p2}  data-justify="center"
+${p2}>${label}</div>
 
-      <ng-template ndsContextMenuContent>
+${p2}<ng-template ndsContextMenuContent>
 ${items}
-      </ng-template>
-    </div>`;
+${p2}</ng-template>
+${pad}</div>`;
 }
 
 /** Menu sem estado externo nenhum — a forma de nove dos onze snippets. */
@@ -169,6 +185,47 @@ function itemWithShortcut(label: string, shortcut?: string, attrs = ''): string 
           ${label}
           <span ndsContextMenuShortcut>${shortcut}</span>
         </div>`;
+}
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * A área entre dois pontos de tabulação da página.
+ *
+ * Menu não é diálogo: o Tab fecha e o foco segue a página a partir da ÁREA — o
+ * vizinho depois dela, ou o de antes no Shift+Tab —, e de dentro do submenu
+ * fecha o menu INTEIRO. Nada disso pede prop: é o que o componente faz, e o que
+ * o snippet ensina é o CONTEXTO em que dá para ver isso acontecer.
+ *
+ * Os vizinhos NÃO são andaime aqui, e a diferença é do assunto: sem um ponto de
+ * tabulação ao lado não há destino nenhum a mostrar, e o snippet viraria uma
+ * cópia do submenu que `contextMenuWithSubmenuSource` já ensina. A área como
+ * ÚLTIMA parada — o caso em que o foco volta para ela — é o que o Playground
+ * mostra, e por isso não tem construtor próprio aqui.
+ */
+export function contextMenuTabLeavesMenuSource(): string {
+  return example(
+    `    <div class="nds-cluster" data-spacing="md">
+      <button ndsButton variant="ghost">Antes</button>
+${menu(
+  `          <div ndsContextMenuItem>Editar</div>
+          <div ndsContextMenuItem>Duplicar</div>
+
+          <div ndsContextMenuSub>
+            <div ndsContextMenuSubTrigger>Compartilhar</div>
+            <ng-template ndsContextMenuSubContent>
+              <div ndsContextMenuItem>Por e-mail</div>
+              <div ndsContextMenuItem>Por link</div>
+            </ng-template>
+          </div>`,
+  LABEL_DEFAULT,
+  '      ',
+)}
+      <button ndsButton variant="ghost">Depois</button>
+    </div>`,
+    undefined,
+    true,
+  );
 }
 
 // ─── Estados ──────────────────────────────────────────────────────────────────

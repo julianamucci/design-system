@@ -12,6 +12,11 @@
  * ligado ao espião da `play`. Quem lê a docs page copia o snippet, não o
  * preview (`story_file_sem_transform`, três arquivos).
  *
+ * Em 2026-09-17 fecharam as DUAS últimas, `TabLeavesMenubar` e `TabAtPageEnd`:
+ * elas nasceram depois daquela rodada, no arquivo-raiz, e a mesma regra as pegou
+ * publicando template cru. São dezesseis construtores para dezesseis stories,
+ * sem exclusão declarada.
+ *
  * O que é ANDAIME e por isso não entra em snippet nenhum:
  *
  *  · `(openChange)="onOpenChange($event)"` e `(onSelect)="onSelect(…)"`,
@@ -92,6 +97,31 @@ function lines(...items: string[]): string {
   return items.map((i) => `          ${i}`).join('\n');
 }
 
+/** As mesmas linhas, no recuo mais fundo de uma barra dentro de uma fileira. */
+function rowLines(...items: string[]): string {
+  return items.map((i) => `            ${i}`).join('\n');
+}
+
+/**
+ * A fileira em que a barra é UMA parada de tabulação entre outras.
+ *
+ * Os vizinhos não são andaime aqui, e a diferença é do assunto: nas duas stories
+ * de Tab o que se ensina é PARA ONDE o foco vai quando o menu fecha, e sem um
+ * ponto de tabulação ao lado não há destino nenhum a mostrar. Some com eles e o
+ * snippet vira uma barra qualquer, que as outras doze já ensinam.
+ *
+ * `hasAfter` é o que separa as duas: com vizinho depois, o Tab sai da barra
+ * inteira para ele; sem vizinho, a barra é a última parada da página e o foco
+ * volta ao gatilho do menu que estava aberto.
+ */
+function tabRow(menus: string[], hasAfter: boolean): string {
+  const after = hasAfter ? '\n      <button ndsButton variant="ghost">Depois</button>' : '';
+  return `    <div class="nds-cluster" data-spacing="md">
+      <button ndsButton variant="ghost">Antes</button>
+${bar(menus, '      ')}${after}
+    </div>`;
+}
+
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 /**
@@ -149,6 +179,82 @@ export function menubarPlaygroundSource(
   \`,
 })
 export class Exemplo {}`;
+}
+
+// ─── Tab sai da barra ─────────────────────────────────────────────────────────
+
+/**
+ * A barra entre dois pontos de tabulação da página.
+ *
+ * A barra inteira é UMA parada (roving tabindex), então o Tab não passa de um
+ * gatilho ao vizinho: ele fecha o menu aberto e sai para o que vem DEPOIS da
+ * barra — e de dentro do submenu fecha o menu inteiro. Nada disso pede prop: é o
+ * que o componente faz, e o que o snippet ensina é o CONTEXTO em que dá para ver
+ * isso acontecer.
+ *
+ * O segundo menu e o submenu estão aqui pelo mesmo motivo: sem o vizinho
+ * "Editar" não haveria como mostrar que o Tab não anda dentro da barra, e sem o
+ * segundo nível não haveria como mostrar que ele não fecha só o filho.
+ */
+export function menubarTabLeavesMenubarSource(): string {
+  return example(
+    tabRow(
+      [
+        menu(
+          'Arquivo',
+          rowLines(
+            '<div ndsMenubarItem>Novo</div>',
+            '<div ndsMenubarItem>Abrir</div>',
+            '<nds-menubar-sub>',
+            '  <div ndsMenubarSubTrigger>Exportar</div>',
+            '  <ng-template ndsMenubarSubContent>',
+            '    <div ndsMenubarItem>PDF</div>',
+            '    <div ndsMenubarItem>CSV</div>',
+            '  </ng-template>',
+            '</nds-menubar-sub>',
+          ),
+          '',
+          '        ',
+        ),
+        menu(
+          'Editar',
+          rowLines('<div ndsMenubarItem>Desfazer</div>', '<div ndsMenubarItem>Refazer</div>'),
+          '',
+          '        ',
+        ),
+      ],
+      true,
+    ),
+    undefined,
+    true,
+  );
+}
+
+/**
+ * A barra como ÚLTIMA parada da página.
+ *
+ * Construtor próprio, e não um reaproveitamento do vizinho: o que muda não é só
+ * o vizinho de depois — o submenu e o segundo item do Editar saem junto, porque
+ * aqui o assunto é o Tab não ter para onde levar o foco, e cena a mais só
+ * disputaria atenção com ele.
+ */
+export function menubarTabAtPageEndSource(): string {
+  return example(
+    tabRow(
+      [
+        menu(
+          'Arquivo',
+          rowLines('<div ndsMenubarItem>Novo</div>', '<div ndsMenubarItem>Abrir</div>'),
+          '',
+          '        ',
+        ),
+        menu('Editar', rowLines('<div ndsMenubarItem>Desfazer</div>'), '', '        '),
+      ],
+      false,
+    ),
+    undefined,
+    true,
+  );
 }
 
 // ─── Variantes: as duas ênfases de item ───────────────────────────────────────

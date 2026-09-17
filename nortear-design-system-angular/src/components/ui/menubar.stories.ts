@@ -2,7 +2,12 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR, type MenubarItemVariant } from './menubar';
-import { menubarPlaygroundSource, type MenubarArgs } from './menubar.source';
+import {
+  menubarPlaygroundSource,
+  menubarTabAtPageEndSource,
+  menubarTabLeavesMenubarSource,
+  type MenubarArgs,
+} from './menubar.source';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
@@ -365,6 +370,7 @@ export const TabLeavesMenubar: Story = {
     // fechando o menu inteiro; a barra como última parada está em `TabAtPageEnd`.
     covers: ['functional.item13'],
     controls: { disable: true },
+    docs: { source: { transform: menubarTabLeavesMenubarSource } },
   },
   render: () => ({
     template: `
@@ -456,6 +462,7 @@ export const TabAtPageEnd: Story = {
   parameters: {
     covers: ['functional.item13'],
     controls: { disable: true },
+    docs: { source: { transform: menubarTabAtPageEndSource } },
   },
   render: () => ({
     template: `
