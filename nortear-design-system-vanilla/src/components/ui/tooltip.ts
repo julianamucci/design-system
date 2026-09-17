@@ -42,7 +42,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
-import { positionFloating, type FloatingSide } from '@/lib/floating';
+import { autoUpdateFloating, positionFloating, type FloatingSide } from '@/lib/floating';
 
 export type TooltipSide = FloatingSide;
 
@@ -160,6 +160,23 @@ const GAP = ARROW_HEIGHT + 4;
  * Sem Provider não há espera compartilhada: `skipDelayDuration` fica zerado,
  * porque dois balões sem grupo não têm por que saber um do outro.
  */
+/**
+ * Reconcilia a seta com o lado FINAL do balão: `data-side` e a coordenada
+ * cruzada que aponta para o gatilho.
+ *
+ * Roda a cada reposição, não só na abertura. As DUAS coordenadas são escritas —
+ * a do eixo que vale e a limpeza da outra —, porque a seta que um dia esteve
+ * num eixo não pode levar a coordenada dele para o seguinte.
+ */
+function placeArrow(panel: HTMLElement, arrowEl: HTMLElement, finalSide: FloatingSide): void {
+  arrowEl.dataset.side = finalSide;
+  const verticalAxis = finalSide === 'top' || finalSide === 'bottom';
+  const panelSpan = verticalAxis ? panel.offsetWidth : panel.offsetHeight;
+  const arrowSpan = verticalAxis ? ARROW_WIDTH : ARROW_HEIGHT;
+  arrowEl.style[verticalAxis ? 'left' : 'top'] = `${(panelSpan - arrowSpan) / 2}px`;
+  arrowEl.style[verticalAxis ? 'top' : 'left'] = '';
+}
+
 function groupAvulso(delayDuration: number): GroupState {
   return { delayDuration, skipDelayDuration: 0, closedIn: 0 };
 }
@@ -191,6 +208,9 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
   let showTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
   let pointerPressionado = false;
+  // A limpeza do acompanhamento de posição — só existe com o balão na tela, e
+  // `hide()` a chama. Ver `autoUpdateFloating` em `@/lib/floating`.
+  let stopAutoUpdate: (() => void) | null = null;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'tooltip';
@@ -252,7 +272,23 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     // viraria para baixo e a seta continuaria desenhada para cima: defeito que
     // compila, renderiza e nenhum portão desta casa reprova. É a razão pela qual
     // `lib/floating.ts` mantém o recurso opt-in.
-    const finalSide = positionFloating(trigger, panelEl, side, 'center', GAP, { flip: true });
+    //
+    // A conta e a seta são UMA função, e não duas linhas soltas, porque rodam de
+    // novo a cada rolagem, redimensionamento da janela ou mudança de tamanho do
+    // gatilho ou do balão, enquanto ele está na tela (`autoUpdateFloating`,
+    // logo abaixo). Rolar pode ser o que faz o lado pedido deixar de caber: a
+    // conta vira o balão, e a seta que não fosse refeita junto continuaria
+    // apontando para o lado antigo.
+    const panel = panelEl;
+    const arrowEl = document.createElement('div');
+    arrowEl.className = 'nds-tooltip-arrow';
+    // `position` é da fábrica, não da folha: nas outras quatro stacks quem a
+    // escreve é a lib, e numa delas o elemento posicionado nem é este.
+    arrowEl.style.position = 'absolute';
+    const place = (): void => {
+      const finalSide = positionFloating(trigger, panel, side, 'center', GAP, { flip: true });
+      placeArrow(panel, arrowEl, finalSide);
+    };
 
     // A seta, e o que esta stack faz que as outras quatro recebem de graça.
     //
@@ -266,19 +302,12 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     // painel, menos meia seta. A dimensão usada é a LARGURA no top/bottom e a
     // ALTURA no left/right, sem rotação — é o que o `transform` da folha espera
     // receber, e é o mesmo par que o base-ui devolve (medido: balão de 58px de
-    // largura → `left: 24px`; de 29px de altura → `top: 12px`).
-    const arrowEl = document.createElement('div');
-    arrowEl.className = 'nds-tooltip-arrow';
-    arrowEl.dataset.side = finalSide;
-    // `position` é da fábrica, não da folha: nas outras quatro stacks quem a
-    // escreve é a lib, e numa delas o elemento posicionado nem é este.
-    arrowEl.style.position = 'absolute';
+    // largura → `left: 24px`; de 29px de altura → `top: 12px`). A conta mora em
+    // `placeArrow`, fora desta função, porque `place` a refaz a cada reposição.
     panelEl.appendChild(arrowEl);
-
-    const verticalAxis = finalSide === 'top' || finalSide === 'bottom';
-    const panelSpan = verticalAxis ? panelEl.offsetWidth : panelEl.offsetHeight;
-    const arrowSpan = verticalAxis ? ARROW_WIDTH : ARROW_HEIGHT;
-    arrowEl.style[verticalAxis ? 'left' : 'top'] = `${(panelSpan - arrowSpan) / 2}px`;
+    place();
+    stopAutoUpdate?.();
+    stopAutoUpdate = autoUpdateFloating(trigger, panel, place);
 
     // `aria-describedby` só enquanto o balão EXISTE. Escrevê-lo na montagem
     // deixa o gatilho apontando para um id ausente o tempo todo — violação de
@@ -298,6 +327,10 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     document.removeEventListener('mousemove', aoMover);
     document.removeEventListener('keydown', onKeyDown);
+    // Antes de remover o balão: um quadro já agendado não pode medir um nó que
+    // saiu do documento.
+    stopAutoUpdate?.();
+    stopAutoUpdate = null;
     // O grupo só é avisado quando havia mesmo um balão na tela: `hide()` também
     // é chamado por caminhos que nunca chegaram a exibir nada, e anotar ali
     // daria ao balão seguinte uma abertura instantânea que ninguém mereceu.

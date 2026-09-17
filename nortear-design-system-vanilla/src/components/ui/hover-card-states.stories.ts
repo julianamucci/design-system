@@ -13,6 +13,7 @@ import { hoverCardWithComandosSource, hoverCardSource } from './hover-card.sourc
 import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
+import { checkPanelFollowsTrigger } from './floating-follow-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -227,6 +228,23 @@ export const Controlled: Story = {
       await userEvent.click(open);
       const panel = await waitForOpen();
       await expect(panel).toBeVisible();
+      await expect(espelho).toHaveTextContent('aberto');
+    });
+
+    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+      // O cartão mora no `body` e o gatilho, no canvas: sem o acompanhamento de
+      // `autoUpdateFloating` o cartão ficava onde abriu. Nesta story, e não na
+      // `Open`, porque aqui ninguém abriu por ponteiro — deslocar o canvas sob um
+      // cursor parado no gatilho poderia fechar o cartão por `mouseleave`.
+      //
+      // `startAt`: o gatilho vive no começo de uma frase encostada à esquerda, e
+      // o cartão centrado nele nasce travado no respiro da janela (medido: left
+      // 8px). Deslocado só 40px, o travamento engolia 23 deles com o componente
+      // certo; a 200px da borda, a medida é só do acompanhamento.
+      const panel = panelOpen()!;
+      await checkPanelFollowsTrigger(panel, canvasElement, { startAt: 200 });
+      // Reposicionar não é mudança de estado: nada é anunciado a quem controla.
+      await expect(panelOpen()).toBe(panel);
       await expect(espelho).toHaveTextContent('aberto');
     });
 

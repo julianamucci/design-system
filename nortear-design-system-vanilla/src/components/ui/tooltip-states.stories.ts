@@ -5,6 +5,7 @@ import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
+import { checkPanelFollowsTrigger } from './floating-follow-probe';
 import tooltipTranslations from '@shared/content/tooltip/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -138,6 +139,17 @@ export const Open: Story = {
       const id = trigger.getAttribute('aria-describedby');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)).toBe(balaoDe(trigger));
+    });
+
+    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+      // O balão mora no `body` e o gatilho, no canvas: sem o acompanhamento de
+      // `autoUpdateFloating` o balão ficava onde abriu. Quem se desloca é o
+      // canvas, e não o botão — o botão anima `transform` na folha.
+      const balao = balaoDe(trigger)!;
+      await checkPanelFollowsTrigger(balao, canvasElement);
+      // Reposicionar não fecha nem troca o balão, e o foco fica onde estava.
+      await expect(balaoDe(trigger)).toBe(balao);
+      await expect(document.activeElement).toBe(trigger);
     });
 
     await step('Cleanup antes do postVisit', async () => {

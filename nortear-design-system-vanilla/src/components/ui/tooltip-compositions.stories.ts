@@ -534,6 +534,34 @@ export const Collision: Story = {
       await aguardarSeta(balaoDe(trigger)!, trigger);
     });
 
+    await step('Com o balão aberto, o gatilho longe do topo e a página rolada, o balão volta ao lado pedido e a seta acompanha', async () => {
+      // O flip provocado por REPOSICIONAMENTO, e não pela abertura. O balão
+      // aberto é reposicionado por `autoUpdateFloating` a cada rolagem, e a
+      // conta que vira o balão tem de refazer a seta junto — senão ela segue
+      // desenhada para o lado de antes, apontando para o vão. É o único passo
+      // que reprova esse esquecimento: nos outros o lado não muda depois de
+      // aberto. `transform` é mecânica de cena, e vai no CANVAS, não no botão:
+      // o botão anima `transform` na folha, e o reposicionamento mediria o
+      // primeiro quadro da transição. No canvas, o `transform` também faz dele o
+      // bloco contedor do gatilho `fixed`, que desce junto — 120px abaixo do
+      // topo, com o espaço que faltava ao lado pedido.
+      const previous = canvasElement.style.transform;
+      try {
+        canvasElement.style.transform = 'translateY(120px)';
+        window.dispatchEvent(new Event('scroll'));
+        const balao = await aguardarLado(trigger, 'top');
+        await aguardarSeta(balao, trigger);
+        // Mesmo balão, aberto: reposicionar não fecha nem remonta.
+        await expect(balao).toHaveAttribute('data-state', 'open');
+        await expect(document.activeElement).toBe(trigger);
+      } finally {
+        canvasElement.style.transform = previous;
+        window.dispatchEvent(new Event('scroll'));
+      }
+      // De volta ao encosto no topo, de volta ao lado oposto — o replay parte daqui.
+      await aguardarLado(trigger, 'bottom');
+    });
+
     await step('Cleanup', async () => { trigger.blur(); clearPortal(); });
   },
 };

@@ -9,6 +9,7 @@ import {
 import { createButton } from './button';
 import { clicarQuandoMontado, montar, wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
+import { checkPanelFollowsTrigger } from './floating-follow-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -169,6 +170,18 @@ export const Open: Story = {
       const items = await menuItems();
       await userEvent.keyboard('s');
       await expect(document.activeElement).toBe(items[2]);
+    });
+
+    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+      // O menu mora no `body` e o gatilho, no canvas: sem o acompanhamento de
+      // `autoUpdateFloating` o menu ficava onde abriu. Quem se desloca é o
+      // canvas, e não o botão — o botão anima `transform` na folha.
+      const menu = await body.findByRole('menu');
+      const focused = document.activeElement;
+      await checkPanelFollowsTrigger(menu, canvasElement);
+      // Reposicionar não fecha o menu e não tira o foco do item.
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(document.activeElement).toBe(focused);
     });
 
     await step('Limpa via ESC antes do postVisit', async () => {

@@ -11,6 +11,7 @@ import {
   clickCreateArea,
   menuOpen,
 } from '@shared/testing/context-menu-area';
+import { checkPanelFollowsTrigger } from './floating-follow-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -350,6 +351,20 @@ export const WithSubmenu: Story = {
       // fotografar.
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(submenu()).not.toBeNull());
+    });
+
+    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+      // O menu raiz é ancorado num PONTO e não acompanha nada — ponto não se
+      // move. O submenu é ancorado no ITEM, e é ele que tem de seguir: quem se
+      // desloca aqui é o próprio sub-gatilho, porque o painel raiz que o contém
+      // mora no `body`, fora do canvas, e o item não anima `transform`.
+      const panel = submenu()!;
+      const focused = document.activeElement;
+      await checkPanelFollowsTrigger(panel, subTrigger());
+      // Reposicionar não fecha o submenu e não mexe no foco.
+      await expect(submenu()).toBe(panel);
+      await expect(subTrigger().getAttribute('aria-expanded')).toBe('true');
+      await expect(document.activeElement).toBe(focused);
     });
   },
 };

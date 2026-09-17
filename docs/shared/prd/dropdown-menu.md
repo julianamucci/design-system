@@ -389,6 +389,39 @@ vezes. `center` é fallback válido, então nada reprovava. Agora reprova:
 `cadeia_transform_origin_sem_bits`, com conferência de premissa contra o pacote
 instalado.
 
+### D13 · Aberto, o menu e os submenus acompanham o gatilho — nos três membros
+
+**Fixada em** 2026-09-17, decisão da dona na passagem do popover ("reposicionar
+nos seis consumidores do `positionFloating` agora").
+**Medição**: o vanilla calculava a posição UMA vez, ao abrir. Com o menu aberto,
+rolar a página — inclusive dentro de um contêiner — ou redimensionar a janela
+deixava o painel parado enquanto o gatilho se movia. As outras quatro stacks
+nunca tiveram o defeito: as quatro libs reposicionam sozinhas (`autoUpdate` do
+floating-ui).
+**Mecanismo**: `autoUpdateFloating` (`nortear-design-system-vanilla/src/lib/floating.ts`)
+escuta rolagem em cada ancestral rolável do gatilho e na janela, redimensionamento
+da janela, e mudança de tamanho do gatilho e do painel, agrupando por quadro.
+
+**Onde ele age na família, e onde NÃO age — as duas coisas de propósito:**
+
+| peça | acompanha? | por quê |
+|---|---|---|
+| painel do DropdownMenu | sim | ligado ao abrir, desligado no `dismantle()` |
+| submenu — nos TRÊS membros | sim | é o mesmo `src/lib/submenu.ts`; ligado por nível e desligado no `closeFrom`, e cada atualização refaz o lado e o `--transform-origin` |
+| painel de topo do Menubar | não | é ancorado pela FOLHA (D12), e não passa pelo `positionFloating` |
+| painel de topo do ContextMenu | não | é ancorado num PONTO (`positionFloatingAtPoint`), o do clique: não há gatilho que se mova |
+
+**Portões**: passo `'Com o painel aberto, o gatilho deslocado e a página rolada
+reposicionam o painel junto dele'` na `States/Open` do DropdownMenu e na
+`Compositions/WithSubmenu` do Menubar e do ContextMenu (o submenu). No
+ContextMenu o passo desloca o próprio item, porque o botão anima `transform` na
+folha e deslocá-lo mediria a animação, não o acompanhamento.
+**O que não acontece**: reposicionar não anuncia abertura nem fechamento, e não
+move foco nem o destaque do item.
+**Limite declarado**: a sonda de vazamento das stories só conta ouvintes de
+`window` e `document`; os de contêiner rolável e o observador ficam provados
+pelo teste unitário do utilitário.
+
 ## 4. Anatomia
 
 Três árvores, porque os três membros divergem justamente na moldura: o que muda é

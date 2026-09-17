@@ -169,6 +169,32 @@ campo, porque nada declarava um. Portão: `campo_gatilho_divergente`. Os modais
 chegaram ao mesmo nome em 2026-09-10 — o Dialog primeiro, e AlertDialog, Sheet e
 Drawer no mesmo dia, por decisão da dona (`18-overlay.md` §Analytics).
 
+### D10 · Aberto, o cartão acompanha o gatilho
+
+**Fixada em** 2026-09-17, decisão da dona na passagem do popover ("reposicionar
+nos seis consumidores do `positionFloating` agora").
+**Medição**: o vanilla calculava a posição UMA vez, ao abrir. Com o cartão
+aberto, rolar a página — inclusive dentro de um contêiner — ou redimensionar a
+janela deixava o cartão parado enquanto o gatilho se movia. As outras quatro
+stacks nunca tiveram o defeito: as quatro libs reposicionam sozinhas
+(`autoUpdate` do floating-ui).
+**Mecanismo**: `autoUpdateFloating` (`nortear-design-system-vanilla/src/lib/floating.ts`)
+escuta rolagem em cada ancestral rolável do gatilho e na janela, redimensionamento
+da janela, e mudança de tamanho do gatilho e do cartão, agrupando por quadro. É
+ligado ao abrir e desligado no `hide()`. Cada atualização refaz a posição com o
+MESMO `side`, `align` e `flip` (D9), e reescreve o `data-side` e o `data-align`
+finais.
+**O que não acontece**: reposicionar não chama `onOpenChange` nem move foco — o
+cartão continua o mesmo, só em outro lugar.
+**Portão**: passo `'Com o painel aberto, o gatilho deslocado e a página rolada
+reposicionam o painel junto dele'` na `States/Controlled` do vanilla. O gatilho
+dessa story fica encostado à esquerda, então o passo começa o deslocamento em
+200 px — com o respiro de borda, 40 px a partir de zero seriam parcialmente
+engolidos com o componente CERTO.
+**Limite declarado**: a sonda de vazamento das stories só conta ouvintes de
+`window` e `document`; os de contêiner rolável e o observador ficam provados
+pelo teste unitário do utilitário.
+
 ## 4. Anatomia
 
 ```

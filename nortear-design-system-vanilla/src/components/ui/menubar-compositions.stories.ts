@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { embrulhar, waitForPanel, triggersOf } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith } from './menubar.source';
+import { checkPanelFollowsTrigger } from './floating-follow-probe';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -296,6 +297,20 @@ export const WithSubmenu: Story = {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         await expect(visibleMenus()).toHaveLength(2);
       });
+    });
+
+    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+      // O painel do submenu mora no `body`; o sub-gatilho, no menu da barra, que
+      // é ancorado por CSS dentro do canvas. Sem o acompanhamento de
+      // `autoUpdateFloating` em `@/lib/submenu`, o submenu ficava onde abriu
+      // enquanto o item que o abriu andava.
+      const submenu = visibleMenus()[1];
+      const focused = document.activeElement;
+      await checkPanelFollowsTrigger(submenu, canvasElement);
+      // Reposicionar não fecha nível nenhum e não mexe no foco.
+      await expect(visibleMenus()).toHaveLength(2);
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(document.activeElement).toBe(focused);
     });
   },
 };

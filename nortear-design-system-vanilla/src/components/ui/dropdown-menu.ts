@@ -112,6 +112,7 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import {
+  autoUpdateFloating,
   positionFloating,
   type FloatingAlign,
   type FloatingSide,
@@ -342,6 +343,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   // aplicar o `setOpen(false)`. Sem ele o fechamento controlado saía sempre como
   // `api`, e o Escape da pessoa virava "fechado pelo código" no GA4.
   let pendingReason: DropdownMenuCloseReason | null = null;
+  // A limpeza do acompanhamento de posição — só existe com o menu aberto, e
+  // `dismantle()` a chama. Ver `autoUpdateFloating` em `@/lib/floating`.
+  let stopAutoUpdate: (() => void) | null = null;
 
   // ── Submenu ─────────────────────────────────────────────────────────────────
   // Um controlador por menu, e um painel por nível: abrir outro no mesmo nível fecha o
@@ -640,7 +644,17 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
     panelEl = buildMenu(items, 'dropdown-menu-content');
     document.body.appendChild(panelEl);
-    positionFloating(trigger, panelEl, side, align, sideOffset);
+    // A mesma conta roda de novo a cada rolagem, redimensionamento da janela ou
+    // mudança de tamanho do gatilho ou do painel, enquanto o menu está aberto —
+    // sem isto o painel ficava parado onde abriu e o gatilho andava. Só
+    // geometria: não anuncia nada e não toca no foco.
+    const panel = panelEl;
+    const place = (): void => {
+      positionFloating(trigger, panel, side, align, sideOffset);
+    };
+    place();
+    stopAutoUpdate?.();
+    stopAutoUpdate = autoUpdateFloating(trigger, panel, place);
 
     trigger.setAttribute('aria-expanded', 'true');
     isOpen = true;
@@ -705,6 +719,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
     // Primeiro o filho: o painel dele vive no `body` e não sai junto com o pai.
     submenu.close();
+    // Antes de remover o painel: um quadro já agendado não pode medir um nó que
+    // saiu do documento.
+    stopAutoUpdate?.();
+    stopAutoUpdate = null;
     panelEl?.remove();
     panelEl = null;
     trigger.setAttribute('aria-expanded', 'false');

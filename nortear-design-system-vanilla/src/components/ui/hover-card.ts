@@ -87,7 +87,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type Destroyable } from '@/lib/destroy';
-import { positionFloating } from '@/lib/floating';
+import { autoUpdateFloating, positionFloating } from '@/lib/floating';
 
 export type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 export type HoverCardAlign = 'start' | 'center' | 'end';
@@ -198,6 +198,9 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   let panelEl: HTMLElement | null = null;
   let showTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
+  // A limpeza do acompanhamento de posição — só existe com o cartão aberto, e
+  // `hide()` a chama. Ver `autoUpdateFloating` em `@/lib/floating`.
+  let stopAutoUpdate: (() => void) | null = null;
 
   // O elemento nasce sem os dois comandos e os recebe no fim desta função —
   // por isso a conversão passa por `unknown`: o `<div>` só vira `HoverCardElement`
@@ -236,7 +239,16 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     // declaração compartilhada colapsaria esse invólucro para 0×0. Quem escreve
     // é o `measurePanel` do `positionFloating`, antes de medir.
     document.body.appendChild(panelEl);
-    positionHoverCard(trigger, panelEl, side, align, sideOffset);
+    // A conta roda de novo a cada rolagem, redimensionamento da janela ou
+    // mudança de tamanho do gatilho ou do cartão, enquanto ele está aberto —
+    // `positionHoverCard` inteira, porque é ela que reescreve o `data-side`
+    // quando a rolagem faz o lado pedido deixar de caber. Só geometria: nada é
+    // anunciado (`onOpenChange` fica de fora) e o foco não é tocado.
+    const panel = panelEl;
+    const place = (): void => positionHoverCard(trigger, panel, side, align, sideOffset);
+    place();
+    stopAutoUpdate?.();
+    stopAutoUpdate = autoUpdateFloating(trigger, panel, place);
 
     // O gatilho é DESCRITO pelo painel, e só enquanto o painel EXISTE — o
     // `id` acima é o alvo. Escrever o atributo na montagem, com o cartão ainda
@@ -260,6 +272,10 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     if (!panelEl) return;
     document.removeEventListener('keydown', onKeyDown);
+    // Antes de remover o painel: um quadro já agendado não pode medir um nó que
+    // saiu do documento.
+    stopAutoUpdate?.();
+    stopAutoUpdate = null;
     // A descrição sai junto com o painel: sobrando, apontaria para um nó que
     // não existe mais.
     trigger.removeAttribute('aria-describedby');

@@ -152,6 +152,34 @@ silêncio, porque `center` é fallback válido.
 **Por quê**: a tecla já vem com caixa própria, e o padding cheio do balão somado
 à caixa da tecla abria um vão que lia como erro de alinhamento.
 
+### D8 · Aberto, o balão acompanha o gatilho — e a seta é refeita a cada vez
+
+**Fixada em** 2026-09-17, decisão da dona na passagem do popover ("reposicionar
+nos seis consumidores do `positionFloating` agora").
+**Medição**: o vanilla calculava a posição UMA vez, ao mostrar. Com o balão
+aberto, rolar a página — inclusive dentro de um contêiner — ou redimensionar a
+janela deixava o balão parado enquanto o gatilho se movia. As outras quatro
+stacks nunca tiveram o defeito: as quatro libs reposicionam sozinhas
+(`autoUpdate` do floating-ui). O mesmo valia para os outros cinco consumidores
+do `positionFloating` do vanilla.
+**Mecanismo**: `autoUpdateFloating` (`nortear-design-system-vanilla/src/lib/floating.ts`)
+escuta rolagem em cada ancestral rolável do gatilho e na janela, redimensionamento
+da janela, e mudança de tamanho do gatilho e do balão (`ResizeObserver`),
+agrupando por quadro. É ligado ao mostrar e desligado no `hide()`.
+**O que é refeito a cada atualização, e é o ponto delicado deste componente**: o
+lado final E a seta. Um flip provocado por ROLAGEM troca o lado com o balão já
+na tela, e a seta que não fosse refeita apontaria para o lado antigo. A conta da
+seta saiu para uma função própria (`placeArrow`), chamada no callback.
+**Portões**: passo `'Com o painel aberto, o gatilho deslocado e a página rolada
+reposicionam o painel junto dele'` na `States/Open` do vanilla; e um passo na
+`Compositions/Collision` que rola até o balão VIRAR para cima e confere a seta —
+o passo de deslocamento horizontal não pegaria a seta velha, porque não vira o
+lado. Provado: com a seta não refeita, a folga entre o bico e o gatilho deu
+−80,5 px.
+**Limite declarado**: a sonda de vazamento das stories só conta ouvintes de
+`window` e `document`; os de contêiner rolável e o observador ficam provados
+pelo teste unitário do utilitário.
+
 ## 4. Anatomia
 
 ```

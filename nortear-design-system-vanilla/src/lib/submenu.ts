@@ -20,7 +20,7 @@
 // puxá-los para cá obrigaria os três a compartilhar um formato de item que eles
 // não compartilham. Quem chama entrega uma função que devolve o painel pronto.
 
-import { positionFloating } from '@/lib/floating';
+import { autoUpdateFloating, positionFloating, type FloatingSide } from '@/lib/floating';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -37,6 +37,27 @@ const DEFAULT_CLOSE_DELAY = 300;
 
 /** Vão entre o gatilho e o painel, em px — o padrão das fábricas de menu. */
 const DEFAULT_SIDE_OFFSET = 4;
+
+/**
+ * A ORIGEM do zoom de entrada é a borda que encosta no item, na altura do item:
+ * à esquerda do painel quando ele sai pela direita, à direita quando o `flip` o
+ * virou. A folha compartilhada lê `--transform-origin` como primeiro degrau da
+ * cadeia (o nome que o base-ui publica), e sem ele caía em `center` — o submenu
+ * crescia do MEIO, em silêncio, porque `center` é fallback válido. É custom
+ * property: onde a folha do painel não a lê (ou o painel não anima a entrada),
+ * ela não muda nada.
+ *
+ * A altura sai do `top` que a conta acabou de escrever, e não de medir o painel:
+ * a caixa dele pode estar no primeiro quadro da animação, com o `scale`
+ * aplicado. Refeita a cada reposição, porque o lado e o `top` podem mudar.
+ */
+function writeTransformOrigin(trigger: HTMLElement, panel: HTMLElement, side: FloatingSide): void {
+  const originY = trigger.getBoundingClientRect().top + window.scrollY - parseFloat(panel.style.top);
+  panel.style.setProperty(
+    '--transform-origin',
+    `${side === 'left' ? '100%' : '0px'} ${Math.max(0, originY)}px`,
+  );
+}
 
 export type SubmenuOptions = {
   /**
@@ -220,7 +241,7 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
   const registry = new WeakMap<HTMLElement, SubmenuTriggerOptions>();
 
   /** Os painéis abertos, do primeiro nível ao mais fundo. */
-  const levels: Array<{ trigger: HTMLElement; panel: HTMLElement }> = [];
+  const levels: Array<{ trigger: HTMLElement; panel: HTMLElement; stopAutoUpdate: () => void }> = [];
   let panelCount = 0;
   let closeTimer: ReturnType<typeof setTimeout> | null = null;
   /** Nível que o fechamento agendado vai fechar (ele e os de baixo). */
@@ -340,24 +361,21 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     // quem montou: dois dos três chamadores nem o escreviam, e o terceiro
     // (menubar) cravava `right` na construção, antes de existir medida. Depois
     // da troca esse valor estaria mentindo.
-    const side = positionFloating(trigger, panel, 'right', 'start', sideOffset, { flip: true });
-
-    // A ORIGEM do zoom de entrada é a borda que encosta no item, na altura do
-    // item: à esquerda do painel quando ele sai pela direita, à direita quando o
-    // `flip` o virou. A folha compartilhada lê `--transform-origin` como
-    // primeiro degrau da cadeia (o nome que o base-ui publica), e sem ele caía
-    // em `center` — o submenu crescia do MEIO, em silêncio, porque `center` é
-    // fallback válido. É custom property: onde a folha do painel não a lê (ou o
-    // painel não anima a entrada), ela não muda nada.
     //
-    // A altura sai do `top` que a conta acabou de escrever, e não de medir o
-    // painel: a caixa dele pode estar no primeiro quadro da animação, com o
-    // `scale` aplicado.
-    const originY = trigger.getBoundingClientRect().top + window.scrollY - parseFloat(panel.style.top);
-    panel.style.setProperty(
-      '--transform-origin',
-      `${side === 'left' ? '100%' : '0px'} ${Math.max(0, originY)}px`,
-    );
+    // A conta e a origem do zoom são UMA função porque rodam de novo a cada
+    // rolagem, redimensionamento da janela ou mudança de tamanho do item ou do
+    // painel, enquanto o painel está aberto (`autoUpdateFloating`, logo abaixo):
+    // perto da borda, rolar pode ser o que vira o lado, e a origem segue o lado.
+    const place = (): void => {
+      const side = positionFloating(trigger, panel, 'right', 'start', sideOffset, { flip: true });
+      writeTransformOrigin(trigger, panel, side);
+    };
+    place();
+
+    // Acompanhamento ligado aqui e desligado em `closeFrom`, junto do painel. O
+    // gatilho já aberto voltou lá em cima sem remontar nada, então este ponto só
+    // é alcançado por painel NOVO — não há segundo acompanhamento do mesmo.
+    const stopAutoUpdate = autoUpdateFloating(trigger, panel, place);
 
     if (closeDelay > 0) {
       // Entrar no painel só cancela o fechamento que o levaria junto: o que foi
@@ -372,7 +390,7 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     markTrigger(trigger, true);
     trigger.setAttribute('aria-owns', panel.id);
 
-    levels.push({ trigger, panel });
+    levels.push({ trigger, panel, stopAutoUpdate });
 
     if (focusFirst) focusFirstItem(panel);
   }
@@ -386,7 +404,10 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     if (closeTimerLevel >= level) cancelClose();
     let shallowest: HTMLElement | null = null;
     while (levels.length > level) {
-      const { trigger, panel } = levels.pop()!;
+      const { trigger, panel, stopAutoUpdate } = levels.pop()!;
+      // Antes de remover o painel: um quadro já agendado não pode medir um nó
+      // que saiu do documento.
+      stopAutoUpdate();
       panel.remove();
       markTrigger(trigger, false);
       // `aria-owns` sai junto: apontar para um painel que já não está no
