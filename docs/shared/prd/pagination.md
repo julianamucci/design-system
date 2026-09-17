@@ -250,12 +250,29 @@ regra vale para `data-active`.
 afirmam `toBeDisabled()`. É outro mecanismo para o mesmo contrato (C7), e o
 conteúdo compartilhado (`notes.item2`) documenta só o primeiro. Ver V3.
 
-### D9 · Não há primitivo headless de paginação no angular, e a razão está medida
+### D9 · O angular não usa o primitivo de paginação da lib, e o motivo registrado estava errado
 
 **Estado**: `pagination.ts` do angular declara oito peças sem
-`@radix-ng/primitives`, e o comentário diz por quê — conferido em
-`node_modules/@radix-ng/primitives`, o pacote não publica um `pagination`.
-**E não haveria o que compor**: a paginação não guarda estado próprio, não
+`@radix-ng/primitives`. O comentário do arquivo, e esta decisão até 2026-09-17,
+diziam que o pacote não publica um `pagination`. **Publica**: a versão instalada,
+1.1.2, tem `pagination/` e `fesm2022/radix-ng-primitives-pagination.mjs`, com as
+diretivas `rdxPaginationRoot`, `-List`, `-ListItem`, `-First`, `-Prev`, `-Next`,
+`-Last` e `-Ellipsis`. Quem achou foi a medição do PRD do Stepper, que encontrou o
+mesmo erro sobre o primitivo de stepper da mesma lib.
+**O motivo medido para não usar**, em 2026-09-17, lendo o `.mjs`:
+- o nome acessível é CRAVADO em inglês por host binding — `"First Page"`,
+  `"Previous Page"`, `"Next Page"`, `"Last Page"` e `"Page " + value`. No angular o
+  host binding de diretiva vence o atributo estático do template, então quem
+  compõe não sobrescreve o nome, e a página é pt-BR, en e es;
+- a desabilitação é `[attr.disabled]`, que só existe em `<button>`. Num `<a>` o
+  atributo não tem efeito: o link segue tabulável e o Enter navega, que é o
+  defeito que a regra de indisponível da categoria existe para impedir;
+- `aria-current="page"` na página atual está correto — é o único ponto em que o
+  primitivo faz o que a paginação precisa.
+
+**O comentário de `pagination.ts` segue afirmando que o pacote não publica
+pagination**: é código, e fica para a revisão.
+**E não haveria muito o que compor**: a paginação não guarda estado próprio, não
 gerencia foco e não tem interação de teclado além da que `<a>` já traz. O que a
 torna acessível é markup nativo (`nav` + `ul` + `li` + `a`) mais três atributos
 ARIA.

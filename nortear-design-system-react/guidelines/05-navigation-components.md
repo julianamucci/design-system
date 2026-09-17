@@ -1,152 +1,113 @@
 # Navigation Components
 
----
-
-## Breadcrumb
-
-**Propósito**: indica a posição do usuário dentro da hierarquia de navegação e permite retornar a níveis anteriores. Use em páginas com hierarquia de 2+ níveis; não usar em páginas de nível único (home, login).
-
-**API e exemplos**: `src/components/ui/breadcrumb.tsx` + stories + `BreadcrumbDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
-
-**Estrutura de subcomponentes**:
-```
-<nav aria-label="Localização na página">
-└── Breadcrumb
-    └── BreadcrumbList
-        ├── BreadcrumbItem
-        │   └── BreadcrumbLink
-        ├── BreadcrumbSeparator (ChevronRight aria-hidden)
-        ├── BreadcrumbItem ...
-        └── BreadcrumbItem
-            └── BreadcrumbPage (aria-current="page")
-```
-
-**Regras**:
-- Máximo 4 níveis visíveis — para hierarquias maiores, usar ellipsis nos níveis intermediários.
-- Sempre incluir link para a página inicial como primeiro item.
-- O último item representa a página atual — nunca é um link, nunca tem `href`.
-- Separador padrão: `ChevronRight` com `aria-hidden="true"` — é decorativo.
-
-**Acessibilidade**:
-- `<nav aria-label="Localização na página">` envolvendo o componente — diferencia do `<nav>` da sidebar.
-- `aria-current="page"` no `BreadcrumbPage` — anuncia que é a página atual.
-- Ícones de separador com `aria-hidden="true"`.
-- O componente aplica `role="list"` e `role="listitem"` automaticamente no `BreadcrumbList`.
-
-**Tema personalizado** (ver `03-sistema-design.md`):
-- Os links dentro do Breadcrumb devem herdar as variáveis de cor, hover e transição definidas para o componente Link no tema personalizado — consistência visual entre todos os links da aplicação.
-
-**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
-- Labels: substantivos ou frases nominais curtas, sem verbo, sem ponto final.
-- Evitar abreviações — "Visão geral" em vez de "Vis. geral".
-- O item atual deve refletir exatamente o `<h1>` da página.
-
-**SEO** (ver `docs/shared/guidelines/06-seo-geo.md`):
-- Único componente de navegação com impacto direto em rich snippets — o Google exibe o caminho quando há Schema.org `BreadcrumbList`.
-- O JSON-LD é gerado automaticamente pelo hook `useSeoEffect` (`@/lib/use-seo.ts`) ao passar o parâmetro `breadcrumb`. **Não** injete o script manualmente com `useEffect`.
-
-**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
-- Rastrear apenas os itens clicáveis — nunca o item atual (último).
-- Evento: `navigation_click` com `label` (texto do link) e `destination` (path).
+A regra da categoria Navegação — qual componente escolher, marco e nome, o
+vocabulário de `aria-current`, os dois modelos de teclado, link ou botão, anel de
+foco, analytics e tom de voz — está UMA vez em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md). O que cada
+componente É — contrato, decisões com data e medição, tokens, peças das cinco
+stacks — está no PRD dele. O que fica aqui é só o que existe nesta stack.
 
 ---
 
-## Menubar
+## Breadcrumb — mecânica desta stack
 
-**Propósito**: barra de menus estilo aplicação desktop, com categorias de comandos organizadas horizontalmente. Use em editores, ferramentas e dashboards complexos. Não usar para navegação entre páginas (usar `NavigationMenu` ou `Sidebar`).
+Contrato e peças das cinco stacks:
+[`docs/shared/prd/breadcrumb.md`](../../docs/shared/prd/breadcrumb.md). Regra da
+categoria: [`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/menubar.tsx` + stories + `MenubarDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Onde o código está**: `src/components/ui/breadcrumb.tsx` + stories +
+`BreadcrumbDocs.tsx`.
 
-**Estrutura de subcomponentes**:
-```
-Menubar (aria-label="Menu principal")
-└── MenubarMenu
-    ├── MenubarTrigger
-    └── MenubarContent
-        ├── MenubarItem
-        │   └── MenubarShortcut
-        └── MenubarSeparator
-```
-
-**Regras**:
-- Máximo 6 menus principais na barra.
-- Estilo obrigatório: minimalista, sem ícones — exceto instrução específica.
-- Sempre implementar atalhos de teclado via `MenubarShortcut` para as ações principais.
-- Agrupar comandos relacionados com `MenubarSeparator` dentro de cada menu.
-- Labels dos menus: substantivos que categorizam os comandos ("Arquivo", "Editar", "Exibir").
-
-**Acessibilidade**:
-- `aria-label="Menu principal"` na `<Menubar>`.
-- O componente aplica `role="menubar"`, `role="menu"` e `role="menuitem"` automaticamente.
-- Navegação por teclado gerenciada pelo primitivo headless (`@base-ui/react`):
-
-| Tecla | Ação |
-|-------|------|
-| `Tab` / `Shift+Tab` | Move entre os menus da barra |
-| `Arrow Right` / `Arrow Left` | Move entre menus na barra (quando aberto) |
-| `Arrow Down` / `Enter` / `Space` | Abre o menu e foca no primeiro item |
-| `Arrow Up` / `Arrow Down` | Navega entre itens do menu aberto |
-| `Escape` | Fecha o menu, retorna foco ao trigger |
-| `Home` / `End` | Vai para o primeiro/último item do menu |
-
-- Atalhos no `MenubarShortcut` são apenas visuais — a lógica do atalho deve ser implementada separadamente.
-
-**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
-- Triggers da barra: substantivos, sem verbo, sem ponto final. Ex.: "Arquivo", "Editar", "Exibir".
-- Itens do menu: verbos no infinitivo descrevendo a ação. Ex.: "Salvar", "Abrir novo", "Exportar como PDF".
-- Atalhos: teclas escritas por extenso (`Ctrl`, `Shift`, `Alt`), compostas com `+` e sem espaço — `Ctrl+S`, `Ctrl+Shift+Z`. Nada de glifo de macOS: ele não se digita em Windows nem em Linux.
-
-**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
-- Não dispara evento hoje — ausência declarada no PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9. Se passar a disparar, será `menubar_item_select` (padrão da família: `dropdown_menu_*`, `context_menu_*`), com `label` = valor ESTÁVEL do item, nunca o texto traduzido.
+- **Sem lib headless, com uma exceção de peça.** Seis das sete peças são funções
+  sobre elemento nativo. Só o `BreadcrumbLink` passa por `useRender` do
+  `@base-ui/react`: a prop `render` troca o `<a>` pelo link do roteador sem um
+  segundo elemento no DOM, e o `data-slot` sai do `state` do hook. **Não há ponte
+  `asChild` aqui** (ver a tabela de gatilhos em [`RULES.md`](RULES.md)).
+- **A raiz já é o `<nav>`**, com `aria-label="breadcrumb"` escrito ANTES do
+  espalhamento das props — o `aria-label` de quem compõe vence o padrão, e é assim
+  que se dá nome único à trilha. Não se envolve o componente em outro `<nav>`.
+- **O rótulo das reticências é a prop `label`.** Com ela a peça sai `role="img"` com
+  nome; sem ela, `aria-hidden` — o caso certo quando um `DropdownMenuTrigger` a
+  envolve e já carrega o nome.
+- **O separador troca o chevron por `children`**; `role="presentation"` e
+  `aria-hidden` continuam no `<li>`, fora do alcance de quem customiza.
+- **O JSON-LD `BreadcrumbList` é do hook de SEO, não do componente**: sai do
+  `useSeoEffect` (`@/lib/use-seo.ts`) quando a página passa o parâmetro
+  `breadcrumb`. Não se injeta o script à mão.
 
 ---
 
-## Navigation Menu
+## Menubar — mecânica desta stack
 
-**Propósito**: navegação horizontal top-level com suporte a submenus em painel expandido. Use em portais, sites institucionais e landing pages sem sidebar. Para aplicações com sidebar persistente, usar a `Sidebar`.
+O Menubar não tem PRD próprio: o contrato dele é o da família de menus,
+[`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md). A
+categoria dele está em disputa — Navegação pelo conteúdo e pelo Storybook, menu de
+comandos pelo PRD da família — e a decisão está no item 1 de "O que está aberto" em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/navigation-menu.tsx` + stories + `NavigationMenuDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Onde o código está**: `src/components/ui/menubar.tsx` + stories +
+`MenubarDocs.tsx`.
 
-**Critério de decisão — Navigation Menu vs Sidebar**:
+- **A barra é o `Menubar` do `@base-ui/react`; cada menu é um `DropdownMenu` do
+  design system.** `MenubarMenu` e as peças de dentro delegam às do
+  `dropdown-menu.tsx`, e é daí que vem o Tab que SAI da barra (C2 do PRD da
+  família): a barra é uma parada só, os outros gatilhos têm `tabindex="-1"`, e sem
+  a herança a lib deixava o menu aberto com o foco no gatilho no Shift+Tab. O
+  portão é `TabLeavesMenubar` e `TabAtPageEnd`.
+- **`MenubarGroup` é OBRIGATÓRIO em volta de `MenubarLabel`.** O rótulo é o
+  `Menu.GroupLabel` da lib, que procura o contexto de um `Menu.Group` ancestral e
+  LANÇA em tempo de render quando não o encontra — a página inteira cai.
+- **`menubar-menu` não vira elemento.** O `data-slot` é passado ao `Menu.Root` da
+  lib, que não renderiza nó; a divergência é de lib e está registrada no PRD da
+  família.
+- **O item de marcação tem estado misto pelo wrapper.** `indeterminate` escreve
+  `aria-checked="mixed"`, entrega `checked={false}` à lib e desenha o traço à mão,
+  porque o item da lib é de dois estados (patch registrado em
+  `PATCHES.md#react-dropdown-menu-mixed-checkbox`).
+- **`data-inset` só existe quando é verdade** (`inset || undefined`): a folha
+  seleciona por presença, e `data-inset="false"` contaria como recuo.
+- **O painel de topo nasce com `align="start"`, `alignOffset={-4}` e
+  `sideOffset={8}`** — o vão de 8 do Menubar (D12 do PRD da família) é do
+  primitivo, não da folha.
+- **O primitivo não dispara evento.** Quem rastreia é a docs page: `onOpenChange`
+  de cada `MenubarMenu` dispara abertura e fechamento — o motivo vem do segundo
+  argumento (`eventDetails.reason`), traduzido para o vocabulário da família — e o
+  `onClick` do item dispara a escolha. Eventos e payload: §9 do PRD da família.
 
-| Situação | Componente |
-|----------|------------|
-| Layout sem sidebar, navegação horizontal no topo | Navigation Menu |
-| Aplicação com painel lateral persistente | Sidebar |
-| Poucos itens (≤ 5) sem submenus | Links simples ou Tabs |
-| Hierarquia profunda com muitas categorias | Sidebar com Accordion |
+---
 
-**Estrutura de subcomponentes**:
-```
-<nav aria-label="Navegação principal">
-└── NavigationMenu
-    └── NavigationMenuList
-        ├── NavigationMenuItem
-        │   └── NavigationMenuLink (aria-current="page" quando ativo)
-        └── NavigationMenuItem
-            ├── NavigationMenuTrigger
-            └── NavigationMenuContent
-                └── <ul> com NavigationMenuLink
-```
+## Navigation Menu — mecânica desta stack
 
-**Regras**:
-- Máximo 7 itens no nível principal.
-- Sem ícones nos itens — exceto instrução específica.
-- Implementar estados `hover`, `active` e `focus` em todos os itens.
+Contrato e peças das cinco stacks:
+[`docs/shared/prd/navigation-menu.md`](../../docs/shared/prd/navigation-menu.md).
+Regra da categoria: [`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**Acessibilidade**:
-- `<nav aria-label="Navegação principal">` envolvendo o componente.
-- `aria-current="page"` no item da página ativa — obrigatório, atualizar dinamicamente.
-- O componente aplica `role="navigation"`, `aria-expanded` e gerencia foco nos submenus automaticamente.
-- Submenus fecham com `Escape` — comportamento nativo do primitivo headless, não sobrescrever.
+**Onde o código está**: `src/components/ui/navigation-menu.tsx` + stories +
+`NavigationMenuDocs.tsx`.
 
-**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
-- Labels: substantivos ou frases nominais curtas, sem verbo, sem ponto final.
-- Máximo 2 palavras por item de nível principal.
-- Itens de submenu podem ser mais descritivos: "Cores do sistema", "Escala tipográfica".
-
-**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
-- Evento: `navigation_click` com `label` e `destination`.
+- **Composição do `@base-ui/react/navigation-menu`, e a raiz monta o painel
+  sozinha.** `NavigationMenu` renderiza o `NavigationMenuPositioner` (portal →
+  posicionador → popup → viewport) depois dos filhos; quem compõe não escreve portal
+  nem viewport, e esta stack **não exporta `NavigationMenuViewport`**. O
+  posicionador é exportado, mas não é peça de uso solto.
+- **A raiz da lib já é o `<nav>`**, sem nome padrão: o `aria-label` vai nela, e não
+  num `<nav>` em volta. O popup é renderizado como `<div>` (`render={<div />}`),
+  porque o `<nav>` padrão dele era um marco sem nome que colidia no
+  `landmark-unique` com mais de um painel aberto.
+- **Duas peças de destino.** `NavigationMenuLink` é o link da BARRA; o destino de
+  DENTRO do painel é `NavigationMenuChild`, que liga `closeOnClick` sempre — a lib
+  nasce com ele desligado, e o painel sobrevivia à escolha.
+- **Página atual pela prop `active` no link**: a lib escreve `data-active` e
+  `aria-current="page"`, e nenhum dos dois quando inativo.
+- **As esperas se chamam `delay` e `closeDelay`**, com padrão 50 e 50 da lib.
+  `delayDuration` não existe aqui: a prop atravessava o componente e caía no DOM
+  como atributo desconhecido.
+- **Lado do painel derivado da orientação** (`bottom` na horizontal, `right` na
+  vertical), com `sideOffset` 8 e `align` padrão `start` — não há prop de lado.
+- **`indicator` liga a seta**, desligada por padrão; ela mora no posicionador,
+  irmã do popup, com `aria-hidden`.
+- **O gatilho aberto é `data-popup-open`**, não `data-state="open"` — é o atributo
+  que a folha lê para o fundo e o chevron nesta stack.
 
 ---
 
@@ -154,10 +115,10 @@ Menubar (aria-label="Menu principal")
 
 Contrato, decisões com data e medição, tokens e peças das cinco stacks:
 [`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da
-categoria está em [`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md) —
-o Pagination entra lá por USO, porque o único consumidor dele no repositório é o
-rodapé de uma lista ou de uma tabela, e a fronteira entre ele e o rodapé do
-DataTable é a regra que mais divergiu. O que fica aqui é a mecânica.
+categoria está em [`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md);
+a fronteira entre ele e o rodapé do DataTable, em
+[`docs/shared/guidelines/20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md). O que fica aqui é a
+mecânica.
 
 **Onde o código está**: `src/components/ui/pagination.tsx` + stories +
 `PaginationDocs.tsx`.
@@ -185,142 +146,56 @@ O que é desta stack:
 
 ---
 
-## Stepper
+## Stepper — mecânica desta stack
 
-**Propósito**: mostrar a posição num fluxo de ordem obrigatória, e quanto ainda falta. Para seções acessíveis em qualquer ordem, use Tabs; para a posição numa hierarquia de páginas, Breadcrumb; para uma operação única de duração mensurável, Progress.
+Contrato e peças das cinco stacks:
+[`docs/shared/prd/stepper.md`](../../docs/shared/prd/stepper.md). Regra da
+categoria: [`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**Peças**: `Stepper`, `StepperItem`, `StepperTrigger`, `StepperIndicator`, `StepperTitle`, `StepperDescription`, `StepperSeparator`.
+**Onde o código está**: `src/components/ui/stepper.tsx` + stories +
+`StepperDocs.tsx`.
 
-Sem primitivo headless: o `@base-ui/react` não tem Stepper, e não há foco a governar nem ARIA a gerar que a marcação nativa já não anuncie. O estado de cada etapa é derivado por contexto — a raiz publica o valor, o item compara e resolve.
-
-**Estrutura**:
-
-```
-ol.nds-stepper                       (aria-label, data-value)
-└── li.nds-stepper-item              (data-step, data-state, data-completed, data-disabled)
-    ├── button.nds-stepper-trigger   (type="button", aria-current="step" só na atual)
-    │   ├── span.nds-sr-only         (palavra de estado)
-    │   ├── span.nds-stepper-indicator   (aria-hidden)
-    │   ├── span.nds-stepper-title
-    │   └── span.nds-stepper-description
-    └── div.nds-stepper-separator    (aria-hidden)
-```
-
-O traço mora DENTRO do item, depois do gatilho — é isso que o faz herdar o estado do item que o precede sem regra de CSS extra.
-
-**Props**:
-
-| Peça | Nome | Default | Função |
-|---|---|---|---|
-| `Stepper` | `value` | `1` | Número da etapa atual, contando de 1 |
-| `Stepper` | `aria-label` | — | Nome acessível do fluxo; obrigatório |
-| `Stepper` | `labels` | `{}` | Palavras de estado (`completed`, `current`) lidas só por leitor de tela |
-| `Stepper` | `onStepSelect` | — | Recebe o número da etapa quando um gatilho disponível é acionado |
-| `StepperItem` | `step` | — | Número desta etapa; obrigatório |
-| `StepperItem` | `completed` | `false` | Conta como concluída mesmo estando depois da atual |
-| `StepperItem` | `disabled` | `false` | Indisponível: o gatilho sai da ordem de tabulação |
-
-Os rótulos de estado moram na RAIZ, e não no gatilho: o estado de uma etapa muda quando o fluxo avança, e uma palavra fixa por gatilho estaria errada no passo seguinte.
-
-**Regras**:
-- Entre três e seis etapas; com duas o indicador não informa nada, e acima de seis o rótulo não cabe
-- O estado é DERIVADO do valor do fluxo — marcar `completed` à mão só cabe quando o fluxo aceita ordem fora do comum
-- Etapa que ainda não pode ser aberta é `disabled`, não um controle focável sem destino
-- Sem `onStepSelect`, os gatilhos continuam focáveis e sem efeito: declare o callback ou marque as etapas como indisponíveis
-
-**Acessibilidade**:
-- A raiz é lista ordenada: a ordem e a contagem das etapas são anunciadas pela própria estrutura
-- `aria-current="step"` — o token da WAI-ARIA para posição num processo — só no gatilho da etapa atual
-- Estado nunca depende só de cor: a concluída troca o número por uma marca de verificação (forma) e a palavra de `labels` vai ao leitor de tela (programático)
-- Indicador e traço são desenho e levam `aria-hidden="true"`
-- Não há região viva: quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco
-- Etapa indisponível usa o `disabled` nativo — aqui não há navegação por setas em que ela precise ser alcançada para ser anunciada
-
-**O gatilho é sempre um botão, e a lacuna que isso deixa**: a folha declara UMA forma de gatilho, e ela é de controle — `cursor: pointer`, `border: 0`, anel de `:focus-visible` (que só faz sentido em quem recebe foco) e `pointer-events: none` no item indisponível (regra que só existe para quem recebe ponteiro). Não há nela uma segunda forma, inerte.
-
-Segue disso que **o design system NÃO oferece um indicador de etapas não navegável**. Oferecê-lo exigiria uma segunda forma declarada em `stepper.css`, e inventá-la sem consumidor seria desenho especulativo — hoje a única composição do catálogo que usa stepper (`onboarding`, §5.1 da guideline 17) trata a forma interativa como vantagem, e não como custo. Enquanto essa segunda forma não existir, a alternativa para um fluxo sem navegação é marcar as etapas como indisponíveis; um Stepper sem callback de seleção rende N paradas de tabulação que não levam a lugar nenhum, e isso é defeito de uso, não modo suportado.
-
-**Analytics**: `step_change` com o número da etapa e o total no payload — valores estáveis, nunca o título traduzido.
+- **React puro, sem lib**: o `@base-ui/react` não tem Stepper. Dois contextos — a
+  raiz publica `value`, `labels` e `onStepSelect`; o item compara o próprio `step`
+  e deriva `data-state` num lugar só.
+- **`aria-label` é obrigatório no TIPO** de `StepperProps`: um Stepper sem nome não
+  compila.
+- **`type="button"` é escrito DEPOIS do espalhamento** no `StepperTrigger`, para
+  que nenhuma prop o devolva a `submit` dentro de um `<form>`.
+- **O gatilho aceita `onClick` e `disabled` próprios.** O `onClick` de quem compõe
+  roda primeiro e `preventDefault()` cancela a seleção; o `disabled` do gatilho
+  VENCE o da etapa (`disabled ?? item.disabled`).
+- **`StepperIndicator` com filhos** marca `data-custom` e deixa de escrever número
+  e marca de verificação.
+- **Peça fora de um `StepperItem` renderiza em silêncio**, sem número e sem estado
+  — não lança.
 
 ---
 
-## Tabs
+## Tabs — mecânica desta stack
 
-**Propósito**: alterna entre views paralelas do mesmo nível hierárquico. Use em conteúdos alternativos relacionados sem ordem obrigatória — detalhes de um produto, configurações por categoria, diferentes visualizações de um dado. Para sequências obrigatórias, usar `Stepper`; para conteúdo expansível independentemente, `Accordion`.
+Contrato e peças das cinco stacks:
+[`docs/shared/prd/tabs.md`](../../docs/shared/prd/tabs.md). Regra da categoria:
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/tabs.tsx` + stories + `TabsDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Onde o código está**: `src/components/ui/tabs.tsx` + stories + `TabsDocs.tsx`.
 
-**Critério de decisão — Tabs vs Stepper vs Accordion**:
-
-| Situação | Componente |
-|----------|------------|
-| Views paralelas, qualquer ordem, sem dependência | Tabs |
-| Etapas sequenciais obrigatórias | Stepper |
-| Seções expansíveis independentemente | Accordion |
-| Muitas seções (> 6) | Accordion ou Sidebar |
-
-**Estrutura de subcomponentes**:
-```
-Tabs
-├── TabsList (aria-label="...")
-│   └── TabsTrigger (um por aba)
-└── TabsContent (um por aba)
-```
-
-**Regras**:
-- Máximo 6 tabs por conjunto — acima disso, considerar `Accordion` ou dividir em seções.
-- Estilo obrigatório: tab simples padrão — exceto instrução específica.
-- Sem ícones nas tabs — exceto instrução específica.
-- A tab ativa deve ser visualmente distinguível por cor e por indicador adicional (underline ou fundo) — não apenas cor.
-
-**Acessibilidade**:
-- `aria-label` no `TabsList` descrevendo o que as tabs representam.
-- O componente aplica `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected` e `aria-controls` automaticamente.
-- Navegação por teclado gerenciada pelo primitivo headless (`@base-ui/react`):
-
-| Tecla | Ação |
-|-------|------|
-| `Arrow Right` / `Arrow Left` | Move entre tabs (roving tabindex) |
-| `Home` / `End` | Vai para a primeira/última tab |
-| `Enter` / `Space` | Ativa a tab focada |
-| `Tab` | Move para o conteúdo do painel ativo |
-
-- O foco vai automaticamente para o `TabsContent` ativo ao pressionar `Tab` — não adicionar `tabIndex` manual nos painéis.
-- Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
-
-**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
-- Labels: substantivos ou gerúndios curtos, máximo 2 palavras, sem ponto final.
-- Exemplos corretos: "Visão geral", "Propriedades", "Exemplos", "Configurações".
-- Exemplos incorretos: "Ver a visão geral", "Clique para ver propriedades".
-- Evitar labels genéricos: "Aba 1", "Tab A", "Outros".
-
-**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
-- Evento: `tab_change` com `label` (texto da tab), `index` (posição base 0) e `total` (total de tabs).
-- Não disparar na tab inicial — apenas nas mudanças subsequentes.
-
----
-
-## Regras transversais de Navigation Components
-
-**Acessibilidade transversal**:
-- Todo componente de navegação vive dentro de um `<nav>` com `aria-label` único e descritivo — nunca dois `<nav>` sem `aria-label` na mesma página
-- `aria-current="page"` no item que representa a página ou estado ativo — obrigatório em Breadcrumb, Navigation Menu, Pagination e Sidebar
-- Ícones decorativos dentro de componentes de navegação: sempre `aria-hidden="true"`
-- Anel de foco obrigatório em todos os elementos interativos: `.nds-focus-ring` (2px de `--ring` em `:focus-visible`, com halo de `--background` por fora)
-
-**Analytics transversal**:
-
-| Componente | Evento | Payload obrigatório |
-|------------|--------|---------------------|
-| Breadcrumb | `navigation_click` | `label`, `destination` |
-| Menubar | `menubar_open` · `menubar_close` · `menubar_item_select` | `{ component: 'menubar', menu, location }`, mais `reason` no fechamento e `label` na escolha — PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9 |
-| Navigation Menu | `navigation_click` | `label`, `destination` |
-| Pagination | `page_change` | `page`, `total_pages` |
-| Stepper | `step_change` | `step`, `total_steps`, `direction` |
-| Tabs | `tab_change` | `label`, `index`, `total` |
-
-**UX Writing transversal**:
-- Todos os labels de navegação em português
-- Substantivos e frases nominais para categorias e seções
-- Verbos no infinitivo apenas em ações diretas (botões "Anterior", "Próximo", "Finalizar")
-- Sem ponto final em labels de navegação
+- **Composição do `@base-ui/react/tabs`.** `orientation` PRECISA chegar ao
+  primitivo — é ele que decide o eixo das setas, o `aria-orientation` e o
+  `data-orientation` que a folha lê; escrever só o atributo deixava o layout
+  vertical e as setas horizontais.
+- **`activationMode` mora no `TabsList`, e o nome da lib não vaza.** O wrapper tira
+  `activateOnFocus` da assinatura e o calcula por comparação de string
+  (`activationMode === "automatic"`): ligada direto, a string `"manual"` viraria
+  `true`. O padrão é `automatic`, contra o padrão manual da lib.
+- **Aba ativa sai só como `data-active`** — esta stack não escreve `data-state`.
+- **Aba desabilitada: repasse `disabled` ao `TabsTrigger`, e só.** A lib escreve
+  `aria-disabled`, mantém a aba no percurso das setas e barra a ativação; nada de
+  guarda à mão.
+- **O painel inativo é DESMONTADO** (`keepMounted` padrão `false` da lib), e por
+  isso a aba inativa não leva `aria-controls`. O painel ativo recebe `tabIndex={0}`
+  da lib — não se escreve `tabIndex` à mão nos painéis.
+- **O `tabindex="0"` segue a aba FOCADA**, não a ativa, quando as duas se separam
+  (modo manual ou seta sobre a desabilitada).
+- **`tabsListVariants` tem as duas variantes com string vazia**: a classe é sempre
+  `nds-tabs-list`, e quem diferencia é `data-variant`.

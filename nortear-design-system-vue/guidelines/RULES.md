@@ -86,3 +86,4 @@ Valem nas cinco stacks e moram em `docs/shared/guidelines/`:
 | regras da categoria Overlay | [18-overlay.md](../../docs/shared/guidelines/18-overlay.md) |
 | regras da categoria Feedback | [19-feedback.md](../../docs/shared/guidelines/19-feedback.md) |
 | regras da categoria Tabelas | [20-tabelas.md](../../docs/shared/guidelines/20-tabelas.md) |
+| regras da categoria Navegação | [21-navegacao.md](../../docs/shared/guidelines/21-navegacao.md) |

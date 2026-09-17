@@ -197,34 +197,63 @@ conferida.
 
 ### Tabelas — escritos ANTES da revisão de código
 
-Mesma ordem invertida da Feedback, por decisão da dona: os três nasceram do CÓDIGO
+Mesma ordem invertida da Feedback, por decisão da dona: os dois nasceram do CÓDIGO
 em 2026-09-16, e a revisão vai usá-los como base. Cada um fecha a §7 com a lista
 numerada de inconsistências entre as cinco stacks, e o que precisa de decisão está
 na §"O que está aberto" da [`20-tabelas.md`](../guidelines/20-tabelas.md).
 
-| componente | PRD | escrito em | inconsistências medidas | pendências |
+| componente | PRD | escrito em | inconsistências medidas | pendências abertas |
 |---|---|---|---|---|
-| Table | [table.md](table.md) | 2026-09-16 | 19 | 3 |
-| DataTable | [data-table.md](data-table.md) | 2026-09-16 | 28 | 13 |
-| Pagination | [pagination.md](pagination.md) | 2026-09-16 | 24 | 5 |
+| Table | [table.md](table.md) | 2026-09-16 | 19 | 2 |
+| DataTable | [data-table.md](data-table.md) | 2026-09-16 | 28 | 12 |
 
-**O Pagination é de NAVEGAÇÃO, e está nesta categoria por uso**: o único consumidor
-dele no repositório é o rodapé de uma lista ou de uma tabela, e a fronteira entre
-ele e o rodapé do DataTable — dois vocabulários de classe que não se compõem em
-stack nenhuma — é a decisão mais atravessada da categoria. O catálogo dele não
-estava nas `08-display-components.md` como os outros dois, e sim nas cinco
-`05-navigation-components.md`.
+**O Pagination foi escrito nesta rodada e NÃO é desta categoria.** Ele entrou em
+Tabelas em 2026-09-16 com a justificativa de que seu único consumidor seria o
+rodapé de uma tabela, e a justificativa não tinha sido medida. Medido em
+2026-09-17: o conteúdo compartilhado o classifica como Navegação, o Storybook o
+agrupa em `Components/Navigation` nas cinco stacks, o catálogo dele morava nas
+`05-navigation-components.md`, e o DataTable não o usa — o rodapé dele é outra
+peça, com outro vocabulário de classe. O PRD dele está na seção de Navegação. O
+que fica aqui é a fronteira entre os dois rodapés, registrada na
+[`20-tabelas.md`](../guidelines/20-tabelas.md).
 
-**Estes três nasceram com o auditor VERMELHO, e isso é diferente das categorias
-anteriores.** Medido em 2026-09-17, depois de os PRDs existirem: table 28 achados,
-data-table 26, pagination 27 — e em cada um, cinco são o `catalogo_duplicado_com_prd`
-que o próprio nascimento do PRD acendeu, um por stack. São as quinze seções de
-catálogo a migrar. O resto era anterior e está descrito nos PRDs.
+**Estes nasceram com o auditor VERMELHO, e isso é diferente das categorias
+anteriores.** Cada PRD acendeu, ao nascer, cinco `catalogo_duplicado_com_prd` — um
+por stack —, e a migração do catálogo do mesmo dia os zerou. O que sobra no
+auditor era anterior aos PRDs e está descrito neles: table 22 achados, data-table
+18, medidos em 2026-09-17 depois da migração.
 
 **Nenhuma das inconsistências medidas é vista por portão** — é a mesma leitura das
 outras categorias, e aqui ela foi conferida contra o auditor achado a achado: o
-auditor toca umas poucas pela borda, e nenhuma das 71 listadas nos três documentos
+auditor toca umas poucas pela borda, e nenhuma das 47 listadas nos dois documentos
 sai de uma regra.
+
+### Navegação — escritos ANTES da revisão de código
+
+Mesma ordem: os PRDs nasceram do CÓDIGO em 2026-09-17, e a revisão vai usá-los como
+base. O que precisa de decisão está na §"O que está aberto" da
+[`21-navegacao.md`](../guidelines/21-navegacao.md).
+
+| componente | PRD | escrito em | inconsistências medidas | pendências abertas |
+|---|---|---|---|---|
+| Breadcrumb | [breadcrumb.md](breadcrumb.md) | 2026-09-17 | 28 | 7 |
+| NavigationMenu | [navigation-menu.md](navigation-menu.md) | 2026-09-17 | 26 | 4 |
+| Pagination | [pagination.md](pagination.md) | 2026-09-16 | 24 | 4 |
+| Stepper | [stepper.md](stepper.md) | 2026-09-17 | 24 | 6 |
+| Tabs | [tabs.md](tabs.md) | 2026-09-17 | 30 | 8 |
+| Menubar | [dropdown-menu.md](dropdown-menu.md) — PRD da família de menus | 2026-09-07 | — | — |
+
+**O Menubar não ganhou PRD próprio, e a categoria dele está em disputa.** O conteúdo
+compartilhado e o Storybook o põem em Navegação; o PRD da família e a
+[`18-overlay.md`](../guidelines/18-overlay.md) o tratam como menu de comandos. Até a
+decisão, o contrato continua no PRD da família — e o `catalogo_duplicado_com_prd`
+não vê as seções `## Menubar` das guidelines de stack, porque ele exige
+um PRD com o nome do componente e não lê `prd-familia`.
+
+**Linha de base do auditor, antes dos PRDs de navegação**, medida em 2026-09-17:
+navigation-menu 38 achados, pagination 21, tabs 18, stepper 14, breadcrumb 7 e
+menubar 1. O NavigationMenu concentra quase 40% da categoria, e dez dos achados
+dele são eventos anunciados no conteúdo e não tipados em stack nenhuma.
 
 **Três membros da família de menus dividem um PRD.** O ContextMenu e o Menubar
 não têm PRD próprio: os dois são montados com as peças do DropdownMenu, e o que

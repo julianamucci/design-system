@@ -1,73 +1,113 @@
 # Navigation Components
 
----
-
-## Breadcrumb
-
-**Propósito**: indica a posição do usuário dentro da hierarquia de navegação e permite retornar a níveis anteriores — usar em páginas com hierarquia de 2 ou mais níveis.
-
-**API e exemplos**: `src/components/ui/breadcrumb/breadcrumb.svelte` + stories + `BreadcrumbDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
-
-**Estrutura**:
-
-```
-<nav aria-label="Localização na página">
-└── Breadcrumb
-    └── BreadcrumbList
-        ├── BreadcrumbItem
-        │   └── BreadcrumbLink
-        ├── BreadcrumbSeparator (ChevronRight aria-hidden)
-        └── BreadcrumbItem
-            └── BreadcrumbPage (último item, aria-current="page")
-```
-
-**Regras**:
-- Máximo 4 níveis visíveis — para hierarquias maiores, usar ellipsis
-- Último item: página atual — nunca é link
-- Separador: `ChevronRight` com `aria-hidden="true"`
-
-**Acessibilidade**:
-- `<nav aria-label="Localização na página">` envolvendo o componente
-- `aria-current="page"` no item atual
+A regra da categoria Navegação — qual componente escolher, marco e nome,
+`aria-current`, teclado, link ou botão, anel de foco, tela estreita, analytics e
+tom de voz — está uma vez para as cinco stacks em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
+O que cada componente É está no PRD dele. Este arquivo guarda só a mecânica desta
+stack: o que o `bits-ui` impõe, o que o Svelte 5 muda e o que foi medido aqui.
 
 ---
 
-## Menubar
+## Breadcrumb — a mecânica desta stack (Svelte 5)
 
-**Propósito**: barra de menus horizontais, estilo aplicativo desktop (File, Edit, View).
+O que o componente É — contrato, decisões, anatomia, tokens, estados, API e peças
+das cinco stacks — está em
+[`docs/shared/prd/breadcrumb.md`](../../docs/shared/prd/breadcrumb.md). A regra da
+categoria, incluindo o marco e o nome, está em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/menubar/menubar.svelte` + stories + `MenubarDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+Desta stack, e só daqui — sete peças escritas à mão, sem primitivo do bits-ui (ele
+não publica breadcrumb, e a trilha não guarda estado nem foco), com o índice
+exportando as formas curtas (`Root`, `List`, `Item`, `Link`, `Page`, `Separator`,
+`Ellipsis`) ao lado das longas:
 
-**Estrutura**:
-
-```
-Menubar
-└── MenubarMenu
-    ├── MenubarTrigger
-    └── MenubarContent
-        ├── MenubarItem
-        │   └── MenubarShortcut
-        └── MenubarSeparator
-```
+- **a raiz já é o `<nav>`**, com o nome padrão `breadcrumb`. O `restProps` é
+  espalhado DEPOIS dos atributos fixos, e é isso que deixa quem compõe sobrescrever
+  o `aria-label` direto na raiz. A mesma ordem vale nas reticências — e ali ela
+  também permite sobrescrever o `role` e o `aria-hidden` que a peça decide;
+- **o link aceita o snippet `child`**, que recebe os atributos já montados
+  (`data-slot`, classe, `href` e o resto) para entregá-los a um `<a>` do
+  consumidor — é a forma de integrar o link de um roteador sem virar um segundo
+  elemento. Sem `child`, a peça renderiza o próprio `<a>`. O `href` tem padrão
+  `undefined`;
+- **o rótulo das reticências é a prop `label`**: com ela, `role="img"` e
+  `aria-label`; sem ela, `aria-hidden="true"`;
+- `BreadcrumbStory.svelte` é andaime de story, não peça publicada.
 
 ---
 
-## Navigation Menu
+## Menubar — a mecânica desta stack (Svelte 5)
 
-**Propósito**: menu de navegação horizontal para sites com múltiplas seções de nível superior. Para apps, preferir Sidebar.
+O Menubar não tem PRD próprio: o contrato dele está no PRD da família de menus,
+[`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md), que o
+trata como menu de comandos. **A categoria dele está em disputa** — conteúdo e
+Storybook dizem Navegação, o PRD da família e a
+[`docs/shared/guidelines/18-overlay.md`](../../docs/shared/guidelines/18-overlay.md)
+dizem Overlay — e a decisão é o primeiro item de "O que está aberto" em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/navigation-menu/navigation-menu.svelte` + stories + `NavigationMenuDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+Desta stack, e só daqui — peças sobre o `Menubar` do bits-ui, com o índice
+exportando as formas curtas ao lado das longas e reexportando o tradutor do motivo
+de fechamento que a família inteira usa:
 
-**Estrutura**:
+- **`bind:value`, e não `defaultValue`**: o bits não tem prop de valor inicial. O
+  menu aberto é o `value` vinculável da raiz, com `""` de partida; passar só um
+  valor inicial funciona, porque a cópia local continua mudando ao abrir e fechar.
+  Uma prop de valor inicial é aceita e descartada em silêncio — foi assim que as
+  demonstrações desta stack renderizaram fechadas;
+- **a raiz publica um acesso por contexto** (`setMenubarRoot`) para o Tab que a lib
+  deixa sem fechar quando o gatilho do menu aberto é a primeira ou a última parada
+  da página. O painel e o subpainel chamam o `closeAfterTab` do DropdownMenu depois
+  do `onkeydown` de quem consome, e o fechamento avisa `onValueChange`;
+- **o painel carimba o próprio `id` no elemento**: o bits consome o `id` para o
+  estado e não o repassa ao nó, e a busca por letra compara os dois — sem o
+  carimbo, o typeahead nunca dispara. Registrado em `PATCHES.md`, na raiz do
+  repositório;
+- **o painel veste `nds-dropdown-menu-content`**, com `sideOffset` 8, `alignOffset`
+  −4, `align` `start` e `side` `bottom` por padrão;
+- **duas peças a mais que as outras stacks de lib**: `MenubarGroupHeading`, que é o
+  cabeçalho de grupo do bits, e `MenubarPortal`. O `MenubarLabel` é um `<div>`
+  solto que não nomeia grupo nenhum, e o separador sai anunciado como `group` —
+  as duas divergências estão medidas na §7 do PRD da família;
+- `MenubarStory.svelte` e `MenubarControlledStory.svelte` são andaime de story.
 
-```
-NavigationMenu
-└── NavigationMenuList
-    └── NavigationMenuItem
-        ├── NavigationMenuTrigger
-        └── NavigationMenuContent
-            └── NavigationMenuLink
-```
+---
+
+## Navigation Menu — a mecânica desta stack (Svelte 5)
+
+O que o componente É está em
+[`docs/shared/prd/navigation-menu.md`](../../docs/shared/prd/navigation-menu.md). A
+regra da categoria está em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
+
+Desta stack, e só daqui — nove peças sobre o `NavigationMenu` do bits-ui, com o
+índice exportando as formas curtas (`Root`, `List`, `Item`, `Trigger`, `Content`,
+`Link`, `Child`, `Indicator`, `Viewport`) ao lado das longas:
+
+- **a raiz declara `value` vinculável**, com `""` de partida. Sem a declaração ele
+  caía no espalhamento e chegava à lib como valor CONTROLADO: `bind:value` não
+  devolvia nada e um valor passado de fora prendia o painel aberto. Não há
+  `defaultValue`;
+- **a raiz monta o viewport sozinha** (`viewport`, padrão `true`): um
+  `.nds-navigation-menu-viewport-wrap` em volta do `Viewport` da lib, que veste
+  `.nds-navigation-menu-viewport-panel`. Compor outro `NavigationMenuViewport`
+  com o padrão ligado produz dois;
+- **o destino do painel (`NavigationMenuChild`) despacha o evento de dispensa da
+  lib DEPOIS do `onclick` de quem consome**, sem olhar `defaultPrevented`. O
+  encadeamento de manipuladores desta stack para no primeiro `preventDefault`, que
+  é o que todo roteador de cliente chama — sem a ponte, o painel ficava aberto
+  justamente nesse caso;
+- **as esperas têm os nomes do bits**: `delayDuration` (200 ms) e
+  `skipDelayDuration` (300 ms);
+- **o tamanho do painel vem da lib** por `--bits-navigation-menu-viewport-width` e
+  `-height`. O bits não publica origem de animação para este componente, e é por
+  isso que a folha tem exceção declarada na cadeia de `transform-origin` (D9 do
+  PRD);
+- o gatilho acrescenta a classe `group`, sem regra em folha nenhuma — resíduo
+  registrado na §7 do PRD;
+- `NavigationMenuStory.svelte` é andaime de story, e `navigation-menu.fixtures.ts`
+  é dado de story.
 
 ---
 
@@ -80,11 +120,9 @@ nome acessível que as cinco implementações de fato escrevem e os dois mecanis
 de desabilitado.
 
 A regra da categoria está em
-[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md), e não numa guideline
-de navegação: o único consumidor desta faixa em todo o repositório é o rodapé de
-uma lista ou de uma tabela, e é lá que está escrita a fronteira entre ela e o
-rodapé do DataTable — que **não** a compõe. A mecânica de navegação desta stack
-continua aqui.
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
+A fronteira entre esta faixa e o rodapé do DataTable — que **não** a compõe — está
+em [`docs/shared/guidelines/20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md).
 
 Desta stack, e só daqui — sete peças, com a raiz, o link e os direcionais vindos
 do bits-ui, e o índice exportando as formas curtas (`Root`, `Content`, `Link`…) ao
@@ -103,83 +141,66 @@ lado das longas:
 
 ---
 
-## Stepper
+## Stepper — a mecânica desta stack (Svelte 5)
 
-**Propósito**: mostrar a posição num fluxo de ordem obrigatória, e quanto ainda falta. Para seções acessíveis em qualquer ordem, use Tabs; para a posição numa hierarquia de páginas, Breadcrumb; para uma operação única de duração mensurável, Progress.
+O que o componente É está em
+[`docs/shared/prd/stepper.md`](../../docs/shared/prd/stepper.md). A regra da
+categoria está em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**Peças**: `Stepper`, `StepperItem`, `StepperTrigger`, `StepperIndicator`, `StepperTitle`, `StepperDescription`, `StepperSeparator`.
+Desta stack, e só daqui — sete peças em Svelte 5 puro, com o índice exportando as
+formas curtas (`Root`, `Item`, `Trigger`, `Indicator`, `Title`, `Description`,
+`Separator`) ao lado das longas, mais `resolveStepperState`:
 
-Sem primitivo headless: o `bits-ui` não tem Stepper, e não há foco a governar nem ARIA a gerar que a marcação nativa já não anuncie. O estado de cada etapa é derivado por `setContext`/`getContext` com getters — a raiz publica o valor, o item compara e resolve.
-
-**Estrutura**:
-
-```
-ol.nds-stepper                       (aria-label, data-value)
-└── li.nds-stepper-item              (data-step, data-state, data-completed, data-disabled)
-    ├── button.nds-stepper-trigger   (type="button", aria-current="step" só na atual)
-    │   ├── span.nds-sr-only         (palavra de estado)
-    │   ├── span.nds-stepper-indicator   (aria-hidden)
-    │   ├── span.nds-stepper-title
-    │   └── span.nds-stepper-description
-    └── div.nds-stepper-separator    (aria-hidden)
-```
-
-O traço mora DENTRO do item, depois do gatilho — é isso que o faz herdar o estado do item que o precede sem regra de CSS extra.
-
-**Props**:
-
-| Peça | Nome | Default | Função |
-|---|---|---|---|
-| `Stepper` | `value` | `1` | Número da etapa atual, contando de 1 |
-| `Stepper` | `aria-label` | — | Nome acessível do fluxo; obrigatório |
-| `Stepper` | `labels` | `{}` | Palavras de estado (`completed`, `current`) lidas só por leitor de tela |
-| `Stepper` | `onStepSelect` | — | Recebe o número da etapa quando um gatilho disponível é acionado |
-| `StepperItem` | `step` | — | Número desta etapa; obrigatório |
-| `StepperItem` | `completed` | `false` | Conta como concluída mesmo estando depois da atual |
-| `StepperItem` | `disabled` | `false` | Indisponível: o gatilho sai da ordem de tabulação |
-
-Os rótulos de estado moram na RAIZ, e não no gatilho: o estado de uma etapa muda quando o fluxo avança, e uma palavra fixa por gatilho estaria errada no passo seguinte.
-
-**Regras**:
-- Entre três e seis etapas; com duas o indicador não informa nada, e acima de seis o rótulo não cabe
-- O estado é DERIVADO do valor do fluxo — marcar `completed` à mão só cabe quando o fluxo aceita ordem fora do comum
-- Etapa que ainda não pode ser aberta é `disabled`, não um controle focável sem destino
-- Sem `onStepSelect`, os gatilhos continuam focáveis e sem efeito: declare o callback ou marque as etapas como indisponíveis
-
-**Acessibilidade**:
-- A raiz é lista ordenada: a ordem e a contagem das etapas são anunciadas pela própria estrutura
-- `aria-current="step"` — o token da WAI-ARIA para posição num processo — só no gatilho da etapa atual
-- Estado nunca depende só de cor: a concluída troca o número por uma marca de verificação (forma) e a palavra de `labels` vai ao leitor de tela (programático)
-- Indicador e traço são desenho e levam `aria-hidden="true"`
-- Não há região viva: quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco
-- Etapa indisponível usa o `disabled` nativo — aqui não há navegação por setas em que ela precise ser alcançada para ser anunciada
-
-**O gatilho é sempre um botão, e a lacuna que isso deixa**: a folha declara UMA forma de gatilho, e ela é de controle — `cursor: pointer`, `border: 0`, anel de `:focus-visible` (que só faz sentido em quem recebe foco) e `pointer-events: none` no item indisponível (regra que só existe para quem recebe ponteiro). Não há nela uma segunda forma, inerte.
-
-Segue disso que **o design system NÃO oferece um indicador de etapas não navegável**. Oferecê-lo exigiria uma segunda forma declarada em `stepper.css`, e inventá-la sem consumidor seria desenho especulativo — hoje a única composição do catálogo que usa stepper (`onboarding`, §5.1 da guideline 17) trata a forma interativa como vantagem, e não como custo. Enquanto essa segunda forma não existir, a alternativa para um fluxo sem navegação é marcar as etapas como indisponíveis; um Stepper sem callback de seleção rende N paradas de tabulação que não levam a lugar nenhum, e isso é defeito de uso, não modo suportado.
-
-**Analytics**: `step_change` com o número da etapa e o total no payload — valores estáveis, nunca o título traduzido.
+- **sem primitivo headless**: o `bits-ui` não tem Stepper;
+- **o estado desce por `setContext`/`getContext` com GETTERS**, e não com valores:
+  o objeto de contexto é criado uma vez, e guardar `value` como número congelaria o
+  estado no primeiro quadro. A derivação é `resolveStepperState`, exportada;
+- **peça fora do contexto LANÇA erro** em português, sem `Stepper` ou sem
+  `StepperItem` em volta — a falha
+  silenciosa renderizaria o gatilho sem `aria-current` e o indicador sem número;
+- **`aria-label` é obrigatório no tipo** da raiz; a seleção chega por
+  `onStepSelect`;
+- **o `onclick` de quem compõe roda primeiro**, e `preventDefault` nele cancela a
+  seleção;
+- **`type="button"`, `aria-current` e `disabled` são escritos DEPOIS do
+  espalhamento** no gatilho: um `disabled` passado direto nele perde para o da
+  etapa;
+- `StepperStory.svelte` e `StepperWizardStory.svelte` são andaime de story.
 
 ---
 
-## Tabs
+## Tabs — a mecânica desta stack (Svelte 5)
 
-**Propósito**: organizar conteúdo em seções alternáveis sem navegar para outra página.
+O que o componente É está em
+[`docs/shared/prd/tabs.md`](../../docs/shared/prd/tabs.md). A regra da categoria —
+inclusive a do indisponível em widget composto — está em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/tabs/tabs.svelte` + stories + `TabsDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+Desta stack, e só daqui — quatro peças sobre o `Tabs` do bits-ui, com o índice
+exportando as formas curtas (`Root`, `List`, `Trigger`, `Content`) ao lado das
+longas, mais `tabsListVariants`:
 
-**Estrutura**:
-
-```
-Tabs (defaultValue)
-├── TabsList
-│   ├── TabsTrigger (value)
-│   └── TabsTrigger (value)
-├── TabsContent (value)
-└── TabsContent (value)
-```
-
-**Acessibilidade**:
-- `role="tablist"`, `role="tab"`, `role="tabpanel"` aplicados automaticamente pelo Bits UI
-- Navegação por teclado: Arrow Left/Right entre tabs; Tab entra no conteúdo
-- Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
+- **a raiz não tem `defaultValue`**: o bits não tem valor inicial separado, e a aba
+  inicial é o próprio `value` vinculável, com `""` de partida;
+- **`activationMode` mora na raiz**, como a lib o publica;
+- **a variante é prop da lista** e sai em `data-variant`; o `tabsListVariants` tem
+  as duas variantes com classe vazia, porque quem diferencia é o atributo;
+- **a aba desabilitada repassa `disabled={false}` ao primitivo** e escreve
+  `aria-disabled` à mão. Medido na fonte da lib: com a prop, o bits emite
+  `disabled` nativo, que vence o que vem do call site, e `data-disabled`, que tira
+  a aba dos candidatos do foco itinerante — a seta passaria por cima dela;
+- **quem barra a ativação da aba desabilitada é uma guarda em fase de captura na
+  `tabs-list`**, instalada por `addEventListener` sobre `mousedown`, `click`,
+  `keydown` (só Enter e Espaço) e `focus`. Na lista, a captura precede sempre os
+  ouvintes do primitivo; no próprio botão, a ordem dependeria de quem registrou
+  primeiro. O `focus` não é cancelável, então quem o contém é `stopPropagation` —
+  o foco acontece, e é ele que faz o leitor de tela anunciar;
+- **o bits escreve `aria-orientation="horizontal"`** também no horizontal, contra a
+  referência (item 22 de "O que está aberto" na `21-navegacao.md`);
+- **a raiz expõe `disabled`**, documentado no Playground como "Desabilita todas as
+  abas de uma vez". Lido na fonte, ele faria o bits emitir `disabled` nativo e
+  `data-disabled` em todas as abas, por fora da guarda acima e contra a regra de
+  indisponível em widget composto. Registrado, não consertado: é o item 23 de "O
+  que está aberto" na `21-navegacao.md` e V28 do PRD;
+- `TabsStory.svelte` é andaime de story, não peça publicada.

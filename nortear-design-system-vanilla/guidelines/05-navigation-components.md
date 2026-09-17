@@ -1,148 +1,178 @@
 # Navigation Components (Nortear — Vanilla TypeScript)
 
----
+A regra da categoria — qual componente escolher, marco e nome, `aria-current`,
+modelo de teclado, link ou botão, analytics e tom de voz — está em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
+O que cada componente É — contrato, decisões, anatomia, tokens, estados e as peças
+das cinco stacks — está no PRD dele. Este arquivo guarda só a mecânica das fábricas
+desta stack.
 
-## Breadcrumb
-
-**Propósito**: indica a posição do usuário na hierarquia de navegação. Use para hierarquias profundas (>2 níveis); para 1-2 níveis, prefira um botão "Voltar".
-
-**API e exemplos**: `src/components/ui/breadcrumb.ts` + stories + `BreadcrumbDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
-
-**Estrutura**:
-
-```
-nav (aria-label="Localização na página")
-└── ol (flex, gap em --spacing-1.5)
-    ├── li
-    │   └── a (item navegável)
-    ├── li
-    │   ├── span aria-hidden separator (/)
-    │   └── a
-    └── li (último item)
-        ├── span aria-hidden separator
-        └── span aria-current="page" (item atual, sem link)
-```
-
-**Regras**:
-- `<nav>` com `aria-label` descritivo (não apenas "Breadcrumb")
-- Lista ordenada (`<ol>`) — a ordem é semanticamente relevante
-- Separadores são `aria-hidden="true"` (decorativos)
-- Item atual: `<span aria-current="page">`, nunca `<a>`
-- Gap entre itens em `--spacing-1.5` (8-grid)
-- Cor: itens navegáveis em `--muted-foreground`; item atual em `--foreground` — ambos resolvidos pela folha `breadcrumb.css`, não por classe no call site. O item atual se distingue pela cor mais forte e por `aria-current`, não por peso de fonte
-- Não truncar labels — se necessário, usar overflow horizontal com scroll
-
-**Acessibilidade**:
-- `aria-label` no `<nav>` em português contextual (ex: "Localização na página")
-- `aria-current="page"` exclusivo no último item
+Menubar e NavigationMenu existem nesta stack e não têm seção aqui; é lacuna
+registrada na `docs/shared/guidelines/21-navegacao.md`, §Por que este arquivo existe.
 
 ---
 
-## Tabs
+## Breadcrumb — a fábrica desta stack
 
-**Propósito**: organizar conteúdo em seções alternáveis no mesmo nível hierárquico. Para navegação entre páginas distintas, usar nav links.
+O contrato está em
+[`docs/shared/prd/breadcrumb.md`](../../docs/shared/prd/breadcrumb.md); a regra da
+categoria, em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**API e exemplos**: `src/components/ui/tabs.ts` + stories + `TabsDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Sete fábricas independentes**, em `src/components/ui/breadcrumb.ts`, e nenhuma
+monta a trilha: quem consome cria cada peça e a encaixa por `append`.
 
-**Estrutura**:
-
-```
-Tabs (container)
-├── TabList (role="tablist")
-│   ├── Tab (role="tab", aria-selected, aria-controls)
-│   └── Tab ...
-└── TabPanels
-    ├── TabPanel (role="tabpanel", aria-labelledby, hidden quando inativo)
-    └── TabPanel ...
-```
-
-**Opts da factory**:
-
-| Nome | Default | Função |
+| Fábrica | Devolve | Opções próprias |
 |---|---|---|
-| `items` | — | Array `{ value, label, content, disabled? }` |
-| `defaultValue` | — | Tab ativo inicial |
-| `variant` | `default` | `default` desenha o trilho; `line` marca o ativo por um traço |
-| `orientation` | `horizontal` | Direção do conjunto; define também qual par de setas navega |
-| `aria-label` | — | **Obrigatório.** Nome da lista de abas — escrito no `role="tablist"` |
-| `onValueChange` | — | Recebe o valor da aba ativada |
-| `class` | — | Classes `.nds-*` adicionais na raiz |
+| `createBreadcrumb` | `<nav>` | `aria-label` (padrão `breadcrumb`) |
+| `createBreadcrumbList` | `<ol>` | — |
+| `createBreadcrumbItem` | `<li>` | — |
+| `createBreadcrumbLink` | `<a>` | `href` (**obrigatório no tipo**), `text` |
+| `createBreadcrumbPage` | `<span aria-current="page">` | `text` |
+| `createBreadcrumbSeparator` | `<li role="presentation" aria-hidden>` | `content`: string ou elemento |
+| `createBreadcrumbEllipsis` | `<span>` | `aria-label` |
 
-**Regras**:
-- O trilho é `.nds-tabs-list`: a folha `tabs.css` resolve o `inline-flex`, o fundo em `--muted` e o respiro interno de 8-grid. `data-variant="line"` troca o trilho pelo traço sob a aba ativa
-- Cada Tab com `aria-selected` e `aria-controls` apontando ao painel
-- Cada TabPanel com `aria-labelledby` apontando ao botão da tab
-- Painel inativo: `hidden = true` (não usar apenas `display: none` via classe)
-- Conteúdos de painel devem ter mesma altura mínima quando possível, evitando jumps no layout
-- Navegação por teclado: Setas ← → entre tabs, Home/End para primeira/última
+Todas aceitam `class`.
 
-**Acessibilidade**:
-- `role="tablist"`, `role="tab"`, `role="tabpanel"` obrigatórios
-- Foco visível no tab ativo
-- `aria-selected="true"` apenas no tab atual
-- Nome da lista de abas obrigatório, pela opção `aria-label` da factory — nunca por um `setAttribute` depois de construir, que some na primeira refatoração
-- Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
+**O separador é IRMÃO dos itens.** Ele se acrescenta à lista entre um item e outro,
+nunca dentro do `<li>` do link. Sem `content`, a fábrica desenha o `ChevronRight`
+por `createElementNS`; com string, ela entra por `textContent`; com elemento, ele
+substitui o chevron. `role` e `aria-hidden` ficam no `<li>` em qualquer caso.
 
-**Analytics**: emitir `tab_change` com `{ from, to, label }` no clique.
+**Texto entra por `textContent`**, no link e na página: a fábrica não interpreta
+HTML.
+
+**As reticências decidem o papel pela opção.** Com `aria-label`, saem com
+`role="img"` e o nome; sem ela, com `aria-hidden="true"`. O gatilho de menu que as
+envolve não é peça: é quem compõe que o cria e o liga.
+
+**Apelidos depreciados**: `label` vale por `aria-label` em `createBreadcrumb` e
+`createBreadcrumbEllipsis`, e `className` por `class` nas sete. Quando os dois
+chegam, o canônico vence.
+
+**Não há troca de elemento.** A integração com roteador de cliente é interceptar o
+clique no `<a>` que `createBreadcrumbLink` devolve.
+
+**Nenhuma fábrica registra ouvinte nem dispara evento**, e por isso não há
+`destroy()`. O rastreio do clique é de quem consome.
 
 ---
 
-## Stepper
+## Tabs — a fábrica desta stack
 
-**Propósito**: mostrar a posição num fluxo de ordem obrigatória, e quanto ainda falta. Para seções acessíveis em qualquer ordem, use Tabs; para a posição numa hierarquia de páginas, Breadcrumb; para uma operação única de duração mensurável, Progress.
+O contrato está em [`docs/shared/prd/tabs.md`](../../docs/shared/prd/tabs.md); a regra
+da categoria, em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
 
-**Peças**: `createStepper`, `createStepperItem`, `createStepperTrigger`, `createStepperIndicator`, `createStepperTitle`, `createStepperDescription`, `createStepperSeparator`, mais `setStepperValue` e `getStepperValue`.
+**Fábrica única**: `createTabs(options)`, em `src/components/ui/tabs.ts`, devolve a
+raiz com a lista e os painéis já montados. Os painéis são filhos diretos da raiz,
+depois da lista.
 
-Esta stack não tem runtime reativo, e é por isso que a montagem é de DUAS FASES: monta-se a árvore e depois se chama `setStepperValue(raiz, valor)`, que resolve o estado de cada etapa, o `aria-current`, o `disabled`, a palavra de estado e o conteúdo do indicador. É a divergência de API desta stack, e é declarada — as outras quatro derivam por reatividade.
+| Opção | Default | Função |
+|---|---|---|
+| `items` | — | Array `{ value, label, content, disabled? }`; obrigatório |
+| `defaultValue` | — | Valor da aba ativa ao montar; obrigatório |
+| `variant` | `default` | Escrito como `data-variant` na lista |
+| `orientation` | `horizontal` | Escrito como `data-orientation` na raiz; decide também o par de setas |
+| `aria-label` | — | Nome da lista, escrito no `role="tablist"`. O tipo não o exige; o contrato exige (C2 do PRD) |
+| `onValueChange` | — | Recebe o valor da aba ativada; não é chamado quando a aba escolhida já é a ativa |
+| `class` | — | Classes adicionais na raiz |
 
-**Estrutura**:
+**Não há valor controlado.** A fábrica devolve só o elemento: depois de montar, a
+aba ativa muda por clique ou por teclado, e não há função para trocá-la de fora.
 
-```
-ol.nds-stepper                       (aria-label, data-value)
-└── li.nds-stepper-item              (data-step, data-state, data-completed, data-disabled)
-    ├── button.nds-stepper-trigger   (type="button", aria-current="step" só na atual)
-    │   ├── span.nds-sr-only         (palavra de estado)
-    │   ├── span.nds-stepper-indicator   (aria-hidden)
-    │   ├── span.nds-stepper-title
-    │   └── span.nds-stepper-description
-    └── div.nds-stepper-separator    (aria-hidden)
-```
+**O nome da lista é opção, nunca retoque.** A lista não é elemento que quem consome
+receba; nomeá-la por `querySelector` depois de construir prende o call site à
+estrutura interna da fábrica.
 
-O traço mora DENTRO do item, depois do gatilho — é isso que o faz herdar o estado do item que o precede sem regra de CSS extra.
+**Ids gerados**: aba e painel recebem `tab-<n>-<value>` e `tabpanel-<n>-<value>`,
+com `n` de um contador do módulo. O `value` de cada item entra no id, então precisa
+ser único no conjunto.
 
-**Props**:
+**O rótulo entra por `textContent`.** Não há opção de ícone nem de badge: as stories
+de composição esvaziam o gatilho depois de montar e inserem o conteúdo num
+`span.nds-cluster`.
 
-| Peça | Nome | Default | Função |
+**O que a fábrica escreve, e que as libs das outras stacks decidem por conta
+própria** (tabela de teclado do PRD):
+
+- `tabindex="0"` fica na aba ATIVA, e todo painel tem `tabindex="0"`;
+- `aria-controls` em todas as abas, e painel inativo com `hidden`, montado no DOM;
+- `aria-orientation` só quando `orientation` é `vertical`;
+- a seta dá a volta no fim, sem opção para desligar; direção RTL não é lida.
+
+**A aba desabilitada é barrada dentro dos ouvintes.** O ouvinte de clique é
+registrado em todas as abas, e a guarda mora nele — o que barra também Enter e
+Espaço, que o navegador entrega como clique ao `<button>`. A seta foca a
+desabilitada e não a ativa.
+
+**Ouvintes nos próprios nós** (cada gatilho e a lista): saem da memória com a
+árvore, e não há `destroy()`.
+
+**Esta stack só tem ativação automática.** Não há `activationMode`: a seta sempre
+ativa a aba. É lacuna registrada, não escolha — V3 do PRD e item 5 de §O que está
+aberto na `docs/shared/guidelines/21-navegacao.md`.
+
+---
+
+## Stepper — a fábrica desta stack
+
+O contrato está em [`docs/shared/prd/stepper.md`](../../docs/shared/prd/stepper.md); a
+regra da categoria, em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md).
+
+**Peças**, em `src/components/ui/stepper.ts`: `createStepper`, `createStepperItem`,
+`createStepperTrigger`, `createStepperIndicator`, `createStepperTitle`,
+`createStepperDescription`, `createStepperSeparator`, mais `setStepperValue` e
+`getStepperValue`.
+
+**Montagem em DUAS FASES.** Esta stack não tem runtime reativo: monta-se a árvore e
+depois se chama `setStepperValue(raiz, valor)`, que resolve o estado de cada etapa,
+o `aria-current`, o `disabled` do gatilho, a palavra de estado e o conteúdo do
+indicador. É divergência de API declarada — as outras quatro derivam por
+reatividade (D4 do PRD).
+
+- **Antes da segunda fase**: todo item está `inactive`, não há etapa atual nem
+  `aria-current`, e o gatilho de uma etapa marcada como indisponível continua
+  habilitado e focável.
+- **`setStepperValue` não tem valor padrão**: o número é argumento obrigatório.
+  `getStepperValue` devolve `1` enquanto a raiz não tem valor resolvido.
+- **Etapa acrescentada depois** não se resolve sozinha: chame `setStepperValue` de
+  novo.
+- A resolução só escreve atributo e texto, sem ler estilo computado — é seguro
+  chamá-la dentro de uma play function.
+
+| Peça | Opção | Default | Função |
 |---|---|---|---|
-| `setStepperValue` | `value` | `1` | Número da etapa atual, contando de 1 — aplicado depois de montar a árvore |
-| `createStepper` | `aria-label` | — | Nome acessível do fluxo; obrigatório |
-| `createStepper` | `labels` | `{}` | Palavras de estado (`completed`, `current`) lidas só por leitor de tela |
-| `createStepper` | `onStepSelect` | — | Recebe o número da etapa quando um gatilho disponível é acionado |
-| `createStepperItem` | `step` | — | Número desta etapa; obrigatório |
-| `createStepperItem` | `completed` | `false` | Conta como concluída mesmo estando depois da atual |
-| `createStepperItem` | `disabled` | `false` | Indisponível: o gatilho sai da ordem de tabulação |
+| `createStepper` | `aria-label` | — | Nome acessível do fluxo; obrigatório no tipo |
+| `createStepper` | `labels` | — | `{ completed?, current? }`, as palavras de estado lidas só por leitor de tela |
+| `createStepper` | `onStepSelect` | — | Recebe o número da etapa cujo gatilho disponível foi acionado |
+| `createStepperItem` | `step` | — | Número da etapa, contando de 1; obrigatório |
+| `createStepperItem` | `completed` | `false` | Concluída mesmo depois da atual |
+| `createStepperItem` | `disabled` | `false` | Indisponível; aplicado ao gatilho por `setStepperValue` |
+| `createStepperIndicator` | `content` | — | Conteúdo próprio; marca `data-custom` e suspende número e marca |
+| `createStepperTitle`, `createStepperDescription` | `text` | — | Texto, por `textContent` |
+| `setStepperValue` | `value` | — | Número da etapa atual; sem padrão |
 
-Os rótulos de estado moram na RAIZ, e não no gatilho: o estado de uma etapa muda quando o fluxo avança, e uma palavra fixa por gatilho estaria errada no passo seguinte.
+Todas as fábricas aceitam `class`, com `className` como apelido depreciado; quando
+os dois chegam, `class` vence.
 
-**Regras**:
-- Entre três e seis etapas; com duas o indicador não informa nada, e acima de seis o rótulo não cabe
-- O estado é DERIVADO do valor do fluxo — marcar `completed` à mão só cabe quando o fluxo aceita ordem fora do comum
-- Etapa que ainda não pode ser aberta é `disabled`, não um controle focável sem destino
-- Sem `onStepSelect`, os gatilhos continuam focáveis e sem efeito: declare o callback ou marque as etapas como indisponíveis
+**Os rótulos de estado moram na raiz** — `createStepper` os guarda em atributos
+`data-label-*` do `<ol>`, e `setStepperValue` os lê de lá a cada resolução.
 
-**Acessibilidade**:
-- A raiz é lista ordenada: a ordem e a contagem das etapas são anunciadas pela própria estrutura
-- `aria-current="step"` — o token da WAI-ARIA para posição num processo — só no gatilho da etapa atual
-- Estado nunca depende só de cor: a concluída troca o número por uma marca de verificação (forma) e a palavra de `labels` vai ao leitor de tela (programático)
-- Indicador e traço são desenho e levam `aria-hidden="true"`
-- Não há região viva: quem anuncia o avanço é o painel que trocou de conteúdo, e é para ele que a aplicação move o foco
-- Etapa indisponível usa o `disabled` nativo — aqui não há navegação por setas em que ela precise ser alcançada para ser anunciada
+**O ouvinte é delegado na raiz, e só existe se `onStepSelect` vier na criação.** Ele
+lê o `data-step` do item no momento do clique, então continua certo depois de
+`setStepperValue` e de etapas acrescentadas. Gatilho com `disabled` não chama. Não
+há como cancelar a seleção a partir do call site (V1 do PRD). O ouvinte fica no
+próprio `<ol>`, e não há `destroy()`.
 
-**O gatilho é sempre um botão, e a lacuna que isso deixa**: a folha declara UMA forma de gatilho, e ela é de controle — `cursor: pointer`, `border: 0`, anel de `:focus-visible` (que só faz sentido em quem recebe foco) e `pointer-events: none` no item indisponível (regra que só existe para quem recebe ponteiro). Não há nela uma segunda forma, inerte.
+**Quem monta cada etapa encaixa as peças**: gatilho com indicador, título e
+descrição dentro; traço acrescentado ao item DEPOIS do gatilho, e omitido na última
+etapa. O `<span>` da palavra de estado nasce dentro do gatilho, criado por
+`createStepperTrigger`, e não se cria à mão.
 
-Segue disso que **o design system NÃO oferece um indicador de etapas não navegável**. Oferecê-lo exigiria uma segunda forma declarada em `stepper.css`, e inventá-la sem consumidor seria desenho especulativo — hoje a única composição do catálogo que usa stepper (`onboarding`, §5.1 da guideline 17) trata a forma interativa como vantagem, e não como custo. Enquanto essa segunda forma não existir, a alternativa para um fluxo sem navegação é marcar as etapas como indisponíveis; um Stepper sem callback de seleção rende N paradas de tabulação que não levam a lugar nenhum, e isso é defeito de uso, não modo suportado.
-
-**Analytics**: `step_change` com o número da etapa e o total no payload — valores estáveis, nunca o título traduzido.
+**`type="button"` é escrito pela fábrica** no gatilho, para que clicar numa etapa
+dentro de um `<form>` não o envie.
 
 ---
 
@@ -150,12 +180,11 @@ Segue disso que **o design system NÃO oferece um indicador de etapas não naveg
 
 O contrato do componente — anatomia, estados, nomes acessíveis, geometria e o
 evento que ele dispara — está em
-[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da categoria está em
-[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md): o Pagination é
-descrito junto com Table e DataTable porque o único consumidor dele é o rodapé de
-uma lista ou de uma tabela, e é lá que ficam a fronteira com o rodapé do DataTable,
-o alinhamento da faixa e o desabilitado que precisa de dois atributos. A mecânica de
-navegação desta stack fica aqui.
+[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da
+categoria está em
+[`docs/shared/guidelines/21-navegacao.md`](../../docs/shared/guidelines/21-navegacao.md),
+§Paginar: o alinhamento da faixa, o desabilitado que precisa de dois atributos e a
+fronteira com o rodapé do DataTable. A mecânica de navegação desta stack fica aqui.
 
 **Fábrica única**: `createPagination(options)` devolve a faixa inteira montada, em
 `src/components/ui/pagination.ts`. É a única stack com a régua de páginas embutida —

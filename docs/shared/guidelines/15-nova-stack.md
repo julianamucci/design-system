@@ -41,7 +41,7 @@ O que muda de framework para framework. Copiar do pacote mais próximo e **adapt
 
 ### 2.1 `guidelines/` — só o que é da stack
 
-A pasta tem de **existir** antes dos componentes: é essa a lição do Angular, que nasceu sem ela e ficou invisível para toda regra que a varre. O que vai dentro é o que é **específico da stack** — build e configuração, mecânica da lib, sintaxe de template, API de componente, stories e docs page. Regra que vale igual nas cinco mora UMA vez em `docs/shared/guidelines/`, inclusive regra de categoria (`17-componentes-conversacionais.md`, `18-overlay.md`, `19-feedback.md`, `20-tabelas.md`).
+A pasta tem de **existir** antes dos componentes: é essa a lição do Angular, que nasceu sem ela e ficou invisível para toda regra que a varre. O que vai dentro é o que é **específico da stack** — build e configuração, mecânica da lib, sintaxe de template, API de componente, stories e docs page. Regra que vale igual nas cinco mora UMA vez em `docs/shared/guidelines/`, inclusive regra de categoria (`17-componentes-conversacionais.md`, `18-overlay.md`, `19-feedback.md`, `20-tabelas.md`, `21-navegacao.md`).
 
 Como referência de forma, as stacks maduras têm, em 2026-09-10:
 
