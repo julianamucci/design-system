@@ -579,24 +579,48 @@ um toast de "salvo" ou de erro fica MUDO com o painel aberto. As duas libs já
 faziam a exceção (`markOthers` da base-ui; pacote `aria-hidden`
 `index.js:131-133`), e foi a medição do vue e do svelte que a trouxe.
 
-| stacks | o que fica de fora |
-|---|---|
-| vanilla, react, angular, svelte | `[aria-live]` com qualquer valor (inclusive `off`), `<script>`, e os seis papéis de região viva implícita: `status`, `alert`, `log`, `progressbar`, `marquee`, `timer` |
-| vue | `[aria-live]` e `<script>` — **divergência de mecânica de lib**: quem escolhe é o pacote `aria-hidden` da reka, e alargar exigiria patch |
-
-**O svelte esteve nessa segunda linha por algumas horas de 2026-09-17, e saiu.**
-Ele implementou a exceção copiando o que a lib fazia — `[aria-live]` e `<script>`
-— e a medição do portão mostrou que a lista das outras três era maior. Como ali o
-algoritmo é NOSSO, alargar custou uma constante; o vue fica porque a escolha é do
-pacote. Detalhe de implementação que vale guardar: os papéis são lidos como lista
-de tokens em minúsculas, e não por seletor `[role~="status"]`, porque o seletor de
+**A exceção é a MESMA nas cinco**: `[aria-live]` com qualquer valor (inclusive
+`off`), `<script>`, e os seis papéis de região viva implícita — `status`,
+`alert`, `log`, `progressbar`, `marquee`, `timer`. O papel é lido como LISTA DE
+TOKENS em minúsculas, e não por seletor `[role~="status"]`, porque o seletor de
 atributo do CSS **não** é insensível a caixa.
 
+**Igualar o vue exigiu inverter o mecanismo, e é isso que vale guardar.** Ali
+quem esconde é a lib, e o pacote `aria-hidden` 1.2.6 **não tem lista de
+exceções**: o `hideOthers` empurra `[aria-live]` e `script` para a lista de
+ALVOS (`dist/es2015/index.js`) e esconde todo o resto — quem passa os alvos é o
+CHAMADOR, e a reka passa um elemento só (`Popover/PopoverContentModal.js:122`).
+O corte por ATRIBUTO é o mesmo do `markOthers` da base-ui. Em vez de alargar a
+lista da lib com patch — que mexeria no `useHideOthers` compartilhado e
+alcançaria Dialog e AlertDialog sem suíte rodada —, o
+`popover-aria-hidden-restore.ts` **devolve** o valor de antes aos nós de papel
+vivo que a lib escondeu.
+
+**E a devolução tem de ser CONTÍNUA, não pontual.** Medido em 2026-09-17 com uma
+sonda de painel aninhado: o pacote conta por nó (`counterMap`), e um segundo
+`hideOthers` **reescreve** `aria-hidden` num nó que já não o tinha — um disparo
+único perderia para o segundo painel modal. A devolução é um `MutationObserver`
+filtrado em `aria-hidden`, vivo pelo tempo do painel, e cada painel modal
+renderiza o seu. Duas guardas que a medição impôs: só mexe em nó que carrega o
+marcador da lib (`data-aria-hidden`), e só quando o valor MUDOU — porque
+`setAttribute` gera registro mesmo escrevendo o mesmo valor, e o observador se
+realimentaria.
+
+**O svelte esteve na lista curta por algumas horas do mesmo dia, e saiu** pelo
+caminho oposto: ele copiou a exceção da lib dele, a medição do portão mostrou que
+a das outras três era maior, e ali o algoritmo é NOSSO — alargar custou uma
+constante.
+
 `role="region"` **continua** escondido, de propósito: marco não é anúncio.
-Consequência registrada da divergência: um elemento marcado SÓ por
-`role="status"`, sem `aria-live` explícito, é escondido no vue e não nas outras
-quatro. O toaster da casa declara `aria-live`, então o caso alcançável é o de
-quem compõe por papel.
+**O mesmo silêncio segue nos OUTROS overlays do vue**, e está registrado uma vez
+na `18-overlay.md`, §O que está aberto, item 4: seis peças da reka chamam
+`useHideOthers` — Dialog (e com ele AlertDialog e o Sheet, cujo `SheetContent`
+monta o modal do Dialog), Drawer, Menu (DropdownMenu, ContextMenu e Menubar,
+cujo `modal` é `true` por padrão, e por isso o caso mais alcançável de todos),
+Select e Combobox. O popover fechou primeiro, e a receita para os outros é esta:
+**devolver, não alargar**. O toaster da casa declara `aria-live`, então quem
+sofre é quem compõe região viva por papel — inclusive um `role="alert"` de
+formulário, que é justamente o que precisa ser ouvido com um painel aberto.
 
 **O valor `'trap-focus'` do angular saiu junto**, por decisão da dona no mesmo
 dia: ele prendia o foco e anunciava `aria-modal` **sem** travar a rolagem e sem

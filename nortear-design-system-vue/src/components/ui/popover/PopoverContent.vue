@@ -377,7 +377,9 @@ onBeforeUnmount(() => {
     >
       <slot />
       <!-- Modo modal: quem esconde o resto da página é a lib; este devolve o
-           `aria-hidden="false"` que ela apaga ao desfazer (ver o arquivo). -->
+           `aria-hidden="false"` que ela apaga ao desfazer E poupa a região viva
+           marcada só pelo papel, que a exceção da lib não alcança (ver o
+           arquivo). -->
       <PopoverAriaHiddenRestore v-if="modal" />
     </PopoverContent>
   </PopoverPortal>

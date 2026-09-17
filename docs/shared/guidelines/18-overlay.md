@@ -417,6 +417,46 @@ invariante de categoria.
 3. **As cópias de `--card` nas guidelines de stack** (`01-regras-gerais.md` nas
    cinco, `03-sistema-design.md` em três) contradizem a §Superfície, e o portão
    de cópia só lê a `10-overlay-components.md`.
+4. **No VUE, overlay que esconde o resto da página emudece região viva marcada
+   só por PAPEL.** Medido em 2026-09-17, na passagem do popover. Quem esconde na
+   reka é o pacote `aria-hidden` 1.2.6, e ele não tem "lista de exceções": o
+   `hideOthers` empurra `[aria-live]` e `script` para a lista de ALVOS
+   (`dist/es2015/index.js`, no corpo de `hideOthers`) e esconde todo o resto.
+   Quem passa os alvos é o chamador, e a reka passa **um** elemento só. Então
+   `role="status"`, `role="alert"`, `role="log"`, `role="progressbar"`,
+   `role="marquee"` e `role="timer"` — que pela ARIA JÁ são regiões vivas — são
+   escondidos, e param de anunciar enquanto o painel está aberto.
+
+   Seis peças da reka chamam `useHideOthers`, e por elas passa boa parte desta
+   categoria no vue: `Dialog/DialogContentModal` (Dialog, AlertDialog e também o
+   **Sheet**, cujo `SheetContent.vue` monta o modal do Dialog),
+   `Drawer/DrawerContent`, `Menu/MenuRootContentModal` (DropdownMenu, ContextMenu
+   e Menubar — e o `modal` do DropdownMenu é `true` por padrão, então é o caso
+   mais alcançável de todos), `Select/SelectContentImpl`,
+   `Combobox/ComboboxContentImpl` e `Popover/PopoverContentModal`.
+
+   As outras quatro stacks deixam os seis papéis de fora: o `markOthers` da
+   base-ui e o algoritmo próprio de svelte, vanilla e angular. É divergência de
+   uma stack só, e ela não aparece em teste nenhum — o passo que existe nas cinco
+   afirma o caso do `[aria-live]` explícito, que passa em todas.
+
+   **O quanto é alcançável**: o toaster da casa declara `aria-live`, então quem
+   sofre é quem compõe região viva por papel — inclusive um `role="alert"` de
+   formulário, que é justamente o que precisa ser ouvido com um diálogo aberto.
+
+   **Fecha quando**: os seis papéis ficarem de fora também no vue, nos overlays
+   acima, com o passo `'Uma região viva fora do painel continua anunciando com o
+   modal aberto'` incluindo o andaime de papel — como já está no svelte, no
+   vanilla, no react e no angular.
+
+   **O popover do vue FECHOU em 2026-09-17**, e a receita está na D16 do
+   [`popover.md`](../prd/popover.md): em vez de alargar a lista da lib com patch
+   — que mexeria no `useHideOthers` compartilhado e alcançaria Dialog e
+   AlertDialog de uma vez, sem suíte rodada —, um complemento nosso **devolve** o
+   valor de antes aos nós de papel vivo que a lib escondeu. E a devolução é
+   CONTÍNUA, por `MutationObserver`: o pacote conta por nó e um segundo painel
+   modal reescreve o atributo, então disparo único perde. Os outros seguem na
+   revisão de cada um, por este caminho.
 
 ### Como este inventário foi levantado, para poder ser refeito
 

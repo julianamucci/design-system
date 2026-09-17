@@ -773,30 +773,38 @@ export const Modal: Story = {
       // A exceção não é nossa, então o portão guarda uma dependência: se a lib
       // deixar de pular, este passo reprova em vez de a página emudecer calada.
       //
-      // Os dois andaimes são filhos diretos do `<body>` porque é ali que o
-      // algoritmo escreve, e o CONTRASTE entre eles é o que dá sentido à
-      // asserção: sem o irmão comum, um algoritmo que não escondesse nada
-      // passaria neste passo com louvor.
+      // Os três andaimes são filhos diretos do `<body>` porque é ali que o
+      // algoritmo escreve, e o CONTRASTE com o irmão comum é o que dá sentido às
+      // asserções: sem ele, um algoritmo que não escondesse nada passaria neste
+      // passo com louvor.
       //
-      // ─── DIVERGÊNCIA MEDIDA, e ela é da lib ────────────────────────────────
+      // ─── O TERCEIRO ANDAIME, e por que ele existe ──────────────────────────
       //
-      // Medido em 2026-09-17 com uma sonda de sete elementos: a exceção é por
-      // ATRIBUTO, não por papel. Pulados: `[aria-live]` (qualquer valor) e
-      // `<script>`. Escondidos: `role="status"`, `"alert"`, `"log"`,
-      // `"progressbar"`, `"marquee"` e `"timer"` SEM `aria-live` explícito — e os
-      // dois primeiros têm `aria-live` implícito pela ARIA, então um `role="alert"`
-      // de fora emudece com o painel aberto. A lista é menor que a das outras
-      // stacks, que pulam os seis papéis; aqui quem escolhe é o pacote
-      // `aria-hidden`, e aumentar a lista é mudar a lib, não a story. Fica
-      // REGISTRADO, e o andaime deste passo usa `aria-live` explícito de propósito
-      // — é o que a lib de fato garante.
+      // Medido em 2026-09-17 com uma sonda de sete elementos: a exceção da LIB é
+      // por ATRIBUTO. Pulados: `[aria-live]` (qualquer valor) e `<script>`.
+      // Escondidos: `role="status"`, `"alert"`, `"log"`, `"progressbar"`,
+      // `"marquee"` e `"timer"` SEM `aria-live` explícito — e como `status` e
+      // `alert` têm `aria-live` implícito pela ARIA, o toast marcado apenas pelo
+      // papel, que é a forma mais comum, emudecia com o painel modal aberto.
+      // As outras quatro stacks pulam os seis papéis.
+      //
+      // A lista é do pacote e não se alarga daqui, então a igualdade vem do
+      // `popover-aria-hidden-restore.ts`: ele anota o valor de antes, observa a
+      // escrita da lib e DEVOLVE o valor aos nós de papel vivo que ela escondeu.
+      // Por isso o andaime de PAPEL é medido com espera — a devolução acontece um
+      // tique depois da passada da lib —, e o de ATRIBUTO segue medido direto, que
+      // é o que a lib garante sozinha.
       const trigger = canvas.getByRole('button', { name: /Abrir modal/i });
       const liveRegion = document.createElement('div');
       liveRegion.setAttribute('aria-live', 'polite');
       liveRegion.textContent = 'Alterações salvas.';
+      // De propósito SEM `aria-live`: é o papel, e só ele, que tem de bastar.
+      const roleOnlyLiveRegion = document.createElement('div');
+      roleOnlyLiveRegion.setAttribute('role', 'status');
+      roleOnlyLiveRegion.textContent = 'Rascunho salvo automaticamente.';
       const plainSibling = document.createElement('div');
       plainSibling.textContent = 'Texto comum fora do painel.';
-      document.body.append(liveRegion, plainSibling);
+      document.body.append(liveRegion, roleOnlyLiveRegion, plainSibling);
       const isHidden = (el: Element): boolean => el.getAttribute('aria-hidden') === 'true';
       const hiddenAncestorOf = (el: Element): Element | null =>
         el.parentElement?.closest('[aria-hidden="true"]') ?? null;
@@ -823,6 +831,22 @@ export const Modal: Story = {
           hiddenAncestorOf(liveRegion),
           'um ancestral da região viva fora do painel foi escondido com o modal aberto',
         ).toBeNull();
+
+        // E a região viva marcada SÓ pelo papel, que é o andaime novo. Só
+        // LEITURA dentro do `waitFor`: aqui a exceção é uma DEVOLUÇÃO, e ela cai
+        // um tique depois de a lib escrever.
+        await waitFor(() => {
+          if (isHidden(roleOnlyLiveRegion)) {
+            throw new Error(
+              'a região viva marcada só por role="status" foi escondida com o modal aberto',
+            );
+          }
+        }, { timeout: 2000 });
+        await expect(
+          hiddenAncestorOf(roleOnlyLiveRegion),
+          'um ancestral da região viva marcada só por role="status" foi escondido',
+        ).toBeNull();
+
         await expect(hiddenAncestorOf(dialog)).toBeNull();
 
         await userEvent.keyboard('{Escape}');
@@ -834,8 +858,10 @@ export const Modal: Story = {
           }
         }, { timeout: 2000 });
         await expect(liveRegion.hasAttribute('aria-hidden')).toBe(false);
+        await expect(roleOnlyLiveRegion.hasAttribute('aria-hidden')).toBe(false);
       } finally {
         liveRegion.remove();
+        roleOnlyLiveRegion.remove();
         plainSibling.remove();
       }
     });
