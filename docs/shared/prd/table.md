@@ -658,15 +658,20 @@ Medido em 2026-09-16, nos três idiomas:
    wrapper explícito). No vanilla são 7 fábricas para 8 nós, porque a primeira
    devolve duas peças.
 
-> **PENDÊNCIA · 2026-09-16** — escrever este PRD ARMA o
+> **FECHADA · 2026-09-17** — escrever este PRD ARMOU o
 > `catalogo_duplicado_com_prd` contra as cinco guidelines de stack: a regra só
 > cobra quando o arquivo `docs/shared/prd/<slug>.md` existe, e as cinco
-> `08-display-components.md` têm a seção `^## Table$` (41 linhas no angular, 46 no
-> react, 25 no svelte, 43 no vanilla, 47 no vue). A partir desta escrita, o
-> auditor passa a reportar cinco achados novos para o slug.
+> `08-display-components.md` tinham a seção `^## Table$` (41 linhas no angular, 46
+> no react, 25 no svelte, 43 no vanilla, 47 no vue). O auditor passou a reportar
+> cinco achados novos para o slug.
 > **Fecha quando**: `catalogo_duplicado_com_prd` não reportar `table` — isto é,
 > quando as cinco seções `## Table` tiverem saído, ficando em cada stack só a
 > mecânica própria (fábricas, diretivas, wrapper local) sob outro título.
+> **Como fechou (2026-09-17)**: as cinco seções viraram ponteiro para este PRD e
+> para `docs/shared/guidelines/20-tabelas.md`, com a mecânica da stack sob título
+> próprio. O regex exato do portão não casa o título novo, mas quem prova o
+> fechamento é o CONTEÚDO que saiu, não o contador — o título renomeado sozinho
+> escaparia do mesmo jeito com o catálogo inteiro dentro.
 
 > **PENDÊNCIA · 2026-09-16** — a prop `regionLabel` existe nas cinco stacks e não
 > é passada em nenhum exemplo publicado: o contêiner que rola nunca ganha papel

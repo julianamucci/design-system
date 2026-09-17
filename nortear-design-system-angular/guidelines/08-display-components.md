@@ -45,28 +45,30 @@ div[ndsAvatarGroup]                (pilha sobreposta)
 
 ---
 
-## Table
+## Table — a mecânica desta stack
 
-**Propósito**: dados tabulares estáticos. Para ordenação, filtro, seleção, paginação ou edição inline, **DataTable**.
+O que o componente É — contrato, decisões com data e medição, tokens e peças das
+cinco stacks — está em
+[`docs/shared/prd/table.md`](../../docs/shared/prd/table.md). A regra da
+CATEGORIA — qual componente usar, acessibilidade da tabela, altura e alinhamento,
+estado vazio, analytics e tom de voz — está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md), uma vez só para as
+cinco stacks. Aqui fica o que é desta stack e não tem equivalente nas outras
+quatro.
 
-**Peças**: `div[ndsTableWrapper]`, `table[ndsTable]`, `thead[ndsTableHeader]`, `tbody[ndsTableBody]`, `tfoot[ndsTableFooter]`, `tr[ndsTableRow]`, `th[ndsTableHead]`, `td[ndsTableCell]`, `caption[ndsTableCaption]`.
+**As nove peças são diretiva de ATRIBUTO**, sem `@Component`, sem template
+próprio e sem projeção: `div[ndsTableWrapper]`, `table[ndsTable]`,
+`thead[ndsTableHeader]`, `tbody[ndsTableBody]`, `tfoot[ndsTableFooter]`,
+`tr[ndsTableRow]`, `th[ndsTableHead]`, `td[ndsTableCell]`,
+`caption[ndsTableCaption]`.
 
-**Estrutura**:
+**O wrapper é escrito por quem usa, e só aqui.** Diretiva de atributo tem o
+`<table>` como host e não pode criar um pai, então o `div[ndsTableWrapper]`
+aparece no template de quem compõe; nas outras quatro stacks ele vem de dentro do
+componente. O DOM final é o mesmo nas cinco — a diferença é de API, e está
+registrada no PRD.
 
-```
-div[ndsTableWrapper]                 (dono da rolagem horizontal, tabindex="0")
-└── table[ndsTable]
-    ├── caption[ndsTableCaption]     (obrigatório; pode ser sr-only)
-    ├── thead[ndsTableHeader]
-    │   └── tr[ndsTableRow]
-    │       └── th[ndsTableHead]     (scope, aria-sort quando ordenável)
-    ├── tbody[ndsTableBody]
-    │   └── tr[ndsTableRow]
-    │       └── td[ndsTableCell]
-    └── tfoot[ndsTableFooter]        (opcional — totais)
-```
-
-**Entradas**:
+**Inputs desta stack**:
 
 | Peça | Nome | Default | Função |
 |---|---|---|---|
@@ -74,100 +76,51 @@ div[ndsTableWrapper]                 (dono da rolagem horizontal, tabindex="0")
 | `ndsTableHead` | `scope` | `col` | `col`, `row`, `colgroup`, `rowgroup` |
 | `ndsTableHead` | `sort` | — | Direção de ordenação, vira `aria-sort` |
 
-**Regras**:
-- Legenda **obrigatória**, ainda que fora da tela: é o nome da tabela
-- `scope` em todo cabeçalho — é o que liga célula a cabeçalho para quem navega por leitor
-- Coluna numérica alinha à direita **na célula**, não no cabeçalho: no CSS compartilhado a regra de `th` declara alinhamento à esquerda com especificidade acima da utilitária, então escrever a classe no `<th>` não faria nada
-- **Quem rola é o wrapper do primitivo**, e é ele que tem tab stop. Colocar a rolagem num container decorativo deixa as colunas de fora inalcançáveis por teclado (WCAG 2.1.1, regra `scrollable-region-focusable` do axe)
-- Tabela de dados, nunca de layout — para layout, grade CSS
-
-**Acessibilidade**:
-- Legenda, `scope` e uma única camada rolável focável são os três itens não negociáveis
-- Estado vazio é uma linha com mensagem — tabela vazia silenciosa não comunica nada
+`sort` existe só nesta stack; nas outras quatro o `aria-sort` é escrito no markup
+da composição. `colspan`, `rowspan` e `lang` não viram input — são atributos
+nativos.
 
 ---
 
-## DataTable
+## DataTable — a mecânica desta stack
 
-**Propósito**: tabela para conjunto de dados que exige interação — ordenação, busca, filtro por coluna, seleção, paginação e edição inline.
+Contrato, decisões com data e medição, tokens e peças das cinco stacks:
+[`docs/shared/prd/data-table.md`](../../docs/shared/prd/data-table.md). Regra da
+categoria: [`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md). Aqui
+fica o que é desta stack e não tem equivalente nas outras quatro.
 
-**Componente**: `div[ndsDataTable]`. **O motor é escrito em signals neste stack**, sem biblioteca de tabela headless.
+**Componente**: `div[ndsDataTable]` — seletor de atributo, zoneless, `OnPush`.
 
-> **Quatro recursos que o Vanilla tem e este stack não tem**: redimensionar coluna, reordenar coluna, fixar coluna e virtualização. Não há flag para eles aqui. Está registrado como lacuna, não como "alinhado" — a guideline do Vanilla lista essas flags porque lá elas existem.
+**O motor é escrito em signals, sem lib de tabela headless**, e esta é a única das
+cinco stacks sem TanStack. O estado são signals e a derivação é uma cadeia de
+`computed` (bruto → filtrado → ordenado → paginado) que o template lê direto. Não
+é preferência: o adaptador `@tanstack/angular-table` publica o estado dele por um
+`computed` próprio que espera ser lido dentro de um ciclo de detecção, o que
+sobreporia um segundo modelo de reatividade ao que o resto desta stack usa.
 
-**Estrutura**:
+**Quatro recursos não existem aqui, e o placar é de QUATRO stacks contra uma**:
+redimensionar coluna, reordenar por arrasto, fixar coluna e virtualizar. React,
+vue, svelte e vanilla entregam os quatro; aqui não há flag para eles. O motivo
+declarado é o mesmo nos quatro: os quatro dependem de geometria em pixel escrita
+no próprio elemento (a largura arrastada, o `left` da coluna fixada, a altura das
+linhas fantasma do virtualizador), e valor de design em `style` inline não é
+escrito nesta stack — inline vence a folha e tira o componente do tema, da
+densidade e da escala tipográfica. Enquanto não houver forma de expressar largura
+arrastada como classe ou token, entregar meia funcionalidade seria pior que não
+entregar. Os itens do contrato de teste que ficam sem story por isso estão
+declarados em `coversNotApplicable`, nomeados um a um; a medição está no PRD, §3.
 
-```
-div[ndsDataTable]
-├── barra de ferramentas               (quando há busca ou menu de colunas)
-│   ├── campo de busca global
-│   └── menu de colunas                (dropdown com itens de marcação)
-├── moldura de rolagem                 (só borda e raio — NÃO é o tab stop)
-│   └── div[ndsTableWrapper]           ← quem rola, e quem tem tabindex="0"
-│       └── table[ndsTable]
-│           ├── caption (sr-only)
-│           ├── thead › tr › th        (botão de ordenar, filtro por coluna,
-│           │                            checkbox de seleção total tri-state)
-│           └── tbody › tr › td        (célula vira campo quando editável)
-├── paginação                          (quando ligada)
-└── anúncio de seleção                 (live region polida, sr-only)
-```
+**Os rótulos são templates de string, e não funções** (`'Ordenar por {col}'`,
+`'Selecionar linha {row}'`), onde as outras quatro passam funções. A razão é de
+framework: template Angular não declara função, e quem passa esse objeto o passa
+de dentro de um template. É divergência de **API de framework** — registra-se, não
+se alinha. Pela mesma régua, os rótulos de fixar e redimensionar não existem aqui:
+rótulo sem controle é promessa de recurso inexistente.
 
-**Entradas**:
-
-| Nome | Default | Função |
-|---|---|---|
-| `columns` | obrigatório | Definição das colunas |
-| `data` | obrigatório | As linhas. **Nunca mutado pelo componente** |
-| `rowKey` | índice | Identidade estável da linha |
-| `rowLabel` | — | Texto que identifica a linha no nome do controle de seleção |
-| `caption` | `''` | Nome acessível da tabela |
-| `enableGlobalFilter` | `true` | Campo de busca |
-| `globalFilterPlaceholder` | padrão | Texto do campo de busca |
-| `enableRowSelection` | `false` | Checkbox por linha |
-| `enableColumnVisibility` | `true` | Menu de colunas |
-| `enableColumnFilters` | `false` | Filtro por coluna no cabeçalho |
-| `enablePagination` | `true` | Rodapé de paginação |
-| `pageSize` | `10` | Linhas por página inicial |
-| `pageSizeOptions` | `10, 20, 50, 100` | Opções do seletor |
-| `emptyMessage` | padrão | Frase do estado vazio |
-| `labels` | `{}` | Sobrescreve os textos do componente |
-
-**Saídas**: edição de célula confirmada, e seleção de linhas.
-
-**Definição de coluna**:
-
-| Chave | Função |
-|---|---|
-| `id` | Identificador estável, usado em ordenação, filtro e edição |
-| `header` | Rótulo do cabeçalho — substantivo curto, sem ponto final |
-| `accessor` | Valor **bruto**, usado para ordenar e filtrar |
-| `format` | Texto exibido |
-| `sortable` | Cabeçalho ganha botão de ordenar e `aria-sort` |
-| `hideable` | Coluna aparece no menu de colunas (padrão: sim) |
-| `editable` | Célula vira campo ao clicar |
-| `filter` | `text` ou `select`, com as opções |
-| `numeric` | A **célula** alinha à direita |
-
-**Regras**:
-- **`accessor` e `format` são separados de propósito**: é o que faz "R$ 1.250,00" ordenar como 1250 e não como a string que começa com "R"
-- `rowKey` é obrigatório na prática assim que houver seleção. Sem ele a identidade é a **posição**, e ordenar leva a marcação para quem ocupou o lugar
-- `enableRowSelection` só quando existe ação em lote — checkbox sem ação confunde
-- `data` não é mutado pelo componente: na edição inline, quem consome atualiza o array a partir da saída
-- Estado vazio é uma linha com mensagem
-- **O botão do menu de colunas compõe duas diretivas no mesmo elemento** (gatilho de menu mais visual de botão) e é caso conhecido de disputa de `data-slot` — em teste, procure pela classe. Ver `RULES.md` §8
-
-**Rótulos — divergência de API registrada**:
-
-Neste stack os textos com marcador são **templates de string** (`'Ordenar por {col}'`, `'Selecionar linha {row}'`); nas outras quatro stacks são funções. A razão é que template Angular não declara função, e quem passa esse objeto o passa de dentro de um template. É divergência de **API de framework**: registra-se, não se alinha.
-
-**Acessibilidade**:
-- HTML semântico real — tabela, cabeçalho, corpo, `th` com `scope`
-- `aria-sort` no cabeçalho ordenável, refletindo ascendente, descendente ou nenhum
-- Checkbox de cabeçalho é tri-state em seleção parcial
-- **Cada checkbox de linha carrega o identificador daquela linha no nome.** Nome repetido em dez controles é o mesmo que nome nenhum (WCAG 4.1.2) — é o que `rowLabel` resolve
-- **Uma só camada rola na horizontal**, e é a do primitivo Table. A moldura externa é decoração e não entra na ordem de tabulação
-- O total selecionado é anunciado por live region polida, porque com a paginação desligada esse número não aparece em nenhum lugar da tela
+**O botão do menu de colunas compõe duas diretivas no mesmo elemento** (gatilho de
+menu mais visual de botão), e as duas ligam `data-slot` por host binding: uma
+sobrescreve a outra, sem ordem garantida e sem erro. Em teste, procure pela classe
+`.nds-*`, nunca pelo `data-slot`. Ver [`RULES.md`](RULES.md) §4.
 
 ---
 

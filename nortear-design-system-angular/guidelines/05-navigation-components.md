@@ -147,49 +147,40 @@ Segue disso que **o design system NÃO oferece um indicador de etapas não naveg
 
 ---
 
-## Pagination
+## Pagination — a mecânica desta stack
 
-**Propósito**: navegar entre páginas de uma lista paginada. Para lista curta, rolagem contínua comunica melhor.
+Contrato, decisões com data e medição, tokens e peças das cinco stacks:
+[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da
+categoria está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md) — o Pagination entra
+na categoria Tabelas porque o único consumidor dele em todo o repositório é o
+rodapé de uma lista ou de uma tabela, e é lá que mora a fronteira entre ele e o
+rodapé do DataTable, com o alinhamento da faixa, o mecanismo de desabilitar e o
+evento que a faixa dispara. Aqui fica a mecânica de navegação desta stack.
 
-**Peças**: `nav[ndsPagination]`, `ul[ndsPaginationContent]`, `li[ndsPaginationItem]`, `a[ndsPaginationLink]`, `a[ndsPaginationPrevious]`, `a[ndsPaginationNext]`, `span[ndsPaginationEllipsis]`, `svg[ndsPaginationIcon]`.
+**As oito peças são diretiva de ATRIBUTO no elemento nativo**, num arquivo só e
+sem `@radix-ng/primitives` — o pacote não publica um `pagination`, e não haveria o
+que compor: a faixa não guarda estado, não gerencia foco e não tem teclado além do
+que o `<a>` já traz. As peças são `nav[ndsPagination]`,
+`ul[ndsPaginationContent]`, `li[ndsPaginationItem]`, `a[ndsPaginationLink]`,
+`a[ndsPaginationPrevious]`, `a[ndsPaginationNext]`,
+`span[ndsPaginationEllipsis]` e `svg[ndsPaginationIcon]`. A aparência de botão vem
+de `btnClass()`, a mesma função pura que o `NdsButton` usa, sem herdar componente
+e sem invólucro no DOM.
 
-**Estrutura**:
+**O ícone é peça publicada só aqui**: cada ícone do lucide é uma lista
+`[tag, attrs]` com tag variável, e template Angular exige tag estática — os nós
+são criados por `createElementNS`, sem `innerHTML` no caminho.
 
-```
-nav[ndsPagination]                  (aria-label)
-└── ul[ndsPaginationContent]
-    ├── li[ndsPaginationItem] › a[ndsPaginationPrevious]
-    ├── li[ndsPaginationItem] › a[ndsPaginationLink]        (aria-current quando ativo)
-    ├── li[ndsPaginationItem] › span[ndsPaginationEllipsis]
-    ├── li[ndsPaginationItem] › a[ndsPaginationLink]
-    └── li[ndsPaginationItem] › a[ndsPaginationNext]
-```
-
-**Entradas**:
-
-| Peça | Nome | Default | Função |
-|---|---|---|---|
-| `ndsPagination` | `label` | padrão em português | Nome acessível do `<nav>` |
-| `ndsPaginationLink` | `isActive` | `false` | Marca a página atual |
-| `ndsPaginationLink` | `size` | `icon` | Tamanho herdado da escala do botão |
-| `ndsPaginationLink` | `disabled` | `false` | Desliga o controle |
-| `ndsPaginationPrevious` / `Next` | `text` | `Anterior` / `Próxima` | Rótulo visível |
-| `ndsPaginationPrevious` / `Next` | `label` | — | Nome acessível quando o texto some em tela estreita |
-| `ndsPaginationPrevious` / `Next` | `disabled` | `false` | Extremos da lista |
-| `ndsPaginationEllipsis` | `label` | — | Nome acessível do salto |
-
-**Regras**:
-- Anterior e Próxima estão **sempre presentes**; nos extremos ficam desabilitados, não escondidos — controle que desaparece muda o layout a cada página
-- Página atual marcada com `aria-current="page"`
-- Sem emoji: os ícones vêm do conjunto do design system
-- Em tela estreita, reduzir para "Anterior / X de Y / Próxima"
-- Alvo de toque mínimo pelo token de tamanho, que é piso e não teto
-
-**Acessibilidade**:
-- Nome acessível em todo controle, com o número da página quando aplicável
-- **Desabilitado tem de barrar de verdade.** As peças deste stack são `<a>`, e um listener declarado no `host` de uma diretiva é registrado **depois** do `(click)` que quem consome escreve no mesmo elemento — barrar dali não alcança ninguém, porque o handler de quem usa já disparou. É por isso que a interceptação é feita na fase de captura. Sintoma quando isso falha: o link desabilitado continua chamando o callback de página, sem erro nenhum. Ver `13-system-design.md` §Eventos
-
-**Analytics**: `pagination_change` com origem, destino e total.
+**Desabilitado tem de barrar de verdade, e é por isso que a escuta é em fase de
+CAPTURA.** As peças direcionais desta stack são `<a>`, e um listener declarado no
+`host` de uma diretiva é registrado **depois** do `(click)` que quem consome
+escreve no mesmo elemento — barrar dali não alcança ninguém, porque o handler de
+quem usa já disparou. A interceptação é registrada no construtor, na fase de
+captura, e o estado desabilitado é lido na hora do clique (ler um `input()` dentro
+do construtor devolveria o default). Sintoma quando isso falha: o link
+desabilitado continua chamando o callback de página, sem erro nenhum. Ver
+[`13-system-design.md`](13-system-design.md) §Eventos.
 
 ---
 

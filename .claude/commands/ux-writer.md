@@ -29,6 +29,7 @@ Em paralelo:
 | Navegação | `nortear-design-system-vanilla/guidelines/05-navigation-components.md` |
 | Formulário | `nortear-design-system-vanilla/guidelines/06-form-components.md` |
 | Feedback | `docs/shared/guidelines/19-feedback.md` — a regra da categoria, uma vez para as cinco stacks |
+| Tabelas | `docs/shared/guidelines/20-tabelas.md` — a regra da categoria (Table, DataTable, Pagination), uma vez para as cinco stacks |
 | Display | `nortear-design-system-vanilla/guidelines/08-display-components.md` |
 | Disclosure | `nortear-design-system-vanilla/guidelines/09-disclosure-components.md` |
 | Overlay | `docs/shared/guidelines/18-overlay.md` — a regra da categoria, uma vez para as cinco stacks |

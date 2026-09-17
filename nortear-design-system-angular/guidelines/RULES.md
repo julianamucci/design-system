@@ -103,3 +103,5 @@ Valem nas cinco stacks e moram em `docs/shared/guidelines/`:
 | dimensões em token, `style` inline | [12-tokenizacao-dimensoes.md](../../docs/shared/guidelines/12-tokenizacao-dimensoes.md) |
 | movimento e `prefers-reduced-motion` | [13-animacao.md](../../docs/shared/guidelines/13-animacao.md) |
 | regras da categoria Overlay | [18-overlay.md](../../docs/shared/guidelines/18-overlay.md) |
+| regras da categoria Feedback | [19-feedback.md](../../docs/shared/guidelines/19-feedback.md) |
+| regras da categoria Tabelas | [20-tabelas.md](../../docs/shared/guidelines/20-tabelas.md) |

@@ -43,47 +43,45 @@ Em fila, os avatares vão dentro de `.nds-avatar-group`, que sobrepõe cada um a
 
 ---
 
-## Table
+## Table — as fábricas desta stack
 
-**Propósito**: dados tabulares estáticos com linhas e colunas. Para tabelas com ordenação, filtros, paginação ou edição inline, usar **DataTable**.
+O contrato do componente — peças, `data-slot`, estados, geometria e acessibilidade
+— está em [`docs/shared/prd/table.md`](../../docs/shared/prd/table.md). A regra que atravessa a
+categoria — qual componente escolher, uma só camada rolando, altura como piso,
+estado vazio, alinhamento de coluna numérica, legenda e escopo — está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md). Aqui fica só o que é
+desta stack: as sete fábricas e a forma de compor à mão.
 
-**API e exemplos**: `src/components/ui/table.ts` + stories + `TableDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**As fábricas, com a assinatura real de cada uma**. Não há objeto de opções em
+lugar nenhum: quem monta cria os elementos e os anexa.
 
-**Estrutura**:
-
-```
-div.nds-table-wrapper                        (rola na horizontal, tabindex="0")
-└── table.nds-table
-    ├── caption (obrigatório; .nds-sr-only quando captionHidden)
-    ├── thead
-    │   └── tr
-    │       └── th scope="col" (texto da coluna)
-    └── tbody
-        └── tr                               (a folha já dá o realce ao passar o ponteiro)
-            └── td
-```
-
-**Opts da factory**:
-
-| Nome | Default | Função |
+| Fábrica | Assinatura | Devolve |
 |---|---|---|
-| `caption` | — | Descrição da tabela (obrigatório) |
-| `captionHidden` | `false` | Aplica `.nds-sr-only` no caption |
-| `headers` | — | Cabeçalhos das colunas |
-| `rows` | — | Array de arrays (células) |
+| `createTable` | `(extraClass?, regionLabel?)` | **o par** `{ wrapper, table }` |
+| `createTableHeader` | `(extraClass?)` | `<thead>` |
+| `createTableBody` | `(extraClass?)` | `<tbody>` |
+| `createTableFooter` | `(extraClass?)` | `<tfoot>` |
+| `createTableRow` | `(extraClass?)` | `<tr>` |
+| `createTableHead` | `(text, extraClass?, scope = 'col')` | `<th>` |
+| `createTableCell` | `(text, extraClass?, lang?)` | `<td>` |
+| `createTableCaption` | `(text, extraClass?)` | `<caption>` |
 
-**Regras**:
-- `<caption>` obrigatório (pode ficar fora da tela via `captionHidden: true`, que aplica `.nds-sr-only`)
-- `scope="col"` em todo `<th>` de coluna
-- Padding por célula em `--spacing-*`; o cabeçalho não recebe altura fixa — ela é resultado do padding e da entrelinha, para a tabela crescer com a fonte do navegador (WCAG 1.4.4)
-- A rolagem horizontal é do `.nds-table-wrapper`, e é ele quem tem `tabindex="0"`. Uma camada rolando por tabela — camada rolável sem foco reprova WCAG 2.1.1 (axe `scrollable-region-focusable`), e duas camadas roláveis aninhadas prendem o teclado
-- Realce ao passar o ponteiro, linha selecionada, divisa entre linhas e a supressão da divisa na última já vêm de `.nds-table`. Nada disso se declara no call site
-- Tokens lidos pela folha: `--muted-foreground` no cabeçalho e na legenda, `--foreground` no corpo, `--border` nas divisas, `--muted` no realce
+`createTable` devolver o PAR é a decisão de forma desta stack: o `wrapper` é o nó
+que se anexa à página e a `table` é o nó que recebe as seções, e é isso que torna
+impossível esquecer o contêiner. `regionLabel` é o segundo parâmetro posicional, e
+não uma opção nomeada.
 
-**Acessibilidade**:
-- `<caption>` obrigatório
-- `scope="col"` em headers de coluna; `scope="row"` se houver headers de linha
-- Para tabelas de layout, prefira CSS Grid — `<table>` é apenas para dados
+`lang` em `createTableCell` existe só aqui, para célula cujo texto é identificador
+em outro idioma; nas outras stacks é atributo nativo escrito no markup.
+
+**A composição à mão, em texto**: o `wrapper` recebe a `table`; a `table` recebe,
+nesta ordem, a legenda, o cabeçalho, o corpo e o rodapé; o cabeçalho recebe uma
+linha com um `createTableHead` por coluna; cada linha do corpo recebe um
+`createTableCell` por célula.
+
+**Editar `table.ts` alcança mais do que as tabelas de dados**: `DocsProps.ts` e
+`DocsTokens.ts` montam as tabelas de propriedades e de tokens com estas mesmas
+fábricas, então a mudança chega a todas as docs pages desta stack.
 
 ---
 
@@ -152,52 +150,46 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 ---
 
 
-## DataTable
+## DataTable — a fábrica desta stack
 
-**Propósito**: tabela avançada para datasets que exigem interação — ordenação, filtros, seleção, paginação, redimensionamento, reordenação, fixação, edição inline e virtualização.
+O contrato do componente — as flags e seus padrões, a anatomia, os estados, a
+geometria, os rótulos e a acessibilidade — está em
+[`docs/shared/prd/data-table.md`](../../docs/shared/prd/data-table.md). A regra da categoria está
+em [`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md), inclusive a
+fronteira que mais se erra: o rodapé de paginação já vem de dentro, e não se compõe
+o componente Pagination aqui. Aqui fica só a mecânica desta stack.
 
-**Stack**: factory `createDataTable<TData>(opts)` em `src/components/ui/data-table.ts` sobre **`@tanstack/table-core`** v8 (engine headless) + **`@tanstack/virtual-core`**. Renderiza HTML semântico via DOM nativo reusando o factory `createTable` do design system para preservar tokens 8-grid e a11y.
+**A fábrica e o motor, sem adaptador**: `createDataTable<TData>(options)`, em
+`src/components/ui/data-table.ts`, sobre `@tanstack/table-core` (`^9.1.2`) mais
+`@tanstack/virtual-core`. Não há adaptador de framework: o construtor agnóstico do
+core exige que alguém forneça as ligações de reatividade, e aqui usam-se as que ele
+próprio publica para uso vanilla. Como essas ligações guardam estado por instância,
+o conjunto de recursos nasce A CADA tabela — nunca como constante de módulo.
 
-**API e exemplos**: `src/components/ui/data-table.ts` + stories + `DataTableDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Devolve elemento destruível**, e é a única stack com ciclo de vida explícito: o
+menu de colunas pendura ouvinte de clique no `document`, e a fábrica solta o
+anterior antes de pendurar o seu.
 
-**Flags principais** (todas opcionais): `enableGlobalFilter` (default `true`), `enableColumnVisibility` (default `true`), `enableColumnFilters`, `enableRowSelection`, `enableColumnResizing`, `enableColumnOrdering`, `enableColumnPinning`, `enablePagination` (default `true`), `virtualized` (desliga paginação).
+**Veste o primitivo desta stack**: importa `createTable`, `createTableHeader`,
+`createTableBody`, `createTableRow` e `createTableCaption` de `./table` — daí vêm o
+contêiner que rola, a legenda e os tokens. As células e os `<th>` são montados aqui.
 
-**`ColumnMeta` (Nortear)**:
+**O `meta` da coluna — os campos que o tipo desta stack realmente lê**:
 
 | Chave | Tipo | Função |
 |---|---|---|
-| `filter` | `{ type: 'text' \| 'select'; options?: string[] }` | Input/select por coluna |
-| `editable` | `boolean` | Marca a coluna como editável inline |
-| `renderCell` | `(ctx) => HTMLElement \| string` | DOM nativo para markup rico (badges, ícones, links). Sem JSX/snippets na stack vanilla |
-| `cellClass` | `string` | Classes extras no `<td>` |
+| `filter` | `{ type: 'text' \| 'select'; options?: string[]; placeholder?: string }` | campo ou select de filtro por coluna |
+| `editable` | `boolean` | marca a coluna como editável na célula |
+| `headerLabel` | `string` | rótulo da coluna para os nomes acessíveis, quando o cabeçalho não é texto |
+| `renderCell` | `(ctx: { value, row, rowIndex }) => HTMLElement \| string` | markup rico sem JSX |
 
-**Nome da tabela e identidade da linha** (todas opcionais):
+`renderCell` é a forma de montar badge, ícone ou link nesta stack, que não tem JSX
+nem snippet de template: devolvendo `HTMLElement` o nó é anexado à célula;
+devolvendo `string` o valor vai para `textContent`, ou seja **com escape
+automático**.
 
-| Opção | Tipo | Função |
-|---|---|---|
-| `caption` | `string` | Nome acessível da grade. Vira legenda fora da tela — anunciada pelo leitor, invisível na página |
-| `rowKey` | `(row, index) => string` | Identidade estável da linha. Sem ela a identidade é a POSIÇÃO, e ordenar leva a marcação para quem ocupou o lugar |
-| `rowLabel` | `(row) => string` | Texto que identifica a linha no nome do controle de seleção. Sem ela o identificador sai da primeira coluna de dados, e só cai na chave da linha quando essa coluna vem vazia |
-
-**i18n**: o factory aceita uma opção `labels` para sobrescrever todas as strings (Colunas, Linhas por página, Página, de, Primeira/Anterior/Próxima/Última página, etc.). Sem `labels`, defaults em pt-BR. As docs pages passam `t('demonstration.labels.*')` para refletir o locale ativo. Duas chaves são FUNÇÕES por dependerem da linha ou da coluna: `selectRow(linha)` — texto fixo aqui produziria dez controles homônimos — e `noFilter(coluna)`, o texto da célula sem filtro.
-
-**Regras**:
-- Defina `columns` em escopo de módulo ou memoize — recriar zera o estado da engine
-- `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde
-- Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática
-- Selects de filtro recebem `filterFn: 'equals'` automaticamente; texto usa `includesString`
-- Tokens 8-grid obrigatórios em CSS — `--spacing-1/2/4/6/8/10/24`. Off-grid (3, 5, 7, 9) são bugs
-- Estilos em `docs/shared/styles/nds/data-table.css`, alcançado por `globals.css` pelo alias `@shared/styles/nds/` — classes `.nds-data-table-*`
-- `data` nunca é mutado pelo componente — para edição inline, atualize o array externamente no handler de `onCellEdit`
-- Para markup rico, use `meta.renderCell` retornando `HTMLElement` (preferido) ou `string` (escape automático)
-- `virtualized` e `enablePagination` são mutuamente exclusivos; virtualização desativa paginação
-
-**Acessibilidade**:
-- HTML semântico real (`<table>`, `<thead>`, `<tbody>`, `<th scope="col">`, `<td>`)
-- `aria-sort` no `<th>` ordenável (`ascending` / `descending` / `none`)
-- `aria-label` contextual em todos os botões via `labels.sortBy(col)`, `labels.filter(col)`, etc.
-- Checkbox de cabeçalho com `indeterminate` em seleção parcial (tri-state)
-- Cada checkbox de linha carrega o identificador daquela linha no nome; nome repetido em dez controles é o mesmo que nome nenhum (WCAG 4.1.2)
-- Uma só camada rola na horizontal, e é a do primitivo Table — a única com `tabindex="0"`. O contêiner externo é moldura e, no modo virtualizado, dono da rolagem vertical (WCAG 2.1.1, axe `scrollable-region-focusable`)
-- Handle de resize: `role="separator"` + `aria-orientation="vertical"`
-- Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa
+**A folha e o alias**: `docs/shared/styles/nds/data-table.css`, com as classes
+`.nds-data-table-*`. Ela é alcançada pelo `globals.css` desta stack, que faz
+`@import "@shared/styles/nds/index.css"`; o alias `@shared` aponta para
+`docs/shared` e está declarado nos dois lugares que precisam concordar —
+`vite.config.ts` e `tsconfig.json`.

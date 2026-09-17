@@ -146,44 +146,35 @@ Segue disso que **o design system NÃO oferece um indicador de etapas não naveg
 
 ---
 
-## Pagination
+## Pagination — a fábrica desta stack
 
-**Propósito**: navegar entre páginas de uma lista paginada. Para listas curtas (<20 itens), prefira scroll contínuo.
+O contrato do componente — anatomia, estados, nomes acessíveis, geometria e o
+evento que ele dispara — está em
+[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da categoria está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md): o Pagination é
+descrito junto com Table e DataTable porque o único consumidor dele é o rodapé de
+uma lista ou de uma tabela, e é lá que ficam a fronteira com o rodapé do DataTable,
+o alinhamento da faixa e o desabilitado que precisa de dois atributos. A mecânica de
+navegação desta stack fica aqui.
 
-**API e exemplos**: `src/components/ui/pagination.ts` + stories + `PaginationDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Fábrica única**: `createPagination(options)` devolve a faixa inteira montada, em
+`src/components/ui/pagination.ts`. É a única stack com a régua de páginas embutida —
+até sete páginas saem todas; de oito em diante a régua colapsa, mantendo a primeira,
+a última, a atual e as vizinhas.
 
-**Estrutura**:
-
-```
-nav (aria-label="Paginação dos resultados")
-├── button "Anterior" (aria-label, disabled quando currentPage=1)
-├── span / button (números de página)
-└── button "Próxima" (aria-label, disabled quando currentPage=totalPages)
-```
-
-**Opts da factory**:
-
-| Nome | Default | Função |
+| Opção | Default | Função |
 |---|---|---|
 | `total` | — | Total de páginas |
-| `current` | — | Página atual (1-indexed) |
-| `onPageChange` | — | Avisado quando outra página é pedida. Opcional: uma paginação inteiramente de rota não precisa dele |
+| `current` | — | Página atual, contando de 1 |
+| `onPageChange` | — | Avisado quando outra página é pedida. Opcional: uma paginação inteiramente de rota não precisa dele — e ele continua sendo chamado quando há `hrefForPage`, porque é por ele que passam a analítica e o estado da tela |
 | `hrefForPage` | — | Endereço real de cada página. Com ele o link é destino de verdade e o clique SEGUE — é o ponto de integração com roteador de cliente. Sem ele todo link nasce `#` e o clique é anulado |
-| `showPrevNext` | `true` | Exibe os controles Anterior/Próxima |
-| `aria-label` | `'Paginação'` | Nome acessível do landmark. `label` segue aceito como apelido depreciado; quando os dois vêm, `aria-label` vence |
+| `showPrevNext` | `true` | Exibe os controles direcionais |
+| `aria-label` | `'Paginação'` | Nome acessível do landmark |
+| `label` | — | **Apelido depreciado** de `aria-label`; quando os dois vêm, o canônico vence |
 | `align` | — | `start`/`end` encolhem a faixa e a encostam na ponta; sem valor ela ocupa a linha e fica centrada |
-| `class` | — | Classes adicionais |
+| `class` | — | Classes `.nds-*` adicionais |
 
-**Regras**:
-- `<nav>` com `aria-label` descritivo
-- Botões Anterior/Próxima sempre presentes; `disabled` nos extremos (não esconder)
-- Página atual com `aria-current="page"`
-- Altura mínima dos botões em `--size-lg` (36px na densidade padrão, e é piso de alvo de toque, não teto); gap em `--spacing-1`
-- Nunca usar emojis literais — usar ícones SVG (`ChevronLeft`, `ChevronRight`)
-- Em mobile, exibir apenas controles "Anterior / X de Y / Próxima"
-
-**Acessibilidade**:
-- `aria-label` em todos os botões (ex: "Página anterior", "Página 3")
-- Botões `disabled` nos extremos (não somente visualmente desativados)
-
-**Analytics**: emitir `pagination_change` com `{ from, to, total }`.
+**Os chevrons são da própria fábrica**: ela os cria por `createElementNS`, já com
+`aria-hidden`, então não se passa ícone no call site. Os rótulos acessíveis dos
+controles são constantes em português no módulo — esta é a stack em que eles não
+vêm de fora.

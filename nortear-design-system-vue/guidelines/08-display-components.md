@@ -146,133 +146,64 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 ---
 
 
-## Table
+## Table — mecânica desta stack
 
-**Propósito**: exibição de dados tabulares estruturados com semântica HTML correta.
+O que o componente É — contrato, decisões com data e medição, tokens e peças das
+cinco stacks — está em [`docs/shared/prd/table.md`](../../docs/shared/prd/table.md).
+A regra da CATEGORIA, que atravessa Table, DataTable e Pagination, está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md): acessibilidade da
+tabela, legenda, estado vazio, altura e alinhamento, rolagem, tom de voz e
+analytics.
 
-**API e exemplos**: `src/components/ui/table/table.vue` + stories + `TableDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/table/table.vue` + stories + `TableDocs.vue` (renderizada na aba Docs do Storybook).
 
-**Estrutura de subcomponentes**:
+O que é desta stack:
 
-```
-div.nds-table-wrapper
-└── Table
-    ├── TableCaption   (descrição da tabela — lida por leitores de tela)
-    ├── TableHeader
-    │   └── TableRow
-    │       └── TableHead (th — cabeçalho de coluna, scope="col")
-    ├── TableBody
-    │   └── TableRow
-    │       └── TableCell (td)
-    └── TableFooter
-        └── TableRow
-            └── TableCell (totais, sumários)
-```
-
-**Regras**:
-- `.nds-table-wrapper` envolvendo a tabela — rolagem horizontal em telas estreitas é obrigatória, e é a folha do wrapper que a define
-- `TableCaption` obrigatório — pode ser visualmente oculto (`.nds-sr-only`) quando o contexto visual já é claro; oculto para os olhos, presente para o leitor de tela
-- `scope="col"` em todos os `TableHead` — associa cabeçalhos às células para leitores de tela
-- Estado vazio obrigatório — nunca tabela vazia sem mensagem
-- `aria-label` contextual nos botões de ação por linha — "Ações para fatura INV001"
-- `TableFooter` para totais e sumários — não usar linha de body para isso
-- Para ordenação, filtragem, seleção, paginação e edição: usar **DataTable** (próxima seção) — `Table` é apenas a camada visual semântica
-
-**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
-- `TableCaption` lida pelos leitores de tela antes das células — descreve o propósito da tabela
-- `scope="col"` em `TableHead` — obrigatório para mapear cabeçalhos às células
-- Botões de ação por linha: `aria-label` contextual incluindo o identificador da linha
-- Ordenação: `aria-sort="ascending"` / `"descending"` / `"none"` nos `TableHead` com ordenação ativa
-- Tabela dentro de `.nds-table-wrapper`: `tabindex="0"` no wrapper, para que quem usa teclado possa focá-lo e rolar na horizontal com as setas (WCAG 2.1.1; axe `scrollable-region-focusable`). Uma só camada rola e recebe o `tabindex` — duas produzem parada dupla no Tab
-
-**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
-- Cabeçalhos de coluna: substantivos curtos, sem ponto final, capitalização na primeira palavra
-- Estado vazio: "Nenhum [item] encontrado." — tom encorajador quando há CTA disponível
-- Botão de ação: `aria-label` contextual — "Editar fatura INV001", não apenas "Editar"
-
-**Analytics**: a tabela em si não dispara eventos. Ações dentro da tabela seguem os eventos do componente correspondente (`button_click`, `navigation_click`).
+| o quê | como é aqui |
+|---|---|
+| forma das peças | nove SFCs, cada uma com `class` mais `<slot />`, sem `Primitive` da reka-ui — a tag é literal no template, porque trocar a tag mudaria a semântica |
+| `scope` do cabeçalho | `withDefaults` no `TableHead`, com `col` de padrão. **Não se escreve `scope="col"` no markup**: o default já nasce na peça, e o teste do painel Code afirma a AUSÊNCIA do atributo de propósito. O que se escreve é o caso que o default não cobre, `scope="row"` |
+| contêiner que rola | renderizado pelo PRÓPRIO componente, junto com a `<table>`. **Nunca envolver o componente num wrapper próprio** — seriam duas camadas roláveis, e só uma está na ordem de tabulação; o teste do painel Code afirma que o snippet da tabela larga não configura rolagem nenhuma |
+| `TableEmpty` | peça publicada só nesta stack, a nona. É escolha de CONTRATO, não de marcação, e está registrada como divergência de forma no PRD — que é onde ela se descreve |
 
 ---
 
-## DataTable
+## DataTable — mecânica desta stack
 
-**Propósito**: tabela avançada para datasets que exigem interação — ordenação, filtros, seleção, paginação, redimensionamento, reordenação, fixação, edição inline e virtualização. Construída sobre **`@tanstack/vue-table` v8** (headless) + **`@tanstack/vue-virtual`**, encapsulando a engine numa camada visual que reusa o primitivo `Table` do design system.
+Contrato, decisões com data e medição, tokens e peças das cinco stacks:
+[`docs/shared/prd/data-table.md`](../../docs/shared/prd/data-table.md). Regra da
+categoria: [`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md) — e é lá
+que está a fronteira entre o rodapé deste componente e o componente Pagination,
+que não se compõem em stack nenhuma.
 
-> Use `Table` quando os dados são estáticos e cabem na tela. Use `DataTable` quando o usuário precisa explorar, filtrar ou editar.
+**API e exemplos**: `src/components/ui/data-table/data-table.vue` + stories + `DataTableDocs.vue` (renderizada na aba Docs do Storybook).
 
-**API e exemplos**: `src/components/ui/data-table/data-table.vue` + stories + `DataTableDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**O motor desta stack**: `@tanstack/vue-table`, mais `@tanstack/vue-virtual` para a
+virtualização. A versão instalada é a **9**, e nela cada recurso é REGISTRADO em
+vez de vir ligado — é o que explica existirem dois conjuntos de recursos, um com
+paginação e outro sem, e o estado de paginação sair de um átomo. Documento que
+disser "v8" está vencido.
 
-**Estrutura de subcomponentes**:
-```
-DataTable
-├── Toolbar (GlobalFilter + DropdownMenu de visibilidade/pin)
-├── Container rolável (assume a rolagem vertical quando virtualizado)
-│   └── Table (primitive)
-│       ├── TableHeader (row de cabeçalhos + row de filtros opcional)
-│       └── TableBody (linhas reais + padding rows quando virtualizado)
-└── DataTablePagination (rodapé)
-```
-
-**Flags (cada recurso é opcional)**:
-
-| Flag | Default | Função |
-|---|---|---|
-| `enableGlobalFilter` | `true` | Filtro de busca livre na toolbar |
-| `enableColumnVisibility` | `true` | Menu "Colunas" na toolbar |
-| `enableColumnFilters` | `false` | 2ª linha do header com input/select por coluna |
-| `enableRowSelection` | `false` | Checkbox por linha + tri-state no cabeçalho |
-| `enableColumnResizing` | `false` | Handle lateral em cada cabeçalho |
-| `enableColumnOrdering` | `false` | Drag handle no cabeçalho para reordenar |
-| `enableColumnPinning` | `false` | Pin esquerda/direita via menu de colunas |
-| `enablePagination` | `true` | Rodapé com contagem + nav (≠ `virtualized`) |
-| `virtualized` | `false` | TanStack Virtual; desliga paginação |
-
-**`ColumnMeta` (extensões da column def)**:
-
-| Chave | Tipo | Função |
-|---|---|---|
-| `filter` | `{ type: 'text' \| 'select'; options?: string[] }` | Renderiza input/select na row de filtros (`includesString` ou `equals`) |
-| `editable` | `boolean` | Marca a coluna como editável inline |
+**Como a reatividade chega ao motor**: o estado entra em `useTable` por GETTERS, e
+não por valor. Daí a regra prática desta stack, que vale para os dois objetos:
+`columns` e `labels` moram em REFERÊNCIA ESTÁVEL — módulo ou `computed` —, porque
+objeto novo a cada render remonta as colunas e zera o estado da tabela.
 
 **Eventos**:
 
 | Evento | Payload | Quando |
 |---|---|---|
-| `@cell-edit` | `(rowIndex, columnId, value)` | Edição inline confirmada (`Enter` ou blur) |
-| `@table-ready` | `(table: Table<TData>)` | Após mount; expõe instância para ações em lote, export, etc. |
+| `@cell-edit` | `(rowIndex, columnId, value)` | Edição em linha confirmada — Enter ou saída do campo. Escape descarta e NÃO emite |
+| `@table-ready` | a instância da tabela | Depois da montagem. É por ela que se instrumenta ordenação, filtro e edição no call site, porque o componente é passivo em analytics |
 
+**Duas mecânicas do motor que valem aqui**: para redimensionar ou reordenar,
+defina o tamanho inicial na definição da coluna, senão o cabeçalho usa largura
+automática e a alça fica imprevisível; e filtro de seleção recebe `equals`
+automaticamente, enquanto filtro de texto casa por `includesString`.
 
-**Nome da tabela e identidade da linha** (todas opcionais):
-
-| Prop | Tipo | Função |
-|---|---|---|
-| `caption` | `string` | Nome acessível da grade. Vira legenda fora da tela — anunciada pelo leitor, invisível na página |
-| `rowKey` | `(row, index) => string` | Identidade estável da linha. Sem ela a identidade é a POSIÇÃO, e ordenar leva a marcação para quem ocupou o lugar |
-| `rowLabel` | `(row) => string` | Texto que identifica a linha no nome do controle de seleção. Sem ela o identificador sai da primeira coluna de dados, e só cai na chave da linha quando essa coluna vem vazia |
-| `labels` | `Partial<DataTableLabels>` | Textos da interface. Só as chaves informadas mudam; o resto fica no padrão pt-BR |
-
-**i18n**: `labels` cobre rótulos de controle, contagens e navegação. Duas chaves são FUNÇÕES por dependerem da linha ou da coluna: `selectRow(linha)` — texto fixo aqui produziria dez controles homônimos — e `noFilter(coluna)`, o texto da célula sem filtro. Mantenha `labels` numa referência estável (módulo ou `computed`): objeto novo a cada render remonta as colunas.
-
-**Regras**:
-- Defina `columns` numa referência estável (módulo ou `computed`) — recriar a cada render zera o estado da tabela.
-- `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde.
-- Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática e o handle fica imprevisível.
-- Selects de filtro recebem `filterFn: "equals"` automaticamente; texto usa `includesString`.
-- O componente aplica `table-fixed` ao usar `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — força layout O(1) por coluna e evita travamento em datasets grandes.
-- `data` nunca é mutado pelo componente — para edição inline, atualize a `ref` externamente no handler de `@cell-edit`.
-- `virtualized` e `enablePagination` são mutuamente exclusivos; ativar virtualização desliga paginação automaticamente.
-
-**Acessibilidade** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
-- Tabela semântica via primitive `Table` — `<th>`, `<tr>`, `<td>` reais
-- `aria-sort="ascending|descending|none"` no `<th>` ordenável — anunciado pelo leitor de tela
-- `aria-label` contextual obrigatório nos botões: "Ordenar por <em>coluna</em>", "Filtrar <em>coluna</em>", "Selecionar linha", "Próxima página"
-- Checkbox de cabeçalho usa `indeterminate` quando há seleção parcial (tri-state)
-- Cada checkbox de linha carrega o identificador daquela linha no nome; nome repetido em dez controles é o mesmo que nome nenhum (WCAG 4.1.2)
-- Uma só camada rola na horizontal, e é a do primitivo Table — a única com tabindex zero. O contêiner externo é moldura e, no modo virtualizado, dono da rolagem vertical (WCAG 2.1.1, axe scrollable-region-focusable)
-- Handle de resize tem `role="separator"` + `aria-orientation="vertical"`
-- Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa
-
-**Analytics**: passivo por padrão. Para rastrear interações (sort, filter, edit confirmado), consuma a instância via `@table-ready` e instrumentaliza no caller.
+O componente **nunca muta a lista que recebe**: a edição avisa, e quem consome
+atualiza a `ref` no tratador de `@cell-edit`. É o que permite `data` vir de um
+recorte de servidor.
 
 ---
 
@@ -281,7 +212,6 @@ DataTable
 **Acessibilidade transversal** (ver `../../docs/shared/guidelines/01-acessibilidade.md`):
 - `AvatarImage`: `alt` obrigatório em todos os casos (descritivo ou vazio para decorativo)
 - `Chart`: `role="img"` mais descrição no container; para gráfico denso ou dado crítico, resumo textual à parte — pode ficar visualmente oculto com `.nds-sr-only`
-- `Table`: `TableCaption` obrigatório + `scope="col"` nos cabeçalhos
 - Carousel: `aria-label` nos botões de navegação
 - Movimento reduzido: as folhas `.nds-*` já param sob `prefers-reduced-motion`, e o Chart anima pelos mesmos tokens de duração do resto do sistema. Animação personalizada acrescentada por cima tem de parar sob a mesma condição — se vier de utilitária de animação avulsa, somar `.nds-motion-reduce-none`
 
@@ -292,8 +222,6 @@ DataTable
 | Carousel | `slide_change` | A cada mudança de slide |
 | Avatar clicável | `button_click` ou `navigation_click` | Ao clicar |
 | Chart | — | Passivo, sem eventos padrão |
-| Table | — | Passivo; ações internas rastreadas pelos componentes de ação |
-| DataTable | — | Passivo; rastreio de sort/filter/edit feito no caller via `@table-ready` |
 
 ---
 

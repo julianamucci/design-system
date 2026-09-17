@@ -338,4 +338,5 @@ Para outros indicadores de estado (ex: "feature presente" na seção de acessibi
 |---------|-------------|--------------------------|
 | `06-form-components.md` | Labels e placeholders específicos de cada componente de formulário | Terminologia específica deve ser consistente com este arquivo |
 | `19-feedback.md` | a categoria Feedback (Alert, Badge, Progress, Skeleton, Sonner), nas cinco stacks | Tom de feedback deve seguir as seções "Confirmação", "Aviso" e "Erro" deste arquivo |
+| `20-tabelas.md` | a categoria Tabelas (Table, DataTable, Pagination), nas cinco stacks | A mensagem de vazio segue a seção "Estado vazio" deste arquivo, e os rótulos de paginação a linha Pagination da tabela por componente |
 | `18-overlay.md` | a categoria Overlay, nas cinco stacks | Títulos e descrições de overlays seguem as seções "Ação" e "Diálogo" deste arquivo |

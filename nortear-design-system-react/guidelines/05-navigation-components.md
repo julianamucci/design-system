@@ -150,48 +150,38 @@ Menubar (aria-label="Menu principal")
 
 ---
 
-## Pagination
+## Pagination — mecânica desta stack
 
-**Propósito**: navegação entre páginas de um conjunto de resultados ou conteúdo paginado. Use em listas com mais de 10 itens; abaixo disso, exibir tudo sem paginação.
+Contrato, decisões com data e medição, tokens e peças das cinco stacks:
+[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da
+categoria está em [`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md) —
+o Pagination entra lá por USO, porque o único consumidor dele no repositório é o
+rodapé de uma lista ou de uma tabela, e a fronteira entre ele e o rodapé do
+DataTable é a regra que mais divergiu. O que fica aqui é a mecânica.
 
-**API e exemplos**: `src/components/ui/pagination.tsx` + stories + `PaginationDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Onde o código está**: `src/components/ui/pagination.tsx` + stories +
+`PaginationDocs.tsx`.
 
-**Estrutura de subcomponentes**:
-```
-<nav aria-label="Navegação de páginas">
-└── Pagination
-    └── PaginationContent
-        ├── PaginationItem → PaginationPrevious
-        ├── PaginationItem → PaginationLink (uma por página)
-        ├── PaginationItem → PaginationEllipsis (aria-hidden)
-        └── PaginationItem → PaginationNext
-```
+O que é desta stack:
 
-**Nota de arquitetura**: `PaginationPrevious`, `PaginationNext` e `PaginationLink` renderizam `<a>` por padrão. Em SPAs com roteamento por estado (sem URLs reais), use `asChild` para renderizar um `<button>` semanticamente correto. Em projetos com URLs reais (Next.js, React Router), use `href` direto.
-
-**Regras**:
-- Sempre mostrar página atual e total (ex.: "Página 3 de 12").
-- Usar ellipsis (`…`) quando houver mais de 7 páginas — exibir primeira, última e adjacentes à atual.
-- "Anterior" desabilitado apenas quando estiver na **primeira** página.
-- "Próxima" desabilitado apenas quando estiver na **última** página.
-- Todo o texto em português: "Anterior", "Próxima" — sem abreviações.
-
-**Acessibilidade**:
-- `<nav aria-label="Navegação de páginas">` envolvendo o componente.
-- `aria-label="Ir para página N"` em cada botão numerado — o número sozinho não tem contexto.
-- `aria-current="page"` na página ativa.
-- `aria-label="Página anterior"` e `aria-label="Próxima página"` nos botões de direção.
-- `aria-disabled` + `pointer-events-none` em vez de `disabled` — mantém o elemento no fluxo do Tab.
-- `PaginationEllipsis` com `aria-hidden="true"` — é decorativo.
-
-**UX Writing** (ver `docs/shared/guidelines/05-tom-de-voz.md`):
-- "Anterior" e "Próxima" — sem abreviações, sem ponto final.
-- Botões numerados: apenas o número — o contexto vem do `aria-label`.
-- Ellipsis: `…` (reticências tipográficas), não `...` (três pontos).
-
-**Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
-- Evento: `page_change` com `page` (página de destino) e `total_pages`.
-- Disparar ao confirmar a mudança, não ao clicar — evitar disparos em cliques rápidos.
+- **Sete peças de função, sem lib headless.** O link é o `Button` do design
+  system com `nativeButton={false}` e `render={<a …>}`: dá ao `<a>` a aparência do
+  botão sem um segundo elemento no DOM. **Não há ponte `asChild` aqui** — a prop
+  seria ignorada em silêncio (ver a tabela de gatilhos em [`RULES.md`](RULES.md)).
+- **`isActive` escolhe a variante do botão**: `outline` na página atual, `ghost`
+  nas outras.
+- **`aria-disabled` e `data-active` só existem quando são verdade.** O React
+  escreve booleano de atributo ARIA como a string `"false"`, e com o atributo
+  presente o seletor `[aria-disabled]` passava a casar o controle HABILITADO.
+- **Desabilitar prev/next é coisa de dois mecanismos, e o CSS é só um deles.** A
+  folha barra o PONTEIRO (`pointer-events: none` no botão com
+  `aria-disabled="true"`); o teclado sai por `tabIndex={-1}`, e o `onClick` do
+  próprio `<a>` fecha o que sobra — Enter, clique disparado por script e o
+  `click()` de um teste. Sem os dois últimos o controle continua tabulável e o
+  Enter navega.
+- **A régua de páginas é de quem consome**: esta stack não calcula quais números
+  aparecem nem onde entram as reticências. Onde há URL real, `href` por link; em
+  roteamento por estado, `onClick` — e o controle continua sendo `<a>`.
 
 ---
 

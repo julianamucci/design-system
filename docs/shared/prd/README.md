@@ -195,6 +195,37 @@ descrevendo o vizinho — porque quem revisava tinha o código fresco e o regist
 por escrever. Aqui o documento vem primeiro e a revisão tem contra o que ser
 conferida.
 
+### Tabelas — escritos ANTES da revisão de código
+
+Mesma ordem invertida da Feedback, por decisão da dona: os três nasceram do CÓDIGO
+em 2026-09-16, e a revisão vai usá-los como base. Cada um fecha a §7 com a lista
+numerada de inconsistências entre as cinco stacks, e o que precisa de decisão está
+na §"O que está aberto" da [`20-tabelas.md`](../guidelines/20-tabelas.md).
+
+| componente | PRD | escrito em | inconsistências medidas | pendências |
+|---|---|---|---|---|
+| Table | [table.md](table.md) | 2026-09-16 | 19 | 3 |
+| DataTable | [data-table.md](data-table.md) | 2026-09-16 | 28 | 13 |
+| Pagination | [pagination.md](pagination.md) | 2026-09-16 | 24 | 5 |
+
+**O Pagination é de NAVEGAÇÃO, e está nesta categoria por uso**: o único consumidor
+dele no repositório é o rodapé de uma lista ou de uma tabela, e a fronteira entre
+ele e o rodapé do DataTable — dois vocabulários de classe que não se compõem em
+stack nenhuma — é a decisão mais atravessada da categoria. O catálogo dele não
+estava nas `08-display-components.md` como os outros dois, e sim nas cinco
+`05-navigation-components.md`.
+
+**Estes três nasceram com o auditor VERMELHO, e isso é diferente das categorias
+anteriores.** Medido em 2026-09-17, depois de os PRDs existirem: table 28 achados,
+data-table 26, pagination 27 — e em cada um, cinco são o `catalogo_duplicado_com_prd`
+que o próprio nascimento do PRD acendeu, um por stack. São as quinze seções de
+catálogo a migrar. O resto era anterior e está descrito nos PRDs.
+
+**Nenhuma das inconsistências medidas é vista por portão** — é a mesma leitura das
+outras categorias, e aqui ela foi conferida contra o auditor achado a achado: o
+auditor toca umas poucas pela borda, e nenhuma das 71 listadas nos três documentos
+sai de uma regra.
+
 **Três membros da família de menus dividem um PRD.** O ContextMenu e o Menubar
 não têm PRD próprio: os dois são montados com as peças do DropdownMenu, e o que
 os separa está registrado como decisão lá (D9). O cabeçalho do arquivo declara a

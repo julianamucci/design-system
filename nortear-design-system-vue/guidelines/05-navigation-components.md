@@ -156,55 +156,27 @@ nav[aria-label="Navegação principal"]
 
 ---
 
-## Pagination
+## Pagination — mecânica desta stack
 
-**Propósito**: navegação entre páginas de um conjunto de resultados ou conteúdo paginado.
+Contrato, decisões com data e medição, tokens e peças das cinco stacks:
+[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md). A regra da
+categoria — acessibilidade, alinhamento da faixa, desabilitado, tom de voz e o
+evento — está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md): o Pagination entra
+na categoria Tabelas porque o único consumidor dele em todo o repositório é o
+rodapé de uma lista ou de uma tabela, e a fronteira entre ele e o rodapé do
+DataTable é a regra que mais divergiu. A mecânica de navegação fica aqui.
 
-**Quando usar**: listas com mais de 10 itens onde carregar tudo de uma vez prejudicaria a performance ou a experiência. Abaixo de 10 itens, exibir tudo sem paginação.
+**API e exemplos**: `src/components/ui/pagination/pagination.vue` + stories + `PaginationDocs.vue` (renderizada na aba Docs do Storybook).
 
-**API e exemplos**: `src/components/ui/pagination/pagination.vue` + stories + `PaginationDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
-
-**Estrutura de subcomponentes**:
-
-```
-nav[aria-label="Navegação de páginas"]
-└── Pagination
-    └── PaginationContent
-        ├── PaginationItem
-        │   └── PaginationPrevious
-        ├── PaginationItem
-        │   └── PaginationLink (aria-current="page" no ativo)
-        ├── PaginationItem
-        │   └── PaginationEllipsis (aria-hidden)
-        └── PaginationItem
-            └── PaginationNext
-```
-
-> **Nota de arquitetura**: `PaginationPrevious`, `PaginationNext` e `PaginationLink` renderizam elementos `<a>` por padrão. Em SPAs com roteamento baseado em estado (sem URLs reais por página), usar o padrão `as-child` para renderizar `<button>` semanticamente correto.
-
-**Regras**:
-- Sempre mostrar página atual e total (ex: "Página 3 de 12")
-- Usar ellipsis (`…`) quando houver mais de 7 páginas — exibir primeira, última e as adjacentes à atual
-- "Anterior" desabilitado apenas quando estiver na **primeira** página
-- "Próxima" desabilitado apenas quando estiver na **última** página
-- Todo o texto em português: "Anterior", "Próxima" — sem abreviações
-
-**Acessibilidade**:
-- `<nav aria-label="Navegação de páginas">` envolvendo o componente
-- `aria-label="Ir para página N"` em cada botão numerado — o número sozinho não tem contexto para leitores de tela
-- `aria-current="page"` na página ativa
-- `aria-label="Página anterior"` e `aria-label="Próxima página"` nos botões de direção
-- `aria-disabled` mais `pointer-events: none` (da folha, não de classe avulsa) em vez de `disabled` — mantém o elemento no fluxo do Tab com feedback visual correto
-- `PaginationEllipsis` com `aria-hidden="true"` — é decorativo
-
-**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
-- "Anterior" e "Próxima" — sem abreviações, sem ponto final
-- Botões numerados: apenas o número — o contexto vem do `aria-label`
-- Ellipsis: `…` (reticências tipográficas), não `...` (três pontos)
-
-**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
-- Evento: `page_change` com `page` (página de destino) e `total_pages`
-- Disparar ao confirmar a mudança, não ao clicar — evitar disparos em cliques rápidos
+| o quê | como é aqui |
+|---|---|
+| o que vem da lib | a raiz, a lista e os dois direcionais são primitivos da reka-ui, e as reticências também. O link numerado não: não há primitivo de página em uso |
+| a lista | o primitivo renderiza `div` por padrão e a faixa é uma lista — a tag é trocada pela prop `as` |
+| reticências | o `as` tem de ser PADRÃO de prop, nunca atributo delegado: o `v-bind` dos delegados é aplicado depois, e um `as` indefinido devolvia o `div` do primitivo em silêncio |
+| link numerado | `<a>` escrito à mão, com `href` de padrão `#`. Não é enfeite: sem `href` a âncora não recebe papel de link, não entra na ordem de tabulação e o Enter não a alcança — a faixa numerada inteira ficava fora do teclado. Quem tem URL de verdade passa a sua |
+| desabilitar direcional | aqui os direcionais são `<button>` da lib, com o `disabled` NATIVO, e o navegador barra clique e tabulação sozinho. A regra da categoria cobre também a forma de âncora, que precisa de `aria-disabled` MAIS saída da tabulação: `aria-disabled` bloqueia só o PONTEIRO, e sem `tabindex="-1"` o Enter continua navegando |
+| régua de páginas | calculada pelo primitivo, não por quem consome |
 
 ---
 

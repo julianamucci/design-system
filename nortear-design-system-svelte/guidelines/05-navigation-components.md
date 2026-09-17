@@ -71,27 +71,35 @@ NavigationMenu
 
 ---
 
-## Pagination
+## Pagination — a mecânica desta stack (Svelte 5)
 
-**Propósito**: navegar entre páginas de uma lista paginada.
+O que o componente É — contrato, decisões, anatomia, tokens, estados, API e peças
+das cinco stacks — está em
+[`docs/shared/prd/pagination.md`](../../docs/shared/prd/pagination.md), incluindo o
+nome acessível que as cinco implementações de fato escrevem e os dois mecanismos
+de desabilitado.
 
-**API e exemplos**: `src/components/ui/pagination/pagination.svelte` + stories + `PaginationDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+A regra da categoria está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md), e não numa guideline
+de navegação: o único consumidor desta faixa em todo o repositório é o rodapé de
+uma lista ou de uma tabela, e é lá que está escrita a fronteira entre ela e o
+rodapé do DataTable — que **não** a compõe. A mecânica de navegação desta stack
+continua aqui.
 
-**Estrutura**:
+Desta stack, e só daqui — sete peças, com a raiz, o link e os direcionais vindos
+do bits-ui, e o índice exportando as formas curtas (`Root`, `Content`, `Link`…) ao
+lado das longas:
 
-```
-<nav aria-label="Paginação dos resultados">
-└── Pagination
-    └── PaginationContent
-        ├── PaginationItem → PaginationPrevious
-        ├── PaginationItem → PaginationLink (aria-current="page" no atual)
-        └── PaginationItem → PaginationNext
-```
-
-**Acessibilidade**:
-- `<nav aria-label="Paginação dos resultados">` envolvendo o componente
-- `aria-current="page"` na página atual
-- `aria-disabled="true"` em Anterior/Próximo quando no limite
+- **a raiz usa o snippet `child` para trocar a tag**: o primitivo renderiza um
+  `<div>` e a anatomia pede `<nav>`. Quem troca a tag passa a ser dono do repasse,
+  então os `snippetProps` (`pages`, `range`, `currentPage`) têm de ser repassados
+  à mão;
+- **o link usa `child` por outro motivo**: o bits fixa `aria-label="Page N"` em
+  inglês nos próprios props e vence o que o consumidor passa. Escrever depois do
+  merge da lib é a única forma de o nome acessível sair no idioma da página;
+- o link numerado desta stack é `<button>`, e não `<a>` — por isso não tem
+  endereço. É divergência medida, com pendência aberta na §7 do PRD;
+- `PaginationStory.svelte` é andaime de story, não peça publicada.
 
 ---
 

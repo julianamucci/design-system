@@ -60,29 +60,31 @@ Carousel (aria-label)
 
 ---
 
-## Table
+## Table — a mecânica desta stack (Svelte 5)
 
-**Propósito**: dados tabulares com linhas e colunas — apresentação estática, sem interação. Para datasets interativos, usar **DataTable**.
+O que o componente É — contrato, anatomia completa, tokens, estados e peças das
+cinco stacks — está em
+[`docs/shared/prd/table.md`](../../docs/shared/prd/table.md). A regra da categoria
+— quando é tabela e quando é grade CSS, acessibilidade da tabela, altura,
+alinhamento e estado vazio — está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md).
 
-**API e exemplos**: `src/components/ui/table/table.svelte` + stories + `TableDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+Vá à anatomia do PRD para a árvore inteira: a que estava aqui não mencionava o
+`tfoot`, e a peça existe (`table-footer.svelte`) e é estilizada pela folha.
 
-**Estrutura**:
+Desta stack, e só daqui — oito componentes com `ref` bindável, `class` e
+`restProps`, com o índice exportando as formas curtas (`Root`, `Body`, `Head`…) ao
+lado das longas:
 
-```
-Table
-├── TableCaption (fora da tela se necessário, sempre presente)
-├── TableHeader
-│   └── TableRow
-│       └── TableHead (scope="col")
-└── TableBody
-    └── TableRow
-        └── TableCell
-```
-
-**Acessibilidade obrigatória**:
-- `TableCaption` em toda tabela — pode ficar fora da tela (`.nds-sr-only`), anunciada pelo leitor e invisível na página, mas nunca ausente
-- `scope="col"` em todo `TableHead` de coluna
-- `scope="row"` em `TableHead` de linha (quando aplicável)
+- **`table.svelte` renderiza o par contêiner + `<table>`**, e o contêiner leva um
+  `svelte-ignore` de `a11y_no_noninteractive_tabindex`: a regra do compilador só
+  aceita papel de widget, e nem `region` nem `group` a dispensam. O contêiner é a
+  ÚNICA camada que rola, e quem o monta é o componente — não o envolva noutro.
+- **`scope` nasce `col` na própria peça de cabeçalho**, com o motivo escrito lá.
+  Por isso ele **não se escreve no markup**: `table.source.test.ts` cobra a
+  AUSÊNCIA do atributo no snippet do painel Code, porque repetir o default
+  ensinaria que a acessibilidade depende de alguém lembrar. O que se escreve é o
+  caso que o default não cobre, `scope="row"`.
 
 ---
 
@@ -138,56 +140,37 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 ---
 
 
-## DataTable
+## DataTable — a mecânica desta stack (Svelte 5)
 
-**Propósito**: tabela avançada para datasets que exigem interação — ordenação, filtros, seleção, paginação, redimensionamento, reordenação, fixação, edição inline e virtualização.
+O que o componente É — contrato, as flags e seus padrões, anatomia, tokens,
+estados, API e peças das cinco stacks — está em
+[`docs/shared/prd/data-table.md`](../../docs/shared/prd/data-table.md). A regra da
+categoria — acessibilidade da tabela, uma só camada rolável, altura, estado vazio
+e a fronteira entre este rodapé e o componente Pagination — está em
+[`20-tabelas.md`](../../docs/shared/guidelines/20-tabelas.md).
 
-**Stack**: construída sobre **`@tanstack/table-core`** (engine headless v8) + **`@tanstack/svelte-virtual`**. Não usa o adapter `@tanstack/svelte-table` (incompatível com Svelte 5); um wrapper local em `data-table.svelte` consome `createTable` direto e expõe state via runes (`$state`).
+**O motor, e é nele que esta stack difere das outras quatro**: não há adaptador.
+O `@tanstack/svelte-table` não é usado — é incompatível com Svelte 5 —, e o
+componente consome `@tanstack/table-core` (hoje `^9.1.2`, não v8) direto por
+`constructTable`, com a tabela em `$state.raw` construída num `$effect.pre`. O
+virtualizador é o `@tanstack/svelte-virtual`, e ele precisa de um contador de
+medições próprio porque o store do adaptador reemite sempre o MESMO objeto, e
+`$derived` nunca invalidaria.
 
-**API e exemplos**: `src/components/ui/data-table/data-table.svelte` + stories + `DataTableDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**Dois módulos que só existem aqui**, cada um por um motivo de linguagem:
 
-**Flags principais**: `enableGlobalFilter` (default `true`), `enableColumnVisibility` (default `true`), `enableColumnFilters`, `enableRowSelection`, `enableColumnResizing`, `enableColumnOrdering`, `enableColumnPinning`, `enablePagination` (default `true`), `virtualized` (desliga paginação).
+| arquivo | por que está fora do `.svelte` |
+|---|---|
+| `data-table-features.ts` | o índice importa o componente e o componente precisa do conjunto de recursos — juntos fechariam ciclo de import. E `createRecursos(comPaginacao)` nasce por INSTÂNCIA: as ligações de reatividade guardam estado, e um conjunto compartilhado misturaria as assinaturas de todas as tabelas da página |
+| `data-table-labels.ts` | arquivo de componente não exporta tipo — quem consome precisa de `DataTableLabels` para montar o objeto parcial |
 
-**`ColumnMeta` (Svelte-only)**:
+**O `ColumnMeta` é próprio desta stack**: `filter`, `editable`, `format`,
+`badgeVariant` e `cellClass`. Os três últimos existem por causa de um limite do
+wrapper local — **o `cell` Snippet ainda não é suportado** —, então markup rico
+sai por `badgeVariant`, que embrulha a célula num `<Badge>`, ou por `cellClass`,
+que acrescenta classes `.nds-*` no `<td>`.
 
-| Chave | Tipo | Função |
-|---|---|---|
-| `filter` | `{ type: 'text' \| 'select'; options?: string[] }` | Input/select por coluna |
-| `editable` | `boolean` | Marca a coluna como editável inline |
-| `format` | `(value, row) => string` | Formata o texto da célula (sem JSX/snippet) |
-| `badgeVariant` | `(value, row) => 'default' \| 'destructive' \| 'warning' \| 'success' \| 'info'` | Envolve a célula em `<Badge>` com a variant retornada — substituto do `cell` renderer das outras stacks |
-| `cellClass` | `string` | Classes `.nds-*` extras no `<td>` |
-
-
-**Nome da tabela e identidade da linha** (todas opcionais):
-
-| Prop | Tipo | Função |
-|---|---|---|
-| `caption` | `string` | Nome acessível da grade. Vira legenda fora da tela — anunciada pelo leitor, invisível na página |
-| `rowKey` | `(row, index) => string` | Identidade estável da linha. Sem ela a identidade é a POSIÇÃO, e ordenar leva a marcação para quem ocupou o lugar |
-| `rowLabel` | `(row) => string` | Texto que identifica a linha no nome do controle de seleção. Sem ela o identificador sai da primeira coluna de dados, e só cai na chave da linha quando essa coluna vem vazia |
-| `labels` | `Partial<DataTableLabels>` | Textos da interface. Só as chaves informadas mudam; o resto fica no padrão pt-BR |
-
-**i18n**: `labels` cobre rótulos de controle, contagens e navegação. Duas chaves são FUNÇÕES por dependerem da linha ou da coluna: `selectRow(linha)` — texto fixo aqui produziria dez controles homônimos — e `noFilter(coluna)`, o texto da célula sem filtro. Mantenha `labels` numa referência estável (top-level do `<script>`): objeto novo a cada render remonta as colunas.
-
-**Regras**:
-- Defina `columns` no top-level do `<script>` ou em `$derived` — recriar em cada update zera o estado da tabela
-- `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde
-- Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática
-- Selects de filtro recebem `filterFn: 'equals'` automaticamente; texto usa `includesString`
-- Passa a `table-layout: fixed` em `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — evita travamento em datasets grandes
-- `data` nunca é mutado pelo componente — para edição inline, atualize o `$state` externamente no `onCellEdit`
-- `virtualized` e `enablePagination` são mutuamente exclusivos; virtualização desativa paginação
-- Para markup rico (ícones, links), use `meta.badgeVariant` ou `meta.cellClass`. `cell` Snippet ainda não é suportado pelo wrapper local
-
-**Acessibilidade**:
-- Tabela semântica via `<Table>` primitive — `<th>`, `<tr>`, `<td>` reais
-- `aria-sort` no `<th>` ordenável (`ascending` / `descending` / `none`)
-- `aria-label` contextual obrigatório nos botões: "Ordenar por <em>coluna</em>", "Filtrar <em>coluna</em>", "Selecionar linha", "Próxima página"
-- Checkbox de cabeçalho usa `indeterminate` em seleção parcial (tri-state)
-- Cada checkbox de linha carrega o identificador daquela linha no nome; nome repetido em dez controles é o mesmo que nome nenhum (WCAG 4.1.2)
-- Uma só camada rola na horizontal, e é a do primitivo Table — a única com tabindex zero. O contêiner externo é moldura e, no modo virtualizado, dono da rolagem vertical (WCAG 2.1.1, axe scrollable-region-focusable)
-- Handle de resize: `role="separator"` + `aria-orientation="vertical"`
-- Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa
-
-**Analytics**: passivo por padrão. Para rastrear interações, consuma a instância via `onTableReady` e instrumentaliza no caller.
+**Duas formas de zerar a tabela sem querer**, as duas de reatividade: defina
+`columns` no top-level do `<script>` ou em `$derived`, porque recriar o array a
+cada update zera o estado do motor; e mantenha `labels` numa referência estável,
+porque objeto novo a cada render remonta as colunas.
