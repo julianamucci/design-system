@@ -755,6 +755,20 @@ Não havia pendência no formato fixo neste arquivo antes de 2026-09-15.
 > **PENDÊNCIA · 2026-09-15** — docs pages divergentes em conteúdo: literais onde a maioria lê chave, `closeLabel` ausente no vanilla, segundo painel na demonstração do react, snippets que não batem com a prévia no react e no vue, overrides do angular sem chave compartilhada (inconsistências 21, 22, 23, 26 e 27).
 > **Fecha quando**: as cinco docs pages leem as mesmas chaves para cada prévia, montam um painel na demonstração e publicam o snippet da própria variante.
 
+> **PENDÊNCIA · 2026-09-17** — a docs page do Dialog no angular publica
+> `modal: boolean | 'trap-focus'` (`nortear-design-system-angular/src/components/docs/DialogDocs.ts:1303`),
+> e esse valor é a mesma FAMÍLIA de defeito que a dona acabou de remover do
+> Popover naquela stack: ali ele prendia o foco e anunciava `aria-modal="true"`
+> **sem** travar a rolagem e **sem** esconder o resto da página — metade de um
+> contrato, que é o que a D1 e a D2 do `popover.md` existem para proibir.
+> **O que foi medido e o que NÃO foi**: o comportamento acima foi medido no
+> POPOVER do angular, em 2026-09-17, e por isso a decisão da dona lá foi
+> remover o valor. No Dialog não foi medido o que `'trap-focus'` faz — só que a
+> tabela de props o publica.
+> **Fecha quando**: o que o valor faz no Dialog do angular estiver medido e,
+> com a medição na mão, ou ele entregar o contrato modal inteiro, ou sair da
+> API e da tabela de props, como saiu no Popover.
+
 ## 8. Acessibilidade
 
 **Atributos**: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` e
