@@ -3369,8 +3369,8 @@ const ATRASO_EM_DOCS_PAGE = {
   },
   vanilla: {
     arquivo: 'nortear-design-system-vanilla/src/components/docs/TooltipDocs.ts',
-    declaracao: /delayDuration:\s*(\d+)/g, esperado: 2,
-    motivo: 'o `codeActionBar` (400, pareado com `skipDelayDuration`) e o `0` do snippet da Importação, que ensina o override POR BALÃO — apagar não faria herdar nada, mataria o exemplo',
+    declaracao: /delayDuration:\s*(\d+)/g, esperado: 1,
+    motivo: 'o `codeActionBar` (400, pareado com `skipDelayDuration`), onde customizar o grupo é o assunto. Eram DOIS até 2026-09-16: o segundo era o `0` do snippet da Importação, que ensinava o override por balão — e saiu quando aquele bloco virou a chave compartilhada `import.providerCode`, que ensina a montagem do provedor e herda o atraso da casa pela ausência (D5 do PRD)',
   },
   angular: {
     arquivo: 'nortear-design-system-angular/src/components/docs/TooltipDocs.ts',
