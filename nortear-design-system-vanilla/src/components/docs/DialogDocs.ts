@@ -61,13 +61,13 @@ type DialogDemoOptions = {
    * Id ESTÁVEL desta demo, para o payload — nunca o texto do gatilho.
    *
    * Existe porque `triggerLabel` e `actionLabel` vêm de `t(...)` e iam direto
-   * para `dialog_open`, `dialog_close` e `dialog_action`: o mesmo evento virava
+   * para `dialog_open`, `dialog_close` e `dialog_confirm`: o mesmo evento virava
    * três valores no GA4, um por idioma, e a série não juntava. O
    * `i18n_text_in_payload` não pegava — ele lê a chamada de tradução DENTRO do
    * payload e é cego a `label: opts.triggerLabel`, que é indireção.
    */
   demoId: string;
-  /** Id estável da ação primária (`save`, `delete`, `ok`), para `action_label`. */
+  /** Id estável da ação primária (`save`, `delete`, `ok`), para o `action` do `dialog_confirm`. */
   actionId: string;
   triggerLabel: string;
   triggerVariant?: 'default' | 'outline' | 'destructive';
@@ -127,9 +127,16 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     variant: opts.destructive ? 'destructive' : 'default',
     label: opts.actionLabel,
     onClick: () => {
-      track('dialog_action', {
+      // `dialog_confirm`, e não o aposentado `dialog_action`: os dois
+      // respondiam à mesma pergunta num componente que já manda `dialog_open` e
+      // `dialog_close` — duas séries para uma pergunta só. O `trigger_id` é o
+      // MESMO da abertura desta prévia (`dialogTracking(opts.demoId)`), que é o
+      // que permite juntar abrir, confirmar e fechar no GA4; o id da ação vai
+      // em `action`, onde o Sheet já o punha.
+      track('dialog_confirm', {
         component: 'dialog',
-        action_label: opts.actionId,
+        trigger_id: opts.demoId,
+        action: opts.actionId,
         location: opts.location,
       });
     },
@@ -227,7 +234,15 @@ function buildDialogFormDemo(location: DocsLocation): HTMLElement {
       label: actionLabel,
       type: 'submit',
       onClick: () => {
-        track('dialog_action', { component: 'dialog', action_label: 'save', location });
+        // Mesmo `trigger_id` que o `dialogTracking('with-form', …)` daqui de
+        // baixo manda na abertura e no fechamento: é ele que junta os três
+        // eventos desta prévia numa série só.
+        track('dialog_confirm', {
+          component: 'dialog',
+          trigger_id: 'with-form',
+          action: 'save',
+          location,
+        });
       },
     }),
   );

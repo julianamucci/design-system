@@ -165,8 +165,23 @@ ${pad}</div>`;
  * fechamento é do componente, e escrevê-lo à mão duplicaria o que a diretiva já
  * faz — inclusive devolver o foco ao gatilho.
  */
-function footerBlock(cancel: string, action: string | null, pad = '        '): string {
-  const primary = action === null ? '' : `\n${pad}  <button ndsButton>${action}</button>`;
+function footerBlock(
+  cancel: string,
+  action: string | null,
+  pad = '        ',
+  /**
+   * Atributos da primária, com o espaço à esquerda.
+   *
+   * Existe por um caso só: no Playground a ação que confirma FECHA o painel, e
+   * ela fecha pelo verbo público (`close()`), não por `ndsSheetClose` — é o que
+   * separa no relatório o painel aplicado (`api`) do dispensado
+   * (`close-button`). Nas outras stories a primária não fecha, e escrever o
+   * `(click)` nelas ensinaria um fechamento que a story ao lado não faz.
+   */
+  primaryAttrs = '',
+): string {
+  const primary =
+    action === null ? '' : `\n${pad}  <button ndsButton${primaryAttrs}>${action}</button>`;
   return `${pad}<div ndsSheetFooter>
 ${pad}  <button ndsSheetClose ndsButton variant="outline">${cancel}</button>${primary}
 ${pad}</div>`;
@@ -196,7 +211,10 @@ export function sheetPlaygroundSource(
     [SHEET_IMPORT, BUTTON_IMPORT],
     '...NDS_SHEET, NdsButton',
     sheetMarkup({
+      // A referência de template é o que dá à primária acesso ao verbo público
+      // do painel: `close()` fecha por DECISÃO DE DENTRO e relata `api`.
       rootAttrs: attrs(
+        '#panel',
         defaultOpen ? '[defaultOpen]="true"' : '',
         modal ? '' : '[modal]="false"',
       ),
@@ -208,7 +226,7 @@ export function sheetPlaygroundSource(
       title: l.title,
       description: l.description,
       body: textBody(l.body),
-      footer: footerBlock(l.cancel, l.apply),
+      footer: footerBlock(l.cancel, l.apply, '        ', ' (click)="panel.close()"'),
     }),
   );
 }
@@ -347,7 +365,6 @@ export function sheetOpenSource(): string {
  * largura sai de `--sheet-width` / `--sheet-max-width`.
  */
 export function sheetLongScrollBodySource(): string {
-  const l = labels();
   return `${SHEET_IMPORT}
 ${BUTTON_IMPORT}
 
@@ -355,23 +372,23 @@ ${BUTTON_IMPORT}
   imports: [...NDS_SHEET, NdsButton],
   template: \`
     <nds-sheet [defaultOpen]="true">
-      <button ndsSheetTrigger ndsButton variant="outline">${l.trigger}</button>
+      <button ndsSheetTrigger ndsButton variant="outline">Ler termos</button>
 
       <ng-template ndsSheetContent panelClass="nds-rounded-xl">
         <div ndsSheetHeader>
-          <h2 ndsSheetTitle>${l.title}</h2>
-          <p ndsSheetDescription>${l.description}</p>
+          <h2 ndsSheetTitle>Termos de uso</h2>
+          <p ndsSheetDescription>Leia atentamente antes de aceitar.</p>
         </div>
 
-        <div ndsSheetBody class="nds-stack" data-spacing="sm">
+        <div ndsSheetBody class="nds-stack" data-spacing="sm" aria-label="Termos de uso">
           @for (p of paragrafos; track p.id) {
             <p class="nds-text-body">{{ p.text }}</p>
           }
         </div>
 
         <div ndsSheetFooter>
-          <button ndsSheetClose ndsButton variant="outline">${l.cancel}</button>
-          <button ndsButton>${l.apply}</button>
+          <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
+          <button ndsButton>Aceitar termos</button>
         </div>
       </ng-template>
     </nds-sheet>
@@ -380,7 +397,7 @@ ${BUTTON_IMPORT}
 export class Exemplo {
   readonly paragrafos = Array.from({ length: 24 }, (_, i) => ({
     id: \`p-\${i}\`,
-    text: \`\${i + 1} — ${l.body}\`,
+    text: \`Parágrafo \${i + 1}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.\`,
   }));
 }`;
 }
@@ -391,6 +408,10 @@ export class Exemplo {
  * A lição é o PAR, não a prop sozinha: dispensar o botão do canto só se sustenta
  * porque o rodapé oferece uma saída explícita. Sem ela sobraria o Escape, que
  * quem usa mouse não descobre.
+ *
+ * O rodapé vem inteiro — saída E confirmação —, como na referência e como a
+ * story ao lado renderiza: publicar só o Cancelar ensinaria um painel que nenhum
+ * preview deste componente mostra.
  */
 export function sheetCloseButtonHiddenSource(): string {
   const l = labels();
@@ -403,7 +424,7 @@ export function sheetCloseButtonHiddenSource(): string {
       triggerLabel: l.trigger,
       title: l.title,
       description: l.description,
-      footer: footerBlock(l.cancel, null),
+      footer: footerBlock(l.cancel, l.apply),
     }),
   );
 }
@@ -461,12 +482,12 @@ export function sheetAdvancedFiltersSource(): string {
       title: 'Filtros avançados',
       description: 'Configure os filtros para refinar os resultados.',
       body: `        <div ndsSheetBody>
-          <form id="filtros-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
-            <div class="nds-grid" data-spacing="xs">
+          <form id="filtros-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
+            <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="filtro-categoria">Categoria</label>
               <input ndsInput id="filtro-categoria" value="Eletrônicos" />
             </div>
-            <div class="nds-grid" data-spacing="xs">
+            <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="filtro-minimo">Preço mínimo</label>
               <input ndsInput id="filtro-minimo" type="number" value="100" />
             </div>
@@ -475,12 +496,64 @@ export function sheetAdvancedFiltersSource(): string {
       // Quem aplica é o ENVIO do formulário, religado pelo id. O rodapé mora
       // fora do corpo, então a primária não está dentro do `<form>`: sem o
       // atributo `form` ela é um botão comum, e com dois campos o navegador não
-      // faz o envio implícito — o Enter num campo não dispara nada (PRD D10).
+      // faz o envio implícito — o Enter num campo não dispara nada (PRD D9).
       footer: `        <div ndsSheetFooter>
           <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
           <button ndsButton type="submit" form="filtros-form">Aplicar filtros</button>
         </div>`,
     }),
+  );
+}
+
+/**
+ * Dois painéis na mesma página — e um de cada vez na tela.
+ *
+ * O Sheet é MODAL: abrir o segundo recolhe o primeiro, e quem recolhe é o
+ * componente, não quem consome. Por isso o snippet não tem fiação nenhuma para
+ * isso — a lição é que NÃO É PRECISO escrever nada: dois painéis irmãos, cada um
+ * com o seu gatilho, e a modalidade se encarrega. Escrever aqui um `close()` no
+ * gatilho do outro ensinaria a duplicar a guarda por fora, que é exatamente o
+ * espelho de estado que o componente existe para dispensar.
+ *
+ * O painel que sai da tela sai relatando `api` — ninguém o dispensou, foi
+ * decisão de dentro —, e é `(openChange)` de cada raiz que entrega isso a quem
+ * mede.
+ */
+export function sheetSecondPanelSource(): string {
+  const first = sheetMarkup({
+    contentAttrs: ' side="left"',
+    triggerLabel: 'Abrir o primeiro',
+    title: 'Primeiro painel',
+    description: 'Este sai de cena quando o outro entra.',
+    body: textBody('Abra o segundo painel e este aqui se recolhe.', '          '),
+    // Quem abre o segundo mora DENTRO do primeiro, e isso é o componente, não
+    // arranjo de exemplo: com um painel modal na tela o resto da página fica
+    // inerte, então um gatilho de fora seria inalcançável enquanto o primeiro
+    // durasse.
+    footer: `          <div ndsSheetFooter>
+            <button ndsButton variant="outline" (click)="secondOpen.set(true)">Abrir o segundo</button>
+          </div>`,
+    pad: '      ',
+  });
+
+  const second = sheetMarkup({
+    rootAttrs: ' [open]="secondOpen()" (openChange)="secondOpen.set($event)"',
+    title: 'Segundo painel',
+    description:
+      'O mais novo manda: dois painéis modais ao mesmo tempo deixariam um deles inalcançável.',
+    body: textBody('Este entrou por último, então é este que está na tela.', '          '),
+    pad: '      ',
+  });
+
+  return example(
+    [SHEET_IMPORT, BUTTON_IMPORT],
+    '...NDS_SHEET, NdsButton',
+    `    <div class="nds-cluster" data-spacing="md">
+${first}
+
+${second}
+    </div>`,
+    '  readonly secondOpen = signal(false);',
   );
 }
 
@@ -533,16 +606,16 @@ export function sheetProfileEditSource(): string {
       title: 'Editar perfil',
       description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
       body: `        <div ndsSheetBody>
-          <form id="perfil-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
-            <div class="nds-grid" data-spacing="xs">
+          <form id="perfil-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
+            <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="perfil-nome">Nome</label>
               <input ndsInput id="perfil-nome" value="Juliana Mucci" />
             </div>
-            <div class="nds-grid" data-spacing="xs">
+            <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="perfil-usuario">Nome de usuário</label>
               <input ndsInput id="perfil-usuario" value="@julianamucci" />
             </div>
-            <div class="nds-grid" data-spacing="xs">
+            <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="perfil-bio">Bio</label>
               <input ndsInput id="perfil-bio" value="Designer de sistemas em São Paulo" />
             </div>

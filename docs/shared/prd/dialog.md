@@ -674,7 +674,8 @@ testes de motivo e de snippet, e na docs page das cinco stacks. Caminhos curtos:
 24. **A ação primária fecha o painel, e quem marca a confirmação.** Nas docs
     pages de react (`docs/DialogDocs.tsx:227`), vue (`docs/DialogDocs.vue:673`),
     svelte (`docs/DialogDocs.svelte:417`) e vanilla (`docs/DialogDocs.ts:127-136`)
-    a primária NÃO é peça de fechar — só dispara `dialog_action`. Na demonstração do
+    a primária NÃO é peça de fechar — só dispara o evento de confirmação
+    (`dialog_confirm` desde 2026-09-16; era `dialog_action`). Na demonstração do
     angular ela é `ndsDialogClose type="submit"` (`docs/DialogDocs.ts:847`) e marca
     `confirmed` antes (1074), saindo `api`. A marca: react tem `markConfirmation()`
     sem call site; svelte idem (`close-reason.ts:122`); vue anota `confirm`
@@ -682,7 +683,8 @@ testes de motivo e de snippet, e na docs page das cinco stacks. Caminhos curtos:
     stories a primária fecha no `Playground` do vanilla e na `Controlled` do vue.
     Maioria (4), com a referência: na docs page a primária não fecha. Decisão da
     dona.
-25. **Momento do `dialog_action` na prévia com formulário.** No `submit` do form
+25. **Momento do evento de confirmação na prévia com formulário** (`dialog_confirm`
+    desde 2026-09-16; era `dialog_action`). No `submit` do form
     em react (`docs/DialogDocs.tsx:250`) e vue (`docs/DialogDocs.vue:947`); no
     clique do botão em svelte (`docs/DialogDocs.svelte:700`), vanilla
     (`docs/DialogDocs.ts:229-241`) e angular (`docs/DialogDocs.ts:569`). Maioria
@@ -735,8 +737,20 @@ Não havia pendência no formato fixo neste arquivo antes de 2026-09-15.
 > **PENDÊNCIA · 2026-09-15** — no vanilla um Escape fecha todos os painéis abertos, e a lista de focáveis aceita campo desabilitado (inconsistências 10 e 11).
 > **Fecha quando**: `ui/dialog.ts` do vanilla só fecha o painel do topo no Escape e filtra `textarea`, `input` e `select` desabilitados.
 
-> **PENDÊNCIA · 2026-09-15** — fechar pela ação primária e o momento do `dialog_action` diferem entre as docs pages, e a marca de confirmação existe sem call site em react e svelte (inconsistências 24 e 25).
-> **Fecha quando**: a dona decide se a primária fecha na docs page e se a ação conta no clique ou no `submit`, e as cinco páginas seguem a decisão.
+> **PENDÊNCIA · 2026-09-15** — fechar pela ação primária e o momento do evento de
+> confirmação diferem entre as docs pages, e a marca de confirmação existe sem call
+> site em react e svelte (inconsistências 24 e 25).
+> **Fecha quando**: a dona decide se a primária fecha na docs page e se a ação conta
+> no clique ou no `submit`, e as cinco páginas seguem a decisão.
+> **Conferida em 2026-09-16: continua aberta, e uma metade dela ANDOU.** A
+> unificação do evento (§9) trocou o NOME — `dialog_action` virou `dialog_confirm`
+> nas cinco — e não resolveu o momento: o disparo segue no `submit` em react e vue e
+> no clique nas outras três. No Sheet, a passagem da mesma data decidiu que a
+> primária FECHA nas cinco docs pages; aqui a decisão continua sendo a oposta
+> (maioria e referência: não fecha), e as duas convivem porque o Sheet é painel de
+> formulário e o Dialog nem sempre. E o `markConfirmation()` do react deixou de
+> estar sem call site — o Sheet passou a chamá-lo —, então o que sobra desta
+> pendência é o Dialog.
 
 > **PENDÊNCIA · 2026-09-15** — docs pages divergentes em conteúdo: literais onde a maioria lê chave, `closeLabel` ausente no vanilla, segundo painel na demonstração do react, snippets que não batem com a prévia no react e no vue, overrides do angular sem chave compartilhada (inconsistências 21, 22, 23, 26 e 27).
 > **Fecha quando**: as cinco docs pages leem as mesmas chaves para cada prévia, montam um painel na demonstração e publicam o snippet da própria variante.
@@ -769,27 +783,28 @@ reduzido.
 |---|---|---|
 | `dialog_open` | abre por gatilho ou estado controlado | `{ component: "dialog", trigger_id, location }` |
 | `dialog_close` | fecha | `{ component: "dialog", trigger_id, location, reason }` |
-| `dialog_action` | clique na ação primária do rodapé | `{ component: "dialog", action_label, location }` |
+| `dialog_confirm` | clique na ação primária do rodapé | `{ component: "dialog", trigger_id, action, location }` |
 
-`dialog_action` está tipado nas cinco `analytics.ts`, é disparado pelas cinco
-docs pages e documentado em `analytics.table` do conteúdo compartilhado. **O
-momento do disparo não é o mesmo nas cinco** na prévia com formulário: no
+**`dialog_action` foi APOSENTADO em 2026-09-16, por decisão da dona**, e o
+terceiro evento deste componente passou a ser o `dialog_confirm` que o Sheet e o
+AlertDialog já usavam. Os dois respondiam à mesma pergunta de produto — a ação
+primária do rodapé foi executada — com nomes e formatos diferentes, em
+componentes que deliberadamente COMPARTILHAM `dialog_open` e `dialog_close`.
+O tipo saiu das cinco `analytics.ts`, as cinco docs pages passaram a disparar
+`dialog_confirm`, a tabela do conteúdo compartilhado publica o formato novo, e o
+catálogo de fundamentos tem uma linha só, cobrindo AlertDialog, Dialog e Sheet.
+
+**O que a unificação mudou no payload**: o `action_label` do evento antigo virou
+`action`, e entrou o `trigger_id` — que o `dialog_action` era o único dos três a
+não levar. O valor do `action` continua sendo id estável, nunca texto traduzido
+(`save`, `ok`, `delete`, `remove`, `continue`, `confirm-email` nas prévias da
+página), e o `trigger_id` é o MESMO do `dialog_open` que precedeu a confirmação
+na mesma prévia — é ele que liga as duas pontas da série no GA4, coisa que antes
+não dava para fazer.
+
+**O momento do disparo não era o mesmo nas cinco** na prévia com formulário — no
 `submit` do form em react e vue, no clique do botão em svelte, vanilla e angular
 (inconsistência 25).
-
-**Ele é o ÚNICO dos três que não leva `trigger_id`**, e a diferença é de
-pergunta: `dialog_open` e `dialog_close` respondem "qual painel", e o
-`action_label` responde "qual ação foi confirmada" — id estável, nunca texto
-traduzido (`save`, `ok`, `delete`, `remove`, `continue`, `confirm-email` nas
-prévias da página). Vale saber, porque **o Sheet chama o dele de
-`dialog_confirm`** e manda
-`{ component: "sheet", trigger_id, action, location }` — dois nomes de evento e
-dois formatos para a mesma pergunta de produto, em componentes que
-deliberadamente COMPARTILHAM `dialog_open` e `dialog_close`. Os dois eventos estão
-tipados nas cinco stacks, e cada componente dispara só o seu: nenhuma docs page
-de Dialog manda `dialog_confirm`, nenhuma de Sheet manda `dialog_action`.
-Unificar é decisão da dona — está registrado aqui e na §9 do
-[`sheet.md`](sheet.md), não consertado por conta própria.
 
 O Sheet e o AlertDialog emitem os MESMOS eventos, com `component: "sheet"` e
 `component: "alert-dialog"` — as peças respondem à mesma pergunta de produto, e
@@ -841,8 +856,9 @@ não escutavam `onClose`, então nenhum evento mudou de valor ali.
 **Desde 2026-09-10 quem cobra o campo é o TIPO.** Nas cinco `analytics.ts`,
 `dialog_open`, `dialog_close` e `dialog_confirm` exigem `trigger_id` e proíbem
 `label` (`label?: never`), e `location` é obrigatório no abrir e no fechar — o
-`dialog_confirm` entra nessa lista porque é da FAMÍLIA (quem o dispara é o Sheet,
-ver acima), e o `dialog_action`, que é o terceiro evento deste componente, está
+`dialog_confirm` entra nessa lista porque é o terceiro evento da FAMÍLIA — desde
+2026-09-16 o Dialog também o dispara, no lugar do aposentado `dialog_action`, que
+está
 fora dela: nas cinco ele é `{ component: string; action_label: string;
 location?: string }` — sem `trigger_id`, sem a guarda `label?: never` e com o
 `component` aberto em `string` em vez da união de três palavras. Medido em

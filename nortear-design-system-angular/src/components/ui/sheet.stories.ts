@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
-import { NDS_SHEET } from './sheet';
+import { NDS_SHEET, sheetCloseReason, type SheetCloseReason } from './sheet';
+import type { RdxDialogOpenChange } from '@radix-ng/primitives/dialog';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
@@ -97,6 +98,28 @@ async function close(): Promise<void> {
   await waitForPortalVanish('dialog');
 }
 
+/**
+ * Os motivos que o painel relatou, na ordem, gravados pelo render e lidos pela
+ * play.
+ *
+ * O motivo é a única parte do fechamento que NÃO se vê no DOM: painel fechado
+ * por Escape e painel fechado por código deixam exatamente a mesma tela. Sem
+ * este registro, as quatro palavras da família — `escape`, `overlay`,
+ * `close-button`, `api` — não tinham portão nenhum nesta stack, e uma troca no
+ * mapeador passaria calada pelas doze stories.
+ *
+ * Fora do render porque o `(onOpenChange)` é ligado na MONTAGEM e a play só
+ * recebe o `canvasElement`: sem um ponto combinado entre os dois, não há como
+ * observar o output daqui. Os passos comparam o ANTES com o DEPOIS em vez de
+ * zerar a lista — a play reexecuta no mesmo DOM, e uma lista zerada esconderia
+ * um fechamento a mais.
+ */
+const closeReasons: SheetCloseReason[] = [];
+
+function recordCloseReason(evento: RdxDialogOpenChange): void {
+  if (!evento.open) closeReasons.push(sheetCloseReason(evento.reason));
+}
+
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: sheetPlaygroundSource } },
@@ -111,6 +134,7 @@ export const Playground: Story = {
     // virariam controls falsos na aba API Reference.
     props: {
       ...args,
+      recordCloseReason,
       tituloPainel: t('demonstration.labels.title'),
       descricaoPainel: t('demonstration.labels.description'),
       panelBody: t('demonstration.labels.body'),
@@ -119,9 +143,11 @@ export const Playground: Story = {
     },
     template: `
       <nds-sheet
+        #panel
         [defaultOpen]="defaultOpen"
         [modal]="modal"
         (openChange)="onOpenChange($event)"
+        (onOpenChange)="recordCloseReason($event)"
       >
         <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
@@ -137,7 +163,13 @@ export const Playground: Story = {
 
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
-            <button ndsButton>{{ rotuloAplicar }}</button>
+            <!-- A primária CONFIRMA e sai, e sai pelo verbo público: close()
+                 relata api, o motivo que separa no relatório o painel aplicado
+                 do dispensado. Com ndsSheetClose ela fecharia pelo mesmo
+                 caminho do X, e "aplicou" chegaria como "apertou fechar".
+                 Sem crase aqui dentro: uma crase FECHA o template literal da
+                 story, e o arquivo inteiro deixa de compilar. -->
+            <button ndsButton (click)="panel.close()">{{ rotuloAplicar }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -194,12 +226,14 @@ export const Playground: Story = {
       // tique seguinte. Sem a espera, a asserção reprova o transporte em vez do
       // destino; com ela, um foco que realmente escapasse continuaria
       // reprovando, porque nunca voltaria.
+      // A asserção que existia aqui repetia a espera logo acima, palavra por
+      // palavra: o `waitFor` já reprova por tempo se o foco não voltar, então
+      // ela não podia falhar sozinha nunca.
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
           throw new Error('o foco saiu do painel e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step('Shift+Tab dá a volta para o outro lado, sem sair do painel', async () => {
@@ -217,44 +251,74 @@ export const Playground: Story = {
           throw new Error('o foco saiu do painel para trás e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
-    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+    await step('Escape fecha, devolve o foco ao gatilho e reporta escape', async () => {
+      const antes = closeReasons.length;
       await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
         }
       });
+      await expect(closeReasons.length).toBe(antes + 1);
+      await expect(closeReasons.at(-1)).toBe('escape');
     });
 
-    if (args.modal) {
-      await step('Clique no overlay fecha o painel', async () => {
-        await open(trigger);
-        const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
-        await expect(overlay).not.toBeNull();
-        await userEvent.click(overlay!);
-        await waitForPortalVanish('dialog');
-      });
-    }
+    // Os dois passos abaixo ficavam atrás de `if (args.modal)` e
+    // `if (args.showCloseButton)`. Control desligado não é motivo para o portão
+    // sumir: com o control no default — que é como a suíte roda —, o `if`
+    // parecia proteger e só escondia a possibilidade de a story deixar de medir
+    // se alguém trocasse o default. As outras três stacks sempre executam.
+    await step('Clique no overlay fecha o painel e reporta overlay', async () => {
+      await open(trigger);
+      const antes = closeReasons.length;
+      const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
+      await expect(overlay).not.toBeNull();
+      await userEvent.click(overlay!);
+      await waitForPortalVanish('dialog');
+      await expect(closeReasons.length).toBe(antes + 1);
+      // Clique no véu e foco que escapa são o mesmo gesto para quem usa: "saí
+      // do painel sem decidir nada".
+      await expect(closeReasons.at(-1)).toBe('overlay');
+    });
 
-    if (args.showCloseButton) {
-      await step('O X do canto fecha o painel', async () => {
-        const panel = await open(trigger);
-        const closeBtn = within(panel).getByRole('button', { name: /fechar/i });
-        await userEvent.click(closeBtn);
-        await waitForPortalVanish('dialog');
-      });
-    }
+    await step('O X do canto fecha o painel e reporta close-button', async () => {
+      const painel = await open(trigger);
+      const antes = closeReasons.length;
+      const closeBtn = within(painel).getByRole('button', { name: /^Fechar$/i });
+      await userEvent.click(closeBtn);
+      await waitForPortalVanish('dialog');
+      await expect(closeReasons.length).toBe(antes + 1);
+      await expect(closeReasons.at(-1)).toBe('close-button');
+    });
 
-    await step('Cancelar no rodapé também fecha', async () => {
-      const panel = await open(trigger);
-      const cancelar = within(panel).getByRole('button', {
+    await step('Cancelar no rodapé fecha e reporta close-button', async () => {
+      const painel = await open(trigger);
+      const antes = closeReasons.length;
+      const cancelar = within(painel).getByRole('button', {
         name: t('demonstration.labels.cancel'),
       });
       await userEvent.click(cancelar);
       await waitForPortalVanish('dialog');
+      await expect(closeReasons.length).toBe(antes + 1);
+      // A saída do rodapé é um `ndsSheetClose`, o mesmo caminho do X: as duas
+      // são "apertei a saída", e é isso que separa esta palavra de `api`.
+      await expect(closeReasons.at(-1)).toBe('close-button');
+    });
+
+    await step('A ação primária fecha por decisão de dentro e reporta api', async () => {
+      const painel = await open(trigger);
+      const antes = closeReasons.length;
+      await userEvent.click(
+        within(painel).getByRole('button', { name: t('demonstration.labels.apply') }),
+      );
+      await waitForPortalVanish('dialog');
+      await expect(closeReasons.length).toBe(antes + 1);
+      // O defeito que este passo guarda: fechando por `ndsSheetClose`, a ação
+      // que CONFIRMA chegaria ao relatório como "apertou o botão de fechar", e o
+      // funil não saberia separar o painel aplicado do dispensado.
+      await expect(closeReasons.at(-1)).toBe('api');
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Sheet,
   SheetClose,
@@ -37,7 +37,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { dialogCloseReason }    from "@/components/ui/dialog-close-reason";
+import { dialogCloseReason, markConfirmation } from "@/components/ui/dialog-close-reason";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
@@ -135,6 +135,41 @@ type FiltersFormDemoProps = DemoProps & {
   categoryValue: string;
 };
 
+type ProfileFormDemoProps = {
+  trigger: string;
+  title: string;
+  description: string;
+  cancel: string;
+  submit: string;
+  fieldName: string;
+  fieldNameValue: string;
+  fieldHandle: string;
+  fieldHandleValue: string;
+  fieldBio: string;
+  fieldBioValue: string;
+  location: string;
+};
+
+/**
+ * Os dois lados da série de um painel, num caminho só.
+ *
+ * `trigger_id` usa o SIDE (valor estável, não localizado) — texto traduzido
+ * fragmentaria o mesmo evento em 3 valores no GA4.
+ */
+function trackPanelOpenChange(
+  open: boolean,
+  side: string,
+  location: string,
+  reason?: string,
+) {
+  track(open ? "dialog_open" : "dialog_close", {
+    component: "sheet",
+    trigger_id: side,
+    ...(open ? {} : { reason: dialogCloseReason(reason) }),
+    location,
+  });
+}
+
 function SheetDemo({ trigger, title, description, cancel, apply, body, side = "right", location }: DemoProps) {
   return (
     <div style={{ contain: "layout" }}>
@@ -163,18 +198,32 @@ function SheetDemo({ trigger, title, description, cancel, apply, body, side = "r
           ) : null}
           <SheetFooter>
             <SheetClose render={<Button variant="outline" />}>{cancel}</SheetClose>
-            <Button
-              onClick={() =>
+            {/*
+              A primária CONFIRMA e FECHA. Antes ela só disparava o evento e o
+              painel ficava aberto: quem aplicava os filtros não recebia sinal
+              nenhum de que a ação valeu, e a série de abre/fecha da página não
+              fechava a conta.
+
+              `markConfirmation()` vem ANTES do fechamento e é o que separa esta
+              da saída ao lado: a lib entrega `close-press` para as duas, e sem a
+              marca "confirmou" chegaria ao relatório como "apertou o botão de
+              fechar". O `onClick` de quem compõe é mesclado pela base-ui e roda
+              antes do fechamento.
+            */}
+            <SheetClose
+              render={<Button />}
+              onClick={() => {
+                markConfirmation();
                 track("dialog_confirm", {
                   component: "sheet",
                   trigger_id: side,
                   action: "apply",
                   location,
-                })
-              }
+                });
+              }}
             >
               {apply}
-            </Button>
+            </SheetClose>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -184,19 +233,18 @@ function SheetDemo({ trigger, title, description, cancel, apply, body, side = "r
 
 function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCategory, fieldMinPrice, categoryValue, location }: FiltersFormDemoProps) {
   const side = "right";
+  // Controlado porque a ação primária FECHA, e aqui quem confirma é o ENVIO do
+  // formulário — não um controle de fechar da lib, que fecharia sozinho.
+  const [open, setOpen] = useState(false);
+  const reportOpenChange = (next: boolean, reason?: string) => {
+    setOpen(next);
+    trackPanelOpenChange(next, side, location, reason);
+  };
   return (
     <div style={{ contain: "layout" }}>
-      {/* trigger_id usa o SIDE (valor estável, não localizado) — texto traduzido
-          fragmentaria o mesmo evento em 3 valores no GA4. */}
       <Sheet
-        onOpenChange={(open, details) =>
-          track(open ? "dialog_open" : "dialog_close", {
-            component: "sheet",
-            trigger_id: side,
-            ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
-            location,
-          })
-        }
+        open={open}
+        onOpenChange={(next, details) => reportOpenChange(next, details?.reason)}
       >
         <SheetTrigger render={<Button variant="outline" />}>{trigger}</SheetTrigger>
         <SheetContent side={side}>
@@ -213,12 +261,19 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
               data-spacing="sm"
               onSubmit={(e) => {
                 e.preventDefault();
+                // A marca vem ANTES do fechamento: é ela que faz o fecho sair
+                // `api` — uma decisão de dentro da página — em vez de herdar a
+                // palavra de um gesto que ninguém fez.
+                markConfirmation();
                 track("dialog_confirm", {
                   component: "sheet",
                   trigger_id: side,
                   action: "apply",
                   location,
                 });
+                // E o painel FECHA (decisão da dona): confirmar deixando o
+                // painel aberto não dava sinal de que a ação valeu.
+                reportOpenChange(false);
               }}
             >
               <div className="nds-stack" data-spacing="xs">
@@ -240,6 +295,94 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
               {cancel}
             </SheetClose>
             <Button type="submit" form="docs-sheet-filters">{apply}</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+/**
+ * Edição de perfil: `form` no corpo e o par descartar ↔ confirmar no rodapé.
+ *
+ * Controlado pela mesma razão do formulário de filtros — quem confirma é o ENVIO
+ * do formulário, e o rodapé mora FORA do corpo rolável, então a primária só
+ * alcança o `<form>` pelo atributo `form` (PRD D9). Fechar é decisão da página,
+ * e por isso passa pelo mesmo caminho que relata o `dialog_close`.
+ */
+function ProfileFormDemo({
+  trigger,
+  title,
+  description,
+  cancel,
+  submit,
+  fieldName,
+  fieldNameValue,
+  fieldHandle,
+  fieldHandleValue,
+  fieldBio,
+  fieldBioValue,
+  location,
+}: ProfileFormDemoProps) {
+  const side = "right";
+  const [open, setOpen] = useState(false);
+  const reportOpenChange = (next: boolean, reason?: string) => {
+    setOpen(next);
+    trackPanelOpenChange(next, side, location, reason);
+  };
+  return (
+    <div style={{ contain: "layout" }}>
+      <Sheet
+        open={open}
+        onOpenChange={(next, details) => reportOpenChange(next, details?.reason)}
+      >
+        <SheetTrigger render={<Button variant="outline" />}>{trigger}</SheetTrigger>
+        <SheetContent side={side}>
+          <SheetHeader>
+            <SheetTitle>{title}</SheetTitle>
+            <SheetDescription>{description}</SheetDescription>
+          </SheetHeader>
+          <SheetBody>
+            <form
+              id="docs-sheet-profile"
+              className="nds-stack"
+              data-spacing="sm"
+              onSubmit={(e) => {
+                e.preventDefault();
+                markConfirmation();
+                track("dialog_confirm", {
+                  component: "sheet",
+                  trigger_id: side,
+                  action: "save",
+                  location,
+                });
+                reportOpenChange(false);
+              }}
+            >
+              <div className="nds-stack" data-spacing="xs">
+                <Label htmlFor="docs-sheet-profile-name">{fieldName}</Label>
+                <Input id="docs-sheet-profile-name" defaultValue={fieldNameValue} />
+              </div>
+              <div className="nds-stack" data-spacing="xs">
+                <Label htmlFor="docs-sheet-profile-handle">{fieldHandle}</Label>
+                <Input id="docs-sheet-profile-handle" defaultValue={fieldHandleValue} />
+              </div>
+              <div className="nds-stack" data-spacing="xs">
+                <Label htmlFor="docs-sheet-profile-bio">{fieldBio}</Label>
+                <Input id="docs-sheet-profile-bio" defaultValue={fieldBioValue} />
+              </div>
+            </form>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose render={<Button type="button" variant="outline" />}>
+              {cancel}
+            </SheetClose>
+            {/* Quem confirma é o ENVIO do formulário: o rodapé mora fora do
+                corpo rolável, e só o atributo `form` liga o botão ao `form` — é
+                o que faz o Enter num campo valer tanto quanto o clique. */}
+            <Button type="submit" form="docs-sheet-profile">
+              {submit}
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -340,6 +483,7 @@ export function SheetDocs() {
     <DocsPageLayout
       navGroups={navGroups}
       activeSection={activeId}
+      componentSlug="sheet"
       header={
         <DocsHeader
           title={tContent("title")}
@@ -349,7 +493,7 @@ export function SheetDocs() {
         />
       }
     >
-      <DocsDemonstration >
+      <DocsDemonstration componentSlug="sheet">
         <div className="nds-cluster" data-justify="center" data-spacing="sm">
           <SheetDemo
             trigger={tContent("demonstration.labels.trigger")}
@@ -508,18 +652,23 @@ export function SheetDocs() {
                       <SheetClose render={<Button variant="outline" />}>
                         {tContent("demonstration.labels.cancel")}
                       </SheetClose>
-                      <Button
-                        onClick={() =>
+                      {/* O contraexemplo é componente vivo como o exemplo: a
+                          primária dele confirma e fecha pelo mesmo caminho, com
+                          a marca antes do fechamento. */}
+                      <SheetClose
+                        render={<Button />}
+                        onClick={() => {
+                          markConfirmation();
                           track("dialog_confirm", {
                             component: "sheet",
                             trigger_id: "right",
                             action: "apply",
                             location: "docs_do_dont",
-                          })
-                        }
+                          });
+                        }}
                       >
                         {tContent("demonstration.labels.apply")}
-                      </Button>
+                      </SheetClose>
                     </SheetFooter>
                   </SheetContent>
                 </Sheet>
@@ -561,7 +710,7 @@ export function SheetDocs() {
         ]}
       />
 
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="sheet" code={codeImport} />
 
       <DocsVariants
         componentSlug="sheet"
@@ -654,7 +803,12 @@ export function SheetDocs() {
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="filters" className="nds-stack" data-spacing="sm">
+      <form
+        id="filters"
+        className="nds-stack"
+        data-spacing="sm"
+        onSubmit={(evento) => evento.preventDefault()}
+      >
         <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="category">Categoria</Label>
           <Input id="category" defaultValue="Eletrônicos" />
@@ -770,7 +924,12 @@ export function SheetDocs() {
       <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="profile" className="nds-stack" data-spacing="sm">
+      <form
+        id="profile"
+        className="nds-stack"
+        data-spacing="sm"
+        onSubmit={(evento) => evento.preventDefault()}
+      >
         <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="name">Nome</Label>
           <Input id="name" defaultValue="Juliana Mucci" />
@@ -792,88 +951,20 @@ export function SheetDocs() {
   </SheetContent>
 </Sheet>`,
             preview: (
-              <div style={{ contain: "layout" }}>
-                <Sheet
-                  onOpenChange={(open, details) =>
-                    track(open ? "dialog_open" : "dialog_close", {
-                      component: "sheet",
-                      trigger_id: "right",
-                      ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
-                      location: "docs_composicoes",
-                    })
-                  }
-                >
-                  <SheetTrigger render={<Button variant="outline" />}>
-                    {tContent("variants.compositions.profileEdit.trigger")}
-                  </SheetTrigger>
-                  <SheetContent side="right">
-                    <SheetHeader>
-                      <SheetTitle>
-                        {tContent("variants.compositions.profileEdit.panelTitle")}
-                      </SheetTitle>
-                      <SheetDescription>
-                        {tContent("variants.compositions.profileEdit.panelDescription")}
-                      </SheetDescription>
-                    </SheetHeader>
-                    <SheetBody>
-                      <form
-                        id="docs-sheet-profile"
-                        className="nds-stack"
-                        data-spacing="sm"
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          track("dialog_confirm", {
-                            component: "sheet",
-                            trigger_id: "right",
-                            action: "save",
-                            location: "docs_composicoes",
-                          });
-                        }}
-                      >
-                        <div className="nds-stack" data-spacing="xs">
-                          <Label htmlFor="docs-sheet-profile-name">
-                            {tContent("variants.compositions.profileEdit.fieldName")}
-                          </Label>
-                          <Input
-                            id="docs-sheet-profile-name"
-                            defaultValue={tContent("variants.compositions.profileEdit.fieldNameValue")}
-                          />
-                        </div>
-                        <div className="nds-stack" data-spacing="xs">
-                          <Label htmlFor="docs-sheet-profile-handle">
-                            {tContent("variants.compositions.profileEdit.fieldHandle")}
-                          </Label>
-                          <Input
-                            id="docs-sheet-profile-handle"
-                            defaultValue={tContent("variants.compositions.profileEdit.fieldHandleValue")}
-                          />
-                        </div>
-                        <div className="nds-stack" data-spacing="xs">
-                          <Label htmlFor="docs-sheet-profile-bio">
-                            {tContent("variants.compositions.profileEdit.fieldBio")}
-                          </Label>
-                          <Input
-                            id="docs-sheet-profile-bio"
-                            defaultValue={tContent("variants.compositions.profileEdit.fieldBioValue")}
-                          />
-                        </div>
-                      </form>
-                    </SheetBody>
-                    <SheetFooter>
-                      <SheetClose render={<Button type="button" variant="outline" />}>
-                        {tContent("demonstration.labels.cancel")}
-                      </SheetClose>
-                      {/* Quem confirma é o ENVIO do formulário: o rodapé mora
-                          fora do corpo rolável, e só o atributo `form` liga o
-                          botão ao `form` — é o que faz o Enter num campo valer
-                          tanto quanto o clique. */}
-                      <Button type="submit" form="docs-sheet-profile">
-                        {tContent("variants.compositions.profileEdit.submit")}
-                      </Button>
-                    </SheetFooter>
-                  </SheetContent>
-                </Sheet>
-              </div>
+              <ProfileFormDemo
+                trigger={tContent("variants.compositions.profileEdit.trigger")}
+                title={tContent("variants.compositions.profileEdit.panelTitle")}
+                description={tContent("variants.compositions.profileEdit.panelDescription")}
+                cancel={tContent("demonstration.labels.cancel")}
+                submit={tContent("variants.compositions.profileEdit.submit")}
+                fieldName={tContent("variants.compositions.profileEdit.fieldName")}
+                fieldNameValue={tContent("variants.compositions.profileEdit.fieldNameValue")}
+                fieldHandle={tContent("variants.compositions.profileEdit.fieldHandle")}
+                fieldHandleValue={tContent("variants.compositions.profileEdit.fieldHandleValue")}
+                fieldBio={tContent("variants.compositions.profileEdit.fieldBio")}
+                fieldBioValue={tContent("variants.compositions.profileEdit.fieldBioValue")}
+                location="docs_composicoes"
+              />
             ),
           },
           {

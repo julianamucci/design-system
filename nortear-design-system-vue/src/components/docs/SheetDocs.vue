@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -208,6 +208,77 @@ function rastrearConfirmacao(location: string, side: string, action = 'apply') {
     location,
   });
 }
+
+/**
+ * A DEMONSTRAÇÃO é controlada, e só ela — porque só nela a primária FECHA.
+ *
+ * Decisão da dona (2026-09-16): a ação primária da Demonstração fecha o painel
+ * nas cinco stacks, como a referência já fazia. Aqui isso exige o estado do
+ * lado de fora: a reka só avisa o que ELA decide, então fechar por dentro não
+ * passa por `update:open` e o relato do fechamento é de quem mexeu no estado.
+ *
+ * O motivo sai `api` sem nada de especial: `rastrearConfirmacao` anota
+ * `confirm`, e o mapeador do primitivo traduz "decisão de dentro" para `api`.
+ * Confirmar deixa de ser indistinguível de desistir na série do GA4.
+ */
+const demoOpen = ref(false);
+
+function aoMudarDemo(open: boolean) {
+  demoOpen.value = open;
+  rastrearSheet('docs_demo', 'right', open);
+}
+
+function confirmarDemo() {
+  rastrearConfirmacao('docs_demo', 'right');
+  demoOpen.value = false;
+  // Fechar mexendo no estado não emite `update:open`, então o `dialog_close`
+  // sai daqui — e é isto que fecha a conta de abre/fecha da página.
+  rastrearSheet('docs_demo', 'right', false);
+}
+
+/**
+ * Os demais previews VIVOS seguem a mesma decisão da Demonstração: a ação
+ * primária confirma e FECHA, saindo `api`.
+ *
+ * Eram dez painéis em que "Aplicar" disparava o evento e deixava o painel
+ * aberto por cima do resultado — a stack de referência fecha em todos, pela
+ * mesma `close()` pública que ela relata como `api`.
+ *
+ * Por que CONTROLADO, e não um `SheetClose` embrulhando a primária: a reka
+ * fecha DENTRO do próprio clique, e o ouvinte de captura do painel já anotou
+ * `close-press` quando o `@click` de quem compõe roda. O motivo chegaria ao
+ * GA4 como "apertou o botão de fechar" em vez de "confirmou" — justamente a
+ * distinção que o vocabulário da família existe para guardar. Com o estado do
+ * lado de fora, quem fecha é a página, e a ordem deixa de importar.
+ *
+ * Um registro só, com uma chave por preview: o painel é modal e nunca há dois
+ * abertos ao mesmo tempo, mas cada gatilho precisa do seu próprio estado.
+ */
+const previewOpen = reactive<Record<string, boolean>>({
+  doDontDo1: false,
+  doDontDont1: false,
+  doDontDo2: false,
+  doDontDont2: false,
+  variantRight: false,
+  variantLeft: false,
+  variantTop: false,
+  variantBottom: false,
+  compFilters: false,
+  compProfile: false,
+});
+
+function aoMudarPreview(id: string, location: string, side: string, open: boolean) {
+  previewOpen[id] = open;
+  rastrearSheet(location, side, open);
+}
+
+function confirmarPreview(id: string, location: string, side: string, action = 'apply') {
+  rastrearConfirmacao(location, side, action);
+  previewOpen[id] = false;
+  // Fechar mexendo no estado não emite `update:open`, então o `dialog_close`
+  // sai daqui — é o que fecha a conta de abre/fecha da página.
+  rastrearSheet(location, side, false);
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -325,7 +396,11 @@ function codeAdvancedFilters(): string {
       <SheetDescription>${tContent('demonstration.labels.description')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="filters" class="nds-stack" data-spacing="sm">
+      <!-- A guarda de envio não é detalhe de preview: o rodapé é IRMÃO do
+           corpo, então a primária só alcança o formulário pelo atributo
+           \`form\` — e aí o clique, e o Enter dentro de um campo, DISPARAM
+           envio de verdade. Sem \`prevent\`, a página navega. -->
+      <form id="filters" class="nds-stack" data-spacing="sm" @submit.prevent>
         <div class="nds-stack" data-spacing="xs">
           <Label for="category">${tContent('variants.compositions.advancedFilters.fieldCategory')}</Label>
           <Input id="category" default-value="${tContent('variants.compositions.advancedFilters.categoryValue')}" />
@@ -382,7 +457,10 @@ function codeProfileEdit(): string {
       <SheetDescription>${tContent('variants.compositions.profileEdit.panelDescription')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="profile" class="nds-stack" data-spacing="sm">
+      <!-- Mesma guarda do formulário de filtros: a primária mora no rodapé e
+           chega aqui pelo atributo \`form\`, então o envio é real e sem
+           \`prevent\` a página navega. -->
+      <form id="profile" class="nds-stack" data-spacing="sm" @submit.prevent>
         <div class="nds-stack" data-spacing="xs">
           <Label for="profile-name">${tContent('variants.compositions.profileEdit.fieldName')}</Label>
           <Input id="profile-name" default-value="${tContent('variants.compositions.profileEdit.fieldNameValue')}" />
@@ -591,6 +669,7 @@ const a11yCritCols = computed(() => ({
   <DocsPageLayout
     :nav-groups="navGroups"
     :active-section="activeSection"
+    component-slug="sheet"
   >
     <template #header>
       <DocsHeader
@@ -602,13 +681,16 @@ const a11yCritCols = computed(() => ({
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
-    <DocsDemonstration>
+    <DocsDemonstration component-slug="sheet">
       <div
         class="nds-cluster"
         data-justify="center"
         data-spacing="sm"
       >
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_demo', 'right', o)">
+        <Sheet
+          :open="demoOpen"
+          @update:open="aoMudarDemo"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -633,7 +715,10 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_demo', 'right')">
+              <!-- A primária CONFIRMA E FECHA: aplicar um filtro e deixar o
+                   painel aberto por cima do resultado esconde justamente o que
+                   a pessoa pediu para ver. -->
+              <Button @click="confirmarDemo">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -719,7 +804,10 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'right', o)">
+        <Sheet
+          :open="previewOpen.doDontDo1"
+          @update:open="(o: boolean) => aoMudarPreview('doDontDo1', 'docs_do_dont', 'right', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -744,7 +832,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont', 'right')">
+              <Button @click="confirmarPreview('doDontDo1', 'docs_do_dont', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -757,7 +845,10 @@ const a11yCritCols = computed(() => ({
         texto — literal em pt-BR mostrava português em `en` e `es`.
       -->
       <template #dont-preview-0>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'right', o)">
+        <Sheet
+          :open="previewOpen.doDontDont1"
+          @update:open="(o: boolean) => aoMudarPreview('doDontDont1', 'docs_do_dont', 'right', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('doDont.pair1.dontTrigger') }}
@@ -786,7 +877,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont', 'right')">
+              <Button @click="confirmarPreview('doDontDont1', 'docs_do_dont', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -794,7 +885,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #do-preview-1>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'right', o)">
+        <Sheet
+          :open="previewOpen.doDontDo2"
+          @update:open="(o: boolean) => aoMudarPreview('doDontDo2', 'docs_do_dont', 'right', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -819,7 +913,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont', 'right')">
+              <Button @click="confirmarPreview('doDontDo2', 'docs_do_dont', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -827,7 +921,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-1>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_do_dont', 'top', o)">
+        <Sheet
+          :open="previewOpen.doDontDont2"
+          @update:open="(o: boolean) => aoMudarPreview('doDontDont2', 'docs_do_dont', 'top', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -852,7 +949,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_do_dont', 'top')">
+              <Button @click="confirmarPreview('doDontDont2', 'docs_do_dont', 'top')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -863,11 +960,13 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Importação ───────────────────────────────────────────── -->
     <DocsImport
+      component-slug="sheet"
       :code="codeImportBasic"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
     <DocsVariants
+      component-slug="sheet"
       :items="variantItems"
     >
       <!--
@@ -877,7 +976,10 @@ const a11yCritCols = computed(() => ({
         muda entre elas, e era a única coisa que não estava mudando sozinha.
       -->
       <template #variant-preview-0>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'right', o)">
+        <Sheet
+          :open="previewOpen.variantRight"
+          @update:open="(o: boolean) => aoMudarPreview('variantRight', 'docs_variantes', 'right', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -902,7 +1004,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_variantes', 'right')">
+              <Button @click="confirmarPreview('variantRight', 'docs_variantes', 'right')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -910,7 +1012,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-1>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'left', o)">
+        <Sheet
+          :open="previewOpen.variantLeft"
+          @update:open="(o: boolean) => aoMudarPreview('variantLeft', 'docs_variantes', 'left', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -935,7 +1040,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_variantes', 'left')">
+              <Button @click="confirmarPreview('variantLeft', 'docs_variantes', 'left')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -943,7 +1048,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-2>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'top', o)">
+        <Sheet
+          :open="previewOpen.variantTop"
+          @update:open="(o: boolean) => aoMudarPreview('variantTop', 'docs_variantes', 'top', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -968,7 +1076,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_variantes', 'top')">
+              <Button @click="confirmarPreview('variantTop', 'docs_variantes', 'top')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -976,7 +1084,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-3>
-        <Sheet @update:open="(o: boolean) => rastrearSheet('docs_variantes', 'bottom', o)">
+        <Sheet
+          :open="previewOpen.variantBottom"
+          @update:open="(o: boolean) => aoMudarPreview('variantBottom', 'docs_variantes', 'bottom', o)"
+        >
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -1001,7 +1112,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button @click="rastrearConfirmacao('docs_variantes', 'bottom')">
+              <Button @click="confirmarPreview('variantBottom', 'docs_variantes', 'bottom')">
                 {{ tContent('demonstration.labels.apply') }}
               </Button>
             </SheetFooter>
@@ -1027,7 +1138,10 @@ const a11yCritCols = computed(() => ({
       -->
       <template #variant-preview-0>
         <div style="contain: layout">
-          <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'right', o)">
+          <Sheet
+            :open="previewOpen.compFilters"
+            @update:open="(o: boolean) => aoMudarPreview('compFilters', 'docs_composicoes', 'right', o)"
+          >
             <SheetTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}
@@ -1051,7 +1165,7 @@ const a11yCritCols = computed(() => ({
                   id="docs-sheet-filters"
                   class="nds-stack"
                   data-spacing="sm"
-                  @submit.prevent="rastrearConfirmacao('docs_composicoes', 'right')"
+                  @submit.prevent="confirmarPreview('compFilters', 'docs_composicoes', 'right')"
                 >
                   <div
                     class="nds-stack"
@@ -1129,7 +1243,10 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div style="contain: layout">
-          <Sheet @update:open="(o: boolean) => rastrearSheet('docs_composicoes', 'right', o)">
+          <Sheet
+            :open="previewOpen.compProfile"
+            @update:open="(o: boolean) => aoMudarPreview('compProfile', 'docs_composicoes', 'right', o)"
+          >
             <SheetTrigger as-child>
               <Button variant="outline">
                 {{ tContent('variants.compositions.profileEdit.trigger') }}
@@ -1151,7 +1268,7 @@ const a11yCritCols = computed(() => ({
                   id="docs-sheet-profile"
                   class="nds-stack"
                   data-spacing="sm"
-                  @submit.prevent="rastrearConfirmacao('docs_composicoes', 'right', 'save')"
+                  @submit.prevent="confirmarPreview('compProfile', 'docs_composicoes', 'right', 'save')"
                 >
                   <div
                     class="nds-stack"
@@ -1289,11 +1406,13 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
     <DocsRelated
+      component-slug="sheet"
       :items="relatedItems"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
     <DocsNotes
+      component-slug="sheet"
       :items="noteItems"
     />
 

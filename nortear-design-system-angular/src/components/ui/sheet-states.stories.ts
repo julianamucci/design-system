@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
-import { NDS_SHEET } from './sheet';
+import { NDS_SHEET, sheetCloseReason, type SheetCloseReason } from './sheet';
+import type { RdxDialogOpenChange } from '@radix-ng/primitives/dialog';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
@@ -12,6 +13,7 @@ import {
   sheetControlledSource,
   sheetLongScrollBodySource,
   sheetOpenSource,
+  sheetSecondPanelSource,
 } from './sheet.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -49,6 +51,28 @@ const LABELS = {
   descricao: () => t('demonstration.labels.description'),
   cancelar: () => t('demonstration.labels.cancel'),
   aplicar: () => t('demonstration.labels.apply'),
+};
+
+/**
+ * O painel de TERMOS — o assunto da `LongScrollBody`, escrito como na referência.
+ *
+ * Literal, e não `demonstration.labels`: aqueles rótulos descrevem o painel de
+ * FILTROS, que é curto por natureza e não tem por que rolar. A story rotulava um
+ * painel de termos de "Abrir filtros"/"Filtros avançados"/"Aplicar filtros", e o
+ * texto ao lado dizia que o corpo era longo — o exemplo contradizia a legenda.
+ *
+ * O vanilla é a referência e escreve estas palavras literalmente; copiá-las é o
+ * que mantém as cinco páginas comparáveis lado a lado. O `bodyLabel` é a peça
+ * que mais custa divergir: nome acessível diferente em cada stack é a divergência
+ * que ninguém compara, porque não aparece na tela.
+ */
+const TERMOS = {
+  trigger: 'Ler termos',
+  title: 'Termos de uso',
+  description: 'Leia atentamente antes de aceitar.',
+  cancelar: 'Cancelar',
+  aceitar: 'Aceitar termos',
+  bodyLabel: 'Termos de uso',
 };
 
 export const Closed: Story = {
@@ -151,6 +175,10 @@ export const Open: Story = {
       await expect(panel).toHaveAttribute('data-state', 'open');
       await expect(panel).toHaveAttribute('aria-modal', 'true');
       await expect(panel).toHaveAccessibleName(LABELS.title());
+      // C6: o painel é nomeado pelo título E descrito pela descrição, os dois
+      // obrigatórios. Só o nome era afirmado aqui — um painel que perdesse o
+      // `aria-describedby` passava, e as outras quatro stacks já cobravam.
+      await expect(panel).toHaveAccessibleDescription(LABELS.descricao());
       await expect(
         document.querySelector('[data-slot="sheet-overlay"]'),
       ).not.toBeNull();
@@ -180,14 +208,15 @@ export const LongScrollBody: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABELS.trigger(),
-      tituloPainel: LABELS.title(),
-      descricaoPainel: LABELS.descricao(),
-      rotuloCancelar: LABELS.cancelar(),
-      rotuloAplicar: LABELS.aplicar(),
+      rotuloGatilho: TERMOS.trigger,
+      tituloPainel: TERMOS.title,
+      descricaoPainel: TERMOS.description,
+      rotuloCancelar: TERMOS.cancelar,
+      rotuloAplicar: TERMOS.aceitar,
+      bodyLabel: TERMOS.bodyLabel,
       paragrafos: Array.from({ length: 24 }, (_, i) => ({
         id: `p-${i}`,
-        text: `${i + 1} — ${t('demonstration.labels.body')}`,
+        text: `Parágrafo ${i + 1}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.`,
       })),
     },
     template: `
@@ -200,7 +229,11 @@ export const LongScrollBody: Story = {
             <p ndsSheetDescription>{{ descricaoPainel }}</p>
           </div>
 
-          <div ndsSheetBody class="nds-stack" data-spacing="sm">
+          <!-- [aria-label] liga o INPUT da peça (apelido aria-label), e não o
+               atributo: é o input que decide emitir role="group". Escrito como
+               [attr.aria-label] o nome chegaria ao DOM e o papel não, que é a
+               combinação proibida — nome em elemento sem papel. -->
+          <div ndsSheetBody class="nds-stack" data-spacing="sm" [aria-label]="bodyLabel">
             @for (p of paragrafos; track p.id) {
               <p class="nds-text-body">{{ p.text }}</p>
             }
@@ -246,10 +279,18 @@ export const LongScrollBody: Story = {
       await expect(getComputedStyle(panel).borderTopLeftRadius).not.toBe('0px');
     });
 
-    await step('A região rolável é alcançável por teclado', async () => {
+    await step('A região rolável é alcançável por teclado E se anuncia', async () => {
       // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
       // o corpo (é a regra scrollable-region-focusable do axe).
       await expect(body).toHaveAttribute('tabindex', '0');
+      // C7, e os três andam JUNTOS: caixa que rola é parada de teclado, parada
+      // de teclado precisa de papel, e nome em elemento sem papel é atributo
+      // proibido (`aria-prohibited-attr`). O ramo que emite o papel existe no
+      // primitivo e nenhuma story das cinco o exercitava — `role="group"` nunca
+      // chegava a ser emitido, e o contrato não tinha portão em stack nenhuma.
+      await expect(body).toHaveAttribute('role', 'group');
+      await expect(body).toHaveAttribute('aria-label', TERMOS.bodyLabel);
+      await expect(body).toHaveAccessibleName(TERMOS.bodyLabel);
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
@@ -278,6 +319,7 @@ export const WithCloseButtonHidden: Story = {
       tituloPainel: LABELS.title(),
       descricaoPainel: LABELS.descricao(),
       rotuloCancelar: LABELS.cancelar(),
+      rotuloAplicar: LABELS.aplicar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -289,8 +331,14 @@ export const WithCloseButtonHidden: Story = {
             <p ndsSheetDescription>{{ descricaoPainel }}</p>
           </div>
 
+          <!-- O rodapé INTEIRO, como na referência: a saída à esquerda e a
+               confirmação à direita. Só o Cancelar deixava o exemplo com um
+               rodapé que nenhuma outra story deste componente mostra, e a lição
+               daqui é justamente o par — dispensar o X só se sustenta porque a
+               saída explícita continua ali, ao lado da ação primária. -->
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
+            <button ndsButton>{{ rotuloAplicar }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -302,13 +350,33 @@ export const WithCloseButtonHidden: Story = {
     await step('O X do canto não é renderizado', async () => {
       // Prova do binding de input: sob JIT o componente cairia no default
       // (`true`) e o botão apareceria mesmo com [showCloseButton]="false".
-      await expect(within(panel).queryByRole('button', { name: /fechar/i })).toBeNull();
+      //
+      // A busca é ANCORADA. Solta, `/fechar/i` casaria com qualquer rótulo que
+      // contivesse a palavra — "Fechar sem salvar", "Não fechar" —, e a
+      // ausência do X ficaria provada por um botão que não é o X. As outras
+      // quatro stacks já usavam a forma ancorada.
+      await expect(within(panel).queryByRole('button', { name: /^Fechar$/i })).toBeNull();
+      // E o seletor da própria folha, como na referência: o posicionamento do X
+      // é a única coisa que carrega esta classe, então zero dela é a prova
+      // direta — inclusive se um dia o botão perder o nome acessível.
+      await expect(panel.querySelector('.nds-sheet-close-position')).toBeNull();
     });
 
     await step('E ainda assim existe uma saída — o rodapé', async () => {
-      await expect(
-        within(panel).getByRole('button', { name: LABELS.cancelar() }),
-      ).toBeInTheDocument();
+      const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+      await expect(footer).not.toBeNull();
+      // A CONTAGEM esperada, e não "existe um Cancelar": com `getByRole` sozinho
+      // a asserção passava igual com um rodapé de um botão ou de três, que é
+      // exatamente como este exemplo divergiu da referência sem nada reprovar.
+      const botoes = within(footer!).queryAllByRole('button');
+      await expect(botoes).toHaveLength(2);
+      // Afirmado por NOME, e na ordem: neste stack o `data-slot` é disputado
+      // entre a diretiva de fechar e a de botão, e o que as cinco páginas
+      // comparam lado a lado é o par que a pessoa lê na tela.
+      await expect(botoes.map((b) => b.textContent?.trim())).toEqual([
+        LABELS.cancelar(),
+        LABELS.aplicar(),
+      ]);
     });
   },
 };
@@ -364,7 +432,12 @@ export const Controlled: Story = {
         await userEvent.keyboard('{Escape}');
         await waitForPortalVanish('dialog');
       }
-      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // O que a espera NÃO prova, e por isso é o que se afirma aqui: o NÓ do
+      // painel não está no documento (a espera só consulta o papel `dialog`), e
+      // não existe gatilho DENTRO do componente — quem abre este painel é o
+      // botão de fora, que é o assunto da story.
+      await expect(document.querySelector('[data-slot="sheet-content"]')).toBeNull();
+      await expect(canvasElement.querySelector('[data-slot="sheet-trigger"]')).toBeNull();
     });
 
     await step('O estado externo abre o painel', async () => {
@@ -373,13 +446,159 @@ export const Controlled: Story = {
       await expect(panel).toHaveAttribute('data-state', 'open');
     });
 
-    await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
+    await step('Com o painel aberto, a página atrás não rola', async () => {
+      // C5. `aria-modal="true"` promete que o resto da página está fora de
+      // alcance; sem a trava a promessa é falsa — o leitor de tela não alcança o
+      // que está atrás, mas o mouse e a roda alcançam.
+      //
+      // O marcador é o gancho que a própria lib publica para isto, e ele é
+      // INDEPENDENTE de estratégia: a trava escolhe entre `scrollbar-gutter` e
+      // compensação de largura conforme o navegador, então afirmar sobre
+      // `overflow` mediria qual estratégia rodou, e não se a página travou.
+      await expect(document.documentElement).toHaveAttribute('data-rdx-scroll-locked');
+    });
+
+    await step('Fechar por dentro devolve o valor e SOLTA a rolagem', async () => {
       const panel = await waitForPortal('dialog');
       await userEvent.click(within(panel).getByRole('button', { name: LABELS.cancelar() }));
       await waitForPortalVanish('dialog');
-      // Se o output não tivesse chegado, `isOpen` continuaria true e o painel
-      // reabriria no próximo ciclo de detecção.
-      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // A espera já provou que o papel `dialog` sumiu; o que ela não prova é que
+      // o nó saiu do documento. Se o output não tivesse chegado, `isOpen`
+      // continuaria true e o painel reabriria no próximo ciclo de detecção.
+      await expect(document.querySelector('[data-slot="sheet-content"]')).toBeNull();
+      // A outra metade de C5, e a que de fato quebra a página quando falha:
+      // trava que não solta deixa o documento inerte depois que o painel sumiu.
+      await expect(document.documentElement).not.toHaveAttribute('data-rdx-scroll-locked');
     });
+  },
+};
+
+// ─── Dois painéis, e o mais novo manda ────────────────────────────────────────
+//
+// O Sheet é MODAL: um de cada vez. Abrir o segundo tira o primeiro da tela, e
+// essa saída é um fechamento como qualquer outro — precisa dizer por quê. A lib
+// desta stack empilha diálogos; quem recolhe o anterior é o componente, e o
+// painel que sai da TELA tem de sair também do analytics, senão a série de
+// abre/fecha da docs page não fecha a conta.
+
+/**
+ * Motivos que o PRIMEIRO painel relatou, gravados no render e lidos pela play.
+ *
+ * Fora do render porque o `(onOpenChange)` é ligado na MONTAGEM e a play só
+ * recebe o `canvasElement`: sem um ponto combinado entre os dois, não há como
+ * observar o output daqui.
+ */
+const firstPanelReasons: SheetCloseReason[] = [];
+
+export const SecondPanelClosesFirst: Story = {
+  parameters: {
+    docs: {
+      source: { transform: sheetSecondPanelSource },
+      description: {
+        story:
+          'Dois painéis na mesma página. Abrir o segundo fecha o primeiro, que relata o motivo ' +
+          'api — ninguém o dispensou, foi a modalidade do componente que o recolheu.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      secondOpen: false,
+      noteFirstClose: (evento: RdxDialogOpenChange) => {
+        if (!evento.open) firstPanelReasons.push(sheetCloseReason(evento.reason));
+      },
+    },
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <nds-sheet (onOpenChange)="noteFirstClose($event)">
+          <button ndsSheetTrigger ndsButton variant="outline">Abrir o primeiro</button>
+
+          <ng-template ndsSheetContent side="left">
+            <div ndsSheetHeader>
+              <h2 ndsSheetTitle>Primeiro painel</h2>
+              <p ndsSheetDescription>Este sai de cena quando o outro entra.</p>
+            </div>
+
+            <div ndsSheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                Abra o segundo painel e este aqui se recolhe.
+              </p>
+            </div>
+
+            <div ndsSheetFooter>
+              <button ndsButton variant="outline" (click)="secondOpen = true">Abrir o segundo</button>
+            </div>
+          </ng-template>
+        </nds-sheet>
+
+        <nds-sheet [open]="secondOpen" (openChange)="secondOpen = $event">
+          <ng-template ndsSheetContent side="right">
+            <div ndsSheetHeader>
+              <h2 ndsSheetTitle>Segundo painel</h2>
+              <p ndsSheetDescription>
+                O mais novo manda: dois painéis modais ao mesmo tempo deixariam um deles inalcançável.
+              </p>
+            </div>
+
+            <div ndsSheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">
+                Este entrou por último, então é este que está na tela.
+              </p>
+            </div>
+          </ng-template>
+        </nds-sheet>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const firstTrigger = canvas.getByRole('button', { name: 'Abrir o primeiro' });
+
+    // O painel Interactions REEXECUTA a play no mesmo DOM: sem este ponto de
+    // partida, a rodada seguinte começaria com um painel aberto e um motivo já
+    // gravado. A lista é zerada DEPOIS do fecho, que também relata.
+    if (within(document.body).queryAllByRole('dialog').length > 0) {
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalVanish('dialog');
+    }
+    firstPanelReasons.length = 0;
+
+    await step('O primeiro painel abre sozinho na tela', async () => {
+      await userEvent.click(firstTrigger);
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAccessibleName('Primeiro painel');
+      await expect(document.querySelectorAll('[data-slot="sheet-content"]')).toHaveLength(1);
+      await expect(firstPanelReasons).toEqual([]);
+    });
+
+    await step('Abrir o segundo recolhe o primeiro, e ele diz por quê', async () => {
+      // O segundo painel abre por ESTADO, e o controle que vira esse estado
+      // mora DENTRO do primeiro painel. Não é rodeio de teste: com um modal
+      // aberto a lib põe `pointer-events: none` no body e marca o resto da
+      // página como inerte, então nenhum gatilho de fora é clicável enquanto o
+      // primeiro estiver na tela — quem abre o segundo só pode ser algo que
+      // esteja dentro do primeiro, ou código.
+      const panel = await waitForPortal('dialog');
+      await userEvent.click(within(panel).getByRole('button', { name: 'Abrir o segundo' }));
+
+      await waitFor(() => {
+        const openPanels = document.querySelectorAll('[data-slot="sheet-content"]');
+        if (openPanels.length !== 1) {
+          throw new Error(`esperava um painel na tela, achei ${openPanels.length}`);
+        }
+      });
+
+      const onScreen = document.querySelector<HTMLElement>('[data-slot="sheet-content"]')!;
+      await expect(onScreen).toHaveAccessibleName('Segundo painel');
+      // `api`, e não `overlay`/`escape`/`close-button`: nenhum gesto da pessoa
+      // fechou este painel — foi uma decisão de dentro do componente.
+      await expect(firstPanelReasons).toEqual(['api']);
+    });
+
+    // Termina fechado, e o primeiro não relata um segundo fechamento: ele já
+    // tinha saído.
+    await userEvent.keyboard('{Escape}');
+    await waitForPortalVanish('dialog');
+    await expect(firstPanelReasons).toEqual(['api']);
   },
 };

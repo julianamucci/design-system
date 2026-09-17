@@ -95,7 +95,11 @@ export const Right: Story = {
   play: async () => {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'right');
+    // O lado não pode custar a modalidade nem o nome: as duas afirmações vão
+    // nas QUATRO direções, e o nome vai com argumento — `toHaveAccessibleName()`
+    // vazio passa com qualquer nome, inclusive com o do painel errado.
     await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel direito');
     await expect(panel).toHaveClass(/nds-sheet-content/);
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
     await borderWaitForEncostar(panel, 'right');
@@ -128,6 +132,8 @@ export const Left: Story = {
   play: async () => {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'left');
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel esquerdo');
     await expect(panel).toHaveClass(/nds-sheet-content/);
     await borderWaitForEncostar(panel, 'left');
   },
@@ -156,6 +162,8 @@ export const Top: Story = {
   play: async () => {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'top');
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel superior');
     await expect(panel).toHaveClass(/nds-sheet-content/);
     await borderWaitForEncostar(panel, 'top');
   },
@@ -185,6 +193,8 @@ export const Bottom: Story = {
   play: async () => {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'bottom');
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel inferior');
     await expect(panel).toHaveClass(/nds-sheet-content/);
     await borderWaitForEncostar(panel, 'bottom');
   },

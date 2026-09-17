@@ -232,12 +232,21 @@ function trackOpenChange(triggerId: string, location: DocsLocation, open: boolea
  * marca é o que garante que, quando uma fechar, o motivo saia `api` e não o que
  * sobrou. Marcar não atropela nada: todo caminho de saída real anota o próprio
  * gesto por cima, e a anotação se zera a cada abertura.
+ *
+ * O EVENTO é `dialog_confirm`, e não o aposentado `dialog_action` (decisão da
+ * dona, 2026-09-16). Os dois respondiam à mesma pergunta de produto — "a ação
+ * primária do rodapé foi executada" — em componentes que já compartilham
+ * `dialog_open` e `dialog_close` de propósito; eram dois nomes e dois formatos
+ * para uma série só. O `trigger_id` é o MESMO que o `dialog_open` desta prévia
+ * manda, e é ele que faltava no formato antigo: sem o campo, não dava para
+ * ligar a confirmação ao painel que a recebeu.
  */
-function trackAction(actionId: string, location: DocsLocation) {
+function trackAction(triggerId: string, actionId: string, location: DocsLocation) {
   pendingGesture = 'confirm';
-  track('dialog_action', {
+  track('dialog_confirm', {
     component: 'dialog',
-    action_label: actionId,
+    trigger_id: triggerId,
+    action: actionId,
     location,
   });
 }
@@ -670,7 +679,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="trackAction('save', 'docs_demo')">
+              <Button @click="trackAction('default', 'save', 'docs_demo')">
                 {{ tContent('demonstration.labels.action') }}
               </Button>
             </DialogFooter>
@@ -779,7 +788,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="trackAction('save', 'docs_do_dont')">
+              <Button @click="trackAction('do-dont-pair1-do', 'save', 'docs_do_dont')">
                 {{ tContent('demonstration.labels.action') }}
               </Button>
             </DialogFooter>
@@ -810,7 +819,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="trackAction('ok', 'docs_do_dont')">
+              <Button @click="trackAction('do-dont-pair1-dont', 'ok', 'docs_do_dont')">
                 OK
               </Button>
             </DialogFooter>
@@ -838,7 +847,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="trackAction('save', 'docs_do_dont')">
+              <Button @click="trackAction('do-dont-pair2-do', 'save', 'docs_do_dont')">
                 {{ tContent('demonstration.labels.action') }}
               </Button>
             </DialogFooter>
@@ -868,7 +877,7 @@ const a11yCritCols = computed(() => ({
               </DialogClose>
               <Button
                 variant="destructive"
-                @click="trackAction('delete', 'docs_do_dont')"
+                @click="trackAction('do-dont-pair2-dont', 'delete', 'docs_do_dont')"
               >
                 {{ tContent('demonstration.labels.destructiveTitle') }}
               </Button>
@@ -915,7 +924,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="trackAction('save', 'docs_variantes')">
+              <Button @click="trackAction('basic', 'save', 'docs_variantes')">
                 {{ tContent('demonstration.labels.action') }}
               </Button>
             </DialogFooter>
@@ -944,7 +953,7 @@ const a11yCritCols = computed(() => ({
             <form
               class="nds-stack"
               data-spacing="sm"
-              @submit.prevent="trackAction('save', 'docs_variantes')"
+              @submit.prevent="trackAction('with-form', 'save', 'docs_variantes')"
             >
               <div
                 class="nds-stack"
@@ -982,7 +991,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <!-- `scroll-content` é o id desta prévia. O "Aceitar" fica sem
-             `dialog_action`, como no vanilla: lá ele não é rastreado. -->
+             `dialog_confirm`, como no vanilla: lá ele não é rastreado. -->
         <Dialog @update:open="trackOpenChange('scroll-content', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
@@ -1081,7 +1090,7 @@ const a11yCritCols = computed(() => ({
               </DialogClose>
               <Button
                 variant="destructive"
-                @click="trackAction('remove', 'docs_variantes')"
+                @click="trackAction('destructive', 'remove', 'docs_variantes')"
               >
                 {{ tContent('demonstration.labels.removeItemAction') }}
               </Button>
@@ -1130,7 +1139,7 @@ const a11yCritCols = computed(() => ({
               <Button variant="outline">
                 {{ tContent('demonstration.labels.back') }}
               </Button>
-              <Button @click="trackAction('continue', 'docs_variantes')">
+              <Button @click="trackAction('custom-close-in-footer', 'continue', 'docs_variantes')">
                 {{ tContent('demonstration.labels.continueAction') }}
               </Button>
             </DialogFooter>
@@ -1161,7 +1170,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="trackAction('confirm-email', 'docs_variantes')">
+              <Button @click="trackAction('confirm-email', 'confirm-email', 'docs_variantes')">
                 {{ tContent('demonstration.labels.confirmEmailAction') }}
               </Button>
             </DialogFooter>

@@ -305,28 +305,38 @@
   transition: transform var(--duration-base) ease-in-out, opacity var(--duration-base) ease-in-out;
 }
 
-.nds-sheet-content[data-starting-style],
-.nds-sheet-content[data-ending-style] {
+/* O PAINEL não anima a SAÍDA, e isso é decisão de 2026-09-16.
+ *
+ * Aqui havia `[data-ending-style]` ao lado de cada `[data-starting-style]`. O
+ * atributo é de LIB e não chega às cinco: base-ui (react), radix-ng (angular) e
+ * bits-ui (svelte) o escrevem; a `reka-ui` instalada (vue) não o tem em `dist/`;
+ * o vanilla remove o nó na hora (`sheet.ts:461-466`). No máximo três das cinco
+ * animavam, e a stack de REFERÊNCIA não era uma delas.
+ *
+ * A ENTRADA fica: `[data-starting-style]` cobre a montagem, e as `@keyframes`
+ * acima valem para quem não usa o atributo.
+ *
+ * E o VÉU fica animado nos dois sentidos, de propósito: `.nds-sheet-overlay` é
+ * declarado aqui e consumido pelo `drawer.css`, que não tem regra própria, e
+ * pelo Sidebar em modo móvel. Tirar a saída dele alcançaria três componentes
+ * para resolver um. */
+.nds-sheet-content[data-starting-style] {
   opacity: 0;
 }
 
-.nds-sheet-content[data-side="right"][data-starting-style],
-.nds-sheet-content[data-side="right"][data-ending-style] {
+.nds-sheet-content[data-side="right"][data-starting-style] {
   transform: translateX(2.5rem);
 }
 
-.nds-sheet-content[data-side="left"][data-starting-style],
-.nds-sheet-content[data-side="left"][data-ending-style] {
+.nds-sheet-content[data-side="left"][data-starting-style] {
   transform: translateX(-2.5rem);
 }
 
-.nds-sheet-content[data-side="top"][data-starting-style],
-.nds-sheet-content[data-side="top"][data-ending-style] {
+.nds-sheet-content[data-side="top"][data-starting-style] {
   transform: translateY(-2.5rem);
 }
 
-.nds-sheet-content[data-side="bottom"][data-starting-style],
-.nds-sheet-content[data-side="bottom"][data-ending-style] {
+.nds-sheet-content[data-side="bottom"][data-starting-style] {
   transform: translateY(2.5rem);
 }
 

@@ -6,7 +6,8 @@ import {
   sheetEditPerfilSource,
   sheetClosedSource,
   sheetFiltersAvancadosSource,
-  sheetFormLongSource,
+  sheetLongScrollBodySource,
+  sheetSecondPanelClosesFirstSource,
   sheetHeadingH3Source,
   sheetSideDireitoSource,
   sheetSideEsquerdoSource,
@@ -170,9 +171,28 @@ describe('transforms das stories de estado', () => {
   it('sem o botão do canto, a saída passa a ser o rodapé', () => {
     const saida = sheetNoButtonCloseSource();
     expect(saida).toContain('<SheetContent :show-close-button="false">');
-    expect(saida).toContain('<Button variant="outline">Mais tarde</Button>');
+    // Os rótulos são os da Demonstração, como nas outras stacks: o assunto é a
+    // ausência do X, e um exemplo próprio fazia a story contar duas histórias.
+    expect(saida).toContain('<SheetTitle>Filtros avançados</SheetTitle>');
+    expect(saida).toContain('<Button variant="outline">Cancelar</Button>');
+    expect(saida).toContain('<Button>Aplicar filtros</Button>');
+    expect(saida).not.toContain('Mais tarde');
     // Não há gatilho nesta composição: o painel monta aberto.
     expect(saida).not.toContain('SheetTrigger');
+  });
+
+  it('os dois painéis irmãos: o segundo abre por estado, e nada fecha o primeiro à mão', () => {
+    const saida = sheetSecondPanelClosesFirstSource();
+    expect(saida).toContain(`import { ref } from 'vue'`);
+    expect(saida).toContain('const segundoAberto = ref(false)');
+    expect(saida).toContain(
+      '<Sheet :open="segundoAberto" @update:open="(valor) => (segundoAberto = valor)">',
+    );
+    expect(saida).toContain('<SheetTitle>Primeiro painel</SheetTitle>');
+    expect(saida).toContain('<SheetTitle>Segundo painel</SheetTitle>');
+    // A guarda é do PRIMITIVO: se o snippet ensinasse a fechar o primeiro à
+    // mão, ensinaria a duplicar no consumidor o que o componente promete.
+    expect(saida).not.toContain('primeiroAberto');
   });
 
   it('o controlado liga o valor de fora e devolve cada mudança', () => {
@@ -221,9 +241,19 @@ describe('transforms das stories de composição', () => {
     expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
     // Empilhamento, e não grade: é o que a folha compartilhada define para
     // formulário de painel, e o que o Vanilla renderiza.
-    expect(saida).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(saida).toContain('<form id="filters-form" class="nds-stack" data-spacing="sm" @submit.prevent>');
     expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
     expect(saida).not.toContain('nds-grid');
+
+    // O rodapé é IRMÃO do corpo por construção do primitivo, então a primária
+    // fica FORA do formulário e só o par id ↔ `form` a alcança (PRD D9). Sem o
+    // atributo, `type="submit"` é botão inerte — não envia pelo clique nem
+    // pelo Enter num campo, e nada na tela denuncia. Este snippet publicava
+    // campos soltos e uma primária comum, e era o único das cinco.
+    expect(saida).toContain('<Button type="submit" form="filters-form">Aplicar filtros</Button>');
+    expect(saida).not.toContain('<Button>Aplicar filtros</Button>');
+    // E o descartar não pode herdar `submit` do padrão do HTML.
+    expect(saida).toContain('<Button type="button" variant="outline">Cancelar</Button>');
   });
 
   it('a edição de perfil embrulha os campos num form e confirma por submit', () => {
@@ -285,10 +315,22 @@ describe('transforms das stories de composição', () => {
     expect(saida).not.toContain('Aplicar filtros');
   });
 
-  it('o formulário longo repete campos para que haja o que rolar', () => {
-    const saida = sheetFormLongSource();
-    expect(saida).toContain('<div v-for="i in 12" :key="i"');
-    expect(saida).toContain('<Label :for="`notif-${i}`">Categoria {{ i }}</Label>');
-    expect(saida).toContain('<SheetBody>');
+  it('o corpo longo repete PARÁGRAFOS para que haja o que rolar, como na referência', () => {
+    const saida = sheetLongScrollBodySource();
+    // 24 parágrafos, e não 12 pares rótulo+campo: o assunto da story é a
+    // rolagem, e o formulário trazia junto a lição de outra composição.
+    expect(saida).toContain('<p v-for="i in 24" :key="i">');
+    expect(saida).toContain('<SheetTitle>Termos de uso</SheetTitle>');
+    // Empilhamento, nunca grade — o mesmo ritmo que o outro formulário cobra.
+    expect(saida).toContain('<div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">');
+    expect(saida).not.toContain('nds-grid');
+    // Sem campos aqui: o snippet não importa Label nem Input.
+    expect(saida).not.toContain('@/components/ui/input');
+    expect(saida).not.toContain('<Label');
+
+    // O trio da caixa rolável: o `tabindex` o primitivo põe, mas o papel só é
+    // emitido QUANDO vem nome — e o nome é de quem compõe. Sem ele, o corpo é
+    // parada de teclado anônima.
+    expect(saida).toContain('<SheetBody aria-label="Termos de uso">');
   });
 });

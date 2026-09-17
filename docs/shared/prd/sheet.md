@@ -3,7 +3,9 @@
 > **Estado descrito**: 2026-09-15, conferido linha a linha contra o código das
 > cinco stacks. **Revisão serial fechada em** 2026-09-06.
 >
-> **Revisado contra o código em 2026-09-15** — base para a próxima revisão de código: a §7 lista as inconsistências entre stacks medidas nesta data.
+> **Revisado contra o código em 2026-09-15**, e **corrigido na passagem de `fix`
+> de 2026-09-16**, que fechou as cinco pendências e a maior parte da §7. A §7
+> mantém a numeração original e diz, item a item, o que ficou.
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
@@ -221,10 +223,18 @@ composta (`sheet.css:339-343`). No Dialog a composta é a 8px
 (`dialog.css:287-291`), então o par de números não é o mesmo nas duas folhas
 irmãs.
 
-**Animação — duas camadas na mesma folha.** A entrada por `@keyframes`
-(`sheet.css:264-287`) vale para toda montagem; a SAÍDA só existe por transição
-sobre `[data-starting-style]`/`[data-ending-style]` (`sheet.css:295-331`), e só
-anima onde a lib escreve esses atributos — ver a inconsistência 5 da §7.
+**Animação — o painel entra, e não sai animado.** A entrada por `@keyframes`
+vale para toda montagem, e a transição de `[data-starting-style]` cobre quem usa
+o atributo. **A SAÍDA do painel foi removida em 2026-09-16, por decisão da dona**:
+ela pendurava em `[data-ending-style]`, atributo de LIB que não chega às cinco —
+base-ui, radix-ng e bits-ui o escrevem; a `reka-ui` instalada não o tem em
+`dist/`; o vanilla remove o nó na hora. No máximo três das cinco animavam, e a
+referência não era uma delas.
+
+**O VÉU continua animado nos dois sentidos, e isso é medição, não descuido**:
+`.nds-sheet-overlay` é declarado nesta folha e consumido pelo `drawer.css`, que
+não tem regra própria, e pelo Sidebar em modo móvel (§1). Tirar a saída dele
+consertaria um componente e mexeria em três.
 
 ## 6. Estados
 
@@ -273,9 +283,9 @@ modais. Inconsistência 6 da §7.
 | stack | como difere |
 |---|---|
 | vanilla | fábrica com `onClose(reason)` nas MESMAS quatro palavras do Dialog (`escape`, `overlay`, `close-button`, `api` — conferido em `sheet.ts`), mais `open()`/`close()`/`isOpen()` públicos, `trigger` OPCIONAL e fechamento por `data-slot="sheet-close"` — `PATCHES.md#vanilla-sheet-onclose-reason` e `#vanilla-overlay-close-api` |
-| angular | `sheetCloseReason(RdxDialogOpenChangeReason)` exportado de `ui/sheet.ts:99-115`; a classe extra do painel é `panelClass` (`sheet.ts:162`), porque o painel nasce no portal e quem consome não tem elemento onde escrever `class` |
+| angular | `sheetCloseReason(string \| undefined)` mora em `ui/sheet-close-reason.ts` e é reexportado por `ui/sheet.ts` — **mudou de arquivo em 2026-09-16**, e o motivo é de teste: caso unitário em node não importa módulo com `@Component`, e sem separar não havia como cobrar o mapeador. A assinatura passou a ser a dos irmãos. A classe extra do painel é `panelClass` (`sheet.ts:162`), porque o painel nasce no portal e quem consome não tem elemento onde escrever `class` |
 | vue | `sheetCloseReason(gesture)` + `createSheetCloseWatch(note)` de `ui/sheet/sheet.close-reason.ts` — a reka-ui não publica motivo, então o gesto é OBSERVADO; os gestos têm os nomes dos emits da reka (`escape-key-down`, `pointer-down-outside`, `focus-outside`, `close-press`, `confirm`) e o clique em controle de fechar é pego por DELEGAÇÃO na captura do painel (`:114-117`), como no vanilla |
-| svelte | `sheetCloseReason(signal)` + `createSheetCloseWatch()` de `ui/sheet/close-reason.ts`, e `SheetContent` ganhou `onClosePress` — a bits-ui também não publica motivo; os sinais têm os nomes de motivo das libs que publicam (`escape-key`, `outside-press`, `focus-out`, `close-press`, `confirm`) e NÃO há delegação: cada `SheetClose` do rodapé precisa espalhar `closeWatch.closeTrigger` (`:82`) |
+| svelte | `sheetCloseReason(signal)` + `createSheetCloseWatch()` de `ui/sheet/close-reason.ts` — a bits-ui também não publica motivo; os sinais têm os nomes de motivo das libs que publicam (`escape-key`, `outside-press`, `focus-out`, `close-press`, `confirm`). **Passou a DELEGAR em 2026-09-16**, por ouvinte de captura no painel com predicado puro (`sheet-content.svelte` + `isSheetCloseTrigger`): o `closeTrigger` que cada `SheetClose` precisava espalhar deixou de existir, e com ele os 12 pontos à mão que a docs page mantinha — esquecer um fazia aquele fecho sair `api` |
 | react | não declara tipo próprio: o Sheet é o mesmo `dialog_close` do Dialog e usa o `dialogCloseReason` de `ui/dialog-close-reason.ts` (com `markConfirmation()`), ao lado dos irmãos `drawer-`, `menu-` e `popover-close-reason.ts` |
 | todas | **onde a opção de lado mora varia por stack**; a tabela de props de cada página mostra a forma dela. O lado em si é sempre do painel (C8) |
 | nome das props na docs page | `onOpenChange`/`className` (react), `onUpdate:open`/`class` (vue), `onOpenChange`/`class` (svelte), `openChange`/`modal`/`panelClass` (angular), opções da fábrica com `trigger`, `title`, `titleLevel`, `content`, `footer`, `bodyLabel`, `onClose`, `class` (vanilla) — conferido nas cinco `SheetDocs.*` em 2026-09-15 |
@@ -389,21 +399,43 @@ resolvendo NELE, com o nome acessível saindo do seu texto. Os dois defeitos que
 ela existe para pegar foram plantados e reprovaram nas cinco: trocar a tag
 mantendo o vínculo, e manter a tag rompendo o vínculo.
 
-### Inconsistências entre stacks, medidas em 2026-09-15
+### Inconsistências entre stacks — medidas em 2026-09-15, corrigidas em 2026-09-16
 
-Medido arquivo a arquivo nas cinco stacks (primitivo, stories, `*.source.ts` e
-testes, docs page, `analytics.ts`). `node scripts/audit.mjs sheet --json` devolve
-zero achados nesta data — nenhuma das divergências abaixo tem portão que a veja.
-O que já está registrado como forma de API na tabela de divergências acima não se
-repete aqui, salvo quando tem consequência de comportamento.
+A numeração de 1 a 26 é a da medição original e **fica**, porque o texto acima e
+as pendências apontam para ela por número. Cada item passou a dizer o estado de
+hoje. `node scripts/audit.mjs sheet --json` devolvia zero achados **antes e
+depois** — nenhuma destas divergências tem portão que a veja, e é por isso que a
+passagem existiu.
+
+**O que sobra**: os itens 2, 3, 6, 7 e 26, que são forma de API ou mecânica de
+lib e ficam registrados; o resto fechou.
+
+**As quatro decisões da dona desta rodada**: um painel por vez (item 1), saída do
+painel sem animação (item 5), primária da Demonstração fechando (item 24), e a
+aposentadoria do `dialog_action` em favor do `dialog_confirm` (§9).
+
+**E o que só o NAVEGADOR viu**, depois de tudo compilar e o auditor fechar limpo:
+a guarda de painel único do vue nascia dentro do `<script setup>`, que roda uma
+vez por INSTÂNCIA — cada painel com o próprio registro vazio, cada um "único"
+sozinho, e nada recolhia. O `build` ficava verde; nenhum type-check distingue
+escopo de instância de escopo de módulo. No svelte, a mesma story reprovava por
+outro motivo: a espera afirmava "exatamente um painel" numa hora em que isso já
+era verdade — o primeiro ainda estava lá —, e a asserção media DOM velho.
 
 **Primitivo e comportamento**
 
-1. **Um painel por vez.** vanilla fecha o painel anterior ao abrir outro, relatando
-   `api` (`sheet.ts:231-237`, `:342`), e tem story própria para isso
-   (`sheet-states.stories.ts:426`, `SecondPanelClosesFirst`). react, vue, svelte e
-   angular não têm essa guarda: as libs empilham diálogos. Maioria (4): empilhar;
-   a referência recolhe. Decisão da dona — ver o relatório da revisão.
+1. **FECHADO · um painel por vez, nas cinco.** A referência recolhia e as quatro
+   com lib empilhavam, porque as libs empilham diálogos — e dois modais ao mesmo
+   tempo deixam um inalcançável atrás do véu, com duas armadilhas de foco. Por
+   decisão da dona as quatro passaram a recolher o painel aberto antes de abrir
+   outro, relatando `api`, cada uma com o registro no escopo que a stack permite
+   (módulo no react, no vue e no svelte; serviço no angular). A story
+   `SecondPanelClosesFirst` existe nas cinco e afirma o motivo. **Como o segundo
+   painel é aberto diverge, e é aceitável**: o vanilla clica um gatilho do canvas,
+   react e angular clicam um botão DENTRO do primeiro painel, vue e svelte viram
+   estado por código — com um modal aberto o `body` fica `pointer-events: none` e
+   o clique sintético é recusado. Só a referência prova que um controle de fora
+   continua alcançável.
 2. **`data-slot="sheet"` no DOM.** Só existe em vanilla (wrapper,
    `sheet.ts:283`) e angular (host, `sheet.ts:199`). react passa o atributo à raiz
    da base-ui (`sheet.tsx:31`) e vue à `DialogRoot` (`Sheet.vue:14`), que não
@@ -423,148 +455,159 @@ repete aqui, salvo quando tem consequência de comportamento.
    `data-open`/`data-closed`; vanilla não escreve nenhum. Maioria (3):
    `data-state`. Não é contrato (D8, §6) e só a story do angular o afirma
    (`sheet.stories.ts:164`, `sheet-states.stories.ts:151`, `:373`).
-5. **Animação de saída.** A transição de saída depende de
-   `[data-ending-style]` (`sheet.css:295-331`): base-ui (react), radix-ng
-   (angular) e bits-ui (svelte, `dialog.svelte.d.ts:141-142`) o escrevem; reka-ui
-   (vue) não tem o atributo em `dist/`, e vanilla remove o nó na hora
-   (`sheet.ts:461-466`). Maioria (3): anima a saída; a referência não anima.
-   Decisão da dona.
+5. **FECHADO · o painel não anima mais a saída.** A transição dependia de
+   `[data-ending-style]`, que base-ui, radix-ng e bits-ui escrevem e a `reka-ui`
+   instalada não tem em `dist/`; o vanilla remove o nó na hora. Três das cinco
+   animavam, a referência não. Por decisão da dona a regra saiu de `sheet.css`,
+   com o motivo escrito no lugar dela — e **só nas regras do `.nds-sheet-content`**:
+   o véu ficou animado porque `drawer.css` e o Sidebar móvel o consomem (§5).
 6. **`modal`.** Prop em react (`sheet.tsx:26-31`, com `'trap-focus'`), vue
    (`SheetContent.vue:71-72`) e angular (`sheet.ts:194`); ausente em svelte
    (sempre modal, `sheet-content.svelte:12-13`) e vanilla. Só a docs page do
    angular a lista (`SheetDocs.ts:1154`); react e vue a expõem no Playground
    (`sheet.stories.tsx:71`, `sheet.stories.ts:67`) e não na tabela. Divergência de
    API — registrar; a falta na tabela compartilhada (§7) é o que alinhar.
-7. **Observação do motivo sem lib que o publique.** vue delega o clique em
-   `[data-slot="sheet-close"]` na captura do painel
-   (`sheet.close-reason.ts:114-117`), como o vanilla (`sheet.ts:371-374`); svelte
-   não delega — cada `SheetClose` precisa espalhar `closeWatch.closeTrigger`
-   (`close-reason.ts:82`), e um que não espalhe fecha relatando `api`. Os nomes do
-   gesto também diferem (`escape-key-down`… no vue, `escape-key`… no svelte).
-   Maioria com delegação: vanilla e vue; react e angular recebem o motivo da lib.
-   A forma da função é API; a ausência de delegação no svelte é comportamento.
+7. **Observação do motivo sem lib que o publique — a delegação virou UNÂNIME.**
+   vue e vanilla já delegavam o clique em `[data-slot="sheet-close"]` na captura
+   do painel; **o svelte passou a delegar em 2026-09-16**, e com isso o
+   `closeTrigger` que cada `SheetClose` precisava espalhar deixou de existir —
+   esquecer um ponto fazia aquele fecho sair `api`, e a docs page mantinha 12
+   pontos à mão. react e angular recebem o motivo da lib. O que sobra de
+   divergência é o NOME do gesto (`escape-key-down`… no vue, `escape-key`… no
+   svelte), que é forma de API e fica registrado.
 8. **Aviso de painel sem título.** Só angular avisa em modo dev
    (`sheet.ts:269-285`). Registrar.
 
 **Stories — conjunto e asserções**
 
-9. **`Variants/Right`.** vanilla afirma `aria-modal` e NÃO afirma nome acessível
-   em nenhuma das quatro direções (`sheet-variants.stories.ts:96-190`); react, vue,
-   svelte e angular afirmam `toHaveAccessibleName()` nas quatro e nunca
-   `aria-modal`. Maioria (4) no nome; a referência no `aria-modal`. Alinhar pela
-   união: as duas asserções nas cinco.
-10. **Motivo do fechamento no `Playground`.** vanilla (`sheet.stories.ts:268-331`:
-    escape, overlay, X, Cancelar, primária `api`, `close()` idempotente), vue
-    (`sheet.stories.ts:287-340`: escape, overlay, X, Cancelar; `api` fica na
-    `States/Controlled`, `:413-426`) e svelte (`sheet.stories.ts:240-305`: os cinco
-    caminhos) afirmam a palavra; **react e angular não afirmam motivo em story
-    nenhuma** (`sheet.stories.tsx:277-315`, `sheet.stories.ts:223-258`). angular
-    também não tem teste unitário de `sheetCloseReason` (vue e svelte têm
-    `*close-reason.test.ts`, react `dialog-close-reason.test.ts`). Maioria (3):
-    afirma. Pendência abaixo.
-11. **Passos condicionados a control.** react e angular só executam o passo do
-    véu com `args.modal` e o do X com `args.showCloseButton`
-    (`sheet.stories.tsx:286`, `:298`; `sheet.stories.ts:232`, `:242`); vue,
-    svelte e vanilla sempre executam. Maioria (3): incondicional.
-12. **Trava de rolagem (C5).** Só `States/Controlled` do vanilla afirma
-    (`sheet-states.stories.ts:393-398`), junto com reentrância e `isOpen()`.
-    Nenhuma das outras quatro afirma a trava. Pendência abaixo.
-13. **Corpo nomeado (C7).** Nenhuma story das cinco passa nome ao corpo nem afirma
-    `role="group"`/`aria-label`; `LongScrollBody` afirma só `tabindex`. Só a docs
-    page do vanilla documenta a opção (`bodyLabel`, `SheetDocs.ts:1015`). Pendência
-    abaixo.
-14. **`States/Controlled` do svelte não é controlado.** O botão "Abrir pelo estado
-    externo" é o `SheetTrigger` do andaime (`sheet-states.stories.ts:197-238` +
-    `SheetStory.svelte:165-169`) e o fecho é por Escape; nas outras quatro há
-    botão fora do painel e sem gatilho interno. Maioria (4). Pendência abaixo.
-15. **`States/Open` e `WithCloseButtonHidden`.** angular não afirma a descrição
-    acessível em `Open` (`sheet-states.stories.ts:149-157`; as outras quatro
-    afirmam). Só vanilla afirma a ausência da classe do X
-    (`sheet-states.stories.ts:270`); angular procura `/fechar/i` sem âncoras
-    (`:305`), as outras `/^Fechar$/i`. Maioria (4) na descrição.
-16. **Exemplos das stories de estado divergem.** `LongScrollBody`: 24 parágrafos
-    em vanilla, react e angular; 14 parágrafos no svelte (`SheetStory.svelte:240`);
-    12 pares rótulo+campo sem gatilho no vue (`sheet-states.stories.ts:203-229`).
-    `WithCloseButtonHidden`: "Aceitar atualização" no vue (`:276`) e "Convidar
-    para o time" no svelte (`:165`) contra os rótulos da Demonstração nas outras
-    três. angular acrescenta a asserção de `panelClass` (`:229-247`). Maioria (3):
-    o exemplo do vanilla.
-17. **`Compositions/AdvancedFilters` do vue não tem `<form>`** — campos soltos e a
-    primária como botão comum (`sheet-compositions.stories.ts:89-106`), e o
-    snippet repete (`sheet.source.ts:358-393`); as outras quatro religam a primária
-    por `form="<id>"` e afirmam isso (D9). A docs page do vue tem o `<form>`.
-    Maioria (4). Pendência abaixo.
-18. **A primária das composições do vanilla fecha como `close-button`.**
-    `makeFooter(…, true, formId)` marca Cancelar E a primária com
-    `data-slot="sheet-close"` (`sheet.fixtures.ts:117-120`, usado em
-    `sheet-compositions.stories.ts:107`, `:252`); no `Playground` a primária fecha
-    por `close()` e relata `api`. Nas outras quatro a primária das composições não
-    fecha. Contradiz a própria referência.
-19. **Asserções das composições.** `SecondaryNavigation`: vanilla abre por clique
-    e confere o texto dos cinco links na ordem; as outras abrem na montagem e
-    contam 5; svelte e angular afirmam ausência de rodapé, react e vue não.
-    `BottomPanel`: angular afirma 3 no corpo e 1 no rodapé; react só o corpo;
-    svelte só o rodapé; vanilla os dois pelo texto; vue nenhum dos dois
-    (`sheet-compositions.stories.ts:276-283`). Alinhar pela união, com o vanilla.
-20. **Ritmo do formulário.** angular usa `nds-grid` com `data-spacing="md"` nas
-    composições de formulário (`sheet-compositions.stories.ts:77`, `:213`) e vue
-    `nds-grid` no `LongScrollBody`; as outras usam `nds-stack` `sm` + `xs`, que é o
-    do vanilla e o da própria docs page do angular (`SheetDocs.ts:241`). Maioria (4).
-21. **Regra de acessibilidade silenciada só no vue.** As três stories de
-    variantes, estados e composições do vue ligam `FOCUS_RULE_GUARDA`
-    (`sheet-variants.stories.ts:52`, `sheet-states.stories.ts:46`,
-    `sheet-compositions.stories.ts:36`); nenhuma outra stack precisa. Maioria (4):
-    sem configuração.
-22. **Texto velho no meta das composições do vanilla.** "A factory não expõe um
-    botão de fechar componível — […] os botões do rodapé saem pelo overlay"
-    (`sheet-compositions.stories.ts:46-49`) — falso desde a delegação por
-    `data-slot`.
-23. **Quatro stacks citam "PRD D10" para a regra do `form`**, que neste
-    documento é a D9 (a D10 é do `dialog.md`); o vue não cita número nenhum: vanilla
-    (`sheet-compositions.stories.ts:88`, `sheet.fixtures.ts:96`,
-    `SheetDocs.ts:552`), react (`sheet-compositions.stories.tsx:132`), svelte
-    (`sheet-compositions.stories.ts:76`, `SheetStory.svelte:138`), angular
-    (`sheet-compositions.stories.ts:91`, `:118`).
+9. **FECHADO · as quatro direções afirmam `aria-modal` E o nome esperado, nas
+   cinco.** A referência afirmava só `aria-modal`; as outras quatro chamavam
+   `toHaveAccessibleName()` **sem argumento**, que passa com qualquer nome — e
+   era a família de asserção sem dentes mais numerosa desta passagem. No react o
+   nome vem de `t()` pela mesma store de locale do render, e não de literal
+   pt-BR: a negociação pode resolver `en` no navegador headless.
+10. **FECHADO · as cinco afirmam o motivo do fechamento no `Playground`**, e o
+    angular ganhou o teste unitário do mapeador que era a única stack a não ter
+    (ver a pendência correspondente).
+11. **FECHADO · os passos do véu e do X são incondicionais nas cinco.** react e
+    angular só os executavam com `args.modal`/`args.showCloseButton` ligados —
+    control desligado, passo que não roda, e a story fechava verde sem medir.
+12. **FECHADO · a trava de rolagem (C5) é afirmada nas cinco**, cada uma pela
+    mecânica da sua lib (ver a pendência, que traz as cinco formas).
+13. **FECHADO · o corpo é nomeado e o trio é afirmado nas cinco** (ver a
+    pendência). O rótulo é `'Termos de uso'` nas cinco, **literal, sem chave no
+    conteúdo compartilhado** — as cinco concordam, e isso fica registrado aqui
+    como o ponto por onde uma divergência voltaria a entrar.
+14. **FECHADO · a `States/Controlled` do svelte abre por estado**, sem
+    `SheetTrigger`, como nas outras quatro.
+15. **FECHADO · `States/Open` e `WithCloseButtonHidden` alinhadas.** O angular
+    passou a afirmar a descrição acessível e trocou `/fechar/i` por `/^Fechar$/i`
+    — regex sem âncora casa "Fechar filtros" e qualquer outro rótulo que contenha
+    a palavra.
+16. **FECHADO · os exemplos das stories de estado são os da referência.**
+    `LongScrollBody` com 24 parágrafos e os cinco rótulos do vanilla nas cinco —
+    o svelte trocava quatro deles e o **angular trocava o ASSUNTO**, rotulando um
+    painel de termos como "Abrir filtros"/"Filtros avançados"/"Aplicar filtros".
+    `WithCloseButtonHidden` com os dois botões do rodapé: react e angular tinham
+    só Cancelar, e cravavam `toHaveLength(1)` — asserção com dentes provando o
+    exemplo errado, que é pior que asserção nenhuma.
+17. **FECHADO · o `<form>` religado existe na story E no snippet das cinco** (ver
+    a pendência, que também registra o mesmo defeito achado nos snippets
+    publicados das docs pages).
+18. **FECHADO · a primária das composições do vanilla deixou de ser peça de
+    fechar.** `makeFooter` marcava Cancelar **e a primária** com
+    `data-slot="sheet-close"`, então o mesmo botão saía `close-button` nas
+    composições e `api` no `Playground` — a referência contradizia a si mesma. Hoje
+    só o Cancelar carrega a marca, e as duas plays afirmam isso nos dois sentidos.
+19. **FECHADO · as asserções das composições foram alinhadas pela união**, com o
+    vanilla como referência: `SecondaryNavigation` e `BottomPanel` afirmam corpo e
+    rodapé nas cinco.
+20. **FECHADO · o ritmo do formulário é `nds-stack` `sm` + `xs` nas cinco**, na
+    story e no snippet. `nds-grid` não aparece mais em arquivo de sheet, e react,
+    vue e svelte têm teste negativo cobrando isso.
+21. **FECHADO · o vue não silencia mais a regra de acessibilidade.** O
+    `FOCUS_RULE_GUARDA` estava nas três stories, e a medição mostrou que era
+    **herança de família alheia**: na reka instalada quem monta âncoras de foco é
+    `Combobox`, `Menu`, `Popover` e `Select` — o `DialogContentImpl`, caminho de
+    Dialog, AlertDialog e Sheet, nunca as monta. Desligava uma regra que este
+    componente não tinha motivo para desligar.
+22. **FECHADO · o meta das composições do vanilla diz o contrato real** de
+    delegação; as duas metades do texto anterior eram falsas desde que a
+    delegação por `data-slot` entrou.
+23. **FECHADO · a citação é "PRD D9" nas cinco.** A D10 é do `dialog.md`, e
+    quatro stacks apontavam para lá — referência cruzada errada envelhece calada,
+    porque o número existe nos dois documentos.
 
 **Docs page**
 
-24. **A ação primária da Demonstração fecha só no vanilla.** vanilla dispara
-    `dialog_confirm` e chama `sheet.close()` (`SheetDocs.ts:183-190`) — o fecho
-    sai `api`; react (`SheetDocs.tsx:166-176`), vue (`SheetDocs.vue:636`), svelte
-    (`SheetDocs.svelte:489`) e angular (`SheetDocs.ts:743`) só disparam o evento e
-    o painel fica aberto. No próprio vanilla a prévia de perfil também não fecha
-    (`SheetDocs.ts:834-841`). Maioria (4): não fecha; a referência fecha.
-    Decisão da dona.
-25. **`componentSlug` passado aos containers.** `DocsCompositions` recebe nas
-    cinco; `DocsVariants` só em react (`SheetDocs.tsx:567`) e angular
-    (`SheetDocs.ts:778`); `DocsRelated`/`DocsNotes` só em react (`:1102`, `:1112`)
-    e angular (`:820`, `:825`); `DocsImport` só em angular (`:772`). Maioria (3):
-    sem a prop. Conferir se o container de cada stack a exige antes de alinhar.
+24. **FECHADO · a ação primária FECHA o painel nas cinco docs pages**, saindo
+    `api`, por decisão da dona — a referência já fazia, e as outras quatro só
+    disparavam o evento deixando o painel aberto. **O alcance era maior do que o
+    item dizia**: no vue faltava em DEZ prévias (demonstração, Do & Don't e
+    variantes), porque lá cada uma monta o próprio painel, enquanto no vanilla um
+    construtor único serve todas. No vue isso exigiu painel CONTROLADO em vez de
+    `SheetClose`: a reka fecha dentro do clique e o ouvinte de captura já anotou
+    `close-press`, então o fecho sairia `close-button` e perderia a distinção que
+    o vocabulário existe para guardar.
+25. **FECHADO · `componentSlug` vai a todos os containers que o aceitam**, nas
+    cinco. O que mais pesava é o `DocsPageLayout`: sem a prop ali, o
+    `mountDocsTracking` da página inteira caía na derivação por URL.
 
 **Construtores de snippet**
 
-26. **Cobertura e nomes.** react 15 construtores / 25 testes, vue 16 / 23,
-    angular 14 / 24, vanilla 4 funções parametrizadas / 26, svelte 7 / 12 — svelte
-    não tem construtor por lado nem por estado (o snippet sai dos args). Os nomes
-    divergem de idioma: vue `sheetSideDireitoSource`, `sheetEditPerfilSource`;
-    svelte `perfilSheetEditSource`, `sheetNavegacaoSecundariaSource`,
-    `sheetTermosWithScrollSource`; react e angular em inglês. Divergência de forma —
-    registrar; o nome em português é o que alinhar (maioria em inglês).
+26. **CONTINUA ABERTO · nomes de construtor em português no vue e no svelte.** A
+    granularidade por stack é forma e fica registrada — o svelte não tem
+    construtor por lado nem por estado, porque o snippet sai dos args, e o vanilla
+    serve tudo por funções parametrizadas; as contagens mudaram nesta passagem,
+    com os construtores novos do segundo painel e das composições, e por isso não
+    são repetidas aqui: quem quiser o número mede. **O que não é forma é o
+    IDIOMA**: `sheetSideDireitoSource` e `sheetEditPerfilSource` no vue,
+    `perfilSheetEditSource`, `sheetNavegacaoSecundariaSource` e
+    `sheetTermosWithScrollSource` no svelte, contra react e angular em inglês.
+    Não entrou na lista de ninguém nesta rodada e segue de pé — é lote de
+    renomeação, não item de revisão de componente.
 
-> **PENDÊNCIA · 2026-09-15** — C5 (trava de rolagem) só tem portão no vanilla.
+> **FECHADA · 2026-09-16** — C5 (trava de rolagem) só tem portão no vanilla.
 > **Fecha quando**: react, vue, svelte e angular têm um passo de story que afirma a página travada com o painel aberto e solta depois do fecho.
+> **Como fechou**: as cinco afirmam, lendo a linha-base antes de abrir e cobrando
+> trava E soltura. **A mecânica diverge de propósito, a força não**: vanilla, vue e
+> svelte leem `body.style.overflow`; o react lê o estilo inline de `<html>` e
+> `<body>` com o control `modal` ligado (lá a trava depende dele) e **não** o
+> computado, que passaria numa página já travada por CSS; o angular lê
+> `data-rdx-scroll-locked`, porque a lib troca de estratégia por navegador.
+> Provado com defeito plantado: com a trava inerte, a `Controlled` do vanilla
+> reprova.
 
-> **PENDÊNCIA · 2026-09-15** — C7 (corpo com `role="group"` + `aria-label`) não tem portão em nenhuma stack.
+> **FECHADA · 2026-09-16** — C7 (corpo com `role="group"` + `aria-label`) não tem portão em nenhuma stack.
 > **Fecha quando**: `States/LongScrollBody` das cinco nomeia o corpo e afirma `role="group"` e o nome acessível.
+> **Como fechou**: as cinco nomeiam o corpo com `'Termos de uso'` e afirmam o trio
+> `tabindex="0"` + `role="group"` + nome. As cinco JÁ implementavam o ramo, e
+> nenhuma o exercitava — o papel só é emitido quando o nome chega, então sem a
+> prop os três atributos somem juntos e nada reprovava. Provado com defeito
+> plantado: sem `role="group"`, a `LongScrollBody` do vanilla reprova.
 
-> **PENDÊNCIA · 2026-09-15** — react e angular não afirmam o motivo do fechamento em story, e angular não tem teste de `sheetCloseReason` (inconsistência 10).
+> **FECHADA · 2026-09-16** — react e angular não afirmam o motivo do fechamento em story, e angular não tem teste de `sheetCloseReason` (inconsistência 10).
 > **Fecha quando**: o `Playground` das duas afirma `escape`, `overlay`, `close-button` e `api`, e existe teste unitário do mapeador no angular.
+> **Como fechou**: os dois `Playground` afirmam as quatro palavras, e o angular
+> ganhou `sheet-close-reason.test.ts` com 10 casos — para isso o mapeador saiu
+> para `ui/sheet-close-reason.ts`, porque teste unitário em node não importa
+> módulo com `@Component`. No react a confirmação passou a chamar
+> `markConfirmation()`, que existia sem call site: sem ela, confirmar saía com o
+> motivo da lib em vez de `api`.
 
-> **PENDÊNCIA · 2026-09-15** — `Compositions/AdvancedFilters` do vue e o snippet dela não têm `<form>` religado (inconsistência 17).
+> **FECHADA · 2026-09-16** — `Compositions/AdvancedFilters` do vue e o snippet dela não têm `<form>` religado (inconsistência 17).
 > **Fecha quando**: a story e `sheetFiltersAvancadosSource` do vue têm `<form id>` e primária `type="submit" form="<id>"`, com asserção.
+> **Como fechou**: story e snippet religados e afirmados. **E a varredura achou o
+> mesmo defeito num lugar que a pendência não cobria**: os snippets PUBLICADOS das
+> docs pages de react, vue, svelte e angular traziam `<form id>` sem
+> `preventDefault`, ao lado de uma prévia que guardava — o defeito da D9
+> reimpresso no bloco que a pessoa copia. Só o vanilla publicava certo; os quatro
+> foram corrigidos.
 
-> **PENDÊNCIA · 2026-09-15** — `States/Controlled` do svelte abre pelo gatilho interno (inconsistência 14).
+> **FECHADA · 2026-09-16** — `States/Controlled` do svelte abre pelo gatilho interno (inconsistência 14).
 > **Fecha quando**: a story do svelte abre por estado externo, sem `SheetTrigger`, como nas outras quatro.
+> **Como fechou**: a story ganhou cena própria, sem `SheetTrigger`, abrindo por
+> estado e afirmando também a trava de rolagem e o motivo `escape`.
 
 ## 8. Acessibilidade
 
@@ -602,17 +645,24 @@ nesta tabela. `dialog_open` e `dialog_close` são os do Dialog de propósito: as
 duas peças respondem à mesma pergunta de produto, e separar as séries esconderia
 isso.
 
-**O terceiro evento NÃO é compartilhado com o Dialog.** Conferido nas cinco em
-2026-09-15: o Sheet dispara
-`dialog_confirm` (`{ component: "sheet", trigger_id, action, location }`) e o
-Dialog dispara `dialog_action` (`{ component: "dialog", action_label, location }`)
-— nenhuma `SheetDocs.*` manda `dialog_action`, nenhuma `DialogDocs.*` manda
-`dialog_confirm`, e os dois eventos estão tipados nas cinco `analytics.ts`. São
-dois nomes e dois formatos para a mesma pergunta ("a ação primária do rodapé foi
-executada"), em componentes que compartilham os outros dois eventos de propósito;
-o `dialog_confirm` leva `trigger_id` e o `dialog_action` não. Unificar é decisão
-da dona — registrado aqui e na §9 do [`dialog.md`](dialog.md), não consertado por
-conta própria.
+**O terceiro evento PASSOU a ser compartilhado com o Dialog, em 2026-09-16.** Até
+essa data o Sheet disparava `dialog_confirm` e o Dialog disparava `dialog_action`
+(`{ component: "dialog", action_label, location }`) — dois nomes e dois formatos
+para a mesma pergunta, em componentes que compartilhavam os outros dois eventos
+de propósito. Por decisão da dona o `dialog_action` foi aposentado: saiu das cinco
+`analytics.ts`, as cinco `DialogDocs.*` passaram a mandar `dialog_confirm`, o
+`action_label` virou `action` e entrou o `trigger_id` — o mesmo do `dialog_open`
+que precedeu a confirmação, que é o que liga as duas pontas da série no GA4.
+
+**E fechar o tipo revelou um QUARTO disparador.** O `component` do
+`dialog_confirm` era `string` solto, o único dos três eventos da família sem a
+união — e por isso aceitava calado qualquer valor. Ao apertá-lo para
+`'dialog' | 'alert-dialog' | 'sheet'`, o build do Angular reprovou em
+`DrawerDocs.ts`: **o Drawer confirma por este evento**, embora tenha
+`drawer_open` e `drawer_close` próprios e não tenha `drawer_confirm` em stack
+nenhuma. A união inclui `'drawer'` porque é o que as cinco fazem hoje; a
+assimetria — abrir e fechar por família própria, confirmar pela família do
+Dialog — fica registrada aqui, sem conserto por conta própria.
 
 **`reason` é obrigatório, no vocabulário da família** — `escape`, `overlay`,
 `close-button`, `api` —, com o registro da decisão de 2026-09-10 na §9 do

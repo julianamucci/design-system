@@ -24,6 +24,7 @@
 	import { Button } from "@/components/ui/button/index.js";
 	import XIcon from '@lucide/svelte/icons/x';
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
+	import { isSheetCloseTrigger } from "./close-reason";
 	import type { ComponentProps } from "svelte";
 
 	let {
@@ -41,11 +42,14 @@
 		side?: Side;
 		showCloseButton?: boolean;
 		/**
-		 * Avisa que o X do canto foi acionado — é o `close-press` que o bits-ui
-		 * NÃO publica. O `onOpenChange` diz que o painel fechou, nunca por onde;
-		 * das quatro saídas, esta é a única que mora dentro deste wrapper, então
-		 * é daqui que ela tem de sair. Quem escuta traduz em `SheetCloseReason`
-		 * pelo `close-reason.ts` ao lado; o primitivo não conhece analytics.
+		 * Avisa que um controle de fechar foi acionado — é o `close-press` que o
+		 * bits-ui NÃO publica. O `onOpenChange` diz que o painel fechou, nunca
+		 * por onde. Quem escuta traduz em `SheetCloseReason` pelo
+		 * `close-reason.ts` ao lado; o primitivo não conhece analytics.
+		 *
+		 * Vale para TODO `[data-slot="sheet-close"]` do painel, e não só para o X
+		 * que este wrapper monta: o rodapé é de quem compõe, e o ouvinte de
+		 * captura abaixo é o que alcança os botões que não nascem aqui.
 		 *
 		 * Fica FORA do `restProps` de propósito: espalhado no `Content` viraria
 		 * atributo inválido no elemento do painel.
@@ -60,6 +64,30 @@
 		closeLabel?: string;
 		children: Snippet;
 	} = $props();
+
+	/**
+	 * DELEGAÇÃO na captura do painel — o que faltava a esta stack.
+	 *
+	 * O rodapé é de quem compõe: um ouvinte por botão só alcançaria o X que este
+	 * wrapper monta, e era essa a lacuna que obrigava cada `SheetClose` a
+	 * espalhar um manipulador à mão. Um esquecido fechava o painel relatando
+	 * `api` — "decisão de dentro" para um clique que foi de botão —, e nada
+	 * reprovava. Mesma delegação do `sheet.ts` do Vanilla, que é a referência do
+	 * contrato.
+	 *
+	 * CAPTURA, e não borbulha: o painel é ANCESTRAL dos controles de fechar, e a
+	 * fase de captura nele corre antes de o clique chegar ao botão — ou seja,
+	 * antes de a lib fechar o painel e emitir o `onOpenChange` que lê a anotação.
+	 */
+	$effect(() => {
+		const panel = ref;
+		if (!panel) return;
+		const onClickCapture = (event: MouseEvent) => {
+			if (isSheetCloseTrigger(event.target)) onClosePress?.();
+		};
+		panel.addEventListener('click', onClickCapture, true);
+		return () => panel.removeEventListener('click', onClickCapture, true);
+	});
 </script>
 
 <SheetPortal {...portalProps}>

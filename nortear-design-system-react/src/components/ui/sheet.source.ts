@@ -109,7 +109,7 @@ function body(): string {
  * primária nunca está dentro do `<form>`. Sem ele o exemplo publicava um painel
  * com formulário e NENHUMA forma de submeter: com dois ou mais campos o
  * navegador não faz o envio implícito, e o Enter num campo não dispara nada, em
- * silêncio (PRD D10). Fora desse caso os dois atributos seriam ruído.
+ * silêncio (PRD D9). Fora desse caso os dois atributos seriam ruído.
  */
 function footer(acao = 'Aplicar filtros', saida = 'Cancelar', comFormulario?: string): string {
   const tipo = comFormulario ? 'type="button" ' : '';
@@ -236,9 +236,7 @@ export function sheetNoButtonCloseSource(): string {
       '',
       ' showCloseButton={false}',
       `${header()}
-    <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-    </SheetFooter>`,
+${footer()}`,
       'Abrir filtros',
     ),
   );
@@ -487,6 +485,76 @@ const PARAGRAFOS = Array.from({ length: 24 }, (_, i) => i + 1);`,
 ${footer('Aceitar termos')}`,
       'Ler termos',
     ),
+  );
+}
+
+/**
+ * Dois painéis na mesma página — e um de cada vez na tela.
+ *
+ * O Sheet é MODAL: abrir o segundo recolhe o primeiro, que sai relatando `api`
+ * (ninguém o dispensou, foi a modalidade do componente que o recolheu). O
+ * snippet ensina a composição; o recolhimento não precisa de código de quem
+ * consome, e é justamente esse o ponto — dois painéis modais ao mesmo tempo
+ * deixariam um deles atrás do véu e inalcançável.
+ */
+export function sheetSecondPanelSource(): string {
+  return jsxSnippet(
+    `import { useState } from "react";
+${importingSheet(
+  'Sheet',
+  'SheetBody',
+  'SheetContent',
+  'SheetDescription',
+  'SheetFooter',
+  'SheetHeader',
+  'SheetTitle',
+  'SheetTrigger',
+)}
+${IMPORT_BUTTON}
+
+const [segundoAberto, setSegundoAberto] = useState(false);`,
+    `<div className="nds-cluster" data-spacing="md">
+  <Sheet>
+    <SheetTrigger render={<Button variant="outline" />}>
+      Abrir o primeiro
+    </SheetTrigger>
+    <SheetContent side="left">
+      <SheetHeader>
+        <SheetTitle>Primeiro painel</SheetTitle>
+        <SheetDescription>
+          Este sai de cena quando o outro entra.
+        </SheetDescription>
+      </SheetHeader>
+      <SheetBody>
+        <p className="nds-text-body nds-text-muted-foreground">
+          Abra o segundo painel e este aqui se recolhe.
+        </p>
+      </SheetBody>
+      <SheetFooter>
+        <Button variant="outline" onClick={() => setSegundoAberto(true)}>
+          Abrir o segundo
+        </Button>
+      </SheetFooter>
+    </SheetContent>
+  </Sheet>
+
+  <Sheet open={segundoAberto} onOpenChange={setSegundoAberto}>
+    <SheetContent side="right">
+      <SheetHeader>
+        <SheetTitle>Segundo painel</SheetTitle>
+        <SheetDescription>
+          O mais novo manda: dois painéis modais ao mesmo tempo deixariam um
+          deles inalcançável.
+        </SheetDescription>
+      </SheetHeader>
+      <SheetBody>
+        <p className="nds-text-body nds-text-muted-foreground">
+          Este entrou por último, então é este que está na tela.
+        </p>
+      </SheetBody>
+    </SheetContent>
+  </Sheet>
+</div>`,
   );
 }
 

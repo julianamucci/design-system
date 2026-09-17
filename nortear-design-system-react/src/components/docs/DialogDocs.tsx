@@ -129,7 +129,7 @@ type DialogTriggerId =
   | "do-dont-pair2-do"
   | "do-dont-pair2-dont";
 
-/** Id estável da ação primária, para o `action_label` — o mesmo do vanilla. */
+/** Id estável da ação primária, para o campo `action` — o mesmo do vanilla. */
 type DialogActionId = "save" | "ok" | "delete" | "remove" | "continue" | "confirm-email";
 
 /**
@@ -154,9 +154,29 @@ function trackOpenChange(triggerId: DialogTriggerId, location: DocsLocation) {
   };
 }
 
-/** Clique na ação primária do rodapé, pelo id estável da ação. */
-function trackAction(actionId: DialogActionId, location: DocsLocation) {
-  track("dialog_action", { component: "dialog", action_label: actionId, location });
+/**
+ * Clique na ação primária do rodapé, pelo id estável da ação.
+ *
+ * `dialog_confirm`, e não o aposentado `dialog_action`: os dois respondiam à
+ * MESMA pergunta de produto — "a ação primária do rodapé foi executada" — em
+ * componentes que já compartilham `dialog_open` e `dialog_close` de propósito,
+ * com dois nomes e dois formatos. A dona unificou.
+ *
+ * O `trigger_id` é o mesmo da abertura desta prévia, e é ele que liga a
+ * confirmação ao `dialog_open` que a precedeu no GA4. O `dialog_action` não o
+ * levava: dava para contar confirmações, não para saber de qual painel vieram.
+ */
+function trackConfirm(
+  triggerId: DialogTriggerId,
+  actionId: DialogActionId,
+  location: DocsLocation,
+) {
+  track("dialog_confirm", {
+    component: "dialog",
+    trigger_id: triggerId,
+    action: actionId,
+    location,
+  });
 }
 
 type DemoProps = {
@@ -224,7 +244,7 @@ function DefaultDemo({ triggerId, triggerLabel, title, description, cancel, acti
         <DialogFooter>
           <DialogClose render={<Button variant="outline" />}>{cancel}</DialogClose>
           {/* Mesma razão do `trigger_id`: `action` chega traduzido por prop. */}
-          <Button onClick={() => trackAction("save", location)}>{action}</Button>
+          <Button onClick={() => trackConfirm(triggerId, "save", location)}>{action}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -247,7 +267,7 @@ function FormDemo({ triggerId, triggerLabel, title, description, cancel, action,
           onSubmit={(e) => {
             e.preventDefault();
             // Mesma razão do `trigger_id`: `action` chega traduzido por prop.
-            trackAction("save", location);
+            trackConfirm(triggerId, "save", location);
           }}
         >
           <div className="nds-stack" data-spacing="xs">
@@ -673,7 +693,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button onClick={() => trackAction("save", "docs_do_dont")}>
+                    <Button onClick={() => trackConfirm("do-dont-pair1-do", "save", "docs_do_dont")}>
                       {tContent("demonstration.labels.action")}
                     </Button>
                   </DialogFooter>
@@ -699,7 +719,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                   */}
                   <DialogFooter>
                     <DialogClose render={<Button variant="outline" />}>Não</DialogClose>
-                    <Button onClick={() => trackAction("ok", "docs_do_dont")}>OK</Button>
+                    <Button onClick={() => trackConfirm("do-dont-pair1-dont", "ok", "docs_do_dont")}>OK</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -726,7 +746,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button onClick={() => trackAction("save", "docs_do_dont")}>
+                    <Button onClick={() => trackConfirm("do-dont-pair2-do", "save", "docs_do_dont")}>
                       {tContent("demonstration.labels.action")}
                     </Button>
                   </DialogFooter>
@@ -751,7 +771,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button variant="destructive" onClick={() => trackAction("delete", "docs_do_dont")}>
+                    <Button variant="destructive" onClick={() => trackConfirm("do-dont-pair2-dont", "delete", "docs_do_dont")}>
                       Excluir
                     </Button>
                   </DialogFooter>
@@ -818,7 +838,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description: stripHtml(tContent("variants.items.withScrollContent")),
             preview: (
               // `scroll-content` é o id que o vanilla declara para esta
-              // variante. A ação "Aceitar" fica sem `dialog_action`: o vanilla
+              // variante. A ação "Aceitar" fica sem `dialog_confirm`: o vanilla
               // não a rastreia, e o vocabulário de ações não tem id para ela.
               <Dialog onOpenChange={trackOpenChange("scroll-content", "docs_variantes")}>
                 {/* "Ver termos" segue literal: não há chave de gatilho para o
@@ -930,7 +950,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     </DialogClose>
                     <Button
                       variant="destructive"
-                      onClick={() => trackAction("remove", "docs_variantes")}
+                      onClick={() => trackConfirm("destructive", "remove", "docs_variantes")}
                     >
                       {tContent("demonstration.labels.removeItemAction")}
                     </Button>
@@ -985,7 +1005,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <Button variant="outline">
                       {tContent("demonstration.labels.back")}
                     </Button>
-                    <Button onClick={() => trackAction("continue", "docs_variantes")}>
+                    <Button onClick={() => trackConfirm("custom-close-in-footer", "continue", "docs_variantes")}>
                       {tContent("demonstration.labels.continueAction")}
                     </Button>
                   </DialogFooter>
@@ -1038,7 +1058,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button onClick={() => trackAction("confirm-email", "docs_variantes")}>
+                    <Button onClick={() => trackConfirm("confirm-email", "confirm-email", "docs_variantes")}>
                       {tContent("demonstration.labels.confirmEmailAction")}
                     </Button>
                   </DialogFooter>
@@ -1051,7 +1071,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
 
       {/*
         As duas composições rastreiam abrir e fechar com `location:
-        "docs_composicoes"`, como no vanilla. Nenhuma manda `dialog_action`: a
+        "docs_composicoes"`, como no vanilla. Nenhuma manda `dialog_confirm`: a
         de mídia não tem rodapé, e o "Salvar" do perfil também não é rastreado
         lá.
       */}

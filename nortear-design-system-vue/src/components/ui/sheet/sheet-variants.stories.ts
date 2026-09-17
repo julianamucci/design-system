@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import {
   sheetHeadingH3Source,
@@ -46,10 +46,21 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    // Painel modal aberto: as âncoras de foco da lib são `aria-hidden` E
-    // focáveis, e o axe lê a combinação como armadilha de foco — que é o
-    // contrário do que elas fazem. Ver o motivo completo em wait-for-portal.ts.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    // SEM `FOCUS_RULE_GUARDA`, e isto é medido, não esquecimento. As três
+    // stories do Sheet desligavam `aria-hidden-focus` citando as âncoras de
+    // foco da reka — `<span data-reka-focus-guard tabindex="0">` nas duas
+    // pontas do `body` —, e nenhuma outra stack precisava do mesmo. O motivo é
+    // que essas âncoras NÃO existem aqui: na reka instalada, `useFocusGuards`
+    // é chamado só por `ComboboxContentImpl`, `MenuContentImpl`,
+    // `PopoverContentImpl` e `SelectContentImpl`. O `DialogContentImpl` — que
+    // é por onde passam Dialog, AlertDialog e este Sheet — nunca as monta.
+    // Bate com o que a árvore mostra: quem desliga a regra nesta stack é a
+    // família de menu/select, e as stories de Dialog e AlertDialog terminam
+    // com painel modal aberto sem desligar nada (o addon-a11y varre
+    // `document.body` inteiro e roda com `test: 'error'`). Herdamos o
+    // parâmetro de uma família que não é a nossa, e regra desligada à toa é
+    // portão sem dentes: se um `aria-hidden` focável aparecer aqui, tem de
+    // reprovar.
     docs: {
       source: { transform: sheetSideDireitoSource },
       description: {
@@ -111,6 +122,12 @@ function panel(side: string, title: string) {
 // A asserção está escrita story a story, e não extraída para um helper: o lado
 // é o ÚNICO contrato que cada uma destas quatro verifica, e ver a asserção
 // dentro da story é o que torna um lado errado visível na leitura.
+//
+// As quatro afirmam `aria-modal` E o nome acessível ESPERADO. O
+// `toHaveAccessibleName()` sem argumento que estava aqui passa com qualquer
+// nome — inclusive com o do gatilho, que é o defeito real desta família
+// (painel que se nomeia pelo botão que o abriu). O nome vem da mesma chave que
+// o título renderiza, então trocar um sem o outro reprova.
 
 export const Right: Story = {
   parameters: {
@@ -123,12 +140,13 @@ export const Right: Story = {
       },
     },
   },
-  render: panel('right', 'Painel direito'),
+  render: panel('right', L.rightLabel),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'right');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
-    await expect(dialog).toHaveAccessibleName();
+    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    await expect(dialog).toHaveAccessibleName(L.rightLabel);
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
     await borderWaitForEncostar(dialog, 'right');
   },
@@ -148,12 +166,13 @@ export const Left: Story = {
       },
     },
   },
-  render: panel('left', 'Painel esquerdo'),
+  render: panel('left', L.leftLabel),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'left');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
-    await expect(dialog).toHaveAccessibleName();
+    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    await expect(dialog).toHaveAccessibleName(L.leftLabel);
     await borderWaitForEncostar(dialog, 'left');
   },
 };
@@ -170,12 +189,13 @@ export const Top: Story = {
       },
     },
   },
-  render: panel('top', 'Painel superior'),
+  render: panel('top', L.topLabel),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'top');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
-    await expect(dialog).toHaveAccessibleName();
+    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    await expect(dialog).toHaveAccessibleName(L.topLabel);
     await borderWaitForEncostar(dialog, 'top');
   },
 };
@@ -193,12 +213,13 @@ export const Bottom: Story = {
       },
     },
   },
-  render: panel('bottom', 'Painel inferior'),
+  render: panel('bottom', L.bottomLabel),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'bottom');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
-    await expect(dialog).toHaveAccessibleName();
+    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    await expect(dialog).toHaveAccessibleName(L.bottomLabel);
     await borderWaitForEncostar(dialog, 'bottom');
   },
 };

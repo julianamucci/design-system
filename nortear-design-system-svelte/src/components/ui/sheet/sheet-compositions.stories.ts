@@ -73,7 +73,7 @@ export const AdvancedFilters: Story = {
 
     // O rodapé mora FORA do corpo rolável — é o que o mantém visível enquanto o
     // formulário rola —, então a primária não está dentro do `<form>`: só o
-    // atributo `form` a religa (PRD D10). Sem ele o painel tinha formulário e
+    // atributo `form` a religa (PRD D9). Sem ele o painel tinha formulário e
     // NENHUMA forma de submeter: com dois campos não há envio implícito, e o
     // Enter num campo não disparava nada. `button.form` é a leitura que
     // denuncia, porque vem nulo no botão órfão.
@@ -118,7 +118,7 @@ export const ProfileEdit: Story = {
 
     // A confirmação é o ENVIO do formulário, religado pelo id: o rodapé é irmão
     // do corpo, e sem o atributo `form` o botão fica órfão — três campos, e o
-    // navegador não faz o envio implícito (PRD D10).
+    // navegador não faz o envio implícito (PRD D9).
     const form = panel.querySelector<HTMLFormElement>('form')!;
     const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]')!;
     await expect(submit).toHaveAccessibleName('Salvar alterações');

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Directive,
   TemplateRef,
   ViewEncapsulation,
@@ -22,7 +23,6 @@ import {
   RdxDialogTitle,
   RdxDialogDescription,
   RdxDialogClose,
-  type RdxDialogOpenChangeReason,
 } from '@radix-ng/primitives/dialog';
 import { NdsButton, NdsButtonIcon } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -86,33 +86,13 @@ import { cn } from '@/lib/utils';
 /** Borda de onde o painel desliza. */
 export type SheetSide = 'top' | 'right' | 'bottom' | 'left';
 
-/** Caminho que fechou o painel — o vocabulário que o analytics do produto usa. */
-export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
-
-/**
- * Traduz o motivo do primitivo para o vocabulário do design system.
- *
- * Função pura e exportada de propósito: o evento `dialog_close` nasce na camada
- * de produto (docs page, app), nunca aqui dentro — primitivo de UI que importa
- * `@/lib/analytics` é o que a regra `analytics_in_ui_primitive` proíbe.
- */
-export function sheetCloseReason(motivo: RdxDialogOpenChangeReason): SheetCloseReason {
-  switch (motivo) {
-    case 'escape-key':
-      return 'escape';
-    // Clique no backdrop e foco que escapa são o mesmo gesto do ponto de vista
-    // de quem usa: "saí do painel sem decidir nada".
-    case 'outside-press':
-    case 'focus-out':
-      return 'overlay';
-    case 'close-press':
-      return 'close-button';
-    // Sobra o painel fechado por CÓDIGO — é "fechou por decisão de dentro", que
-    // a família chama de `api` desde 2026-09-10 (era `action` só neste evento).
-    default:
-      return 'api';
-  }
-}
+// A tradução do motivo mora em `./sheet-close-reason`, e é reexportada aqui para
+// quem compõe continuar importando tudo de um lugar só. O arquivo é separado
+// porque a função é PURA e precisa ser testável em node: um teste unitário que
+// importasse ESTE módulo carregaria `@Component`/`@Directive` fora do compilador
+// do Angular, e era por isso que esta stack era a única das cinco sem teste do
+// mapeador. Mesma forma do `dialog-close-reason.ts`.
+export { sheetCloseReason, type SheetCloseReason } from './sheet-close-reason';
 
 /**
  * Conteúdo do painel.
@@ -160,6 +140,27 @@ export class NdsSheetContent {
 
   /** Classes .nds-* extras no painel — ver a nota de largura no docblock acima. */
   readonly panelClass = input('');
+}
+
+// ─── Um painel por vez ────────────────────────────────────────────────────────
+//
+// O Sheet é MODAL: dois painéis na tela ao mesmo tempo escondem o de baixo atrás
+// do véu e criam duas armadilhas de foco. A lib empilha diálogos (ela sabe
+// aninhar, que é outro caso); quem recolhe o anterior é este registro, como na
+// referência — o vanilla fecha o painel aberto ao abrir outro desde
+// `sheet.ts:231-237`, e tem story própria para isso.
+//
+// O painel que sai da TELA sai também do analytics: o recolhimento passa pelo
+// `close()` público, que relata `imperative-action` e vira `api` na tradução.
+// Nenhum gesto da pessoa o fechou — foi decisão de dentro do componente —, e sem
+// isso a série de abre/fecha da docs page não fecha a conta.
+const openPanels = new Set<NdsSheet>();
+
+function closeOthers(current: NdsSheet): void {
+  // Cópia da lista antes de percorrer: cada `close()` mexe no próprio registro.
+  for (const other of [...openPanels]) {
+    if (other !== current) other.close();
+  }
 }
 
 /**
@@ -248,6 +249,8 @@ export class NdsSheet {
    */
   private readonly root = inject(RdxDialogRoot);
 
+  private readonly destroyRef = inject(DestroyRef);
+
   protected readonly content = contentChild(NdsSheetContent, { descendants: true });
 
   /**
@@ -261,7 +264,41 @@ export class NdsSheet {
     cn('nds-sheet-content', this.content()?.panelClass()),
   );
 
+  /**
+   * Fecha o painel por DECISÃO DE DENTRO.
+   *
+   * É o verbo que a referência expõe (`close()` da fábrica do vanilla), e o que
+   * dá à ação primária do rodapé um caminho de saída que não se confunde com o
+   * X: `imperative-action` traduz para `api`, e é ele que separa no GA4 o painel
+   * aplicado do painel dispensado. Quem fecha por gesto — Escape, véu, X,
+   * Cancelar — continua passando pela lib, com o motivo dela.
+   */
+  close(): void {
+    this.root.close('imperative-action');
+  }
+
   constructor() {
+    // Um painel por vez. O registro é alimentado pelo estado, e não pelo clique
+    // no gatilho: painel aberto por `[open]`, por `defaultOpen` ou por código
+    // recolhe o anterior do mesmo jeito.
+    effect(() => {
+      const isOpen = this.root.open();
+      untracked(() => {
+        if (!isOpen) {
+          openPanels.delete(this);
+          return;
+        }
+        openPanels.add(this);
+        closeOthers(this);
+      });
+    });
+
+    // Sair da página não é fechar, e não relata motivo nenhum: quem desmonta com
+    // o painel aberto (troca de idioma numa docs page, story que termina) só
+    // precisa deixar o registro limpo para o próximo painel não recolher um
+    // fantasma.
+    this.destroyRef.onDestroy(() => openPanels.delete(this));
+
     // Painel modal sem nome acessível é o defeito silencioso deste componente:
     // o leitor de tela anuncia "diálogo" e nada mais, e nenhum teste de render
     // percebe. O primitivo só escreve `aria-labelledby` quando existe um

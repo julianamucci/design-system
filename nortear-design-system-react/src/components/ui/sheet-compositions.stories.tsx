@@ -19,6 +19,7 @@ import {
   sheetProfileEditSource,
   sheetSource,
 } from "./sheet.source";
+import { label } from "./sheet.fixtures";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
@@ -129,7 +130,7 @@ export const AdvancedFilters: Story = {
             </SheetClose>
             {/* O rodapé mora FORA do corpo rolável — é o que o mantém visível
                 enquanto o formulário rola —, então a primária não está dentro do
-                `<form>`: só o par id ↔ `form` os liga (PRD D10). Sem ele o
+                `<form>`: só o par id ↔ `form` os liga (PRD D9). Sem ele o
                 painel tinha formulário e NENHUMA forma de submeter, porque com
                 dois campos o navegador não faz o envio implícito. */}
             <Button type="submit" form="filters-form">
@@ -142,17 +143,25 @@ export const AdvancedFilters: Story = {
   },
   play: async () => {
     const panel = await waitForPortal("dialog");
-    await expect(panel).toHaveAccessibleName();
+    // O nome ESPERADO, e não "algum nome": sem argumento a asserção passa até
+    // com o título de outro painel. O texto sai do conteúdo compartilhado pela
+    // MESMA store de locale que o render lê, então vale nos três idiomas.
+    await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
 
-    // Os DOIS campos do conteúdo compartilhado. A contagem é a asserção: o
-    // rótulo vem do idioma corrente e mudaria a cada seleção, mas quantos
-    // campos a composição tem não muda com o idioma.
+    // Os DOIS campos do conteúdo compartilhado, e cada um com o SEU rótulo: a
+    // contagem sozinha passava com os dois campos trocados de nome, ou com o
+    // par `htmlFor` ↔ `id` ligando o rótulo errado ao campo errado.
+    const esperados = [
+      label("variants.compositions.advancedFilters.fieldCategory"),
+      label("variants.compositions.advancedFilters.fieldMinPrice"),
+    ];
     const fields = [...panel.querySelectorAll("input")];
-    await expect(fields).toHaveLength(2);
-    for (const field of fields) await expect(field).toHaveAccessibleName();
+    await expect(fields).toHaveLength(esperados.length);
+    for (const [i, field] of fields.entries())
+      await expect(field).toHaveAccessibleName(esperados[i]);
 
     // O rodapé é irmão do corpo: a primária só alcança o `<form>` pelo atributo
-    // `form`, e `button.form` vem nulo quando ela está órfã (PRD D10).
+    // `form`, e `button.form` vem nulo quando ela está órfã (PRD D9).
     const form = panel.querySelector<HTMLFormElement>("form");
     await expect(form).not.toBeNull();
     const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -221,9 +230,13 @@ export const SecondaryNavigation: Story = {
     await expect(panel).toHaveAttribute("data-side", "left");
     const nav = within(panel).getByRole("navigation");
     await expect(nav).toBeVisible();
-    // O marco leva nome próprio, e o nome sai do conteúdo — por isso a asserção
-    // é a EXISTÊNCIA do nome, e não o texto, que muda com o idioma.
-    await expect(nav).toHaveAccessibleName();
+    // O marco leva nome próprio, e é o nome ESPERADO que se afirma: o texto sai
+    // do conteúdo compartilhado pela mesma store de locale que o render lê, então
+    // afirmar o valor vale nos três idiomas — e "existe um nome" passava com a
+    // página tendo dois marcos indistinguíveis.
+    await expect(nav).toHaveAccessibleName(
+      label("variants.compositions.secondaryNavigation.navLabel"),
+    );
     // As CINCO seções que o conteúdo compartilhado descreve: com quatro, a
     // story documentava uma composição que não existe.
     const links = within(nav).getAllByRole("link");
@@ -313,14 +326,23 @@ export const ProfileEdit: Story = {
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "right");
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAccessibleName(
+      label("variants.compositions.profileEdit.panelTitle"),
+    );
 
-    // Cada campo se nomeia pelo próprio rótulo. A asserção é pelo nome
-    // ACESSÍVEL e não pelo texto: o rótulo vem do conteúdo compartilhado e
-    // muda com o idioma, mas o par `htmlFor` ↔ `id` tem de valer nos três.
+    // Cada campo se nomeia pelo próprio rótulo, e é o rótulo ESPERADO que se
+    // afirma: o texto vem do conteúdo compartilhado pela mesma store de locale
+    // que o render lê. "Tem algum nome" passava com o par `htmlFor` ↔ `id`
+    // ligando o rótulo de um campo ao campo do lado.
+    const esperados = [
+      label("variants.compositions.profileEdit.fieldName"),
+      label("variants.compositions.profileEdit.fieldHandle"),
+      label("variants.compositions.profileEdit.fieldBio"),
+    ];
     const fields = within(panel).getAllByRole("textbox");
-    await expect(fields).toHaveLength(3);
-    for (const field of fields) await expect(field).toHaveAccessibleName();
+    await expect(fields).toHaveLength(esperados.length);
+    for (const [i, field] of fields.entries())
+      await expect(field).toHaveAccessibleName(esperados[i]);
 
     // O rodapé mora FORA do corpo rolável, então o botão de confirmar não está
     // dentro do formulário: só o atributo `form` o liga, e sem ele o envio
@@ -388,7 +410,9 @@ export const BottomPanel: Story = {
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "bottom");
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAccessibleName(
+      label("variants.compositions.bottomPanel.panelTitle"),
+    );
     // As TRÊS ações do conteúdo, no corpo — o rodapé fica fora dele e traz só
     // a saída, que é o que separa esta composição da que confirma.
     const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]');

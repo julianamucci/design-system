@@ -103,7 +103,14 @@ export const Right: Story = {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-side', 'right');
       await expect(panelEl).toHaveClass(/nds-sheet-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      // O nome ESPERADO, e não "tem algum nome": `toHaveAccessibleName()` sem
+      // argumento passa com qualquer string — inclusive com o título de outra
+      // direção, que é justamente o que as quatro stories variam. A asserção
+      // vazia não podia reprovar nada.
+      await expect(panelEl).toHaveAccessibleName(t('demonstration.labels.rightLabel'));
+      // C1 do PRD, e nenhuma das quatro o afirmava nesta stack: painel que
+      // perdesse a modalidade continuaria com nome, lado e classe corretos.
+      await expect(panelEl).toHaveAttribute('aria-modal', 'true');
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
       await borderWaitForEncostar(panelEl, 'right');
     });
@@ -128,7 +135,8 @@ export const Left: Story = {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-side', 'left');
       await expect(panelEl).toHaveClass(/nds-sheet-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      await expect(panelEl).toHaveAccessibleName(t('demonstration.labels.leftLabel'));
+      await expect(panelEl).toHaveAttribute('aria-modal', 'true');
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
       await borderWaitForEncostar(panelEl, 'left');
     });
@@ -152,7 +160,8 @@ export const Top: Story = {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-side', 'top');
       await expect(panelEl).toHaveClass(/nds-sheet-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      await expect(panelEl).toHaveAccessibleName(t('demonstration.labels.topLabel'));
+      await expect(panelEl).toHaveAttribute('aria-modal', 'true');
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
       await borderWaitForEncostar(panelEl, 'top');
     });
@@ -177,7 +186,8 @@ export const Bottom: Story = {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-side', 'bottom');
       await expect(panelEl).toHaveClass(/nds-sheet-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      await expect(panelEl).toHaveAccessibleName(t('demonstration.labels.bottomLabel'));
+      await expect(panelEl).toHaveAttribute('aria-modal', 'true');
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
       await borderWaitForEncostar(panelEl, 'bottom');
     });

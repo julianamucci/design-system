@@ -127,7 +127,13 @@ export class NdsSheet {}
 @Directive({ selector: 'button[ndsSheetTrigger]', hostDirectives: [RdxDialogTrigger] })
 export class NdsSheetTrigger {}
 
-@Directive({ selector: 'h2[ndsSheetTitle], h3[ndsSheetTitle]', hostDirectives: [RdxDialogTitle] })
+// O seletor casa os SEIS níveis: o nível certo depende da hierarquia da página
+// em volta, e um painel aberto de dentro de uma seção já em h3 precisa sair em
+// h4 para o heading-order do axe não reprovar.
+@Directive({
+  selector: 'h1[ndsSheetTitle], h2[ndsSheetTitle], h3[ndsSheetTitle], h4[ndsSheetTitle], h5[ndsSheetTitle], h6[ndsSheetTitle]',
+  hostDirectives: [RdxDialogTitle],
+})
 export class NdsSheetTitle {}
 
 @Directive({ selector: 'p[ndsSheetDescription]', hostDirectives: [RdxDialogDescription] })
@@ -238,7 +244,9 @@ const COMPOSITION_CODE_FILTERS = (labels: {
     </div>
 
     <div ndsSheetBody>
-      <form id="filters" class="nds-stack" data-spacing="sm">
+      <!-- O guard de submit vem NO SNIPPET, e não só na prévia ao lado: sem ele,
+           um Enter dentro do campo tenta navegar a página de quem copiou. -->
+      <form id="filters" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
         <div class="nds-stack" data-spacing="xs">
           <label ndsLabel for="filters-category">${labels.fieldCategory}</label>
           <input ndsInput id="filters-category" value="${labels.categoryValue}" />
@@ -304,7 +312,9 @@ const COMPOSITION_CODE_PROFILE = (labels: {
     </div>
 
     <div ndsSheetBody>
-      <form id="profile" class="nds-stack" data-spacing="sm">
+      <!-- O guard de submit vem NO SNIPPET, e não só na prévia ao lado: sem ele,
+           um Enter dentro do campo tenta navegar a página de quem copiou. -->
+      <form id="profile" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
         <div class="nds-stack" data-spacing="xs">
           <label ndsLabel for="profile-name">${labels.fieldName}</label>
           <input ndsInput id="profile-name" value="${labels.fieldNameValue}" />
@@ -604,7 +614,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplCompPerfil>
-      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
+      <nds-sheet #perfilPanel (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.profileEdit.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -615,12 +625,15 @@ ${actionButtonsSnippet(labels.actions)}
           <div ndsSheetBody>
             <!-- A confirmação é o envio do próprio formulário — não um botão
                  solto. O guard de submit aqui existe só para o preview ao vivo:
-                 sem ele, um Enter dentro do campo tentaria navegar a página. -->
+                 sem ele, um Enter dentro do campo tentaria navegar a página.
+                 E salvar FECHA o painel, pelo verbo público (que relata api):
+                 ficar aberto depois de salvar é a prévia dizendo que falta um
+                 passo que não existe — a mesma decisão da Demonstração. -->
             <form
               id="docs-sheet-profile"
               class="nds-stack"
               data-spacing="sm"
-              (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes', 'save')"
+              (submit)="$event.preventDefault(); aoAplicar('right', 'docs_composicoes', 'save'); perfilPanel.close()"
             >
               <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="docs-sheet-profile-name">
@@ -719,7 +732,7 @@ ${actionButtonsSnippet(labels.actions)}
             <!-- UM painel, o canônico: lado direito, nasce fechado, corpo com o
                  texto que descreve a área rolável, rodapé com Cancelar + ação
                  primária. É o mesmo exemplo do Playground da story. -->
-            <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_demo', $event)">
+            <nds-sheet #demoPanel (onOpenChange)="aoMudarPainel('right', 'docs_demo', $event)">
               <button ndsSheetTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
@@ -740,7 +753,13 @@ ${actionButtonsSnippet(labels.actions)}
                   <button ndsSheetClose ndsButton variant="outline">
                     {{ t('demonstration.labels.cancel') }}
                   </button>
-                  <button ndsButton (click)="aoAplicar('right', 'docs_demo')">
+                  <!-- A primária CONFIRMA e sai: dispara o evento e fecha pelo
+                       verbo público do painel, que relata api. Deixar o painel
+                       aberto depois de aplicar é a demonstração dizendo que
+                       falta um passo que não existe — e close() em vez de
+                       ndsSheetClose é o que separa no GA4 o painel aplicado do
+                       dispensado. -->
+                  <button ndsButton (click)="aoAplicar('right', 'docs_demo'); demoPanel.close()">
                     {{ t('demonstration.labels.apply') }}
                   </button>
                 </div>

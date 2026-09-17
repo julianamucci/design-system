@@ -11,6 +11,7 @@ import {
   sheetOpenSource,
   sheetPlaygroundSource,
   sheetProfileEditSource,
+  sheetSecondPanelSource,
   sheetSecondaryNavigationSource,
   sheetSideBottomSource,
   sheetSideLeftSource,
@@ -58,7 +59,10 @@ describe('sheetPlaygroundSource', () => {
     const code = sheetPlaygroundSource();
     expect(code).toContain("import { NDS_SHEET } from '@/components/ui/sheet';");
     expect(code).toContain("import { NdsButton } from '@/components/ui/button';");
-    expect(code).toContain('<nds-sheet>');
+    // A referência de template dá à primária o verbo público do painel: ela
+    // FECHA por decisão de dentro (`api`), e não pelo caminho do X.
+    expect(code).toContain('<nds-sheet #panel>');
+    expect(code).toContain('<button ndsButton (click)="panel.close()">Aplicar filtros</button>');
     expect(code).toContain('<ng-template ndsSheetContent>');
     // O que só existe dentro da story: binding para os args, as props de rótulo
     // que trazem o conteúdo trilíngue e o espião de output da `play`.
@@ -78,7 +82,7 @@ describe('sheetPlaygroundSource', () => {
     const code = sheetPlaygroundSource('', {
       args: { side: 'right', showCloseButton: true, modal: true, defaultOpen: false },
     });
-    expect(code).toContain('<nds-sheet>');
+    expect(code).toContain('<nds-sheet #panel>');
     expect(code).toContain('<ng-template ndsSheetContent>');
   });
 
@@ -88,7 +92,7 @@ describe('sheetPlaygroundSource', () => {
     });
     // A raiz carrega abertura e modalidade; o conteúdo carrega direção e botão
     // do canto. Trocar de lugar é o erro mais fácil de cometer neste componente.
-    expect(code).toContain('<nds-sheet [defaultOpen]="true" [modal]="false">');
+    expect(code).toContain('<nds-sheet #panel [defaultOpen]="true" [modal]="false">');
     expect(code).toContain('<ng-template ndsSheetContent side="left" [showCloseButton]="false">');
   });
 
@@ -138,6 +142,15 @@ const CONSTRUCTORS: Array<{
    * calado, que é a forma exata do defeito do `source-snippets.test.ts` do Vue.
    */
   titleTag?: 'h3';
+  /**
+   * Quantos painéis o snippet publica, quando não é UM.
+   *
+   * DECLARADO por construtor, como o nível do título: a `SecondPanelClosesFirst`
+   * mostra dois painéis irmãos porque a lição é o que acontece ENTRE eles — o
+   * mais novo recolhe o anterior. Afrouxar a contagem para "um ou mais" deixaria
+   * passar calado o snippet que duplicou um painel por engano.
+   */
+  panels?: 2;
 }> = [
   { name: 'sheetPlaygroundSource', story: 'Playground', build: sheetPlaygroundSource },
   { name: 'sheetSideRightSource', story: 'Variants/Right', build: sheetSideRightSource },
@@ -167,6 +180,12 @@ const CONSTRUCTORS: Array<{
     story: 'States/Controlled',
     build: sheetControlledSource,
     noTrigger: true,
+  },
+  {
+    name: 'sheetSecondPanelSource',
+    story: 'States/SecondPanelClosesFirst',
+    build: sheetSecondPanelSource,
+    panels: 2,
   },
   {
     name: 'sheetAdvancedFiltersSource',
@@ -199,7 +218,7 @@ describe('cobertura das quatro stories', () => {
     expect(exportados).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, noTrigger, titleTag } of CONSTRUCTORS) {
+  for (const { name, story, build, noTrigger, titleTag, panels = 1 } of CONSTRUCTORS) {
     it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
@@ -215,9 +234,9 @@ describe('cobertura das quatro stories', () => {
       expect(code).not.toContain('contain: layout');
       expect(code).not.toContain('min-height');
 
-      // Um painel por snippet, e sempre fechado no fim.
-      expect(code.match(/<nds-sheet[ >]/g)).toHaveLength(1);
-      expect(code.match(/<\/nds-sheet>/g)).toHaveLength(1);
+      // Os painéis que o construtor DECLARA, e sempre fechados no fim.
+      expect(code.match(/<nds-sheet[ >]/g)).toHaveLength(panels);
+      expect(code.match(/<\/nds-sheet>/g)).toHaveLength(panels);
 
       // O par que dá nome e descrição acessíveis ao diálogo. Vale para os quinze:
       // não há painel deste design system sem título.
@@ -227,7 +246,7 @@ describe('cobertura das quatro stories', () => {
       // palavra — portão que afrouxa para caber uma exceção deixa de medir.
       const tag = titleTag ?? 'h2';
       expect(code).toMatch(new RegExp(`<${tag} ndsSheetTitle>[^<]+</${tag}>`));
-      expect(code.match(/<h[1-6] ndsSheetTitle>/g)).toHaveLength(1);
+      expect(code.match(/<h[1-6] ndsSheetTitle>/g)).toHaveLength(panels);
       expect(code).toMatch(/<p ndsSheetDescription>[^<]+<\/p>/);
 
       // `side` mora no conteúdo — a raiz nunca o carrega.
@@ -333,7 +352,12 @@ describe('estados', () => {
     // É o que mantém as ações no lugar quando o conteúdo cresce: o corpo rola,
     // o rodapé fica. Rodapé dentro do corpo sobe para fora de alcance.
     const code = sheetLongScrollBodySource();
-    expect(code).toContain('<div ndsSheetBody class="nds-stack" data-spacing="sm">');
+    // O corpo entra NOMEADO, como o preview ao lado: o primitivo só emite
+    // `role="group"` quando o nome chega, então um snippet sem `aria-label`
+    // publicaria uma região rolável que para o teclado é parada sem assunto.
+    expect(code).toContain(
+      '<div ndsSheetBody class="nds-stack" data-spacing="sm" aria-label="Termos de uso">',
+    );
     const bodyBlock = /<div ndsSheetBody[^>]*>([\s\S]*?)\n {8}<\/div>/.exec(code)?.[1];
     expect(bodyBlock).toBeTypeOf('string');
     expect(bodyBlock).not.toContain('ndsSheetFooter');
@@ -365,8 +389,10 @@ describe('estados', () => {
     const code = sheetCloseButtonHiddenSource();
     expect(code).toContain('<ng-template ndsSheetContent [showCloseButton]="false">');
     expect(code).toContain('<button ndsSheetClose ndsButton variant="outline">Cancelar</button>');
-    // Só a saída no rodapé, como a story renderiza — sem ação primária.
-    expect(code).not.toContain('<button ndsButton>Aplicar filtros</button>');
+    // O rodapé INTEIRO, como a story renderiza e como a referência mostra: a
+    // saída à esquerda, a confirmação à direita. Publicar só o Cancelar ensinava
+    // um painel que nenhum preview deste componente tem.
+    expect(code).toContain('<button ndsButton>Aplicar filtros</button>');
   });
 
   it('sheetControlledSource liga as DUAS pontas do estado, e guarda o valor num sinal', () => {
@@ -405,12 +431,12 @@ describe('composições', () => {
     const bodyBlock = /<div ndsSheetBody>([\s\S]*?)\n {8}<\/div>/.exec(code)?.[1];
     expect(bodyBlock).toBeTypeOf('string');
     expect(bodyBlock).toContain(
-      '<form id="filtros-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">',
+      '<form id="filtros-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">',
     );
     expect(bodyBlock).not.toContain('ndsSheetFooter');
     // E é justamente por o rodapé ficar fora do `<form>` que a primária precisa
     // do religamento pelo id: solta, ela é botão comum, e com dois campos o
-    // navegador não faz o envio implícito — o Enter não dispara nada (PRD D10).
+    // navegador não faz o envio implícito — o Enter não dispara nada (PRD D9).
     expect(code).toContain(
       '<button ndsButton type="submit" form="filtros-form">Aplicar filtros</button>',
     );
@@ -440,7 +466,7 @@ describe('composições', () => {
     // envia formulário curto — não chega a lugar nenhum.
     const code = sheetProfileEditSource();
     expect(code).toContain(
-      '<form id="perfil-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">',
+      '<form id="perfil-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">',
     );
     expect(code).toContain(
       '<button ndsButton type="submit" form="perfil-form">Salvar alterações</button>',

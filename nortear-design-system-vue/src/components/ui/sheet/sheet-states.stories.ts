@@ -17,15 +17,14 @@ import {
   type SheetCloseReason,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import {
   sheetOpenSource,
   sheetControlledSource,
   sheetClosedSource,
-  sheetFormLongSource,
+  sheetLongScrollBodySource,
   sheetNoButtonCloseSource,
+  sheetSecondPanelClosesFirstSource,
 } from './sheet.source';
 import { waitForPointerRelease } from './sheet.fixtures';
 
@@ -42,15 +41,17 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    // Painel modal aberto: ver o motivo em wait-for-portal.ts.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    // SEM `FOCUS_RULE_GUARDA`: as âncoras de foco que justificavam desligar
+    // `aria-hidden-focus` não existem no caminho do Dialog. Motivo medido por
+    // extenso no meta de `sheet-variants.stories.ts`.
     docs: {
       source: { transform: sheetClosedSource },
       description: {
         component:
           'Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), ' +
           'LongScrollBody (corpo mais alto que o painel), WithCloseButtonHidden ' +
-          '(sem o botão do canto) e Controlled (estado externo).',
+          '(sem o botão do canto), Controlled (estado externo) e ' +
+          'SecondPanelClosesFirst (um painel por vez).',
       },
     },
   },
@@ -84,8 +85,6 @@ const sharedComponents = {
   SheetTitle,
   SheetTrigger,
   Button,
-  Input,
-  Label,
 };
 
 export const Closed: Story = {
@@ -171,8 +170,13 @@ export const Open: Story = {
     await step('Monta já aberto, com o contrato de markup completo', async () => {
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAttribute('aria-modal', 'true');
-      await expect(panel).toHaveAccessibleName();
-      await expect(panel).toHaveAccessibleDescription();
+      // O nome e a descrição ESPERADOS: sem argumento as duas passam com
+      // qualquer texto — inclusive com o do gatilho, que é o defeito real aqui
+      // (painel modal que se nomeia pelo botão que o abriu).
+      await expect(panel).toHaveAccessibleName('Filtros avançados');
+      await expect(panel).toHaveAccessibleDescription(
+        'Configure os filtros para refinar os resultados.',
+      );
       await expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
     });
 
@@ -190,9 +194,9 @@ export const LongScrollBody: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      // O corpo mais alto que o painel é o assunto: sem os campos repetidos não
-      // há rolagem para o leitor ver de onde vem a separação corpo/rodapé.
-      source: { transform: sheetFormLongSource },
+      // O corpo mais alto que o painel é o assunto: sem os parágrafos repetidos
+      // não há rolagem para o leitor ver de onde vem a separação corpo/rodapé.
+      source: { transform: sheetLongScrollBodySource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
@@ -202,26 +206,29 @@ export const LongScrollBody: Story = {
   },
   render: () => ({
     components: sharedComponents,
+    // O exemplo é o da REFERÊNCIA: os termos de uso em 24 parágrafos. Eram 12
+    // pares rótulo+campo numa grade, e só aqui — o assunto é a ROLAGEM, e o
+    // formulário trazia junto a lição do `form` religado, que é de outra
+    // composição.
     template: `
       <Sheet default-open>
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle>Preferências de notificação</SheetTitle>
-            <SheetDescription>Configure cada tipo de notificação individualmente.</SheetDescription>
+            <SheetTitle>Termos de uso</SheetTitle>
+            <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
           </SheetHeader>
-          <SheetBody>
-            <div class="nds-grid" data-spacing="sm">
-              <div v-for="i in 12" :key="i" class="nds-grid" data-spacing="xs">
-                <Label :for="'notif-' + i">Categoria {{ i }}</Label>
-                <Input :id="'notif-' + i" :defaultValue="'Configuração ' + i" />
-              </div>
+          <SheetBody aria-label="Termos de uso">
+            <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+              <p v-for="i in 24" :key="i">
+                Parágrafo {{ i }}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.
+              </p>
             </div>
           </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
               <Button variant="outline">Cancelar</Button>
             </SheetClose>
-            <Button>Salvar preferências</Button>
+            <Button>Aceitar termos</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -239,10 +246,21 @@ export const LongScrollBody: Story = {
       await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
     });
 
-    await step('A região rolável é alcançável por teclado', async () => {
-      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
-      // o corpo (é a regra scrollable-region-focusable do axe).
+    await step('A região rolável é parada de teclado COM papel e nome', async () => {
+      // Os TRÊS juntos, que é o que o contrato exige (C7). WCAG 2.1.1: sem o
+      // `tabindex` quem navega por teclado não consegue rolar o corpo (é a
+      // regra scrollable-region-focusable do axe). E parada de teclado precisa
+      // de papel: `aria-label` em elemento sem papel é atributo PROIBIDO, que
+      // o leitor de tela descarta — por isso o primitivo só emite o `role`
+      // quando o nome vem.
+      //
+      // O ramo existe nas cinco stacks e nenhuma story o exercitava, então
+      // `role="group"` nunca chegava a ser emitido: o corpo era parada de
+      // teclado anônima em toda parte, sem nada reprovando.
       await expect(body).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAttribute('role', 'group');
+      await expect(body).toHaveAttribute('aria-label', 'Termos de uso');
+      await expect(body).toHaveAccessibleName('Termos de uso');
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
@@ -269,18 +287,21 @@ export const WithCloseButtonHidden: Story = {
   },
   render: () => ({
     components: sharedComponents,
+    // Os rótulos são os da Demonstração, como nas outras stacks: o assunto é a
+    // AUSÊNCIA do X, e um exemplo próprio fazia a mesma story contar duas
+    // histórias e não se comparava com as irmãs.
     template: `
       <Sheet default-open>
         <SheetContent side="right" :show-close-button="false">
           <SheetHeader>
-            <SheetTitle>Aceitar atualização</SheetTitle>
-            <SheetDescription>Uma nova versão está disponível. Continue para atualizar.</SheetDescription>
+            <SheetTitle>Filtros avançados</SheetTitle>
+            <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
           </SheetHeader>
           <SheetFooter>
             <SheetClose as-child>
-              <Button variant="outline">Mais tarde</Button>
+              <Button variant="outline">Cancelar</Button>
             </SheetClose>
-            <Button>Atualizar agora</Button>
+            <Button>Aplicar filtros</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -299,7 +320,14 @@ export const WithCloseButtonHidden: Story = {
     await step('E ainda assim existe uma saída — o rodapé', async () => {
       const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
       await expect(footer).not.toBeNull();
-      await expect(within(footer!).getAllByRole('button').length).toBeGreaterThan(0);
+      // `getAllByRole(...).length > 0` NÃO podia reprovar: o `getAll` estoura
+      // em zero ANTES de a comparação acontecer, então a asserção só rodava
+      // quando já tinha passado. Conta o que o rodapé promete, por ÍNDICE.
+      await expect(
+        within(footer!)
+          .queryAllByRole('button')
+          .map((button) => button.textContent?.trim()),
+      ).toEqual(['Cancelar', 'Aplicar filtros']);
     });
   },
 };
@@ -356,7 +384,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <Button variant="outline" @click="open = true">Abrir pelo estado externo</Button>
+        <Button variant="outline" :data-open="String(open)" @click="open = true">Abrir pelo estado externo</Button>
         <Sheet :open="open" @update:open="handleOpenChange">
           <SheetContent v-bind="closeWatch" side="right">
             <SheetHeader>
@@ -385,12 +413,19 @@ export const Controlled: Story = {
         await userEvent.keyboard('{Escape}');
         await waitForPortalGone('dialog');
       }
-      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // A espera acima já provou a ausência do PAPEL `dialog` — repeti-la aqui
+      // seria afirmar o que ela afirmou. O que ela não prova é que o nó do
+      // painel saiu do documento, e é isso que se afirma.
+      await expect(document.querySelector('[data-slot="sheet-content"]')).toBeNull();
     });
 
     // Depois do fechamento de partida: a play REEXECUTA no mesmo DOM, e o passo
     // acima pode ter fechado o que a rodada anterior deixou aberto.
     controlledCloseReasons.length = 0;
+
+    // Lido ANTES de abrir: é isto que o fechamento tem de devolver, e não a
+    // string vazia — outro painel pode estar segurando a trava.
+    const overflowAntes = document.body.style.overflow;
 
     await step('O estado externo abre o painel', async () => {
       await waitForPointerRelease();
@@ -400,14 +435,42 @@ export const Controlled: Story = {
       await expect(panel).toHaveAttribute('data-slot', 'sheet-content');
     });
 
+    await step('Com o painel aberto, a página atrás não rola', async () => {
+      // `aria-modal="true"` promete que o resto da página está fora de
+      // alcance. Sem a trava a promessa é falsa: o leitor de tela não alcança
+      // o que está atrás, mas o mouse e a roda alcançam. Era o contrato C5, e
+      // só o Vanilla o afirmava.
+      //
+      // A lib trava no tique seguinte à abertura, então a espera é necessária
+      // — e é de LEITURA pura: um `waitFor` que MEXESSE no DOM reagendaria a
+      // si mesmo até o navegador travar, sem reprovar.
+      await waitFor(() => {
+        if (document.body.style.overflow !== 'hidden') {
+          throw new Error(
+            `esperava a rolagem da página travada, achei "${document.body.style.overflow}"`,
+          );
+        }
+      });
+    });
+
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
       const panel = await waitForPortal('dialog');
       await userEvent.click(within(panel).getByRole('button', { name: /^Cancelar$/i }));
       await waitForPortalGone('dialog');
-      // Se o evento não tivesse chegado, `open` continuaria true e o painel
-      // reabriria no próximo ciclo de render.
-      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // A espera acima já provou que o painel saiu do DOM — repetir isso aqui
+      // era asserção que não podia reprovar. O que ela NÃO prova é que o valor
+      // VOLTOU a quem é dono dele: sem o `update:open`, `open` continuaria
+      // true e o painel reabriria no próximo ciclo de render.
+      await expect(externo).toHaveAttribute('data-open', 'false');
       await expect(controlledCloseReasons.at(-1)).toBe('close-button');
+    });
+
+    await step('E a trava de rolagem foi solta junto', async () => {
+      await waitFor(() => {
+        if (document.body.style.overflow !== overflowAntes) {
+          throw new Error('a rolagem da página não foi devolvida depois do fecho');
+        }
+      });
     });
 
     await step('A ação primária confirma e fecha, e isso se chama api', async () => {
@@ -423,6 +486,169 @@ export const Controlled: Story = {
 
     await step('Os dois caminhos relataram motivos DIFERENTES', async () => {
       await expect(controlledCloseReasons).toEqual(['close-button', 'api']);
+    });
+  },
+};
+
+// ─── Dois painéis, e o mais novo manda ────────────────────────────────────────
+//
+// O Sheet é MODAL: um de cada vez. Abrir o segundo tira o primeiro da tela, e
+// essa saída é um fechamento como qualquer outro — precisa dizer por quê. Sem
+// a guarda a lib EMPILHA os dois: o de baixo fica atrás do véu, inalcançável, e
+// some do analytics sem nunca ter relatado um fechamento.
+//
+// A guarda mora no primitivo (`SheetContent.vue`), como no Vanilla, e é por
+// isso que esta story não faz nada para o primeiro se recolher.
+
+/** Motivos que o PRIMEIRO painel relatou, na ordem. */
+const firstPanelReasons: SheetCloseReason[] = [];
+
+/**
+ * Estado do SEGUNDO painel, no módulo para a `play` alcançar.
+ *
+ * Abrir o segundo por CLIQUE não é possível: enquanto o primeiro é modal a lib
+ * deixa `pointer-events: none` no `body`, e o `userEvent` recusa clicar num
+ * elemento assim. Quem comanda o segundo é o estado — que é também o que a
+ * pessoa escreveria, já que o gatilho dele estaria atrás do véu.
+ */
+const secondPanelOpen = ref(false);
+
+export const SecondPanelClosesFirst: Story = {
+  parameters: {
+    docs: {
+      source: { transform: sheetSecondPanelClosesFirstSource },
+      description: {
+        story:
+          'Dois painéis na mesma página. Abrir o segundo fecha o primeiro, que relata o ' +
+          'motivo api — ninguém o dispensou, foi a modalidade do componente que o recolheu.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    setup() {
+      // O caminho de saída que o PRIMEIRO painel viu. Anotar é do primitivo;
+      // traduzir o gesto em motivo é de quem consome.
+      let gesture: SheetCloseGesture | null = null;
+      const closeWatch = createSheetCloseWatch((seen) => { gesture = seen; });
+
+      function handleFirstOpenChange(value: boolean) {
+        if (value) {
+          gesture = null;
+          return;
+        }
+        firstPanelReasons.push(sheetCloseReason(gesture));
+        gesture = null;
+      }
+
+      function setSecondOpen(value: boolean) {
+        secondPanelOpen.value = value;
+      }
+
+      return { closeWatch, handleFirstOpenChange, secondPanelOpen, setSecondOpen };
+    },
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <Sheet @update:open="handleFirstOpenChange">
+          <SheetTrigger as-child>
+            <Button variant="outline">Abrir o primeiro</Button>
+          </SheetTrigger>
+          <SheetContent v-bind="closeWatch" side="left">
+            <SheetHeader>
+              <SheetTitle>Primeiro painel</SheetTitle>
+              <SheetDescription>Este sai de cena quando o outro entra.</SheetDescription>
+            </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">Abra o segundo painel e este aqui se recolhe.</p>
+            </SheetBody>
+          </SheetContent>
+        </Sheet>
+
+        <Sheet :open="secondPanelOpen" @update:open="setSecondOpen">
+          <SheetTrigger as-child>
+            <Button variant="outline">Abrir o segundo</Button>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <SheetHeader>
+              <SheetTitle>Segundo painel</SheetTitle>
+              <SheetDescription>O mais novo manda: dois painéis modais ao mesmo tempo deixariam um deles inalcançável.</SheetDescription>
+            </SheetHeader>
+            <SheetBody>
+              <p class="nds-text-body nds-text-muted-foreground">Este entrou por último, então é este que está na tela.</p>
+            </SheetBody>
+          </SheetContent>
+        </Sheet>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const firstTrigger = canvas.getByRole('button', { name: 'Abrir o primeiro' });
+
+    // A play REEXECUTA no mesmo DOM: parte sempre do mesmo ponto.
+    secondPanelOpen.value = false;
+    await waitForPortalGone('dialog');
+    await waitForPointerRelease();
+    firstPanelReasons.length = 0;
+
+    let firstPanel!: HTMLElement;
+
+    await step('O primeiro painel abre sozinho na tela', async () => {
+      await userEvent.click(firstTrigger);
+      firstPanel = await waitForPortal('dialog', { name: 'Primeiro painel' });
+      await expect(firstPanel).toHaveAccessibleName('Primeiro painel');
+      await expect(firstPanelReasons).toEqual([]);
+    });
+
+    await step('Abrir o segundo recolhe o primeiro, e ele diz por quê', async () => {
+      secondPanelOpen.value = true;
+
+      // A espera é PELO NOME, e era aqui que estava o defeito. "Existe
+      // exatamente um painel" já era verdade ANTES de o segundo montar — o
+      // primeiro ainda estava lá —, então a condição passava na primeira
+      // tentativa e a asserção media o painel em DESMONTE, cujo
+      // `aria-labelledby` já apontava para um título fora do documento. Nome
+      // acessível vazio era o sintoma de uma espera sem dentes, não de uma
+      // asserção exigente demais.
+      //
+      // `waitForPortal` com `name` espera o painel CERTO e ainda segura a
+      // animação de entrada (o portão de opacidade), que é o outro tempo que
+      // esta story atravessa — aqui sem o gesto de clique para o cobrir.
+      const panel = await waitForPortal('dialog', { name: 'Segundo painel' });
+      await expect(panel).toHaveAccessibleName('Segundo painel');
+
+      // O recolhimento foi DECIDIDO e RELATADO antes de o segundo se nomear.
+      // Esta é a metade SÍNCRONA do contrato, e a que não depende de quando o
+      // nó sai do DOM: a guarda do primitivo roda em `flush: 'sync'`, então o
+      // motivo já está no livro-caixa neste ponto. O painel que sai da TELA
+      // tem de sair também do analytics — `api` e não `overlay`/`escape`/
+      // `close-button`, porque nenhum gesto da pessoa fechou este painel.
+      await expect(firstPanelReasons).toEqual(['api']);
+
+      // E o NÓ sai da tela. A saída passa pelo Presence da lib e pela fila de
+      // render do Vue, então é assíncrona em relação ao nome do segundo:
+      // afirmar a ordem instantânea aqui seria afirmar uma promessa que esta
+      // lib não faz. A espera é só de LEITURA e tem prazo — se a guarda não
+      // recolhesse, o primeiro continuaria na tela e isto reprovaria.
+      await waitFor(() => {
+        const abertos = document.querySelectorAll('[data-slot="sheet-content"]');
+        const primeiroNoDom = document.body.contains(firstPanel);
+        if (primeiroNoDom || abertos.length !== 1) {
+          throw new Error(
+            'esperava só o segundo painel na tela — ' +
+            `primeiro ainda no DOM: ${primeiroNoDom}, painéis: ${abertos.length}, ` +
+            `motivos do primeiro: ${JSON.stringify(firstPanelReasons)}`,
+          );
+        }
+      });
+    });
+
+    await step('Fechado o segundo, não sobra painel nenhum', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+      // E o primeiro não relatou um SEGUNDO fechamento: ele já tinha saído, e
+      // um registro morto no conjunto o faria fechar de novo aqui.
+      await expect(firstPanelReasons).toEqual(['api']);
     });
   },
 };

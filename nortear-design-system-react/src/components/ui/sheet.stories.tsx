@@ -13,27 +13,30 @@ import {
   SheetTrigger,
 } from "./sheet";
 import { sheetSource } from "./sheet.source";
+import {
+  dialogCloseReason,
+  markConfirmation,
+  type DialogCloseReason,
+} from "./dialog-close-reason";
 import { Button } from "./button";
-import { useI18nStore, useTranslation } from "@/lib/i18n";
+import { label } from "./sheet.fixtures";
+import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 import { SheetDocs } from "@/components/docs/SheetDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 import { figmaDesign } from "@shared/figma/design-links";
 /**
- * Rótulo fora do React.
+ * Motivo de cada fechamento desta rodada, na ordem em que aconteceram.
  *
- * `useTranslation` é hook e vale dentro do `render`, que é componente; a `play`
- * e o `args` não são. Os dois caminhos leem a MESMA store de locale, então o
- * texto que a play procura é sempre o que o painel mostra.
+ * O motivo é derivado AO LADO do primitivo (`dialogCloseReason`) e só repassado
+ * aqui — a story não inventa palavra, ela confere a que o componente entrega.
+ * Até esta rodada o react não afirmava motivo em story nenhuma: Escape, véu e X
+ * podiam chegar ao GA4 com a palavra errada sem nada reprovar.
  */
-function label(caminho: string): string {
-  const dicionarios = sheetTranslations as unknown as Record<string, unknown>;
-  const dict = (dicionarios[useI18nStore.getState().locale] ?? dicionarios["pt-BR"]) as Record<string, unknown>;
-  return caminho
-    .split(".")
-    .reduce<unknown>((no, key) => (no as Record<string, unknown>)?.[key], dict) as string;
-}
+const closeReasons: DialogCloseReason[] = [];
+
+const lastCloseReason = (): DialogCloseReason | undefined => closeReasons.at(-1);
 
 type SheetArgs = {
   side: "top" | "right" | "bottom" | "left";
@@ -165,9 +168,13 @@ export const Playground: Story = {
       <Sheet
         defaultOpen={args.defaultOpen}
         modal={args.modal}
-        // Só o valor: o `eventDetails` do base-ui carrega o evento nativo, e a
-        // aba Actions estoura SecurityError ao serializar `event.view`.
-        onOpenChange={(open) => args.onOpenChange?.(open)}
+        // Só o VALOR chega ao espião: o `eventDetails` do base-ui carrega o
+        // evento nativo, e a aba Actions estoura SecurityError ao serializar
+        // `event.view`. O motivo é lido aqui e guardado como palavra.
+        onOpenChange={(open, details) => {
+          if (!open) closeReasons.push(dialogCloseReason(details?.reason));
+          args.onOpenChange?.(open);
+        }}
       >
         <SheetTrigger render={<Button variant="outline" />}>
           {args.triggerLabel}
@@ -191,7 +198,19 @@ export const Playground: Story = {
             <SheetClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </SheetClose>
-            <Button>{t("demonstration.labels.apply")}</Button>
+            {/*
+              A primária CONFIRMA e FECHA, como na referência — e o fecho sai
+              `api`, não `close-button`.
+
+              Quem separa os dois caminhos é `markConfirmation()`: a lib entrega
+              `close-press` tanto para o Cancelar quanto para esta, e sem a marca
+              "confirmou os filtros" chegaria ao relatório como "apertou o botão
+              de fechar". O `onClick` de quem compõe é mesclado pela base-ui e
+              roda ANTES do fechamento, que é o que torna a marca eficaz.
+            */}
+            <SheetClose render={<Button />} onClick={() => markConfirmation()}>
+              {t("demonstration.labels.apply")}
+            </SheetClose>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -202,6 +221,10 @@ export const Playground: Story = {
     const trigger = canvas.getByRole("button", { name: args.triggerLabel });
 
     await close();
+    // Zerado DEPOIS do fechamento de partida: o painel Interactions reexecuta a
+    // play no mesmo DOM, e o fecho que prepara o terreno não é um dos caminhos
+    // que esta rodada mede.
+    closeReasons.length = 0;
 
     await step("Clicar no gatilho abre o painel, com nome e descrição acessíveis", async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
@@ -248,12 +271,16 @@ export const Playground: Story = {
       // span, e um quadro depois já está no primeiro botão. Sem a espera, a
       // asserção reprova o transporte em vez do destino; com ela, um foco que
       // realmente escapasse continuaria reprovando, porque nunca voltaria.
+      // A ESPERA é a asserção: ela reprova por tempo esgotado se o foco não
+      // voltar. Um `expect(panel.contains(document.activeElement))` logo abaixo
+      // repetia a condição que a espera acabara de garantir — asserção que não
+      // pode reprovar, e que dava ao passo uma aparência de rigor que ele já
+      // tinha por outro meio.
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
           throw new Error("o foco saiu do painel e não voltou");
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step("Shift+Tab dá a volta para o outro lado, sem sair do painel", async () => {
@@ -266,51 +293,83 @@ export const Playground: Story = {
       // Mesma espera do sentido direto, e pelo mesmo motivo: a volta passa
       // por uma âncora de foco irmã do painel e o retorno cai no tique
       // seguinte. Foco que escapasse de verdade nunca voltaria, e reprovaria.
+      // Mesma leitura do passo anterior: a espera reprova sozinha, e a asserção
+      // idêntica logo depois dela não media nada de novo.
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
           throw new Error("o foco saiu do painel para trás e não voltou");
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
-    await step("Escape fecha e devolve o foco ao gatilho", async () => {
+    await step("Escape fecha, devolve o foco ao gatilho e relata escape", async () => {
       await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error("o foco não voltou ao gatilho");
         }
       });
+      await expect(lastCloseReason()).toBe("escape");
     });
 
-    if (args.modal) {
-      await step("Clique no overlay fecha o painel", async () => {
-        await open(trigger);
-        const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
-        await expect(overlay).not.toBeNull();
-        // `overlay.click()` NÃO serve: a lib dispensa a camada no `pointerdown`,
-        // que o `click()` sintético não emite.
-        await userEvent.click(overlay!);
-        await waitForPortalGone("dialog");
-      });
-    }
+    // Os passos do véu e do X NÃO são condicionados a control. Presos a
+    // `args.modal`/`args.showCloseButton`, eles sumiam em silêncio para quem
+    // mexesse no painel Controls — e sumiam junto com a única prova de C4. As
+    // outras stacks sempre os executaram.
+    await step("Clique no overlay fecha o painel e relata overlay", async () => {
+      await open(trigger);
+      const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
+      await expect(overlay).not.toBeNull();
+      // `overlay.click()` NÃO serve: a lib dispensa a camada no `pointerdown`,
+      // que o `click()` sintético não emite.
+      await userEvent.click(overlay!);
+      await waitForPortalGone("dialog");
+      await expect(lastCloseReason()).toBe("overlay");
+    });
 
-    if (args.showCloseButton) {
-      await step("O botão do canto fecha o painel", async () => {
-        const panel = await open(trigger);
-        const closeBtn = within(panel).getByRole("button", { name: /fechar/i });
-        await userEvent.click(closeBtn);
-        await waitForPortalGone("dialog");
-      });
-    }
+    await step("O botão do canto fecha o painel e relata close-button", async () => {
+      const panel = await open(trigger);
+      const closeBtn = within(panel).getByRole("button", { name: /fechar/i });
+      // O X é UM controle de fechar entre os possíveis, e se nomeia como tal.
+      await expect(closeBtn.closest('[data-slot="sheet-close"]')).not.toBeNull();
+      await userEvent.click(closeBtn);
+      await waitForPortalGone("dialog");
+      await expect(lastCloseReason()).toBe("close-button");
+    });
 
-    await step("Cancelar no rodapé também fecha", async () => {
+    await step("Cancelar no rodapé também fecha, e pelo mesmo motivo", async () => {
       const panel = await open(trigger);
       const cancelar = within(panel).getByRole("button", {
         name: label("demonstration.labels.cancel"),
       });
       await userEvent.click(cancelar);
       await waitForPortalGone("dialog");
+      await expect(lastCloseReason()).toBe("close-button");
+    });
+
+    await step("A ação primária confirma e fecha, e isso se chama api", async () => {
+      const panel = await open(trigger);
+      const primaria = within(panel).getByRole("button", {
+        name: label("demonstration.labels.apply"),
+      });
+      await userEvent.click(primaria);
+      await waitForPortalGone("dialog");
+      // O defeito que este passo guarda: sem `markConfirmation()` a lib entrega
+      // `close-press` também aqui, e "confirmou os filtros" chegaria ao
+      // relatório indistinguível de "apertou o X".
+      await expect(lastCloseReason()).toBe("api");
+    });
+
+    await step("Nenhum caminho de saída foi relatado por omissão", async () => {
+      // A série inteira, e não só a última palavra: é o que impede um motivo de
+      // vazar para o caminho vizinho sem ninguém ver.
+      await expect(closeReasons).toEqual([
+        "escape",
+        "overlay",
+        "close-button",
+        "close-button",
+        "api",
+      ]);
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa do

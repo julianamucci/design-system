@@ -134,7 +134,11 @@ export const Open: Story = {
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAttribute('aria-modal', 'true');
       await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
-      await expect(panel).toHaveAccessibleDescription();
+      // Com argumento: sem ele a asserção só exige que EXISTA descrição, e
+      // passaria com o `aria-describedby` apontando para o texto errado.
+      await expect(panel).toHaveAccessibleDescription(
+        'Configure os filtros para refinar os resultados.',
+      );
       await expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
     });
 
@@ -161,6 +165,9 @@ export const LongScrollBody: Story = {
           title: 'Termos de uso',
           description: 'Leia atentamente antes de aceitar.',
           applyLabel: 'Aceitar termos',
+          // O corpo rolável é NOMEADO, e o snippet ensina o mesmo painel que o
+          // preview mostra: sem `bodyLabel` a fábrica não emite `role="group"`.
+          bodyLabel: 'Termos de uso',
         }),
       },
       description: {
@@ -188,6 +195,9 @@ export const LongScrollBody: Story = {
       title: 'Termos de uso',
       description: 'Leia atentamente antes de aceitar.',
       content: long,
+      // Quem rola entra na ordem de tabulação, e um destino de Tab sem nome é
+      // um "grupo" sem assunto para quem navega por teclado (C7).
+      bodyLabel: 'Termos de uso',
       footer: makeFooter('Cancelar', 'Aceitar termos', true),
     });
     clicarQuandoMontado(trigger);
@@ -205,10 +215,17 @@ export const LongScrollBody: Story = {
       await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
     });
 
-    await step('A região rolável é alcançável por teclado', async () => {
+    await step('A região rolável é alcançável por teclado E nomeada (C7)', async () => {
       // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
       // o corpo (é a regra scrollable-region-focusable do axe).
       await expect(body).toHaveAttribute('tabindex', '0');
+      // O TRIO, e não só o tabindex: a fábrica implementa o ramo desde sempre e
+      // nenhuma story o exercitava, então `role="group"` nunca era emitido e a
+      // afirmação da página sobre ele não tinha quem a reprovasse. O papel só
+      // sai QUANDO existe nome — `aria-label` em elemento sem papel é atributo
+      // proibido, e o axe reprova.
+      await expect(body).toHaveAttribute('role', 'group');
+      await expect(body).toHaveAttribute('aria-label', 'Termos de uso');
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
@@ -273,7 +290,19 @@ export const WithCloseButtonHidden: Story = {
     await step('E ainda assim existe uma saída — o rodapé', async () => {
       const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
       await expect(footer).not.toBeNull();
-      await expect(within(footer!).getAllByRole('button').length).toBeGreaterThan(0);
+      // `queryAllByRole` com o número esperado, e não `getAllByRole(...).length
+      // > 0`: o `get` estoura em zero ANTES da comparação, então a asserção
+      // antiga não podia reprovar nem com o rodapé vazio.
+      await expect(within(footer!).queryAllByRole('button')).toHaveLength(2);
+      // E a saída é o CANCELAR: o que faz um botão fechar é a marca, não a
+      // presença. A primária confirma e não a carrega — ela fecharia por
+      // `close()`, relatando `api`.
+      await expect(
+        within(footer!).getByRole('button', { name: 'Cancelar' }),
+      ).toHaveAttribute('data-slot', 'sheet-close');
+      await expect(
+        within(footer!).getByRole('button', { name: 'Aplicar filtros' }),
+      ).not.toHaveAttribute('data-slot', 'sheet-close');
     });
   },
 };
@@ -348,7 +377,10 @@ export const Controlled: Story = {
         await userEvent.keyboard('{Escape}');
         await waitForPortalGone('dialog');
       }
-      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // Instrumento TROCADO de propósito: `waitForPortalGone` já espera por
+      // `queryAllByRole('dialog')`, então repetir o mesmo papel afirmaria o que
+      // a espera acabou de provar. O painel é consultado pelo slot de markup.
+      await expect(document.querySelector('[data-slot="sheet-content"]')).toBeNull();
     });
 
     await step('E não existe gatilho ESCONDIDO — a forma que `open()` aposentou', async () => {

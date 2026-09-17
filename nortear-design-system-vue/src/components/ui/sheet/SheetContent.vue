@@ -2,7 +2,7 @@
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
-import { computed } from 'vue'
+import { computed, onScopeDispose, watch } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { XIcon } from 'lucide-vue-next'
 import {
@@ -15,6 +15,11 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import SheetOverlay from './SheetOverlay.vue'
+import {
+  claimSinglePanel,
+  releasePanel,
+  type SheetOpenEntry,
+} from './sheet.single-panel'
 
 interface SheetContentProps extends DialogContentProps {
   class?: HTMLAttributes['class']
@@ -70,6 +75,41 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 // de deixar o axe apontar o diálogo sem nome.
 const rootContext = injectDialogRootContext()
 const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
+
+/**
+ * UM PAINEL POR VEZ, como a referência. O conjunto vive em
+ * `sheet.single-panel.ts` — escopo de MÓDULO, e o docblock de lá diz por quê.
+ *
+ * O painel recolhido sai relatando `api`: nenhum gesto o dispensou — foi a
+ * modalidade do componente que o recolheu. Isso cai sozinho, e é o desenho:
+ * `onOpenChange(false)` emite `update:open`, e quem consome traduz o gesto
+ * ANOTADO, que aqui não existe — e o que não se sabe vira `api`, nunca
+ * `close-button`. O painel que sai da TELA sai também do analytics.
+ *
+ * `flush: 'sync'` porque o recolhimento tem de ser DECIDIDO antes de o segundo
+ * painel montar. A saída do nó em si passa pelo Presence da lib e pela fila de
+ * render do Vue, e é assíncrona — a story afirma as duas metades separadas.
+ */
+const entry: SheetOpenEntry = { close: () => rootContext.onOpenChange(false) }
+
+watch(
+  () => rootContext.open.value,
+  (open) => {
+    if (!open) {
+      releasePanel(entry)
+      return
+    }
+    claimSinglePanel(entry)
+  },
+  { immediate: true, flush: 'sync' },
+)
+
+// O painel pode sair da página aberto (troca de rota, story que desmonta): sem
+// isto o conjunto guardaria um registro morto e a próxima abertura tentaria
+// fechar um painel que já não existe.
+onScopeDispose(() => {
+  releasePanel(entry)
+})
 </script>
 
 <template>

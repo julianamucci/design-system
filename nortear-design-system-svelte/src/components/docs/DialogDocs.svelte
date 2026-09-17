@@ -366,9 +366,30 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     });
   }
 
-  /** Ação primária do rodapé — `action_label` é o `actionId` estável do Vanilla. */
-  function trackDialogAction(location: DialogLocation, actionId: string): void {
-    track('dialog_action', { component: 'dialog', action_label: actionId, location });
+  /**
+   * Ação primária do rodapé — o MESMO evento do Sheet.
+   *
+   * `dialog_action` foi aposentado: ele e o `dialog_confirm` respondiam à mesma
+   * pergunta de produto ("a ação primária do rodapé foi executada") em dois
+   * componentes que já compartilham `dialog_open` e `dialog_close` de propósito.
+   * Eram dois nomes e dois formatos para uma série só, e só um deles levava o
+   * `trigger_id` que casa a confirmação com a abertura.
+   *
+   * `trigger_id` é o mesmo id estável que o `dialog_open` daquele preview manda
+   * — nunca o texto do gatilho, que viraria três valores no GA4, um por idioma.
+   * `action` é o `actionId` estável do Vanilla.
+   */
+  function trackDialogConfirm(
+    location: DialogLocation,
+    triggerId: string,
+    actionId: string,
+  ): void {
+    track('dialog_confirm', {
+      component: 'dialog',
+      trigger_id: triggerId,
+      action: actionId,
+      location,
+    });
   }
 </script>
 
@@ -414,7 +435,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                 <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </DialogClose>
-            <Button onclick={() => trackDialogAction('docs_demo', 'save')}>{$tStore('demonstration.labels.action')}</Button>
+            <Button onclick={() => trackDialogConfirm('docs_demo', 'default', 'save')}>{$tStore('demonstration.labels.action')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -540,7 +561,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button onclick={() => trackDialogAction('docs_do_dont', 'save')}>{$tStore('demonstration.labels.action')}</Button>
+          <Button onclick={() => trackDialogConfirm('docs_do_dont', 'do-dont-pair1-do', 'save')}>{$tStore('demonstration.labels.action')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -559,7 +580,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button onclick={() => trackDialogAction('docs_do_dont', 'ok')}>OK</Button>
+          <Button onclick={() => trackDialogConfirm('docs_do_dont', 'do-dont-pair1-dont', 'ok')}>OK</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -578,7 +599,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button onclick={() => trackDialogAction('docs_do_dont', 'save')}>{$tStore('demonstration.labels.action')}</Button>
+          <Button onclick={() => trackDialogConfirm('docs_do_dont', 'do-dont-pair2-do', 'save')}>{$tStore('demonstration.labels.action')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -597,7 +618,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button variant="destructive" onclick={() => trackDialogAction('docs_do_dont', 'delete')}>{$tStore('demonstration.labels.destructiveTitle')}</Button>
+          <Button variant="destructive" onclick={() => trackDialogConfirm('docs_do_dont', 'do-dont-pair2-dont', 'delete')}>{$tStore('demonstration.labels.destructiveTitle')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -662,7 +683,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button onclick={() => trackDialogAction('docs_variantes', 'save')}>{$tStore('demonstration.labels.action')}</Button>
+          <Button onclick={() => trackDialogConfirm('docs_variantes', 'basic', 'save')}>{$tStore('demonstration.labels.action')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -697,14 +718,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             <DialogClose {...closeWatch.closeTrigger}>
               {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DialogClose>
-            <Button type="submit" onclick={() => trackDialogAction('docs_variantes', 'save')}>{$tStore('demonstration.labels.action')}</Button>
+            <Button type="submit" onclick={() => trackDialogConfirm('docs_variantes', 'with-form', 'save')}>{$tStore('demonstration.labels.action')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   {/snippet}
   {#snippet variantWithScroll()}
-    <!-- O "Aceitar" fica sem `dialog_action`, como no Vanilla: lá ele não é
+    <!-- O "Aceitar" fica sem `dialog_confirm`, como no Vanilla: lá ele não é
          rastreado. -->
     <Dialog onOpenChange={(o: boolean) => trackDialog('docs_variantes', 'scroll-content', o)}>
       <DialogTrigger>
@@ -772,7 +793,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button variant="destructive" onclick={() => trackDialogAction('docs_variantes', 'remove')}>{$tStore('demonstration.labels.removeItemAction')}</Button>
+          <Button variant="destructive" onclick={() => trackDialogConfirm('docs_variantes', 'destructive', 'remove')}>{$tStore('demonstration.labels.removeItemAction')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -801,7 +822,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         -->
         <DialogFooter showCloseButton onClosePress={closeWatch.markClosePress} closeLabel={$tStore('demonstration.labels.close')}>
           <Button variant="outline">{$tStore('demonstration.labels.back')}</Button>
-          <Button onclick={() => trackDialogAction('docs_variantes', 'continue')}>{$tStore('demonstration.labels.continueAction')}</Button>
+          <Button onclick={() => trackDialogConfirm('docs_variantes', 'custom-close-in-footer', 'continue')}>{$tStore('demonstration.labels.continueAction')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -822,7 +843,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button onclick={() => trackDialogAction('docs_variantes', 'confirm-email')}>{$tStore('demonstration.labels.confirmEmailAction')}</Button>
+          <Button onclick={() => trackDialogConfirm('docs_variantes', 'confirm-email', 'confirm-email')}>{$tStore('demonstration.labels.confirmEmailAction')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -61,7 +61,7 @@ export const ProfileEdit: Story = {
       source: { transform: dialogPerfilSource },
       description: {
         story:
-          "Edição de perfil em formulário modal. Submissão dispara `dialog_action` e fecha o Dialog ao concluir.",
+          "Edição de perfil em formulário modal. Submissão dispara `dialog_confirm` e fecha o Dialog ao concluir.",
       },
     },
   },

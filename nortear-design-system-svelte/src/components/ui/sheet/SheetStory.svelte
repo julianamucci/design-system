@@ -48,6 +48,12 @@
     cancelLabel?: string;
     variant?: Variant;
     /**
+     * Nome do corpo rolável. Sem ele o `SheetBody` não emite `role="group"` —
+     * papel sem nome não se anuncia, e nome em elemento sem papel o leitor de
+     * tela descarta. Os três andam juntos (C7 do PRD).
+     */
+    bodyLabel?: string;
+    /**
      * Fecha o painel ao confirmar. Fora por padrão: as stories que já existiam
      * clicam na primária sem esperar fechamento, e o ramo novo é o que prova o
      * motivo `api` — decisão de dentro, fechamento por código.
@@ -77,6 +83,7 @@
     actionLabel = 'Aplicar filtros',
     cancelLabel = 'Cancelar',
     variant = 'default',
+    bodyLabel,
     closeOnAction = false,
     onAction,
     onCancel,
@@ -135,7 +142,7 @@
    * nunca está dentro do `<form>`. Sem `type="submit"` e sem o atributo `form`
    * ela é um botão comum: o painel tem formulário e NENHUMA forma de submeter —
    * com dois ou mais campos o navegador não faz o envio implícito, e o Enter num
-   * campo não dispara nada, em silêncio (PRD D10).
+   * campo não dispara nada, em silêncio (PRD D9).
    */
   const formId = $derived(
     variant === 'withForm'
@@ -236,8 +243,15 @@
               `overflow`, o `flex` que segura o rodapé e o `tabindex` que a
               regra scrollable-region-focusable exige.
             -->
-            <SheetBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
-              {#each Array.from({ length: 14 }) as _, i (i)}
+            <!-- VINTE E QUATRO parágrafos, como no Vanilla: com catorze o corpo
+                 rolava só em painel baixo, e o exemplo que as cinco páginas
+                 comparam deixava de mostrar a mesma coisa. -->
+            <SheetBody
+              class="nds-stack nds-text-body nds-text-muted-foreground"
+              data-spacing="sm"
+              aria-label={bodyLabel}
+            >
+              {#each Array.from({ length: 24 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}
             </SheetBody>
@@ -284,7 +298,12 @@
               passo que não existe.
             -->
             <SheetFooter>
-              <SheetClose {...closeWatch.closeTrigger}>
+              <!--
+                Sem `closeWatch.closeTrigger` espalhado aqui: quem vê o clique
+                agora é o ouvinte de CAPTURA do painel, que alcança todo
+                `[data-slot="sheet-close"]` — inclusive os que o rodapé compõe.
+              -->
+              <SheetClose>
                 {#snippet child({ props })}
                   <!--
                     O `onclick` ENCADEIA o do primitivo em vez de substituí-lo.

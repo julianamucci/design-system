@@ -152,13 +152,6 @@ interface AnalyticsEvents {
   /** Fechamento, por qualquer caminho — mesmos campos da abertura, mais o `reason`. */
   dialog_close: { component: 'dialog' | 'alert-dialog' | 'sheet'; trigger_id: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location: string; label?: never };
 
-  /** Clique na ação primária do Footer do Dialog. */
-  dialog_action: {
-    component: string;
-    action_label: string;
-    location?: string;
-  };
-
   card_click: {
     component: "card";
     label: string;
@@ -376,7 +369,17 @@ interface AnalyticsEvents {
    * `trigger_id` identifica o painel pelo mesmo id estável da abertura — ver
    * `dialog_open`.
    */
-  dialog_confirm: { component: string; trigger_id: string; action?: string; location?: string; label?: never };
+  /**
+   * Ação primária do rodapé executada, nos TRÊS painéis da família.
+   *
+   * Desde 2026-09-16 o Dialog também dispara este evento: o `dialog_action`, que
+   * era só dele e levava `action_label` sem `trigger_id`, foi aposentado por
+   * decisão da dona. O `component` era `string` solto — o único dos três —, e
+   * fechá-lo revelou um QUARTO disparador: o Drawer, que tem `drawer_open` e
+   * `drawer_close` próprios e mesmo assim confirma pelo evento da família
+   * (assimetria registrada em `sheet.md` §9).
+   */
+  dialog_confirm: { component: 'dialog' | 'alert-dialog' | 'sheet' | 'drawer'; trigger_id: string; action?: string; location?: string; label?: never };
 
   /** Disparado quando o usuário muda de página em Pagination. */
   page_change: {

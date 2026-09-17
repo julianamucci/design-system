@@ -19,7 +19,6 @@
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
@@ -186,6 +185,56 @@
     track('dialog_confirm', { component: 'sheet', action, trigger_id: triggerId, location });
   }
 
+  /** O painel da Demonstração, comandado por estado para a primária poder fechá-lo. */
+  let demoOpen = $state(false);
+
+  /**
+   * A ação primária da Demonstração CONFIRMA e FECHA.
+   *
+   * O painel que fica aberto depois da confirmação diz que a decisão não foi
+   * tomada — é a referência (Vanilla) que está certa aqui, e as outras quatro
+   * stacks só disparavam o evento.
+   *
+   * O fechamento é anunciado À MÃO porque a lib não o anuncia: o `onOpenChange`
+   * sai do setter interno dela, e mudar o valor ligado por fora fecha o painel
+   * em silêncio. A marca da confirmação já está posta, então a palavra que sai
+   * daqui é `api` — decisão de dentro.
+   */
+  function confirmAndCloseDemo(): void {
+    confirmSheet('docs_demo', 'right', 'apply');
+    if (!demoOpen) return;
+    demoOpen = false;
+    trackSheet('docs_demo', 'right', false);
+  }
+
+  /** A prévia de edição de perfil, comandada por estado pela mesma razão. */
+  let profileOpen = $state(false);
+
+  /**
+   * Salvar CONFIRMA e FECHA, como a primária da Demonstração.
+   *
+   * A decisão da dona vale para toda prévia viva, e não só para a Demonstração:
+   * o painel que fica aberto depois de salvar diz que o salvamento não
+   * aconteceu, e quem edita continua preso no diálogo sem nada indicando o
+   * contrário. A referência (Vanilla) fecha, e fecha por `close()` — que a
+   * família relata como `api`.
+   *
+   * Aqui o fechamento é anunciado À MÃO pelo mesmo motivo do `confirmAndCloseDemo`:
+   * o `onOpenChange` sai do setter interno da lib, então mudar o valor ligado
+   * por fora fecha o painel em silêncio. A marca da confirmação já está posta
+   * pelo `confirmSheet`, então a palavra que sai daqui é `api`.
+   *
+   * Mora no ENVIO do formulário, e não no clique: a primária é
+   * `type="submit"` religada por `form`, então o Enter num campo também
+   * confirma — e também tem de fechar.
+   */
+  function confirmAndCloseProfile(): void {
+    confirmSheet('docs_composicoes', 'right', 'save');
+    if (!profileOpen) return;
+    profileOpen = false;
+    trackSheet('docs_composicoes', 'right', false);
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -275,7 +324,11 @@
       <SheetDescription>${t('demonstration.labels.description')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="filters" class="nds-stack" data-spacing="sm">
+      <!-- A guarda vai no snippet PUBLICADO, e não só na prévia ao lado: a
+           primária do rodapé é religada ao formulário pelo atributo "form",
+           então o clique — e o Enter num campo — dispara envio de verdade, e sem
+           preventDefault a página de quem copia tenta navegar (D9). -->
+      <form id="filters" class="nds-stack" data-spacing="sm" onsubmit={(evento) => evento.preventDefault()}>
         <div class="nds-stack" data-spacing="xs">
           <Label for="category">${t('variants.compositions.advancedFilters.fieldCategory')}</Label>
           <Input id="category" value="${t('variants.compositions.advancedFilters.categoryValue')}" />
@@ -340,7 +393,10 @@ ${links}
       <SheetDescription>${t('variants.compositions.profileEdit.panelDescription')}</SheetDescription>
     </SheetHeader>
     <SheetBody>
-      <form id="profile" class="nds-stack" data-spacing="sm">
+      <!-- Mesma guarda do snippet de filtros, e pela mesma razão: sem ela o
+           exemplo que a pessoa copia reimprime o defeito da D9, ao lado de uma
+           prévia viva que se protege. -->
+      <form id="profile" class="nds-stack" data-spacing="sm" onsubmit={(evento) => evento.preventDefault()}>
         <div class="nds-stack" data-spacing="xs">
           <Label for="profile-name">${t('variants.compositions.profileEdit.fieldName')}</Label>
           <Input id="profile-name" value="${t('variants.compositions.profileEdit.fieldNameValue')}" />
@@ -447,7 +503,7 @@ interface TriggerProps {
   });
 </script>
 
-<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
+<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="sheet">
   {#snippet header()}
     <DocsHeader
       title={$tStore('title')}
@@ -458,7 +514,7 @@ interface TriggerProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration>
+  <DocsDemonstration componentSlug="sheet">
     <!--
       UM gatilho só. Os quatro `side` viviam aqui e repetiam integralmente a
       seção Variantes logo abaixo — quem lê via o mesmo exemplo duas vezes.
@@ -466,7 +522,7 @@ interface TriggerProps {
       traduzido, que partiria o mesmo evento em três valores no GA4.
     -->
     <div class="nds-cluster" data-justify="center" data-spacing="sm" style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_demo', 'right', o)}>
+      <Sheet bind:open={demoOpen} onOpenChange={(o: boolean) => trackSheet('docs_demo', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -481,12 +537,12 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}
                 <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </SheetClose>
-            <Button onclick={() => confirmSheet('docs_demo', 'right', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={confirmAndCloseDemo}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -611,7 +667,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button onclick={() => confirmSheet('docs_do_dont', 'right', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
@@ -662,7 +718,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button onclick={() => confirmSheet('docs_do_dont', 'right', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
@@ -697,12 +753,14 @@ interface TriggerProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
+    componentSlug="sheet"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
+    componentSlug="sheet"
     items={[
       { trackId: 'right',  name: $tStore('variants.items.right'),  description: stripHtml($tStore('variants.styles.right')),  code: codeSide('right',  $tStore('demonstration.labels.rightLabel'),  $tStore), preview: variantRight  },
       { trackId: 'left',   name: $tStore('variants.items.left'),   description: stripHtml($tStore('variants.styles.left')),   code: codeSide('left',   $tStore('demonstration.labels.leftLabel'),   $tStore), preview: variantLeft   },
@@ -728,7 +786,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button onclick={() => confirmSheet('docs_variantes', 'right', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
@@ -754,7 +812,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button onclick={() => confirmSheet('docs_variantes', 'left', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
@@ -780,7 +838,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button onclick={() => confirmSheet('docs_variantes', 'top', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
@@ -806,7 +864,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button onclick={() => confirmSheet('docs_variantes', 'bottom', 'apply')}>{$tStore('demonstration.labels.apply')}</Button>
@@ -897,7 +955,7 @@ interface TriggerProps {
           <!-- O rodapé fica FORA do corpo: é ele que continua visível quando o
                conteúdo rola. O `form` religa o botão ao formulário. -->
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button type="submit" form="docs-sheet-filters">{$tStore('demonstration.labels.apply')}</Button>
@@ -934,7 +992,7 @@ interface TriggerProps {
 
   {#snippet compProfileEdit()}
     <div style="contain: layout">
-      <Sheet onOpenChange={(o: boolean) => trackSheet('docs_composicoes', 'right', o)}>
+      <Sheet bind:open={profileOpen} onOpenChange={(o: boolean) => trackSheet('docs_composicoes', 'right', o)}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('variants.compositions.profileEdit.trigger')}</Button>
@@ -954,7 +1012,7 @@ interface TriggerProps {
             <form id="docs-sheet-profile" class="nds-stack" data-spacing="sm"
                   onsubmit={(e: SubmitEvent) => {
                     e.preventDefault();
-                    confirmSheet('docs_composicoes', 'right', 'save');
+                    confirmAndCloseProfile();
                   }}>
               <div class="nds-stack" data-spacing="xs">
                 <Label for="docs-sheet-profile-name">{$tStore('variants.compositions.profileEdit.fieldName')}</Label>
@@ -971,7 +1029,7 @@ interface TriggerProps {
             </form>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
             <Button type="submit" form="docs-sheet-profile">{$tStore('variants.compositions.profileEdit.submit')}</Button>
@@ -1002,7 +1060,7 @@ interface TriggerProps {
             </div>
           </SheetBody>
           <SheetFooter>
-            <SheetClose {...closeWatch.closeTrigger}>
+            <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.compositions.bottomPanel.close')}</Button>{/snippet}
             </SheetClose>
           </SheetFooter>
@@ -1095,6 +1153,7 @@ interface TriggerProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
+    componentSlug="sheet"
     items={[
       { name: $tStore('related.items.drawer.name'),      description: $tStore('related.items.drawer.description'),      path: '?path=/docs/components-overlay-drawer--docs'      },
       { name: $tStore('related.items.dialog.name'),      description: $tStore('related.items.dialog.description'),      path: '?path=/docs/components-overlay-dialog--docs'      },
@@ -1105,6 +1164,7 @@ interface TriggerProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
+    componentSlug="sheet"
     items={[
       { title: '', content: stripHtml($tStore('notes.item1')) },
       { title: '', content: stripHtml($tStore('notes.item2')) },
@@ -1172,7 +1232,3 @@ interface TriggerProps {
   />
 </DocsPageLayout>
 
-<!-- DOMPurify.sanitize available para uso futuro em {@html} dinâmico -->
-{#if false}
-  {@html DOMPurify.sanitize('')}
-{/if}

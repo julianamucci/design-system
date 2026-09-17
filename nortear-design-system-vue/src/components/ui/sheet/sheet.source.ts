@@ -265,6 +265,10 @@ export function sheetHeadingH3Source(): string {
 /**
  * Sem o botão do canto. Só se sustenta porque o rodapé oferece a saída — a
  * lição é o par, não a prop sozinha.
+ *
+ * Os rótulos são os da Demonstração, como nas outras stacks: o assunto é a
+ * AUSÊNCIA do X, e um exemplo próprio ("Aceitar atualização" / "Mais tarde")
+ * fazia a mesma story contar duas histórias e não se comparava com as irmãs.
  */
 export function sheetNoButtonCloseSource(): string {
   return vueSnippet(
@@ -278,8 +282,8 @@ export function sheetNoButtonCloseSource(): string {
     ])}\n${BUTTON}`,
     `<Sheet default-open>
   <SheetContent :show-close-button="false">
-${header('Aceitar atualização', 'Uma nova versão está disponível. Continue para atualizar.', 4)}
-${footer('Mais tarde', 'Atualizar agora', 4)}
+${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -348,6 +352,13 @@ ${p}</div>`;
  * separa o corpo rolável do rodapé fixo — sem ele o rodapé rola junto e as
  * ações sobem para fora de alcance.
  *
+ * O corpo é um `form` e a confirmação é o `submit` dele, religado pelo par
+ * id ↔ `form` (PRD D9). O rodapé é IRMÃO do corpo por construção do primitivo,
+ * então a primária não cabe dentro do formulário, e sem o atributo
+ * `type="submit"` é botão INERTE — não envia pelo clique nem pelo Enter num
+ * campo, e nada na tela denuncia. Este snippet publicava campos soltos e uma
+ * primária comum, e era o único das cinco stacks que fazia isso.
+ *
  * As QUATRO composições levam gatilho, aqui e nas stories. Elas nasceram sem —
  * só `default-open`, e o painel aparecia sem nada que explicasse como se abre —,
  * e é a única stack em que isso acontecia: as outras quatro sempre renderizaram
@@ -374,12 +385,17 @@ ${TRIGGER('Abrir filtros')}
   <SheetContent>
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
     <SheetBody>
-      <div class="nds-stack" data-spacing="sm">
+      <form id="filters-form" class="nds-stack" data-spacing="sm" @submit.prevent>
 ${field('cat', 'Categoria', 'Eletrônicos', 8)}
 ${field('min', 'Preço mínimo', '100', 8, 'number')}
-      </div>
+      </form>
     </SheetBody>
-${footer('Cancelar', 'Aplicar filtros', 4)}
+    <SheetFooter>
+      <SheetClose as-child>
+        <Button type="button" variant="outline">Cancelar</Button>
+      </SheetClose>
+      <Button type="submit" form="filters-form">Aplicar filtros</Button>
+    </SheetFooter>
   </SheetContent>
 </Sheet>`,
   );
@@ -509,11 +525,20 @@ ${actions}
 }
 
 /**
- * Formulário mais alto que o painel: quem rola é o corpo, e o rodapé fica.
- * `SheetBody` também leva `tabindex="0"` por dentro, para que a região rolável
- * seja alcançável por teclado (WCAG 2.1.1).
+ * Corpo mais alto que o painel: quem rola é o corpo, e o rodapé fica.
+ *
+ * O exemplo é o da REFERÊNCIA — os termos de uso em 24 parágrafos. Aqui eram
+ * 12 pares rótulo+campo numa grade, e só nesta stack: o assunto da story é a
+ * ROLAGEM, e um formulário traz junto a lição do formulário (o `form` religado
+ * por id), que é de outra composição. A grade também contrariava o ritmo que a
+ * própria stack cobra no outro formulário — empilhamento, nunca `nds-grid`.
+ *
+ * O `aria-label` no `SheetBody` fecha o trio que uma caixa rolável exige:
+ * `tabindex="0"` (que o primitivo põe), `role="group"` e nome. Sem o nome o
+ * primitivo NÃO emite o papel — e nome em elemento sem papel é atributo
+ * proibido, que o leitor de tela descarta.
  */
-export function sheetFormLongSource(): string {
+export function sheetLongScrollBodySource(): string {
   return vueSnippet(
     `${importing([
       'SheetBody',
@@ -524,21 +549,66 @@ export function sheetFormLongSource(): string {
       'SheetHeader',
       'SheetTitle',
     ])}
-${BUTTON}
-${FIELD}`,
+${BUTTON}`,
     `<Sheet default-open>
   <SheetContent>
-${header('Preferências de notificação', 'Configure cada tipo de notificação individualmente.', 4)}
-    <SheetBody>
-      <div class="nds-grid" data-spacing="sm">
-        <div v-for="i in 12" :key="i" class="nds-grid" data-spacing="xs">
-          <Label :for="\`notif-\${i}\`">Categoria {{ i }}</Label>
-          <Input :id="\`notif-\${i}\`" :default-value="\`Configuração \${i}\`" />
-        </div>
+${header('Termos de uso', 'Leia atentamente antes de aceitar.', 4)}
+    <SheetBody aria-label="Termos de uso">
+      <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+        <p v-for="i in 24" :key="i">
+          Parágrafo {{ i }}: termos longos o bastante para o corpo precisar rolar
+          dentro do painel, sem empurrar o rodapé para fora da tela.
+        </p>
       </div>
     </SheetBody>
-${footer('Cancelar', 'Salvar preferências', 4)}
+${footer('Cancelar', 'Aceitar termos', 4)}
   </SheetContent>
 </Sheet>`,
+  );
+}
+
+/**
+ * Dois painéis na mesma página, e o mais novo manda.
+ *
+ * O snippet mostra a COMPOSIÇÃO, e não a guarda: recolher o painel anterior é
+ * do primitivo, e quem escreve não faz nada para que aconteça. É justamente
+ * isso que o exemplo ensina — dois `Sheet` irmãos, um deles comandado por
+ * estado, e nunca dois painéis modais na tela ao mesmo tempo.
+ *
+ * O segundo abre por ESTADO porque é assim que se abre um painel de dentro de
+ * outro fluxo: com o primeiro aberto, o gatilho do segundo está atrás do véu e
+ * inerte.
+ */
+export function sheetSecondPanelClosesFirstSource(): string {
+  return vueSnippet(
+    `import { ref } from 'vue'
+${importing([
+  'SheetContent',
+  'SheetDescription',
+  'SheetHeader',
+  'SheetTitle',
+  'SheetTrigger',
+])}
+${BUTTON}
+
+const segundoAberto = ref(false)`,
+    `<div class="nds-cluster" data-spacing="md">
+  <Sheet>
+${TRIGGER('Abrir o primeiro')}
+    <SheetContent side="left">
+${header('Primeiro painel', 'Este sai de cena quando o outro entra.', 6)}
+    </SheetContent>
+  </Sheet>
+
+  <Sheet :open="segundoAberto" @update:open="(valor) => (segundoAberto = valor)">
+    <SheetContent>
+${header(
+  'Segundo painel',
+  'O mais novo manda: dois painéis modais ao mesmo tempo deixariam um deles inalcançável.',
+  6,
+)}
+    </SheetContent>
+  </Sheet>
+</div>`,
   );
 }

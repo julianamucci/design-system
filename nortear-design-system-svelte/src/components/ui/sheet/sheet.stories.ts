@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { waitForPointerRelease } from './sheet.fixtures';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
@@ -104,15 +105,6 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-/** Espera o `body` voltar a aceitar ponteiro depois de um fechamento. */
-async function waitForPointerLiberado(): Promise<void> {
-  await waitFor(() => {
-    if (getComputedStyle(document.body).pointerEvents === 'none') {
-      throw new Error('o overlay ainda bloqueia o ponteiro');
-    }
-  });
-}
-
 /**
  * Abre só se estiver fechado.
  *
@@ -123,7 +115,7 @@ async function open(trigger: HTMLElement): Promise<HTMLElement> {
   // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
   // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
   // Sem esta espera o clique de reabertura falha no intervalo — medido.
-  await waitForPointerLiberado();
+  await waitForPointerRelease();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -142,7 +134,7 @@ async function close(): Promise<void> {
     await userEvent.keyboard('{Escape}');
   }
   await waitForPortalGone('dialog');
-  await waitForPointerLiberado();
+  await waitForPointerRelease();
 }
 
 /**
@@ -205,7 +197,11 @@ export const Playground: Story = {
 
     await step('Tab mantém o foco preso dentro do painel', async () => {
       const panel = await waitForPortal('dialog');
-      for (let i = 0; i < 6; i++) await userEvent.tab();
+      const visitados = new Set<Element>();
+      for (let i = 0; i < 6; i++) {
+        await userEvent.tab();
+        if (document.activeElement) visitados.add(document.activeElement);
+      }
       // A espera é o mecanismo, não folga: quem dá a volta é uma âncora de foco
       // da lib — um <span> IRMÃO do painel — e o retorno para dentro acontece no
       // tique seguinte. Sem a espera, a asserção reprova o transporte em vez do
@@ -216,7 +212,13 @@ export const Playground: Story = {
           throw new Error('o foco saiu do painel e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
+      // A espera acima já provou o destino, e repeti-la numa asserção não
+      // mediria nada novo. O que ela NÃO prova é que o foco ANDOU: seis Tab
+      // num painel com várias paradas têm de visitar mais de um elemento, e o
+      // gatilho — que está atrás do véu — não pode ser nenhum deles. Foco
+      // parado num único controle, ou escapando para a página, reprova aqui.
+      await expect(visitados.size).toBeGreaterThan(1);
+      await expect(visitados.has(trigger)).toBe(false);
     });
 
     await step('Shift+Tab dá a volta para o outro lado, sem sair do painel', async () => {
@@ -225,7 +227,11 @@ export const Playground: Story = {
       // duas direções e só a direta tinha asserção. No sentido inverso o laço
       // passa por um ramo próprio — no Vanilla é literalmente o `if
       // (e.shiftKey)`, que nenhuma story percorria.
-      for (let i = 0; i < 6; i++) await userEvent.tab({ shift: true });
+      const visitados = new Set<Element>();
+      for (let i = 0; i < 6; i++) {
+        await userEvent.tab({ shift: true });
+        if (document.activeElement) visitados.add(document.activeElement);
+      }
       // Mesma espera do sentido direto, e pelo mesmo motivo: a volta passa
       // por uma âncora de foco irmã do painel e o retorno cai no tique
       // seguinte. Foco que escapasse de verdade nunca voltaria, e reprovaria.
@@ -234,7 +240,10 @@ export const Playground: Story = {
           throw new Error('o foco saiu do painel para trás e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
+      // Mesma leitura do sentido direto: a espera prova o destino, e o que
+      // falta provar é o percurso.
+      await expect(visitados.size).toBeGreaterThan(1);
+      await expect(visitados.has(trigger)).toBe(false);
     });
 
     await step('Escape fecha, devolve o foco ao gatilho e reporta escape', async () => {
@@ -301,7 +310,7 @@ export const Playground: Story = {
       // que CONFIRMA — e o fechamento por código que ela dispara, que a lib nem
       // anuncia — chegava ao relatório como "apertou o botão de fechar".
       await expect(lastCloseReason(onClose)).toBe('api');
-      await waitForPointerLiberado();
+      await waitForPointerRelease();
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa do

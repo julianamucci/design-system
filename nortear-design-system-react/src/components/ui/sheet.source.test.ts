@@ -9,6 +9,7 @@ import {
   sheetNoButtonCloseSource,
   sheetOpenSource,
   sheetProfileEditSource,
+  sheetSecondPanelSource,
   sheetSideBottomSource,
   sheetSideLeftSource,
   sheetSideRightSource,
@@ -37,6 +38,7 @@ const ALL_SOURCES = [
   sheetBottomPanelSource,
   sheetContentLongSource,
   sheetHeadingH3Source,
+  sheetSecondPanelSource,
 ];
 
 /** As quatro direções compartilham a mesma composição; só a borda muda. */
@@ -243,12 +245,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('sem o botão do canto, quem oferece a saída é o rodapé', () => {
-    // A ausência só se sustenta porque sobra outro caminho para o ponteiro;
-    // a story ao lado mostra exatamente um botão no rodapé.
+    // A ausência só se sustenta porque sobra outro caminho para o ponteiro, e o
+    // rodapé da referência tem DOIS botões: a saída explícita e a ação
+    // primária. A asserção antiga cobrava exatamente um — tinha dentes, e
+    // provava o exemplo errado.
     const output = sheetNoButtonCloseSource();
     expect(output).toContain('<SheetContent showCloseButton={false}>');
     expect(output).toContain('<SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>');
-    expect(output).not.toContain('<Button>Aplicar filtros</Button>');
+    expect(output).toContain('<Button>Aplicar filtros</Button>');
   });
 
   it('o controlado ensina o par de estado, e não o invólucro da story', () => {
@@ -312,7 +316,7 @@ describe('transforms das stories de composição', () => {
     // E a primária é o ENVIO, religado pelo id: o rodapé é irmão do corpo, e sem
     // o atributo `form` o snippet publicava um painel com formulário e NENHUMA
     // forma de submeter — dois campos, sem envio implícito, e o Enter não
-    // dispara nada (PRD D10).
+    // dispara nada (PRD D9).
     expect(output).toContain('<Button type="submit" form="filters-form">Aplicar filtros</Button>');
     expect(output).not.toContain('<Button>Aplicar filtros</Button>');
     const rotulos = [...output.matchAll(/<Label htmlFor="[^"]*">([^<]*)<\/Label>/g)].map(
@@ -382,6 +386,33 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('<Button variant="destructive">Excluir</Button>');
     expect(output).toContain('<SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>');
     expect(output).toContain(`${TRIGGER_TAG}\n    Abrir ações\n  </SheetTrigger>`);
+  });
+});
+
+describe('dois painéis na mesma página', () => {
+  it('ensina os DOIS painéis, cada um com o próprio lado e nome', () => {
+    // A composição é o assunto: um painel só não mostra o que a story existe
+    // para provar — que abrir o segundo recolhe o primeiro.
+    const output = sheetSecondPanelSource();
+    expect(output).toContain('<SheetContent side="left">');
+    expect(output).toContain('<SheetContent side="right">');
+    expect(output).toContain('<SheetTitle>Primeiro painel</SheetTitle>');
+    expect(output).toContain('<SheetTitle>Segundo painel</SheetTitle>');
+    expect(output).toContain('Abrir o primeiro');
+    expect(output).toContain('Abrir o segundo');
+  });
+
+  it('quem abre o segundo mora DENTRO do primeiro, e os dois painéis são irmãos', () => {
+    // Não é escolha de exemplo: com `modal` ligado a lib marca o resto do
+    // documento como `inert`, e um botão fora do painel aberto fica inalcançável
+    // para o ponteiro. Aninhar o segundo `Sheet` dentro do primeiro também não
+    // serve — ele seria desmontado junto com quem o abriu.
+    const output = sheetSecondPanelSource();
+    expect(output).toContain('const [segundoAberto, setSegundoAberto] = useState(false);');
+    expect(output).toContain('<Sheet open={segundoAberto} onOpenChange={setSegundoAberto}>');
+    expect(output).toContain('onClick={() => setSegundoAberto(true)}');
+    // O segundo não tem gatilho próprio: quem o abre é o botão do primeiro.
+    expect(output.match(/<SheetTrigger/g)).toHaveLength(1);
   });
 });
 

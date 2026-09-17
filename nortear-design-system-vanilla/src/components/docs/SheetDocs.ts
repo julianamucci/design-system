@@ -95,7 +95,7 @@ type SheetDemoOptions = {
    * visível enquanto o conteúdo rola —, então a ação primária nunca está dentro
    * do `<form>`. Sem `type: 'submit'` e sem o atributo `form`, o painel tem
    * formulário e NENHUMA forma de submeter: com dois ou mais campos o navegador
-   * não faz o envio implícito, e o Enter num campo não dispara nada (PRD D10).
+   * não faz o envio implícito, e o Enter num campo não dispara nada (PRD D9).
    */
   formId?: string;
 };
@@ -259,7 +259,7 @@ export function createSheetDocs(): HTMLElement {
     }));
   }
 
-  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups() });
+  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups(), componentSlug: 'sheet' });
   const root = pageLayout.root;
   const headerSlot = pageLayout.headerSlot;
   const main = pageLayout.main;
@@ -290,6 +290,7 @@ export function createSheetDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
+          componentSlug: 'sheet',
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
@@ -425,6 +426,7 @@ export function createSheetDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'sheet',
           code: `import { createSheet } from '@/components/ui/sheet';
 import { createButton } from '@/components/ui/button';`,
         });
@@ -463,6 +465,7 @@ createSheet({
         const codeBottom = variantCode('bottom', t('demonstration.labels.bottomLabel'));
 
         return createDocsVariants({
+          componentSlug: 'sheet',
           items: [
             {
               trackId: 'right',
@@ -549,7 +552,7 @@ createSheet({
           const form = document.createElement('form');
           // O id existe para o RODAPÉ: ele mora fora do corpo rolável — é o que
           // o mantém visível enquanto o formulário rola —, então a primária só
-          // alcança o formulário pelo atributo `form` (PRD D10).
+          // alcança o formulário pelo atributo `form` (PRD D9).
           form.id = 'docs-sheet-filters';
           form.className = 'nds-stack';
           form.dataset.spacing = 'sm';
@@ -590,7 +593,7 @@ createSheet({
         const buildProfileEditBody = () => {
           const form = document.createElement('form');
           // Mesmo motivo do formulário de filtros: o rodapé é irmão do corpo, e
-          // é o atributo `form` da primária que religa os dois (PRD D10).
+          // é o atributo `form` da primária que religa os dois (PRD D9).
           form.id = 'docs-sheet-profile';
           form.className = 'nds-stack';
           form.dataset.spacing = 'sm';
@@ -796,14 +799,17 @@ const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
 footer.append(cancel, save);
-createSheet({
+const sheet = createSheet({
   trigger,
   side: 'right',
   title: '${t('variants.compositions.profileEdit.panelTitle')}',
   description: '${t('variants.compositions.profileEdit.panelDescription')}',
   content: form,
   footer,
-});`,
+});
+// A primária confirma e SAI por decisão de dentro: close() relata 'api'. A marca
+// de saída no rodapé é do Cancelar, que relata 'close-button'.
+save.addEventListener('click', () => sheet.close());`,
               previewFactory: () => {
                 const trigger = createButton({
                   variant: 'outline',
@@ -814,7 +820,7 @@ createSheet({
                   label: t('variants.compositions.profileEdit.submit'),
                   // A confirmação é o ENVIO do formulário. O rodapé mora fora do
                   // corpo rolável, então só o atributo `form` o alcança — sem
-                  // ele, três campos e nenhuma forma de submeter (PRD D10).
+                  // ele, três campos e nenhuma forma de submeter (PRD D9).
                   type: 'submit',
                 });
                 save.setAttribute('form', 'docs-sheet-profile');
@@ -830,17 +836,7 @@ createSheet({
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';
                 footer.append(cancel, save);
-                // `action` nomeia a ação que o BOTÃO faz: aqui ele salva, então
-                // 'save'. 'apply' segue certo nos previews de filtros.
-                save.addEventListener('click', () => {
-                  track('dialog_confirm', {
-                    component: 'sheet',
-                    trigger_id: 'right',
-                    action: 'save',
-                    location: 'docs_composicoes',
-                  });
-                });
-                return createSheet({
+                const sheet = createSheet({
                   trigger,
                   side: 'right',
                   title: t('variants.compositions.profileEdit.panelTitle'),
@@ -865,6 +861,27 @@ createSheet({
                     });
                   },
                 });
+
+                // `action` nomeia a ação que o BOTÃO faz: aqui ele salva, então
+                // 'save'. 'apply' segue certo nos previews de filtros.
+                //
+                // E ela FECHA, como a primária da Demonstração: por `close()`,
+                // que a fábrica relata como `api`. Antes, esta prévia confirmava
+                // e deixava o painel aberto — a pessoa salvava e continuava
+                // presa no diálogo, sem nada indicando que o salvamento tinha
+                // acontecido. Fechar é o que a stack de referência tem de
+                // ensinar às outras quatro.
+                save.addEventListener('click', () => {
+                  track('dialog_confirm', {
+                    component: 'sheet',
+                    trigger_id: 'right',
+                    action: 'save',
+                    location: 'docs_composicoes',
+                  });
+                  sheet.close();
+                });
+
+                return sheet;
               },
             },
             {
@@ -1067,6 +1084,7 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'sheet',
           items: [
             { name: t('related.items.drawer.name'),      description: toPlainText(t('related.items.drawer.description')),      path: '?path=/docs/components-overlay-drawer--docs'      },
             { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/components-overlay-dialog--docs'       },
@@ -1077,6 +1095,7 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'sheet',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

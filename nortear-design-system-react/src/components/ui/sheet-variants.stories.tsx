@@ -21,10 +21,12 @@ import {
   sheetSource,
 } from "./sheet.source";
 import { Button } from "./button";
+import { label } from "./sheet.fixtures";
 import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
 import { figmaDesign } from "@shared/figma/design-links";
+
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`), não na raiz. Cada uma nasce ABERTA: é o estado que a
 // regressão visual precisa capturar e é nele que o axe tem o que examinar —
@@ -130,7 +132,11 @@ export const Right: Story = {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "right");
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    // O painel é modal e se NOMEIA — as duas metades de C1 e C6. O nome vai
+    // ESCRITO: `toHaveAccessibleName()` sem argumento passa com qualquer nome,
+    // inclusive com o do painel errado, e era assim nas quatro direções.
+    await expect(panel).toHaveAttribute("aria-modal", "true");
+    await expect(panel).toHaveAccessibleName(label("demonstration.labels.rightLabel"));
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
     await borderWaitForEncostar(panel, "right");
   },
@@ -154,7 +160,8 @@ export const Left: Story = {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "left");
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAttribute("aria-modal", "true");
+    await expect(panel).toHaveAccessibleName(label("demonstration.labels.leftLabel"));
     await borderWaitForEncostar(panel, "left");
   },
 };
@@ -176,7 +183,8 @@ export const Top: Story = {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "top");
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAttribute("aria-modal", "true");
+    await expect(panel).toHaveAccessibleName(label("demonstration.labels.topLabel"));
     await borderWaitForEncostar(panel, "top");
   },
 };
@@ -199,7 +207,8 @@ export const Bottom: Story = {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "bottom");
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAttribute("aria-modal", "true");
+    await expect(panel).toHaveAccessibleName(label("demonstration.labels.bottomLabel"));
     await borderWaitForEncostar(panel, "bottom");
   },
 };

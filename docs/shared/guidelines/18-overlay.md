@@ -267,7 +267,8 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 [`07-analytics.md`](07-analytics.md). O que é desta categoria:
 
 - **Quem abriu vai em `trigger_id`, em todo painel** — `dialog_*` (Dialog,
-  AlertDialog, Sheet, incluindo o `dialog_confirm`), `drawer_*`, `popover_open`,
+  AlertDialog e Sheet, nos TRÊS eventos: `dialog_open`, `dialog_close` e
+  `dialog_confirm`), `drawer_*`, `popover_open`,
   `hover_card_open` e `tooltip_view`. O valor é o id estável do gatilho; no Sheet
   e no Drawer das demonstrações, o lado que ele abre. **A obrigatoriedade não é a
   mesma nos dois grupos**, medido nos cinco `analytics.ts` em 2026-09-15: em

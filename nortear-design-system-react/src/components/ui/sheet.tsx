@@ -25,10 +25,80 @@ import { XIcon } from "lucide-react"
 // para o leitor de tela, e por isso não recebe o atributo.
 const SheetModalContext = React.createContext<boolean | "trap-focus">(true)
 
-function Sheet({ ...props }: SheetPrimitive.Root.Props) {
+/**
+ * Painéis abertos. O Sheet é MODAL: um de cada vez, e o mais novo manda.
+ *
+ * A lib EMPILHA diálogos — abrir o segundo deixava o primeiro vivo atrás do véu,
+ * inalcançável pelo ponteiro e fora da armadilha de foco do painel de cima. A
+ * referência da casa (vanilla, `sheet.ts:231-237`) recolhe o anterior na
+ * ABERTURA, e é essa a guarda determinística: não depende de quando a remoção do
+ * nó é notificada, e descreve o estado que o componente promete.
+ *
+ * Quem tira o painel da tela é o `close()` imperativo da própria lib
+ * (`actionsRef`), e não um estado paralelo mantido aqui: ele passa pelo mesmo
+ * `setOpen` de todos os outros caminhos, então o consumidor RECEBE o
+ * `onOpenChange` com `reason: 'imperative-action'` — que o `dialogCloseReason`
+ * traduz para `api`. É a palavra certa entre as quatro do vocabulário da
+ * família: ninguém dispensou o painel de baixo (Escape, véu e botão são os três
+ * gestos da pessoa, e nenhum aconteceu), foi uma decisão tomada DENTRO do
+ * sistema. Sem isso o painel que sumia da tela sumia também do analytics.
+ */
+const openPanels = new Set<{ close: () => void }>()
+
+function closeOtherPanels(current: { close: () => void }): void {
+  for (const entry of [...openPanels]) {
+    if (entry !== current) entry.close()
+  }
+}
+
+function Sheet({
+  open,
+  defaultOpen,
+  onOpenChange,
+  actionsRef,
+  ...props
+}: SheetPrimitive.Root.Props) {
+  // O `actionsRef` de quem compõe tem precedência: o handle é dele, e o painel
+  // só pega carona no mesmo objeto para poder se recolher.
+  const ownActions = React.useRef<SheetPrimitive.Root.Actions | null>(null)
+  const actions = actionsRef ?? ownActions
+
+  // "Está aberto?" só para saber QUANDO entrar e sair da pilha — quem abre e
+  // fecha continua sendo a lib. O valor é DERIVADO, nunca sincronizado por
+  // efeito: no modo controlado quem manda é a prop, e copiá-la com um
+  // `setState` dentro de um efeito renderizaria de novo para chegar ao valor
+  // que já estava aqui (`react-hooks/set-state-in-effect`).
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false)
+  const isOpen = open ?? uncontrolledOpen
+
+  const entry = React.useMemo(
+    () => ({ close: () => actions.current?.close() }),
+    [actions],
+  )
+
+  React.useEffect(() => {
+    if (!isOpen) return
+    // Antes de pôr mais um painel na tela, tire da tela o que já estava lá.
+    closeOtherPanels(entry)
+    openPanels.add(entry)
+    return () => {
+      openPanels.delete(entry)
+    }
+  }, [isOpen, entry])
+
   return (
     <SheetModalContext.Provider value={props.modal ?? true}>
-      <SheetPrimitive.Root data-slot="sheet" {...props} />
+      <SheetPrimitive.Root
+        data-slot="sheet"
+        open={open}
+        defaultOpen={defaultOpen}
+        actionsRef={actions}
+        onOpenChange={(next, details) => {
+          setUncontrolledOpen(next)
+          onOpenChange?.(next, details)
+        }}
+        {...props}
+      />
     </SheetModalContext.Provider>
   )
 }

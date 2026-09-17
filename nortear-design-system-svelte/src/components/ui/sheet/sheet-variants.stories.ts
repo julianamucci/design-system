@@ -72,7 +72,11 @@ export const Right: Story = {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'right');
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    // O nome ESPERADO, e `aria-modal` junto. Sem argumento,
+    // `toHaveAccessibleName()` passa com qualquer nome — inclusive com o título
+    // de outra direção —, e era essa a asserção das quatro stories de lado.
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel direito');
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
     // O painel ENTRA deslocado pela própria largura, e o helper espera o
     // transform assentar antes de medir.
@@ -104,7 +108,8 @@ export const Left: Story = {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'left');
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel esquerdo');
     await borderWaitForEncostar(panel, 'left');
   },
 };
@@ -132,7 +137,8 @@ export const Top: Story = {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'top');
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel superior');
     await borderWaitForEncostar(panel, 'top');
   },
 };
@@ -161,7 +167,8 @@ export const Bottom: Story = {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'bottom');
     await expect(panel).toHaveClass(/nds-sheet-content/);
-    await expect(panel).toHaveAccessibleName();
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveAccessibleName('Painel inferior');
     await borderWaitForEncostar(panel, 'bottom');
   },
 };

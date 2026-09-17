@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
   createSheetCloseWatch,
+  isSheetCloseTrigger,
   sheetCloseReason,
+  SHEET_CLOSE_SLOT,
   type SheetCloseReason,
   type SheetCloseSignal,
 } from './close-reason';
@@ -50,6 +52,34 @@ describe('sheetCloseReason', () => {
   });
 });
 
+/**
+ * A pergunta da DELEGAÇÃO, provada sem navegador.
+ *
+ * O ouvinte de captura do `SheetContent` é quem a faz a cada clique no painel; o
+ * que ele decide com a resposta é `close-press` ou nada. Antes não havia
+ * delegação nenhuma: cada `SheetClose` do rodapé espalhava um manipulador à mão,
+ * e o que ficasse de fora fechava relatando `api`.
+ */
+describe('isSheetCloseTrigger', () => {
+  it('o clique DENTRO de um controle de fechar conta, e é por isso que existe closest', () => {
+    // O clique cai no ícone ou no `.nds-sr-only` dentro do botão; comparação
+    // direta com o alvo erraria os dois.
+    const target = { closest: (selector: string) => (selector === SHEET_CLOSE_SLOT ? {} : null) };
+    expect(isSheetCloseTrigger(target as unknown as EventTarget)).toBe(true);
+  });
+
+  it('clique em qualquer outro ponto do painel não conta', () => {
+    expect(isSheetCloseTrigger({ closest: () => null } as unknown as EventTarget)).toBe(false);
+  });
+
+  it('alvo sem closest responde não, em vez de derrubar o ouvinte', () => {
+    // Nó de texto e o próprio documento chegam aqui, e o ouvinte corre em
+    // captura — uma exceção nele impediria o painel de ver o próprio clique.
+    expect(isSheetCloseTrigger(null)).toBe(false);
+    expect(isSheetCloseTrigger({} as unknown as EventTarget)).toBe(false);
+  });
+});
+
 describe('createSheetCloseWatch', () => {
   it('reporta o gesto anotado pelos ouvintes do painel', () => {
     const watch = createSheetCloseWatch();
@@ -65,7 +95,7 @@ describe('createSheetCloseWatch', () => {
     watch.listeners.onClosePress();
     expect(watch.takeReason()).toBe('close-button');
 
-    watch.closeTrigger.onclick();
+    watch.markClosePress();
     expect(watch.takeReason()).toBe('close-button');
 
     watch.markConfirmation();

@@ -263,7 +263,18 @@ export const Playground: Story = {
           throw new Error('o foco saiu do painel e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
+      // A asserção que estava aqui repetia a espera palavra por palavra, e por
+      // isso não podia reprovar nada que a espera já não tivesse reprovado. O
+      // que a espera NÃO cobre: ela aceita o próprio painel, que tem
+      // `tabindex="-1"` e recebe o foco na abertura — `panel.contains(panel)` é
+      // verdadeiro. Estas duas medem que o Tab ANDOU até um controle de
+      // verdade, em vez de o foco ter ficado parado na caixa.
+      await expect(document.activeElement).not.toBe(panel);
+      await expect(
+        (document.activeElement as HTMLElement).matches(
+          'a[href], button, input, select, textarea, [tabindex="0"]',
+        ),
+      ).toBe(true);
     });
 
     await step('Shift+Tab dá a volta para o outro lado, sem sair do painel', async () => {
@@ -281,7 +292,14 @@ export const Playground: Story = {
           throw new Error('o foco saiu do painel para trás e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
+      // Mesmo conserto do sentido direto, e pelo mesmo motivo: a espera aceita
+      // o painel parado, e o que interessa é que a volta parou num controle.
+      await expect(document.activeElement).not.toBe(panel);
+      await expect(
+        (document.activeElement as HTMLElement).matches(
+          'a[href], button, input, select, textarea, [tabindex="0"]',
+        ),
+      ).toBe(true);
     });
 
     await step('Escape fecha, devolve o foco ao gatilho e relata escape', async () => {

@@ -145,7 +145,7 @@ describe('paridade entre snippet e preview', () => {
     expect(labels).toEqual([filters.fieldCategory, filters.fieldMinPrice]);
   });
 
-  it('religa a primária ao <form> pelo id quando o corpo é formulário (D10)', () => {
+  it('religa a primária ao <form> pelo id quando o corpo é formulário (D9)', () => {
     // O rodapé é IRMÃO do corpo por construção da fábrica — é o que o mantém
     // visível enquanto o formulário rola —, então a primária nunca está dentro
     // do `<form>`. Sem `type: 'submit'` e sem o atributo `form`, o snippet
@@ -303,6 +303,16 @@ describe('coerência dos snippets', () => {
     // da lista sai da medição sem uma palavra, e foi assim que uma varredura
     // desta casa encolheu 28 exports com a suíte verde.
     expect(referenciasSoltas(sheetHeadingH3Source('', {}))).toEqual([]);
+  });
+
+  it('nomeia o corpo rolável só quando a story o nomeia', () => {
+    // O par do ramo da fábrica: com `bodyLabel` ela emite `role="group"` junto,
+    // e sem ele o corpo fica só com o `tabindex`. Publicar a opção vazia
+    // ensinaria um papel que o painel copiado não teria.
+    expect(sheetSnippet({ body: 'paragraphs' })).not.toContain('bodyLabel');
+    expect(sheetSnippet({ body: 'paragraphs', bodyLabel: 'Termos de uso' })).toContain(
+      "bodyLabel: 'Termos de uso',",
+    );
   });
 
   it('mostra showCloseButton só quando ele é desligado', () => {

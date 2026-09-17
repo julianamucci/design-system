@@ -338,8 +338,8 @@
           "part": "Camada escura sobre a página enquanto o painel está aberto — a cor vem do token do véu, com 80% de opacidade"
         },
         "ring": {
-          "class": "nds-sheet-close",
-          "part": "Anel de foco do botão de fechar"
+          "class": "nds-sheet-close · nds-sheet-close-position",
+          "part": "Anel de foco do botão de fechar — na forma própria do vanilla; nas quatro com lib o botão é o do design system e o anel vem da folha dele"
         },
         "width": {
           "class": "nds-sheet-content",
@@ -831,8 +831,8 @@
           "part": "Dark layer over the page while the panel is open — the colour comes from the veil token, at 80% opacity"
         },
         "ring": {
-          "class": "nds-sheet-close",
-          "part": "Focus ring on the close button"
+          "class": "nds-sheet-close · nds-sheet-close-position",
+          "part": "Focus ring of the close button — in vanilla’s own form; in the four with a lib the button is the design system one and the ring comes from its sheet"
         },
         "width": {
           "class": "nds-sheet-content",
@@ -1324,8 +1324,8 @@
           "part": "Capa oscura sobre la página mientras el panel está abierto — el color viene del token del velo, con 80% de opacidad"
         },
         "ring": {
-          "class": "nds-sheet-close",
-          "part": "Anillo de foco del botón de cerrar"
+          "class": "nds-sheet-close · nds-sheet-close-position",
+          "part": "Anillo de foco del botón de cerrar — en la forma propia de vanilla; en las cuatro con lib el botón es el del design system y el anillo viene de su hoja"
         },
         "width": {
           "class": "nds-sheet-content",

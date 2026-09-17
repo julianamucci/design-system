@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import {
   sheetBottomPanelSource,
   sheetEditPerfilSource,
@@ -32,8 +32,9 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    // Painel modal aberto: ver o motivo em wait-for-portal.ts.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    // SEM `FOCUS_RULE_GUARDA`: as âncoras de foco que justificavam desligar
+    // `aria-hidden-focus` não existem no caminho do Dialog. Motivo medido por
+    // extenso no meta de `sheet-variants.stories.ts`.
     docs: {
       source: { transform: sheetFiltersAvancadosSource },
       description: {
@@ -71,6 +72,8 @@ const sharedComponents = {
 export const AdvancedFilters: Story = {
   parameters: {
     docs: {
+      // O corpo é um `form` e a confirmação é o `submit` dele, religado pelo
+      // atributo `form` — a mesma construção da edição de perfil ao lado.
       description: { story: 'Painel direito com filtros avançados — caso de uso clássico em desktop.' },
     },
   },
@@ -87,7 +90,15 @@ export const AdvancedFilters: Story = {
             <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <div class="nds-stack" data-spacing="sm">
+            <!--
+              O rodapé é IRMÃO do corpo rolável por construção do primitivo,
+              então a primária não cabe DENTRO do formulário: ela se religa
+              por \`form="<id>"\` (PRD D9). Sem o atributo, \`type="submit"\` é
+              botão inerte — não envia pelo clique nem pelo Enter num campo, e
+              nada na tela denuncia. O \`prevent\` existe porque, religada, a
+              submissão passa a funcionar de verdade e navegaria o preview.
+            -->
+            <form id="filters-form" class="nds-stack" data-spacing="sm" @submit.prevent>
               <div class="nds-stack" data-spacing="xs">
                 <Label for="cat">Categoria</Label>
                 <Input id="cat" defaultValue="Eletrônicos" />
@@ -96,13 +107,13 @@ export const AdvancedFilters: Story = {
                 <Label for="min">Preço mínimo</Label>
                 <Input id="min" type="number" defaultValue="100" />
               </div>
-            </div>
+            </form>
           </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button type="button" variant="outline">Cancelar</Button>
             </SheetClose>
-            <Button>Aplicar filtros</Button>
+            <Button type="submit" form="filters-form">Aplicar filtros</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -117,6 +128,22 @@ export const AdvancedFilters: Story = {
     // documenta. Esta story mostrava três, e nenhum deles era esse par.
     const rotulos = [...panel.querySelectorAll('label')].map((el) => el.textContent?.trim());
     await expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
+
+    // A primária vive no rodapé, FORA do formulário, e só o par id ↔ `form` a
+    // alcança (PRD D9). `button.form` é a leitura que denuncia: vem nula
+    // quando o botão está órfão, e é ela que separa "religado" de
+    // "`type="submit"` escrito e inerte".
+    const form = panel.querySelector<HTMLFormElement>('form');
+    await expect(form).not.toBeNull();
+    const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]');
+    await expect(submit).not.toBeNull();
+    await expect(submit).toHaveAttribute('form', form!.id);
+    await expect(submit!.form).toBe(form);
+    // E o descartar não pode herdar `submit` do padrão do HTML.
+    await expect(within(panel).getByRole('button', { name: /^Cancelar$/i })).toHaveAttribute(
+      'type',
+      'button',
+    );
   },
 };
 
@@ -124,7 +151,8 @@ export const ProfileEdit: Story = {
   parameters: {
     docs: {
       // O corpo é um `form` e a confirmação é o `submit` dele, religado pelo
-      // atributo `form` — o meta mostra filtros soltos, sem formulário em volta.
+      // atributo `form` (PRD D9) — o meta mostra a mesma construção com os
+      // campos de filtro.
       source: { transform: sheetEditPerfilSource },
       description: { story: 'Edição de perfil com múltiplos campos no painel direito.' },
     },
@@ -178,7 +206,8 @@ export const ProfileEdit: Story = {
 
     // O rodapé mora FORA do corpo rolável, então o botão não está dentro do
     // formulário: só o atributo `form` o alcança, e sem ele nem o clique nem o
-    // Enter num campo enviariam — o botão continuaria clicável e inerte.
+    // Enter num campo enviariam — o botão continuaria clicável e inerte
+    // (PRD D9).
     const form = panel.querySelector<HTMLFormElement>('form');
     await expect(form).not.toBeNull();
     const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -277,7 +306,26 @@ export const BottomPanel: Story = {
     const panel = await waitForPortal('dialog');
     await expect(panel).toHaveAttribute('data-side', 'bottom');
     await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
-    await expect(within(panel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
+
+    // As três ações moram no CORPO, e por ÍNDICE: é o que mantém a fileira
+    // igual à do conteúdo compartilhado, com a destrutiva por último. Contar
+    // no painel inteiro somaria o rodapé e o X do canto.
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]');
+    await expect(body).not.toBeNull();
+    await expect(
+      within(body!)
+        .getAllByRole('button')
+        .map((button) => button.textContent?.trim()),
+    ).toEqual(['Compartilhar', 'Duplicar', 'Excluir']);
+
+    // O rodapé fica FORA do corpo — é o que segura a saída no lugar quando a
+    // fileira cresce. A busca é dentro dele porque o X do canto também se
+    // chama "Fechar": no painel inteiro haveria dois.
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+    await expect(footer).not.toBeNull();
+    await expect(within(footer!).getAllByRole('button')).toHaveLength(1);
+    await expect(within(footer!).getByRole('button', { name: /^Fechar$/i })).toBeVisible();
+
     // Sem confirmação: o rodapé oferece apenas a saída.
     await expect(within(panel).queryByRole('button', { name: /Aplicar/i })).toBeNull();
   },

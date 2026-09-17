@@ -74,12 +74,12 @@ export const AdvancedFilters: Story = {
           <div ndsSheetBody>
             <!-- A guarda de submit existe para o preview: sem ela, o Enter num
                  campo tentaria navegar a página. -->
-            <form id="filtros-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
-              <div class="nds-grid" data-spacing="xs">
+            <form id="filtros-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="comp-categoria">Categoria</label>
                 <input ndsInput id="comp-categoria" value="Eletrônicos" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="comp-minimo">Preço mínimo</label>
                 <input ndsInput id="comp-minimo" type="number" value="100" />
               </div>
@@ -88,7 +88,7 @@ export const AdvancedFilters: Story = {
 
           <!-- O rodapé fica FORA do corpo: é ele que continua visível quando o
                formulário cresce. Por isso a primária não está dentro do
-               form, e é o atributo form que os religa (PRD D10). -->
+               form, e é o atributo form que os religa (PRD D9). -->
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
             <button ndsButton type="submit" form="filtros-form">Aplicar filtros</button>
@@ -115,7 +115,7 @@ export const AdvancedFilters: Story = {
       await expect(within(panel).getByLabelText(/Categoria/i)).toBeVisible();
     });
 
-    await step('E por isso a primária é submit religado pelo id (D10)', async () => {
+    await step('E por isso a primária é submit religado pelo id (D9)', async () => {
       // Consequência direta do passo anterior: com o rodapé fora do `<form>`, a
       // primária só o alcança pelo atributo `form`. Sem ele o painel tinha
       // formulário e NENHUMA forma de submeter — com dois campos o navegador não
@@ -210,16 +210,16 @@ export const ProfileEdit: Story = {
           </div>
 
           <div ndsSheetBody>
-            <form id="perfil-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
-              <div class="nds-grid" data-spacing="xs">
+            <form id="perfil-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="perfil-nome">Nome</label>
                 <input ndsInput id="perfil-nome" value="Juliana Mucci" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="perfil-usuario">Nome de usuário</label>
                 <input ndsInput id="perfil-usuario" value="@julianamucci" />
               </div>
-              <div class="nds-grid" data-spacing="xs">
+              <div class="nds-stack" data-spacing="xs">
                 <label ndsLabel for="perfil-bio">Bio</label>
                 <input ndsInput id="perfil-bio" value="Designer de sistemas em São Paulo" />
               </div>

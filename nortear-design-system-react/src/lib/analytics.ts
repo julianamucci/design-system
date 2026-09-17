@@ -162,13 +162,6 @@ interface AnalyticsEvents {
     label?: never;
   };
 
-  /** Clique na ação primária do Footer de um Dialog. */
-  dialog_action: {
-    component: string;
-    action_label: string;
-    location?: string;
-  };
-
   card_click: {
     component: "card";
     label: string;
@@ -449,8 +442,24 @@ interface AnalyticsEvents {
    * `trigger_id` é o mesmo id estável da abertura do painel — é ele que liga a
    * confirmação ao `dialog_open` que a precedeu no GA4.
    */
+  /**
+   * Ação primária do rodapé executada, nos TRÊS painéis da família.
+   *
+   * Desde 2026-09-16 o Dialog também dispara este evento: o `dialog_action`, que
+   * era só dele e levava `action_label` sem `trigger_id`, foi aposentado por
+   * decisão da dona. Dois nomes para a mesma pergunta de produto partiam a série
+   * do GA4 em duas, em componentes que já compartilham `dialog_open` e
+   * `dialog_close`.
+   *
+   * O `component` era `string` solto — o único dos três —, o que aceitava
+   * qualquer valor e desligava a checagem que os outros dois têm. Fechá-lo
+   * revelou um QUARTO disparador: o Drawer, que tem `drawer_open` e
+   * `drawer_close` próprios e mesmo assim confirma pelo evento da família. A
+   * união inclui `'drawer'` porque é o que as cinco stacks fazem hoje; a
+   * assimetria está registrada em `sheet.md` §9.
+   */
   dialog_confirm: {
-    component: string;
+    component: "dialog" | "alert-dialog" | "sheet" | "drawer";
     trigger_id: string;
     action?: string;
     location?: string;

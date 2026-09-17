@@ -278,15 +278,9 @@
         },
         "dialogConfirm": {
           "event": "dialog_confirm",
-          "component": "AlertDialog, Sheet",
+          "component": "AlertDialog, Dialog, Sheet",
           "when": "Ação primária é confirmada.",
           "extras": "<code>trigger_id</code>, <code>action</code>"
-        },
-        "dialogAction": {
-          "event": "dialog_action",
-          "component": "Dialog",
-          "when": "Clique na ação primária do rodapé.",
-          "extras": "<code>action_label</code>"
         },
         "popoverOpen": {
           "event": "popover_open",
@@ -703,15 +697,9 @@
         },
         "dialogConfirm": {
           "event": "dialog_confirm",
-          "component": "AlertDialog, Sheet",
+          "component": "AlertDialog, Dialog, Sheet",
           "when": "Primary action is confirmed.",
           "extras": "<code>trigger_id</code>, <code>action</code>"
-        },
-        "dialogAction": {
-          "event": "dialog_action",
-          "component": "Dialog",
-          "when": "Click on the footer primary action.",
-          "extras": "<code>action_label</code>"
         },
         "popoverOpen": {
           "event": "popover_open",
@@ -1128,15 +1116,9 @@
         },
         "dialogConfirm": {
           "event": "dialog_confirm",
-          "component": "AlertDialog, Sheet",
+          "component": "AlertDialog, Dialog, Sheet",
           "when": "Se confirma la acción primaria.",
           "extras": "<code>trigger_id</code>, <code>action</code>"
-        },
-        "dialogAction": {
-          "event": "dialog_action",
-          "component": "Dialog",
-          "when": "Clic en la acción primaria del pie.",
-          "extras": "<code>action_label</code>"
         },
         "popoverOpen": {
           "event": "popover_open",

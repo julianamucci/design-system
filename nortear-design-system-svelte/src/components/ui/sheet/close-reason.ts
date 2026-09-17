@@ -65,12 +65,36 @@ export function sheetCloseReason(signal?: SheetCloseSignal | null): SheetCloseRe
   }
 }
 
+/**
+ * Todo controle de fechar do painel se nomeia assim — o X que o `SheetContent`
+ * monta e todo `SheetClose` que o rodapé compõe.
+ */
+export const SHEET_CLOSE_SLOT = '[data-slot="sheet-close"]';
+
+/**
+ * O clique caiu num controle de fechar do painel?
+ *
+ * É a pergunta que a DELEGAÇÃO faz, e ela é função pura de propósito: quem a
+ * usa é o ouvinte de captura do `SheetContent`, e é aqui que ela pode ser
+ * provada sem navegador.
+ *
+ * `closest` e não comparação direta: o clique costuma cair no ícone ou no
+ * `.nds-sr-only` dentro do botão, e o alvo direto erraria os dois. Alvo sem
+ * `closest` — nó de texto, ou o próprio documento — responde não em vez de
+ * derrubar o ouvinte, que corre antes de tudo que o painel faz com o clique.
+ */
+export function isSheetCloseTrigger(target: EventTarget | null): boolean {
+  const element = target as Element | null;
+  return Boolean(element?.closest?.(SHEET_CLOSE_SLOT));
+}
+
 /** O que o `createSheetCloseWatch` devolve. */
 export interface SheetCloseWatch {
   /**
    * Pronto para espalhar no `SheetContent`, que repassa os três primeiros ao
-   * primitivo e consome o `onClosePress` para o X do canto. Só ouvintes ficam
-   * aqui: método espalhado em componente vira atributo inválido no DOM.
+   * primitivo e consome o `onClosePress` para TODO controle de fechar do painel
+   * — o X do canto e cada `SheetClose` do rodapé, por delegação. Só ouvintes
+   * ficam aqui: método espalhado em componente vira atributo inválido no DOM.
    */
   readonly listeners: {
     onEscapeKeydown: () => void;
@@ -78,8 +102,6 @@ export interface SheetCloseWatch {
     onFocusOutside: () => void;
     onClosePress: () => void;
   };
-  /** Pronto para espalhar num `SheetClose` do rodapé. */
-  readonly closeTrigger: { onclick: () => void };
   /** Marca a decisão de dentro ANTES de o painel fechar. */
   markConfirmation(): void;
   /** Marca o clique numa saída explícita — o X do canto ou um `SheetClose`. */
@@ -92,6 +114,13 @@ export interface SheetCloseWatch {
 
 /**
  * Guarda o último gesto observado até o painel de fato fechar.
+ *
+ * NÃO existe mais um `closeTrigger` para espalhar botão a botão. Ele existia
+ * porque esta era a única stack sem delegação: cada `SheetClose` do rodapé
+ * precisava espalhá-lo, e o que ficasse de fora fechava o painel relatando
+ * `api` — a docs page espalhava em onze pontos, e o defeito de esquecer um é
+ * silencioso. Hoje quem vê o clique é o ouvinte de captura do `SheetContent`,
+ * como no Vanilla (`sheet.ts:371-374`) e no Vue.
  *
  * Vence o ÚLTIMO gesto, não o primeiro: quem clica em "Aplicar" e depois desiste
  * pelo Escape fechou por Escape. A precedência inversa reportaria a decisão que
@@ -114,7 +143,6 @@ export function createSheetCloseWatch(): SheetCloseWatch {
       onFocusOutside: mark('focus-out'),
       onClosePress: mark('close-press'),
     },
-    closeTrigger: { onclick: mark('close-press') },
     markConfirmation: mark('confirm'),
     markClosePress: mark('close-press'),
     reset() {

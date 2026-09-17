@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   perfilSheetEditSource,
   sheetBottomPanelSource,
+  sheetControlledSource,
   sheetFiltersAvancadosSource,
   sheetHeadingH3Source,
   sheetNavegacaoSecundariaSource,
+  sheetSecondPanelSource,
   sheetSource,
   sheetTermosWithScrollSource,
 } from './sheet.source';
@@ -118,7 +120,7 @@ describe('transforms das stories de composição', () => {
     expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
   });
 
-  it('religa a primária ao <form> pelo id, e só onde há formulário (D10)', () => {
+  it('religa a primária ao <form> pelo id, e só onde há formulário (D9)', () => {
     // O rodapé é IRMÃO do corpo rolável por construção do primitivo — é o que o
     // mantém visível enquanto o formulário rola —, então a primária nunca está
     // dentro do `<form>`. Sem `type="submit"` e sem o atributo `form`, o snippet
@@ -144,6 +146,8 @@ describe('transforms das stories de composição', () => {
       sheetBottomPanelSource(),
       sheetNavegacaoSecundariaSource(),
       sheetHeadingH3Source(),
+      sheetControlledSource(),
+      sheetSecondPanelSource(),
     ]) {
       expect(saida).not.toContain('type="submit"');
       expect(saida).not.toContain('handleSubmit');
@@ -216,6 +220,40 @@ describe('transforms das stories de composição', () => {
     // rolável é o SheetBody, não um contêiner improvisado na página.
     expect(saida).toContain('<SheetBody class="nds-stack');
     expect(saida).toContain('{#each paragrafos as paragrafo (paragrafo)}');
-    expect(saida).toContain('<Button>Aceitar</Button>');
+    // Os rótulos são os do Vanilla, literais — gatilho, título e as duas ações.
+    // Este exemplo é comparado lado a lado nas cinco páginas, e quatro das cinco
+    // palavras eram outras aqui.
+    expect(saida).toContain('<Button variant="outline" {...props}>Ler termos</Button>');
+    expect(saida).toContain('<SheetTitle>Termos de uso</SheetTitle>');
+    expect(saida).toContain('<Button variant="outline" {...props}>Cancelar</Button>');
+    expect(saida).toContain('<Button>Aceitar termos</Button>');
+    // O NOME do corpo vai junto com a rolagem: sem ele o `SheetBody` não emite
+    // `role="group"`, e o exemplo ensinaria a metade que o axe não acusa (C7).
+    expect(saida).toContain('aria-label="Termos de uso"');
+    // Vinte e quatro, como no Vanilla: com catorze o corpo só rola em painel
+    // baixo, e o exemplo deixa de mostrar o que diz mostrar.
+    expect(saida).toContain('{ length: 24 },');
+  });
+
+  it('o painel controlado abre por ESTADO, e não publica gatilho nenhum', () => {
+    const saida = sheetControlledSource();
+    expect(saida).toContain('let open = $state(false);');
+    expect(saida).toContain('<Sheet bind:open>');
+    // O assunto do exemplo é a AUSÊNCIA do gatilho do componente: quem abre é o
+    // botão de quem consome, e ele anuncia o diálogo por conta própria.
+    expect(saida).not.toContain('SheetTrigger');
+    expect(saida).toContain('<Button aria-haspopup="dialog"');
+  });
+
+  it('os dois painéis ficam lado a lado, e o segundo é controlado por estado', () => {
+    const saida = sheetSecondPanelSource();
+    expect(saida).toContain('let secondOpen = $state(false);');
+    expect(saida).toContain('<SheetContent side="left">');
+    // O segundo painel é CONTROLADO: com um painel modal na tela o clique no
+    // gatilho irmão não chega, e quem o abre de verdade é o estado.
+    expect(saida).toContain('<Sheet bind:open={secondOpen}>');
+    expect(saida).toContain('<SheetTitle>Segundo painel</SheetTitle>');
+    // Os dois gatilhos, como na referência.
+    expect(saida.match(/<SheetTrigger>/g)).toHaveLength(2);
   });
 });

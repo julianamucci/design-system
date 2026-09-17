@@ -447,7 +447,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton (click)="onExampleAction('save', 'docs_do_dont')">{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton (click)="onExampleAction('do-dont-pair1-do', 'save', 'docs_do_dont')">{{ t('demonstration.labels.action') }}</button>
             </div>
           </div>
         </ng-template>
@@ -475,7 +475,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton (click)="onExampleAction('ok', 'docs_do_dont')">OK</button>
+              <button ndsButton (click)="onExampleAction('do-dont-pair1-dont', 'ok', 'docs_do_dont')">OK</button>
             </div>
           </div>
         </ng-template>
@@ -494,7 +494,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton (click)="onExampleAction('save', 'docs_do_dont')">{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton (click)="onExampleAction('do-dont-pair2-do', 'save', 'docs_do_dont')">{{ t('demonstration.labels.action') }}</button>
             </div>
           </div>
         </ng-template>
@@ -516,7 +516,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton variant="destructive" (click)="onExampleAction('delete', 'docs_do_dont')">{{ t('demonstration.labels.destructiveTitle') }}</button>
+              <button ndsButton variant="destructive" (click)="onExampleAction('do-dont-pair2-dont', 'delete', 'docs_do_dont')">{{ t('demonstration.labels.destructiveTitle') }}</button>
             </div>
           </div>
         </ng-template>
@@ -535,7 +535,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton (click)="onExampleAction('save', 'docs_variantes')">{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton (click)="onExampleAction('basic', 'save', 'docs_variantes')">{{ t('demonstration.labels.action') }}</button>
             </div>
           </div>
         </ng-template>
@@ -566,7 +566,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
               </div>
               <div ndsDialogFooter>
                 <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-                <button ndsButton type="submit" (click)="onExampleAction('save', 'docs_variantes')">{{ t('demonstration.labels.action') }}</button>
+                <button ndsButton type="submit" (click)="onExampleAction('with-form', 'save', 'docs_variantes')">{{ t('demonstration.labels.action') }}</button>
               </div>
             </form>
           </div>
@@ -576,7 +576,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
 
     <ng-template #tplVarWithScrollContent>
       <!-- 'scroll-content' é o id deste exemplo, o dos termos. O "Aceitar" fica
-           sem dialog_action, como na página de referência: lá ele não é
+           sem dialog_confirm, como na página de referência: lá ele não é
            rastreado. -->
       <div ndsDialog (onOpenChange)="onExampleOpenChange('scroll-content', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.termsTitle') }}</button>
@@ -653,7 +653,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton variant="destructive" (click)="onExampleAction('remove', 'docs_variantes')">{{ t('demonstration.labels.removeItemAction') }}</button>
+              <button ndsButton variant="destructive" (click)="onExampleAction('destructive', 'remove', 'docs_variantes')">{{ t('demonstration.labels.removeItemAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -688,7 +688,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter [showCloseButton]="true" [closeLabel]="t('demonstration.labels.close')">
               <button ndsButton variant="outline">{{ t('demonstration.labels.back') }}</button>
-              <button ndsButton (click)="onExampleAction('continue', 'docs_variantes')">{{ t('demonstration.labels.continueAction') }}</button>
+              <button ndsButton (click)="onExampleAction('custom-close-in-footer', 'continue', 'docs_variantes')">{{ t('demonstration.labels.continueAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -718,7 +718,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton (click)="onExampleAction('confirm-email', 'docs_variantes')">{{ t('demonstration.labels.confirmEmailAction') }}</button>
+              <button ndsButton (click)="onExampleAction('confirm-email', 'confirm-email', 'docs_variantes')">{{ t('demonstration.labels.confirmEmailAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -1060,9 +1060,27 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     });
   }
 
-  /** A ação primária de um exemplo — `actionId` estável, nunca o rótulo do botão. */
-  protected onExampleAction(actionId: string, location: DocsLocation): void {
-    track('dialog_action', { component: 'dialog', action_label: actionId, location });
+  /**
+   * A ação primária de um exemplo — `actionId` estável, nunca o rótulo do botão.
+   *
+   * `dialog_confirm`, e não o aposentado `dialog_action`: os dois respondiam à
+   * MESMA pergunta ("a ação primária do rodapé foi executada") em componentes
+   * que já compartilham `dialog_open` e `dialog_close` de propósito, com dois
+   * nomes e dois formatos. O `trigger_id` é o mesmo que o `dialog_open` deste
+   * exemplo manda — sem ele, a confirmação era a única das três pontas do funil
+   * que não dizia de qual diálogo veio.
+   */
+  protected onExampleAction(
+    triggerId: string,
+    actionId: string,
+    location: DocsLocation,
+  ): void {
+    track('dialog_confirm', {
+      component: 'dialog',
+      trigger_id: triggerId,
+      action: actionId,
+      location,
+    });
   }
 
   /**
@@ -1072,9 +1090,11 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
    */
   protected onDemoConfirm(): void {
     this.confirmed = true;
-    track('dialog_action', {
+    track('dialog_confirm', {
       component: 'dialog',
-      action_label: 'save',
+      // O mesmo `trigger_id` que o `dialog_open` desta demonstração manda.
+      trigger_id: 'default',
+      action: 'save',
       location: 'docs_demo',
     });
   }

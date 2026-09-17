@@ -37,6 +37,13 @@ type Options = Partial<SheetArgs> & {
    * Nível do cabeçalho do título. Ausente, o snippet não escreve nível nenhum.
    */
   titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+  /**
+   * Nome do corpo rolável. Sem ele o `SheetBody` não emite `role="group"`: papel
+   * sem nome não se anuncia, e nome em elemento sem papel o leitor de tela
+   * descarta (C7 do PRD). Só o corpo que ROLA é parada de teclado, então só ele
+   * ensina o atributo.
+   */
+  bodyLabel?: string;
 };
 
 const DEFAULT: SheetArgs & { body: Body } = {
@@ -80,7 +87,7 @@ ${extras.join('\n')}`;
 }
 
 /** Corpo rolável ou formulário, indentado para dentro do conteúdo. */
-function panelBody(body: Body): string {
+function panelBody(body: Body, bodyLabel?: string): string {
   if (body === 'texto') {
     return `
     <SheetBody>
@@ -166,8 +173,13 @@ function panelBody(body: Body): string {
   if (body === 'rolagem') {
     // O corpo é peça do componente: o SheetBody já traz o overflow, o flex que
     // segura o rodapé e o tabindex que a região rolável exige (WCAG 2.1.1).
+    //
+    // E o NOME vai junto: a caixa que rola é parada de teclado, parada de
+    // teclado precisa de papel, e o papel só aparece com nome. Publicar o corpo
+    // longo sem `aria-label` ensinaria a metade que o axe não acusa.
+    const label = bodyLabel ? ` aria-label="${bodyLabel}"` : '';
     return `
-    <SheetBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+    <SheetBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm"${label}>
       {#each paragrafos as paragrafo (paragrafo)}
         <p>{paragrafo}</p>
       {/each}
@@ -207,6 +219,7 @@ function panel(o: Options): string {
     cancelLabel,
     body,
     titleLevel,
+    bodyLabel,
   } = { ...DEFAULT, ...o };
 
   // `open` ausente é o painel NÃO controlado: o gatilho abre e fecha sozinho, e
@@ -245,7 +258,7 @@ function handleSubmit(evento: SubmitEvent) {
   const paragrafosList =
     body === 'rolagem'
       ? `\n\nconst paragrafos = Array.from(
-  { length: 14 },
+  { length: 24 },
   (_, i) => \`Parágrafo \${i + 1}: conteúdo extenso, mais alto que o painel.\`,
 );`
       : '';
@@ -294,7 +307,7 @@ function handleSubmit(evento: SubmitEvent) {
       ${panelTitle(title, titleLevel)}
       <SheetDescription>${description}</SheetDescription>
     </SheetHeader>
-${panelBody(body)}${footerBlock}  </SheetContent>
+${panelBody(body, bodyLabel)}${footerBlock}  </SheetContent>
 </Sheet>`,
   );
 }
@@ -348,12 +361,135 @@ export function sheetTermosWithScrollSource(): string {
   return panel({
     open: true,
     body: 'rolagem',
-    triggerLabel: 'Ver termos',
-    title: 'Termos e condições',
+    // Os rótulos são os da story, que são os do Vanilla: o snippet tem de
+    // descrever o painel que a pessoa está vendo, palavra por palavra.
+    triggerLabel: 'Ler termos',
+    title: 'Termos de uso',
     description: 'Leia atentamente antes de aceitar.',
-    actionLabel: 'Aceitar',
-    cancelLabel: 'Recusar',
+    actionLabel: 'Aceitar termos',
+    cancelLabel: 'Cancelar',
+    bodyLabel: 'Termos de uso',
   });
+}
+
+/**
+ * Estado: o painel comandado de FORA, sem gatilho nenhum.
+ *
+ * Escrito por extenso em vez de sair do `panel()`: o que este exemplo ensina é
+ * justamente a ausência do `SheetTrigger`, e a composição canônica sempre o
+ * monta. O botão é de quem consome — o anúncio dele (`aria-haspopup`) vem
+ * escrito aqui pelo mesmo motivo.
+ */
+export function sheetControlledSource(): string {
+  return svelteSnippet(
+    `import {
+  Sheet,
+  SheetBody,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+
+// O painel não tem gatilho: quem o abre é o estado, e o botão abaixo só escreve
+// nele. Cada mudança volta para quem é dono do valor.
+let open = $state(false);`,
+    `<Button aria-haspopup="dialog" onclick={() => (open = true)}>Abrir pelo estado externo</Button>
+
+<Sheet bind:open>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Controlado pelo pai</SheetTitle>
+      <SheetDescription>
+        Este painel é comandado por estado externo e devolve cada mudança a quem é dono dele.
+      </SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">
+        O valor ligado manda no painel, e o painel devolve cada mudança.
+      </p>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>Cancelar</Button>
+        {/snippet}
+      </SheetClose>
+      <Button onclick={() => (open = false)}>Confirmar</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+  );
+}
+
+/**
+ * Estado: dois painéis na mesma tela, e o mais novo manda.
+ *
+ * Os dois gatilhos ficam lado a lado, e o segundo painel é CONTROLADO: com um
+ * painel modal na tela o clique no gatilho irmão não chega (a página atrás fica
+ * inerte), então quem o abre de verdade é o estado — um atalho, uma rota, uma
+ * decisão do produto.
+ */
+export function sheetSecondPanelSource(): string {
+  return svelteSnippet(
+    `import {
+  Sheet,
+  SheetBody,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+
+// O painel é modal: um de cada vez. Abrir o segundo recolhe o primeiro, e esse
+// recolhimento é um fechamento como outro qualquer — o motivo dele é "api",
+// porque nenhum gesto da pessoa fechou aquele painel.
+let secondOpen = $state(false);`,
+    `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Abrir o primeiro</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>Primeiro painel</SheetTitle>
+      <SheetDescription>Este sai de cena quando o outro entra.</SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">
+        Abra o segundo painel e este aqui se recolhe.
+      </p>
+    </SheetBody>
+  </SheetContent>
+</Sheet>
+
+<Sheet bind:open={secondOpen}>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Abrir o segundo</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Segundo painel</SheetTitle>
+      <SheetDescription>
+        O mais novo manda: dois painéis modais ao mesmo tempo deixariam um deles inalcançável.
+      </SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <p class="nds-text-body nds-text-muted-foreground">
+        Este entrou por último, então é este que está na tela.
+      </p>
+    </SheetBody>
+  </SheetContent>
+</Sheet>`,
+  );
 }
 
 /** Composição: navegação secundária à esquerda, sem rodapé. */

@@ -83,17 +83,25 @@ export function makeExitFooter(exitLabel: string): HTMLElement {
 /**
  * Rodapé de duas ações — cancelar à esquerda, ação principal à direita.
  *
- * Com `fecharAoClicar`, os dois botões passam a fechar o painel — pelo contrato
- * de markup, marcados com `data-slot="sheet-close"`, que a fábrica delega no
+ * Com `fecharAoClicar`, é o CANCELAR que passa a fechar o painel — pelo contrato
+ * de markup, marcado com `data-slot="sheet-close"`, que a fábrica delega no
  * painel e relata como `close-button`. Antes de 2026-09-11 não havia o que
  * marcar, e a fixture fingia um clique no véu: o motivo relatado era `overlay`
- * para dois caminhos que são de botão.
+ * para um caminho que é de botão.
+ *
+ * A PRIMÁRIA não leva a marca, e isto não é detalhe de fixture: ela não é
+ * controle de fechar. Quem confirma sai por decisão de DENTRO — `close()` no que
+ * a fábrica devolve, relatado como `api`. Marcada, ela fechava como
+ * `close-button` nas composições enquanto o `Playground`, que monta o rodapé à
+ * mão, a fechava por `close()` e relatava `api`: o mesmo botão com dois motivos,
+ * e a referência contradizendo a si mesma justamente no vocabulário que as
+ * outras quatro stacks copiam.
  *
  * `formId` religa a ação principal ao `<form>` do corpo. O rodapé do Sheet é
  * IRMÃO do corpo rolável por construção da fábrica — é o que o mantém visível
  * enquanto o formulário rola —, então a primária nunca está dentro do `<form>`:
  * sem `type="submit"` e sem o atributo `form`, o painel tem formulário e NENHUMA
- * forma de submeter, e o Enter num campo não dispara nada (PRD D10). A fábrica
+ * forma de submeter, e o Enter num campo não dispara nada (PRD D9). A fábrica
  * de botão não expõe `form`, e por isso ele entra por `setAttribute`.
  */
 export function makeFooter(
@@ -114,10 +122,7 @@ export function makeFooter(
   footer.dataset.spacing = 'md';
   footer.append(cancel, action);
 
-  if (fecharAoClicar) {
-    cancel.dataset.slot = 'sheet-close';
-    action.dataset.slot = 'sheet-close';
-  }
+  if (fecharAoClicar) cancel.dataset.slot = 'sheet-close';
 
   return footer;
 }

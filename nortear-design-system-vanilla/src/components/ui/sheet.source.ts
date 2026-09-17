@@ -36,6 +36,14 @@ export type SheetSnippetOptions = {
   titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   body?: SheetBody;
+  /**
+   * Nome do corpo rolável.
+   *
+   * Presente, a fábrica emite `role="group"` junto com o `aria-label` (C7). O
+   * papel só sai QUANDO existe nome: `aria-label` em elemento sem papel é
+   * atributo proibido. Ausente, o corpo continua com `tabindex="0"` e sem papel.
+   */
+  bodyLabel?: string;
   /** Rótulos do rodapé. `false` monta o painel SEM rodapé. */
   cancelLabel?: string | false;
   applyLabel?: string | false;
@@ -213,7 +221,7 @@ function bodyOf(o: SheetSnippetOptions): Body {
  * véu, que relata `overlay` para um caminho que é de botão.
  *
  * Quando o corpo é um `<form>`, a primária é `type: 'submit'` RELIGADA pelo
- * atributo `form` (PRD D10). O rodapé é irmão do corpo por construção da
+ * atributo `form` (PRD D9). O rodapé é irmão do corpo por construção da
  * fábrica, então a primária nunca está dentro do formulário: sem o religamento
  * o painel teria formulário e nenhuma forma de submeter — com dois ou mais
  * campos o navegador não faz o envio implícito, e o Enter não dispara nada.
@@ -279,6 +287,9 @@ function panelLines(o: SheetSnippetOptions, trigger: string, rodapeRef?: string)
         : text(o.description ?? 'Configure os filtros para refinar os resultados.'),
     ],
     ['content', 'corpo'],
+    // Só quando o corpo é nomeado: sem nome a fábrica não emite papel nenhum, e
+    // publicar a opção vazia ensinaria um `role="group"` que não existe.
+    ['bodyLabel', o.bodyLabel ? text(o.bodyLabel) : undefined],
     ['footer', rodapeRef],
     // Só quando é FALSO: `true` é o padrão da fábrica e não entra no snippet.
     ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],

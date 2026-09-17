@@ -229,12 +229,14 @@ export const Playground: Story = {
       // tique seguinte. Sem a espera, a asserção reprova o transporte em vez do
       // destino; com ela, um foco que realmente escapasse continuaria
       // reprovando, porque nunca voltaria.
+      // A espera É a asserção: ela reprova por estouro de prazo se o foco não
+      // voltar. O `expect(panel.contains(...))` idêntico que vinha depois dela
+      // media o que ela acabara de garantir — asserção que não pode reprovar.
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
           throw new Error('o foco saiu do painel e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step('Shift+Tab dá a volta para o outro lado, sem sair do painel', async () => {
@@ -247,12 +249,13 @@ export const Playground: Story = {
       // Mesma espera do sentido direto, e pelo mesmo motivo: a volta passa
       // por uma âncora de foco irmã do painel e o retorno cai no tique
       // seguinte. Foco que escapasse de verdade nunca voltaria, e reprovaria.
+      // Mesma leitura do sentido direto: quem reprova aqui é a espera, e o
+      // `expect` gêmeo que a seguia repetia a condição dela.
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
           throw new Error('o foco saiu do painel para trás e não voltou');
         }
       });
-      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     // O MOTIVO que chegou ao `onClose` na última vez.
