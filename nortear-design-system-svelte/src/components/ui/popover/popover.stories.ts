@@ -47,6 +47,11 @@ const meta: Meta = {
       description: 'Distância em pixels entre trigger e Content.',
       table: { type: { summary: 'number' }, defaultValue: { summary: '4' } },
     },
+    alignOffset: {
+      control: { type: 'number', step: 1 },
+      description: 'Deslocamento em pixels ao longo do eixo do alinhamento.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '0' } },
+    },
     defaultOpen: {
       control: 'boolean',
       description: 'Estado inicial em modo não-controlado.',
@@ -103,6 +108,7 @@ const meta: Meta = {
     side: 'bottom',
     align: 'center',
     sideOffset: 4,
+    alignOffset: 0,
     defaultOpen: false,
     triggerLabel: 'Abrir popover',
     title: 'Configurações de exibição',
@@ -121,6 +127,10 @@ type Story = StoryObj;
 
 export const Playground: Story = {
   parameters: {
+    // Declarada na PRÓPRIA story, e não herdada do meta. Aqui ela é a mesma
+    // transform do meta de propósito: o Playground é a única story cujo snippet
+    // acompanha os controls, e é para ele que a forma com `ctx.args` existe.
+    docs: { source: { transform: popoverSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3',
       'accessibility.item4',
@@ -167,21 +177,113 @@ export const Playground: Story = {
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
-    await step('3. O painel não é modal', async () => {
+    await step('3. O painel é nomeado pelo título e descrito pela descrição', async () => {
+      // D12: `labelledby` NOMEIA, `describedby` DESCREVE — os dois no mesmo
+      // elemento não são ambiguidade.
+      const p = panel()!;
+      const idTitle = p.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
+      await expect(document.getElementById(idTitle!)).toHaveAttribute('data-slot', 'popover-title');
+      const idDescription = p.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveAttribute(
+        'data-slot', 'popover-description',
+      );
+    });
+
+    await step('4. O painel não é modal', async () => {
       // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
       // tela esconder tudo o que está fora dele, que é contrato de Dialog.
       await expect(panel()).not.toHaveAttribute('aria-modal');
     });
 
-    await step('4. O foco entra no painel ao abrir', async () => {
+    await step('5. Ao abrir, o foco vai ao PRIMEIRO focável do painel', async () => {
+      // É o que separa popover de tooltip: o conteúdo é interativo, então o foco
+      // precisa alcançá-lo sem caçar com Tab pela página inteira.
+      //
+      // E o alvo é EXATO, não "algum lugar dentro do painel": `contains` passava
+      // com qualquer elemento focado, e é este passo que dá dentes ao seguinte —
+      // sem ele, "o foco está dentro" passaria com ou sem `data-autofocus`. Aqui
+      // o primeiro focável é o Cancelar do rodapé.
       await waitFor(() => {
         if (!panel()!.contains(document.activeElement)) {
           throw new Error('foco não entrou no painel');
         }
       });
+      await expect(
+        within(panel()!).getByRole('button', { name: args.cancelLabel as string }),
+      ).toHaveFocus();
     });
 
-    await step('5. Escape fecha o popover e retorna foco ao trigger', async () => {
+    await step('6. E `data-autofocus` VENCE o primeiro focável, mesmo com tabindex=-1', async () => {
+      // A outra metade de `accessibility.item4`, que o `covers` desta story
+      // reivindica desde que o conteúdo passou a nomear o atributo.
+      //
+      // O alvo marcado é o TÍTULO, com `tabindex="-1"`: não é o primeiro
+      // focável (nem sequer tabulável), então a asserção só passa se a marca for
+      // lida — e lida SEM o filtro de `FOCUSABLE`, que exclui `tabindex="-1"` de
+      // propósito. Uma implementação que passasse a marca pela lista de
+      // focáveis cairia no Cancelar e reprovaria aqui.
+      //
+      // A marca é posta QUANDO o painel monta, e não no painel aberto antes de
+      // fechar: o conteúdo é renderizado de novo a cada abertura, e um atributo
+      // escrito no nó anterior some com ele. O observador escreve antes de a
+      // política de foco rodar — ela espera um `requestAnimationFrame`, e a
+      // notificação de mutação é microtarefa.
+      await close();
+      const marked: HTMLElement[] = [];
+      // TODOS os títulos de painel, e não só o de `panel()`: um painel ainda em
+      // saída pode continuar no DOM, e a primeira ocorrência seria ele.
+      const mark = () => {
+        const titles = document.querySelectorAll<HTMLElement>(
+          '[data-slot="popover-content"] [data-slot="popover-title"]:not([data-autofocus])',
+        );
+        for (const title of titles) {
+          title.setAttribute('tabindex', '-1');
+          title.setAttribute('data-autofocus', '');
+          marked.push(title);
+        }
+      };
+      const observer = new MutationObserver(mark);
+      let openPanel: HTMLElement | null = null;
+      try {
+        // `data-slot` também: onde ele é escrito por binding, pode chegar depois
+        // da inserção do nó, e a marca procura por ele.
+        //
+        // E `data-state`, que é o que faltava. MEDIDO em 2026-09-17: este passo
+        // reprovava em 3 de 4 rodadas com `marked=0` — o observador não era
+        // chamado NENHUMA vez. O `closed()` deste arquivo aceita o painel ainda
+        // no DOM com `data-state="closed"` (é o que ele mede), então quando o
+        // `open()` cai dentro da animação de saída o bits REUSA o nó: não há
+        // inserção nem `data-slot` novo, só `data-state` virando `open`. Sem ele
+        // no filtro, a marca nunca era escrita e a asserção lia o título cru.
+        // Com ele, a reabertura por reuso também dispara a marca — e antes da
+        // política de foco, que espera um `requestAnimationFrame`.
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['data-slot', 'data-state'],
+        });
+        openPanel = await open();
+        const title = openPanel.querySelector<HTMLElement>('[data-slot="popover-title"]')!;
+        await expect(title).toHaveAttribute('data-autofocus');
+        await waitFor(() => expect(title).toHaveFocus());
+      } finally {
+        observer.disconnect();
+        // O foco sai do título ANTES de a marca sair: tirar o `tabindex` de um
+        // elemento focado joga o foco no `body`, e o passo seguinte partiria de
+        // um foco sem dono. O estado final é o do passo anterior — aberto, foco no
+        // Cancelar —, e o replay do painel Interactions parte dele.
+        if (openPanel?.isConnected) within(openPanel).queryByRole('button', { name: args.cancelLabel as string })?.focus();
+        for (const el of marked) {
+          el.removeAttribute('data-autofocus');
+          el.removeAttribute('tabindex');
+        }
+      }
+    });
+
+    await step('7. Escape fecha o popover e retorna foco ao trigger', async () => {
       await open();
       await userEvent.keyboard('{Escape}');
       await closed();
@@ -195,7 +297,7 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'escape');
     });
 
-    await step('6. Clicar fora fecha o painel', async () => {
+    await step('8. Clicar fora fecha o painel', async () => {
       await open();
       // O clique de fora é REEMITIDO até a dispensa acontecer. A camada de
       // dispensa da lib só passa a escutar `pointerdown` um tick depois de o
@@ -218,7 +320,7 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
 
-    await step('7. Cancelar (PopoverClose) fecha o painel por dentro', async () => {
+    await step('9. Cancelar (PopoverClose) fecha o painel por dentro', async () => {
       await open();
       const cancelar = body.getByRole('button', { name: args.cancelLabel as string });
       await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
@@ -231,8 +333,8 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'close-button');
     });
 
-    await step('8. Salvar fecha por CÓDIGO, e o motivo é api', async () => {
-      // O contraste com o passo 7 é o ponto inteiro: os dois botões fecham, e é
+    await step('10. Salvar fecha por CÓDIGO, e o motivo é api', async () => {
+      // O contraste com o passo 8 é o ponto inteiro: os dois botões fecham, e é
       // o CAMINHO que separa "desistiu" de "concluiu" no relatório. Salvar não
       // é `PopoverClose` — dentro dele, "concluiu" chegaria ao GA4 como
       // "apertou o botão de fechar", apagando o sinal que justifica o campo.
@@ -246,7 +348,7 @@ export const Playground: Story = {
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
-    await step('9. Estado final: painel aberto', async () => {
+    await step('11. Estado final: painel aberto', async () => {
       await expect(await open()).toBeVisible();
     });
   },

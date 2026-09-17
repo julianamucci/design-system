@@ -15,9 +15,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   computeFloatingPosition,
+  autoUpdateFloating,
   computePointPosition,
   positionFloating,
   positionFloatingAtPoint,
+  type ComputeFloatingInput,
   type FloatingAnchorRect,
   type FloatingViewport,
 } from '@/lib/floating';
@@ -201,6 +203,98 @@ describe('computeFloatingPosition — flip', () => {
   });
 });
 
+describe('computeFloatingPosition — alignOffset, o vão do eixo CRUZADO', () => {
+  /** Painel abaixo do gatilho, encostado no início: o eixo cruzado é o horizontal. */
+  const abaixo: ComputeFloatingInput = {
+    anchor: rect(100, 200, 40, 30),
+    panelWidth: 100,
+    panelHeight: 60,
+    side: 'bottom',
+    align: 'start',
+    offset: 8,
+    viewport: viewport(),
+  };
+
+  it('desliza o eixo cruzado e NÃO toca no principal', () => {
+    const sem = computeFloatingPosition(abaixo);
+    const com = computeFloatingPosition({ ...abaixo, alignOffset: 12 });
+
+    expect(sem.left).toBe(100);
+    expect(com.left).toBe(112);
+    // O eixo principal é do `offset`; se os dois se misturassem, o painel
+    // mudaria de distância do gatilho ao pedir desvio de alinhamento.
+    expect(com.top).toBe(sem.top);
+  });
+
+  it('aceita desvio NEGATIVO — o eixo tem dois sentidos', () => {
+    expect(computeFloatingPosition({ ...abaixo, alignOffset: -12 }).left).toBe(88);
+  });
+
+  it('desliza na VERTICAL quando o lado é horizontal', () => {
+    // Com `side: 'right'` o eixo cruzado vira o vertical, e é o `top` que anda.
+    const { top, left } = computeFloatingPosition({
+      anchor: rect(300, 400, 50, 30),
+      panelWidth: 200,
+      panelHeight: 120,
+      side: 'right',
+      align: 'start',
+      offset: 4,
+      alignOffset: 20,
+      viewport: viewport(),
+    });
+
+    expect(top).toBe(420);
+    // 300 + 50 + 4 = 354, intocado.
+    expect(left).toBe(354);
+  });
+
+  it('sem a opção, a conta é EXATAMENTE a de antes — o padrão é 0', () => {
+    // A garantia dos outros cinco chamadores de `positionFloating`, que não
+    // pedem desvio nenhum: a opção nova não pode movê-los um pixel.
+    expect(computeFloatingPosition(abaixo)).toEqual(
+      computeFloatingPosition({ ...abaixo, alignOffset: 0 }),
+    );
+  });
+
+  it('a borda da janela VENCE o desvio', () => {
+    // O desvio é pedido de desenho; sair da tela não é opção. Sem o travamento
+    // depois da soma, este painel iria para x=-171.
+    const { left } = computeFloatingPosition({
+      anchor: rect(53, 100, 40, 30),
+      panelWidth: 288,
+      panelHeight: 100,
+      side: 'bottom',
+      align: 'center',
+      offset: 8,
+      alignOffset: -100,
+      viewport: viewport(),
+    });
+
+    expect(left).toBe(RESPIRO);
+  });
+
+  it('não muda a decisão do flip, que é medida no OUTRO eixo', () => {
+    const { side, left, top } = computeFloatingPosition({
+      anchor: rect(940, 300, 50, 30),
+      panelWidth: 200,
+      panelHeight: 120,
+      side: 'right',
+      align: 'start',
+      offset: 4,
+      alignOffset: 50,
+      viewport: viewport(),
+      flip: true,
+    });
+
+    // Mesmo lado e mesma coordenada principal do caso sem desvio; só o cruzado
+    // andou. Um `alignOffset` que entrasse no déficit faria o painel virar de
+    // lado por causa de um ajuste de alinhamento.
+    expect(side).toBe('left');
+    expect(left).toBe(736);
+    expect(top).toBe(350);
+  });
+});
+
 describe('computePointPosition — o menu de contexto desliza, não vira', () => {
   it('deixa o canto no ponto quando o painel cabe', () => {
     const { top, left } = computePointPosition({
@@ -339,6 +433,19 @@ describe('positionFloating — escrita no painel', () => {
     expect(panel.style.left).toBe('736px');
   });
 
+  it('repassa o alignOffset à conta, sem mexer no eixo principal', () => {
+    stubJanela();
+    const panel = fakePanel(200, 120);
+
+    positionFloating(fakeAnchor(rect(100, 300, 50, 30)), panel, 'right', 'start', 4, {
+      alignOffset: 16,
+    });
+
+    // 300 + 16 no cruzado; 100 + 50 + 4 no principal, intocado.
+    expect(panel.style.top).toBe('316px');
+    expect(panel.style.left).toBe('154px');
+  });
+
   it('com flip e espaço de sobra, o anúncio confirma o lado pedido', () => {
     stubJanela();
     const panel = fakePanel(200, 120);
@@ -379,5 +486,208 @@ describe('positionFloatingAtPoint — escrita no painel', () => {
 
     expect(panel.style.left).toBe('120px');
     expect(panel.style.top).toBe('200px');
+  });
+});
+
+describe('autoUpdateFloating — o painel acompanha a âncora', () => {
+  /**
+   * Um alvo de evento que CONTA: registros e remoções por tipo. A limpeza é
+   * provada por contagem, e não por "a função rodou" — uma limpeza que roda e
+   * esquece um ouvinte passaria nesta segunda pergunta.
+   */
+  type Counter = {
+    listeners: Map<string, Set<() => void>>;
+    added: number;
+    removed: number;
+    addEventListener: (type: string, fn: () => void) => void;
+    removeEventListener: (type: string, fn: () => void) => void;
+    fire: (type: string) => void;
+  };
+
+  function counter(extra: Record<string, unknown> = {}): Counter {
+    const listeners = new Map<string, Set<() => void>>();
+    const target: Counter = {
+      listeners,
+      added: 0,
+      removed: 0,
+      addEventListener(type, fn) {
+        target.added++;
+        if (!listeners.has(type)) listeners.set(type, new Set());
+        listeners.get(type)!.add(fn);
+      },
+      removeEventListener(type, fn) {
+        if (listeners.get(type)?.delete(fn)) target.removed++;
+      },
+      fire(type) {
+        listeners.get(type)?.forEach((fn) => fn());
+      },
+    };
+    return Object.assign(target, extra);
+  }
+
+  const liveCount = (target: Counter): number =>
+    [...target.listeners.values()].reduce((n, s) => n + s.size, 0);
+
+  /** Quadros pendentes, drenados à mão — o teste decide quando o quadro "passa". */
+  let frames: Map<number, () => void>;
+  let observers: Array<{ targets: unknown[]; disconnected: boolean; cb: () => void }>;
+
+  function setupEnv(withResizeObserver = true) {
+    frames = new Map();
+    observers = [];
+    let next = 0;
+
+    const win = counter();
+    const body = { nodeType: 1 };
+    const html = { nodeType: 1, parentNode: null };
+    // Gatilho → contêiner rolável → invólucro sem rolagem → body.
+    const wrapperEl = counter({ nodeType: 1, parentNode: body, overflow: 'visible' });
+    const scroller = counter({ nodeType: 1, parentNode: wrapperEl, overflow: 'auto' });
+    const anchor = { nodeType: 1, parentNode: scroller } as unknown as HTMLElement;
+    const panel = { nodeType: 1 } as unknown as HTMLElement;
+
+    vi.stubGlobal('window', win);
+    vi.stubGlobal('document', { body, documentElement: html });
+    vi.stubGlobal('getComputedStyle', (el: { overflow?: string }) => ({
+      overflow: el.overflow ?? 'visible',
+      overflowX: el.overflow ?? 'visible',
+      overflowY: el.overflow ?? 'visible',
+    }));
+    vi.stubGlobal('requestAnimationFrame', (cb: () => void) => {
+      frames.set(++next, cb);
+      return next;
+    });
+    vi.stubGlobal('cancelAnimationFrame', (id: number) => {
+      frames.delete(id);
+    });
+    if (withResizeObserver) {
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          record: { targets: unknown[]; disconnected: boolean; cb: () => void };
+          constructor(cb: () => void) {
+            this.record = { targets: [], disconnected: false, cb };
+            observers.push(this.record);
+          }
+          observe(target: unknown) {
+            this.record.targets.push(target);
+          }
+          disconnect() {
+            this.record.disconnected = true;
+          }
+        },
+      );
+    } else {
+      vi.stubGlobal('ResizeObserver', undefined);
+    }
+
+    return { win, scroller, wrapperEl, anchor, panel };
+  }
+
+  function flushFrame(): void {
+    const pending = [...frames.values()];
+    frames.clear();
+    pending.forEach((cb) => cb());
+  }
+
+  it('reposiciona quando a JANELA rola', () => {
+    const { win, anchor, panel } = setupEnv();
+    const update = vi.fn();
+    autoUpdateFloating(anchor, panel, update);
+
+    win.fire('scroll');
+    expect(update).not.toHaveBeenCalled();
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
+  it('reposiciona quando um CONTÊINER rolável do gatilho rola — e só ele', () => {
+    const { scroller, wrapperEl, anchor, panel } = setupEnv();
+    const update = vi.fn();
+    autoUpdateFloating(anchor, panel, update);
+
+    // O invólucro sem `overflow` não rola: escutá-lo seria ouvinte à toa.
+    expect(liveCount(wrapperEl)).toBe(0);
+    scroller.fire('scroll');
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
+  it('reposiciona quando a janela muda de TAMANHO', () => {
+    const { win, anchor, panel } = setupEnv();
+    const update = vi.fn();
+    autoUpdateFloating(anchor, panel, update);
+
+    win.fire('resize');
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
+  it('observa o tamanho do gatilho E do painel', () => {
+    const { anchor, panel } = setupEnv();
+    const update = vi.fn();
+    autoUpdateFloating(anchor, panel, update);
+
+    expect(observers).toHaveLength(1);
+    expect(observers[0].targets).toEqual([anchor, panel]);
+    observers[0].cb();
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
+  it('AGRUPA por quadro: uma rajada vira uma conta só', () => {
+    const { win, scroller, anchor, panel } = setupEnv();
+    const update = vi.fn();
+    autoUpdateFloating(anchor, panel, update);
+
+    win.fire('scroll');
+    scroller.fire('scroll');
+    win.fire('resize');
+    win.fire('scroll');
+    expect(frames.size).toBe(1);
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(1);
+
+    // O quadro seguinte volta a aceitar agendamento.
+    win.fire('scroll');
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(2);
+  });
+
+  it('a LIMPEZA remove todo ouvinte que registrou, desconecta e cancela o quadro', () => {
+    const { win, scroller, anchor, panel } = setupEnv();
+    const update = vi.fn();
+    const stop = autoUpdateFloating(anchor, panel, update);
+
+    // janela: scroll + resize; contêiner rolável: scroll.
+    expect(win.added).toBe(2);
+    expect(scroller.added).toBe(1);
+
+    win.fire('scroll');
+    stop();
+
+    expect(win.removed).toBe(win.added);
+    expect(scroller.removed).toBe(scroller.added);
+    expect(liveCount(win)).toBe(0);
+    expect(liveCount(scroller)).toBe(0);
+    expect(observers[0].disconnected).toBe(true);
+    // O quadro agendado antes da limpeza não pode reposicionar um painel fechado.
+    expect(frames.size).toBe(0);
+    flushFrame();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('sem ResizeObserver no ambiente, escuta o resto e limpa igual', () => {
+    const { win, scroller, anchor, panel } = setupEnv(false);
+    const update = vi.fn();
+    const stop = autoUpdateFloating(anchor, panel, update);
+
+    scroller.fire('scroll');
+    flushFrame();
+    expect(update).toHaveBeenCalledTimes(1);
+
+    stop();
+    expect(liveCount(win)).toBe(0);
+    expect(liveCount(scroller)).toBe(0);
   });
 });

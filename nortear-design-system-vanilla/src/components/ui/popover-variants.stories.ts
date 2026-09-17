@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import {
   createPopover,
   createPopoverDescription,
@@ -19,7 +19,8 @@ const meta: Meta = {
   parameters: {
     design: figmaDesign('popover'),
     actions: { disable: true },
-    layout: 'padded',
+    // `centered`, como as outras quatro — ver a nota do meta de `-states`.
+    layout: 'centered',
     controls: { disable: true },
     docs: {
       source: { transform: popoverSource },
@@ -83,7 +84,9 @@ export const Default: Story = {
 };
 
 export const WithTitle: Story = {
-  parameters: { covers: ['visual.item2', 'accessibility.item5'] },
+  // `accessibility.item3` veio da `Focused`, que perdeu a descrição do painel e
+  // com ela o direito de reivindicar `aria-describedby`.
+  parameters: { covers: ['visual.item2', 'accessibility.item5', 'accessibility.item3'] },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Configurações de exibição' });
 
@@ -91,13 +94,42 @@ export const WithTitle: Story = {
     // escrever `.nds-popover-title` à mão era o contorno de quando elas não
     // existiam — e nesse caminho o `data-slot` documentado dependia de quem
     // compunha lembrar de escrevê-lo.
-    const content = createPopoverHeader();
-    content.append(
+    const header = createPopoverHeader();
+    header.append(
       createPopoverTitle({ text: 'Configurações de exibição' }),
       createPopoverDescription({ text: 'Ajuste a aparência do conteúdo da página.' }),
     );
 
+    // O rodapé de ações, que as outras quatro stacks já tinham nesta variante e
+    // esta não. Medido em 2026-09-17: sem ele o painel desta story não tinha
+    // NENHUM focável, e por isso os dois passos de teclado — o Tab entre os
+    // controles internos e o anel de foco — existiam em quatro stacks e faltavam
+    // aqui. Comparar as cinco páginas deixava de responder como é a variante
+    // recomendada.
+    //
+    // Os dois caminhos de fechamento são os mesmos do Playground: o Cancelar leva
+    // `data-slot="popover-close"` e a delegação da fábrica o relata como
+    // `close-button`; o Salvar não leva a marca e fecha por CÓDIGO, com o
+    // `close()` que só existe depois de a fábrica devolver.
+    const actions = document.createElement('div');
+    actions.className = 'nds-cluster';
+    actions.dataset.spacing = 'sm';
+    actions.dataset.justify = 'end';
+    const cancel = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+    cancel.dataset.slot = 'popover-close';
+    const save = createButton({ variant: 'default', size: 'sm', label: 'Salvar' });
+    actions.append(cancel, save);
+
+    const content = document.createElement('div');
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
+    content.append(header, actions);
+
     const el = createPopover({ trigger, content });
+    save.addEventListener('click', () => {
+      // …aqui entraria a gravação do formulário…
+      el.close();
+    });
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
@@ -121,6 +153,32 @@ export const WithTitle: Story = {
       await expect(desc.textContent).toMatch(/Ajuste a aparência/);
     });
 
+    await step('A descrição entra por aria-describedby', async () => {
+      const idDescription = panel()!.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveClass(/nds-popover-description/);
+    });
+
+    await step('Tab caminha entre os controles internos', async () => {
+      const ctx = within(panel()!);
+      const cancel = ctx.getByRole('button', { name: /Cancelar/i });
+      const save = ctx.getByRole('button', { name: /Salvar/i });
+      cancel.focus();
+      await userEvent.tab();
+      await expect(save).toHaveFocus();
+    });
+
+    await step('E o elemento focado por teclado mostra o anel de foco', async () => {
+      // `:focus-visible` é a condição exata que o CSS compartilhado usa para
+      // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
+      // casaria a pseudo-classe e o anel não apareceria.
+      const save = within(panel()!).getByRole('button', { name: /Salvar/i });
+      await expect(save.matches(':focus-visible')).toBe(true);
+      // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
+      // errada daria verde em qualquer elemento.
+      await expect(getComputedStyle(save).boxShadow).not.toBe('none');
+    });
+
     await step('O cabeçalho é uma peça, não uma div com classe escrita à mão', async () => {
       const header = panel()!.querySelector('[data-slot="popover-header"]')!;
       await expect(header).toHaveClass(/nds-popover-header/);
@@ -131,6 +189,13 @@ export const WithTitle: Story = {
     });
   },
 };
+
+/**
+ * Espião do `onOpenChange` da `Form`, no módulo para a play alcançá-lo: é ele
+ * que prova que confirmar chega ao relatório como `api`, e não só que o painel
+ * sumiu.
+ */
+const formOpenChange = fn();
 
 export const Form: Story = {
   parameters: {
@@ -169,7 +234,7 @@ export const Form: Story = {
 
     content.append(nameRow, emailRow, submit);
 
-    const el = createPopover({ trigger, content });
+    const el = createPopover({ trigger, content, onOpenChange: formOpenChange });
     // Confirmar fecha por CÓDIGO, depois de salvar — o motivo que chega ao
     // `onOpenChange` é `api`. Só a peça marcada com `data-slot="popover-close"`
     // relata `close-button`, e ela é a de DESISTIR. O ouvinte entra aqui porque
@@ -200,6 +265,37 @@ export const Form: Story = {
       await userEvent.clear(name);
       await userEvent.type(name, 'Bruno Lima');
       await expect(name).toHaveValue('Bruno Lima');
+    });
+
+    await step('O Atualizar fecha por CÓDIGO e informa api', async () => {
+      const p = await open(trigger);
+      const atualizar = within(p).getByRole('button', { name: /atualizar/i });
+      // Sem a marca de fechar: ele é o submit DO formulário, e quem fecha é o
+      // `close()` do ouvinte — motivo `api`, "salvou e fechou".
+      await expect(atualizar).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(atualizar);
+      await waitFor(() => {
+        if (panel()) throw new Error('o Atualizar não fechou o painel');
+      });
+      await expect(formOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    await step('O Enter num campo envia o formulário e fecha com api', async () => {
+      // Metade das pessoas envia formulário pelo Enter, e é o caminho que só o
+      // ouvinte de `submit` cobre — um `click` no botão não o alcança.
+      const p = await open(trigger);
+      const name = within(p).getByLabelText(/nome/i);
+      name.focus();
+      await userEvent.keyboard('{Enter}');
+      await waitFor(() => {
+        if (panel()) throw new Error('o formulário não fechou o painel pelo Enter');
+      });
+      await expect(formOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await expect(await open(trigger)).toBeVisible();
     });
   },
 };

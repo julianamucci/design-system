@@ -12,6 +12,10 @@ export type PopoverArgs = {
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   sideOffset: number;
+  /** Deslocamento no eixo do ALINHAMENTO. O `sideOffset` é o eixo principal. */
+  alignOffset: number;
+  /** Modo modal — foco preso, rolagem travada, `aria-modal`. Os três juntos. */
+  modal: boolean;
   /** Abre já na montagem. No snippet vira estado local com `bind:open`. */
   defaultOpen: boolean;
   open: boolean;
@@ -46,9 +50,14 @@ function importDoPopover(names: string[]): string {
 const HEADER = ['PopoverHeader', 'PopoverTitle', 'PopoverDescription'];
 
 function header(title: string, description: string): string {
+  // Sem descrição, a linha e o import saem juntos (ver `popoverSource`): o
+  // painel da `Focused` é só título e ações.
+  const descriptionLine = description
+    ? `
+      <PopoverDescription>${description}</PopoverDescription>`
+    : '';
   return `    <PopoverHeader>
-      <PopoverTitle>${title}</PopoverTitle>
-      <PopoverDescription>${description}</PopoverDescription>
+      <PopoverTitle>${title}</PopoverTitle>${descriptionLine}
     </PopoverHeader>`;
 }
 
@@ -267,6 +276,8 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     side: 'bottom',
     align: 'center',
     sideOffset: 4,
+    alignOffset: 0,
+    modal: false,
     defaultOpen: false,
     open: false,
     triggerLabel: 'Abrir popover',
@@ -281,7 +292,12 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     ...ctx?.args,
   };
 
-  const { names, externos, state, markup, fechaPorCodigo } = part(a);
+  const part_ = part(a);
+  const { externos, state, markup, fechaPorCodigo } = part_;
+  // Import que não se usa é ruído que o leitor copia junto.
+  const names = a.description || a.variant === 'default'
+    ? part_.names
+    : part_.names.filter((name) => name !== 'PopoverDescription');
   const isOpen = Boolean(a.open || a.defaultOpen);
   // O estado de abertura entra por dois motivos independentes: o painel nasce
   // aberto, ou o rodapé tem confirmação — que fecha escrevendo nele.
@@ -298,6 +314,7 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     a.side === 'bottom' ? '' : `side="${a.side}"`,
     a.align === 'center' ? '' : `align="${a.align}"`,
     a.sideOffset === 4 ? '' : `sideOffset={${a.sideOffset}}`,
+    a.alignOffset === 0 ? '' : `alignOffset={${a.alignOffset}}`,
     // Só a composição sem título declara nome: com `PopoverTitle` dentro, o
     // `aria-label` venceria o título visível em vez de somar a ele.
     a.panelLabel && a.variant === 'default' ? `aria-label="${a.panelLabel}"` : '',
@@ -305,7 +322,7 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
 
   return svelteSnippet(
     script,
-    `<Popover${hasState ? ' bind:open={open}' : ''}>
+    `<Popover${hasState ? ' bind:open={open}' : ''}${a.modal ? ' modal' : ''}>
   <PopoverTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>${a.triggerLabel}</Button>
@@ -316,4 +333,170 @@ ${markup}
   </PopoverContent>
 </Popover>`,
   );
+}
+
+// ─── Overrides por story ──────────────────────────────────────────────────────
+//
+// UM CONSTRUTOR POR STORY, e não a transform do meta cascateando para as
+// catorze. Painel que HERDA mostra o exemplo de outra story e acerta por
+// coincidência — e coincidência não sobrevive à próxima edição do render.
+//
+// As stories de VARIAÇÃO e COMPOSIÇÃO nascem abertas para a captura do
+// Chromatic, e isso é andaime da foto, não lição: popover que já nasce aberto é
+// o oposto do que o componente promete, e o snippet das mesmas variantes na
+// docs page também não o ensina. Os overrides delas reaproveitam a transform sem
+// o estado de abertura. Nas stories de ESTADO o estado É o assunto, e ali fica.
+//
+// O `bind:open` que sobra em `withTitle`, `form` e `tableFilter` não é andaime:
+// nessas três o botão de confirmação fecha por CÓDIGO, e sem o estado o snippet
+// ensinaria um botão inerte.
+
+/** States/Closed — o painel fora do DOM, que é o estado inicial. */
+export function popoverClosedSource(): string {
+  return popoverSource('', { args: { variant: 'withTitle', defaultOpen: false } });
+}
+
+/** States/Open — o painel que nasce aberto, por `defaultOpen`. */
+export function popoverOpenSource(): string {
+  return popoverSource('', { args: { variant: 'withTitle', defaultOpen: true } });
+}
+
+/** States/Controlled — a abertura comandada de fora, por `bind:open`. */
+export function popoverControlledSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'withTitle',
+      open: true,
+      triggerLabel: 'Abrir via estado externo',
+      title: 'Controlado pelo pai',
+      description: 'Este popover é comandado por estado externo via bind:open.',
+      saveLabel: 'Confirmar',
+    },
+  });
+}
+
+/**
+ * States/Modal — foco preso, rolagem travada e `aria-modal`, os três juntos.
+ *
+ * É a única transform que escreve `modal`, e é o ponto inteiro da story: sem a
+ * prop no snippet, o painel Code ensinaria o popover comum ao lado de uma
+ * página que fala de modo modal.
+ */
+export function popoverModalSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'options',
+      modal: true,
+      defaultOpen: true,
+      triggerLabel: 'Abrir modal',
+      title: 'Popover modal',
+      description: 'O foco fica preso no painel enquanto ele está aberto.',
+    },
+  });
+}
+
+/** States/Focused — o foco entra, caminha por Tab e, saindo pela tecla, fecha e volta ao gatilho. */
+export function popoverFocusedSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'withTitle',
+      defaultOpen: false,
+      title: 'Confirmar alteração',
+      description: '',
+      saveLabel: 'Confirmar',
+      cancelLabel: 'Cancelar',
+    },
+  });
+}
+
+/** Variants/Default — conteúdo livre, nomeado por `aria-label`. */
+export function popoverDefaultSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'default',
+      triggerLabel: 'Ver atalhos',
+      description: 'Use Ctrl+K para abrir a busca em qualquer tela.',
+      panelLabel: 'Informações adicionais',
+    },
+  });
+}
+
+/** Variants/WithTitle — o cabeçalho que nomeia e descreve o painel. */
+export function popoverWithTitleSource(): string {
+  return popoverSource('', { args: { variant: 'withTitle', triggerLabel: 'Configurações' } });
+}
+
+/** Variants/Form — formulário curto, com o submit fechando por código. */
+export function popoverFormSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'form',
+      triggerLabel: 'Editar perfil',
+      title: 'Editar perfil',
+      description: 'Altere o nome e o email da conta.',
+    },
+  });
+}
+
+// Compositions/EditProfile NÃO tem construtor próprio: ela e a Variants/Form
+// renderizam a MESMA composição, com os mesmos rótulos, e dividem o
+// `popoverFormSource`. A exceção é declarada em `popover.source.test.ts`, que
+// cobra a premissa — se as duas deixarem de ser a mesma composição, o caso
+// reprova em vez de continuar quieto.
+
+/** Compositions/TableFilter — status combináveis, com Limpar / Aplicar. */
+export function popoverTableFilterSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'tableFilter',
+      triggerLabel: 'Filtros',
+      title: 'Filtrar por status',
+      description: 'Combine quantos status quiser na listagem.',
+    },
+  });
+}
+
+/** Compositions/ColorPicker — paleta restrita, cada amostra com nome próprio. */
+export function popoverColorPickerSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'colorPicker',
+      triggerLabel: 'Escolher cor da etiqueta',
+      title: 'Cor da etiqueta',
+      description: 'Escolha uma cor da paleta do tema.',
+    },
+  });
+}
+
+/** Compositions/QuickSettings — preferências booleanas independentes. */
+export function popoverQuickSettingsSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'quickSettings',
+      triggerLabel: 'Configurações rápidas',
+      title: 'Preferências',
+      description: 'Cada linha vale por si — nada aqui depende do resto.',
+    },
+  });
+}
+
+/**
+ * Compositions/SideTop — o lado preferido, e o vão pedido.
+ *
+ * O lado é uma PREFERÊNCIA: sem espaço acima, a lib vira o painel para baixo
+ * sozinha. O que o snippet ensina são as duas props que a story declara; a
+ * folga que a play cria em volta do gatilho é andaime da medição, não lição.
+ */
+export function popoverSideTopSource(): string {
+  return popoverSource('', {
+    args: {
+      variant: 'withTitle',
+      side: 'top',
+      sideOffset: 12,
+      alignOffset: 8,
+      triggerLabel: 'Abrir acima',
+      title: 'Ancorado acima',
+      description: 'Sem espaço acima, o painel vira para baixo sozinho.',
+    },
+  });
 }

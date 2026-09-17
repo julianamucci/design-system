@@ -56,6 +56,7 @@ export type PopoverArgs = {
   side: PopoverSide;
   align: PopoverAlign;
   sideOffset: number;
+  alignOffset: number;
   defaultOpen: boolean;
   triggerLabel: string;
   onOpenChange: (open: boolean) => void;
@@ -74,6 +75,7 @@ export function popoverPlaygroundSource(
     side = 'bottom',
     align = 'center',
     sideOffset = 4,
+    alignOffset = 0,
     defaultOpen = false,
     triggerLabel = 'Abrir popover',
   } = ctx.args ?? {};
@@ -84,6 +86,8 @@ export function popoverPlaygroundSource(
     side !== 'bottom' ? `side="${side}"` : '',
     align !== 'center' ? `align="${align}"` : '',
     sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
+    // O deslocamento no eixo CRUZADO (D14): padrão 0, e só entra quando difere.
+    alignOffset !== 0 ? `[alignOffset]="${alignOffset}"` : '',
   ].filter(Boolean).join(' ');
   // A raiz é sempre CONTROLADA: é o `[(open)]` que permite ao "Salvar" fechar
   // por código. O control `defaultOpen` entra no valor inicial do sinal, que é
@@ -230,8 +234,8 @@ function indented(block: string, pad: string): string {
 }
 
 /**
- * A raiz controlada com o painel simples — o corpo de `Closed`, `Open` e
- * `Focus`, que só diferem no valor que SEMEIA o sinal.
+ * A raiz controlada com o painel simples — o corpo de `Closed` e `Open`, que só
+ * diferem no valor que SEMEIA o sinal.
  *
  * Não é exportada: o `transform` do Storybook chama o construtor com
  * `(código, contexto)`, então quem entra na tabela de transforms tem de ter
@@ -270,21 +274,65 @@ export class Exemplo {
 }
 
 /**
- * States/Closed e States/Focus — o popover padrão, fechado em repouso.
+ * States/Closed — o popover padrão, fechado em repouso.
  *
- * Serve DUAS stories, e a exceção está declarada em `popover.source.test.ts`
- * com a premissa cobrada caso a caso: as duas renderizam o mesmo template e
- * semeiam o mesmo estado inicial. O que as separa é INTERAÇÃO — uma não abre o
- * painel, a outra abre e caminha com Tab entre os controles —, e interação não
- * aparece em snippet. Dois construtores idênticos seriam a cópia que envelhece
- * sozinha.
- *
- * É também o que diferencia `Focus` de `Modal`: aqui o foco ENTRA no painel ao
- * abrir e não fica preso, porque a raiz não declara `modal`. A ausência do
- * input é o que o snippet ensina.
+ * Até 2026-09-17 servia também a States/Focused, que renderizava o mesmo
+ * painel. A paridade final das cinco deu à Focused o painel de CONFIRMAÇÃO, e
+ * markup diferente não compartilha construtor: ela ganhou o seu, logo abaixo.
  */
 export function popoverBasicSource(): string {
   return simpleStateExample(false);
+}
+
+/**
+ * States/Focused — o painel de CONFIRMAÇÃO, o mesmo nas cinco stacks.
+ *
+ * Título sem descrição e o rodapé com os dois caminhos de fechar: "Cancelar" é
+ * a peça de fechar (`close-button`, desistiu) e "Confirmar" fecha por CÓDIGO
+ * (`api`, concluiu). Dois focáveis de propósito: a story caminha com Tab entre
+ * eles e sai pelas duas bordas.
+ *
+ * É também o que diferencia `Focused` de `Modal`: aqui o foco ENTRA no painel ao
+ * abrir e não fica preso, porque a raiz não declara `modal`. A ausência do
+ * input é o que o snippet ensina.
+ *
+ * Os vizinhos "Antes" e "Depois" e o espião do `(onOpenChange)` são andaime da
+ * play e não entram — a premissa é cobrada em `popover.source.test.ts`.
+ */
+export function popoverFocusedSource(): string {
+  return `import { signal } from '@angular/core';
+import { NDS_POPOVER } from '@/components/ui/popover';
+import { NdsButton } from '@/components/ui/button';
+
+@Component({
+  imports: [...NDS_POPOVER, NdsButton],
+  template: \`
+    <div ndsPopover [(open)]="aberto">
+      <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
+
+      <ng-template ndsPopoverContent>
+        <div class="nds-stack" data-spacing="sm">
+          <h2 ndsPopoverTitle>Confirmar alteração</h2>
+
+          <div class="nds-cluster" data-justify="end" data-spacing="sm">
+            <!-- Desistiu: a peça de fechar, que reporta close-button -->
+            <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
+            <!-- Concluiu: confirma e fecha por código, que reporta api -->
+            <button ndsButton size="sm" (click)="confirmar()">Confirmar</button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  \`,
+})
+export class Exemplo {
+  readonly aberto = signal(false);
+
+  confirmar(): void {
+    // …aplicar a alteração…
+    this.aberto.set(false);
+  }
+}`;
 }
 
 /**
@@ -342,8 +390,9 @@ export class Exemplo {
 }
 
 /**
- * States/Modal — `[modal]="true"`, que prende o foco, trava a rolagem e anuncia
- * `aria-modal`, os três juntos.
+ * States/Modal — `[modal]="true"`, que prende o foco, trava a rolagem, anuncia
+ * `aria-modal` e esconde o resto da página do leitor de tela, os quatro juntos
+ * (o quarto entrou em 2026-09-17, pela D16 do PRD).
  *
  * O painel NÃO traz peça de fechar, e a ausência é o assunto: com um
  * `ndsPopoverClose` registrado quem prende o foco passa a ser a lib
@@ -659,9 +708,11 @@ export class Exemplo {}`;
 /**
  * Compositions/SideTop — o lado de abertura pedido por atributo.
  *
- * O assunto é o par `side="top"` + `[sideOffset]="12"`: a posição é união de
- * strings e vai como atributo, a distância é número e vai como binding —
- * escrita `sideOffset="12"` ela chegaria à diretiva como a STRING "12".
+ * O assunto é o trio `side="top"` + `[sideOffset]="12"` + `[alignOffset]="8"`: a
+ * posição é união de strings e vai como atributo, as distâncias são número e vão
+ * como binding — escrita `sideOffset="12"` ela chegaria à diretiva como a STRING
+ * "12". O `alignOffset` (D14) desliza o painel 8px no eixo cruzado, e só aparece
+ * porque difere do padrão 0.
  *
  * O irmão que cria o espaço acima do gatilho NÃO entra, nem o embrulho que o
  * segura. Ele existe para que o auto-flip não aconteça enquanto a play mede o
@@ -681,7 +732,7 @@ import { NdsButton } from '@/components/ui/button';
 
       <!-- A posição é atributo e a distância é binding: escrita
            sideOffset="12" ela chegaria à diretiva como a string "12". -->
-      <ng-template ndsPopoverContent side="top" [sideOffset]="12">
+      <ng-template ndsPopoverContent side="top" [sideOffset]="12" [alignOffset]="8">
         <div ndsPopoverHeader>
           <h2 ndsPopoverTitle>Ancorado acima</h2>
           <p ndsPopoverDescription>

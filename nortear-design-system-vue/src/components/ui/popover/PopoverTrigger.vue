@@ -3,7 +3,7 @@ import type { PopoverTriggerProps } from 'reka-ui'
 import type { ComponentPublicInstance } from 'vue'
 import { inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { PopoverTrigger } from 'reka-ui'
-import { POPOVER_CLOSE_REASON } from './popover.context'
+import { POPOVER_ANCHOR, POPOVER_CLOSE_REASON } from './popover.context'
 
 const props = defineProps<PopoverTriggerProps>()
 
@@ -14,6 +14,8 @@ const triggerRef = ref<ComponentPublicInstance | null>(null)
 // véu; o popover é não-modal, o gatilho continua clicável, e o clique é vontade
 // de quem usa. Lê `data-state` do próprio elemento para saber se estava aberto.
 const anotarMotivo = inject(POPOVER_CLOSE_REASON, () => {})
+// O gatilho se registra como âncora do painel (ver `POPOVER_ANCHOR`).
+const anchor = inject(POPOVER_ANCHOR, null)
 function aoClicar(evento: MouseEvent) {
   const el = evento.currentTarget as HTMLElement | null
   if (el?.dataset.state === 'open') anotarMotivo('overlay')
@@ -52,6 +54,7 @@ onMounted(async () => {
   await nextTick()
   const trigger = triggerRef.value?.$el as HTMLElement | undefined
   if (!trigger || trigger.nodeType !== Node.ELEMENT_NODE) return
+  if (anchor) anchor.trigger.value = trigger
   corrigir(trigger)
   // O painel monta um quadro depois de `aria-expanded` virar `true`, então o
   // observador reexecuta a correção a cada mudança dos dois atributos.
@@ -63,6 +66,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  if (anchor && anchor.trigger.value === triggerRef.value?.$el) anchor.trigger.value = null
   observer?.disconnect()
   observer = null
 })

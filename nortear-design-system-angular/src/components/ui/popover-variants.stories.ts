@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
-import { open, panel } from './popover.fixtures';
+import { closeSpy, open, panel, settle } from './popover.fixtures';
 import { popoverFormSource, popoverPlainSource, popoverTitledSource } from './popover.source';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
@@ -46,6 +46,7 @@ export const Default: Story = {
   },
   render: () => ({
     template: `
+      <div class="nds-min-h-70" style="contain: layout">
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Ver atalhos</button>
 
@@ -55,6 +56,7 @@ export const Default: Story = {
             busca em qualquer tela.
           </p>
         </ng-template>
+      </div>
       </div>
     `,
   }),
@@ -80,7 +82,9 @@ export const Default: Story = {
 
 export const WithTitle: Story = {
   parameters: {
-    covers: ['visual.item2', 'accessibility.item5'],
+    // `accessibility.item3` (foco por teclado e anel visível) mora aqui desde
+    // 2026-09-17, como nas outras quatro: a `Focused` o perdeu na paridade final.
+    covers: ['visual.item2', 'accessibility.item5', 'accessibility.item3'],
     // O painel Code publica o componente, com o `[(open)]` num SINAL: o
     // `isOpen` de `props` é do renderer do Storybook e não existe fora dele.
     docs: { source: { transform: popoverTitledSource } },
@@ -90,6 +94,7 @@ export const WithTitle: Story = {
     // é isso que faz o motivo chegar como `api` em vez de `close-button`.
     props: { isOpen: false },
     template: `
+      <div class="nds-min-h-70" style="contain: layout">
       <div ndsPopover [(open)]="isOpen">
         <button ndsPopoverTrigger ndsButton variant="outline">Configurações de exibição</button>
 
@@ -106,6 +111,7 @@ export const WithTitle: Story = {
             <button ndsButton size="sm" (click)="isOpen = false">Salvar</button>
           </div>
         </ng-template>
+      </div>
       </div>
     `,
   }),
@@ -136,8 +142,30 @@ export const WithTitle: Story = {
         panel()!.querySelector('[data-slot="popover-header"]'),
       ).toHaveClass(/nds-popover-header/);
     });
+
+    await step('Tab caminha entre os controles internos', async () => {
+      const cancel = within(panel()!).getByRole('button', { name: 'Cancelar' });
+      const save = within(panel()!).getByRole('button', { name: 'Salvar' });
+      cancel.focus();
+      await userEvent.tab();
+      await expect(save).toHaveFocus();
+    });
+
+    await step('E o elemento focado por teclado mostra o anel de foco', async () => {
+      // `:focus-visible` é a condição exata que o CSS compartilhado usa para
+      // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
+      // casaria a pseudo-classe e o anel não apareceria.
+      const save = within(panel()!).getByRole('button', { name: 'Salvar' });
+      await expect(save.matches(':focus-visible')).toBe(true);
+      // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
+      // errada daria verde em qualquer elemento.
+      await expect(getComputedStyle(save).boxShadow).not.toBe('none');
+    });
   },
 };
+
+/** Os fechamentos da `Form` — no módulo, para a play alcançar. */
+const formCloses = closeSpy();
 
 export const Form: Story = {
   parameters: {
@@ -151,9 +179,18 @@ export const Form: Story = {
     // gravar, e é isso que faz o motivo chegar como `api`. Marcado com
     // `ndsPopoverClose` ele reportaria `close-button`, que é o motivo de quem
     // desistiu — e o "Cancelar" ao lado é justamente esse caminho.
-    props: { isOpen: false },
+    //
+    // O espião registra os fechamentos: os que a lib conduz, pelo
+    // `(onOpenChange)`, e o fechamento por código, pelo `recordConclude()` do
+    // submit — ver `closeSpy` em `popover.fixtures.ts`.
+    props: {
+      isOpen: false,
+      recordOpenChange: formCloses.recordOpenChange,
+      recordConclude: formCloses.recordConclude,
+    },
     template: `
-      <div ndsPopover [(open)]="isOpen">
+      <div class="nds-min-h-90" style="contain: layout">
+      <div ndsPopover [(open)]="isOpen" (onOpenChange)="recordOpenChange($event)">
         <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
         <ng-template ndsPopoverContent>
@@ -169,7 +206,7 @@ export const Form: Story = {
           <form
             class="nds-stack"
             data-spacing="md"
-            (submit)="$event.preventDefault(); isOpen = false"
+            (submit)="$event.preventDefault(); isOpen = false; recordConclude()"
           >
             <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="pv-form-nome">Nome</label>
@@ -191,6 +228,7 @@ export const Form: Story = {
             </div>
           </form>
         </ng-template>
+      </div>
       </div>
     `,
   }),
@@ -220,21 +258,29 @@ export const Form: Story = {
       // O gesto que o clique não cobre: quem digitou um valor aperta Enter. Com
       // o fechamento pendurado no clique de "Atualizar", este caminho deixaria
       // o painel aberto depois de gravar.
-      await userEvent.type(screen.getByLabelText('Nome'), '{Enter}');
+      const closesBefore = formCloses.closeCount();
+      await userEvent.type(within(panel()!).getByLabelText('Nome'), '{Enter}');
       await waitFor(async () => {
         await expect(panel()).toBeNull();
       });
+      await settle();
+      await expect(formCloses.closeCount()).toBe(closesBefore + 1);
+      await expect(formCloses.spy).toHaveBeenLastCalledWith(false, 'api');
     });
 
     await step('E "Atualizar" fecha por código, não pela peça de fechar', async () => {
       await open(trigger);
-      const update = screen.getByRole('button', { name: 'Atualizar' });
+      const update = within(panel()!).getByRole('button', { name: 'Atualizar' });
       await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
       await expect(update).toHaveAttribute('type', 'submit');
+      const closesBefore = formCloses.closeCount();
       await userEvent.click(update);
       await waitFor(async () => {
         await expect(panel()).toBeNull();
       });
+      await settle();
+      await expect(formCloses.closeCount()).toBe(closesBefore + 1);
+      await expect(formCloses.spy).toHaveBeenLastCalledWith(false, 'api');
     });
 
     // Termina ABERTA: é o estado que o Chromatic fotografa.

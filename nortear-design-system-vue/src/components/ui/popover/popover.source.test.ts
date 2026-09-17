@@ -8,6 +8,7 @@ import {
   popoverEditarPerfilSource,
   popoverClosedSource,
   popoverFilterSource,
+  popoverFocusedSource,
   popoverFormSource,
   popoverModalSource,
   popoverPreferenciasSource,
@@ -153,6 +154,14 @@ describe('transforms das stories de estado', () => {
     expect(output).toContain('<PopoverContent side="top" :side-offset="12">');
     // `align="center"` é o padrão do painel — repeti-lo ensinaria ruído.
     expect(output).not.toContain('align=');
+    // `align-offset` no padrão `0` também não sai.
+    expect(output).not.toContain('align-offset');
+  });
+
+  it('o painel acima imprime `align-offset` quando ele difere de 0 (D14)', () => {
+    const output = popoverAboveSource({ alignOffset: 8 });
+    expect(output).toContain('<PopoverContent side="top" :side-offset="12" :align-offset="8">');
+    expect(popoverAboveSource({ alignOffset: 0 })).not.toContain('align-offset');
   });
 
   it('o controlado entrega o estado a quem consome, com dois botões separados', () => {
@@ -163,6 +172,21 @@ describe('transforms das stories de estado', () => {
     // do próprio clique, e o par fechar+abrir reabriria no mesmo gesto.
     expect(output).toContain('@click="aberto = true"');
     expect(output).toContain('@click="aberto = false"');
+  });
+
+  it('a story do foco abre por CLIQUE, e o painel traz o par de controles', () => {
+    const output = popoverFocusedSource();
+    // Sem `default-open`: o foco entra no painel em resposta ao GESTO, e é isso
+    // que a story mede — um painel já aberto na montagem não tem o gesto.
+    expect(output).not.toContain('default-open');
+    expect(output).toContain('<PopoverTitle>Confirmar alteração</PopoverTitle>');
+    // Dois focáveis: com um só, "o Tab do último sai do painel" seria verdade
+    // sem o Tab ter caminhado por nada.
+    expect(output).toContain('<Button variant="ghost" size="sm">Cancelar</Button>');
+    expect(output).toContain('<Button size="sm" @click="close()">Confirmar</Button>');
+    // Sem descrição no painel: quem nomeia é o título, e import que não se usa
+    // é ruído que o leitor copia junto.
+    expect(output).not.toContain('PopoverDescription');
   });
 
   it('o modo modal é prop da RAIZ, ao lado da abertura', () => {
@@ -212,7 +236,12 @@ describe('transforms das stories de composição', () => {
   it('o Cancelar do rodapé é o PopoverClose, e não um botão decorativo', () => {
     // O defeito de 2026-09-12: o rodapé ensinava um Cancelar que não fechava
     // nada. Quem copia o snippet copia o defeito, então a guarda é aqui.
-    for (const fn of [popoverSource, popoverWithTitleSource, popoverEditarPerfilSource]) {
+    for (const fn of [
+      popoverSource,
+      popoverWithTitleSource,
+      popoverEditarPerfilSource,
+      popoverFocusedSource,
+    ]) {
       const output = fn();
       expect(output).toContain('<PopoverClose as-child>');
       // `as-child` não é detalhe: sem ele o botão do design system fica dentro
@@ -236,6 +265,9 @@ describe('transforms das stories de composição', () => {
       [popoverOpenSource, 'Salvar'],
       [popoverControlledSource, 'Salvar'],
       [popoverFilterSource, 'Aplicar'],
+      // A story `Focused`: mesmo par de caminhos, com o rótulo do vanilla, que
+      // é o modelo desta story nas cinco.
+      [popoverFocusedSource, 'Confirmar'],
     ];
     for (const [fn, label] of pares) {
       const output = fn();
@@ -324,6 +356,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     popoverFormSource,
     popoverClosedSource,
     popoverOpenSource,
+    popoverFocusedSource,
     popoverAboveSource,
     popoverControlledSource,
     popoverModalSource,

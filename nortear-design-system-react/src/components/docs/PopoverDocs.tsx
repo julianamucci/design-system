@@ -1162,6 +1162,46 @@ function aplicar() {
             value: tContent("tokens.table.ring.class"),
             description: tContent("tokens.table.ring.part"),
           },
+          {
+            token: "--z-popover",
+            value: tContent("tokens.table.zIndex.class"),
+            description: tContent("tokens.table.zIndex.part"),
+          },
+          {
+            token: "--spacing-4",
+            value: tContent("tokens.table.padding.class"),
+            description: tContent("tokens.table.padding.part"),
+          },
+          {
+            token: "--spacing-2-5",
+            value: tContent("tokens.table.gap.class"),
+            description: tContent("tokens.table.gap.part"),
+          },
+          {
+            token: "--radius",
+            value: tContent("tokens.table.radius.class"),
+            description: tContent("tokens.table.radius.part"),
+          },
+          {
+            token: "--text-control",
+            value: tContent("tokens.table.text.class"),
+            description: tContent("tokens.table.text.part"),
+          },
+          {
+            token: "--spacing-1-5",
+            value: tContent("tokens.table.headerGap.class"),
+            description: tContent("tokens.table.headerGap.part"),
+          },
+          {
+            token: "--text-control-lg",
+            value: tContent("tokens.table.titleSize.class"),
+            description: tContent("tokens.table.titleSize.part"),
+          },
+          {
+            token: "--font-weight-medium",
+            value: tContent("tokens.table.titleWeight.class"),
+            description: tContent("tokens.table.titleWeight.part"),
+          },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

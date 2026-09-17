@@ -31,6 +31,14 @@ describe('popoverControladoSnippet', () => {
   it('e devolve o estado por `onOpenChange`, que é o assunto da story', () => {
     expect(popoverControlledSnippet()).toContain('onOpenChange:');
   });
+
+  it('é CONTROLADO: declara `open` e aplica a mudança por `setOpen()`', () => {
+    // Sem os dois, o consumidor não teria como recusar um fechamento — que é o
+    // que a story `Controlled` mede.
+    const code = popoverControlledSnippet();
+    expect(code).toContain('open: false');
+    expect(code).toContain('painel.setOpen(aberto)');
+  });
 });
 
 describe('popoverSnippet', () => {
@@ -91,6 +99,18 @@ describe('popoverSnippet', () => {
     expect(code).not.toContain('createPopoverTitle');
   });
 
+  it('imprime `alignOffset` só quando difere de 0 (D14)', () => {
+    expect(popoverSnippet({ alignOffset: 0 })).not.toContain('alignOffset');
+    expect(popoverSnippet({ alignOffset: 8 })).toContain('alignOffset: 8');
+  });
+
+  it('a SideTop declara lado, vão e deslocamento do eixo cruzado', () => {
+    const code = popoverSourceWith({ side: 'top', sideOffset: 12, alignOffset: 8 })('', {});
+    expect(code).toContain("side: 'top'");
+    expect(code).toContain('sideOffset: 12');
+    expect(code).toContain('alignOffset: 8');
+  });
+
   it('mostra a limpeza só quando ela é o assunto', () => {
     expect(popoverSnippet({ destroy: true })).toContain('painel.destroy();');
   });
@@ -127,6 +147,18 @@ describe('popoverComFormularioSnippet', () => {
     // snippet EXPLICA a marca num comentário, e um `toContain` cru reprovava na
     // prosa que ensina a regra em vez de na violação dela.
     expect(code).not.toMatch(/^\s*\w+\.dataset\.slot = 'popover-close'/m);
+  });
+});
+
+describe('popoverComFormularioSnippet com Cancelar', () => {
+  it('traz a peça de fechar ao lado do submit, e uma marca só', () => {
+    // O Cancelar relata `close-button` e o Atualizar, `api`: o snippet da
+    // `EditProfile` ensina os dois caminhos que a play mede.
+    const code = popoverWithFormSnippet({ cancel: true });
+    expect(code).toContain("label: 'Cancelar'");
+    expect(code).toContain("type: 'submit'");
+    expect(code.match(/^\s*\w+\.dataset\.slot = 'popover-close'/gm)).toHaveLength(1);
+    expect(code).toContain('painel.close()');
   });
 });
 

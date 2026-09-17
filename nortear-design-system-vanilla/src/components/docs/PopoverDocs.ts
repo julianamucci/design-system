@@ -53,7 +53,54 @@ function screenReaderItems(): string[] {
     .filter(([k]) => k !== 'title')
     .map(([, v]) => v);
 }
-const { t, subscribe } = createTranslation(popoverTranslations as Record<string, unknown>);
+// Opções que só existem na fábrica desta stack — `trigger`, `content`,
+// `ariaLabel`, `class` e as das sub-fábricas —, e as notas que a tabela de props
+// acrescenta à descrição compartilhada sobre o que ESTA fábrica escreve no
+// markup. É API de framework, e por isso não tem chave em `docs/shared/content`:
+// o override é o mecanismo, com descrição nos três idiomas. Escritas à mão na
+// tabela, ficavam em português para quem lesse a página em inglês ou espanhol.
+const PROPS_OVERRIDES = {
+  'pt-BR': {
+    'props.table.trigger.description': 'Elemento que abre o popover ao clicar (geralmente Button).',
+    'props.table.content.description': 'Conteúdo do painel. String é renderizada via textContent.',
+    'props.table.ariaLabel.description': 'Nome acessível declarado do painel. Só age quando o conteúdo não traz título: com título quem nomeia é o aria-labelledby, e os dois juntos seriam ambiguidade.',
+    'props.table.class.description': 'Classes adicionais aplicadas ao painel flutuante.',
+    'props.table.side.markupNote': 'Sai no markup como data-side.',
+    'props.table.align.markupNote': 'Sai no markup como data-align.',
+    'props.table.open.markupNote': 'Definida, o painel passa ao modo controlado: clique, Escape e clique fora só anunciam a intenção por onOpenChange, e quem move o painel é setOpen().',
+    'props.table.onOpenChange.markupNote': 'Os quatro caminhos: escape, overlay (clique fora, clique no gatilho de novo, ou Tab para fora do painel), close-button (qualquer elemento marcado com data-slot="popover-close" dentro do painel) e api (a chamada de close() no que a fábrica devolve).',
+    'props.table.parts.text.description': 'Texto da parte, escrito por textContent.',
+    'props.table.parts.level.description': 'Só no título: profundidade do cabeçalho. O painel é um diálogo e usa este elemento como nome acessível; trocar o nível encaixa o título na hierarquia da página.',
+    'props.table.parts.class.description': 'Classes .nds-* adicionais na parte.',
+  },
+  en: {
+    'props.table.trigger.description': 'Element that opens the popover on click (usually a Button).',
+    'props.table.content.description': 'Panel content. A string is rendered through textContent.',
+    'props.table.ariaLabel.description': 'Declared accessible name of the panel. It only applies when the content has no title: with a title, aria-labelledby names the panel, and both together would be ambiguous.',
+    'props.table.class.description': 'Additional classes applied to the floating panel.',
+    'props.table.side.markupNote': 'Rendered in the markup as data-side.',
+    'props.table.align.markupNote': 'Rendered in the markup as data-align.',
+    'props.table.open.markupNote': 'When set, the panel becomes controlled: click, Escape and outside click only announce the intent through onOpenChange, and setOpen() is what moves the panel.',
+    'props.table.onOpenChange.markupNote': 'The four paths: escape, overlay (outside click, clicking the trigger again, or Tab out of the panel), close-button (any element marked with data-slot="popover-close" inside the panel) and api (calling close() on what the factory returns).',
+    'props.table.parts.text.description': 'Text of the part, written through textContent.',
+    'props.table.parts.level.description': 'Title only: heading depth. The panel is a dialog and uses this element as its accessible name; changing the level fits the title into the page hierarchy.',
+    'props.table.parts.class.description': 'Additional .nds-* classes on the part.',
+  },
+  es: {
+    'props.table.trigger.description': 'Elemento que abre el popover al hacer clic (generalmente un Button).',
+    'props.table.content.description': 'Contenido del panel. Un string se renderiza mediante textContent.',
+    'props.table.ariaLabel.description': 'Nombre accesible declarado del panel. Solo actúa cuando el contenido no trae título: con título quien nombra es aria-labelledby, y los dos juntos serían ambigüedad.',
+    'props.table.class.description': 'Clases adicionales aplicadas al panel flotante.',
+    'props.table.side.markupNote': 'Sale en el markup como data-side.',
+    'props.table.align.markupNote': 'Sale en el markup como data-align.',
+    'props.table.open.markupNote': 'Definida, el panel pasa al modo controlado: clic, Escape y clic fuera solo anuncian la intención por onOpenChange, y quien mueve el panel es setOpen().',
+    'props.table.onOpenChange.markupNote': 'Los cuatro caminos: escape, overlay (clic fuera, clic de nuevo en el disparador, o Tab fuera del panel), close-button (cualquier elemento marcado con data-slot="popover-close" dentro del panel) y api (la llamada a close() en lo que devuelve la fábrica).',
+    'props.table.parts.text.description': 'Texto de la parte, escrito mediante textContent.',
+    'props.table.parts.level.description': 'Solo en el título: profundidad del encabezado. El panel es un diálogo y usa este elemento como nombre accesible; cambiar el nivel encaja el título en la jerarquía de la página.',
+    'props.table.parts.class.description': 'Clases .nds-* adicionales en la parte.',
+  },
+};
+const { t, subscribe } = createTranslation(popoverTranslations as Record<string, unknown>, PROPS_OVERRIDES);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -1085,7 +1132,8 @@ export type PopoverOptions = {
   content: HTMLElement | string;
   side?: PopoverSide;          // default 'bottom'
   align?: PopoverAlign;        // default 'center'
-  sideOffset?: number;         // default 4
+  sideOffset?: number;         // default 4  — vão no eixo do \`side\`
+  alignOffset?: number;        // default 0  — vão no eixo do \`align\`
   open?: boolean;              // presente = modo controlado
   defaultOpen?: boolean;
   modal?: boolean;             // default false — foco preso + rolagem travada
@@ -1142,26 +1190,36 @@ salvar.addEventListener('click', () => popover.close());`;
               title: 'createPopover(options)',
               cols: propsCols,
               items: [
-                { name: 'trigger',      type: 'HTMLElement',                         defaultValue: '—',         required: 'Sim', description: 'Elemento que abre o popover ao clicar (geralmente Button).' },
-                { name: 'content',      type: 'HTMLElement | string',                defaultValue: '—',         required: 'Sim', description: 'Conteúdo do painel. String é renderizada via textContent.' },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) + ' Sai no markup como data-align.' },
-                { name: 'sideOffset',   type: 'number',                              defaultValue: '4',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) },
-                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.open.description')) + ' Definida, o painel passa ao modo controlado: clique, Escape e clique fora só anunciam a intenção por onOpenChange, e quem move o painel é setOpen().' },
-                { name: 'defaultOpen',  type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: 'Estado inicial no modo não-controlado.' },
-                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: toPlainText(t('props.table.modal.description')) },
-                { name: 'ariaLabel',    type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Nome acessível declarado do painel. Só age quando o conteúdo não traz título: com título quem nomeia é o aria-labelledby, e os dois juntos seriam ambiguidade.' },
-                { name: 'onOpenChange', type: "(open: boolean, reason?: 'escape' | 'overlay' | 'close-button' | 'api') => void", defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) + ' No fechamento chega também o caminho que o causou: escape, overlay (clique fora, ou clique no gatilho de novo), close-button (qualquer elemento marcado com data-slot="popover-close" dentro do painel) e api (a chamada de close() no que a fábrica devolve).' },
-                { name: 'class',        type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
+                // Tipo, padrão, obrigatoriedade e descrição saem do conteúdo
+                // compartilhado, como nas outras quatro stacks. Escritos à mão
+                // aqui, ficavam em português nos três idiomas — esta era a
+                // única das cinco que não lia `props.table.*`, e a tabela
+                // publicava 'Sim'/'Não' para quem lesse a página em inglês ou
+                // espanhol. As quatro opções que só existem nesta fábrica
+                // (`trigger`, `content`, `ariaLabel`, `class`) não têm chave no
+                // conteúdo: a obrigatoriedade traduz pelo vocabulário comum da
+                // interface, e a descrição pelo override `PROPS_OVERRIDES`, no topo.
+                { name: 'trigger',      type: 'HTMLElement',                      defaultValue: '—',                                  required: tNav('common.yes'),                     description: t('props.table.trigger.description') },
+                { name: 'content',      type: 'HTMLElement | string',             defaultValue: '—',                                  required: tNav('common.yes'),                     description: t('props.table.content.description') },
+                { name: 'side',         type: t('props.table.side.type'),         defaultValue: t('props.table.side.default'),         required: t('props.table.side.required'),         description: toPlainText(t('props.table.side.description')) + ' ' + t('props.table.side.markupNote') },
+                { name: 'align',        type: t('props.table.align.type'),        defaultValue: t('props.table.align.default'),        required: t('props.table.align.required'),        description: toPlainText(t('props.table.align.description')) + ' ' + t('props.table.align.markupNote') },
+                { name: 'sideOffset',   type: t('props.table.sideOffset.type'),   defaultValue: t('props.table.sideOffset.default'),   required: t('props.table.sideOffset.required'),   description: toPlainText(t('props.table.sideOffset.description')) },
+                { name: 'alignOffset',  type: t('props.table.alignOffset.type'),  defaultValue: t('props.table.alignOffset.default'),  required: t('props.table.alignOffset.required'),  description: toPlainText(t('props.table.alignOffset.description')) },
+                { name: 'open',         type: t('props.table.open.type'),         defaultValue: t('props.table.open.default'),         required: t('props.table.open.required'),         description: toPlainText(t('props.table.open.description')) + ' ' + t('props.table.open.markupNote') },
+                { name: 'defaultOpen',  type: t('props.table.defaultOpen.type'),  defaultValue: t('props.table.defaultOpen.default'),  required: t('props.table.defaultOpen.required'),  description: toPlainText(t('props.table.defaultOpen.description')) },
+                { name: 'modal',        type: t('props.table.modal.type'),        defaultValue: t('props.table.modal.default'),        required: t('props.table.modal.required'),        description: toPlainText(t('props.table.modal.description')) },
+                { name: 'ariaLabel',    type: 'string',                           defaultValue: '—',                                  required: tNav('common.no'),                      description: t('props.table.ariaLabel.description') },
+                { name: 'onOpenChange', type: t('props.table.onOpenChange.type'), defaultValue: t('props.table.onOpenChange.default'), required: t('props.table.onOpenChange.required'), description: toPlainText(t('props.table.onOpenChange.description')) + ' ' + t('props.table.onOpenChange.markupNote') },
+                { name: 'class',        type: 'string',                           defaultValue: '—',                                  required: tNav('common.no'),                      description: t('props.table.class.description') },
               ],
             },
             {
               title: 'createPopoverHeader / createPopoverTitle / createPopoverDescription',
               cols: propsCols,
               items: [
-                { name: 'text',  type: 'string',                    defaultValue: '—', required: 'Não', description: 'Texto da parte, escrito por textContent.' },
-                { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6',     defaultValue: '2', required: 'Não', description: 'Só no título: profundidade do cabeçalho. O painel é um diálogo e usa este elemento como nome acessível; trocar o nível encaixa o título na hierarquia da página.' },
-                { name: 'class', type: 'string',                    defaultValue: '—', required: 'Não', description: 'Classes .nds-* adicionais na parte.' },
+                { name: 'text',  type: 'string',                    defaultValue: '—', required: tNav('common.no'), description: t('props.table.parts.text.description') },
+                { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6',     defaultValue: '2', required: tNav('common.no'), description: t('props.table.parts.level.description') },
+                { name: 'class', type: 'string',                    defaultValue: '—', required: tNav('common.no'), description: t('props.table.parts.class.description') },
               ],
             },
           ],
@@ -1185,6 +1243,19 @@ salvar.addEventListener('click', () => popover.close());`;
             { token: '--border',              value: t('tokens.table.border.class'),             description: t('tokens.table.border.part')             },
             { token: '--elevation-md',        value: t('tokens.table.shadow.class'),             description: t('tokens.table.shadow.part')             },
             { token: '--ring',                value: t('tokens.table.ring.class'),               description: t('tokens.table.ring.part')               },
+            // As oito linhas de geometria e tipografia. Existiam no conteúdo
+            // compartilhado e ficavam INERTES: a tabela é lista literal em cada
+            // docs page, então chave sem linha não aparece em lugar nenhum — a
+            // página publicava seis tokens de cor e calava tudo que dá forma ao
+            // painel.
+            { token: '--z-popover',           value: t('tokens.table.zIndex.class'),             description: t('tokens.table.zIndex.part')             },
+            { token: '--spacing-4',           value: t('tokens.table.padding.class'),            description: t('tokens.table.padding.part')            },
+            { token: '--spacing-2-5',         value: t('tokens.table.gap.class'),                description: t('tokens.table.gap.part')                },
+            { token: '--radius',              value: t('tokens.table.radius.class'),             description: t('tokens.table.radius.part')             },
+            { token: '--text-control',        value: t('tokens.table.text.class'),               description: t('tokens.table.text.part')               },
+            { token: '--spacing-1-5',         value: t('tokens.table.headerGap.class'),          description: t('tokens.table.headerGap.part')          },
+            { token: '--text-control-lg',     value: t('tokens.table.titleSize.class'),          description: t('tokens.table.titleSize.part')          },
+            { token: '--font-weight-medium',  value: t('tokens.table.titleWeight.class'),        description: t('tokens.table.titleWeight.part')        },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

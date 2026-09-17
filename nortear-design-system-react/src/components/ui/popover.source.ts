@@ -30,6 +30,8 @@ export type PopoverArgs = {
   side: 'top' | 'right' | 'bottom' | 'left';
   align: 'start' | 'center' | 'end';
   sideOffset: number;
+  /** Deslocamento no eixo do alinhamento (D14). Padrão `0`, e só entra quando difere. */
+  alignOffset: number;
   defaultOpen: boolean;
   modal: boolean;
 };
@@ -104,12 +106,16 @@ ${content}
  * peça de fechar é o defeito seguinte, e mais silencioso: o painel some do
  * mesmo jeito, e os dois desfechos chegam ao relatório com o mesmo motivo.
  */
-const ACTIONS_DEFAULT = `    <div className="nds-cluster" data-justify="end" data-spacing="sm">
+function actionsPair(primaryLabel: string, actionName: string): string {
+  return `    <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <PopoverClose asChild>
         <Button variant="ghost" size="sm">Cancelar</Button>
       </PopoverClose>
-      <Button size="sm" onClick={() => { salvar(); setOpen(false); }}>Salvar</Button>
+      <Button size="sm" onClick={() => { ${actionName}(); setOpen(false); }}>${primaryLabel}</Button>
     </div>`;
+}
+
+const ACTIONS_DEFAULT = actionsPair('Salvar', 'salvar');
 
 /**
  * Abertura do `<form>` do painel, com o fechamento já no lugar certo.
@@ -191,6 +197,9 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
     typeof args.sideOffset === 'number' && args.sideOffset !== DISTANCIA_DEFAULT
       ? propNumber('sideOffset', args.sideOffset)
       : undefined,
+    typeof args.alignOffset === 'number' && args.alignOffset !== 0
+      ? propNumber('alignOffset', args.alignOffset)
+      : undefined,
   ]);
 
   return jsxSnippet(
@@ -255,6 +264,42 @@ ${controlledPreamble('salvar', 'grave o que o painel ajustou', true)}`,
       '',
       `${header('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
 ${ACTIONS_DEFAULT}`,
+    ),
+  );
+}
+
+/**
+ * O painel da story `Focused` — o foco entrando no primeiro focável.
+ *
+ * O snippet do `meta` mostra o painel FECHADO, e a story é justamente sobre o
+ * que acontece ao abrir: sem um par de controles dentro, não haveria "primeiro
+ * focável" nenhum para o foco alcançar.
+ *
+ * O par é Cancelar/Confirmar, e não Cancelar/Salvar, para casar com o vanilla,
+ * que é o modelo desta story nas cinco. Os dois caminhos de fechar continuam
+ * separados: o Cancelar é a PEÇA (`close-button`, desistiu) e o Confirmar fecha
+ * por CÓDIGO (`api`, concluiu).
+ */
+export function popoverFocusedSource(): string {
+  return jsxSnippet(
+    `${IMPORT_USE_STATE}
+${importingPopover(
+  'Popover',
+  'PopoverClose',
+  'PopoverContent',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
+${IMPORT_BUTTON}
+
+${controlledPreamble('confirmar', 'aplique a alteração', true)}`,
+    popover(
+      RAIZ_CONTROLADA,
+      'Abrir popover',
+      '',
+      `${header('Confirmar alteração')}
+${actionsPair('Confirmar', 'confirmar')}`,
     ),
   );
 }
@@ -630,7 +675,8 @@ ${preferencia('Modo compacto')}
 /**
  * Ancorado acima. `side` é preferência, não garantia: sem espaço acima o painel
  * vira para baixo sozinho — a troca é sempre de LADO no mesmo eixo, nunca de
- * eixo. `sideOffset` é a distância entre o gatilho e o painel.
+ * eixo. `sideOffset` é a distância entre o gatilho e o painel; `alignOffset`
+ * (D14) desliza o painel ao longo da borda, e só é impresso quando difere de `0`.
  */
 export function popoverAboveSource(): string {
   return jsxSnippet(
@@ -646,7 +692,7 @@ ${IMPORT_BUTTON}`,
     popover(
       '',
       'Abrir acima',
-      ' side="top" sideOffset={12}',
+      ' side="top" sideOffset={12} alignOffset={8}',
       header('Ancorado acima', 'Sem espaço acima, o painel vira para baixo sozinho.'),
     ),
   );

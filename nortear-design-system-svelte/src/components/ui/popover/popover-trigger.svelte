@@ -12,6 +12,13 @@
 		...restProps
 	}: PopoverPrimitive.TriggerProps = $props();
 
+	// O painel precisa do gatilho para devolver o foco quando o `Tab` sai dele,
+	// e mora em portal: não há como achá-lo subindo a árvore.
+	$effect(() => {
+		contexto?.registerTrigger(ref);
+		return () => contexto?.registerTrigger(null);
+	});
+
 	// Clique no gatilho com o painel ABERTO fecha — e é `overlay`, não `api`. O
 	// drawer manda esse caminho para `api` porque ali o gatilho fica coberto pelo
 	// véu; o popover é não-modal, o gatilho continua clicável, e o clique é

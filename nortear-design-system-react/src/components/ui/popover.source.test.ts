@@ -6,6 +6,7 @@ import {
   popoverControlledSource,
   popoverEditarPerfilSource,
   popoverFilterSource,
+  popoverFocusedSource,
   popoverFormSource,
   popoverModalSource,
   popoverOpenSource,
@@ -39,6 +40,7 @@ const ALL = [
   popoverPreferenciasSource,
   popoverAboveSource,
   popoverCloseSource,
+  popoverFocusedSource,
 ];
 
 /**
@@ -91,6 +93,14 @@ describe('popoverSource (transform do meta)', () => {
       args: { side: 'top', align: 'start', sideOffset: 12 },
     });
     expect(output).toContain('<PopoverContent side="top" align="start" sideOffset={12}>');
+  });
+
+  it('imprime alignOffset só quando difere de 0 (D14)', () => {
+    const zero = popoverSource(undefined, { args: { alignOffset: 0 } });
+    expect(zero).toContain('<PopoverContent>');
+    expect(zero).not.toContain('alignOffset');
+    const eight = popoverSource(undefined, { args: { alignOffset: 8 } });
+    expect(eight).toContain('<PopoverContent alignOffset={8}>');
   });
 
   it('não inventa posição fora da união quando o control é adulterado', () => {
@@ -232,6 +242,9 @@ describe('a lição do controle de fechar', () => {
     // construtor, fecha pela PEÇA, fecha por CÓDIGO no clique, fecha no SUBMIT, não fecha
     [popoverSource, ['Cancelar'], ['Salvar'], [], []],
     [popoverCloseSource, ['Cancelar'], ['Salvar'], [], []],
+    // A story `Focused`: mesmo par de caminhos, com o rótulo do vanilla, que é
+    // o modelo desta story nas cinco.
+    [popoverFocusedSource, ['Cancelar'], ['Confirmar'], [], []],
     // O formulário da variante não tem rodapé: o submit é a única ação.
     [popoverFormSource, [], [], ['Atualizar'], []],
     [popoverEditarPerfilSource, ['Cancelar'], [], ['Atualizar'], []],
@@ -418,10 +431,13 @@ describe('composições e estados', () => {
     expect(output).toContain('<Popover defaultOpen>');
   });
 
-  it('ancorado acima declara lado e distância, e cala o alinhamento padrão', () => {
+  it('ancorado acima declara lado, distância e deslocamento, e cala o alinhamento padrão', () => {
     // A story ao lado escreve `align="center"` no `render` para deixar a
-    // intenção explícita no canvas; o snippet não repete o padrão.
-    expect(popoverAboveSource()).toContain('<PopoverContent side="top" sideOffset={12}>');
+    // intenção explícita no canvas; o snippet não repete o padrão. O
+    // `alignOffset={8}` da story entra, porque difere de 0 (D14).
+    expect(popoverAboveSource()).toContain(
+      '<PopoverContent side="top" sideOffset={12} alignOffset={8}>',
+    );
   });
 
   it('cada amostra de cor carrega o próprio rótulo — a cor não é o nome', () => {

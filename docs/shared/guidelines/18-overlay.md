@@ -178,7 +178,7 @@ reimplementa**. No vanilla, cada fábrica o implementa — ver a
 | tecla | o que faz |
 |---|---|
 | `Escape` | fecha o overlay do topo da pilha. No Tooltip o foco **fica** no gatilho; no AlertDialog fechar equivale a cancelar |
-| `Tab` / `Shift+Tab` | na família modal (Dialog, AlertDialog, Sheet, Drawer) o foco fica **preso** no painel. Menu e Popover não prendem: Tab sai e segue a página — no menu, e fecha |
+| `Tab` / `Shift+Tab` | na família modal (Dialog, AlertDialog, Sheet, Drawer) o foco fica **preso** no painel. Menu e Popover não prendem, e nos dois o Tab para fora fecha o painel — mas o foco vai a lugares DIFERENTES: no menu, ao ponto de tabulação vizinho do gatilho (`dropdown-menu.md`); no Popover, de volta ao gatilho, nos dois sentidos (D11 do `popover.md`, decisão da dona em 2026-09-17). A diferença é de propósito, não de descuido |
 | setas | percorrem os itens do menu e o destaque do Command |
 | letra | no menu, typeahead; no Command, vira texto da busca, e o foco nunca sai do campo |
 

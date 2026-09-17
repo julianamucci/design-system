@@ -208,7 +208,7 @@
       "open": {
         "label": "Open",
         "trigger": "click no trigger",
-        "behavior": "Aberto — <code>data-state=\"open\"</code>, foco no primeiro elemento focável."
+        "behavior": "Aberto — <code>data-state=\"open\"</code>, foco no elemento marcado com <code>data-autofocus</code> ou, sem marca, no primeiro focável."
       },
       "controlled": {
         "label": "Controlled",
@@ -218,7 +218,7 @@
       "modal": {
         "label": "Modal",
         "trigger": "modal ativo",
-        "behavior": "Foco preso no painel, rolagem da página travada e <code>aria-modal=\"true\"</code>, as três juntas. O padrão é não-modal."
+        "behavior": "Foco preso no painel, rolagem da página travada, <code>aria-modal=\"true\"</code> e o resto da página escondido do leitor de tela, as quatro juntas. O padrão é não-modal."
       },
       "focused": {
         "label": "Focused",
@@ -256,16 +256,16 @@
           "description": "Estado inicial não-controlado."
         },
         "onOpenChange": {
-          "type": "(open: boolean) => void",
+          "type": "(open: boolean, reason?: \"escape\" | \"overlay\" | \"close-button\" | \"api\") => void",
           "default": "—",
           "required": "Não",
-          "description": "Callback disparado ao abrir ou fechar."
+          "description": "Callback disparado ao abrir ou fechar. No fechamento chega também o motivo, no vocabulário do design system."
         },
         "modal": {
           "type": "boolean",
           "default": "false",
           "required": "Não",
-          "description": "Quando ativo, prende o foco no painel, trava a rolagem da página e faz o painel se anunciar como diálogo modal. O padrão é não-modal."
+          "description": "Quando ativo, prende o foco no painel, trava a rolagem da página, faz o painel se anunciar como diálogo modal e esconde o resto da página do leitor de tela. O padrão é não-modal."
         },
         "side": {
           "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
@@ -284,12 +284,18 @@
           "default": "4",
           "required": "Não",
           "description": "Distância em pixels entre trigger e content."
+        },
+        "alignOffset": {
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Deslocamento em pixels ao longo do eixo do alinhamento."
         }
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
-        "angular": "<!-- Controle externo do estado aberto/fechado -->\n<div ndsPopover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <form ndsForm></form>\n  </ng-template>\n</div>",
+        "angular": "<!-- Controle externo do estado aberto/fechado -->\n<div ndsPopover [(open)]=\"aberto\">\n  <button ndsPopoverTrigger ndsButton variant=\"outline\">Editar perfil</button>\n\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <div ndsPopoverHeader>\n      <h2 ndsPopoverTitle>Editar perfil</h2>\n    </div>\n\n    <div class=\"nds-cluster\" data-justify=\"end\" data-spacing=\"sm\">\n      <!-- desistir: fecha pela peça, e chega ao relatório como close-button -->\n      <button ndsPopoverClose ndsButton variant=\"ghost\" size=\"sm\">Cancelar</button>\n      <!-- concluir: salva e fecha por CÓDIGO, e chega como api -->\n      <button ndsButton size=\"sm\" (click)=\"salvar()\">Concluir</button>\n    </div>\n  </ng-template>\n</div>",
         "vue": "<!-- Controle externo do estado aberto/fechado -->\n<Popover v-model:open=\"aberto\">\n  <PopoverTrigger as-child>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" :side-offset=\"8\">\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
         "svelte": "<!-- Controle externo do estado aberto/fechado -->\n<Popover bind:open={aberto}>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Editar</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
         "vanilla": "// Controle externo do estado isOpen/fechado\nlet isOpen = false;\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Editar' }),\n  content: formulario,\n  side: 'bottom',\n  align: 'start',\n  sideOffset: 8,     // vão entre gatilho e painel, em px\n  open: isOpen,      // com `open`, quem manda no estado é quem chama\n  onOpenChange: (proximo) => {\n    isOpen = proximo;\n    popover.setOpen(proximo);\n  },\n});\n\n// Abrir e fechar por código: open(), close(), toggle(), setOpen(bool)\npopover.open();"
@@ -323,6 +329,38 @@
         "ring": {
           "class": ".nds-focus-ring",
           "part": "Anel de foco em elementos internos"
+        },
+        "zIndex": {
+          "class": ".nds-popover-content",
+          "part": "Camada do painel e do positioner"
+        },
+        "padding": {
+          "class": ".nds-popover-content",
+          "part": "Espaçamento interno do painel"
+        },
+        "gap": {
+          "class": ".nds-popover-content",
+          "part": "Espaço entre os filhos diretos do painel"
+        },
+        "radius": {
+          "class": ".nds-popover-content",
+          "part": "Raio das quinas do painel"
+        },
+        "text": {
+          "class": ".nds-popover-content",
+          "part": "Tamanho do texto do corpo"
+        },
+        "headerGap": {
+          "class": ".nds-popover-header",
+          "part": "Espaço entre título e descrição"
+        },
+        "titleSize": {
+          "class": ".nds-popover-title",
+          "part": "Tamanho do título"
+        },
+        "titleWeight": {
+          "class": ".nds-popover-title",
+          "part": "Peso do título"
         }
       },
       "customizationTitle": "Customização",
@@ -336,14 +374,14 @@
         "item1": "<code>role=\"dialog\"</code> aplicado automaticamente ao <code>PopoverContent</code>",
         "item2": "<code>aria-labelledby</code> aponta para o título quando há um; sem título visível, o nome vem de <code>aria-label</code>",
         "item3": "<code>aria-describedby</code> vinculado à <code>PopoverDescription</code> quando presente",
-        "item4": "Foco move para o primeiro elemento focável ao abrir",
+        "item4": "Ao abrir, o foco vai ao elemento marcado com <code>data-autofocus</code>; sem marca, ao primeiro elemento focável",
         "item5": "<code>Escape</code> fecha o popover e retorna foco ao trigger",
-        "item6": "Clique fora fecha o popover (comportamento nativo)"
+        "item6": "Clique fora, ou o foco levado a outro elemento da página, fecha o popover"
       },
       "keyboard": {
         "title": "Navegação por Teclado",
-        "tab": "Percorre os elementos focáveis do painel; a partir do último, sai e segue a ordem da página. No modo modal volta ao primeiro.",
-        "shiftTab": "Percorre em sentido inverso; a partir do primeiro, sai do painel. No modo modal vai ao último.",
+        "tab": "Percorre os elementos focáveis do painel; a partir do último, fecha o painel e devolve o foco ao trigger. No modo modal volta ao primeiro.",
+        "shiftTab": "Percorre em sentido inverso; a partir do primeiro, fecha o painel e devolve o foco ao trigger. No modo modal vai ao último.",
         "escape": "Fecha o popover e retorna foco ao trigger",
         "enter": "Ativa o trigger ou elemento focado",
         "space": "Ativa o trigger quando é botão"
@@ -389,7 +427,7 @@
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a abertura e o fechamento, o retorno do foco ao gatilho, o descarte por Escape e por clique fora e o posicionamento com desvio por colisão vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-popover-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Auto-flip</strong> — quando não há espaço no <code>side</code> preferido, o popover automaticamente reposiciona em outro lado para evitar overflow.",
       "item3": "<strong>Portal</strong> — o <code>PopoverContent</code> é renderizado em portal no <code>document.body</code> para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
-      "item4": "<strong>Não-modal por padrão</strong> — o foco entra no painel ao abrir, mas o Tab sai dele e segue a ordem da página, e o painel não se anuncia como modal. No modo modal as três coisas mudam juntas: o foco fica preso no painel, a rolagem da página trava e o painel passa a se anunciar como diálogo modal. Elas andam juntas de propósito — anunciar que o resto da página está inerte sem prender o foco engana quem navega por leitor de tela."
+      "item4": "<strong>Não-modal por padrão</strong> — o foco entra no painel ao abrir, mas não fica preso: sair dele com Tab fecha o painel e devolve o foco ao gatilho, e o painel não se anuncia como modal. No modo modal as quatro coisas mudam juntas: o foco fica preso no painel, a rolagem da página trava, o painel passa a se anunciar como diálogo modal e o resto da página fica escondido do leitor de tela. Elas andam juntas de propósito — anunciar que o resto da página está inerte sem prender o foco nem escondê-lo engana quem navega por leitor de tela."
     },
     "analytics": {
       "description": "Eventos relevantes do componente.",
@@ -402,7 +440,7 @@
           "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
-          "trigger": "Popover fecha — por Escape, clique fora ou no gatilho, botão de fechar, ou pelo código (ao salvar, por exemplo)",
+          "trigger": "Popover fecha — por Escape, clique fora ou no gatilho, Tab para fora, foco levado a outro elemento, botão de fechar, ou pelo código (ao salvar, por exemplo)",
           "payload": "{ component: \"popover\", reason: \"escape\" | \"overlay\" | \"close-button\" | \"api\", location }"
         }
       }
@@ -413,7 +451,7 @@
         "description": "O que deve acontecer em resposta a cada interação.",
         "item1": {
           "action": "Clicar no trigger",
-          "result": "Abre o popover; foco vai ao primeiro elemento focável",
+          "result": "Abre o popover; o foco vai ao elemento marcado com data-autofocus ou, sem marca, ao primeiro focável",
           "priority": "high"
         },
         "item2": {
@@ -428,7 +466,7 @@
         },
         "item4": {
           "action": "Tab dentro do popover",
-          "result": "Percorre os focáveis internos e, a partir do último, sai do painel — o padrão é não-modal",
+          "result": "Percorre os focáveis internos e, a partir do último, fecha o painel e devolve o foco ao trigger — o padrão é não-modal",
           "priority": "medium"
         }
       },
@@ -673,7 +711,7 @@
       "open": {
         "label": "Open",
         "trigger": "click on trigger",
-        "behavior": "Open — <code>data-state=\"open\"</code>, focus on the first focusable element."
+        "behavior": "Open — <code>data-state=\"open\"</code>, focus on the element marked with <code>data-autofocus</code> or, with no marker, on the first focusable element."
       },
       "controlled": {
         "label": "Controlled",
@@ -683,7 +721,7 @@
       "modal": {
         "label": "Modal",
         "trigger": "modal enabled",
-        "behavior": "Focus trapped in the panel, page scroll locked and <code>aria-modal=\"true\"</code>, the three together. The default is non-modal."
+        "behavior": "Focus trapped in the panel, page scroll locked, <code>aria-modal=\"true\"</code> and the rest of the page hidden from screen readers, the four together. The default is non-modal."
       },
       "focused": {
         "label": "Focused",
@@ -721,16 +759,16 @@
           "description": "Initial uncontrolled state."
         },
         "onOpenChange": {
-          "type": "(open: boolean) => void",
+          "type": "(open: boolean, reason?: \"escape\" | \"overlay\" | \"close-button\" | \"api\") => void",
           "default": "—",
           "required": "No",
-          "description": "Callback fired on open or close."
+          "description": "Callback fired on open or close. On close it also receives the reason, in the design system vocabulary."
         },
         "modal": {
           "type": "boolean",
           "default": "false",
           "required": "No",
-          "description": "When enabled, traps focus inside the panel, locks page scrolling and makes the panel announce itself as a modal dialog. The default is non-modal."
+          "description": "When enabled, traps focus inside the panel, locks page scrolling, makes the panel announce itself as a modal dialog and hides the rest of the page from screen readers. The default is non-modal."
         },
         "side": {
           "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
@@ -749,12 +787,18 @@
           "default": "4",
           "required": "No",
           "description": "Pixel distance between trigger and content."
+        },
+        "alignOffset": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Pixel offset along the alignment axis."
         }
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
-        "angular": "<!-- External control of the open/closed state -->\n<div ndsPopover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <form ndsForm></form>\n  </ng-template>\n</div>",
+        "angular": "<!-- External control of the open/closed state -->\n<div ndsPopover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton variant=\"outline\">Edit profile</button>\n\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <div ndsPopoverHeader>\n      <h2 ndsPopoverTitle>Edit profile</h2>\n    </div>\n\n    <div class=\"nds-cluster\" data-justify=\"end\" data-spacing=\"sm\">\n      <!-- give up: closes through the part, and reports close-button -->\n      <button ndsPopoverClose ndsButton variant=\"ghost\" size=\"sm\">Cancel</button>\n      <!-- conclude: saves and closes by CODE, and reports api -->\n      <button ndsButton size=\"sm\" (click)=\"save()\">Done</button>\n    </div>\n  </ng-template>\n</div>",
         "vue": "<!-- External control of the open/closed state -->\n<Popover v-model:open=\"open\">\n  <PopoverTrigger as-child>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" :side-offset=\"8\">\n    <ProfileForm />\n  </PopoverContent>\n</Popover>",
         "svelte": "<!-- External control of the open/closed state -->\n<Popover bind:open={open}>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Edit</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <ProfileForm />\n  </PopoverContent>\n</Popover>",
         "vanilla": "// External control of the open/closed state\nlet isOpen = false;\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Edit' }),\n  content: form,\n  side: 'bottom',\n  align: 'start',\n  sideOffset: 8,     // gap between trigger and panel, in px\n  open: isOpen,      // with `open`, the caller owns the state\n  onOpenChange: (next) => {\n    isOpen = next;\n    popover.setOpen(next);\n  },\n});\n\n// Opening and closing by code: open(), close(), toggle(), setOpen(bool)\npopover.open();"
@@ -788,6 +832,38 @@
         "ring": {
           "class": ".nds-focus-ring",
           "part": "Focus ring on internal elements"
+        },
+        "zIndex": {
+          "class": ".nds-popover-content",
+          "part": "Layer of the panel and the positioner"
+        },
+        "padding": {
+          "class": ".nds-popover-content",
+          "part": "Inner spacing of the panel"
+        },
+        "gap": {
+          "class": ".nds-popover-content",
+          "part": "Space between the panel's direct children"
+        },
+        "radius": {
+          "class": ".nds-popover-content",
+          "part": "Corner radius of the panel"
+        },
+        "text": {
+          "class": ".nds-popover-content",
+          "part": "Body text size"
+        },
+        "headerGap": {
+          "class": ".nds-popover-header",
+          "part": "Space between title and description"
+        },
+        "titleSize": {
+          "class": ".nds-popover-title",
+          "part": "Title size"
+        },
+        "titleWeight": {
+          "class": ".nds-popover-title",
+          "part": "Title weight"
         }
       },
       "customizationTitle": "Customization",
@@ -801,14 +877,14 @@
         "item1": "<code>role=\"dialog\"</code> applied automatically to the <code>PopoverContent</code>",
         "item2": "<code>aria-labelledby</code> points to the title when there is one; with no visible title, the name comes from <code>aria-label</code>",
         "item3": "<code>aria-describedby</code> linked to <code>PopoverDescription</code> when present",
-        "item4": "Focus moves to the first focusable element on open",
+        "item4": "On open, focus goes to the element marked with <code>data-autofocus</code>; with no marker, to the first focusable element",
         "item5": "<code>Escape</code> closes the popover and returns focus to trigger",
-        "item6": "Click outside closes the popover (native behavior)"
+        "item6": "Clicking outside, or focus moved to another element on the page, closes the popover"
       },
       "keyboard": {
         "title": "Keyboard Navigation",
-        "tab": "Walks the panel’s focusable elements; from the last one it leaves and follows the page order. In modal mode it returns to the first.",
-        "shiftTab": "Walks them in reverse; from the first one it leaves the panel. In modal mode it goes to the last.",
+        "tab": "Walks the panel’s focusable elements; from the last one it closes the panel and returns focus to the trigger. In modal mode it returns to the first.",
+        "shiftTab": "Walks them in reverse; from the first one it closes the panel and returns focus to the trigger. In modal mode it goes to the last.",
         "escape": "Closes the popover and returns focus to trigger",
         "enter": "Activates trigger or focused element",
         "space": "Activates trigger when it's a button"
@@ -854,7 +930,7 @@
       "item1": "<strong>Behaviour and looks in separate layers</strong> — opening and closing, returning focus to the trigger, dismissal by Escape and by outside click, and positioning with collision shifting come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-popover-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Auto-flip</strong> — when there isn't enough space on the preferred <code>side</code>, the popover automatically repositions to avoid overflow.",
       "item3": "<strong>Portal</strong> — <code>PopoverContent</code> renders in a portal on <code>document.body</code> to avoid <code>z-index</code> and <code>overflow</code> issues.",
-      "item4": "<strong>Non-modal by default</strong> — focus moves into the panel on open, but Tab leaves it and follows the page order, and the panel does not announce itself as modal. In modal mode all three change together: focus stays trapped in the panel, page scrolling locks, and the panel announces itself as a modal dialog. They go together on purpose — announcing that the rest of the page is inert without trapping focus misleads anyone navigating with a screen reader."
+      "item4": "<strong>Non-modal by default</strong> — focus moves into the panel on open but is not trapped: tabbing out of it closes the panel and returns focus to the trigger, and the panel does not announce itself as modal. In modal mode all four change together: focus stays trapped in the panel, page scrolling locks, the panel announces itself as a modal dialog, and the rest of the page is hidden from screen readers. They go together on purpose — announcing that the rest of the page is inert without trapping focus or hiding it misleads anyone navigating with a screen reader."
     },
     "analytics": {
       "description": "Relevant component events.",
@@ -867,7 +943,7 @@
           "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
-          "trigger": "Popover closes — by Escape, click outside or on the trigger, the close button, or by code (on save, for instance)",
+          "trigger": "Popover closes — by Escape, click outside or on the trigger, tabbing out, focus moved to another element, the close button, or by code (on save, for instance)",
           "payload": "{ component: \"popover\", reason: \"escape\" | \"overlay\" | \"close-button\" | \"api\", location }"
         }
       }
@@ -878,7 +954,7 @@
         "description": "What should happen in response to each interaction.",
         "item1": {
           "action": "Click the trigger",
-          "result": "Opens the popover; focus goes to the first focusable element",
+          "result": "Opens the popover; focus goes to the element marked with data-autofocus or, with no marker, to the first focusable element",
           "priority": "high"
         },
         "item2": {
@@ -893,7 +969,7 @@
         },
         "item4": {
           "action": "Tab inside the popover",
-          "result": "Walks the inner focusables and, from the last one, leaves the panel — the default is non-modal",
+          "result": "Walks the inner focusables and, from the last one, closes the panel and returns focus to the trigger — the default is non-modal",
           "priority": "medium"
         }
       },
@@ -1138,7 +1214,7 @@
       "open": {
         "label": "Open",
         "trigger": "clic en el trigger",
-        "behavior": "Abierto — <code>data-state=\"open\"</code>, foco en el primer elemento focalizable."
+        "behavior": "Abierto — <code>data-state=\"open\"</code>, foco en el elemento marcado con <code>data-autofocus</code> o, sin marca, en el primer elemento focalizable."
       },
       "controlled": {
         "label": "Controlled",
@@ -1148,7 +1224,7 @@
       "modal": {
         "label": "Modal",
         "trigger": "modal activo",
-        "behavior": "Foco atrapado en el panel, scroll de la página bloqueado y <code>aria-modal=\"true\"</code>, las tres juntas. Por defecto es no modal."
+        "behavior": "Foco atrapado en el panel, scroll de la página bloqueado, <code>aria-modal=\"true\"</code> y el resto de la página oculto al lector de pantalla, las cuatro juntas. Por defecto es no modal."
       },
       "focused": {
         "label": "Focused",
@@ -1186,16 +1262,16 @@
           "description": "Estado inicial no controlado."
         },
         "onOpenChange": {
-          "type": "(open: boolean) => void",
+          "type": "(open: boolean, reason?: \"escape\" | \"overlay\" | \"close-button\" | \"api\") => void",
           "default": "—",
           "required": "No",
-          "description": "Callback disparado al abrir o cerrar."
+          "description": "Callback disparado al abrir o cerrar. Al cerrar llega también el motivo, en el vocabulario del design system."
         },
         "modal": {
           "type": "boolean",
           "default": "false",
           "required": "No",
-          "description": "Cuando está activo, atrapa el foco en el panel, bloquea el desplazamiento de la página y hace que el panel se anuncie como diálogo modal. El valor por defecto es no modal."
+          "description": "Cuando está activo, atrapa el foco en el panel, bloquea el desplazamiento de la página, hace que el panel se anuncie como diálogo modal y oculta el resto de la página al lector de pantalla. El valor por defecto es no modal."
         },
         "side": {
           "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
@@ -1214,12 +1290,18 @@
           "default": "4",
           "required": "No",
           "description": "Distancia en píxeles entre trigger y content."
+        },
+        "alignOffset": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Desplazamiento en píxeles a lo largo del eje de alineación."
         }
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
-        "angular": "<!-- Control externo del estado abierto/cerrado -->\n<div ndsPopover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <form ndsForm></form>\n  </ng-template>\n</div>",
+        "angular": "<!-- Control externo del estado abierto/cerrado -->\n<div ndsPopover [(open)]=\"abierto\">\n  <button ndsPopoverTrigger ndsButton variant=\"outline\">Editar perfil</button>\n\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <div ndsPopoverHeader>\n      <h2 ndsPopoverTitle>Editar perfil</h2>\n    </div>\n\n    <div class=\"nds-cluster\" data-justify=\"end\" data-spacing=\"sm\">\n      <!-- desistir: cierra por la pieza, y llega al informe como close-button -->\n      <button ndsPopoverClose ndsButton variant=\"ghost\" size=\"sm\">Cancelar</button>\n      <!-- concluir: guarda y cierra por CÓDIGO, y llega como api -->\n      <button ndsButton size=\"sm\" (click)=\"guardar()\">Listo</button>\n    </div>\n  </ng-template>\n</div>",
         "vue": "<!-- Control externo del estado abierto/cerrado -->\n<Popover v-model:open=\"abierto\">\n  <PopoverTrigger as-child>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" :side-offset=\"8\">\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
         "svelte": "<!-- Control externo del estado abierto/cerrado -->\n<Popover bind:open={abierto}>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Editar</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
         "vanilla": "// Control externo del estado isOpen/cerrado\nlet isOpen = false;\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Editar' }),\n  content: formulario,\n  side: 'bottom',\n  align: 'start',\n  sideOffset: 8,     // espacio entre disparador y panel, en px\n  open: isOpen,     // con `open`, quien manda en el estado es quien llama\n  onOpenChange: (siguiente) => {\n    isOpen = siguiente;\n    popover.setOpen(siguiente);\n  },\n});\n\n// Abrir y cerrar por código: open(), close(), toggle(), setOpen(bool)\npopover.open();"
@@ -1253,6 +1335,38 @@
         "ring": {
           "class": ".nds-focus-ring",
           "part": "Anillo de foco en elementos internos"
+        },
+        "zIndex": {
+          "class": ".nds-popover-content",
+          "part": "Capa del panel y del positioner"
+        },
+        "padding": {
+          "class": ".nds-popover-content",
+          "part": "Espaciado interno del panel"
+        },
+        "gap": {
+          "class": ".nds-popover-content",
+          "part": "Espacio entre los hijos directos del panel"
+        },
+        "radius": {
+          "class": ".nds-popover-content",
+          "part": "Radio de las esquinas del panel"
+        },
+        "text": {
+          "class": ".nds-popover-content",
+          "part": "Tamaño del texto del cuerpo"
+        },
+        "headerGap": {
+          "class": ".nds-popover-header",
+          "part": "Espacio entre título y descripción"
+        },
+        "titleSize": {
+          "class": ".nds-popover-title",
+          "part": "Tamaño del título"
+        },
+        "titleWeight": {
+          "class": ".nds-popover-title",
+          "part": "Peso del título"
         }
       },
       "customizationTitle": "Personalización",
@@ -1266,14 +1380,14 @@
         "item1": "<code>role=\"dialog\"</code> aplicado automáticamente al <code>PopoverContent</code>",
         "item2": "<code>aria-labelledby</code> apunta al título cuando lo hay; sin título visible, el nombre viene de <code>aria-label</code>",
         "item3": "<code>aria-describedby</code> vinculado a <code>PopoverDescription</code> cuando está presente",
-        "item4": "El foco se mueve al primer elemento focalizable al abrir",
+        "item4": "Al abrir, el foco va al elemento marcado con <code>data-autofocus</code>; sin marca, al primer elemento focalizable",
         "item5": "<code>Escape</code> cierra el popover y devuelve el foco al trigger",
-        "item6": "Clic fuera cierra el popover (comportamiento nativo)"
+        "item6": "Clic fuera, o el foco llevado a otro elemento de la página, cierra el popover"
       },
       "keyboard": {
         "title": "Navegación por Teclado",
-        "tab": "Recorre los elementos enfocables del panel; desde el último sale y sigue el orden de la página. En modo modal vuelve al primero.",
-        "shiftTab": "Los recorre en sentido inverso; desde el primero sale del panel. En modo modal va al último.",
+        "tab": "Recorre los elementos enfocables del panel; desde el último cierra el panel y devuelve el foco al trigger. En modo modal vuelve al primero.",
+        "shiftTab": "Los recorre en sentido inverso; desde el primero cierra el panel y devuelve el foco al trigger. En modo modal va al último.",
         "escape": "Cierra el popover y devuelve el foco al trigger",
         "enter": "Activa el trigger o elemento focalizado",
         "space": "Activa el trigger cuando es botón"
@@ -1319,7 +1433,7 @@
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la apertura y el cierre, el retorno del foco al disparador, el descarte por Escape y por clic fuera y el posicionamiento con desvío por colisión vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-popover-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Auto-flip</strong> — cuando no hay espacio en el <code>side</code> preferido, el popover se reposiciona automáticamente para evitar overflow.",
       "item3": "<strong>Portal</strong> — el <code>PopoverContent</code> se renderiza en portal en <code>document.body</code> para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
-      "item4": "<strong>No-modal por defecto</strong> — el foco entra en el panel al abrir, pero el Tab sale de él y sigue el orden de la página, y el panel no se anuncia como modal. En modo modal las tres cosas cambian juntas: el foco queda atrapado en el panel, el desplazamiento de la página se bloquea y el panel se anuncia como diálogo modal. Van juntas a propósito — anunciar que el resto de la página está inerte sin atrapar el foco engaña a quien navega con lector de pantalla."
+      "item4": "<strong>No-modal por defecto</strong> — el foco entra en el panel al abrir, pero no queda atrapado: salir de él con Tab cierra el panel y devuelve el foco al disparador, y el panel no se anuncia como modal. En modo modal las cuatro cosas cambian juntas: el foco queda atrapado en el panel, el desplazamiento de la página se bloquea, el panel se anuncia como diálogo modal y el resto de la página queda oculto al lector de pantalla. Van juntas a propósito — anunciar que el resto de la página está inerte sin atrapar el foco ni ocultarlo engaña a quien navega con lector de pantalla."
     },
     "analytics": {
       "description": "Eventos relevantes del componente.",
@@ -1332,7 +1446,7 @@
           "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
-          "trigger": "El popover se cierra — por Escape, clic fuera o en el disparador, el botón de cerrar, o por código (al guardar, por ejemplo)",
+          "trigger": "El popover se cierra — por Escape, clic fuera o en el disparador, Tab hacia fuera, foco llevado a otro elemento, el botón de cerrar, o por código (al guardar, por ejemplo)",
           "payload": "{ component: \"popover\", reason: \"escape\" | \"overlay\" | \"close-button\" | \"api\", location }"
         }
       }
@@ -1343,7 +1457,7 @@
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
         "item1": {
           "action": "Hacer clic en el trigger",
-          "result": "Abre el popover; el foco va al primer elemento focalizable",
+          "result": "Abre el popover; el foco va al elemento marcado con data-autofocus o, sin marca, al primer elemento focalizable",
           "priority": "high"
         },
         "item2": {
@@ -1358,7 +1472,7 @@
         },
         "item4": {
           "action": "Tab dentro del popover",
-          "result": "Recorre los enfocables internos y, desde el último, sale del panel — el valor por defecto es no modal",
+          "result": "Recorre los enfocables internos y, desde el último, cierra el panel y devuelve el foco al trigger — el valor por defecto es no modal",
           "priority": "medium"
         }
       },

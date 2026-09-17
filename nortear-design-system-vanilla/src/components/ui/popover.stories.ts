@@ -225,6 +225,21 @@ export const Playground: Story = {
       ).toBe(callsBefore + 1);
     });
 
+    await step('O painel é nomeado pelo título e descrito pela descrição', async () => {
+      // D12: `labelledby` NOMEIA, `describedby` DESCREVE. Sem o segundo, o
+      // leitor de tela anuncia o nome do diálogo e cala a linha que explica o
+      // que ele faz — e a fábrica só o escreve quando acha a peça de descrição.
+      const p = panel()!;
+      const idTitle = p.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
+      await expect(document.getElementById(idTitle!)).toHaveAttribute('data-slot', 'popover-title');
+      const idDescription = p.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveAttribute(
+        'data-slot', 'popover-description',
+      );
+    });
+
     await step('Aberto, aria-controls aponta para o id real do painel', async () => {
       const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
@@ -252,16 +267,54 @@ export const Playground: Story = {
       await expect(panel()).not.toHaveAttribute('aria-modal');
     });
 
-    await step('O foco entra no painel ao abrir', async () => {
+    await step('Ao abrir, o foco vai ao PRIMEIRO focável do painel', async () => {
       await waitFor(() => {
         if (!panel()!.contains(document.activeElement)) {
           throw new Error('foco não entrou no painel');
         }
       });
       // Primeiro focável, não um qualquer: é o que a tabela de estados promete.
+      // E é este passo que dá dentes ao seguinte — sem o alvo EXATO, "o foco
+      // está dentro" passaria com ou sem `data-autofocus`.
       await expect(document.activeElement).toBe(
         within(panel()!).getByRole('button', { name: /cancelar/i }),
       );
+    });
+
+    await step('E `data-autofocus` VENCE o primeiro focável, mesmo com tabindex=-1', async () => {
+      // A outra metade de `accessibility.item4`, que o `covers` desta story
+      // reivindica desde que o conteúdo passou a nomear o atributo.
+      //
+      // O alvo marcado é o TÍTULO, com `tabindex="-1"`: não é o primeiro
+      // focável (nem sequer tabulável), então a asserção só passa se a marca for
+      // lida — e lida SEM o filtro de `FOCUSABLE`, que exclui `tabindex="-1"` de
+      // propósito. Uma implementação que passasse a marca por `getFocusable`
+      // cairia no Cancelar e reprovaria aqui.
+      //
+      // Nesta stack a marca pode ir no painel aberto e sobreviver ao fechar: o
+      // `content` é o MESMO nó a cada abertura — a fábrica o recoloca num painel
+      // novo —, então o título marcado é o título que volta.
+      const title = (await open(trigger)).querySelector<HTMLElement>(
+        '[data-slot="popover-title"]',
+      )!;
+      try {
+        title.setAttribute('tabindex', '-1');
+        title.setAttribute('data-autofocus', '');
+        await close(trigger);
+        await open(trigger);
+        await expect(document.activeElement).toBe(title);
+      } finally {
+        // O foco sai do título ANTES de a marca sair: tirar o `tabindex` de um
+        // elemento focado joga o foco no `body`. O estado final é o do passo
+        // anterior — aberto, foco no Cancelar —, e o replay do painel
+        // Interactions parte dele. A referência é o NÓ, e não uma busca no
+        // painel: se a asserção reprovar com ele fechado, a marca sai do mesmo
+        // jeito, e o nó é o que a próxima abertura recoloca.
+        const p = panel();
+        if (p) within(p).queryByRole('button', { name: /cancelar/i })?.focus();
+        title.removeAttribute('data-autofocus');
+        title.removeAttribute('tabindex');
+      }
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {

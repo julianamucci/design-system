@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect, userEvent, waitFor } from 'storybook/test';
+import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import {
   Popover,
   PopoverClose,
@@ -158,9 +158,14 @@ export const WithTitle: Story = {
       await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
     });
 
-    await step('E a descrição usa a classe própria', async () => {
-      const desc = panel()!.querySelector('[data-slot="popover-description"]')!;
-      await expect(desc).toHaveClass(/nds-popover-description/);
+    await step('A descrição entra por aria-describedby', async () => {
+      // D12: o painel aponta `aria-describedby` para o id da descrição. Nesta
+      // stack quem escreve o atributo é o `PopoverDescription.vue`, porque a
+      // reka não tem peça de descrição.
+      const dialog = panel()!;
+      const idDescription = dialog.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveClass(/nds-popover-description/);
     });
 
     await step('Tab caminha entre os controles internos', async () => {
@@ -185,6 +190,13 @@ export const WithTitle: Story = {
   },
 };
 
+/**
+ * Espião do `update:open` da `Form`. No módulo, e não no `setup`: criado lá,
+ * a play não o alcançaria. É ele que diz que o formulário fechou por CÓDIGO
+ * (`api`) — o painel sumir sozinho passaria com qualquer motivo.
+ */
+const formOpenChange = fn();
+
 export const Form: Story = {
   parameters: {
     covers: ['visual.item3'],
@@ -199,9 +211,12 @@ export const Form: Story = {
   },
   render: () => ({
     components: sharedComponents,
+    setup() {
+      return { formOpenChange };
+    },
     template: `
       <div class="nds-min-h-90" style="contain: layout">
-        <Popover v-slot="{ close }" :default-open="true">
+        <Popover v-slot="{ close }" :default-open="true" @update:open="formOpenChange">
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
           </PopoverTrigger>
@@ -260,16 +275,21 @@ export const Form: Story = {
       // caminho do clique não cobriria este gesto.
       const name = within(panel()!).getByLabelText(/Nome/i);
       name.focus();
+      formOpenChange.mockClear();
       await userEvent.keyboard('{Enter}');
       await closed();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // Fechou por CÓDIGO: o motivo é `api`, "concluiu".
+      await expect(formOpenChange).toHaveBeenLastCalledWith(false, 'api');
     });
 
     await step('E o "Atualizar" fecha pelo mesmo caminho', async () => {
       await userEvent.click(trigger);
       await waitForPortal('dialog');
+      formOpenChange.mockClear();
       await userEvent.click(within(panel()!).getByRole('button', { name: /Atualizar/i }));
       await closed();
+      await expect(formOpenChange).toHaveBeenLastCalledWith(false, 'api');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

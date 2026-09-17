@@ -20,8 +20,16 @@
  *   painel quando não há nenhum. É o que separa o popover do tooltip, e é o que
  *   o conteúdo compartilhado promete em três seções (acessibilidade, estados e
  *   critérios de teste).
- * - O foco NÃO fica PRESO: `Tab` sai do painel e segue a ordem da página.
- *   Nenhuma das cinco instala laço de tabulação no estado padrão.
+ * - O foco NÃO fica PRESO: `Tab` sai do painel. Nenhuma das cinco instala laço
+ *   de tabulação no estado padrão. E sair com Tab FECHA o painel e DEVOLVE o
+ *   foco ao GATILHO — decisões da dona de 2026-09-16 (fechar) e 2026-09-17
+ *   (destino), iguais nas cinco. O motivo relatado é `overlay`, o mesmo do
+ *   clique fora: quem tabulou para fora saiu do painel sem decidir nada. Vale
+ *   nos dois sentidos — `Tab` a partir do último focável e `Shift+Tab` a partir
+ *   do primeiro —, e num painel sem focável nenhum qualquer dos dois fecha. O
+ *   destino é o gatilho, e não "o próximo da página", porque o painel mora em
+ *   portal no fim do `body`: o próximo da ordem é o navegador. **No modo MODAL
+ *   não vale**: lá o foco fica preso, e não há "sair" para fechar.
  * - Por isso o painel NUNCA recebe `aria-modal`. O atributo manda o leitor de
  *   tela esconder tudo o que está fora do diálogo, e essa promessa só se cumpre
  *   com o foco preso: sem a prisão ele MENTE — o resto da página fica
@@ -29,6 +37,9 @@
  *   contrário do véu do Dialog, e é de propósito: um popover é conteúdo AO
  *   LADO, não no lugar.
  * - `Escape` fecha e DEVOLVE o foco ao gatilho. Clique fora fecha.
+ * - Foco levado a OUTRO elemento da página — que não o gatilho — fecha com
+ *   `overlay`, uma vez, e o foco FICA onde foi posto (D15, 2026-09-17). Foco que
+ *   sai do documento não fecha. No modo modal não vale.
  * - O gatilho declara `aria-expanded` e `aria-haspopup="dialog"`, e
  *   `aria-controls` apontando para o painel SÓ enquanto ele existe — apontar
  *   para um id ausente reprova em `aria-valid-attr-value`.
@@ -45,7 +56,16 @@
  *      e `Shift+Tab` no primeiro vai ao último;
  *   2. a rolagem da página fica travada;
  *   3. o painel anuncia `aria-modal="true"`;
- *   4. `Escape` fecha e devolve o foco ao gatilho, como no modo padrão.
+ *   4. `Escape` fecha e devolve o foco ao gatilho, como no modo padrão;
+ *   5. o resto da página fica ESCONDIDO do leitor de tela — `aria-hidden="true"`
+ *      nos irmãos de cada ancestral do painel, SEMPRE, com ou sem peça de
+ *      fechar, e restaurado exatamente ao fechar e ao desmontar. Decisão da
+ *      dona de 2026-09-17 (item 7 da §7 do PRD): `aria-modal` sozinho é honrado
+ *      de forma desigual pelos leitores de tela. Aqui é `@/lib/hide-others`.
+ *      REGIÃO VIVA e `<script>` ficam de FORA do esconder — escondê-las deixaria
+ *      um toast de "salvo" ou de erro mudo com o painel aberto; o `markOthers`
+ *      da base-ui e o pacote `aria-hidden` fazem o mesmo. No modo não-modal nada
+ *      é escondido.
  *
  * `aria-modal` SÓ existe no modo modal, e é o item 1 que lhe dá direito: o
  * atributo manda o leitor de tela esconder o resto da página, e sem foco preso
@@ -103,7 +123,9 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
+import { hideOthers } from '@/lib/hide-others';
 import {
+  autoUpdateFloating,
   positionFloating,
   type FloatingAlign,
   type FloatingSide,
@@ -120,6 +142,18 @@ export type PopoverOptions = {
   /** Vão entre gatilho e painel, em px. Mesmo nome e mesmo padrão das outras stacks. */
   sideOffset?: number;
   /**
+   * Deslocamento do painel no eixo do ALINHAMENTO, em px. Padrão `0`.
+   *
+   * O par do `sideOffset`, que é o vão do outro eixo: `sideOffset` afasta o
+   * painel do gatilho, `alignOffset` o desliza ao longo da borda em que o
+   * `align` o encostou. Positivo empurra para o fim do eixo — direita nos lados
+   * `top`/`bottom`, baixo nos lados `left`/`right`.
+   *
+   * Mesmo nome e mesmo padrão das outras quatro stacks, que o recebem da lib
+   * headless. A conta vive em `computeFloatingPosition`.
+   */
+  alignOffset?: number;
+  /**
    * Estado CONTROLADO. Definido, quem manda no painel é quem chama: o clique no
    * gatilho, o Escape e o clique fora passam a apenas ANUNCIAR a intenção por
    * `onOpenChange`, e o painel só se move quando `setOpen()` for chamado.
@@ -133,8 +167,9 @@ export type PopoverOptions = {
   /**
    * Modo MODAL. Padrão `false`, que é o popover normal desta casa.
    *
-   * `true` prende o foco no painel, trava a rolagem da página e faz o painel
-   * anunciar `aria-modal="true"`. Os três andam juntos de propósito — ver o
+   * `true` prende o foco no painel, trava a rolagem da página, faz o painel
+   * anunciar `aria-modal="true"` e esconde o resto da página do leitor de tela
+   * (`aria-hidden`). Andam juntos de propósito — ver o
    * bloco no cabeçalho deste arquivo para por que anunciar sem prender é
    * mentir para quem usa leitor de tela.
    */
@@ -225,8 +260,8 @@ export function createPopoverHeader(options: PopoverPartOptions = {}): HTMLEleme
  * uma dimensão só no GA4:
  *
  *   escape        tecla Escape
- *   overlay       saiu do painel sem decidir nada: clique fora, foco que saiu,
- *                 ou clique no gatilho de novo
+ *   overlay       saiu do painel sem decidir nada: clique fora, Tab na borda,
+ *                 foco levado a outro elemento, ou clique no gatilho de novo
  *   close-button  controle de fechar explícito dentro do painel — todo
  *                 `[data-slot="popover-close"]` do painel, por delegação
  *   api           fechado por código — é aqui que cai "salvou e fechou"
@@ -334,6 +369,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     side = 'bottom',
     align = 'center',
     sideOffset = 4,
+    alignOffset = 0,
     modal = false,
     onOpenChange,
   } = options;
@@ -350,6 +386,19 @@ export function createPopover(options: PopoverOptions): PopoverElement {
   // `scroll-lock`. Sem esta bandeira, um `close()` que chegasse duas vezes
   // soltaria duas travas — e a segunda seria a de outro painel.
   let scrollLocked = false;
+  // Elemento para o qual a perda de foco já ANUNCIOU `overlay` e que ainda
+  // segura o foco. Só pesa no modo controlado — no não-controlado o fechamento
+  // remove os ouvintes —, e é o que impede o clique fora de anunciar a mesma
+  // dispensa uma segunda vez: o clique move o foco antes de o `click` chegar.
+  let focusLossTarget: Element | null = null;
+  // A limpeza do acompanhamento de posição. Existe só com o painel aberto, e é
+  // o que `close()` chama — ver `autoUpdateFloating` em `@/lib/floating`.
+  let stopAutoUpdate: (() => void) | null = null;
+  // A restauração do "esconder os outros" do modo modal. Existe só com o painel
+  // modal aberto, e desfaz EXATAMENTE o que esta instância escondeu — a contagem
+  // por elemento, que é do documento, está em `@/lib/hide-others`. Zerada em
+  // `close()`, para um fechamento duplo não soltar a de outro painel.
+  let restoreHidden: (() => void) | null = null;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'popover';
@@ -435,6 +484,22 @@ export function createPopover(options: PopoverOptions): PopoverElement {
       panelEl.setAttribute('aria-label', options.ariaLabel?.trim() || triggerName);
     }
 
+    // A DESCRIÇÃO do painel, pelo mesmo caminho do nome logo acima: a peça já
+    // carrega o `data-slot`, então encontrá-la é uma consulta e não um contrato
+    // novo. Sem isto o leitor de tela anuncia o nome do diálogo e CALA a linha
+    // que explica o que ele faz — e o conteúdo compartilhado promete o atributo
+    // em três chaves e três idiomas (`anatomy.item6`,
+    // `accessibility.items.item3`, `accessibility.aria.describedBy`).
+    //
+    // Só a PRIMEIRA: `aria-describedby` aceita lista de ids, mas um painel com
+    // duas descrições é ambiguidade de composição, e apontar para as duas faria
+    // o leitor de tela lê-las em sequência como se fossem uma.
+    const description = panelEl.querySelector<HTMLElement>('[data-slot="popover-description"]');
+    if (description) {
+      if (!description.id) description.id = `${contentId}-description`;
+      panelEl.setAttribute('aria-describedby', description.id);
+    }
+
     document.body.appendChild(panelEl);
     // `flip: true`, e o retorno é ESCRITO no painel.
     //
@@ -453,7 +518,25 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     // Aqui ligar é seguro, e no tooltip não seria: a folha do popover não lê
     // `[data-side]` para desenhar nada, e não há seta cuja coordenada cruzada
     // precise ser refeita.
-    panelEl.dataset.side = positionFloating(trigger, panelEl, side, align, sideOffset, { flip: true });
+    //
+    // A conta é uma função porque roda de novo a cada rolagem, redimensionamento
+    // da janela ou mudança de tamanho do gatilho ou do painel, enquanto o painel
+    // está aberto — e o `data-side` vai junto, porque rolar pode ser justamente
+    // o que faz o lado pedido deixar de caber. Só a geometria: reposicionar não
+    // anuncia nada e não toca no foco.
+    const panel = panelEl;
+    const place = (): void => {
+      panel.dataset.side = positionFloating(trigger, panel, side, align, sideOffset, {
+        flip: true,
+        alignOffset,
+      });
+    };
+    place();
+    // `?.()` antes de religar: `open()` já barra a segunda abertura, mas um
+    // acompanhamento que sobrevivesse seria dois ouvintes de rolagem movendo o
+    // mesmo painel.
+    stopAutoUpdate?.();
+    stopAutoUpdate = autoUpdateFloating(trigger, panel, place);
 
     trigger.setAttribute('aria-expanded', 'true');
     trigger.setAttribute('aria-controls', contentId);
@@ -466,6 +549,15 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     if (modal) {
       lockBodyScroll();
       scrollLocked = true;
+      // O resto da página sai da árvore do leitor de tela — decisão da dona de
+      // 2026-09-17, igual nas cinco, SEMPRE que o modo for modal. `aria-modal`
+      // já promete isso, mas os leitores de tela o honram de forma desigual (o
+      // VoiceOver do Safari é o caso conhecido). `aria-hidden`, e não `inert`:
+      // `inert` bloquearia o ponteiro lá fora, e o clique fora tem de chegar
+      // para fechar. Depois do `appendChild`: o algoritmo sobe a partir do
+      // painel já no documento.
+      restoreHidden?.();
+      restoreHidden = hideOthers(panelEl);
     }
 
     // O foco entra no painel — é o que separa o popover do tooltip. O conteúdo
@@ -473,9 +565,20 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     // teclado teria de atravessar o resto da página para alcançá-lo. É a
     // promessa que o conteúdo compartilhado faz em três seções: acessibilidade,
     // estados e critérios de teste.
-    (getFocusable(panelEl)[0] ?? panelEl).focus();
+    //
+    // `[data-autofocus]` vem ANTES, e a consulta é PRÓPRIA: a lista `FOCUSABLE`
+    // filtra `[tabindex="-1"]` de propósito (ver o bloco dela), e um alvo
+    // marcado à mão com `tabindex="-1"` é exatamente o caso que a marca existe
+    // para servir — foco PROGRAMÁTICO, que é o que ela pede. Passar a marca por
+    // `getFocusable` descartaria em silêncio o alvo que quem compõe escolheu.
+    const autofocus = panelEl.querySelector<HTMLElement>('[data-autofocus]');
+    (autofocus ?? getFocusable(panelEl)[0] ?? panelEl).focus();
 
     document.addEventListener('keydown', handleKeydown);
+    // Perda de foco (D15) — registrado DEPOIS de o foco entrar no painel, para
+    // o próprio foco de abertura não passar pelo ouvinte. Só fora do modo modal:
+    // lá o foco fica preso, e não há "perder" que feche.
+    if (!modal) document.addEventListener('focusin', handleFocusIn);
     // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
     // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
     // registrado DEPOIS da limpeza e ficava para sempre.
@@ -499,6 +602,10 @@ export function createPopover(options: PopoverOptions): PopoverElement {
       !!panelEl &&
       (panelEl.contains(document.activeElement) || document.activeElement === document.body);
 
+    // Antes de remover o painel: um quadro já agendado não pode medir um nó que
+    // saiu do documento.
+    stopAutoUpdate?.();
+    stopAutoUpdate = null;
     panelEl?.remove();
     panelEl = null;
     trigger.setAttribute('aria-expanded', 'false');
@@ -512,11 +619,23 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     }
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
+    // Removido ANTES do `trigger.focus()` logo abaixo: o foco devolvido não pode
+    // voltar a passar pelo ouvinte de perda de foco. (O gatilho já é ignorado
+    // por ele; a ordem é a segunda cerca, não a primeira.)
+    document.removeEventListener('focusin', handleFocusIn);
+    focusLossTarget = null;
 
     if (scrollLocked) {
       unlockBodyScroll();
       scrollLocked = false;
     }
+
+    // Cada elemento escondido por ESTA instância volta ao estado de antes — com
+    // o `aria-hidden` que já tinha, de qualquer valor. Antes do `trigger.focus()`:
+    // o gatilho mora no que foi escondido, e o foco não deve pousar num elemento
+    // que o leitor de tela ainda não enxerga.
+    restoreHidden?.();
+    restoreHidden = null;
 
     if (focusEstavaInside) trigger.focus();
 
@@ -562,12 +681,55 @@ export function createPopover(options: PopoverOptions): PopoverElement {
       return;
     }
 
+    // ─── Tab para FORA do painel FECHA — e só fora do modo modal ─────────────
+    //
+    // Decisão da dona de 2026-09-16, igual nas cinco. O motivo é `overlay`: quem
+    // tabulou para fora saiu do painel sem decidir nada, como quem clica fora.
+    //
+    // Quem fecha AQUI é a TECLA, e não o ouvinte de perda de foco
+    // (`handleFocusIn`, D15): tabular para fora do último focável da página não
+    // produz `focusin` nenhum — o foco vai para o navegador e o documento fica
+    // com o `body`. O painel mora em portal no FIM do `body`, então este é
+    // justamente o caso comum aqui, e o ouvinte de foco não o veria. Os dois
+    // caminhos não somam: a tecla é cancelada, o foco não se move, e o
+    // `close()` tira o ouvinte de foco antes de devolver o foco ao gatilho.
+    //
+    // COM `preventDefault` — decisão da dona de 2026-09-17: o DESTINO de quem
+    // tabula para fora é o GATILHO, nos dois sentidos. O Tab nativo não pode
+    // mover o foco, porque o painel mora em portal no fim do `body`: a "próxima
+    // posição" da ordem da página é o navegador, e o documento ficava com o
+    // foco no `body` (medido na story `Focused`). Com a tecla cancelada, o foco
+    // ainda está dentro do painel quando `close()` roda, e é o `close()` que o
+    // devolve ao gatilho — um caminho só, o mesmo do Escape.
+    //
+    // O ramo só age com o foco DENTRO do painel — alinhado às quatro stacks com
+    // lib em 2026-09-17, onde o ouvinte mora NO painel e um Tab dado em outro
+    // controle da página nem chega a ele. Até ali este ouvinte, que escuta no
+    // `document`, fechava o painel também quando o foco estava em OUTRO
+    // controle: o contrato fala em Tab a partir do último focável DO PAINEL, e
+    // aquele Tab é da pessoa, não do painel. Painel sem focável conta como
+    // dentro: o foco está no próprio painel (`tabindex="-1"`), que `contains`
+    // inclui.
+    if (!modal && e.key === 'Tab' && panelEl) {
+      const active = document.activeElement;
+      if (!panelEl.contains(active)) return;
+      const focusable = getFocusable(panelEl);
+      const isLeaving =
+        !focusable.length ||
+        (e.shiftKey ? active === focusable[0] : active === focusable[focusable.length - 1]);
+      if (!isLeaving) return;
+      e.preventDefault();
+      pedirChange(false, 'overlay');
+      return;
+    }
+
     // Laço de tabulação — SÓ no modo modal. Mesma forma do `dialog.ts` desta
     // stack, de propósito: é o mesmo problema, e duas escritas diferentes do
     // mesmo laço divergiriam na primeira correção.
     //
-    // Fora do modo modal não há ramo nenhum aqui: o `Tab` segue a ordem da
-    // página e SAI do painel, que é o contrato padrão do popover.
+    // É o ramo OPOSTO ao de cima, e os dois juntos são o contrato: fora do modo
+    // modal o Tab fecha e devolve ao gatilho; aqui ele volta ao começo e o
+    // painel fica.
     if (modal && e.key === 'Tab' && panelEl) {
       const focusable = getFocusable(panelEl);
       // Sem nada focável dentro, o foco não tem para onde ir e ficar preso é
@@ -586,8 +748,49 @@ export function createPopover(options: PopoverOptions): PopoverElement {
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
     if (!panelEl?.contains(target) && !trigger.contains(target)) {
+      // O mesmo gesto já anunciou pela perda de foco: o `mousedown` focou o
+      // alvo antes deste `click` chegar. Só alcançável no modo controlado.
+      if (focusLossTarget?.contains(target)) {
+        focusLossTarget = null;
+        return;
+      }
       pedirChange(false, 'overlay');
     }
+  }
+
+  // ─── Perda de foco FECHA — só fora do modo modal (D15) ─────────────────────
+  //
+  // Decisão da dona de 2026-09-17, igual nas cinco: o painel não-modal fica
+  // aberto só enquanto o foco está nele. Foco levado a OUTRO elemento do
+  // documento fecha com `overlay`, uma vez, e o foco FICA onde foi posto — o
+  // `close()` só o devolve ao gatilho quando ele estava dentro do painel ou no
+  // `body`, e aqui ele já está no destino que alguém escolheu.
+  //
+  // `focusin` no `document`, e não `focusout` no painel: o `focusout` não diz se
+  // o foco foi para um elemento ou para FORA do documento (outra janela, barra
+  // de endereço), e esse caso não fecha — sem elemento de destino, não há
+  // `focusin` nenhum. E ele não vê o foco levado para fora quando o painel não
+  // o tinha, que é justamente o estado que esta decisão elimina.
+  //
+  // Os três conflitos, cada um resolvido num lugar:
+  //  - GATILHO: conta como parte do painel. O `mousedown` do clique nele move
+  //    o foco para ele antes do `click`; tratado como fora, o foco fecharia e o
+  //    `click` reabriria.
+  //  - CLIQUE FORA: no não-controlado o foco fecha e o `close()` tira o ouvinte
+  //    de `click`; no controlado, `focusLossTarget` impede o segundo anúncio.
+  //  - TAB DA BORDA: a tecla é cancelada e o foco não se move — ver o ramo em
+  //    `handleKeydown`.
+  function handleFocusIn(e: FocusEvent): void {
+    const target = e.target as Node | null;
+    if (!panelEl || !target) return;
+    if (panelEl.contains(target) || trigger.contains(target)) {
+      focusLossTarget = null;
+      return;
+    }
+    // Já anunciado para este mesmo elemento (controlado): não repete.
+    if (focusLossTarget === target) return;
+    focusLossTarget = target as Element;
+    pedirChange(false, 'overlay');
   }
 
   trigger.addEventListener('click', (e) => {
@@ -602,8 +805,9 @@ export function createPopover(options: PopoverOptions): PopoverElement {
 
   // O painel mora em portal no body: quando o wrapper sai do DOM — troca de
   // story no Storybook, desmonte de página — nada removeria o painel, e ele
-  // sobreviveria por cima do conteúdo seguinte junto com o `keydown` e o
-  // `click` de fora. Mesma forma do dialog e do sheet.
+  // sobreviveria por cima do conteúdo seguinte junto com o `keydown`, o `click`
+  // de fora e o `focusin` da perda de foco — os três saem em `close()`. Mesma
+  // forma do dialog e do sheet.
   // `Object.assign` e não um `as`: os verbos entram no tipo do próprio alvo, e
   // `tornarDestruivel` devolve exatamente `PopoverElement` sem conversão. Uma
   // asserção aqui teria de passar por `unknown` — o wrapper é `HTMLDivElement` e

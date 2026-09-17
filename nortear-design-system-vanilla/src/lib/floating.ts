@@ -126,6 +126,8 @@ export type ComputeFloatingInput = {
   side: FloatingSide;
   align: FloatingAlign;
   offset: number;
+  /** Deslocamento no eixo do ALINHAMENTO. Ver `FloatingOptions.alignOffset`. */
+  alignOffset?: number;
   viewport: FloatingViewport;
   /** Trocar o lado quando o oposto couber MELHOR. Ver `FloatingOptions.flip`. */
   flip?: boolean;
@@ -140,7 +142,7 @@ export type ComputeFloatingInput = {
  * própria — foi assim que o painel saindo da tela viveu tanto tempo.
  */
 export function computeFloatingPosition(input: ComputeFloatingInput): FloatingPlacement {
-  const { anchor, panelWidth: pw, panelHeight: ph, align, offset, viewport } = input;
+  const { anchor, panelWidth: pw, panelHeight: ph, align, offset, alignOffset = 0, viewport } = input;
 
   // ── `flip`, e por que ele é OPT-IN ─────────────────────────────────────────
   //
@@ -193,6 +195,26 @@ export function computeFloatingPosition(input: ComputeFloatingInput): FloatingPl
     else if (align === 'end') top = anchor.bottom + viewport.scrollY - ph;
     else top = anchor.top + viewport.scrollY + anchor.height / 2 - ph / 2;
   }
+
+  // ── `alignOffset`: o vão do eixo CRUZADO ───────────────────────────────────
+  //
+  // `offset` afasta o painel da âncora no eixo PRINCIPAL (o que o `side`
+  // escolhe); este desliza o painel no eixo do ALINHAMENTO, que é o outro. Os
+  // dois são vãos, e é só por isso que cabem na mesma conta — trocar um pelo
+  // outro moveria o painel para cima do gatilho ou o desencostaria da borda que
+  // o `align` pediu.
+  //
+  // Positivo empurra para o FIM do eixo cruzado: direita nos lados vertical
+  // (`top`/`bottom`), baixo nos horizontais (`left`/`right`). É a convenção das
+  // quatro libs headless das outras stacks, e adotá-la é o que faz `alignOffset:
+  // 8` descrever a mesma tela nas cinco.
+  //
+  // Vai ANTES do travamento logo abaixo, de propósito: o deslocamento é um
+  // pedido de desenho, e a borda da janela não é negociável. Pedir 200px de
+  // desvio num painel que já encosta na margem encaixa o painel na margem em vez
+  // de o mandar para fora da tela.
+  if (verticalAxis) left += alignOffset;
+  else top += alignOffset;
 
   // ── Correção de borda, e SÓ no eixo cruzado ────────────────────────────────
   //
@@ -268,6 +290,19 @@ export type FloatingOptions = {
    * que contradiz a coordenada é pior que atributo nenhum.
    */
   flip?: boolean;
+  /**
+   * Deslocamento do painel no eixo do ALINHAMENTO, em px. Padrão `0`.
+   *
+   * O par do `offset` posicional, que é o vão do eixo principal — e é o
+   * `alignOffset` das outras quatro stacks, que o recebem da lib headless.
+   *
+   * Entra AQUI, e não como um sexto parâmetro posicional, porque
+   * `positionFloating` tem seis chamadores nesta stack (`tooltip`, `hover-card`,
+   * `dropdown-menu`, `menubar`, `submenu`, `popover`): um parâmetro novo no meio
+   * da lista quebraria os seis de uma vez, e um no fim empurraria `options` para
+   * a sétima posição. Opcional com padrão `0`, quem não pede fica idêntico.
+   */
+  alignOffset?: number;
 };
 
 /** Lê o estado da janela uma vez, no formato que a geometria espera. */
@@ -321,7 +356,8 @@ function measurePanel(panel: HTMLElement): { panelWidth: number; panelHeight: nu
  * de `offsetWidth`/`offsetHeight`, que valem zero em nó desanexado.
  *
  * @param offset Vão entre âncora e painel, em px. É o `sideOffset` das outras
- *               stacks; cada fábrica traz o próprio padrão.
+ *               stacks; cada fábrica traz o próprio padrão. O vão do OUTRO eixo
+ *               é `options.alignOffset`.
  * @returns O lado FINAL. Igual ao pedido, salvo `flip` que trocou — quem tem
  *          elemento satélite dependente do lado (a seta do tooltip) o reconcilia
  *          por aqui.
@@ -344,6 +380,7 @@ export function positionFloating(
     side,
     align,
     offset,
+    alignOffset: options.alignOffset,
     viewport: readViewport(),
     flip: options.flip,
   });
@@ -357,6 +394,114 @@ export function positionFloating(
   if (options.flip) panel.dataset.side = placement.side;
 
   return placement.side;
+}
+
+/**
+ * `overflow` que faz um ancestral recortar ou rolar o que está dentro dele.
+ *
+ * `hidden` e `clip` entram junto de `auto`/`scroll`/`overlay`: um contêiner
+ * recortado ainda pode ser rolado por código (`scrollTop`), e é a mesma lista que
+ * o floating-ui usa para achar ancestral rolável.
+ */
+const OVERFLOW_ROLAVEL = /auto|scroll|overlay|hidden|clip/;
+
+/**
+ * Os ancestrais ROLÁVEIS da âncora, do mais próximo ao mais distante.
+ *
+ * Para antes de `body`/`html`: a rolagem do documento chega pela `window`, que
+ * quem chama já escuta. Atravessa raiz de sombra pelo `host`, senão um gatilho
+ * dentro de um web component nunca acharia a rolagem de fora dele.
+ */
+function scrollAncestors(anchor: Element): Element[] {
+  const found: Element[] = [];
+  let node: Node | null = anchor.parentNode;
+  while (node) {
+    if (typeof ShadowRoot !== 'undefined' && node instanceof ShadowRoot) {
+      node = node.host;
+      continue;
+    }
+    const el = node as Element;
+    if (el.nodeType !== 1 || el === document.body || el === document.documentElement) break;
+    const { overflow, overflowX, overflowY } = getComputedStyle(el);
+    if (OVERFLOW_ROLAVEL.test(`${overflow}${overflowX}${overflowY}`)) found.push(el);
+    node = el.parentNode;
+  }
+  return found;
+}
+
+/**
+ * Mantém o painel colado na âncora enquanto ele está aberto. Devolve a LIMPEZA.
+ *
+ * Por que existe: `positionFloating` mede e escreve UMA vez, no momento em que é
+ * chamado. O painel mora no `body` com coordenadas de documento, e o gatilho
+ * mora onde quem compõe o pôs — então, se um contêiner rolável no caminho rola,
+ * se a janela muda de tamanho e o layout reflui, ou se o próprio gatilho muda de
+ * tamanho, o gatilho anda e o painel fica parado, DESCOLADO dele. As quatro libs
+ * headless das outras stacks não têm o defeito porque todas ligam o `autoUpdate`
+ * do floating-ui enquanto o painel está aberto; o vanilla, sem lib, era a única
+ * stack onde abrir um popover e rolar a lista deixava o painel para trás.
+ * Decisão da dona de 2026-09-17: reposicionar nos seis chamadores de
+ * `positionFloating` (tooltip, hover-card, dropdown-menu, menubar, submenu e
+ * popover). O `positionFloatingAtPoint` fica de fora — ponto não se move.
+ *
+ * O que escuta:
+ *   • `scroll` em CADA ancestral rolável da âncora e na `window` — evento de
+ *     rolagem não borbulha de elemento para a janela, então escutar só a janela
+ *     perderia a lista rolável onde o gatilho mora;
+ *   • `resize` na `window`;
+ *   • `ResizeObserver` na âncora e no painel — o painel que cresce (conteúdo
+ *     carregado) muda o encaixe tanto quanto o gatilho que muda de rótulo.
+ *
+ * Agrupado por `requestAnimationFrame`: uma rajada de `scroll` vira no máximo
+ * UMA conta por quadro. Sem isto cada evento mediria o painel de novo, e medir
+ * força layout — rolar uma lista com o menu aberto viraria layout em série.
+ *
+ * `update` é a MESMA conta que o componente fez ao abrir, com tudo o que ele faz
+ * com o lado final (`data-side`, a seta do tooltip). Reposicionar não anuncia
+ * nada e não move foco: quem chama passa só a parte geométrica.
+ *
+ * O `ResizeObserver` notifica uma vez ao começar a observar; essa primeira
+ * chamada refaz a mesma conta com as mesmas medidas, e sai idêntica.
+ */
+export function autoUpdateFloating(
+  anchor: HTMLElement,
+  panel: HTMLElement,
+  update: () => void,
+): () => void {
+  let frame: number | null = null;
+
+  const schedule = (): void => {
+    if (frame !== null) return;
+    frame = requestAnimationFrame(() => {
+      frame = null;
+      update();
+    });
+  };
+
+  const scrollTargets: EventTarget[] = [...scrollAncestors(anchor), window];
+  for (const target of scrollTargets) {
+    target.addEventListener('scroll', schedule, { passive: true });
+  }
+  window.addEventListener('resize', schedule);
+
+  // Guarda de ambiente, não de navegador: os navegadores suportados têm o
+  // observador, e o projeto `unit` roda em node, onde ele não existe.
+  let observer: ResizeObserver | null = null;
+  if (typeof ResizeObserver !== 'undefined') {
+    observer = new ResizeObserver(schedule);
+    observer.observe(anchor);
+    observer.observe(panel);
+  }
+
+  return () => {
+    for (const target of scrollTargets) target.removeEventListener('scroll', schedule);
+    window.removeEventListener('resize', schedule);
+    observer?.disconnect();
+    // Um quadro já agendado mediria um painel que talvez nem esteja mais no
+    // documento — e reescreveria `top`/`left` de quem acabou de fechar.
+    if (frame !== null) cancelAnimationFrame(frame);
+    frame = null;
+  };
 }
 
 /**

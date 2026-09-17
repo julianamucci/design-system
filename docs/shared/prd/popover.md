@@ -33,17 +33,18 @@ valer — e `—` é dívida declarada, não ausência de risco.
 
 | # | o contrato | portão |
 |---|---|---|
-| C1 | Abre no clique do gatilho | passo "Clicar no gatilho abre o painel" da `Playground`, nas cinco — a `Open` abre por `defaultOpen` em quatro e só clica no vanilla (§7, inconsistência 12) |
-| C2 | Ao abrir, o foco ENTRA no painel: primeiro focável, ou o próprio painel quando não há nenhum | `testes.functional.item1` + passo "O foco entra no painel ao abrir" da `Playground`, nas cinco |
-| C3 | O foco NÃO fica preso: Tab a partir do último focável SAI do painel e segue a ordem da página | só no vanilla — passo "E do ÚLTIMO focável o Tab SAI do painel" da `Focused`; nas outras quatro, — (§7, inconsistências 1 e 11) |
+| C1 | Abre no clique do gatilho | passo "Clicar no gatilho abre o painel" da `Playground`, nas cinco — e a `Open` abre por `defaultOpen` nas cinco desde 2026-09-17, quando o vanilla deixou de encenar o clique (§7, item 12) |
+| C2 | Ao abrir, o foco ENTRA no painel: primeiro `[data-autofocus]`, senão o primeiro focável, senão o próprio painel | `testes.functional.item1` + passo "O foco entra no painel ao abrir" da `Playground`, nas cinco — o degrau do `data-autofocus` é de 2026-09-16, ver D13 |
+| C3 | O foco NÃO fica preso: Tab a partir do último focável, ou Shift+Tab a partir do primeiro, **fecha o painel e devolve o foco ao gatilho** | a `Focused`, nas cinco, nos DOIS sentidos — ver D11 |
 | C4 | `Escape` fecha e devolve o foco ao gatilho | `testes.functional.item2` + passo de Escape da `Playground`, nas cinco |
-| C5 | Clique fora fecha | `testes.functional.item3` + passo "Clicar fora fecha" — na `Playground` de quatro, na `Controlled` do angular |
+| C5 | Clique fora fecha, uma vez só | `testes.functional.item3` + passo "Clicar fora fecha" na `Playground` das CINCO (o angular voltou a declará-lo ali em 2026-09-17) + passo `'Com o painel aberto, clicar em "Antes" fecha o painel uma vez só'` da `Focused`, nas cinco, que é o único que exercita clique em elemento FOCÁVEL — ver D15 |
 | C6 | O painel SEMPRE tem nome acessível — `aria-labelledby` quando há título visível, `aria-label` quando o conteúdo é livre | `testes.accessibility.item5` + passos de `Default` e `WithTitle`, nas cinco + regra `aria-dialog-name` do axe |
 | C7 | No modo padrão o painel NÃO recebe `aria-modal` — nem como `"false"` | passo "O painel não é modal" da `Playground`, nas cinco |
-| C8 | `modal: true` liga três coisas JUNTAS: foco preso, rolagem travada, `aria-modal="true"` | story `Modal`, nas cinco — mas ela mede `aria-modal` e o laço de Tab; **a trava de rolagem não tem asserção em stack nenhuma** |
+| C8 | `modal: true` liga QUATRO coisas JUNTAS: foco preso, rolagem travada, `aria-modal="true"` e o resto da página escondido do leitor de tela | story `Modal`, nas cinco: `aria-modal`, o laço de Tab, a trava de rolagem (desde 2026-09-16) e o escondimento com restauração (desde 2026-09-17, ver D16) |
 | C9 | Sem espaço no `side` pedido, o painel vira para o lado oposto (auto-flip) | story `SideTop`, nas cinco: lado exato com espaço, virada sem espaço — ver D0 |
 | C10 | Renderiza em portal no `body`; fechado, não existe no DOM | `notes.item3` |
 | C11 | Nenhuma região viva: o painel não é anúncio, é alcançado | inspeção — nenhuma regra de axe cobre ausência de `aria-live` |
+| C12 | No modo não-modal, o foco levado a OUTRO elemento da página — que não o gatilho — fecha o painel com `overlay`, uma vez, e o foco FICA onde foi posto | a `Focused`, nas cinco — ver D15 |
 
 ## 3. Decisões fixadas
 
@@ -131,7 +132,7 @@ manda esconder o resto da página, e sem foco preso ele MENTE.
 **Para revisitar**: seria preciso mostrar um caso em que conteúdo ao lado da
 página exige inércia do resto. Hoje esse caso é o Dialog.
 
-### D2 · `modal` é entregue nas cinco, e liga três coisas juntas
+### D2 · `modal` é entregue nas cinco, e liga QUATRO coisas juntas
 
 **Fixada em** 2026-09-02 (`16c6f7ee0`), sob a regra "entregar ou remover".
 **Medição**: a prop estava na tabela de props desde sempre e existia em três das
@@ -305,6 +306,347 @@ página sai em `h2` (dialog, sheet, drawer, alert-dialog e agora o popover), e
 card — que é conteúdo EM FLUXO — não afirma nível nenhum, saindo `<div>` como
 nas outras quatro.
 
+### D11 · O Tab para fora FECHA o painel, nas cinco
+
+**Fixada em** 2026-09-16, decisão da dona.
+**Medição, corrigida em 2026-09-17 na fonte das quatro libs**: o foco saía nas
+cinco (C3), mas o painel só fechava em **duas** — react, pelo
+`closeOnFocusOut = true` da base-ui (`FloatingFocusManager.js:127`, nunca
+desligado em `popover/`), e angular, pela assinatura explícita de `focusOut` do
+radix-ng (`radix-ng-primitives-popover.mjs:608-613`). As outras três não
+fechavam, **e cada uma por uma razão diferente**:
+
+- **vue** — a reka liga o `keydown` do `FocusScope` NO TEMPLATE
+  (`FocusScope.js:168`), então ele roda com ou sem trap, e a única porteira
+  (`:142`, `!loop && !trapped`) não fecha, porque o popover passa `loop`. O Tab a
+  partir do último tabulável DÁ A VOLTA (`:152-156`): o foco nunca sai, e o
+  `focusOutside` da `DismissableLayer` nunca dispara;
+- **svelte** — o bits também passa `loop` sem condição, mas protege na
+  REGISTRAÇÃO: `focus-scope.svelte.js:93-94` retorna cedo sem trap, e os
+  ouvintes só nascem em `:143`. No não-modal o laço é inerte, o foco sai e o
+  `onFocusOutside` dispara — só que ele só ANOTAVA o motivo, sem dispensar;
+- **vanilla** — não tinha ouvinte de foco nenhum.
+
+**A primeira versão desta decisão dizia "react, vue e angular fechavam", e
+estava errada no vue** — lida na `DismissableLayer`, sem descer ao
+`FocusScope`. A correção seguinte generalizou o laço da reka para o bits, e
+errou no svelte. Duas leituras de alto nível, dois erros, a mesma premissa. O
+que decide é ONDE a lib põe a porteira, e isso não se deriva de uma lib para
+outra: se mede em cada uma.
+
+**Como cada stack fecha no Tab da borda, estado final de 2026-09-17** — as cinco
+por TECLA, com `preventDefault()`, e nenhuma por detector de foco:
+
+| stack | interceptação | quem devolve o foco ao gatilho |
+|---|---|---|
+| vanilla | `keydown` no `document`, só com o foco DENTRO do painel | o `close()` da fábrica |
+| react | `onKeyDownCapture` no popup — sem ela, as sentinelas da base-ui (`FloatingPortal.mjs:175-198`) mandariam o foco ao VIZINHO do gatilho; o motivo cru `imperative-action` é trocado por `focus-out` → `overlay` | o `FloatingFocusManager` da lib |
+| vue | `@keydown.capture` com `stopPropagation()` — o handler da reka, ligado no template (`FocusScope.js:168`), roda na bolha do mesmo elemento e não chega a dar a volta; desligar o laço não era opção, o `PopoverContentImpl` passa `loop` fixo | o `closeAutoFocus` da reka |
+| svelte | `keydown` no painel, fechando por `dismiss('overlay')` | a própria stack, pelo gatilho registrado no contexto |
+| angular | `keydown` no painel, fechando com o motivo cru `focus-out` | o escopo de foco do radix-ng |
+
+**O destino do foco — decisão da dona em 2026-09-17: volta ao GATILHO, nos dois
+sentidos.** Era pendência aberta desta mesma decisão, e a Fase D a respondeu em
+navegador antes de alguém decidir: o C3 dizia "segue a ordem da página", e isso
+não funciona com painel em portal no fim do `<body>` — "depois dele" é fora do
+documento. Medido nas suítes filtradas das cinco:
+
+| stack | o que acontecia no Tab para fora |
+|---|---|
+| react | fechava, e o foco ia ao próximo focável DEPOIS DO GATILHO — a base-ui cerca o portal com sentinelas de foco (`FloatingPortal.mjs:175-198`, `getNextTabbable(domReference)`) |
+| vue | fechava, e a lib devolvia o foco ao gatilho |
+| vanilla | fechava, e o foco caía no `<body>` |
+| svelte, angular | **nem fechavam**: o foco saía do documento sem `focusin`, e o detector de "foco saiu" das duas libs nunca disparava. Num navegador real é igual — o foco escapa para a barra de endereço |
+
+Foram oferecidas duas saídas: a ordem lógica do gatilho, que é o que a base-ui
+faz, e a devolução ao gatilho. A dona escolheu a segunda — mais simples de
+implementar e de explicar, ao custo de um Tab a mais para seguir a página.
+
+**Três consequências, e a terceira é a que mais importa:**
+
+1. **O mecanismo passa a ser o mesmo nas cinco**: interceptar Tab/Shift+Tab na
+   borda do painel, com `preventDefault()`, e fechar com `overlay`. Por TECLA, e
+   não por detector de foco — a tabela acima é a prova de que detector de foco
+   não dispara num portal no fim do documento. A tabela "Como cada stack fecha"
+   mais acima traz os caminhos FINAIS das cinco;
+2. a rodada anterior deixou de chamar `preventDefault` de propósito, "para o
+   foco seguir a ordem da página" — com o destino no gatilho, o Tab nativo não
+   pode mover o foco, e o comentário que dizia aquilo passou a ser falso;
+3. **a asserção que só dizia "o foco saiu do painel" não prova mais nada.** Ela
+   passava no vue com o foco no gatilho, no react com o foco no vizinho dele, e
+   teria passado com o foco no `<body>`. A `Focused` das cinco passa a exigir o
+   foco NO gatilho, nos dois sentidos.
+**Por quê**: painel não-modal que continua aberto com o foco longe dele é painel
+órfão — quem navega por teclado já seguiu a página, e o conteúdo fica na tela
+sem dono. O motivo relatado é `overlay`, que é o que o vocabulário fechado já
+reserva para "saiu do painel sem decidir nada".
+**Escopo**: NÃO vale no modo modal, onde o foco fica preso e não há "sair".
+**Para revisitar**: precisaria de um caso em que ler o painel enquanto se
+interage com a página ao lado seja o uso esperado — e esse caso é o HoverCard.
+
+### D12 · `aria-describedby` nas cinco
+
+**Fixada em** 2026-09-16, decisão da dona.
+**Medição**: só react e angular o emitiam, pelas libs. A maioria (3, incluindo a
+referência) NÃO tinha — e mesmo assim o conteúdo compartilhado prometia o
+atributo em três chaves × três idiomas, e a story do svelte
+(`popover.stories.ts:67`) AFIRMAVA a ligação que a stack não entregava.
+**Por quê**: aqui a maioria estava errada. A alternativa era apagar nove
+afirmações de documentação e uma asserção, perdendo a leitura da descrição em
+sequência ao título — que é o ganho real do atributo para quem usa leitor de
+tela.
+**Cuidado ao revisitar**: o par com o C6 é de papéis distintos — `labelledby`
+NOMEIA, `describedby` DESCREVE. Os dois no mesmo elemento não são ambiguidade,
+ao contrário do que vale para `aria-label` × `aria-labelledby` (D3).
+
+### D13 · `data-autofocus` é o primeiro degrau do C2
+
+**Fixada em** 2026-09-16, decisão da dona.
+**Medição**: o atributo era lido só no angular (`ui/popover.ts:409`), com motivo
+escrito — o Calendar dentro do Popover. Varredura do repositório inteiro no
+mesmo dia: ele existe em DOIS lugares, `angular/ui/calendar.ts:374` que ESCREVE
+e `angular/ui/popover.ts:409` que LÊ. Mais nada.
+**O contrato, igual nas cinco**: ao abrir, o foco vai ao primeiro
+`[data-autofocus]` dentro do painel; sem marca, ao primeiro focável; sem nenhum,
+ao próprio painel. `[data-autofocus]` com `tabindex="-1"` VALE como alvo — é
+foco programático, que é exatamente o que o atributo pede.
+**Por que não virou regra de categoria**: Dialog, Sheet, Drawer e AlertDialog
+não leem o atributo; eles usam o `openAutoFocus` da lib, que é outra coisa (e
+`autoFocus` do InputOTP é uma terceira). Escrever isto no `18-overlay.md`
+anunciaria invariante de categoria sobre metade dos componentes.
+
+> **ASSIMETRIA REGISTRADA · 2026-09-16** — depois desta decisão as cinco LEEM o
+> atributo, mas só o Calendar do angular o ESCREVE. Pôr um Calendar dentro de um
+> Popover foca o dia certo sozinho ali e não nas outras quatro. Não é capacidade
+> inerte (quem compõe pode marcar à mão em qualquer stack), mas é a mesma
+> composição se comportando diferente. A dona decidiu em 2026-09-16 **não** puxar
+> o `calendar` para a passagem do popover.
+> **Fecha quando**: o `calendar` das outras quatro marcar o dia em vista com
+> `data-autofocus`, como o do angular — primeira tarefa de `/pipeline fix calendar`.
+>
+> **E um segundo item para a mesma passagem, registrado em 2026-09-17**: a D15
+> passou a fechar o painel quando o foco sai dele, e o Calendar dentro do
+> Popover é o único consumidor do primitivo nas cinco stacks. A leitura diz que
+> navegar a grade com as setas não fecha o painel — o foco da grade fica dentro
+> dele —, mas **nada prova**: a play do `calendar-compositions` abre o painel e
+> clica num dia, e nunca anda pela grade pelo teclado, em stack nenhuma.
+> **Fecha quando**: a composição de seletor de data das cinco navegar a grade
+> com as setas, com o painel aberto, e afirmar que ele continua aberto.
+
+### D14 · `alignOffset` entregue nas cinco
+
+**Fixada em** 2026-09-16, decisão da dona, sob a mesma regra "entregar ou
+remover" da D2 — e invertida em relação a ela: na D2 a prop estava documentada e
+faltava em duas stacks; aqui ela existia em duas e não estava documentada em
+lugar nenhum.
+**Medição**: prop no react (padrão `0`) e input no angular (padrão `0`); ausente
+do vanilla, e vue e svelte não a declaram (só a repassam por spread). Fora do
+popover, porém, `alignOffset` já é vocabulário da casa nas mesmas duas stacks —
+context-menu, dropdown-menu, hover-card, menubar, navigation-menu e select no
+react; combobox, context-menu, hover-card, select, menubar e dropdown-menu no
+angular —, e a divergência dele já estava registrada, em aberto, na §7 do
+`hover-card.md` e do `dropdown-menu.md`. Não era prop nova: era prop pela metade.
+**Consequência de implementação**: o vanilla não tinha onde recebê-la. O
+`positionFloating` (`src/lib/floating.ts`) recebe um `offset` só, do eixo
+PRINCIPAL. O deslocamento do eixo cruzado entra em `FloatingOptions` e na função
+pura `computeFloatingPosition` — **nunca como parâmetro posicional**, porque há
+seis call sites naquela stack (tooltip, hover-card, dropdown-menu, menubar,
+submenu, popover) e inserir posição quebraria todos. Com padrão `0`, os outros
+cinco ficam idênticos.
+
+**Esta decisão nasceu dizendo "entregue nas cinco", e a afirmação era falsa em
+duas — corrigido em 2026-09-17.** A asserção nova da `SideTop` (`alignOffset: 8`,
+exigindo o painel 8 px deslocado no eixo cruzado) reprovou no vue e no svelte
+medindo **0 px**: as duas libs usam o `@floating-ui`, que **só aplica
+deslocamento de alinhamento com `start`/`end`** — com `align: 'center'`, que é o
+padrão, ele não faz nada. A base-ui, o radix-ng e o vanilla o aplicam também no
+centro, e é por isso que react, angular e vanilla nunca tiveram o defeito.
+Conserto nas duas: o painel passa à lib uma ÂNCORA VIRTUAL já deslocada no eixo
+cruzado (vue `PopoverContent.vue`, `crossAxisReference`, com o gatilho e o
+`PopoverAnchor` registrados num contexto próprio; svelte `popover-content.svelte`,
+`effectiveAnchor` como `customAnchor`).
+
+O que isto ensina além do popover: **prop de posicionamento entregue não é prop
+de posicionamento que age.** A tabela de props publicava `alignOffset` nas duas
+stacks antes de hoje, e ele era inerte no alinhamento padrão — o tipo compilava,
+a docs page listava, e nenhuma story pedia o efeito. Vale para qualquer
+`*Offset` que apareça nos vizinhos flutuantes.
+
+### D15 · O painel não-modal fecha quando perde o foco
+
+**Fixada em** 2026-09-17, decisão da dona.
+**Medição**: as `Focused` das cinco ganharam um focável antes e outro depois do
+gatilho, para a asserção de destino da D11 ter dentes — e o passo "com o foco em
+Antes e o painel aberto, o Tab não fecha" mostrou três comportamentos para o
+mesmo estado:
+
+| stack | foco levado por código para fora do painel aberto |
+|---|---|
+| vanilla, svelte | o painel ficava aberto |
+| vue, angular | o painel fechava na hora — fechamento por perda de foco da reka e do radix-ng |
+| react | o `focus()` não fechava; e o Tab seguinte caía numa sentinela da base-ui posta logo antes do gatilho, fechava o painel e devolvia o foco ao mesmo lugar: **a tecla não avançava** |
+
+O estado só era alcançável por código da aplicação: clique fora já fechava nas
+cinco, e pelo teclado a D11 fecha antes de o foco sair.
+
+**O contrato, igual nas cinco**:
+- foco levado a outro elemento do documento que não esteja no painel nem seja o
+  gatilho → o painel fecha, com `overlay`, **uma vez**, e o foco **fica onde foi
+  posto** — não é devolvido ao gatilho, porque quem o moveu escolheu o destino;
+- **o gatilho conta como parte do painel**: clicar nele com o foco dentro fecha
+  uma vez só, pelo clique, sem um segundo fechamento por perda de foco. Foi
+  exatamente essa disputa que fez o svelte tirar a detecção por foco em
+  2026-09-17 — o clique alternava o painel e a perda de foco o fechava junto;
+- **clique fora continua sendo um fechamento só**, embora o clique mova o foco
+  antes de o evento de clique chegar;
+- foco que sai do DOCUMENTO — outra janela, barra de endereço — **não** fecha:
+  não há elemento de destino. A saída pelo teclado nas bordas do painel é da D11.
+
+**Por quê**: é o argumento do painel órfão da D11 levado até o fim — o painel
+não-modal fica aberto só enquanto o foco está nele. E alinha pela maioria das
+libs, em vez de desligar comportamento de três delas.
+
+**Consequência que conta**: o defeito da tecla engolida no react deixa de ser
+alcançável. Com o `focus()` fechando, o estado "foco antes do gatilho com o
+painel aberto" não existe mais.
+
+**Como cada stack detecta a perda de foco, medido na fonte e na suíte em
+2026-09-17:**
+
+| stack | detecção | o gatilho conta como painel | o foco fica onde foi posto | clique fora = um fechamento |
+|---|---|---|---|---|
+| vanilla | ouvinte de `focusin` no `document`, registrado só depois que o foco entra no painel | excluído no ouvinte | o `close()` só devolve o foco quando ele estava no painel ou no `<body>` | o `close()` remove o ouvinte de clique antes de o `click` chegar |
+| react | ouvinte PRÓPRIO (`onBlur`/`onFocus` do React, que atravessam portal) — o `closeOnFocusOut` da base-ui nunca disparava: o `markInsideReactTree` (`FloatingFocusManager.mjs:324`) marca o foco como interno e a checagem sai cedo (`:290-293`) | registro de gatilhos do próprio popover | a lib não puxa de volta | `closedRef` cancela o segundo — **defeito anterior a esta passagem**: clique em elemento FOCÁVEL fora gerava dois `popover_close` só com a lib |
+| vue | a lib — `DismissableLayer.js:65-71` | a lib (`PopoverContentNonModal.js:138-139`) | a lib: interação fora suprime o `closeAutoFocus` (`:125`, `:134`) | a lib: o `pointerdown` fora bloqueia o `focusin` seguinte (`:140`) |
+| svelte | `onFocusOutside` do bits, com o gatilho excluído | excluído no handler | a bandeira `leftByFocus` bloqueia a devolução ao gatilho | a checagem de clique fora do bits sai quando o painel já saiu (`use-dismissable-layer.svelte.js:121-125`) |
+| angular | a lib | `isRelatedTargetInside` (`floating-focus-manager.mjs:509`) | `shouldPreserveMovedFocus()` (`focus-scope.mjs:655-663`) | perda de foco ignorada com o botão pressionado (`:499`), e `close()` sai cedo (`popover.mjs:215`) |
+
+**O instrumento, porque ele decidiu três provas de dentes.** O `userEvent.click`
+não reproduz a ordem real: no sintético o `click` chega antes da detecção de
+perda de foco das libs, que é assíncrona, e o passo do clique no gatilho passava
+COM o defeito. Duas chamadas soltas de `userEvent.pointer` não geram `click`
+nenhum. O que pegou nas três stacks de lib assíncrona: pressionar e soltar na
+MESMA instância de `userEvent.setup()`, com pausa de relógio entre os dois.
+
+**E por que a cobertura antiga nunca viu o fechamento duplo do react**: a
+Playground das cinco testa "clicar fora fecha" num `<p>` NÃO focável, que só
+aciona o caminho do ponteiro. A `Focused` ganhou o passo em elemento focável nas
+cinco. O dente foi provado no react
+(sem o `closedRef`, três fechamentos) e no vue (anúncio duplicado plantado,
+"expected 2 to be 1"). Nas outras três — vanilla, svelte e angular — o segundo
+anúncio não se produz sem artifício, pelas guardas da última coluna da tabela
+acima; ali o passo fica como portão de regressão, que reprova no dia em que a
+guarda sumir.
+
+### D16 · No modo modal, o resto da página é escondido do leitor de tela
+
+**Fixada em** 2026-09-17, decisão da dona (item 7 da §7).
+**Medição**: as cinco já prendiam o foco, travavam a rolagem e anunciavam
+`aria-modal="true"` — mas esconder o resto da página, que é o que o `aria-modal`
+PROMETE, só acontecia em parte: o vue escondia sempre (a reka, pelo pacote
+`aria-hidden`), react e angular **só quando havia peça de fechar registrada** no
+painel, e svelte e vanilla nunca. Leitores de tela honram `aria-modal` de forma
+desigual, e o caso conhecido é o VoiceOver do Safari.
+
+**O contrato**: modo modal e painel aberto → todo elemento fora do painel recebe
+`aria-hidden="true"`, pelo percurso "esconder os outros" (os IRMÃOS de cada
+ancestral do painel até o `<body>`), **sempre**, com ou sem peça de fechar. Ao
+fechar e ao desmontar, **cada elemento volta ao valor de antes**. No modo
+não-modal, nada é escondido. Com isso o modal deixa de ser três coisas e passa a
+ser QUATRO (C8, D2).
+
+**`aria-hidden`, e não `inert`**: `inert` também bloqueia ponteiro nos elementos
+de fora, e isso ameaçaria "clique fora fecha". Medido no angular: se o `inert`
+fosse aplicado, o clique fora ainda fecharia (o evento cai no `<body>`), mas o
+controle clicado ficaria inalcançável.
+
+**As libs não bastavam, e a razão é a mesma nas duas que tentaram**: elas tratam
+`aria-hidden="false"` como "não escondido", escrevem `"true"` e, ao desfazer,
+**removem o atributo** — o valor original nunca voltava (base-ui
+`markOthers.mjs:91,98-99,122`; pacote `aria-hidden` 1.2.6
+`dist/es2015/index.js:66,78-79,97-100`). Por isso react, angular, svelte e
+vanilla escrevem o percurso, e o vue acrescenta um complemento que devolve o
+`"false"` depois que a lib desfaz.
+
+**A contagem é por ELEMENTO e no nível do documento**, não por instância: o valor
+original é lido pela primeira instância que esconde e devolvido quando a última
+solta. Guardar "o valor anterior" em cada instância falha com dois painéis
+fechando fora de ordem — é a mesma razão da trava de rolagem contada.
+
+**REGIÕES VIVAS não são escondidas.** A primeira redação desta decisão dizia
+"todo elemento", e estava errada: escondida, uma região viva para de anunciar, e
+um toast de "salvo" ou de erro fica MUDO com o painel aberto. As duas libs já
+faziam a exceção (`markOthers` da base-ui; pacote `aria-hidden`
+`index.js:131-133`), e foi a medição do vue e do svelte que a trouxe.
+
+| stacks | o que fica de fora |
+|---|---|
+| vanilla, react, angular, svelte | `[aria-live]` com qualquer valor (inclusive `off`), `<script>`, e os seis papéis de região viva implícita: `status`, `alert`, `log`, `progressbar`, `marquee`, `timer` |
+| vue | `[aria-live]` e `<script>` — **divergência de mecânica de lib**: quem escolhe é o pacote `aria-hidden` da reka, e alargar exigiria patch |
+
+**O svelte esteve nessa segunda linha por algumas horas de 2026-09-17, e saiu.**
+Ele implementou a exceção copiando o que a lib fazia — `[aria-live]` e `<script>`
+— e a medição do portão mostrou que a lista das outras três era maior. Como ali o
+algoritmo é NOSSO, alargar custou uma constante; o vue fica porque a escolha é do
+pacote. Detalhe de implementação que vale guardar: os papéis são lidos como lista
+de tokens em minúsculas, e não por seletor `[role~="status"]`, porque o seletor de
+atributo do CSS **não** é insensível a caixa.
+
+`role="region"` **continua** escondido, de propósito: marco não é anúncio.
+Consequência registrada da divergência: um elemento marcado SÓ por
+`role="status"`, sem `aria-live` explícito, é escondido no vue e não nas outras
+quatro. O toaster da casa declara `aria-live`, então o caso alcançável é o de
+quem compõe por papel.
+
+**O valor `'trap-focus'` do angular saiu junto**, por decisão da dona no mesmo
+dia: ele prendia o foco e anunciava `aria-modal` **sem** travar a rolagem e sem
+esconder — metade de um contrato, que é o que a D1 e a D2 proíbem. O `modal`
+daquela stack passou a ser `boolean`, como nas outras quatro, e `aria-modal`, o
+laço de tabulação e o escondimento passaram a sair da MESMA pergunta, em vez de
+três condições que podiam discordar.
+
+**Portões**: passo `'Com o painel modal aberto, o resto da página fica escondido
+do leitor de tela, e volta ao fechar'` na `Modal`, e
+`'Uma região viva fora do painel continua anunciando com o modal aberto'` — as
+duas nas cinco, com o contraste (um elemento comum CONTINUA escondido), que é o
+que impede a exceção larga demais de passar. E na `Focused`,
+`'No modo não-modal, o resto da página não é escondido'`. Provado com defeito
+plantado nas cinco, nos três sentidos: sem esconder, sem restaurar o valor
+anterior, e escondendo no não-modal.
+
+**Medido e SEM defeito, para não ser remedido**: popover aninhado. Um segundo
+popover aberto de dentro de um painel modal **não** é escondido — o percurso é um
+instantâneo dos irmãos no instante de abrir, e o painel novo entra no `<body>`
+depois; e nada sobra ao fechar. Um relatório desta passagem afirmou o contrário,
+sem medir.
+
+### D17 · Aberto, o painel acompanha o gatilho
+
+**Fixada em** 2026-09-17, decisão da dona (item 8 da §7): "reposicionar nos seis
+consumidores agora".
+**Medição**: o vanilla calculava a posição UMA vez, ao abrir; rolar a página —
+inclusive dentro de um contêiner — ou redimensionar a janela deixava o painel
+parado enquanto o gatilho se movia. As outras quatro nunca tiveram o defeito: as
+libs usam o `autoUpdate` do floating-ui.
+**Mecanismo**: `autoUpdateFloating` (`src/lib/floating.ts`) escuta rolagem em
+cada ancestral rolável do gatilho e na janela, redimensionamento da janela, e
+mudança de tamanho do gatilho e do painel (`ResizeObserver`), agrupando por
+quadro; devolve a limpeza. No popover é ligado ao abrir e desligado no `close()`,
+que o desmonte também chama. Cada atualização refaz a posição com o MESMO `side`,
+`align`, `sideOffset`, `alignOffset` e `flip`, e reescreve o `data-side`.
+**Escopo**: a decisão valeu para os SEIS consumidores do `positionFloating` no
+vanilla — ver a D8 do `tooltip.md` (onde a SETA é refeita a cada atualização), a
+D10 do `hover-card.md` e a D13 do `dropdown-menu.md` (com a tabela de onde o
+acompanhamento age e onde não age). O menu de contexto fica de fora por ser
+ancorado num PONTO: não há gatilho que se mova.
+**Portão**: passo `'Com o painel aberto, o gatilho deslocado e a página rolada
+reposicionam o painel junto dele'` na `States/Open`, mais a `ListenerCleanup`,
+que reprovou com `window:scroll` e `window:resize` sobrando quando a limpeza foi
+retirada. Reposicionar não anuncia estado nem move foco, e o passo afirma isso.
+**Limite declarado**: a sonda de vazamento só conta ouvintes de `window` e
+`document`; os de contêiner rolável e o `ResizeObserver` ficam provados pelo
+teste unitário do utilitário.
+
 ## 4. Anatomia
 
 ```
@@ -317,7 +659,7 @@ popover                       (raiz — só estado; caixa própria só no vanill
     └── popover-content       role="dialog" · a caixa
         ├── popover-header        ESTRUTURA — coluna com gap próprio
         │   ├── popover-title        h2 (ou role="heading" aria-level="2"), peso medium
-        │   └── popover-description  p (div no svelte), --muted-foreground
+        │   └── popover-description  p nas cinco (era `div` no svelte até 2026-09-17), --muted-foreground
         └── [conteúdo arbitrário]  campo, botão, seleção — é o que distingue
                                    este painel de um menu ou de uma dica
 ```
@@ -466,8 +808,11 @@ Forma de API não tem fonte de verdade — cada lib tem a sua.
 |---|---|
 | vanilla | fábrica: `createPopover({ trigger, content, … })` devolve `{ open, close, toggle, setOpen }` — é `setOpen` que dá forma ao modo controlado, e não há leitor de estado. Sub-fábricas `createPopoverHeader/Title/Description`; `createPopoverTitle` aceita `level` |
 | vanilla, angular | recebem o nome acessível por opção/`input` (`ariaLabel`); nas outras três é atributo no elemento |
-| angular | `modal` não é booleano na lib: o `radix-ng` aceita a string `'trap-focus'`, e o wrapper traduz |
+| angular | a LIB aceita `modal` não booleano (o `radix-ng` recebe também a string `'trap-focus'`), mas o wrapper **não expõe isso**: `PopoverModal` é `boolean`, como nas outras quatro, desde 2026-09-17 — o valor saiu por decisão da dona, ver D16 |
 | svelte | a lib não tem `modal`; o mecanismo é `trapFocus` + `preventScroll` no Content |
+| todas | o segundo argumento do `onOpenChange` (item 10): vanilla e svelte `(open, reason?)` no vocabulário do design system; vue `update:open [value, reason?]`; react `(open, eventDetails)` da base-ui; angular `RdxPopoverOpenChange`. A tabela compartilhada publica os quatro motivos fechados, que é o que atravessa as cinco |
+| react, vue | o `data-slot="popover"` da RAIZ não existe (item 9): nas duas a raiz da lib não renderiza elemento, então o atributo não chegava ao DOM. Removido em 2026-09-17, em vez de ficar como atributo que ninguém pode consultar. A raiz com caixa própria é só do vanilla (`display: contents`) e do angular (`nds-inline-block`) |
+| vue | ao esconder o resto da página no modo modal, a lista do que fica de fora é do pacote `aria-hidden` da reka, e é menor que a das outras quatro — ver a tabela da D16 |
 
 ### Peças, por stack
 
@@ -534,6 +879,13 @@ onde o comportamento é delas. Caminhos curtos: `react/…` é
    há ouvinte de foco (`ui/popover.ts:556-591` trata Escape, Tab modal e clique
    fora). Maioria (3): fecha. A referência não fecha, e o C3 só diz que o foco
    sai — não diz se o painel fica. **Decisão da dona.**
+
+   **Remedido em 2026-09-17, e este item estava errado no vue.** A
+   `DismissableLayer` emite `dismiss` no `focusOutside`, como está escrito — mas
+   o `focusOutside` nunca chega pelo Tab, porque o `FocusScope` da reka dá a
+   volta antes (`FocusScope.js:142,152-156,168`). A maioria real era **duas**
+   (react e angular), não três. Decidido e fechado pela D11, que registra o
+   caminho de cada stack.
 2. **`aria-describedby` só existe em duas.** react: a base-ui liga
    (`@base-ui/react/popover/popup/PopoverPopup.js:94`), provado em
    `react/ui/popover.stories.tsx:95` e `popover-variants.stories.tsx:158`.
@@ -603,10 +955,15 @@ onde o comportamento é delas. Caminhos curtos: `react/…` é
     `update:open [value, reason?]` (`ui/popover/Popover.vue:34-38`); react
     `(open, eventDetails)` da base-ui, com o motivo cru; angular
     `RdxPopoverOpenChange` com `reason` cru. A tabela compartilhada publica
-    `(open: boolean) => void`. E `alignOffset`: prop do react
-    (`ui/popover.tsx:185`) e input do angular (`ui/popover.ts:165`), repassado à
-    lib no vue e no svelte, **ausente** do vanilla (`ui/popover.ts:115-159`) e da
-    tabela compartilhada.
+    `(open: boolean) => void` — **corrigido em 2026-09-16** para publicar o
+    segundo argumento, que as cinco entregam. E `alignOffset`: prop do react
+    (`ui/popover.tsx:185`, padrão `0`) e input do angular (`ui/popover.ts:165`,
+    padrão `0`), **ausente** do vanilla e da tabela compartilhada.
+    **Esta linha dizia "repassado à lib no vue e no svelte", e a remedição de
+    2026-09-16 a derrubou**: `alignOffset`/`align-offset` tem ZERO ocorrências
+    em qualquer arquivo de popover das duas. O que existe é o spread de props
+    para a lib, que não é a mesma afirmação — e a diferença importa, porque
+    "repassado" faz parecer entregue. Fechado pela D14.
 
 **Stories e asserções**
 
@@ -674,9 +1031,12 @@ onde o comportamento é delas. Caminhos curtos: `react/…` é
 **Snippets e docs page**
 
 19. **O svelte tem UM construtor de snippet.** `svelte/ui/popover/popover.source.ts`
-    exporta só `popoverSource`, com 13 casos no teste; react 12 construtores e 23
-    casos, vue 13 e 26, vanilla 11 e 22, angular 12 e 44 (contagem de
-    `it`/`test`). As stories do svelte reaproveitam a `transform` do `meta`. O
+    exporta só `popoverSource`, com 13 casos no teste; react 12 construtores e
+    **22** casos, vue 13 e 26, vanilla 11 e 22, angular 12 e 44 (contagem de
+    `it`/`test`). **O 23 do react era erro de contagem**, achado na remedição de
+    2026-09-16: `^\s*(it|test)\(` devolve 22, e contando `it.each` e aninhados
+    devolve 26 — nenhum dos dois métodos chega a 23. Número em PRD que ninguém
+    recontou é como qualquer outra afirmação não verificada. As stories do svelte reaproveitam a `transform` do `meta`. O
     audit não reprova (o slug volta vazio), porque a regra olha a presença de
     `transform`, não a granularidade. Maioria (4): construtor por story.
 20. **A tabela de props da docs page do vanilla é literal, e uma linha é
@@ -706,28 +1066,64 @@ os mesmos valores de `location` (`docs_demo`, `docs_variantes`,
 `aria-modal` na `Playground`; o laço de Tab e o `aria-modal` na `Modal`; a
 `SideTop` exigindo o lado exato e a virada.
 
-> **PENDÊNCIA · 2026-09-15** — as inconsistências 1 a 21 acima estão abertas.
-> As que pedem decisão da dona são a 1 (Tab para fora fecha?), a 2
-> (`aria-describedby` nas cinco ou em nenhuma), a 6 (`data-autofocus`) e a 11
-> (story de foco nas cinco ou em nenhuma).
-> **Fecha quando**: cada item estiver alinhado, ou declarado como divergência
-> registrada na tabela de forma acima, e esta seção for remedida.
+> **PENDÊNCIA · 2026-09-15, em fechamento desde 2026-09-16** — as inconsistências
+> 1 a 21 acima estão abertas.
+> **As quatro que pediam decisão da dona foram decididas em 2026-09-16**: a 1
+> pela D11 (o Tab para fora fecha nas cinco), a 2 pela D12 (`aria-describedby`
+> nas cinco) e a 6 pela D13 (`data-autofocus` promovido). A 11 fechou sem D
+> própria, por ser o PORTÃO da D11: a `Focused` passa a existir nas cinco, com o
+> passo do C3 exigindo as duas metades — o foco sai e o painel fecha. Entrou
+> junto a D14 (`alignOffset` entregue nas cinco), que saiu do item 10.
+> **Remedidas em 2026-09-16**: 19 dos 21 itens seguem exatos; a 10 e a 19 tinham
+> afirmação errada DESTE documento, corrigidas acima.
+> **FECHADA em 2026-09-17.** Os 21 itens e os seis achados novos (N1–N6) estão
+> alinhados, ou declarados na tabela de forma acima com a premissa medida. As
+> decisões da dona que fecharam os que dependiam dela: D11 e a devolução do foco
+> ao gatilho (item 1), D12 (2), D13 (6), a `Focused` nas cinco (11), D14 (10),
+> D15, D16 (7) e D17 (8). O item 13 fechou com as provas de confirmação iguais
+> nas cinco, o 9 com a remoção do atributo inerte, e o N5 com a classe no lugar
+> do `style` inline.
+
+> **PENDÊNCIA · 2026-09-17** — no vanilla, com dois popovers aninhados abertos,
+> **um único Escape fecha os dois**: cada instância escuta o `keydown` no
+> `document`, e não há pilha de camadas. A `18-overlay.md` diz o contrário —
+> "Escape fecha o overlay do topo da pilha" —, e as quatro libs mantêm essa
+> pilha. Medido de passagem em 2026-09-17, ao verificar o escondimento em
+> painel aninhado (D16).
+> **É a MESMA família de um item já aberto**: o `dialog.md` registra, desde
+> 2026-09-15, que "no vanilla um Escape fecha todos os painéis abertos". O
+> mecanismo é o mesmo — ouvinte por instância no `document` —, então o conserto
+> é do vanilla como um todo, não deste componente.
+> **Fecha quando**: o vanilla tiver uma pilha de camadas que só entregue o
+> Escape ao painel do topo, com asserção de painel aninhado no popover e no
+> dialog.
 
 > **PENDÊNCIA · 2026-09-15** — a trava de rolagem do modo modal (C8) não tem
 > asserção em stack nenhuma.
-> **Fecha quando**: a `Modal` das cinco medir a rolagem travada com o painel
-> aberto e destravada depois de fechar.
+> **Confirmada por varredura em 2026-09-16**: `overflow`, `scrollLock`,
+> `lockBodyScroll`, `body.style`, `scrollHeight` e `scrollTop` têm ZERO
+> ocorrências em todos os arquivos de story de popover das cinco stacks. As cinco
+> `Modal` medem `aria-modal` e o laço de Tab, e nenhuma toca em rolagem — ou
+> seja, um terço do que a D2 promete não é cobrado em lugar nenhum.
+> **FECHADA em 2026-09-16**: a `Modal` das cinco mede a rolagem travada com o
+> painel aberto e destravada depois de fechar, e o portão foi provado com a
+> trava inerte plantada. Em 2026-09-17 a mesma story ganhou o escondimento do
+> resto da página (D16), de modo que as QUATRO coisas que o `modal` liga passaram
+> a ter asserção nas cinco.
 
 ## 8. Acessibilidade
 
 **Atributos.** Painel: `role="dialog"`, mais `aria-labelledby` **ou** `aria-label`
-(C6), `aria-describedby` quando há descrição — **só no react e no angular**, onde
-a lib o liga; vue, svelte e vanilla não o emitem (§7, inconsistência 2) —, e
-`aria-modal="true"` só no modo modal. Gatilho: `aria-expanded`, `aria-haspopup="dialog"`, e `aria-controls` só
+(C6), `aria-describedby` quando há descrição — **nas cinco desde 2026-09-16**
+(D12); até então só no react e no angular, onde a lib o liga —, e
+`aria-modal="true"` só no modo modal — e, desde 2026-09-17, junto com o resto da
+página escondido por `aria-hidden` (D16), porque anunciar inércia sem cumpri-la é
+a metade que engana. Gatilho: `aria-expanded`, `aria-haspopup="dialog"`, e `aria-controls` só
 com o painel montado (D8).
 
-**Teclado.** Tab percorre os focáveis do painel e, a partir do último, SAI e segue
-a ordem da página — no modo modal volta ao primeiro. Shift+Tab espelha. Escape
+**Teclado.** Tab percorre os focáveis do painel; a partir do último, **fecha o
+painel e devolve o foco ao gatilho** (D11). Shift+Tab espelha, a partir do
+primeiro. No modo modal o Tab volta ao primeiro, e ali não há "sair". Escape
 fecha e devolve o foco ao gatilho. Enter e Espaço ativam o gatilho.
 
 **O que NÃO se faz, de propósito:**

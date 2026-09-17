@@ -23,6 +23,10 @@ const meta = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     design: figmaDesign('popover'),
+    // Declarado, e não herdado: sem `layout` o Storybook cai em `padded`, e esta
+    // era a única Playground das cinco fora do `centered` — o quadro deixava de
+    // casar com o das irmãs justamente na página que se lê lado a lado.
+    layout: 'centered',
     docs: {
       page: withAutoDocsTab(PopoverDocs),
       source: { transform: popoverSource },
@@ -189,13 +193,19 @@ export const Playground: Story = {
       ).toBe(antes + 1);
     });
 
-    await step('O painel é nomeado pelo título que ele carrega', async () => {
+    await step('O painel é nomeado pelo título e descrito pela descrição', async () => {
       // E não pelo texto do gatilho: com título, o nome do diálogo é o título.
       const p = panel()!;
       const id = p.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)).toHaveAttribute('data-slot', 'popover-title');
       await expect(p).toHaveAccessibleName(/Configurações de exibição/i);
+      // D12: `labelledby` NOMEIA, `describedby` DESCREVE.
+      const idDescription = p.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveAttribute(
+        'data-slot', 'popover-description',
+      );
     });
 
     await step('O painel não é modal', async () => {
@@ -204,12 +214,90 @@ export const Playground: Story = {
       await expect(panel()).not.toHaveAttribute('aria-modal');
     });
 
-    await step('O foco entra no painel ao abrir', async () => {
+    await step('Ao abrir, o foco vai ao PRIMEIRO focável do painel', async () => {
+      // É o que separa popover de tooltip: o conteúdo é interativo, então o foco
+      // precisa alcançá-lo sem caçar com Tab pela página inteira.
+      //
+      // E o alvo é EXATO, não "algum lugar dentro do painel": `contains` passava
+      // com qualquer elemento focado, e é este passo que dá dentes ao seguinte —
+      // sem ele, "o foco está dentro" passaria com ou sem `data-autofocus`. Aqui
+      // o primeiro focável é o Cancelar do rodapé.
       await waitFor(() => {
         if (!panel()!.contains(document.activeElement)) {
           throw new Error('foco não entrou no painel');
         }
       });
+      await expect(within(panel()!).getByRole('button', { name: /Cancelar/i })).toHaveFocus();
+    });
+
+    await step('E `data-autofocus` VENCE o primeiro focável, mesmo com tabindex=-1', async () => {
+      // A outra metade de `accessibility.item4`, que o `covers` desta story
+      // reivindica desde que o conteúdo passou a nomear o atributo.
+      //
+      // O alvo marcado é o TÍTULO, com `tabindex="-1"`: não é o primeiro
+      // focável (nem sequer tabulável), então a asserção só passa se a marca for
+      // lida — e lida SEM o filtro de `FOCAVEIS`, que exclui `tabindex="-1"` de
+      // propósito. Uma implementação que passasse a marca pela lista de
+      // focáveis cairia no Cancelar e reprovaria aqui.
+      //
+      // A marca é posta QUANDO o painel monta, e não no painel aberto antes de
+      // fechar: o conteúdo é renderizado de novo a cada abertura, e um atributo
+      // escrito no nó anterior some com ele. O observador escreve antes de a
+      // política de foco rodar — ela espera o `nextTick` do `FocusScope` da lib,
+      // e a notificação de mutação é a microtarefa enfileirada antes dele.
+      await close();
+      const marked: HTMLElement[] = [];
+      // TODOS os títulos de painel, e não só o de `panel()`: um painel ainda em
+      // saída pode continuar no DOM, e a primeira ocorrência seria ele.
+      const mark = () => {
+        const titles = document.querySelectorAll<HTMLElement>(
+          '[data-slot="popover-content"] [data-slot="popover-title"]:not([data-autofocus])',
+        );
+        for (const title of titles) {
+          title.setAttribute('tabindex', '-1');
+          title.setAttribute('data-autofocus', '');
+          marked.push(title);
+        }
+      };
+      const observer = new MutationObserver(mark);
+      let openPanel: HTMLElement | null = null;
+      try {
+        // `data-slot` também: onde ele é escrito por binding, pode chegar depois
+        // da inserção do nó, e a marca procura por ele.
+        //
+        // E NÃO `data-state`, que o svelte precisou acrescentar em 2026-09-17 —
+        // premissa medida aqui, e é ela que dispensa o atributo: o `closed()`
+        // desta story espera `panel()` virar nulo, ou seja o nó FORA do DOM.
+        // Reabrir depois disso é sempre uma INSERÇÃO, que o `childList` pega; o
+        // que quebrou lá foi o `closed()` tolerar o painel ainda no DOM com
+        // `data-state="closed"`, e aí a lib reusava o nó sem inserir nada.
+        //
+        // A premissa se cobra sozinha: se a reka passar a manter o painel
+        // montado ao fechar, é o `closed()` que estoura por tempo —
+        // ruidosamente —, e não este passo que fica verde medindo menos. Se
+        // algum dia a espera for afrouxada, o filtro tem de crescer junto.
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['data-slot'],
+        });
+        openPanel = await open();
+        const title = openPanel.querySelector<HTMLElement>('[data-slot="popover-title"]')!;
+        await expect(title).toHaveAttribute('data-autofocus');
+        await waitFor(() => expect(title).toHaveFocus());
+      } finally {
+        observer.disconnect();
+        // O foco sai do título ANTES de a marca sair: tirar o `tabindex` de um
+        // elemento focado joga o foco no `body`, e foco fora do painel o
+        // dispensa. O estado final é o do passo anterior — aberto, foco no
+        // Cancelar —, e o replay do painel Interactions parte dele.
+        if (openPanel?.isConnected) within(openPanel).queryByRole('button', { name: /Cancelar/i })?.focus();
+        for (const el of marked) {
+          el.removeAttribute('data-autofocus');
+          el.removeAttribute('tabindex');
+        }
+      }
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {

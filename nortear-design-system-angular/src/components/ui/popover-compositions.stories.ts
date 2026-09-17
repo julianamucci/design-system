@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
-import { close, open, panel } from './popover.fixtures';
+import { close, closeSpy, open, panel, settle } from './popover.fixtures';
 import {
   popoverColorPickerSource,
   popoverFormSource,
@@ -64,6 +64,10 @@ async function uncheck(box: HTMLElement): Promise<void> {
   if (box.getAttribute('aria-checked') !== 'false') await userEvent.click(box);
 }
 
+/** Os fechamentos da `EditProfile` e da `TableFilter` — no módulo, para a play alcançar. */
+const editProfileCloses = closeSpy();
+const tableFilterCloses = closeSpy();
+
 export const EditProfile: Story = {
   parameters: {
     // O painel Code tem de ensinar a MESMA forma que o preview: o fechamento
@@ -74,9 +78,18 @@ export const EditProfile: Story = {
     // Controlada por causa do "Atualizar": ele fecha por CÓDIGO depois de
     // gravar, e é isso que faz o motivo chegar como `api`. Com `ndsPopoverClose`
     // ele reportaria `close-button`, que é o motivo de quem desistiu.
-    props: { isOpen: false },
+    //
+    // O espião registra os fechamentos: os que a lib conduz, pelo
+    // `(onOpenChange)`, e o fechamento por código, pelo `recordConclude()` do
+    // submit — ver `closeSpy` em `popover.fixtures.ts`.
+    props: {
+      isOpen: false,
+      recordOpenChange: editProfileCloses.recordOpenChange,
+      recordConclude: editProfileCloses.recordConclude,
+    },
     template: `
-      <div ndsPopover [(open)]="isOpen">
+      <div class="nds-min-h-90" style="contain: layout">
+      <div ndsPopover [(open)]="isOpen" (onOpenChange)="recordOpenChange($event)">
         <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
         <ng-template ndsPopoverContent>
@@ -92,7 +105,7 @@ export const EditProfile: Story = {
           <form
             class="nds-stack"
             data-spacing="md"
-            (submit)="$event.preventDefault(); isOpen = false"
+            (submit)="$event.preventDefault(); isOpen = false; recordConclude()"
           >
             <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="pc-perfil-nome">Nome</label>
@@ -117,6 +130,7 @@ export const EditProfile: Story = {
           </form>
         </ng-template>
       </div>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -131,36 +145,43 @@ export const EditProfile: Story = {
 
     await step('Atualizar CONCLUI: fecha por código, e pelo caminho do submit', async () => {
       // O botão é `type="submit"`, e não a peça de fechar: assim o motivo chega
-      // ao relatório como `api` — "gravou e fechou" — e o Enter num campo,
-      // testado logo abaixo, fecha pelo mesmo caminho.
-      const update = screen.getByRole('button', { name: 'Atualizar' });
+      // ao relatório como `api` — "gravou e fechou". O Enter num campo, que
+      // fecha pelo mesmo caminho, é provado na `Variants/Form`.
+      const update = within(panel()!).getByRole('button', { name: 'Atualizar' });
       await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
       await expect(update).toHaveAttribute('type', 'submit');
+      const closesBefore = editProfileCloses.closeCount();
       await userEvent.click(update);
       await waitFor(async () => {
         await expect(panel()).toBeNull();
       });
+      await settle();
+      await expect(editProfileCloses.closeCount()).toBe(closesBefore + 1);
+      await expect(editProfileCloses.spy).toHaveBeenLastCalledWith(false, 'api');
     });
 
-    await step('E o Enter num campo faz o mesmo, sem passar pelo clique', async () => {
+    await step('Cancelar DESISTE: fecha pela peça de fechar, sem sair do contexto', async () => {
       await open(trigger);
-      await userEvent.type(screen.getByLabelText('Nome'), '{Enter}');
+      const closesBefore = editProfileCloses.closeCount();
+      await userEvent.click(within(panel()!).getByRole('button', { name: 'Cancelar' }));
       await waitFor(async () => {
         await expect(panel()).toBeNull();
       });
-    });
-
-    await step('Cancelar fecha sem sair do contexto', async () => {
-      await open(trigger);
-      await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
-      await waitFor(async () => {
-        await expect(panel()).toBeNull();
-      });
+      await settle();
+      await expect(editProfileCloses.closeCount()).toBe(closesBefore + 1);
+      await expect(editProfileCloses.spy).toHaveBeenLastCalledWith(false, 'close-button');
       // Fechar por dentro devolve o foco ao gatilho, senão quem navega por
       // teclado voltaria ao início da página.
       await waitFor(async () => {
         await expect(trigger).toHaveFocus();
       });
+    });
+
+    // Termina ABERTA, depois das provas de fechamento: é o estado que o axe varre
+    // e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await open(trigger);
+      await expect(panel()).toBeInTheDocument();
     });
   },
 };
@@ -176,9 +197,14 @@ export const TableFilter: Story = {
     // aplicar o filtro, e é isso que faz o motivo chegar como `api`. Marcado
     // com `ndsPopoverClose` ele reportaria `close-button`, que é o motivo de
     // quem desistiu — e o "Limpar" ao lado, que não fecha, é o contraste.
-    props: { isOpen: false },
+    props: {
+      isOpen: false,
+      recordOpenChange: tableFilterCloses.recordOpenChange,
+      recordConclude: tableFilterCloses.recordConclude,
+    },
     template: `
-      <div ndsPopover [(open)]="isOpen">
+      <div class="nds-min-h-80" style="contain: layout">
+      <div ndsPopover [(open)]="isOpen" (onOpenChange)="recordOpenChange($event)">
         <button ndsPopoverTrigger ndsButton variant="outline">Filtros</button>
 
         <ng-template ndsPopoverContent>
@@ -204,9 +230,10 @@ export const TableFilter: Story = {
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
             <button ndsButton variant="ghost" size="sm">Limpar</button>
-            <button ndsButton size="sm" (click)="isOpen = false">Aplicar</button>
+            <button ndsButton size="sm" (click)="isOpen = false; recordConclude()">Aplicar</button>
           </div>
         </ng-template>
+      </div>
       </div>
     `,
   }),
@@ -215,29 +242,40 @@ export const TableFilter: Story = {
     const trigger = canvas.getByRole('button', { name: 'Filtros' });
 
     await step('Os três status são combináveis', async () => {
+      // Dentro do PAINEL, e não no documento: `screen` varre a página inteira, e
+      // a asserção passaria com as três caixas em qualquer lugar — inclusive
+      // fora do popover, que é justamente o que ela deveria provar. As outras
+      // quatro stacks escopam.
       await open(trigger);
-      await expect(screen.getAllByRole('checkbox')).toHaveLength(3);
+      await expect(within(panel()!).getAllByRole('checkbox')).toHaveLength(3);
     });
 
     await step('E marcar um deles não fecha o painel', async () => {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
-      const active = screen.getByRole('checkbox', { name: 'Ativo' });
+      const closesBefore = tableFilterCloses.closeCount();
+      const active = within(panel()!).getByRole('checkbox', { name: 'Ativo' });
       await check(active);
       await expect(active).toHaveAttribute('aria-checked', 'true');
+      await settle();
       await expect(panel()).toBeInTheDocument();
+      await expect(tableFilterCloses.closeCount()).toBe(closesBefore);
     });
 
     await step('Aplicar fecha por código, e não pela peça de fechar', async () => {
       // Quem CONCLUIU fecha escrevendo no estado: assim o motivo chega ao
       // relatório como `api`. Com `ndsPopoverClose` ele chegaria como
       // `close-button`, apagando a diferença entre desistir e concluir.
-      const aplicar = screen.getByRole('button', { name: 'Aplicar' });
+      const aplicar = within(panel()!).getByRole('button', { name: 'Aplicar' });
       await expect(aplicar).not.toHaveAttribute('data-slot', 'popover-close');
+      const closesBefore = tableFilterCloses.closeCount();
       await userEvent.click(aplicar);
       await waitFor(async () => {
         await expect(panel()).toBeNull();
       });
+      await settle();
+      await expect(tableFilterCloses.closeCount()).toBe(closesBefore + 1);
+      await expect(tableFilterCloses.spy).toHaveBeenLastCalledWith(false, 'api');
     });
 
     // Termina ABERTA: é o estado que o Chromatic fotografa.
@@ -256,6 +294,7 @@ export const ColorPicker: Story = {
   },
   render: () => ({
     template: `
+      <div class="nds-min-h-80" style="contain: layout">
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Escolher cor da etiqueta</button>
 
@@ -299,6 +338,7 @@ export const ColorPicker: Story = {
           </div>
         </ng-template>
       </div>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -336,6 +376,7 @@ export const QuickSettings: Story = {
   },
   render: () => ({
     template: `
+      <div class="nds-min-h-80" style="contain: layout">
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Configurações rápidas</button>
 
@@ -360,6 +401,7 @@ export const QuickSettings: Story = {
             </div>
           </div>
         </ng-template>
+      </div>
       </div>
     `,
   }),
@@ -410,14 +452,15 @@ export const SideTop: Story = {
   parameters: {
     covers: ['visual.item4'],
     layout: 'padded',
-    // O painel Code publica `side="top"` + `[sideOffset]="12"` e NADA do irmão
+    // O painel Code publica `side="top"` + `[sideOffset]="12"` +
+    // `[alignOffset]="8"` e NADA do irmão
     // que cria o espaço acima: ele é andaime do quadro, e ensiná-lo faria quem
     // copia achar que o popover precisa de um espaçador para abrir acima.
     docs: { source: { transform: popoverSideTopSource } },
   },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full" data-align="center" data-spacing="sm">
+      <div class="nds-stack nds-w-full" data-align="center" data-spacing="sm" style="contain: layout">
         <!-- Espaço acima do gatilho. aria-hidden porque é andaime de layout:
              não há nada aqui para um leitor de tela anunciar. -->
         <div class="nds-min-h-60" data-slot="side-top-headroom" aria-hidden="true"></div>
@@ -425,7 +468,7 @@ export const SideTop: Story = {
         <div ndsPopover>
           <button ndsPopoverTrigger ndsButton variant="outline">Abrir acima</button>
 
-          <ng-template ndsPopoverContent side="top" [sideOffset]="12">
+          <ng-template ndsPopoverContent side="top" [sideOffset]="12" [alignOffset]="8">
             <div ndsPopoverHeader>
               <h2 ndsPopoverTitle>Ancorado acima</h2>
               <p ndsPopoverDescription>
@@ -467,6 +510,20 @@ export const SideTop: Story = {
       // 12px pedidos, com 1px de folga para arredondamento sub-pixel do
       // floating-ui. No padrão (4px) esta asserção reprovaria.
       await expect(Math.abs(rg.top - rp.bottom - 12)).toBeLessThanOrEqual(1);
+    });
+
+    await step('E o alignOffset desloca o painel 8 px no outro eixo', async () => {
+      // O `data-side` e o vão acima medem o eixo PRINCIPAL. Este passo mede o
+      // CRUZADO, e com o `[alignOffset]="8"` (D14) ele deixou de ser "centros
+      // coincidem" — asserção que passaria com o input ignorado. `align` é
+      // `center`, então o centro do painel fica 8px à DIREITA do centro do
+      // gatilho, com 1px de folga para arredondamento sub-pixel. Um `align`
+      // chegando errado ou um `shift` por colisão lateral também reprovam aqui.
+      const rg = trigger.getBoundingClientRect();
+      const rp = panel()!.getBoundingClientRect();
+      const triggerCenter = rg.left + rg.width / 2;
+      const panelCenter = rp.left + rp.width / 2;
+      await expect(Math.abs(panelCenter - triggerCenter - 8)).toBeLessThanOrEqual(1);
     });
 
     await step('Sem espaço acima, o painel VIRA para baixo e a geometria acompanha', async () => {

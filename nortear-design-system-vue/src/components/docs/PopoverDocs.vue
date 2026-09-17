@@ -462,6 +462,7 @@ const popoverContentPropItems = computed(() => [
   { name: 'side',       type: tContent('props.table.side.type'),       defaultValue: tContent('props.table.side.default'),       required: tContent('props.table.side.required'),       description: toPlainText(tContent('props.table.side.description'))       },
   { name: 'align',      type: tContent('props.table.align.type'),      defaultValue: tContent('props.table.align.default'),      required: tContent('props.table.align.required'),      description: toPlainText(tContent('props.table.align.description'))      },
   { name: 'sideOffset', type: tContent('props.table.sideOffset.type'), defaultValue: tContent('props.table.sideOffset.default'), required: tContent('props.table.sideOffset.required'), description: toPlainText(tContent('props.table.sideOffset.description')) },
+  { name: 'alignOffset', type: tContent('props.table.alignOffset.type'), defaultValue: tContent('props.table.alignOffset.default'), required: tContent('props.table.alignOffset.required'), description: toPlainText(tContent('props.table.alignOffset.description')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -471,6 +472,18 @@ const tokenRows = computed(() => [
   { token: '--border',             value: tContent('tokens.table.border.class'),            description: tContent('tokens.table.border.part')            },
   { token: '--elevation-md',       value: tContent('tokens.table.shadow.class'),            description: tContent('tokens.table.shadow.part')            },
   { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
+  // A tabela é lista LITERAL aqui: as oito chaves abaixo já existiam no conteúdo
+  // compartilhado, nos três idiomas, e ficavam INERTES até a docs page de cada
+  // stack acrescentar a linha. Token e classe saem do mapa do contrato, não de
+  // leitura da folha — quem manda no par é `popover.css`.
+  { token: '--z-popover',          value: tContent('tokens.table.zIndex.class'),            description: tContent('tokens.table.zIndex.part')            },
+  { token: '--spacing-4',          value: tContent('tokens.table.padding.class'),           description: tContent('tokens.table.padding.part')           },
+  { token: '--spacing-2-5',        value: tContent('tokens.table.gap.class'),               description: tContent('tokens.table.gap.part')               },
+  { token: '--radius',             value: tContent('tokens.table.radius.class'),            description: tContent('tokens.table.radius.part')            },
+  { token: '--text-control',       value: tContent('tokens.table.text.class'),              description: tContent('tokens.table.text.part')              },
+  { token: '--spacing-1-5',        value: tContent('tokens.table.headerGap.class'),         description: tContent('tokens.table.headerGap.part')         },
+  { token: '--text-control-lg',    value: tContent('tokens.table.titleSize.class'),         description: tContent('tokens.table.titleSize.part')         },
+  { token: '--font-weight-medium', value: tContent('tokens.table.titleWeight.class'),       description: tContent('tokens.table.titleWeight.part')       },
 ]);
 
 // Os itens da lista mais o bloco `aria`: o container tem uma lista só, e deixar

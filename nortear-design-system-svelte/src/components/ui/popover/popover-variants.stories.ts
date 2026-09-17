@@ -4,7 +4,12 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 import { panel } from './popover.fixtures';
-import { popoverSource } from './popover.source';
+import {
+  popoverSource,
+  popoverDefaultSource,
+  popoverWithTitleSource,
+  popoverFormSource,
+} from './popover.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
@@ -35,6 +40,7 @@ export const Default: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      source: { transform: popoverDefaultSource },
       description: {
         story:
           'Conteúdo livre — apenas `PopoverContent` com texto. Sem título, o painel declara o próprio nome por `aria-label`.',
@@ -69,6 +75,7 @@ export const WithTitle: Story = {
       'visual.item2', 'accessibility.item5', 'accessibility.item3', 'functional.item4',
     ],
     docs: {
+      source: { transform: popoverWithTitleSource },
       description: {
         story:
           '`PopoverHeader` com `PopoverTitle` e `PopoverDescription` + ações Salvar/Cancelar. Composição padrão para acessibilidade.',
@@ -93,6 +100,14 @@ export const WithTitle: Story = {
       await expect(title).toHaveAttribute('data-slot', 'popover-title');
       await expect(title).toHaveClass(/nds-popover-title/);
       await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
+    });
+
+    await step('A descrição entra por aria-describedby', async () => {
+      // D12: o painel aponta `aria-describedby` para o id da descrição.
+      const dialog = panel()!;
+      const idDescription = dialog.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveClass(/nds-popover-description/);
     });
 
     await step('Tab caminha entre os controles internos', async () => {
@@ -121,6 +136,7 @@ export const Form: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: popoverFormSource },
       description: {
         story:
           'Formulário inline — Inputs e botão de submit dentro do `PopoverContent`.',
@@ -175,6 +191,27 @@ export const Form: Story = {
         { timeout: 2000 },
       );
       await expect(args.onAction).toHaveBeenCalled();
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    await step('Enter num campo envia o formulário e fecha o painel', async () => {
+      // É por isto que o fechamento mora no `submit`, e não no clique do
+      // "Atualizar": metade das pessoas envia formulário pelo teclado, e o
+      // caminho do clique não cobriria este gesto.
+      const trigger = within(canvasElement).getByRole('button', { name: /Editar perfil/i });
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
+      const name = within(dialog).getByLabelText(/Nome/i);
+      name.focus();
+      (args.onOpenChange as ReturnType<typeof fn>).mockClear();
+      await userEvent.keyboard('{Enter}');
+      await waitFor(
+        () => {
+          if (panel()) throw new Error('o painel não fechou no Enter');
+        },
+        { timeout: 2000 },
+      );
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'api');
     });
 

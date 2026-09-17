@@ -4,7 +4,14 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 import { panel } from './popover.fixtures';
-import { popoverSource } from './popover.source';
+import {
+  popoverSource,
+  popoverFormSource,
+  popoverTableFilterSource,
+  popoverColorPickerSource,
+  popoverQuickSettingsSource,
+  popoverSideTopSource,
+} from './popover.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
@@ -53,6 +60,10 @@ async function waitForFocus(dialog: HTMLElement): Promise<void> {
 export const EditProfile: Story = {
   parameters: {
     docs: {
+      // Mesma composição e mesmos rótulos da `Variants/Form`: as duas dividem o
+      // construtor de propósito, e a exceção está declarada em
+      // `popover.source.test.ts`, que cobra a premissa.
+      source: { transform: popoverFormSource },
       description: {
         story: 'Caso clássico — formulário curto inline com Nome + Email + Atualizar.',
       },
@@ -70,8 +81,21 @@ export const EditProfile: Story = {
     cancelLabel: 'Cancelar',
     onAction: fn(),
     onCancel: fn(),
+    onOpenChange: fn(),
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step, args }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: /Editar perfil/i });
+    const spy = args.onOpenChange as ReturnType<typeof fn>;
+    const closed = async () => {
+      // Só LEITURA dentro do `waitFor`.
+      await waitFor(
+        () => {
+          if (panel()) throw new Error('popover ainda aberto');
+        },
+        { timeout: 2000 },
+      );
+    };
+
     await step('O formulário abre preenchido e pronto para edição', async () => {
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       // Escopo no diálogo: o rótulo do gatilho e o título são o mesmo texto, e
@@ -81,12 +105,41 @@ export const EditProfile: Story = {
       await expect(ctx.getByLabelText(/Nome/i)).toHaveValue('Ana Ribeiro');
       await expect(ctx.getByLabelText(/Email/i)).toHaveValue('ana@nortear.com.br');
     });
+
+    await step('O Cancelar é a PEÇA de fechar, e fecha o painel', async () => {
+      const cancelar = within(panel()!).getByRole('button', { name: 'Cancelar' });
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      spy.mockClear();
+      await userEvent.click(cancelar);
+      await closed();
+      await expect(spy).toHaveBeenLastCalledWith(false, 'close-button');
+    });
+
+    await step('E o Atualizar fecha pelo SUBMIT do formulário', async () => {
+      // O fechamento mora no `submit`, e não no clique: fechar no clique
+      // desmontaria o formulário antes de ele submeter. Motivo `api`, "concluiu".
+      await userEvent.click(trigger);
+      await waitForPortal('dialog', { timeout: 2000 });
+      const update = within(panel()!).getByRole('button', { name: 'Atualizar' });
+      await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
+      spy.mockClear();
+      await userEvent.click(update);
+      await closed();
+      await expect(spy).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await userEvent.click(trigger);
+      await expect(await waitForPortal('dialog', { timeout: 2000 })).toBeVisible();
+    });
   },
 };
 
 export const TableFilter: Story = {
   parameters: {
     docs: {
+      source: { transform: popoverTableFilterSource },
       description: {
         story:
           'Filtros contextuais de uma listagem — status combináveis e o par Limpar / Aplicar ao final.',
@@ -100,9 +153,15 @@ export const TableFilter: Story = {
     title: 'Filtrar por status',
     description: 'Combine quantos status quiser na listagem.',
     onAction: fn(),
+    onOpenChange: fn(),
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step, args }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: /Filtros/i });
+
     await step('Os três status são combináveis', async () => {
+      // Precondição do replay: uma rodada que morreu depois do Aplicar deixaria
+      // o painel fechado.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       const ctx = within(dialog);
       await expect(ctx.getAllByRole('checkbox')).toHaveLength(3);
@@ -117,12 +176,36 @@ export const TableFilter: Story = {
       await expect(pendente).toBeChecked();
       await expect(panel()).toBeInTheDocument();
     });
+
+    await step('Aplicar fecha o painel por CÓDIGO — motivo api', async () => {
+      // Aplicar É a decisão: fecha por código depois de aplicar, e o motivo
+      // chega como `api`, "concluiu" — nunca como a peça de fechar.
+      const apply = within(panel()!).getByRole('button', { name: 'Aplicar' });
+      await expect(apply).not.toHaveAttribute('data-slot', 'popover-close');
+      const spy = args.onOpenChange as ReturnType<typeof fn>;
+      spy.mockClear();
+      await userEvent.click(apply);
+      await waitFor(
+        () => {
+          if (panel()) throw new Error('popover ainda aberto');
+        },
+        { timeout: 2000 },
+      );
+      await expect(spy).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await userEvent.click(trigger);
+      await expect(await waitForPortal('dialog', { timeout: 2000 })).toBeVisible();
+    });
   },
 };
 
 export const ColorPicker: Story = {
   parameters: {
     docs: {
+      source: { transform: popoverColorPickerSource },
       description: {
         story: 'Paleta restrita em grid — cada amostra tem nome acessível próprio.',
       },
@@ -163,6 +246,7 @@ export const ColorPicker: Story = {
 export const QuickSettings: Story = {
   parameters: {
     docs: {
+      source: { transform: popoverQuickSettingsSource },
       description: {
         story:
           'Preferências booleanas independentes — alternativa leve ao Dialog para ajustes rápidos.',
@@ -200,7 +284,6 @@ export const QuickSettings: Story = {
 };
 
 export const SideTop: Story = {
-  name: 'Side top (auto-flip)',
   parameters: {
     covers: ['visual.item4'],
     // `padded` e não o `centered` do meta: com o conteúdo centrado na vertical,
@@ -210,6 +293,7 @@ export const SideTop: Story = {
     // tem espaço acima em janela nenhuma.
     layout: 'padded',
     docs: {
+      source: { transform: popoverSideTopSource },
       description: {
         story:
           'Posicionamento preferido `side="top"`. Se não houver espaço, o popover faz auto-flip para outra direção.',
@@ -220,6 +304,7 @@ export const SideTop: Story = {
     defaultOpen: true,
     side: 'top',
     sideOffset: 12,
+    alignOffset: 8,
     // A folga acima é um IRMÃO inerte do popover — ver a prop no PopoverStory.
     spaceAbove: true,
     variant: 'withTitle',
@@ -251,22 +336,42 @@ export const SideTop: Story = {
      * Exige o lado NO ATRIBUTO e na GEOMETRIA — atributo que muda sozinho seria
      * markup mentindo sobre onde o painel ficou.
      *
-     * Só leitura pura aqui dentro: `waitFor` reagenda por mutação, e uma sonda
-     * que escrevesse no DOM provocaria a própria tentativa seguinte até a aba
-     * morrer sem reprovar. O laço existe porque o posicionador da lib nasce com
-     * um transform de reserva e só assenta num quadro seguinte.
+     * Espera de RELÓGIO, e NUNCA `waitFor`. A condição precisa de
+     * `getBoundingClientRect()`, que FORÇA layout: dentro de um `waitFor` isso
+     * não reprova, PENDURA. A tentativa provoca a própria tentativa seguinte
+     * pelo observador de mutação, o prazo nunca chega, o núcleo crava em 100% e
+     * a aba morre sem resultado — levando o arquivo inteiro junto. O laço de
+     * relógio tem prazo de verdade e não depende de mutação para tentar de novo.
+     *
+     * A espera existe porque o posicionador da lib nasce com um transform de
+     * reserva e só assenta num quadro seguinte. As asserções ficam FORA do
+     * laço: dentro dele, um lado errado só esgotaria o prazo em silêncio.
      */
     async function expectSide(side: 'top' | 'bottom'): Promise<void> {
-      await waitFor(() => {
-        const dialog = panel();
-        expect(dialog).not.toBeNull();
-        expect(dialog!.getAttribute('data-side')).toBe(side);
+      const gapTo = (dialog: HTMLElement): number => {
         const rt = trigger.getBoundingClientRect();
-        const rp = dialog!.getBoundingClientRect();
+        const rp = dialog.getBoundingClientRect();
+        return side === 'top' ? rt.top - rp.bottom : rp.top - rt.bottom;
+      };
+
+      const deadline = Date.now() + 2000;
+      while (Date.now() < deadline) {
+        const dialog = panel();
         // 12px pedidos, com 1px de folga para arredondamento sub-pixel.
-        const distancia = side === 'top' ? rt.top - rp.bottom : rp.top - rt.bottom;
-        expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
-      }, { timeout: 2000 });
+        if (
+          dialog &&
+          dialog.getAttribute('data-side') === side &&
+          Math.abs(gapTo(dialog) - 12) <= 1
+        ) {
+          break;
+        }
+        await new Promise<void>((resolve) => setTimeout(resolve, 50));
+      }
+
+      const dialog = panel();
+      await expect(dialog).not.toBeNull();
+      await expect(dialog!.getAttribute('data-side')).toBe(side);
+      await expect(Math.abs(gapTo(dialog!) - 12)).toBeLessThanOrEqual(1);
     }
 
     await step('Com espaço acima, o painel abre EXATAMENTE no lado pedido', async () => {
@@ -276,12 +381,14 @@ export const SideTop: Story = {
       await expectSide('top');
     });
 
-    await step('E continua alinhado ao gatilho no outro eixo', async () => {
+    await step('E o alignOffset desloca o painel no outro eixo pela medida pedida', async () => {
+      // D14: `alignOffset` desliza o painel no eixo CRUZADO. Positivo empurra
+      // para a direita num lado vertical. 8px pedidos, com 1px de folga para
+      // arredondamento sub-pixel — medir só "alinhado" passaria sem a prop.
       const rt = trigger.getBoundingClientRect();
       const rp = panel()!.getBoundingClientRect();
-      await expect(
-        Math.abs(rt.left + rt.width / 2 - (rp.left + rp.width / 2)),
-      ).toBeLessThanOrEqual(2);
+      const shift = rp.left + rp.width / 2 - (rt.left + rt.width / 2);
+      await expect(Math.abs(shift - 8)).toBeLessThanOrEqual(1);
     });
 
     // ─── O contrato C9, que esta story afirmava e não media ──────────────────

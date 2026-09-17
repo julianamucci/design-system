@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "./popover";
 import { Button } from "./button";
+import { close, open, panel } from "./popover.fixtures";
 import { popoverSource } from "./popover.source";
 import { PopoverDocs } from "@/components/docs/PopoverDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -43,6 +44,11 @@ const meta = {
       description: "Distância em pixels entre trigger e content.",
       table: { type: { summary: "number" }, defaultValue: { summary: "4" } },
     },
+    alignOffset: {
+      control: { type: "number" },
+      description: "Deslocamento em pixels ao longo do eixo do alinhamento.",
+      table: { type: { summary: "number" }, defaultValue: { summary: "0" } },
+    },
     defaultOpen: {
       control: "boolean",
       description: "Estado inicial em modo não-controlado.",
@@ -63,6 +69,7 @@ const meta = {
     side: "bottom",
     align: "center",
     sideOffset: 4,
+    alignOffset: 0,
     defaultOpen: false,
     modal: false,
     onOpenChange: fn(),
@@ -80,24 +87,6 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-/** O painel mora em portal no body — `screen`, não `within(canvasElement)`. */
-function panel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
-
-/** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */
-async function open(trigger: HTMLElement): Promise<HTMLElement> {
-  if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
-  await waitFor(() => expect(screen.getByRole("dialog")).toBeVisible());
-  return panel()!;
-}
-
-/** Fecha só se estiver aberto. */
-async function close(trigger: HTMLElement): Promise<void> {
-  if (trigger.getAttribute("aria-expanded") === "true") await userEvent.click(trigger);
-  await waitFor(() => expect(panel()).toBeNull());
-}
-
 export const Playground: Story = {
   parameters: {
     covers: [
@@ -106,10 +95,11 @@ export const Playground: Story = {
     ],
   },
   render: (args) => {
-    const { side, align, sideOffset, defaultOpen, modal, onOpenChange } = args as typeof args & {
+    const { side, align, sideOffset, alignOffset, defaultOpen, modal, onOpenChange } = args as typeof args & {
       side?: "top" | "bottom" | "left" | "right";
       align?: "start" | "center" | "end";
       sideOffset?: number;
+      alignOffset?: number;
       // O tipo da lib entrega `(open, eventDetails)`; o espião recebe SÓ o
       // valor. Dentro de `eventDetails` vem o evento nativo, e a aba Actions
       // estoura um SecurityError ao serializar o `Window` do iframe.
@@ -130,7 +120,12 @@ export const Playground: Story = {
           <PopoverTrigger asChild>
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
-          <PopoverContent side={side} align={align} sideOffset={sideOffset}>
+          <PopoverContent
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            alignOffset={alignOffset}
+          >
             <PopoverHeader>
               <PopoverTitle>Configurações de exibição</PopoverTitle>
               <PopoverDescription>
@@ -212,10 +207,97 @@ export const Playground: Story = {
       await expect(panel()).not.toHaveAttribute("aria-modal");
     });
 
-    await step("O foco entra no painel ao abrir", async () => {
+    await step("Ao abrir, o foco vai ao PRIMEIRO focável do painel", async () => {
       // É o que separa popover de tooltip: o conteúdo é interativo, então o
       // foco precisa alcançá-lo sem caçar com Tab pela página inteira.
-      await waitFor(() => expect(panel()!.contains(document.activeElement)).toBe(true));
+      //
+      // E o alvo é EXATO, não "algum lugar dentro do painel": `contains` é
+      // verdade no modo modal e no não-modal, com política de foco e sem
+      // nenhuma — a asserção passava com qualquer elemento focado. Aqui o
+      // primeiro focável é o Cancelar do rodapé, e é o contrato de
+      // `accessibility.item4` sem a marca de `data-autofocus`.
+      const p = await open(trigger);
+      await waitFor(() => expect(p.contains(document.activeElement)).toBe(true));
+      await expect(within(p).getByRole("button", { name: /Cancelar/i })).toHaveFocus();
+    });
+
+    await step("E `data-autofocus` VENCE o primeiro focável, mesmo com tabindex=-1", async () => {
+      // A outra metade de `accessibility.item4`, que o `covers` desta story
+      // reivindica desde que o conteúdo passou a nomear o atributo.
+      //
+      // O alvo marcado é o TÍTULO, com `tabindex="-1"`: não é o primeiro
+      // focável (nem sequer tabulável), então a asserção só passa se a marca for
+      // lida — e lida SEM o filtro da lista de tabuláveis, que exclui
+      // `tabindex="-1"` de propósito. Uma implementação que passasse a marca
+      // pela lista de focáveis cairia no Cancelar e reprovaria aqui.
+      //
+      // A marca é posta QUANDO o painel monta, e não no painel aberto antes de
+      // fechar: fechar desmonta o conteúdo, a reabertura cria nós novos, e um
+      // atributo escrito no nó anterior some com ele.
+      //
+      // Mesmo mecanismo das outras quatro, com a premissa medida NESTA lib: a
+      // base-ui 1.7.0 não lê o `initialFocus` no efeito de layout. O
+      // `useIsoLayoutEffect` de `FloatingFocusManager.mjs:352` só ENFILEIRA um
+      // `queueMicrotask` (`:362`), e é dentro dele que a função é chamada
+      // (`:364`); o foco em si sai num `requestAnimationFrame`
+      // (`enqueueFocus.mjs:22`). A inserção do painel acontece na fase de
+      // mutação do commit, ANTES dos efeitos de layout, então a notificação do
+      // observador é microtarefa enfileirada antes da que resolve o alvo.
+      await close(trigger);
+      const marked: HTMLElement[] = [];
+      // TODOS os títulos de painel, e não só o de `panel()`: um painel ainda em
+      // saída pode continuar no DOM, e a primeira ocorrência seria ele.
+      const mark = () => {
+        const titles = document.querySelectorAll<HTMLElement>(
+          '[data-slot="popover-content"] [data-slot="popover-title"]:not([data-autofocus])',
+        );
+        for (const title of titles) {
+          title.setAttribute("tabindex", "-1");
+          title.setAttribute("data-autofocus", "");
+          marked.push(title);
+        }
+      };
+      const observer = new MutationObserver(mark);
+      let openPanel: HTMLElement | null = null;
+      try {
+        // `data-slot` também: onde ele é escrito por binding, pode chegar
+        // depois da inserção do nó.
+        //
+        // E NÃO `data-state`, que o svelte precisou acrescentar em 2026-09-17 —
+        // premissa medida aqui, e é ela que dispensa o atributo: o `close()` das
+        // fixtures espera `panel()` virar `null`, ou seja o nó FORA do DOM.
+        // Reabrir depois disso é sempre uma INSERÇÃO, que o `childList` pega; o
+        // que quebrou lá foi o `closed()` tolerar o painel ainda no DOM com
+        // `data-state="closed"`, e aí o bits reusava o nó sem inserir nada.
+        //
+        // A premissa se cobra sozinha: se a lib passar a manter o painel montado
+        // ao fechar, é o `close()` que estoura por tempo — ruidosamente —, e não
+        // este passo que fica verde medindo menos. Se algum dia a espera for
+        // afrouxada, o filtro tem de crescer junto.
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["data-slot"],
+        });
+        openPanel = await open(trigger);
+        const title = openPanel.querySelector<HTMLElement>('[data-slot="popover-title"]')!;
+        await expect(title).toHaveAttribute("data-autofocus");
+        await waitFor(() => expect(title).toHaveFocus());
+      } finally {
+        observer.disconnect();
+        // O foco sai do título ANTES de a marca sair: tirar o `tabindex` de um
+        // elemento focado joga o foco no `body`, e foco fora do painel o
+        // dispensa. O estado final é o do passo anterior — aberto, foco no
+        // Cancelar —, e o replay do painel Interactions parte dele.
+        if (openPanel?.isConnected) {
+          within(openPanel).queryByRole("button", { name: /Cancelar/i })?.focus();
+        }
+        for (const el of marked) {
+          el.removeAttribute("data-autofocus");
+          el.removeAttribute("tabindex");
+        }
+      }
     });
 
     await step("Escape fecha e devolve o foco ao gatilho", async () => {

@@ -1,4 +1,5 @@
-import { expect, screen, userEvent, waitFor } from 'storybook/test';
+import { expect, fn, screen, userEvent, waitFor } from 'storybook/test';
+import { popoverCloseReason } from './popover-close-reason';
 
 /**
  * Andaimes de teste do Popover — um módulo, quatro arquivos de story.
@@ -43,4 +44,43 @@ export async function open(trigger: HTMLElement): Promise<void> {
 export async function close(trigger: HTMLElement): Promise<void> {
   if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
   await waitFor(() => expect(panel()).toBeNull());
+}
+
+/**
+ * Espião dos FECHAMENTOS de uma story, já no vocabulário do design system.
+ *
+ * Duas entradas, porque nesta stack são dois caminhos que não se cruzam:
+ *
+ *  · `recordOpenChange` liga no `(onOpenChange)` e recebe o que a LIB conduz —
+ *    Escape, clique fora, perda de foco, a peça de fechar;
+ *  · `recordConclude` é chamado pela própria story quando ela fecha por CÓDIGO.
+ *    Escrever no `[(open)]` fecha o painel sem passar pelo `close()` do
+ *    radix-ng, e o `onOpenChange` não nasce — é por isso que a docs page emite
+ *    o `popover_close` com `api` à mão (`concluir()` no `PopoverDocs.ts`), e a
+ *    story repete essa forma em vez de inventar outra.
+ *
+ * O que a contagem prova é o par: o fechamento por código é anunciado UMA vez,
+ * como `api`. Se a ação de concluir também passasse pela lib — marcada como
+ * peça de fechar, por exemplo —, chegaria um `close-button` junto e a contagem
+ * reprovaria.
+ */
+export function closeSpy() {
+  const spy = fn();
+  return {
+    spy,
+    recordOpenChange(event: { open: boolean; reason?: string }): void {
+      spy(event.open, event.open ? undefined : popoverCloseReason(event.reason));
+    },
+    recordConclude(): void {
+      spy(false, 'api');
+    },
+    closeCount(): number {
+      return spy.mock.calls.filter(([isOpen]) => isOpen === false).length;
+    },
+  };
+}
+
+/** Espera de RELÓGIO antes de contar: `waitFor` não prova que um segundo anúncio NÃO chegou. */
+export function settle(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 150));
 }

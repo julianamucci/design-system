@@ -159,33 +159,6 @@ export class NdsPopoverContent {
 @Directive({ selector: '[ndsPopoverDescription]', hostDirectives: [RdxPopoverDescription] })
 @Directive({ selector: 'button[ndsPopoverClose]', hostDirectives: [RdxPopoverClose] })`;
 
-// Exemplo local porque o `props.extensibilityCode` compartilhado abre um
-// `form[ndsForm]` vazio, e aqui o assunto é outro: o que este stack tem de
-// extensível é o par `[open]` / `(openChange)`, que também habilita `[(open)]`.
-// A raiz é `div[ndsPopover]` — seletor de atributo, como no snippet da Anatomia.
-//
-// Os DOIS caminhos de fechar aparecem aqui de propósito, porque a diferença
-// entre eles é o que chega ao relatório: `button[ndsPopoverClose]` fecha sem
-// passar pelo estado externo e reporta `close-button` (desistiu); escrever no
-// estado reporta `api` (concluiu, depois de salvar).
-const EXTENSIBILITY_CODE = `<!-- Controle externo do estado aberto/fechado -->
-<div ndsPopover [(open)]="aberto">
-  <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
-
-  <ng-template ndsPopoverContent side="bottom" align="start" [sideOffset]="8">
-    <div ndsPopoverHeader>
-      <h2 ndsPopoverTitle>Editar perfil</h2>
-    </div>
-
-    <div class="nds-cluster" data-justify="end" data-spacing="sm">
-      <!-- sair sem decidir: fecha sem passar pelo estado externo -->
-      <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-      <!-- concluir: salva e fecha por CÓDIGO -->
-      <button ndsButton size="sm" (click)="salvar()">Concluir</button>
-    </div>
-  </ng-template>
-</div>`;
-
 const VARIANT_CODE = {
   default: `<div ndsPopover>
   <button ndsPopoverTrigger ndsButton variant="outline">Ver atalhos</button>
@@ -672,7 +645,7 @@ const COMPOSITION_CODE = {
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
-          [extensibilityCode]="extensibilityCode"
+          [extensibilityCode]="extensibilityCode()"
           language="ts"
         />
 
@@ -720,7 +693,6 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeButton = IMPORT_CODE_BUTTON;
   protected readonly swatchClasses = SWATCH_CLASSES;
@@ -926,6 +898,20 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * O snippet de extensibilidade, LIDO DO CONTEÚDO COMPARTILHADO.
+   *
+   * Era uma constante local até 2026-09-16, e as outras quatro stacks já liam
+   * `props.extensibilityCode`. Snippet que mora no arquivo da docs page é
+   * invisível a quem lê o JSON — a mesma perda que a regra de nunca pôr uma
+   * chave `*Code` em override existe para evitar: o conteúdo passa a descrever
+   * quatro stacks e a quinta diverge em silêncio.
+   */
+  protected readonly extensibilityCode = computed(() => {
+    dict();
+    return t('props.extensibilityCode');
+  });
+
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
@@ -1108,8 +1094,13 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
             description: toPlainText(t('props.table.onOpenChange.description')),
           },
           {
+            // Tipo do conteúdo compartilhado, sem linha própria: o `modal` desta
+            // stack é `boolean`, como nas outras quatro. Até 2026-09-17 esta
+            // linha publicava `boolean | 'trap-focus'` — um valor que prendia o
+            // foco e anunciava `aria-modal` sem travar a rolagem nem esconder o
+            // resto da página; a dona o removeu (ver `PopoverModal`).
             name: 'modal',
-            type: `boolean | 'trap-focus'`,
+            type: toPlainText(t('props.table.modal.type')),
             defaultValue: toPlainText(t('props.table.modal.default')),
             required: not,
             description: toPlainText(t('props.table.modal.description')),
@@ -1162,13 +1153,26 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     // `ring-ring`), inexistentes em qualquer stack desde a migração `.nds-*`.
     // Agora o próprio `translations.json` traz a classe real, e as cinco stacks
     // documentam o mesmo seletor — este bloco só escolhe a ordem das linhas.
+    //
+    // As oito últimas entraram em 2026-09-16: o conteúdo compartilhado ganhou as
+    // chaves, mas a tabela é lista LITERAL em cada docs page — chave nova fica
+    // INERTE até as cinco stacks acrescentarem a linha. Cor primeiro, depois a
+    // geometria do painel e por fim a do cabeçalho, que é como a folha se lê.
     return [
-      { token: '--popover',            k: 'popover'           },
-      { token: '--popover-foreground', k: 'popoverForeground' },
-      { token: '--muted-foreground',   k: 'mutedForeground'   },
-      { token: '--border',             k: 'border'            },
-      { token: '--elevation-md',       k: 'shadow'            },
-      { token: '--ring',               k: 'ring'              },
+      { token: '--popover',             k: 'popover'           },
+      { token: '--popover-foreground',  k: 'popoverForeground' },
+      { token: '--muted-foreground',    k: 'mutedForeground'   },
+      { token: '--border',              k: 'border'            },
+      { token: '--elevation-md',        k: 'shadow'            },
+      { token: '--ring',                k: 'ring'              },
+      { token: '--z-popover',           k: 'zIndex'            },
+      { token: '--spacing-4',           k: 'padding'           },
+      { token: '--spacing-2-5',         k: 'gap'               },
+      { token: '--radius',              k: 'radius'            },
+      { token: '--text-control',        k: 'text'              },
+      { token: '--spacing-1-5',         k: 'headerGap'         },
+      { token: '--text-control-lg',     k: 'titleSize'         },
+      { token: '--font-weight-medium',  k: 'titleWeight'       },
     ].map(({ token, k }) => ({
       token,
       value: t(`tokens.table.${k}.class`),

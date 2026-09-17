@@ -936,6 +936,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: toPlainText($tStore('props.table.side.description'))         },
           { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: toPlainText($tStore('props.table.align.description'))        },
           { name: 'sideOffset',   type: $tStore('props.table.sideOffset.type'),   defaultValue: $tStore('props.table.sideOffset.default'),   required: $tStore('props.table.sideOffset.required'),   description: toPlainText($tStore('props.table.sideOffset.description'))   },
+          { name: 'alignOffset',  type: $tStore('props.table.alignOffset.type'),  defaultValue: $tStore('props.table.alignOffset.default'),  required: $tStore('props.table.alignOffset.required'),  description: toPlainText($tStore('props.table.alignOffset.description'))  },
         ],
       },
     ]}
@@ -958,6 +959,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { token: '--border',             value: $tStore('tokens.table.border.class'),            description: $tStore('tokens.table.border.part')            },
       { token: '--elevation-md',       value: $tStore('tokens.table.shadow.class'),            description: $tStore('tokens.table.shadow.part')            },
       { token: '--ring',               value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part')              },
+      { token: '--z-popover',          value: $tStore('tokens.table.zIndex.class'),            description: $tStore('tokens.table.zIndex.part')            },
+      { token: '--spacing-4',          value: $tStore('tokens.table.padding.class'),           description: $tStore('tokens.table.padding.part')           },
+      { token: '--spacing-2-5',        value: $tStore('tokens.table.gap.class'),               description: $tStore('tokens.table.gap.part')               },
+      { token: '--radius',             value: $tStore('tokens.table.radius.class'),            description: $tStore('tokens.table.radius.part')            },
+      { token: '--text-control',       value: $tStore('tokens.table.text.class'),              description: $tStore('tokens.table.text.part')              },
+      { token: '--spacing-1-5',        value: $tStore('tokens.table.headerGap.class'),         description: $tStore('tokens.table.headerGap.part')         },
+      { token: '--text-control-lg',    value: $tStore('tokens.table.titleSize.class'),         description: $tStore('tokens.table.titleSize.part')         },
+      { token: '--font-weight-medium', value: $tStore('tokens.table.titleWeight.class'),       description: $tStore('tokens.table.titleWeight.part')       },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

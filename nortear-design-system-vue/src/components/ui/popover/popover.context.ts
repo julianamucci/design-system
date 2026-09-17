@@ -1,4 +1,4 @@
-import type { ComputedRef, InjectionKey } from 'vue'
+import type { ComputedRef, InjectionKey, ShallowRef } from 'vue'
 
 /**
  * Leva `modal` da raiz do Popover até o painel.
@@ -48,3 +48,54 @@ export type PopoverCloseReason = 'escape' | 'overlay' | 'close-button' | 'api'
  */
 export const POPOVER_CLOSE_REASON: InjectionKey<(reason: PopoverCloseReason) => void> =
   Symbol('nds-popover-close-reason')
+
+/**
+ * Fecha o painel por um caminho que a LIB não dispensa sozinha — e já com o
+ * motivo.
+ *
+ * Quem sabe fechar um popover não-controlado da reka é a RAIZ dela, que publica
+ * `close()` no slot; o painel vive em portal e recebe o slot de quem compõe, não
+ * o da raiz, então ele não tem como alcançá-lo. Este é o caminho de volta: a
+ * raiz guarda o `close` que recebeu e o entrega por contexto.
+ *
+ * Existe por causa do `Tab` para fora (decisão de 2026-09-16, igual nas cinco).
+ * Os outros caminhos de fechar — Escape, clique fora, peça de fechar — são da
+ * própria lib, e para eles basta ANOTAR o motivo por `POPOVER_CLOSE_REASON`.
+ * Este não: a reka não fecha no `Tab`, ela dá a volta com o foco (ver
+ * `PopoverContent.vue`). É a mesma peça que o `dismiss` do contexto do svelte,
+ * pela mesma razão, do outro lado.
+ *
+ * O motivo viaja JUNTO da chamada porque fechar por aqui é mudar o estado da
+ * raiz em silêncio: a anotação e o fechamento precisam ser o mesmo gesto, ou o
+ * motivo chega para o fechamento seguinte.
+ *
+ * O `inject` cai numa dispensa inerte quando o painel é usado sem a nossa raiz.
+ */
+export const POPOVER_DISMISS: InjectionKey<(reason: PopoverCloseReason) => void> =
+  Symbol('nds-popover-dismiss')
+
+/**
+ * O elemento em que o painel se ancora, levado da raiz até o painel — para o
+ * `alignOffset` valer também com `align="center"` (D14).
+ *
+ * A reka posiciona pelo `@floating-ui`, e o middleware `offset` dele só aplica
+ * `alignmentAxis` quando há alinhamento (`start`/`end`): com `center`, o padrão,
+ * o deslocamento do eixo cruzado some sem aviso (`@floating-ui/core`,
+ * `if (alignment && typeof alignmentAxis === 'number')`). A base-ui e o radix-ng
+ * passam o valor também como `crossAxis`, e o vanilla o soma em qualquer
+ * alinhamento — a reka não, e não há prop que o ligue. Medido em 2026-09-17 pela
+ * `SideTop`: `alignOffset: 8` com `center` deslocava 0px.
+ *
+ * O painel corrige entregando à lib uma referência VIRTUAL, com o retângulo do
+ * gatilho deslizado no eixo cruzado — e para isso precisa do elemento, que a
+ * reka guarda em contexto interno (recusado aqui pelo mesmo motivo do
+ * `POPOVER_MODAL`). O gatilho se registra; o `PopoverAnchor`, quando existe,
+ * vence, como na lib.
+ */
+export interface PopoverAnchorRegistry {
+  trigger: ShallowRef<HTMLElement | null>
+  custom: ShallowRef<HTMLElement | null>
+}
+
+export const POPOVER_ANCHOR: InjectionKey<PopoverAnchorRegistry> =
+  Symbol('nds-popover-anchor')

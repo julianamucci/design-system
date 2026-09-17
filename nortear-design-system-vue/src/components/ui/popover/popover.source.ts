@@ -308,18 +308,62 @@ export function popoverOpenSource(): string {
 }
 
 /**
+ * O painel da story `Focused` — o foco entrando no primeiro focável.
+ *
+ * O snippet do `meta` mostra o painel FECHADO, e a story é justamente sobre o
+ * que acontece ao abrir: sem um par de controles dentro não haveria "primeiro
+ * focável" nem "último focável" para medir.
+ *
+ * O par é Cancelar/Confirmar, e não Cancelar/Salvar, para casar com o vanilla,
+ * que é o modelo desta story nas cinco. Os dois caminhos de fechar continuam
+ * separados: o Cancelar é a PEÇA (`close-button`, desistiu) e o Confirmar fecha
+ * por CÓDIGO (`api`, concluiu).
+ *
+ * E sem `default-open`: a story abre por CLIQUE, porque o foco entra no painel
+ * em resposta ao gesto — o snippet ensina a forma que a story exercita.
+ */
+export function popoverFocusedSource(): string {
+  return vueSnippet(
+    `${importa(
+      'Popover',
+      'PopoverClose',
+      'PopoverContent',
+      'PopoverHeader',
+      'PopoverTitle',
+      'PopoverTrigger',
+    )}
+import { Button } from '@/components/ui/button'`,
+    popover({
+      label: 'Abrir popover',
+      panel: `  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Confirmar alteração</PopoverTitle>
+    </PopoverHeader>
+    <div class="nds-cluster" data-justify="end" data-spacing="sm">
+${close('Cancelar', '      ')}
+${confirmar('Confirmar', '      ')}
+    </div>
+  </PopoverContent>`,
+    }),
+  );
+}
+
+/**
  * Ancoragem acima: `side` é a PREFERÊNCIA, não uma garantia — sem espaço acima
  * o painel vira para baixo sozinho. O que ele nunca faz é trocar de eixo.
  *
- * `side-offset` é a folga entre painel e gatilho, em px.
+ * `side-offset` é a folga entre painel e gatilho, em px. `align-offset` é o
+ * deslocamento no eixo CRUZADO, e só sai quando difere do padrão `0` —
+ * repetir o padrão ensinaria ruído.
  */
-export function popoverAboveSource(): string {
+export function popoverAboveSource({ alignOffset = 0 }: { alignOffset?: number } = {}): string {
+  const alignOffsetAttr = alignOffset !== 0 ? ` :align-offset="${alignOffset}"` : '';
   return vueSnippet(
     IMPORT_BASE,
     popover({
       root: ':default-open="true"',
       label: 'Abrir acima',
-      panel: `  <PopoverContent side="top" :side-offset="12">
+      panel: `  <PopoverContent side="top" :side-offset="12"${alignOffsetAttr}>
     <PopoverHeader>
       <PopoverTitle>Ancorado acima</PopoverTitle>
       <PopoverDescription>Sem espaço acima, o painel vira para baixo sozinho.</PopoverDescription>

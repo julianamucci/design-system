@@ -2,13 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
+  afterRenderEffect,
   computed,
   contentChild,
   inject,
   input,
   numberAttribute,
+  viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -83,28 +86,53 @@ import {
  * `popover.ts` do Vanilla, medido na fonte das cinco libs em 2026-09-02.
  *
  * O Popover é NÃO-MODAL POR PADRÃO: o foco ENTRA no painel ao abrir (é o que o
- * separa do tooltip), mas NÃO fica preso — `Tab` sai e segue a ordem da página.
+ * separa do tooltip), mas NÃO fica preso — `Tab` do último focável, ou
+ * `Shift+Tab` do primeiro, SAI do painel: o painel FECHA e o foco VOLTA AO
+ * GATILHO, nos dois sentidos (decisão da dona, 2026-09-17). Painel sem nada
+ * focável fecha com qualquer um dos dois. O fechamento chega ao relatório como
+ * `overlay`, o mesmo motivo de quem dispensou o painel sem decidir.
+ * E o painel também FECHA quando PERDE o foco (D15, decisão da dona,
+ * 2026-09-17): foco levado por código a outro elemento da página — que não o
+ * gatilho, que conta como parte do painel — fecha uma vez, com `overlay`, e o
+ * foco FICA onde foi posto, sem voltar ao gatilho. Foco que sai do documento
+ * (outra janela) não fecha. No modo MODAL nada disso vale — lá o foco fica
+ * preso e não há "sair".
  * Por isso o painel só recebe `aria-modal` no modo modal: o atributo manda o
  * leitor de tela esconder o resto da página, e sem foco preso ele mentiria.
  * `Escape` fecha e devolve o foco ao gatilho; clique fora fecha; o gatilho
  * declara `aria-expanded` e `aria-haspopup="dialog"`; nenhuma região viva.
  *
  * `modal` foi ENTREGUE nas cinco em 2026-09-02: prende o foco, trava a rolagem e
- * anuncia `aria-modal`, os três juntos. O padrão continua não-modal.
+ * anuncia `aria-modal`; desde 2026-09-17, também esconde o resto da página do
+ * leitor de tela — os quatro juntos. O padrão continua não-modal. O esconder vale
+ * com ou sem `ndsPopoverClose`, por `aria-hidden` — ver `hideOutside`.
  *
- * Mecanismo desta stack, medido na fonte: `RdxPopoverRoot` nasce com
- * `modal = input(false)`, mas `modal` NÃO é booleano — `transformModal` aceita
- * também a string `'trap-focus'`. O gerenciador de foco trapeia com
- * `'trap-focus' || (modal === true && hasPopupClose())` e isola o lado de fora
- * (`inert`) só com `modal === true && hasPopupClose()`. Já a trava de rolagem
- * cai de `modal === true` sozinho (`useAnchoredScrollLock`). O `aria-modal` do
+ * Mecanismo desta stack, medido na fonte do `@radix-ng/primitives` 1.1.2
+ * (`fesm2022/`): o gerenciador de foco do primitivo trapeia com
+ * `'trap-focus' || (modal === true && hasPopupClose())`
+ * (`radix-ng-primitives-popover.mjs:622-623`), isola o lado de fora (`inert`) só
+ * com `modal === true && hasPopupClose()` (`:625`), e a trava de rolagem cai de
+ * `modal === true` sozinho (`useAnchoredScrollLock`, `:581`). O `aria-modal` do
  * Radix NG está no DIALOG, não no popover — aqui ele é nosso.
+ *
+ * DUAS CORREÇÕES DE 2026-09-17, as duas medidas nesta passagem:
+ *
+ *  - o trap do primitivo NÃO LIGA NESTA COMPOSIÇÃO, em nenhum caso — nem com
+ *    peça de fechar. `hasPopupClose()` nunca fica verdadeiro: o `RdxPopoverClose`
+ *    só se registra se injetar o `RdxPopoverPopup` (`:693-694`), e o
+ *    `ndsPopoverClose` vive num `<ng-template ndsPopoverContent>` declarado FORA
+ *    do painel, então o injetor dele é o da declaração e não o do painel. Até
+ *    esta data este bloco dizia que "modal com um botão de fechar" trapearia pela
+ *    lib, e que a alternativa a isso seria injetar um botão que o desenho não
+ *    pede: as duas frases descreviam um caminho que não existe. Quem prende o
+ *    foco aqui é SEMPRE o laço de tabulação do `NdsPopover` abaixo;
+ *  - a string `'trap-focus'`, que o `transformModal` (`:16`) ainda aceita, SAIU
+ *    do contrato desta stack — ver `PopoverModal` e `NdsPopover.travaFoco`.
  *
  * Por isso o modo modal aqui é metade lib e metade nosso, igual à stack do
  * base-ui: `modal` segue para a raiz (trava de rolagem) e o laço de tabulação
  * está escrito no `NdsPopover` abaixo, na mesma forma do `popover.ts` do
- * Vanilla. A alternativa seria injetar um botão de fechar que o desenho não pede
- * só para satisfazer `hasPopupClose()`.
+ * Vanilla.
  */
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -115,17 +143,25 @@ export type PopoverAlign = 'start' | 'center' | 'end';
 /**
  * Modo MODAL. O padrão é `false`, que é o popover normal desta casa.
  *
- * `true` prende o foco no painel, trava a rolagem da página e faz o painel
- * anunciar `aria-modal="true"` — os três juntos, que é o que a tabela de props
- * do conteúdo compartilhado promete. Anunciar inércia sem prender o foco seria
- * mentir para quem usa leitor de tela.
+ * `true` prende o foco no painel, trava a rolagem da página, faz o painel
+ * anunciar `aria-modal="true"` e esconde o resto da página do leitor de tela —
+ * os quatro juntos. Anunciar inércia sem prender o foco nem esconder o resto
+ * seria mentir para quem usa leitor de tela.
  *
- * `'trap-focus'` é um valor SÓ desta stack, herdado do primitivo: prende o foco
- * sem travar a rolagem nem isolar o lado de fora. Fica exposto porque tirá-lo
- * seria estreitar a API do primitivo sem ganho; não faz parte do contrato
- * cross-stack, e é divergência de API de framework — registrada, não alinhada.
+ * BOOLEANO, como nas outras quatro stacks, desde 2026-09-17 (decisão da dona).
+ * Até essa data o tipo era `boolean | 'trap-focus'`: um valor público só desta
+ * stack, herdado do `transformModal` do primitivo, que prendia o foco e fazia o
+ * painel anunciar `aria-modal="true"` — mas NÃO travava a rolagem nem escondia o
+ * resto da página, duas das quatro coisas que o modo modal liga juntas. Ou seja,
+ * anunciava inércia sem cumpri-la, que é exatamente o defeito que as decisões D1
+ * e D2 do PRD existem para proibir. Divergência de API de framework se registra;
+ * promessa de acessibilidade quebrada, não.
+ *
+ * A lib continua aceitando a string na entrada (`transformModal`), e é por isso
+ * que `NdsPopover.travaFoco` compara com `true` de forma ESTRITA: nada desta
+ * stack escreve o valor, e qualquer coisa que não seja `true` é não-modal.
  */
-export type PopoverModal = boolean | 'trap-focus';
+export type PopoverModal = boolean;
 
 export { popoverCloseReason, type PopoverCloseReason } from './popover-close-reason';
 
@@ -185,8 +221,8 @@ export class NdsPopoverContent {
  *
  * `open` é model do primitivo, então `[(open)]` funciona; `defaultOpen` cobre o
  * modo não-controlado e `modal` escolhe entre não-modal (padrão) e modal
- * (`true`: foco preso, rolagem travada e `aria-modal`). Ver `PopoverModal` para
- * o terceiro valor, que é só desta stack.
+ * (`true`: foco preso, rolagem travada, `aria-modal` e o resto da página
+ * escondido do leitor de tela — os quatro juntos). Ver `PopoverModal`.
  *
  * `triggerId` / `defaultTriggerId` / `handle` ficam FORA da lista de inputs de
  * propósito: os três servem ao caso de um popover com gatilhos destacados,
@@ -238,6 +274,7 @@ export class NdsPopoverContent {
           [alignOffset]="panel.alignOffset()"
         >
           <div
+            #popup
             rdxPopoverPopup
             class="nds-popover-content"
             data-slot="popover-content"
@@ -272,15 +309,17 @@ export class NdsPopover {
   /**
    * O foco está PRESO no painel?
    *
-   * Os dois valores que prendem: `true` (contrato cross-stack, com trava de
-   * rolagem por cima) e `'trap-focus'` (valor só desta stack, sem a trava). É
-   * desta pergunta que saem tanto o `aria-modal` quanto o laço de tabulação —
-   * as duas coisas têm de concordar sempre, porque uma sem a outra é o defeito.
+   * UM valor, e ele é o contrato cross-stack: `modal === true`. É desta pergunta
+   * que saem o `aria-modal`, o laço de tabulação e o esconder do lado de fora —
+   * os três têm de concordar sempre, porque um sem o outro é o defeito.
+   *
+   * Comparação ESTRITA de propósito. Até 2026-09-17 a string `'trap-focus'`
+   * também entrava aqui e anunciava `aria-modal="true"` sem trava de rolagem e
+   * sem esconder o resto da página; o valor saiu do contrato naquela data (ver
+   * `PopoverModal`), mas o `transformModal` do primitivo ainda o deixa chegar à
+   * raiz — então qualquer coisa que não seja `true` é não-modal, aqui.
    */
-  protected readonly travaFoco = computed(() => {
-    const modal = this.root.modal();
-    return modal === true || modal === 'trap-focus';
-  });
+  protected readonly travaFoco = computed(() => this.root.modal() === true);
 
   /**
    * `aria-modal` SÓ quando o foco está preso, e nunca `"false"` no padrão: o
@@ -288,23 +327,84 @@ export class NdsPopover {
    */
   protected readonly ariaModal = computed(() => (this.travaFoco() ? 'true' : null));
 
+  /** O painel vivo, quando existe — é dele que sai a cadeia de ancestrais. */
+  private readonly popup = viewChild('popup', { read: ElementRef<HTMLElement> });
+
+  constructor() {
+    // Modo MODAL com o painel aberto: o resto da página some do leitor de tela
+    // — ver `hideOutside`. Depois do render, e não num `effect` comum: o portal
+    // do primitivo muda o painel para o `<body>` num efeito próprio
+    // (`radix-ng-primitives-portal.mjs:136-145`), e a cadeia de ancestrais só é
+    // a definitiva depois dele. Fechar (ou desmontar) roda a limpeza, que
+    // devolve cada elemento ao estado de antes.
+    //
+    // Pela MESMA pergunta que liga o `aria-modal` e o laço de tabulação
+    // (`travaFoco`), e não por uma leitura própria de `modal`: as três coisas são
+    // o mesmo modo, e ler `modal` em três lugares é como elas se separam.
+    afterRenderEffect((onCleanup) => {
+      const popup = this.popup()?.nativeElement;
+      if (!popup || !this.root.isOpen() || !this.travaFoco()) return;
+      onCleanup(hideOutside(popup));
+    });
+  }
+
   /**
-   * Laço de tabulação do modo modal.
+   * O `Tab` na borda do painel — os dois modos, com resultados opostos.
    *
-   * Escrito aqui porque o primitivo não trapeia com `modal === true` sozinho:
-   * ele exige `hasPopupClose()`, ou seja, um `ndsPopoverClose` REGISTRADO dentro
-   * do painel — ver o bloco no topo deste arquivo. Mesma forma do `popover.ts`
-   * do Vanilla, que é a referência.
+   * NÃO-MODAL: do ÚLTIMO focável com `Tab`, ou do PRIMEIRO com `Shift+Tab`, a
+   * tecla é barrada, o painel FECHA e o foco volta ao GATILHO. Painel sem nada
+   * focável fecha com qualquer um dos dois. Mesma forma do ramo não-modal do
+   * `handleKeydown` do Vanilla, que é a referência.
    *
-   * Quando o primitivo JÁ está trapeando (com `'trap-focus'`, ou com `true` mais
-   * um botão de fechar), este laço é redundante e inofensivo: os dois levam o
-   * foco para o mesmo lugar.
+   * Por `keydown`, e não pelo fechamento por foco do primitivo
+   * (`focusManager.focusOut` → `close('focus-out')`): o painel mora em portal
+   * no FIM do `<body>`, então o Tab do último focável leva o foco para FORA DO
+   * DOCUMENTO — sem `focusin` em elemento nenhum, e o gerenciador de foco não vê
+   * a saída. Medido em 2026-09-17 pela story `Focused`: o painel ficava aberto.
    *
-   * Fora do modo modal não há ramo nenhum: `Tab` segue a ordem da página e SAI
-   * do painel, que é o contrato padrão do popover.
+   * Fecha com o motivo cru `'focus-out'`, o mesmo que a lib usaria, e é isso que
+   * faz o `popoverCloseReason` entregar `overlay` sem mapa novo. O foco NÃO é
+   * movido aqui: com a tecla barrada ele continua no painel até o desmonte, e o
+   * escopo de foco do primitivo o devolve ao elemento focado antes da abertura
+   * — o gatilho — no quadro seguinte (`focus(previouslyFocusedElement)`, porque
+   * foco que caiu no `<body>` não conta como "movido"). A story afirma o destino.
+   *
+   * ─── E a PERDA DE FOCO (D15), que é o caso oposto ─────────────────────────
+   *
+   * Foco levado por código a outro elemento da página fecha o painel com
+   * `overlay`, uma vez, e o foco FICA onde foi posto. Não há código nosso para
+   * isso, nem devolução a suprimir — medido na suíte e na fonte do
+   * `@radix-ng/primitives` 1.1.2 (`fesm2022/`), em 2026-09-17:
+   *
+   *  - quem fecha é o gerenciador de foco: `focusout` com `relatedTarget` fora
+   *    da árvore flutuante emite `focusOut`
+   *    (`radix-ng-primitives-floating-focus-manager.mjs:497-513`), e o popup o
+   *    converte em `close('focus-out')` (`radix-ng-primitives-popover.mjs:609-613`);
+   *  - a devolução do escopo de foco no desmonte
+   *    (`radix-ng-primitives-focus-scope.mjs:655-663`) só foca o elemento de antes
+   *    da abertura quando `shouldPreserveMovedFocus()` (`:681`) é falso — e ele é
+   *    verdadeiro exatamente aqui: foco num elemento que não é o `<body>` e não
+   *    está no painel. Por isso o `Tab` da borda, que segura o foco dentro, volta
+   *    ao gatilho, e a perda de foco não;
+   *  - o gatilho conta como parte do painel: `isRelatedTargetInside` (`:509`, e
+   *    `:637`) o exclui, então o clique nele fecha pelo `trigger-press`, uma vez;
+   *  - o clique fora não soma dois: com o botão apertado a perda de foco é
+   *    ignorada (`pointerDown`, `:499`), e quem fecha é só o `outside-press`.
+   *
+   * Consequência para quem mexer aqui: mover o foco explicitamente para o
+   * gatilho no fechamento (num `(closeAutoFocus)`, por exemplo) desfaria a D15 —
+   * foi o defeito plantado que deu dentes à story `Focused`.
+   *
+   * MODAL: laço. Escrito aqui porque o primitivo NÃO trapeia nesta composição —
+   * em nenhum caso, nem com peça de fechar: ele exige `hasPopupClose()`, e um
+   * `ndsPopoverClose` declarado no `<ng-template ndsPopoverContent>` nunca se
+   * registra no painel (medido em 2026-09-17; ver o bloco no topo deste
+   * arquivo). Some com isso a última hipótese de redundância, porque a string
+   * `'trap-focus'` da lib saiu do contrato na mesma data: este laço é o ÚNICO
+   * trap de foco desta stack, e não uma segunda camada por cima do da lib.
    */
   protected aoTeclar(evento: KeyboardEvent): void {
-    if (!this.travaFoco() || evento.key !== 'Tab' || evento.defaultPrevented) return;
+    if (evento.key !== 'Tab' || evento.defaultPrevented) return;
 
     const panel = evento.currentTarget as HTMLElement | null;
     if (!panel) return;
@@ -312,6 +412,18 @@ export class NdsPopover {
     const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCAVEIS)).filter(
       (el) => !el.closest('[hidden]'),
     );
+
+    if (!this.travaFoco()) {
+      const active = document.activeElement;
+      const saindo =
+        !focusable.length ||
+        (evento.shiftKey ? active === focusable[0] : active === focusable[focusable.length - 1]);
+      if (!saindo) return;
+      evento.preventDefault();
+      this.root.close('focus-out', evento);
+      return;
+    }
+
     // Sem nada focável dentro, ficar preso é literal: o gerenciador de foco já
     // deixou o painel com `tabindex="-1"`, e ele segura o foco sozinho.
     if (!focusable.length) {
@@ -410,6 +522,103 @@ export class NdsPopover {
     const target = declarado ?? panel.querySelector<HTMLElement>(FOCAVEIS);
     (target ?? panel).focus();
   }
+}
+
+/**
+ * Modo MODAL: o resto da página some do leitor de tela enquanto o painel está
+ * aberto — decisão da dona de 2026-09-17 (item 7 da §7 do PRD), igual nas cinco.
+ * `aria-modal` sozinho não basta: leitores de tela o honram de forma desigual
+ * (o VoiceOver do Safari é o caso conhecido).
+ *
+ * O algoritmo "esconder os outros": para cada ancestral do painel até o
+ * `<body>`, os IRMÃOS desse ancestral recebem `aria-hidden="true"`; o painel e a
+ * cadeia de ancestrais dele, não — e as REGIÕES VIVAS também não, ver
+ * `REGIOES_VIVAS`. `aria-hidden` e NUNCA `inert`: `inert` também tira do
+ * ponteiro os elementos de fora, e o clique fora é o que fecha.
+ *
+ * POR QUE A STACK COMPLEMENTA o primitivo, medido no `@radix-ng/primitives`
+ * 1.1.2 (`fesm2022/`) em 2026-09-17:
+ * - o primitivo não usa `aria-hidden` para isso; ele isola o lado de fora com
+ *   `inert`, e só com `modal === true && hasPopupClose()`
+ *   (`radix-ng-primitives-popover.mjs:625`);
+ * - e `hasPopupClose()` NUNCA é verdadeiro nesta composição: o
+ *   `RdxPopoverClose` só se registra se injetar o `RdxPopoverPopup`
+ *   (`radix-ng-primitives-popover.mjs:693-694`), e o `ndsPopoverClose` vive num
+ *   `<ng-template ndsPopoverContent>` declarado FORA do painel — o injetor dele
+ *   é o da declaração, não o do painel. Medido com uma story descartável: modo
+ *   modal COM `ndsPopoverClose`, painel aberto, nenhum elemento com `inert`;
+ * - e o `markOthers` do primitivo, quando age, trata `"false"` como "não
+ *   isolado" e REMOVE o atributo ao soltar
+ *   (`radix-ng-primitives-floating-focus-manager.mjs:95`, `:128`) — o valor
+ *   anterior não voltaria.
+ *
+ * Por isso a restauração aqui é EXATA: cada elemento guarda o valor que tinha
+ * (ou a ausência dele) e o recebe de volta. O contador por elemento é o que
+ * deixa dois painéis modais simultâneos soltarem o mesmo elemento só quando o
+ * último fechar. Mesma forma do `hideOutside` do `popover.tsx` do react.
+ */
+const hiddenCount = new WeakMap<Element, number>();
+const previousAriaHidden = new WeakMap<Element, string | null>();
+
+/**
+ * O que o esconder NÃO marca: REGIÃO VIVA e `<script>`.
+ *
+ * Escondido do leitor de tela, um toast que anuncia "salvo" — ou um erro que
+ * chega enquanto o painel está aberto — fica MUDO, e o anúncio é justamente o
+ * que não pode se perder. As libs das outras stacks pulam os mesmos elementos,
+ * medido em 2026-09-17: o `markOthers` da base-ui 1.7.0 preserva todo
+ * `[aria-live]` e ignora `script` (`markOthers.mjs:86`, `:53`), e o pacote
+ * `aria-hidden` 1.2.6 que a reka usa faz o mesmo, com a mesma justificativa em
+ * comentário (`dist/es2015/index.js:131-133`). O `<script>` entra porque não tem
+ * efeito nenhum na árvore de acessibilidade — marcá-lo é só ruído.
+ *
+ * Os `role` da lista são as regiões vivas IMPLÍCITAS do ARIA: um elemento com
+ * `role="status"` anuncia sem nunca declarar `aria-live`, e uma exceção que só
+ * olhasse o atributo o silenciaria. `[aria-live]` com qualquer valor, inclusive
+ * `"off"`: quem escreveu o atributo é quem manda no anúncio, não nós.
+ */
+const REGIOES_VIVAS = [
+  '[aria-live]',
+  'script',
+  '[role="status"]',
+  '[role="alert"]',
+  '[role="log"]',
+  '[role="progressbar"]',
+  '[role="marquee"]',
+  '[role="timer"]',
+].join(', ');
+
+function hideOutside(panel: HTMLElement): () => void {
+  const body = panel.ownerDocument.body;
+  const hidden: Element[] = [];
+  let node: Element = panel;
+  while (node !== body && node.parentElement) {
+    for (const sibling of Array.from(node.parentElement.children)) {
+      if (sibling === node || sibling.matches(REGIOES_VIVAS)) continue;
+      const count = hiddenCount.get(sibling) ?? 0;
+      if (count === 0) {
+        previousAriaHidden.set(sibling, sibling.getAttribute('aria-hidden'));
+        sibling.setAttribute('aria-hidden', 'true');
+      }
+      hiddenCount.set(sibling, count + 1);
+      hidden.push(sibling);
+    }
+    node = node.parentElement;
+  }
+  return () => {
+    for (const element of hidden) {
+      const count = (hiddenCount.get(element) ?? 1) - 1;
+      if (count > 0) {
+        hiddenCount.set(element, count);
+        continue;
+      }
+      hiddenCount.delete(element);
+      const previous = previousAriaHidden.get(element) ?? null;
+      previousAriaHidden.delete(element);
+      if (previous === null) element.removeAttribute('aria-hidden');
+      else element.setAttribute('aria-hidden', previous);
+    }
+  };
 }
 
 /**

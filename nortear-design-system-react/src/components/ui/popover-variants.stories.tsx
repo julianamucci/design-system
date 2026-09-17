@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor, screen, within, userEvent } from "storybook/test";
+import { expect, waitFor, screen, within, userEvent, fn } from "storybook/test";
 import {
   Popover,
   PopoverClose,
@@ -13,6 +13,7 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
+import { popoverCloseReason } from "./popover-close-reason";
 import {
   popoverContentLivreSource,
   popoverFormSource,
@@ -96,9 +97,13 @@ export const Default: Story = {
 
 export const WithTitle: Story = {
   parameters: {
-    covers: [
-      "visual.item2", "accessibility.item5", "accessibility.item3", "functional.item4",
-    ],
+    // `functional.item4` saiu daqui em 2026-09-16. O item passou a exigir duas
+    // coisas — "percorre os focáveis internos e, A PARTIR DO ÚLTIMO, sai do
+    // painel e o FECHA" —, e o passo desta story prova só a primeira: o Tab
+    // caminhando entre Cancelar e Salvar, que são o primeiro e o penúltimo.
+    // Quem prova o item inteiro é a story `Focused`, em States, e a cobertura
+    // foi para lá junto com a asserção.
+    covers: ["visual.item2", "accessibility.item5", "accessibility.item3"],
     docs: {
       description: {
         story:
@@ -186,6 +191,14 @@ export const WithTitle: Story = {
   },
 };
 
+/**
+ * Espião dos fechamentos da `Form`, no módulo para a play alcançá-lo: é o motivo
+ * que prova que confirmar chega ao relatório como `api`, e não só que o painel
+ * sumiu. Fechar por código não passa pelo `onOpenChange` da lib, então o `api`
+ * é anunciado no `onSubmit`, onde a decisão acontece.
+ */
+const formClose = fn();
+
 export const Form: Story = {
   parameters: {
     covers: ["visual.item3"],
@@ -207,7 +220,13 @@ export const Form: Story = {
       const [open, setOpen] = useState(true);
       return (
     <div className={wrapperClass} style={wrapperStyle}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+        open={open}
+        onOpenChange={(next, details) => {
+          setOpen(next);
+          if (!next) formClose(popoverCloseReason(details?.reason));
+        }}
+      >
         <PopoverTrigger asChild>
           <Button variant="outline">Editar perfil</Button>
         </PopoverTrigger>
@@ -226,6 +245,7 @@ export const Form: Story = {
               e.preventDefault();
               // …aqui entraria a gravação do perfil…
               setOpen(false);
+              formClose(popoverCloseReason(undefined));
             }}
           >
             <Label htmlFor="popover-form-name" className="nds-text-caption">
@@ -263,7 +283,7 @@ export const Form: Story = {
       await expect(submit).toBeVisible();
     });
 
-    await step("Atualizar salva e fecha por CÓDIGO, pelo caminho do submit", async () => {
+    await step("O Atualizar fecha por CÓDIGO e informa api", async () => {
       const submit = within(screen.getByRole("dialog")).getByRole("button", {
         name: /Atualizar/i,
       });
@@ -274,18 +294,24 @@ export const Form: Story = {
       await waitFor(() => {
         expect(screen.queryByRole("dialog")).toBeNull();
       });
+      await expect(formClose).toHaveBeenLastCalledWith("api");
     });
 
-    await step("O Enter num campo fecha pelo mesmo caminho", async () => {
+    await step("O Enter num campo envia o formulário e fecha com api", async () => {
       // É o gesto de quem acabou de digitar, e ele NÃO passa pelo `onClick` de
       // botão nenhum — só o `submit` do formulário o alcança.
       const trigger = within(canvasElement).getByRole("button", { name: /Editar perfil/i });
       await userEvent.click(trigger);
       const name = within(await waitFor(() => screen.getByRole("dialog"))).getByLabelText(/Nome/i);
+      // A contagem, e não só o último motivo: o passo anterior já deixou `api`
+      // gravado, e sem ela um Enter que fechasse por outro caminho passaria.
+      const closesBefore = formClose.mock.calls.length;
       await userEvent.type(name, "{Enter}");
       await waitFor(() => {
         expect(screen.queryByRole("dialog")).toBeNull();
       });
+      await expect(formClose).toHaveBeenCalledTimes(closesBefore + 1);
+      await expect(formClose).toHaveBeenLastCalledWith("api");
     });
 
     // Termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

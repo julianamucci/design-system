@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor, screen, within, userEvent } from "storybook/test";
+import { expect, waitFor, screen, within, userEvent, fn } from "storybook/test";
 import {
   Popover,
   PopoverClose,
@@ -13,6 +13,8 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
+import { open, panel } from "./popover.fixtures";
+import { popoverCloseReason } from "./popover-close-reason";
 import {
   popoverAboveSource,
   popoverEditarPerfilSource,
@@ -74,10 +76,6 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-function panel(): HTMLElement {
-  return screen.getByRole("dialog");
-}
-
 /** Fecha (se aberto) e reabre pelo gatilho, devolvendo o painel novo.
  *
  *  O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
@@ -103,6 +101,18 @@ async function waitForSide(el: HTMLElement, side: string, timeout = 1500): Promi
   }
 }
 
+/**
+ * Espiões dos fechamentos das composições que CONFIRMAM, no módulo para a play
+ * alcançá-los: é o motivo, já traduzido, que prova qual caminho fechou — o
+ * painel some igual pelos dois.
+ *
+ * Fechar por CÓDIGO não passa pelo `onOpenChange` desta lib (a raiz é
+ * controlada, e quem escreve `open` é quem compõe), então o `api` é anunciado
+ * onde a decisão acontece, com a mesma tradução — a forma da `CloseButton`.
+ */
+const editProfileClose = fn();
+const tableFilterClose = fn();
+
 const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";
 
 export const EditProfile: Story = {
@@ -125,7 +135,13 @@ export const EditProfile: Story = {
       const [open, setOpen] = useState(true);
       return (
     <div className={wrapperClass} style={wrapperStyle}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+        open={open}
+        onOpenChange={(next, details) => {
+          setOpen(next);
+          if (!next) editProfileClose(popoverCloseReason(details?.reason));
+        }}
+      >
         <PopoverTrigger asChild>
           <Button variant="outline">Editar perfil</Button>
         </PopoverTrigger>
@@ -147,6 +163,7 @@ export const EditProfile: Story = {
               e.preventDefault();
               // …aqui entraria a gravação do perfil…
               setOpen(false);
+              editProfileClose(popoverCloseReason(undefined));
             }}
           >
             <Label htmlFor="comp-name" className="nds-text-caption">Nome</Label>
@@ -172,11 +189,38 @@ export const EditProfile: Story = {
     };
     return <EditProfileDemo />;
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole("button", { name: /Editar perfil/i });
+
     await step("O formulário abre preenchido e pronto para edição", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(within(dialog).getByLabelText(/Nome/i)).toHaveValue("Ana Ribeiro");
       await expect(within(dialog).getByLabelText(/Email/i)).toHaveValue("ana@nortear.com.br");
+    });
+
+    await step("O Cancelar fecha o painel e informa close-button", async () => {
+      const p = await open(trigger);
+      const cancel = within(p).getByRole("button", { name: /Cancelar/i });
+      await expect(cancel).toHaveAttribute("data-slot", "popover-close");
+      await userEvent.click(cancel);
+      await waitFor(() => expect(panel()).toBeNull());
+      await expect(editProfileClose).toHaveBeenLastCalledWith("close-button");
+    });
+
+    await step("O Atualizar fecha por CÓDIGO e informa api", async () => {
+      // Sem a peça de fechar de propósito: quem fecha é o `onSubmit` — motivo
+      // `api`, "salvou e fechou", e não "desistiu".
+      const p = await open(trigger);
+      const update = within(p).getByRole("button", { name: /Atualizar/i });
+      await expect(update).not.toHaveAttribute("data-slot", "popover-close");
+      await userEvent.click(update);
+      await waitFor(() => expect(panel()).toBeNull());
+      await expect(editProfileClose).toHaveBeenLastCalledWith("api");
+    });
+
+    // Termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step("Estado final: painel aberto", async () => {
+      await expect(await open(trigger)).toBeVisible();
     });
   },
 };
@@ -200,7 +244,13 @@ export const TableFilter: Story = {
       const [open, setOpen] = useState(true);
       return (
     <div className={wrapperClass} style={wrapperStyle}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+        open={open}
+        onOpenChange={(next, details) => {
+          setOpen(next);
+          if (!next) tableFilterClose(popoverCloseReason(details?.reason));
+        }}
+      >
         <PopoverTrigger asChild>
           <Button variant="outline">Filtros</Button>
         </PopoverTrigger>
@@ -230,7 +280,10 @@ export const TableFilter: Story = {
               quem ainda está decidindo. */}
           <div className="nds-cluster" data-justify="end" data-spacing="sm">
             <Button variant="ghost" size="sm">Limpar</Button>
-            <Button size="sm" onClick={() => setOpen(false)}>Aplicar</Button>
+            <Button
+              size="sm"
+              onClick={() => { setOpen(false); tableFilterClose(popoverCloseReason(undefined)); }}
+            >Aplicar</Button>
           </div>
         </PopoverContent>
       </Popover>
@@ -239,7 +292,9 @@ export const TableFilter: Story = {
     };
     return <FiltrosDemo />;
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole("button", { name: /Filtros/i });
+
     await step("Os três status são combináveis", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(within(dialog).getAllByRole("checkbox")).toHaveLength(3);
@@ -249,10 +304,24 @@ export const TableFilter: Story = {
     await step("E marcar outro não fecha o painel", async () => {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
-      const pendente = within(panel()).getByLabelText(/Pendente/i) as HTMLInputElement;
+      const pendente = within(panel()!).getByLabelText(/Pendente/i) as HTMLInputElement;
       if (!pendente.checked) await userEvent.click(pendente);
       await expect(pendente).toBeChecked();
       await expect(screen.queryByRole("dialog")).toBeInTheDocument();
+    });
+
+    await step("O Aplicar fecha por CÓDIGO e informa api", async () => {
+      // Aplicar É a decisão: fecha por código, e o motivo é `api` — "concluiu".
+      const apply = within(panel()!).getByRole("button", { name: /Aplicar/i });
+      await expect(apply).not.toHaveAttribute("data-slot", "popover-close");
+      await userEvent.click(apply);
+      await waitFor(() => expect(panel()).toBeNull());
+      await expect(tableFilterClose).toHaveBeenLastCalledWith("api");
+    });
+
+    // Termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step("Estado final: painel aberto", async () => {
+      await expect(await open(trigger)).toBeVisible();
     });
   },
 };
@@ -305,7 +374,7 @@ export const ColorPicker: Story = {
     });
 
     await step("E o foco chega a cada uma por Tab", async () => {
-      const ctx = within(panel());
+      const ctx = within(panel()!);
       const first = ctx.getByRole("button", { name: "Primária" });
       const segunda = ctx.getByRole("button", { name: "Secundária" });
       first.focus();
@@ -404,7 +473,7 @@ export const SideTop: Story = {
         <PopoverTrigger asChild>
           <Button variant="outline">Abrir acima</Button>
         </PopoverTrigger>
-        <PopoverContent side="top" align="center" sideOffset={12}>
+        <PopoverContent side="top" align="center" sideOffset={12} alignOffset={8}>
           <PopoverHeader>
             <PopoverTitle>Ancorado acima</PopoverTitle>
             <PopoverDescription>
@@ -434,7 +503,7 @@ export const SideTop: Story = {
     });
 
     await step("E o sideOffset separa painel e gatilho pela medida pedida", async () => {
-      const dialog = panel();
+      const dialog = panel()!;
       const r1 = trigger.getBoundingClientRect();
       const r2 = dialog.getBoundingClientRect();
       // Geometria acompanhando o atributo: o painel INTEIRO acima do gatilho.
@@ -443,6 +512,21 @@ export const SideTop: Story = {
       // asserção é a que pegou o painel crescendo POR CIMA do gatilho quando o
       // CSS compartilhado tirava o painel do fluxo do positioner.
       await expect(Math.abs(r1.top - r2.bottom - 12)).toBeLessThanOrEqual(1);
+      // ─── O eixo CRUZADO, que faltava a esta stack ─────────────────────────
+      //
+      // As duas asserções acima medem o eixo PRINCIPAL — o de cima para baixo,
+      // que é o que `side="top"` e `sideOffset` escolhem. Nenhuma delas repara
+      // em onde o painel caiu no eixo horizontal: com `align="center"` trocado
+      // por `start` ou `end`, ou com o `alignOffset` empurrando o painel para o
+      // lado, as duas continuariam verdes. Vue, svelte e vanilla já mediam isto.
+      //
+      // `align="center"` põe os dois centros juntos, e o `alignOffset={8}` (D14)
+      // empurra o painel 8px para o fim do eixo — a direita, no lado `top`. Com
+      // sinal e folga de 1px: com a prop ignorada, ou empurrando para o lado
+      // errado, a asserção reprova.
+      const triggerCenter = r1.left + r1.width / 2;
+      const panelCenter = r2.left + r2.width / 2;
+      await expect(Math.abs(panelCenter - triggerCenter - 8)).toBeLessThanOrEqual(1);
     });
 
     // ─── O contrato C9, que esta story afirmava e não media ──────────────────

@@ -35,7 +35,13 @@ export type PopoverSnippetOptions = {
   side?: PopoverSide;
   align?: PopoverAlign;
   sideOffset?: number;
+  /** Deslocamento no eixo do alinhamento (D14). Só entra no snippet quando difere de `0`. */
+  alignOffset?: number;
   defaultOpen?: boolean;
+  /** Estado CONTROLADO — quem aplica a mudança é o consumidor, por `setOpen()`. */
+  open?: boolean;
+  /** O formulário ganha o par Cancelar (peça de fechar) + Atualizar (submit). */
+  cancel?: boolean;
   /** Modo modal — foco preso, rolagem travada, painel anunciado como modal. */
   modal?: boolean;
   /** Presença liga a linha do callback; string troca a expressão mostrada. */
@@ -82,9 +88,11 @@ function panelLines(o: PopoverSnippetOptions, content: string): string[] {
     ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
     ['align', o.align && o.align !== 'center' ? text(o.align) : undefined],
     ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 4 ? String(o.sideOffset) : undefined],
+    ['alignOffset', o.alignOffset !== undefined && o.alignOffset !== 0 ? String(o.alignOffset) : undefined],
     // Só o painel sem título declara nome: `o.text` é justamente a forma que
     // troca cabeçalho por texto solto.
     ['ariaLabel', o.ariaLabel && typeof o.text === 'string' ? text(o.ariaLabel) : undefined],
+    ['open', o.open !== undefined ? String(o.open) : undefined],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
     ['modal', o.modal ? 'true' : undefined],
     [
@@ -198,10 +206,15 @@ export function popoverSourceWith(
  */
 export function popoverControlledSnippet(o: PopoverSnippetOptions = {}): string {
   const soText = typeof o.text === 'string';
+  // CONTROLADO: o gesto só anuncia, e é o consumidor que aplica por `setOpen()`
+  // — e que pode RECUSAR, não aplicando. `painel` é lido dentro do callback, que
+  // só roda depois de a fábrica devolver.
   const withCallback: PopoverSnippetOptions = {
     ...o,
+    open: o.open ?? false,
     description: o.description ?? 'Estado observado por fora via onOpenChange.',
-    onOpenChange: o.onOpenChange ?? '(aberto) => mostrarEstado(aberto)',
+    onOpenChange:
+      o.onOpenChange ?? '(aberto) => {\n    mostrarEstado(aberto);\n    painel.setOpen(aberto);\n  }',
   };
 
   return snippet(
@@ -241,6 +254,26 @@ export function popoverSourceControlled(
  * foco entra nele ao abrir e a pessoa digita ali dentro.
  */
 export function popoverWithFormSnippet(o: PopoverSnippetOptions = {}): string {
+  // Com `cancel`, o rodapé ganha a peça de DESISTIR ao lado do submit: os dois
+  // fecham, por caminhos diferentes (`close-button` × `api`).
+  const footer = o.cancel
+    ? `
+
+// O Cancelar é a PEÇA de fechar: a fábrica delega o clique em
+// \`[data-slot="popover-close"]\` e relata \`close-button\`.
+const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+cancelar.dataset.slot = 'popover-close';
+
+const acoes = document.createElement('div');
+acoes.className = 'nds-cluster';
+acoes.dataset.spacing = 'sm';
+acoes.dataset.justify = 'end';
+acoes.append(cancelar, createButton({ size: 'sm', label: 'Atualizar', type: 'submit' }));`
+    : '';
+  const submitLine = o.cancel
+    ? 'acoes,'
+    : "createButton({ size: 'sm', label: 'Atualizar', type: 'submit' }),";
+
   return snippet(
     [
       importing('popover', 'createPopover', 'createPopoverTitle'),
@@ -261,13 +294,13 @@ function campo(id, rotulo, valor) {
   linha.dataset.spacing = 'xs';
   linha.append(createLabel({ text: rotulo, htmlFor: id }), createInput({ id, value: valor }));
   return linha;
-}
+}${footer}
 
 formulario.append(
   createPopoverTitle({ text: 'Editar perfil' }),
   campo('perfil-nome', 'Nome', 'Ana Ribeiro'),
   campo('perfil-email', 'Email', 'ana@nortear.com.br'),
-  createButton({ size: 'sm', label: 'Atualizar', type: 'submit' }),
+  ${submitLine}
 );`,
     `const painel = ${callLine('createPopover', panelLines(o, 'formulario'))};`,
     `// Confirmar fecha por CÓDIGO, depois de salvar: o motivo que chega ao

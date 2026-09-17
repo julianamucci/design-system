@@ -4,6 +4,7 @@ import {
   popoverBasicSource,
   popoverColorPickerSource,
   popoverControlledSource,
+  popoverFocusedSource,
   popoverFormSource,
   popoverModalSource,
   popoverOpenSource,
@@ -125,22 +126,19 @@ const CONSTRUCTORS: Array<{
     build: popoverFormSource,
   },
   {
-    // A EXCEÇÃO DECLARADA desta rodada: duas stories, um construtor.
-    //
-    // States/Closed e States/Focus renderizam o MESMO template e semeiam o
-    // MESMO estado inicial. O que as separa é interação — uma nem abre o
-    // painel, a outra abre e caminha com Tab entre os controles —, e interação
-    // não aparece em snippet. Dois construtores idênticos seriam uma cópia
-    // esperando para envelhecer sozinha.
-    //
-    // A premissa é verificada logo abaixo, em "premissa das exceções": um caso
-    // compara os dois templates e outro compara as duas `props`.
     name: 'popoverBasicSource',
-    stories: [
-      { file: './popover-states.stories.ts', story: 'Closed' },
-      { file: './popover-states.stories.ts', story: 'Focus' },
-    ],
+    stories: [{ file: './popover-states.stories.ts', story: 'Closed' }],
     build: popoverBasicSource,
+  },
+  {
+    // Construtor PRÓPRIO desde 2026-09-17. Até ali a Focused compartilhava o de
+    // Closed, com a premissa "mesmo markup" cobrada abaixo; a paridade final das
+    // cinco deu a ela o painel de CONFIRMAÇÃO, a premissa caiu — e a exceção
+    // saiu junto, em vez de ser afrouxada. O caso "premissa das exceções" agora
+    // cobra o contrário: que o painel da story é o que o snippet ensina.
+    name: 'popoverFocusedSource',
+    stories: [{ file: './popover-states.stories.ts', story: 'Focused' }],
+    build: popoverFocusedSource,
   },
   {
     name: 'popoverOpenSource',
@@ -167,7 +165,7 @@ const CONSTRUCTORS: Array<{
     // Construtor PRÓPRIO, e não um reaproveitamento de `popoverBasicSource`: o
     // painel é o mesmo, mas o gatilho não ("Configurações de exibição" × "Abrir
     // popover"). Markup diferente não compartilha construtor — é a mesma régua
-    // que aprova a dupla Closed/Focus por serem idênticas.
+    // que aprova a dupla Closed/Focused por serem idênticas.
     name: 'popoverTitledSource',
     stories: [{ file: './popover-variants.stories.ts', story: 'WithTitle' }],
     build: popoverTitledSource,
@@ -261,6 +259,14 @@ const SCAFFOLD_OF_THE_STATES = [
       'States/Modal abre o painel para o axe varrer e o Chromatic fotografar. ' +
       'Um popover modal que nasce aberto prende o foco de quem acabou de chegar.',
   },
+  {
+    name: '(onOpenChange)="recordControlledOpenChange($event)"',
+    pattern: /\(onOpenChange\)="recordControlledOpenChange\(\$event\)"/g,
+    why:
+      'States/Controlled conta os anúncios de fechamento e RECUSA o pedido para ' +
+      'provar que a perda de foco seguinte também é anunciada. É instrumento da ' +
+      'play, não o que o modo controlado ensina.',
+  },
 ];
 
 /**
@@ -289,9 +295,37 @@ const SCAFFOLD_OF_THE_COMPOSITIONS = [
   },
 ];
 
+/**
+ * O andaime da States/Focused — e SÓ ele. Nada disto vai ao snippet:
+ * `popoverFocusedSource` publica o painel da story sem os vizinhos e sem o
+ * espião, e é o que a comparação abaixo cobra.
+ */
+const FOCUSED_SCAFFOLD: Array<{ name: string; piece: string; from: 'template' | 'props' }> = [
+  {
+    name: 'fileira e vizinho "Antes"',
+    piece: ' <div class="nds-cluster" data-spacing="md"> <button ndsButton variant="ghost">Antes</button>',
+    from: 'template',
+  },
+  {
+    name: 'vizinho "Depois" e fim da fileira',
+    piece: ' <button ndsButton variant="ghost">Depois</button> </div>',
+    from: 'template',
+  },
+  {
+    name: 'espião do (onOpenChange)',
+    piece: ' (onOpenChange)="recordFocusedOpenChange($event)"',
+    from: 'template',
+  },
+  {
+    name: 'espião nas props',
+    piece: ', recordFocusedOpenChange',
+    from: 'props',
+  },
+];
+
 describe('premissa das exceções', () => {
   const CLOSED = { file: './popover-states.stories.ts', story: 'Closed' };
-  const FOCUS = { file: './popover-states.stories.ts', story: 'Focus' };
+  const FOCUS = { file: './popover-states.stories.ts', story: 'Focused' };
   const OPEN = { file: './popover-states.stories.ts', story: 'Open' };
 
   it('os templates de estado existem e não voltaram vazios da leitura', () => {
@@ -300,19 +334,64 @@ describe('premissa das exceções', () => {
     }
   });
 
-  it('Closed e Focus renderizam o MESMO markup e semeiam o MESMO estado', () => {
-    // Este é o caso que dá dentes à exceção. No dia em que uma das duas ganhar
-    // um elemento, trocar o gatilho ou nascer aberta, elas param de poder
-    // compartilhar um construtor — e é aqui que isso aparece, em vez de num
-    // snippet que passou a ensinar a outra story.
+  it('Focused publica o MESMO painel que renderiza, tirado o andaime declarado', () => {
+    // O caso que dá dentes ao construtor próprio. Antes de 2026-09-17 ele
+    // afirmava o contrário — Focused igual a Closed — e caiu quando a Focused
+    // ganhou o painel de confirmação comum às cinco. Não foi afrouxado: foi
+    // trocado pela pergunta que a nova forma pede.
+    //
+    // Cada pedaço de andaime tem de aparecer EXATAMENTE uma vez — pedaço que
+    // sumiu ou mudou de forma reprova aqui, em vez de a comparação passar a
+    // engolir outra coisa. Tirado o andaime, o que sobra da raiz em diante é
+    // comparado com o template do snippet. As duas únicas diferenças são as
+    // mesmas do painel simples: o comentário de template não conta, e o
+    // `(click)="aberto = false"` da propriedade solta do renderer vira o método
+    // `confirmar()` da classe do exemplo.
+    const normalize = (t: string) =>
+      t.replace(/<!--[\s\S]*?-->/g, '').replace(/\s+/g, ' ').replace(/> </g, '><').trim();
+    let focusedTemplate = normalize(storyTemplate(FOCUS.file, FOCUS.story));
+    let focusedProps = storyProps(FOCUS.file, FOCUS.story);
+    for (const { name, piece, from } of FOCUSED_SCAFFOLD) {
+      const normalizedPiece = from === 'template' ? normalize(piece) : piece;
+      const haystack = from === 'template' ? focusedTemplate : focusedProps;
+      expect(
+        haystack.split(normalizedPiece).length - 1,
+        `andaime "${name}" da States/Focused não aparece exatamente uma vez no ${from} — ` +
+          'a exceção declarada perdeu a premissa e precisa ser reexaminada',
+      ).toBe(1);
+      if (from === 'template') focusedTemplate = focusedTemplate.replace(normalizedPiece, '');
+      else focusedProps = focusedProps.replace(normalizedPiece, '');
+    }
+    expect(focusedProps).toBe('aberto: false');
+
+    const root = focusedTemplate.indexOf('<div ndsPopover');
+    const frameEnd = focusedTemplate.lastIndexOf('</div>');
+    expect(root).toBeGreaterThan(-1);
+    const storyRoot = focusedTemplate
+      .slice(root, frameEnd)
+      // O espião tirado deixa um espaço antes do fecho da tag da raiz.
+      .replace(/\s+>/g, '>')
+      .replace('(click)="aberto = false"', '(click)="confirmar()"')
+      .trim();
+
+    const code = popoverFocusedSource();
+    const snippetTemplate = /template: `([\s\S]*?)`,/.exec(code)?.[1] ?? '';
+    expect(snippetTemplate).toContain('ndsPopover');
     expect(
-      storyTemplate(FOCUS.file, FOCUS.story),
-      'States/Focus divergiu de States/Closed: as duas deixaram de renderizar o ' +
-        'mesmo markup, então popoverBasicSource não pode mais servir às duas — dê a ' +
-        'esta um construtor próprio',
-    ).toBe(storyTemplate(CLOSED.file, CLOSED.story));
-    expect(storyProps(FOCUS.file, FOCUS.story)).toBe(storyProps(CLOSED.file, CLOSED.story));
-    expect(storyProps(CLOSED.file, CLOSED.story)).toBe('aberto: false');
+      storyRoot,
+      'States/Focused divergiu do que popoverFocusedSource ensina além do andaime declarado',
+    ).toBe(normalize(snippetTemplate));
+    expect(code).toContain('confirmar(): void {');
+  });
+
+  it('e Focused NÃO é mais o painel de Closed — sem descrição e sem "Salvar"', () => {
+    // A premissa da troca de construtor. Se a Focused voltar a interpolar o
+    // painel simples, este caso reprova e a dupla precisa ser reexaminada.
+    const focused = storyTemplate(FOCUS.file, FOCUS.story);
+    expect(focused).toContain('Confirmar alteração');
+    expect(focused).not.toContain('ndsPopoverDescription');
+    expect(focused).not.toContain('SIMPLE_PANEL');
+    expect(storyTemplate(CLOSED.file, CLOSED.story)).toContain('SIMPLE_PANEL');
   });
 
   it('e Open só se separa das duas pelo ESTADO INICIAL, que é a razão de ter construtor próprio', () => {
@@ -395,6 +474,9 @@ describe('nenhum snippet publica o andaime da story', () => {
       // Os ganchos da play e a abertura de conveniência da captura.
       expect(code).not.toContain('data-testid=');
       expect(code).not.toContain('[defaultOpen]');
+      // Os espiões das plays, com ou sem a recusa do consumidor.
+      expect(code).not.toMatch(/record\w*OpenChange/);
+      expect(code).not.toContain('(onOpenChange)');
 
       // Valor de design em style inline não entra em snippet: inline vence a
       // folha, e a declaração deixa o tema e a densidade para trás.
@@ -464,6 +546,17 @@ describe('popoverPlaygroundSource', () => {
     });
     expect(panelTag(code)).toBe(
       '<ng-template ndsPopoverContent side="right" align="start" [sideOffset]="12">',
+    );
+  });
+
+  it('imprime alignOffset só quando difere do padrão 0, como binding', () => {
+    // D14: o deslocamento no eixo cruzado. No padrão ele some da tag inteira;
+    // fora dele entra como binding, porque é número.
+    expect(panelTag(popoverPlaygroundSource('', { args: { alignOffset: 0 } }))).toBe(
+      '<ng-template ndsPopoverContent>',
+    );
+    expect(panelTag(popoverPlaygroundSource('', { args: { alignOffset: 8 } }))).toBe(
+      '<ng-template ndsPopoverContent [alignOffset]="8">',
     );
   });
 
@@ -551,6 +644,28 @@ describe('as lições do componente', () => {
   });
 });
 
+describe('popoverFocusedSource', () => {
+  it('o painel de confirmação: título SEM descrição, e os dois caminhos de fechar', () => {
+    const code = popoverFocusedSource();
+    expect(code).toContain('<h2 ndsPopoverTitle>Confirmar alteração</h2>');
+    expect(code).not.toContain('ndsPopoverDescription');
+    const actions = footer(code);
+    expect(actions.match(/ndsPopoverClose/g)).toHaveLength(1);
+    expect(actions).toContain('<button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar<');
+    expect(actions).toContain('<button ndsButton size="sm" (click)="confirmar()">Confirmar<');
+    expect(methodBody(code, 'confirmar(): void {')).toContain('this.aberto.set(false);');
+  });
+
+  it('não declara modal, e não publica os vizinhos da story', () => {
+    const code = popoverFocusedSource();
+    expect(code).not.toContain('modal');
+    expect(code).not.toContain('>Antes<');
+    expect(code).not.toContain('>Depois<');
+    expect(code).toContain('<div ndsPopover [(open)]="aberto">');
+    expect(code).toContain('readonly aberto = signal(false);');
+  });
+});
+
 describe('popoverFormSource', () => {
   it('devolve o componente do painel com formulário, e não o template da story', () => {
     const code = popoverFormSource();
@@ -634,7 +749,7 @@ describe('os estados', () => {
     expect(code).toContain("import { signal } from '@angular/core';");
   });
 
-  it('e não declara modal — a ausência é o que separa Focus de Modal', () => {
+  it('e não declara modal — a ausência é o que separa Focused de Modal', () => {
     // O foco ENTRA no painel ao abrir (é o que separa o popover do tooltip) e
     // NÃO fica preso. Quem quiser a prisão escreve `[modal]="true"`, e aí é a
     // outra story. Um snippet com `[modal]` aqui ensinaria o oposto.
@@ -914,8 +1029,11 @@ describe('popoverSideTopSource', () => {
     // primeira rodada.
     const code = popoverSideTopSource();
     const tag = panelTag(code);
-    expect(tag).toBe('<ng-template ndsPopoverContent side="top" [sideOffset]="12">');
-    expect(tag).not.toContain('sideOffset="12"');
+    expect(tag).toBe(
+      '<ng-template ndsPopoverContent side="top" [sideOffset]="12" [alignOffset]="8">',
+    );
+    expect(tag).not.toContain(' sideOffset="12"');
+    expect(tag).not.toContain(' alignOffset="8"');
   });
 
   it('e NÃO publica o espaçador da story, nem o embrulho que o segura', () => {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import {
   createPopover,
   createPopoverDescription,
@@ -18,7 +18,10 @@ const meta: Meta = {
   parameters: {
     design: figmaDesign('popover'),
     actions: { disable: true },
-    layout: 'padded',
+    // `centered`, como as outras quatro — ver a nota do meta de `-states`. A
+    // `SideTop` deste arquivo declara `padded` nela mesma: ela é a única que
+    // depende de espaço ACIMA do gatilho.
+    layout: 'centered',
     controls: { disable: true },
     docs: {
       source: { transform: popoverSource },
@@ -43,13 +46,23 @@ async function waitForOpen(): Promise<void> {
   }, { timeout: 1500 });
 }
 
+/**
+ * Espiões do `onOpenChange` das composições que CONFIRMAM, no módulo para a play
+ * alcançá-los: é o motivo que prova qual caminho fechou — o painel some igual
+ * pelos dois.
+ */
+const editProfileOpenChange = fn();
+const tableFilterOpenChange = fn();
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const EditProfile: Story = {
   parameters: {
     // Override de story: o formulário dentro do painel pede outra FORMA de
-    // snippet — rótulo, campo e submit.
-    docs: { source: { transform: popoverSourceForm({ triggerLabel: 'Editar perfil' }) } },
+    // snippet — rótulo, campo, o Cancelar e o submit.
+    docs: {
+      source: { transform: popoverSourceForm({ triggerLabel: 'Editar perfil', cancel: true }) },
+    },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
@@ -78,11 +91,22 @@ export const EditProfile: Story = {
       createInput({ id: 'pc-email', type: 'email', value: 'joana@example.com' }),
     );
 
+    // O par do rodapé fecha por CAMINHOS diferentes, e é a diferença que chega
+    // ao relatório: o Cancelar é a PEÇA de fechar (`close-button`, desistiu); o
+    // Atualizar é o submit do formulário, que fecha por código (`api`, concluiu).
+    // `type: 'button'` é o padrão de `createButton`, então o Cancelar não envia.
+    const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+    cancelar.dataset.slot = 'popover-close';
     const submit = createButton({ variant: 'default', size: 'sm', label: 'Atualizar', type: 'submit' });
+    const actions = document.createElement('div');
+    actions.className = 'nds-cluster';
+    actions.dataset.spacing = 'sm';
+    actions.dataset.justify = 'end';
+    actions.append(cancelar, submit);
 
-    form.append(title, desc, nameRow, emailRow, submit);
+    form.append(title, desc, nameRow, emailRow, actions);
 
-    const el = createPopover({ trigger, content: form });
+    const el = createPopover({ trigger, content: form, onOpenChange: editProfileOpenChange });
     // Confirmar o formulário fecha por CÓDIGO — motivo `api`, "salvou e
     // fechou". O ouvinte é ligado aqui, e não junto do `<form>`: o conteúdo é
     // montado antes de a fábrica existir, e é ela que tem o `close()`.
@@ -94,13 +118,44 @@ export const EditProfile: Story = {
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: /editar perfil/i });
+
     await step('Form de perfil aberto com valores pré-preenchidos', async () => {
       await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const ctx = within(panel!);
+      const ctx = within(panel()!);
       await expect(ctx.getByLabelText('Nome')).toHaveValue('Joana Silva');
       await expect(ctx.getByLabelText(/email/i)).toHaveValue('joana@example.com');
+    });
+
+    await step('O Cancelar fecha o painel e informa close-button', async () => {
+      const p = await open(trigger);
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(cancelar);
+      await waitFor(() => {
+        if (panel()) throw new Error('o Cancelar não fechou o painel');
+      });
+      await expect(editProfileOpenChange).toHaveBeenLastCalledWith(false, 'close-button');
+    });
+
+    await step('O Atualizar fecha por CÓDIGO e informa api', async () => {
+      const p = await open(trigger);
+      const atualizar = within(p).getByRole('button', { name: /atualizar/i });
+      // Sem a marca de fechar de propósito: quem fecha é o `close()` do ouvinte
+      // de `submit`, e o motivo é `api` — "salvou e fechou", não "desistiu".
+      await expect(atualizar).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(atualizar);
+      await waitFor(() => {
+        if (panel()) throw new Error('o Atualizar não fechou o painel');
+      });
+      await expect(editProfileOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await expect(await open(trigger)).toBeVisible();
     });
   },
 };
@@ -139,13 +194,15 @@ export const TableFilter: Story = {
     actions.className = 'nds-cluster';
     actions.dataset.spacing = 'sm';
     actions.dataset.justify = 'end';
-    actions.style.paddingTop = 'var(--spacing-2, 0.5rem)';
+    // O respiro acima do rodapé é CLASSE da escada, e não `style` inline: inline
+    // vence a folha e sairia do tema e da densidade.
+    actions.classList.add('nds-pt-2');
     const clear = createButton({ variant: 'ghost', size: 'sm', label: 'Limpar' });
     const apply = createButton({ variant: 'default', size: 'sm', label: 'Aplicar' });
     actions.append(clear, apply);
     content.appendChild(actions);
 
-    const el = createPopover({ trigger, content });
+    const el = createPopover({ trigger, content, onOpenChange: tableFilterOpenChange });
     // O Aplicar é a CONFIRMAÇÃO: aplica o filtro e fecha por código, relatando
     // `api`. Marcá-lo com `data-slot="popover-close"` o faria relatar
     // `close-button`, que é o motivo de quem desistiu.
@@ -156,13 +213,44 @@ export const TableFilter: Story = {
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
-  play: async ({ step }) => {
-    await step('Filtro mostra checkboxes e botões de ação', async () => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('Os três status são combináveis', async () => {
       await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const ctx = within(panel!);
+      const ctx = within(panel()!);
+      await expect(ctx.getAllByRole('checkbox')).toHaveLength(3);
       await expect(ctx.getByLabelText('Ativo')).toBeChecked();
       await expect(ctx.getByRole('button', { name: /aplicar/i })).toBeInTheDocument();
+    });
+
+    await step('E marcar outro NÃO fecha o painel', async () => {
+      // Este é o comportamento da composição, e a play só afirmava que os
+      // controles renderizavam. Filtro é escolha MÚLTIPLA: fechar no primeiro
+      // clique obrigaria a reabrir o painel para cada critério, e nada aqui
+      // reprovaria se o painel passasse a se dispensar ao marcar.
+      const pendente = within(panel()!).getByLabelText('Pendente') as HTMLInputElement;
+      if (!pendente.checked) await userEvent.click(pendente);
+      await expect(pendente).toBeChecked();
+      await expect(panel()).not.toBeNull();
+      // E a que já estava marcada continua marcada: os status se somam.
+      await expect(within(panel()!).getByLabelText('Ativo')).toBeChecked();
+    });
+
+    await step('O Aplicar fecha por CÓDIGO e informa api', async () => {
+      // Aplicar É a decisão: fecha por código, e o motivo é `api` — "concluiu".
+      // Com a marca de fechar ele relataria `close-button`, que é quem desistiu.
+      const apply = within(panel()!).getByRole('button', { name: /aplicar/i });
+      await expect(apply).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(apply);
+      await waitFor(() => {
+        if (panel()) throw new Error('o Aplicar não fechou o painel');
+      });
+      await expect(tableFilterOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await expect(await open(canvas.getByRole('button', { name: /filtros/i }))).toBeVisible();
     });
   },
 };
@@ -213,21 +301,28 @@ export const ColorPicker: Story = {
     return centralizar(el);
   },
   play: async ({ step }) => {
-    await step('Grid de swatches com aria-label por cor', async () => {
+    await step('Cada amostra tem nome acessível PRÓPRIO, e eles são únicos', async () => {
+      // A cor não é o nome: quem não a distingue precisa do rótulo, e sem ele o
+      // axe reprova por `button-name`. Conferir duas amostras nominais — era o
+      // que esta play fazia — deixava as outras quatro livres para perder o
+      // `aria-label` ou repetir o do vizinho sem nada ficar vermelho.
       await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const ctx = within(panel!);
-      await expect(ctx.getByRole('button', { name: 'Primária' })).toBeInTheDocument();
-      await expect(ctx.getByRole('button', { name: 'Destrutiva' })).toBeInTheDocument();
+      const nomes = within(panel()!)
+        .getAllByRole('button')
+        .map((b) => b.getAttribute('aria-label'))
+        .filter((n): n is string => n !== null);
+      await expect(nomes).toHaveLength(6);
+      // Unicidade: seis rótulos repetidos nomeariam seis botões e distinguiriam
+      // zero.
+      await expect(new Set(nomes).size).toBe(6);
     });
     await step('Foco navega entre swatches via Tab', async () => {
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const first = within(panel!).getByRole('button', { name: 'Primária' });
+      const ctx = within(panel()!);
+      const first = ctx.getByRole('button', { name: 'Primária' });
       first.focus();
       await expect(first).toHaveFocus();
       await userEvent.tab();
-      const second = within(panel!).getByRole('button', { name: 'Secundária' });
-      await expect(second).toHaveFocus();
+      await expect(ctx.getByRole('button', { name: 'Secundária' })).toHaveFocus();
     });
   },
 };
@@ -273,13 +368,26 @@ export const QuickSettings: Story = {
     return centralizar(el);
   },
   play: async ({ step }) => {
-    await step('Toggles renderizam com estados iniciais', async () => {
+    await step('As preferências são INDEPENDENTES entre si', async () => {
       await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const ctx = within(panel!);
-      await expect(ctx.getByLabelText(/notificações/i)).toBeChecked();
-      await expect(ctx.getByLabelText(/modo escuro/i)).not.toBeChecked();
-      await expect(ctx.getByLabelText(/modo compacto/i)).not.toBeChecked();
+      const ctx = within(panel()!);
+      const notificacoes = ctx.getByLabelText(/notificações/i) as HTMLInputElement;
+      const escuro = ctx.getByLabelText(/modo escuro/i) as HTMLInputElement;
+      const compacto = ctx.getByLabelText(/modo compacto/i) as HTMLInputElement;
+
+      // Ponto de partida conhecido antes de medir: no replay o painel chega com
+      // o que a rodada anterior deixou.
+      if (!notificacoes.checked) await userEvent.click(notificacoes);
+      if (escuro.checked) await userEvent.click(escuro);
+      if (compacto.checked) await userEvent.click(compacto);
+
+      await userEvent.click(escuro);
+      await expect(escuro).toBeChecked();
+      // As outras duas não se mexem: são preferências, não um grupo de escolha
+      // única. A play afirmava só o estado INICIAL de cada linha, que renderiza
+      // igual com ou sem a independência.
+      await expect(notificacoes).toBeChecked();
+      await expect(compacto).not.toBeChecked();
     });
   },
 };
@@ -287,10 +395,24 @@ export const QuickSettings: Story = {
 export const SideTop: Story = {
   parameters: {
     covers: ['visual.item4'],
+    // `padded` e não o `centered` do meta: com o conteúdo centrado na vertical,
+    // o espaço acima do gatilho é metade do que SOBRA do viewport, e some ou
+    // reaparece conforme a altura da janela — o passo que exige a virada
+    // mediria o tamanho da tela, não o auto-flip. É o que a D0 custou uma
+    // captura de tela para descobrir, e é a mesma declaração que vue, svelte e
+    // angular trazem nesta story.
+    layout: 'padded',
     // Override de story: o lado é o assunto, e `side` não passa por control
     // neste arquivo.
     docs: {
-      source: { transform: popoverSourceWith({ side: 'top', triggerLabel: 'Abrir acima' }) },
+      source: {
+        transform: popoverSourceWith({
+          side: 'top',
+          sideOffset: 12,
+          alignOffset: 8,
+          triggerLabel: 'Abrir acima',
+        }),
+      },
     },
   },
   render: () => {
@@ -304,7 +426,14 @@ export const SideTop: Story = {
       createPopoverDescription({ text: 'Sem espaço acima, o painel vira para baixo sozinho.' }),
     );
 
-    const el = createPopover({ trigger, content, side: 'top' });
+    // `sideOffset: 12` como nas outras quatro: o vão é o assunto visual desta
+    // story, e no padrão 4 a diferença entre "encostado" e "afastado" não dá
+    // para ver nem para medir com folga de arredondamento.
+    //
+    // `alignOffset: 8` (D14): o deslocamento do eixo CRUZADO, o par do
+    // `sideOffset`. Com o padrão `0`, a asserção de alinhamento passaria com a
+    // opção ignorada; com 8, ela só passa se a opção chegar ao posicionamento.
+    const el = createPopover({ trigger, content, side: 'top', sideOffset: 12, alignOffset: 8 });
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
 
     // Espaço ACIMA do gatilho, senão o painel não cabe e o auto-flip o manda
@@ -326,19 +455,30 @@ export const SideTop: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: 'Abrir acima' });
 
-    await step('O painel é posicionado acima do gatilho', async () => {
+    await step('O lado pedido é o lado obtido, e o vão é o pedido', async () => {
       const p = await open(trigger);
+      // `top` EXATO. Afirmar só a geometria deixava o markup livre para dizer
+      // outra coisa, e é o `data-side` que as stories e a folha leem.
+      await expect(p).toHaveAttribute('data-side', 'top');
       const rg = trigger.getBoundingClientRect();
       const rp = p.getBoundingClientRect();
+      // O painel INTEIRO acima do gatilho.
       await expect(rp.bottom).toBeLessThanOrEqual(rg.top + 1);
+      // Os 12px pedidos, com 1px de folga para arredondamento sub-pixel. É a
+      // asserção que pega o painel crescendo POR CIMA do gatilho quando o
+      // posicionador perde a medida.
+      await expect(Math.abs(rg.top - rp.bottom - 12)).toBeLessThanOrEqual(1);
     });
 
-    await step('E continua alinhado ao gatilho no outro eixo', async () => {
+    await step('E no outro eixo o painel se desloca pelo alignOffset pedido', async () => {
+      // `align: 'center'` põe os dois centros juntos, e o `alignOffset: 8`
+      // empurra o painel 8px para o fim do eixo — a direita, no lado `top`.
+      // Com sinal: um deslocamento para o lado errado também reprova.
       const rg = trigger.getBoundingClientRect();
       const rp = panel()!.getBoundingClientRect();
       const centerTrigger = rg.left + rg.width / 2;
       const centerPanel = rp.left + rp.width / 2;
-      await expect(Math.abs(centerTrigger - centerPanel)).toBeLessThanOrEqual(2);
+      await expect(Math.abs(centerPanel - centerTrigger - 8)).toBeLessThanOrEqual(1);
     });
 
     // ─── O contrato C9, que esta story afirmava e não media ──────────────────

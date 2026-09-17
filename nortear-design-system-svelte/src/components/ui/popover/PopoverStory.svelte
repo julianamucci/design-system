@@ -27,6 +27,8 @@
     side?: Side;
     align?: Align;
     sideOffset?: number;
+    /** Deslocamento no eixo do alinhamento. O `sideOffset` é o eixo principal. */
+    alignOffset?: number;
     defaultOpen?: boolean;
     open?: boolean;
     /** Modo modal — foco preso, rolagem travada, painel anunciado como modal. */
@@ -61,10 +63,27 @@
      * `aria-label` junto venceria o título visível.
      */
     panelLabel?: string;
+    /**
+     * Vizinhos focáveis do gatilho — "Antes" e "Depois", na mesma linha.
+     *
+     * Andaime da story `Focused`, e o que dá dentes à asserção de DESTINO: sem
+     * outro focável ao lado do gatilho, "o foco voltou ao gatilho" podia passar
+     * por acaso da composição. Fora do `{#key}`, como a folga acima.
+     */
+    neighbors?: boolean;
     onAction?: () => void;
     onCancel?: () => void;
     /** Mudança de estado — no fechamento, com o motivo do design system. */
     onOpenChange?: (open: boolean, reason?: PopoverCloseReason) => void;
+    /**
+     * O consumidor RECUSA o fechamento enquanto isto devolver `true`.
+     *
+     * Andaime da story `Controlled`: o modo controlado desta stack é o
+     * `bind:open`, e recusar é o setter da ligação não escrever `false`. É
+     * função, e não booleano, para a play poder ligar e desligar a recusa sem
+     * remontar a story.
+     */
+    refuseClose?: () => boolean;
   }
   // `defaultOpen` não existe no bits-ui nem no vaul-svelte: a prop era
   // passada, ignorada, e o overlay nunca abria. A API real é `open`
@@ -75,6 +94,7 @@
     side = 'bottom',
     align = 'center',
     sideOffset = 4,
+    alignOffset = 0,
     defaultOpen = false,
     open = $bindable(defaultOpen),
     modal = false,
@@ -90,9 +110,11 @@
     spaceAbove = false,
     avoidCollisions = undefined,
     panelLabel = undefined,
+    neighbors = false,
     onAction,
     onCancel,
     onOpenChange,
+    refuseClose,
   }: Props = $props();
 
   /**
@@ -160,8 +182,19 @@
          a play pode esconder e reexibir a folga sem disputar com o Svelte. -->
     <div class="nds-min-h-60" aria-hidden="true"></div>
   {/if}
+  {#snippet popoverBlock()}
   {#key `${side}-${align}-${defaultOpen}-${variant}`}
-      <Popover bind:open {modal} {onOpenChange}>
+      <Popover
+        bind:open={
+          () => open,
+          (value) => {
+            if (!value && refuseClose?.()) return;
+            open = value;
+          }
+        }
+        {modal}
+        {onOpenChange}
+      >
         <PopoverTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{triggerLabel}</Button>
@@ -173,6 +206,7 @@
           {side}
           {align}
           {sideOffset}
+          {alignOffset}
           {avoidCollisions}
           aria-label={variant === 'default' ? panelLabel : undefined}
         >
@@ -220,7 +254,11 @@
           {:else if variant === 'withTitle'}
             <PopoverHeader>
               <PopoverTitle>{title}</PopoverTitle>
-              <PopoverDescription>{description}</PopoverDescription>
+              <!-- Sem descrição quando ela vem vazia: o painel da `Focused` é só
+                   título e ações, igual nas cinco. -->
+              {#if description}
+                <PopoverDescription>{description}</PopoverDescription>
+              {/if}
             </PopoverHeader>
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose>
@@ -322,6 +360,18 @@
         </PopoverContent>
       </Popover>
   {/key}
+  {/snippet}
+
+  {#if neighbors}
+    <!-- Tamanho padrão: o `sm` reprova no `target-size` do axe. -->
+    <div class="nds-cluster" data-spacing="md">
+      <Button variant="ghost">Antes</Button>
+      {@render popoverBlock()}
+      <Button variant="ghost">Depois</Button>
+    </div>
+  {:else}
+    {@render popoverBlock()}
+  {/if}
 
   <!-- Alvo inerte para a dispensa por clique fora: clicar em `document.body`
        depende da geometria da página e do ponto exato do clique sintético. -->
