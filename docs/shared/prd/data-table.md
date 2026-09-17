@@ -937,11 +937,15 @@ stacks, nem as 21 chaves de rótulo copiadas quatro vezes.
 > a chave começa por "Sem lib de tabela". O comentário é o que envelheceu.
 > **Fecha quando**: o comentário for reescrito ou removido.
 
-> **PENDÊNCIA · 2026-09-16** — a guideline do vanilla lista `cellClass` no meta de
-> coluna, que o vanilla não lê, e omite `headerLabel`, que ele lê em 8 pontos; a
-> do vue nomeia `table-fixed` em vez de `.nds-table-fixed`. Com este PRD, a seção
-> `## DataTable` das cinco guidelines passa a ser catálogo duplicado — é o que a
+> **FECHADA · 2026-09-17** — a guideline do vanilla listava `cellClass` no meta de
+> coluna, que o vanilla não lê, e omitia `headerLabel`, que ele lê em 8 pontos; a
+> do vue nomeava `table-fixed` em vez de `.nds-table-fixed`. Com este PRD, a seção
+> `## DataTable` das cinco guidelines passou a ser catálogo duplicado — é o que a
 > regra `catalogo_duplicado_com_prd` cobra.
 > **Fecha quando**: as cinco seções `## DataTable` saírem das guidelines de stack,
 > ficando nelas só a mecânica própria daquela stack, e a regra da CATEGORIA
 > (display) permanecer.
+> **Como fechou (2026-09-17)**: as cinco seções viraram ponteiro para este PRD e
+> para `docs/shared/guidelines/20-tabelas.md`, que é onde a regra da categoria
+> ficou. A do vanilla passou a descrever o `meta` real, conferido no tipo; a do
+> vue saiu inteira, com o nome errado da classe junto.

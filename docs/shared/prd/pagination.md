@@ -590,12 +590,14 @@ dentro de um template de snippet), não é violação de axe, e o evento "existe
 porque está escrito em dois documentos.
 
 > **PENDÊNCIA · 2026-09-16** — `pagination_change` é ensinado pelo snippet de
-> importação da docs page do vanilla e pelas guidelines de navegação do vanilla
-> e do angular, e não está tipado em nenhuma das cinco `analytics.ts`. O evento
-> real é `page_change`, tipado nas cinco e disparado nas cinco.
-> **Fecha quando**: o snippet do vanilla e as duas guidelines disserem
-> `page_change`, e `grep -rn "pagination_change"` não achar nada fora deste
-> arquivo.
+> importação da docs page do vanilla, e não está tipado em nenhuma das cinco
+> `analytics.ts`. O evento real é `page_change`, tipado nas cinco e disparado nas
+> cinco. Estreitada em 2026-09-17: as guidelines de navegação do vanilla e do
+> angular também o ensinavam, e as duas deixaram de ensinar com a migração do
+> catálogo. Sobra o snippet, que é código de docs page.
+> **Fecha quando**: o snippet do vanilla disser `page_change`, e
+> `grep -rn "pagination_change"` não achar nada fora dos documentos que registram
+> o defeito.
 
 ## 10. Reconstruir do zero
 
