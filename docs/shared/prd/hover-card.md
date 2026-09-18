@@ -195,6 +195,94 @@ engolidos com o componente CERTO.
 `window` e `document`; os de contêiner rolável e o observador ficam provados
 pelo teste unitário do utilitário.
 
+### D11 · `alignOffset` é ZERO nas cinco
+
+**Decidido em 2026-09-17**, pela dona. O react declarava `alignOffset: 4`; o
+angular declarava 0; vue e svelte não declaravam. Passa a ser 0 nas cinco, que é
+o valor do vanilla.
+
+**Por que importava, sendo 4px**: o deslocamento cruzado só existe de verdade em
+três das cinco. Todas as stories das cinco usam `align: 'center'`, e aí o
+`@floating-ui` — que é quem posiciona no vue e no svelte — **ignora**
+`alignOffset`, enquanto base-ui, radix-ng e a conta do vanilla o aplicam também
+no centro. Ou seja, o número não divergia só no papel: o painel do react saía 4px
+fora do lugar em relação aos outros quatro, e nenhuma story via, porque nenhuma
+afirma a coordenada do eixo cruzado.
+
+**Por que não virou 4 nas cinco**: alinhar por cima custaria conta própria no vue
+e no svelte, que foi o preço que o popover pagou na D14 dele — e aqui não há
+motivo de desenho para pagá-lo. O cartão é centrado no gatilho.
+
+**A D9 não cobriu isto, e parecia ter coberto.** Ela fixou o vão em 4px nas cinco
+e a conta numa só — mas o vão é `sideOffset`, o eixo PRINCIPAL. `alignOffset` é o
+cruzado, e ficou de fora sem uma linha dizendo isso. Quem leu a D9 depois tinha
+todo motivo para achar o assunto encerrado.
+
+**Portão**: `hover-card-probe.ts` passa a declarar `ALIGN_OFFSET_PADRAO = 0` ao
+lado do `SIDE_OFFSET_PADRAO`, e o Playground das cinco afirma o valor.
+
+### D12 · Só foco VISÍVEL abre o cartão
+
+**Decidido em 2026-09-17**, pela dona. Tab abre nas cinco, e sempre abriu. O que
+diverge é `.focus()` por SCRIPT: vue, vanilla e angular abriam; react e svelte
+não, porque base-ui e bits-ui filtram por `:focus-visible`. Passa a não abrir nas
+cinco.
+
+**Por quê**: o cartão é apoio pedido por um gesto. Foco movido por script não é
+gesto do usuário — é a página se reorganizando —, e um painel que aparece aí é
+ruído sobre alguém que não pediu nada. O caso que motiva a regra de acessibilidade
+(alcançar o conteúdo pelo teclado) é o Tab, e ele segue funcionando nas cinco.
+
+**Isto põe a referência contra o comportamento atual dela**, e é deliberado: a
+regra do vanilla-referência vale para o que ele mede CERTO sobre o contrato do
+design system. Aqui ele não mede uma decisão — herdou "qualquer foco abre" de não
+ter filtro nenhum.
+
+**Portão**: passo `'Foco programático não abre o cartão'` na `States/Closed` das
+cinco: `.focus()` no gatilho, espera de RELÓGIO maior que o atraso de abertura, e
+o painel ausente. Espera de relógio e não `waitFor`, porque a prova é de ausência.
+
+### D13 · Clique fora fecha o cartão nas cinco
+
+**Decidido em 2026-09-17**, pela dona. react, vue, svelte e angular já fechavam;
+o vanilla só fechava com Escape. Passa a fechar nas cinco.
+
+**Por quê**: cartão de apoio que sobrevive a um clique noutro lugar é overlay
+preso — o usuário já mudou de assunto e ele continua na tela, cobrindo o que veio
+depois. E as duas saídas que o vanilla tinha não bastam: Escape não é caminho em
+touch, e tirar o ponteiro não acontece quando o ponteiro foi para outro lugar
+clicando.
+
+**Segunda vez que a referência perde neste componente, e pelo mesmo motivo da
+D12**: o vanilla não estava afirmando um contrato, estava sem o ouvinte.
+
+**Portão**: passo `'Clique fora fecha o cartão'` na `States/Open` das cinco —
+clique no `<body>`, fora do gatilho e fora do painel, e o painel desmonta. O
+evento sai com o `reason` de fechamento por clique fora, como nas outras quatro.
+
+### D14 · Ninguém anima a saída
+
+**Decidido em 2026-09-17**, pela dona. react, svelte e angular animavam; vue e
+vanilla fechavam secos. Passa a fechar seco nas cinco, e
+`.nds-hover-card-content[data-ending-style]` saiu da folha.
+
+**A causa é a mesma do tooltip, e a decisão é a mesma**: `[data-ending-style]` é
+atributo de LIB e não chega às cinco. base-ui, bits-ui e radix-ng o escrevem; a
+`reka-ui` instalada não o tem em `dist/`, e o vanilla desmonta o nó na hora. No
+máximo três das cinco animariam, e a referência não era uma delas.
+
+**Este componente era o gêmeo não fechado de 2026-09-16.** Naquele dia o tooltip
+perdeu a transição de saída por esta razão exata, e o hover-card ficou — com a
+folha declarando um movimento que duas stacks nunca executaram. Fechar os dois
+com respostas opostas deixaria dois PRDs discordando sobre a mesma pergunta.
+
+**O que sai junto**: a folha deixa de declarar movimento, e com isso a ausência
+de bloco `prefers-reduced-motion` nela deixa de ser um assunto — não há o que
+guardar. A §5 passa de QUINZE declarações para DOZE.
+
+**Portão**: nenhum novo. A ausência de movimento é o estado da folha, e
+`guarda_de_movimento_inerte` cobra a forma certa se ele voltar.
+
 ## 4. Anatomia
 
 ```
@@ -219,10 +307,13 @@ métrica.
 
 ## 5. Geometria e tokens
 
-Fonte: `docs/shared/styles/nds/hover-card.css` — **quinze declarações**, e o
+Fonte: `docs/shared/styles/nds/hover-card.css` — **doze declarações**, e o
 arquivo é pequeno o bastante para a conta fechar: **nove** na tabela abaixo — a
 linha da largura vale por duas, a declaração no `:root` e a leitura no painel, e a
-linha de posicionamento vale por zero — e **seis** fora dela, nomeadas logo depois.
+linha de posicionamento vale por zero — e **três** fora dela, nomeadas logo depois.
+
+Eram quinze até 2026-09-17. As três que saíram são as da saída animada, retirada
+pela D14.
 
 | propriedade | valor | token |
 |---|---|---|
@@ -250,41 +341,41 @@ Esta linha dizia "a mesma do Tooltip e mais alta que a do Popover (`md`)", e
 descrever vizinho é o que já envelheceu a linha equivalente do popover no dia em
 que tooltip e hover-card desceram de `xl` para `lg`.
 
-**Animação**: só a saída anima (`[data-ending-style]`), para evitar corrida entre
-opacidade zero na entrada e checagem síncrona de visibilidade — foi ela que
-derrubava `toBeVisible` nas plays. **E ela só existe onde a lib publica
-`data-ending-style`**: react (base-ui), svelte (bits, `getDataTransitionAttrs`) e
-angular (radix-ng). O vue (reka publica só `data-state`) e o vanilla (a fábrica
-remove o painel na hora) fecham sem animação — inconsistência 5 da §7.
+**Animação**: nenhuma, desde 2026-09-17 (D14). A folha não declara movimento.
+
+Até essa data a saída animava por `[data-ending-style]` — e só onde a lib publica
+o atributo: react (base-ui), svelte (bits, `getDataTransitionAttrs`) e angular
+(radix-ng). O vue (a reka instalada publica só `data-state`) e o vanilla (a
+fábrica remove o painel na hora) já fechavam secos, e por isso a regra descrevia
+um movimento que duas das cinco nunca executaram. A entrada nunca animou nesta
+folha, de propósito: opacidade zero na entrada entrava em corrida com a checagem
+síncrona de visibilidade e derrubava `toBeVisible` nas plays.
 
 **`position: absolute` no painel ficou nesta folha até 2026-09-13** (D8), medido
 e registrado aqui como dado enquanto o `tooltip.css` já o tinha tirado pelo mesmo
 defeito. O que fechou foi o portão, não a linha no documento:
 `folha_tira_do_fluxo_sem_dizer_onde`.
 
-**`prefers-reduced-motion` é atendido pela camada de TOKEN, e a ausência de um
-bloco `@media` nesta folha NÃO é defeito** — foi relatada como tal duas vezes,
-em 2026-09-08 e 2026-09-09, sempre pela mesma leitura: `hover-card.css` era a
-única da categoria sem o bloco, e as outras oito tinham. Sob a preferência,
-`docs/shared/tokens/motion.css` zera a escada inteira de `--duration-*`, e a
-transição da saída usa `var(--duration-fast)`. Medido em 2026-09-09 em motor de
-CSS real (Chromium com `reducedMotion: 'reduce'`, lendo `getComputedStyle`):
-este painel para, junto com os outros 21 alvos de overlay sondados.
+**`prefers-reduced-motion` deixou de ser uma pergunta nesta folha em 2026-09-17**,
+quando a D14 tirou a saída animada: não há movimento, e portanto não há o que
+reduzir. A ausência de um bloco `@media` aqui **nunca foi defeito**, e chegou a
+ser relatada como tal três vezes — em 2026-09-08, 2026-09-09 e de novo hoje,
+sempre pela mesma leitura, a de que esta era a única folha da categoria sem o
+bloco. Enquanto havia transição, quem a parava era a camada de TOKEN: sob a
+preferência, `docs/shared/tokens/motion.css` zera a escada inteira de duração, e
+a transição media por ela. Medido em 2026-09-09 num motor de CSS real (Chromium
+com `reducedMotion: 'reduce'`, lendo `getComputedStyle`): o painel parava, junto
+com os outros 21 alvos de overlay sondados.
 
-Das nove folhas da categoria, sete têm bloco; `hover-card.css` e `popover.css` não
-(o popover não anima desde 2026-09-12). Recontado em 2026-09-15.
-
-Os blocos por folha das vizinhas são redundância, e vários deles **não seguravam
-nada até 2026-09-17**: a guarda mirava a classe nua, (0,1,0), contra uma
-declaração em `[data-ending-style]` ou `[data-open]`, (0,2,0), e perdia na
-cascata — `@media` não acrescenta especificidade. Ninguém tinha notado porque a
-camada de token já fazia o trabalho. Hoje as quatro folhas que estavam assim
-foram corrigidas e `guarda_de_movimento_inerte` reprova a volta; o histórico
-está na §8. O exemplo que morava aqui era o do popover, e ele saiu do mundo em
-2026-09-12. O
-único caso que o token não alcança é duração LITERAL, fora de
-`var(--duration-*)`; aqui não é o caso, e as duas utilitárias que estavam nessa
-situação foram corrigidas no fim de `utilities.css`.
+Vale guardar o mecanismo, porque ele continua valendo para as vizinhas. Os blocos
+por folha delas são redundância, e quatro **não seguravam nada até 2026-09-17**:
+a guarda mirava a classe nua, (0,1,0), contra uma declaração em
+`[data-ending-style]` ou `[data-open]`, (0,2,0), e perdia na cascata — `@media`
+não acrescenta especificidade. Ninguém tinha notado porque a camada de token já
+fazia o trabalho. As quatro foram corrigidas, e
+`guarda_de_movimento_inerte` reprova a volta; o histórico está na §8. O único
+caso que o token não alcança é duração LITERAL, fora da escada — e o exemplar
+mais caro dele também caiu naquele dia, no `.nds-chevron` de `utilities.css`.
 
 ## 6. Estados
 
@@ -294,7 +385,7 @@ situação foram corrigidas no fim de `utilities.css`.
 | Opening | hover ou foco, durante a espera | nada visível ainda — a espera É o estado |
 | Open | espera cumprida | cartão montado; `aria-describedby` ativo |
 | Closing | ponteiro sai, durante a espera de fechamento | cartão ainda montado |
-| Transitioning | saída, com `[data-ending-style]` | opacidade e escala até a transição terminar — só em react, svelte e angular; vue e vanilla desmontam sem transição |
+| ~~Transitioning~~ | — | **não existe desde 2026-09-17** (D14): o painel desmonta ao fechar, nas cinco |
 
 ## 7. API
 
@@ -372,8 +463,12 @@ não reporta nada (`[]`): nenhum item abaixo tem portão hoje. Caminhos curtos:
 1. **Default de `alignOffset`.** react `4` (`ui/hover-card.tsx:178`); angular `0`
    (`ui/hover-card.ts:135`); vue e svelte não declaram, e as libs usam 0; vanilla
    não tem a opção (`HoverCardOptions`, `ui/hover-card.ts:95-110`). Maioria (3): 0.
-   Com `align` em `start`/`end`, o react desloca o painel 4px no eixo cruzado e as
-   outras não.
+   **RESOLVIDA pela D11 em 2026-09-17**: zero nas cinco. Quem alinha é o react.
+   E a leitura que estava escrita aqui — "com `align` em `start`/`end`, o react
+   desloca 4px e as outras não" — **subestimava o defeito**: em `center`, que é o
+   que TODAS as stories das cinco usam, base-ui e radix-ng também aplicam o
+   deslocamento cruzado; só o `@floating-ui` (vue e svelte) o ignora ali. O painel
+   do react já estava 4px fora do lugar na configuração que todo mundo exercita.
 2. **Que foco abre.** react só abre em `:focus-visible` (`useFocus` do base-ui,
    `PreviewCardTrigger.js:71`; comentário em `ui/hover-card.tsx:55-59`) e svelte
    também (`isFocusVisible`, `bits-ui/dist/bits/link-preview/link-preview.svelte.js:134-137`).
@@ -381,17 +476,22 @@ não reporta nada (`[]`): nenhum item abaixo tem portão hoje. Caminhos curtos:
    (`radix-ng-primitives-preview-card.mjs:707-714`) e vanilla (`ui/hover-card.ts:288`)
    abrem com foco cru, inclusive programático. Maioria (3), com a referência: foco
    cru. Nas duas o filtro é da lib — alinhar exige interceptar, senão declarar.
+   **RESOLVIDA pela D12 em 2026-09-17**: só foco visível abre, nas cinco. Quem
+   alinha são vue, vanilla e angular.
 3. **Clique fora fecha?** react (`useDismiss`, `PreviewCardRoot.js:81`), vue
    (`DismissableLayer`, `HoverCardContentImpl.js:161-167`), svelte
    (`onInteractOutside`, `link-preview.svelte.js`) e angular (`outsidePress: () => true`,
    `radix-ng-primitives-preview-card.mjs:493`) fecham. O vanilla só escuta Escape no
    documento (`ui/hover-card.ts:219-221,253`): clicar fora não fecha. Maioria (4):
-   fecha; a referência não.
+   fecha; a referência não. **RESOLVIDA pela D13 em 2026-09-17**: fecha nas cinco.
+   Quem alinha é o vanilla.
 4. **Saída animada.** react, svelte (`getDataTransitionAttrs`, `link-preview.svelte.js:228`)
    e angular (`data-ending-style` no popup, `radix-ng-primitives-preview-card.mjs:516`)
    publicam `[data-ending-style]` e animam a saída da folha. O vue não: a reka
    publica só `data-state` (`HoverCardContentImpl.js:174`). O vanilla remove o
    painel na hora (`ui/hover-card.ts:266`). Maioria (3): anima; a referência não.
+   **RESOLVIDA pela D14 em 2026-09-17**: ninguém anima, e a regra saiu da folha.
+   Quem alinha são react, svelte e angular — retirando a animação, não somando-a.
 5. **Atributo de estado no painel.** react e angular: `data-open`/`data-closed`; vue e
    svelte: `data-state` (`HoverCardContentImpl.js:174`, `link-preview.svelte.js:227`);
    vanilla: nenhum. Mecânica de lib — registrar, não alinhar. Mas a story
@@ -656,13 +756,28 @@ duas regras cobra, não se alguma cobra.
 > declara na própria story por que não afirma (premissa verificada); e o
 > `hover-card.fixtures.ts` do angular deixa de redefinir a espera.
 
-> **PENDÊNCIA · 2026-09-15** — comportamento que diverge sem decisão registrada (§7,
-> itens 1 a 4): `alignOffset` 4 só no react; foco programático não abre no react e no
-> svelte; clique fora não fecha no vanilla; saída animada ausente no vue e no vanilla.
-> Os três últimos põem a referência (vanilla) contra a maioria, e por isso não se
-> alinham sem a dona.
-> **Fecha quando**: cada um dos quatro vira uma decisão D com data, e o código das
-> cinco a cumpre ou declara a exceção de lib com a premissa verificada.
+> **DECIDIDA · 2026-09-17** — comportamento que divergia sem decisão registrada
+> (§7, itens 1 a 4): `alignOffset` 4 só no react; foco programático não abre no
+> react e no svelte; clique fora não fecha no vanilla; saída animada ausente no vue
+> e no vanilla. Os três últimos punham a referência (vanilla) contra a maioria, e
+> por isso não se alinhavam sem a dona.
+>
+> As quatro viraram decisão na mesma rodada: **D11** (zero nas cinco), **D12** (só
+> foco visível abre), **D13** (clique fora fecha nas cinco) e **D14** (ninguém
+> anima a saída).
+>
+> Duas leituras que a medição corrigiu na hora de decidir, e que valem mais que as
+> decisões em si:
+>
+> - o item 1 parecia coberto pela **D9** e não estava — ela fixou o `sideOffset`,
+>   que é o eixo principal, e o `alignOffset` ficou de fora sem uma linha dizendo;
+> - em **dois dos três** casos em que "a referência contradiz a maioria", o vanilla
+>   não estava afirmando contrato nenhum: estava sem o ouvinte (D13) e sem o filtro
+>   (D12). A regra da referência vale para o que ele mede certo, e ausência não é
+>   medição.
+>
+> **Fecha quando**: o código das cinco cumpre as quatro, com os portões que cada
+> uma nomeia.
 
 ## 9. Analytics
 

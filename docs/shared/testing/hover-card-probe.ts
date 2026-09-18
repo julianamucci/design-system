@@ -21,7 +21,7 @@
 // que inclui este arquivo compartilhado: daqui o caminho de node_modules é o de
 // docs/shared, que não tem as libs de teste. Mesmo marcador do slider-probe. Se
 // algum dia resolver, ele passa a acusar sozinho.
-import { userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import {
   expectOndeDiz as expectOndeDizCompartilhado,
   noLugarDeEspera,
@@ -152,6 +152,24 @@ export async function panelEntrar(trigger: HTMLElement, panel: HTMLElement): Pro
 export const SIDE_OFFSET_PADRAO = 4;
 
 /**
+ * Deslocamento no eixo CRUZADO, e ele é zero nas cinco (D11, 2026-09-17).
+ *
+ * Mora ao lado do vão de propósito. O react declarava 4 aqui enquanto as outras
+ * quatro declaravam 0 ou nada, e a divergência sobreviveu meses porque a D9 —
+ * que fixou o `sideOffset` em 4 — dava a impressão de ter tratado os dois eixos.
+ * São dois números com o mesmo valor de origem e significados opostos; separados
+ * em arquivos diferentes, o segundo some atrás do primeiro.
+ *
+ * E o efeito não é só em `start`/`end`, que era a leitura anterior: com
+ * `align: 'center'` — o padrão de TODAS as stories das cinco — base-ui, radix-ng
+ * e a conta do vanilla APLICAM o deslocamento cruzado; só o `@floating-ui` o
+ * ignora ali. O painel do react saía 4px fora do lugar na configuração que todo
+ * mundo exercita, e nenhuma asserção via, porque nenhuma afirma a coordenada do
+ * eixo cruzado.
+ */
+export const ALIGN_OFFSET_PADRAO = 0;
+
+/**
  * A ancoragem em si mora em `ancoragem.ts`, e não aqui, porque o invariante não
  * é do cartão: a mesma declaração de folha derrubou tooltip, hover-card e a
  * família do dropdown-menu. Reexportado para que as stories das cinco stacks
@@ -196,6 +214,40 @@ export function expectOndeDiz(
   sideOffset = SIDE_OFFSET_PADRAO,
 ): void {
   expectOndeDizCompartilhado(trigger, panel, sideOffset);
+}
+
+/**
+ * O painel está CENTRADO no gatilho, no eixo cruzado (D11).
+ *
+ * Afirma a COORDENADA, e não o valor da opção — afirmar `alignOffset === 0`
+ * seria repetir a constante para ela mesma, que é a forma de asserção que deixou
+ * a D8 passar meses. Aqui o que se mede é onde o painel FICOU: com
+ * `align: 'center'` e deslocamento cruzado zero, o centro do painel coincide com
+ * o centro do gatilho no eixo perpendicular ao lado escolhido.
+ *
+ * A tolerância de 1,5px não é folga arbitrária: é arredondamento de subpixel de
+ * três motores de posicionamento diferentes. O defeito que isto pega — 4px de
+ * deslocamento — está bem acima dela.
+ *
+ * Em `side` top/bottom o eixo cruzado é o HORIZONTAL; em left/right, o vertical.
+ * Quem passa o lado é a story, que é quem o pediu.
+ */
+export function expectCentradoNoEixoCruzado(
+  trigger: HTMLElement,
+  panel: HTMLElement,
+  side: 'top' | 'bottom' | 'left' | 'right',
+): void {
+  const g = trigger.getBoundingClientRect();
+  const p = panel.getBoundingClientRect();
+  const horizontal = side === 'top' || side === 'bottom';
+  const centroGatilho = horizontal ? g.left + g.width / 2 : g.top + g.height / 2;
+  const centroPainel = horizontal ? p.left + p.width / 2 : p.top + p.height / 2;
+  const desvio = Math.abs(centroPainel - centroGatilho);
+  expect(
+    desvio,
+    `painel fora do centro do gatilho no eixo cruzado: ${desvio.toFixed(1)}px `
+      + `(lado ${side}, tolerância 1.5px). Deslocamento cruzado tem de ser ${ALIGN_OFFSET_PADRAO} — D11.`,
+  ).toBeLessThanOrEqual(1.5);
 }
 
 /** Contraste WCAG entre duas cores computadas (`rgb(...)` / `rgba(...)`). */

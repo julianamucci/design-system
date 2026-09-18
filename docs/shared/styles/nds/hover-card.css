@@ -119,7 +119,7 @@
 }
 
 /*
- * ─── nds-hover-card composite (portal positioner + saída animada) ───────────
+ * ─── nds-hover-card composite (portal positioner) ───────────────────────────
  */
 
 .nds-hover-card-positioner {
@@ -148,33 +148,23 @@
  * invólucro nomeado. Regra que depende de ancestral é regra que vale onde o
  * ancestral existe.
  */
-/* Entrada aparece direto; saída animada (evita corrida com toBeVisible).
+/* A SAÍDA ANIMADA SAIU EM 2026-09-17, por decisão da dona (D14), e com ela a
+ * última declaração de movimento desta folha.
  *
- * NÃO FALTA UM BLOCO `@media (prefers-reduced-motion: reduce)` AQUI, e esta
- * folha ser a única da categoria sem um já foi relatada como defeito duas
- * vezes. Quem para o movimento nesta casa é a camada de TOKEN: sob a
- * preferência, `docs/shared/tokens/motion.css` zera a escada inteira de
- * `--duration-*`, e a transição abaixo usa `var(--duration-fast)`. Medido em
- * 2026-09-09 num motor de CSS real com a preferência emulada: este painel para,
- * junto com os outros 21 alvos de overlay sondados.
+ * Aqui havia `.nds-hover-card-content[data-ending-style]` com opacidade, escala
+ * e transição. O atributo é de LIB e não chega às cinco: base-ui (react),
+ * bits-ui (svelte) e radix-ng (angular) o escrevem; a `reka-ui` instalada (vue)
+ * não o tem em `dist/`, e o vanilla desmonta o nó na hora. Três das cinco
+ * animavam a saída e duas fechavam secas — e a stack de REFERÊNCIA era uma das
+ * secas. Nenhuma asserção alcançava a diferença, e nem a foto do Chromatic
+ * comparava, porque cada stack fotografava o próprio fim.
  *
- * Os blocos por folha das vizinhas são cinto e suspensório — e vários deles não
- * seguram nada, por especificidade: a guarda mira a classe nua (0,1,0) contra
- * uma declaração em `[data-ending-style]` (0,2,0), e perde na cascata; `@media`
- * não acrescenta especificidade. Ninguém tinha notado porque a camada de token
- * já fazia o trabalho.
+ * É a mesma decisão, pela mesma causa e com a mesma redação, que o TOOLTIP
+ * recebeu em 2026-09-16 — este componente era o gêmeo não fechado daquele dia.
  *
- * O exemplo que estava escrito aqui era o popover, e ele saiu em 2026-09-12: o
- * Popover deixou de animar (decisão da dona), então nem a declaração nem a
- * guarda existem mais naquela folha. Citar vizinho pelo nome envelhece sozinho —
- * o que fica é a FORMA do defeito, que continua valendo para quem escrever a
- * próxima guarda.
- *
- * O caso que a guarda de token NÃO cobre é duração LITERAL, fora de
- * `var(--duration-*)` — ver o bloco no fim de `utilities.css`. Aqui não é o
- * caso. */
-.nds-hover-card-content[data-ending-style] {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity var(--duration-fast) ease-in, transform var(--duration-fast) ease-in;
-}
+ * E some junto a pergunta que esta folha respondia duas vezes por rodada: ela
+ * não tem bloco `@media (prefers-reduced-motion: reduce)`, e agora não tem
+ * mesmo o que guardar. Guarda sobre movimento inexistente é pior que guarda
+ * ausente — anuncia proteção e sobrevive a toda leitura de quem procura por ela.
+ * Se o movimento voltar, a guarda volta com ele, mirando os MESMOS seletores da
+ * declaração (portão `guarda_de_movimento_inerte`). */

@@ -16,7 +16,7 @@
       "sentenceAfter": "há 2 horas."
     },
     "anatomy": {
-      "item1": "<strong>HoverCard (Root)</strong> — provider de estado controlado com callback de mudança e delays configuráveis.",
+      "item1": "<strong>HoverCard (Root)</strong> — guarda o estado aberto/fechado e avisa quando ele muda. As esperas de abrir e de fechar são configuráveis (ver a tabela de props).",
       "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara o hover (link, botão, texto). Componha com elemento filho para herdar seus estilos.",
       "item3": "<strong>HoverCardContent</strong> — cartão flutuante posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
       "structureLabel": "Estrutura básica:",
@@ -24,7 +24,7 @@
         "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"nds-cluster\" data-spacing=\"sm\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"nds-font-medium\">Joana Silva</p>\n        <p className=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "vue": "<HoverCard>\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<HoverCard>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
-        "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.append(\n  criarAvatar('/joana.jpg'),\n  criarResumo('Joana Silva', 'Designer · 142 seguidores'),\n);\n\nconst card = createHoverCard({\n  trigger: trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
+        "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\n// O miolo é markup comum — o casco (superfície, borda, raio, respiro) vem da folha\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.dataset.align = 'start';\n\nconst avatar = document.createElement('div');\navatar.className = 'nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted';\navatar.setAttribute('aria-hidden', 'true');\navatar.textContent = 'JS';\n\nconst info = document.createElement('div');\ninfo.className = 'nds-stack';\ninfo.dataset.spacing = 'xs';\n\nconst name = document.createElement('p');\nname.className = 'nds-text-body nds-font-medium';\nname.textContent = 'Joana Silva';\n\nconst meta = document.createElement('p');\nmeta.className = 'nds-text-caption nds-text-muted-foreground';\nmeta.textContent = 'Designer · 142 seguidores';\n\ninfo.append(name, meta);\nprofile.append(avatar, info);\n\nconst card = createHoverCard({\n  trigger: trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
         "angular": "<!-- As três peças são diretivas de atributo sobre elementos nativos -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <span ndsAvatar>\n        <span ndsAvatarFallback aria-hidden=\"true\">JS</span>\n      </span>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</span>"
       }
     },
@@ -231,6 +231,18 @@
           "default": "'center'",
           "required": "Não",
           "description": "Alinhamento horizontal do Content (em HoverCardContent)."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "Não",
+          "description": "Distância em px entre o gatilho e o cartão, no eixo do lado escolhido (em HoverCardContent)."
+        },
+        "alignOffset": {
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Deslocamento em px no eixo perpendicular ao lado escolhido (em HoverCardContent). Zero deixa o cartão centrado no gatilho."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -238,8 +250,8 @@
         "react": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"nds-max-w-xs\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>",
         "vue": "<!-- HoverCard com delay customizado e posicionamento -->\n<HoverCard :open-delay=\"500\" :close-delay=\"200\">\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<!-- HoverCard com delay customizado e posicionamento -->\n<HoverCard openDelay={500} closeDelay={200} bind:open>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </HoverCardContent>\n</HoverCard>",
-        "vanilla": "// HoverCard com delay customizado e posicionamento\nconst card = createHoverCard({\n  trigger: gatilho,\n  content: perfil,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// abrir/fechar por código, para tour guiado ou foco vindo do teclado\ncard.abrir();",
-        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<span ndsHoverCard [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </ng-template>\n</span>"
+        "vanilla": "// HoverCard com delay customizado e posicionamento\nconst card = createHoverCard({\n  trigger: gatilho,\n  content: perfil,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// abrir/fechar por código, para tour guiado ou foco vindo do teclado\ncard.open();",
+        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </ng-template>\n</span>"
       }
     },
     "tokens": {
@@ -269,12 +281,12 @@
           "part": "Largura do painel — 20rem por padrão; redefina a propriedade para mudar todos os cartões de uma vez"
         },
         "layer": {
-          "part": "Camada do portal e do painel, acima do conteúdo da página"
+          "part": "Camada do painel, acima do conteúdo da página"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Largura de TODOS os cartões — a folha do componente lê esta propriedade */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Largura de UM cartão: utilitária de largura no painel.\n   utilities.css entra por último no index.css, então ela vence. */\n/* class=\"nds-w-md\" no Content */\n\n/* Saída mais rápida */\n[data-slot='hover-card-content'][data-ending-style] {\n  transition-duration: 100ms;\n}"
+        "web": "/* Largura de TODOS os cartões — a folha do componente lê esta propriedade */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Largura de UM cartão: utilitária de largura no painel.\n   utilities.css entra por último no index.css, então ela vence. */\n/* class=\"nds-w-md\" no Content */"
       }
     },
     "accessibility": {
@@ -289,7 +301,7 @@
       },
       "keyboard": {
         "title": "Navegação por Teclado",
-        "tab": "Tab — move foco para o Trigger; HoverCard abre automaticamente após focus.",
+        "tab": "Tab — move o foco para o Trigger e o cartão abre. Foco movido por código não abre o cartão: só o foco visível, que é o que o teclado produz.",
         "escape": "ESC — fecha o Content.",
         "shiftTab": "Shift+Tab — devolve o foco ao elemento anterior; ao perder o foco, o Content fecha.",
         "enter": "Enter — ativa o trigger se for link/botão (comportamento padrão do elemento)."
@@ -425,7 +437,7 @@
       "sentenceAfter": "2 hours ago."
     },
     "anatomy": {
-      "item1": "<strong>HoverCard (Root)</strong> — controlled state provider with change callback and configurable delays.",
+      "item1": "<strong>HoverCard (Root)</strong> — holds the open/closed state and reports when it changes. The open and close delays are configurable (see the props table).",
       "item2": "<strong>HoverCardTrigger</strong> — element triggering the hover (link, button, text). Compose with a child element to inherit its styles.",
       "item3": "<strong>HoverCardContent</strong> — floating card positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
       "structureLabel": "Basic structure:",
@@ -433,7 +445,7 @@
         "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"nds-cluster\" data-spacing=\"sm\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"nds-font-medium\">Joana Silva</p>\n        <p className=\"nds-text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "vue": "<HoverCard>\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<HoverCard>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
-        "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.append(\n  buildAvatar('/joana.jpg'),\n  buildSummary('Joana Silva', 'Designer · 142 followers'),\n);\n\nconst card = createHoverCard({\n  trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
+        "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\n// The inner content is ordinary markup — the shell (surface, border, radius, padding) comes from the sheet\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.dataset.align = 'start';\n\nconst avatar = document.createElement('div');\navatar.className = 'nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted';\navatar.setAttribute('aria-hidden', 'true');\navatar.textContent = 'JS';\n\nconst info = document.createElement('div');\ninfo.className = 'nds-stack';\ninfo.dataset.spacing = 'xs';\n\nconst name = document.createElement('p');\nname.className = 'nds-text-body nds-font-medium';\nname.textContent = 'Joana Silva';\n\nconst meta = document.createElement('p');\nmeta.className = 'nds-text-caption nds-text-muted-foreground';\nmeta.textContent = 'Designer · 142 followers';\n\ninfo.append(name, meta);\nprofile.append(avatar, info);\n\nconst card = createHoverCard({\n  trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
         "angular": "<!-- The three parts are attribute directives on native elements -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <span ndsAvatar>\n        <span ndsAvatarFallback aria-hidden=\"true\">JS</span>\n      </span>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</span>"
       }
     },
@@ -640,6 +652,18 @@
           "default": "'center'",
           "required": "No",
           "description": "Horizontal alignment of Content (on HoverCardContent)."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "No",
+          "description": "Distance in px between trigger and card, along the axis of the chosen side (on HoverCardContent)."
+        },
+        "alignOffset": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Offset in px on the axis perpendicular to the chosen side (on HoverCardContent). Zero keeps the card centred on the trigger."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -647,8 +671,8 @@
         "react": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"nds-max-w-xs\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>",
         "vue": "<!-- HoverCard with custom delay and positioning -->\n<HoverCard :open-delay=\"500\" :close-delay=\"200\">\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<!-- HoverCard with custom delay and positioning -->\n<HoverCard openDelay={500} closeDelay={200} bind:open>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </HoverCardContent>\n</HoverCard>",
-        "vanilla": "// HoverCard with custom delay and positioning\nconst card = createHoverCard({\n  trigger,\n  content: profile,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// open/close from code, for a guided tour or focus arriving from the keyboard\ncard.abrir();",
-        "angular": "<!-- HoverCard with custom delay and positioning -->\n<span ndsHoverCard [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </ng-template>\n</span>"
+        "vanilla": "// HoverCard with custom delay and positioning\nconst card = createHoverCard({\n  trigger,\n  content: profile,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// open/close from code, for a guided tour or focus arriving from the keyboard\ncard.open();",
+        "angular": "<!-- HoverCard with custom delay and positioning -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </ng-template>\n</span>"
       }
     },
     "tokens": {
@@ -678,12 +702,12 @@
           "part": "Panel width — 20rem by default; redefine the property to change every card at once"
         },
         "layer": {
-          "part": "Portal and panel layer, above the page content"
+          "part": "Panel layer, above the page content"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Width for EVERY card — the component sheet reads this property */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Width for ONE card: a width utility on the panel.\n   utilities.css is imported last in index.css, so it wins. */\n/* class=\"nds-w-md\" on Content */\n\n/* Faster exit */\n[data-slot='hover-card-content'][data-ending-style] {\n  transition-duration: 100ms;\n}"
+        "web": "/* Width for EVERY card — the component sheet reads this property */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Width for ONE card: a width utility on the panel.\n   utilities.css is imported last in index.css, so it wins. */\n/* class=\"nds-w-md\" on Content */"
       }
     },
     "accessibility": {
@@ -698,7 +722,7 @@
       },
       "keyboard": {
         "title": "Keyboard Navigation",
-        "tab": "Tab — moves focus to Trigger; HoverCard opens automatically after focus.",
+        "tab": "Tab — moves focus to the Trigger and the card opens. Focus moved by code does not open it: only visible focus, which is what the keyboard produces.",
         "escape": "ESC — closes Content.",
         "shiftTab": "Shift+Tab — returns focus to the previous element; losing focus closes Content.",
         "enter": "Enter — activates trigger if it's a link/button (default element behavior)."
@@ -834,7 +858,7 @@
       "sentenceAfter": "hace 2 horas."
     },
     "anatomy": {
-      "item1": "<strong>HoverCard (Root)</strong> — provider de estado controlado con callback de cambio y delays configurables.",
+      "item1": "<strong>HoverCard (Root)</strong> — guarda el estado abierto/cerrado y avisa cuando cambia. Las esperas de apertura y de cierre son configurables (ver la tabla de props).",
       "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara el hover (link, botón, texto). Compón con un elemento hijo para heredar sus estilos.",
       "item3": "<strong>HoverCardContent</strong> — tarjeta flotante posicionada vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
       "structureLabel": "Estructura básica:",
@@ -842,7 +866,7 @@
         "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"nds-cluster\" data-spacing=\"sm\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"nds-font-medium\">Joana Silva</p>\n        <p className=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "vue": "<HoverCard>\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<HoverCard>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <div class=\"nds-size-10 nds-rounded-full nds-bg-muted\" aria-hidden=\"true\"></div>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
-        "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.append(\n  construirAvatar('/joana.jpg'),\n  construirResumen('Joana Silva', 'Designer · 142 seguidores'),\n);\n\nconst card = createHoverCard({\n  trigger: trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
+        "vanilla": "const trigger = document.createElement('a');\ntrigger.href = '/users/joana';\ntrigger.textContent = '@joana';\n\n// El contenido interno es markup común — el casco (superficie, borde, radio, espaciado) viene de la hoja\nconst profile = document.createElement('div');\nprofile.className = 'nds-cluster';\nprofile.dataset.spacing = 'sm';\nprofile.dataset.align = 'start';\n\nconst avatar = document.createElement('div');\navatar.className = 'nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted';\navatar.setAttribute('aria-hidden', 'true');\navatar.textContent = 'JS';\n\nconst info = document.createElement('div');\ninfo.className = 'nds-stack';\ninfo.dataset.spacing = 'xs';\n\nconst name = document.createElement('p');\nname.className = 'nds-text-body nds-font-medium';\nname.textContent = 'Joana Silva';\n\nconst meta = document.createElement('p');\nmeta.className = 'nds-text-caption nds-text-muted-foreground';\nmeta.textContent = 'Designer · 142 seguidores';\n\ninfo.append(name, meta);\nprofile.append(avatar, info);\n\nconst card = createHoverCard({\n  trigger: trigger,\n  content: profile,\n  side: 'bottom',\n  align: 'start',\n});",
         "angular": "<!-- Las tres piezas son directivas de atributo sobre elementos nativos -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\" data-align=\"start\">\n      <span ndsAvatar>\n        <span ndsAvatarFallback aria-hidden=\"true\">JS</span>\n      </span>\n      <div class=\"nds-stack\" data-spacing=\"xs\">\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-caption nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</span>"
       }
     },
@@ -1049,6 +1073,18 @@
           "default": "'center'",
           "required": "No",
           "description": "Alineación horizontal del Content (en HoverCardContent)."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "No",
+          "description": "Distancia en px entre el gatillo y la tarjeta, en el eje del lado elegido (en HoverCardContent)."
+        },
+        "alignOffset": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Desplazamiento en px en el eje perpendicular al lado elegido (en HoverCardContent). Cero deja la tarjeta centrada en el gatillo."
         }
       },
       "extensibilityTitle": "Extensibilidad",
@@ -1056,8 +1092,8 @@
         "react": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"nds-max-w-xs\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>",
         "vue": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<HoverCard :open-delay=\"500\" :close-delay=\"200\">\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<HoverCard openDelay={500} closeDelay={200} bind:open>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </HoverCardContent>\n</HoverCard>",
-        "vanilla": "// HoverCard con delay personalizado y posicionamiento\nconst card = createHoverCard({\n  trigger: gatillo,\n  content: perfil,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// abrir/cerrar por código, para tour guiado o foco que llega del teclado\ncard.abrir();",
-        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<span ndsHoverCard [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </ng-template>\n</span>"
+        "vanilla": "// HoverCard con delay personalizado y posicionamiento\nconst card = createHoverCard({\n  trigger: gatillo,\n  content: perfil,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// abrir/cerrar por código, para tour guiado o foco que llega del teclado\ncard.open();",
+        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </ng-template>\n</span>"
       }
     },
     "tokens": {
@@ -1087,12 +1123,12 @@
           "part": "Ancho del panel — 20rem por defecto; redefine la propiedad para cambiar todas las tarjetas de una vez"
         },
         "layer": {
-          "part": "Capa del portal y del panel, por encima del contenido de la página"
+          "part": "Capa del panel, por encima del contenido de la página"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Ancho de TODAS las tarjetas — la hoja del componente lee esta propiedad */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Ancho de UNA tarjeta: utilidad de ancho en el panel.\n   utilities.css se importa al final en index.css, así que gana. */\n/* class=\"nds-w-md\" en Content */\n\n/* Salida más rápida */\n[data-slot='hover-card-content'][data-ending-style] {\n  transition-duration: 100ms;\n}"
+        "web": "/* Ancho de TODAS las tarjetas — la hoja del componente lee esta propiedad */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Ancho de UNA tarjeta: utilidad de ancho en el panel.\n   utilities.css se importa al final en index.css, así que gana. */\n/* class=\"nds-w-md\" en Content */"
       }
     },
     "accessibility": {
@@ -1107,7 +1143,7 @@
       },
       "keyboard": {
         "title": "Navegación por Teclado",
-        "tab": "Tab — mueve foco al Trigger; HoverCard abre automáticamente tras focus.",
+        "tab": "Tab — mueve el foco al Trigger y la tarjeta se abre. El foco movido por código no la abre: solo el foco visible, que es el que produce el teclado.",
         "escape": "ESC — cierra el Content.",
         "shiftTab": "Shift+Tab — devuelve el foco al elemento anterior; al perder el foco, el Content se cierra.",
         "enter": "Enter — activa el trigger si es link/botón (comportamiento predeterminado del elemento)."
