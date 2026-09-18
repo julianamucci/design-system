@@ -33,6 +33,19 @@ import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+// Gatilho de EXPLICAÇÃO que leva ao destino (D15): o sublinhado pontilhado e o
+// `cursor-help` continuam, porque são o que distingue "isto explica alguma
+// coisa" de um link comum de navegação. As utilitárias que zeravam o cromo de
+// `<button>` saíram — num `<a>` não há cromo nativo para neutralizar.
+const CLASSES_TRIGGER_EXPLAINER =
+  "nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help";
+
+// Destinos das duas variantes que carregam informação própria (D15/C8), em
+// constante nomeada e não em tabela: URL não se traduz, e é a mesma nas cinco
+// stacks e nos três idiomas.
+const GLOSSARY_HREF = "/glossario/wcag-2-2-aa";
+const METRIC_HREF = "/metricas/conversao";
+
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
   medium: "common.medium",
@@ -380,10 +393,10 @@ interface HoverCardContentProps {
         é a menção dentro da frase, não o atraso, e a página exige ≥300ms
         para abrir. Quem quiser ver atraso customizado tem a variante própria.
       */}
-      <DocsDemonstration >
+      <DocsDemonstration componentSlug="hover-card">
         <p
           className="nds-text-body nds-max-w-sm nds-min-h-50"
-          style={{ contain: "layout", position: "relative" }}
+          style={{ contain: "layout" }}
         >
           {tContent("demonstration.sentenceBefore")}{" "}
           <HoverCard
@@ -499,7 +512,7 @@ interface HoverCardContentProps {
             // sem papel de link, inalcançável por toque e por teclado. É
             // exatamente a lição da legenda.
             doPreview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   onOpenChange={(open) => trackHoverCard(open, "par1-do", "docs_do_dont")}
                 >
@@ -513,7 +526,7 @@ interface HoverCardContentProps {
               </div>
             ),
             dontPreview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   onOpenChange={(open) => trackHoverCard(open, "par1-dont", "docs_do_dont")}
                 >
@@ -536,7 +549,7 @@ interface HoverCardContentProps {
             // intenção, 0ms abre a cada passada. Escrever `openDelay={0}` em
             // texto mostrava o valor sem mostrar o efeito.
             doPreview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={500}
                   closeDelay={200}
@@ -552,7 +565,7 @@ interface HoverCardContentProps {
               </div>
             ),
             dontPreview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={0}
                   closeDelay={200}
@@ -591,7 +604,7 @@ interface HoverCardContentProps {
             // variante documenta, e um valor de conveniência aqui mentiria
             // sobre o que o leitor sente no produto.
             preview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   onOpenChange={(open) => trackHoverCard(open, "default", "docs_variantes")}
                 >
@@ -611,7 +624,7 @@ interface HoverCardContentProps {
             description: stripHtml(tContent("variants.styles.withDelay")),
             code: codeWithDelay,
             preview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={500}
                   closeDelay={200}
@@ -634,7 +647,7 @@ interface HoverCardContentProps {
             useWhen: tContent("variants.items.userProfile.use"),
             code: codeUserProfile,
             preview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={50}
                   closeDelay={50}
@@ -657,7 +670,7 @@ interface HoverCardContentProps {
             useWhen: tContent("variants.items.linkPreview.use"),
             code: codeLinkPreview,
             preview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={50}
                   closeDelay={50}
@@ -679,22 +692,21 @@ interface HoverCardContentProps {
             description: tContent("variants.items.definitionTooltip.description"),
             useWhen: tContent("variants.items.definitionTooltip.use"),
             code: codeDefinition,
-            // Gatilho que NÃO navega é botão sem moldura, com sublinhado
-            // pontilhado — as classes zeram o cromo nativo sem uma linha inline.
+            // O gatilho LEVA ao verbete (D15): o cartão explica a sigla, e quem
+            // não alcança o cartão — no toque, num leitor de tela — chega à mesma
+            // explicação pelo destino. O sublinhado pontilhado fica, porque é ele
+            // que distingue explicação de navegação comum.
             preview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={50}
                   closeDelay={50}
                   onOpenChange={(open) => trackHoverCard(open, "definition-tooltip", "docs_variantes")}
                 >
                   <HoverCardTrigger asChild>
-                    <button
-                      type="button"
-                      className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-                    >
+                    <a href={GLOSSARY_HREF} className={CLASSES_TRIGGER_EXPLAINER}>
                       {tContent("variants.items.definitionTooltip.cardTerm")}
-                    </button>
+                    </a>
                   </HoverCardTrigger>
                   <HoverCardContent>{definitionCard}</HoverCardContent>
                 </HoverCard>
@@ -708,19 +720,16 @@ interface HoverCardContentProps {
             useWhen: tContent("variants.items.metricExplainer.use"),
             code: codeMetric,
             preview: (
-              <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
+              <div className="nds-min-h-40" style={{ contain: "layout" }}>
                 <HoverCard
                   openDelay={50}
                   closeDelay={50}
                   onOpenChange={(open) => trackHoverCard(open, "metric-explainer", "docs_variantes")}
                 >
                   <HoverCardTrigger asChild>
-                    <button
-                      type="button"
-                      className="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-                    >
+                    <a href={METRIC_HREF} className={CLASSES_TRIGGER_EXPLAINER}>
                       3,42%
-                    </button>
+                    </a>
                   </HoverCardTrigger>
                   <HoverCardContent>{metricCard}</HoverCardContent>
                 </HoverCard>

@@ -7,6 +7,8 @@ import {
   accessibleName,
   panelOpen,
   leaveWithPointer,
+  expectCentradoNoEixoCruzado,
+  withSceneAwayFromEdge,
 } from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { hoverCardSource } from "./hover-card.source";
@@ -110,11 +112,10 @@ export const Playground: Story = {
     // remontar não mudaria nada na tela.
     // A reserva de espaço sai de CLASSE (`nds-min-h-50`), como no `emFrase` do
     // Vanilla: cravada em `style`, venceria a folha e sairia do tema, da
-    // densidade e da escala. No `style` fica só mecânica de layout.
-    <p
-      className="nds-text-body nds-max-w-sm nds-min-h-50"
-      style={{ contain: "layout", position: "relative" }}
-    >
+    // densidade e da escala. No `style` fica só mecânica de layout — e só
+    // `contain`, como o Vanilla: o `position: relative` que morava aqui não
+    // ancorava nada, porque o painel vive num portal no `<body>`.
+    <p className="nds-text-body nds-max-w-sm nds-min-h-50" style={{ contain: "layout" }}>
       Comentário de{" "}
       <HoverCard
         key={String(defaultOpen)}
@@ -151,6 +152,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("link", { name: /@joana/i });
+    const requestedSide = args.side ?? "bottom";
 
     await step("O gatilho continua sendo um link de verdade", async () => {
       // O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela,
@@ -184,6 +186,33 @@ export const Playground: Story = {
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);
+    });
+
+    await step("O painel fica centrado no gatilho no eixo cruzado", async () => {
+      // D11: o deslocamento no eixo cruzado é ZERO nas cinco, e o que se afirma
+      // aqui é a COORDENADA — afirmar `alignOffset === 0` repetiria a constante
+      // para ela mesma, que é a forma de asserção que deixou a D8 passar meses.
+      //
+      // O lado vem da story, que é quem o pediu: a fuga de colisão pode trocar o
+      // lado pelo oposto, mas nunca troca o EIXO, e é o eixo que decide qual das
+      // duas coordenadas é a cruzada.
+      //
+      // A cena é AFASTADA da borda antes de medir, e isto é a asserção inteira.
+      // O executor de teste não aplica o `layout: "centered"` do meta — isso é
+      // do canvas do Storybook —, então a story renderiza encostada à esquerda:
+      // medido, `canvasElement` nasce em x=0 num viewport de 1200px e o gatilho
+      // fica a ~145px da borda. Com o painel a 320px, centrá-lo pediria um
+      // `left` negativo, e o `shift` da lib o trava no respiro da janela —
+      // travado, o painel fica fora do centro com o componente CERTO e o
+      // deslocamento cruzado deixa de ter efeito nenhum. Sem a folga o passo
+      // mediria o travamento, não a D11.
+      //
+      // O auxiliar é o da sonda COMPARTILHADA e não uma versão local: cinco
+      // formas diferentes de afastar a cena seriam cinco asserções diferentes,
+      // que é o defeito que esta passagem existe para fechar.
+      await withSceneAwayFromEdge(canvasElement, () => {
+        expectCentradoNoEixoCruzado(trigger, panelOpen()!, requestedSide);
+      });
     });
 
     await step("Levar o ponteiro para longe fecha o cartão", async () => {

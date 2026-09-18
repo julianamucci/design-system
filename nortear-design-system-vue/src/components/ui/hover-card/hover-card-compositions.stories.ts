@@ -61,8 +61,25 @@ const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
 // layout, que não tem token nem escala.
 const CLASSES_PARAGRAPH = 'nds-text-body nds-max-w-sm nds-min-h-50';
 const LAYOUT_PARAGRAPH = 'contain: layout;';
+// Gatilho que não navega — só a `Sides`, onde o rótulo é o LADO e não há para
+// onde ir. As três últimas utilitárias existem para zerar o cromo nativo de
+// `<button>`; num `<a>` elas não neutralizam nada.
 const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+
+// Gatilho que EXPLICA e LEVA ao caminho alternativo (D15). O sublinhado
+// pontilhado e o `cursor-help` ficam: são eles que distinguem "isto explica
+// alguma coisa" de um link de navegação comum, e é por isso que a classe não é a
+// mesma do `@joana`.
+const CLASSES_TRIGGER_EXPLAINER =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+
+// Os caminhos alternativos que a D15 exige, e eles são FIXOS: iguais nas cinco
+// stacks e nos três idiomas, porque URL não se traduz — o `/users/joana` da
+// `UserProfile` já fazia assim. Sem default: destino default convida a publicar
+// a composição sem escolher para onde ela leva.
+const HREF_GLOSSARY = '/glossario/wcag-2-2-aa';
+const HREF_METRIC = '/metricas/conversao';
 
 export const UserProfile: Story = {
   parameters: {
@@ -164,6 +181,18 @@ export const LinkPreview: Story = {
   },
 };
 
+// A sigla e a definição são as do conteúdo compartilhado
+// (`variants.items.definitionTooltip.cardTerm` / `cardMeaning`), que é a fonte da
+// docs page: a story mostrava "WCAG 2.2 AA" no gatilho e "WCAG 2.2 nível AA" no
+// painel enquanto a página ao lado mostrava outra coisa, e comparar as duas
+// deixava de responder qualquer pergunta. A story não LÊ o conteúdo (é markup de
+// captura, em um idioma só), mas copia dele.
+//
+// O gatilho e o termo em destaque são a MESMA sigla, e saem da mesma chave: o
+// termo "por extenso" não existe mais como texto à parte — quem explica é a
+// definição. O conteúdo se contradizia sozinho até 2026-09-17, com `use` citando
+// `WCAG 2.2 AA` e `cardTerm` dizendo `WCAG 2.2`, e as cinco stacks se dividiram
+// exatamente nessa fresta.
 export const TermDefinition: Story = {
   parameters: {
     covers: ['visual.item3'],
@@ -184,14 +213,14 @@ export const TermDefinition: Story = {
         Todo componente do sistema atende
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
-            <button type="button" class="${CLASSES_TRIGGER_BUTTON}">WCAG 2.2 AA</button>
+            <a href="${HREF_GLOSSARY}" class="${CLASSES_TRIGGER_EXPLAINER}">WCAG 2.2 AA</a>
           </HoverCardTrigger>
           <HoverCardContent>
             <div class="nds-stack" data-spacing="xs">
-              <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
+              <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
               <p class="nds-text-caption nds-text-muted-foreground">
-                Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1,
-                operação por teclado e alvo de toque de 24px.
+                Web Content Accessibility Guidelines: padrão internacional de acessibilidade
+                para conteúdo web.
               </p>
             </div>
           </HoverCardContent>
@@ -203,26 +232,40 @@ export const TermDefinition: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('O gatilho de definição é um botão, e não envia formulário', async () => {
-      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
-      // Sem `type="button"`, o mesmo gatilho dentro de um <form> enviaria o
-      // formulário ao ser ativado por Enter.
-      await expect(trigger).toHaveAttribute('type', 'button');
+    await step('O gatilho de definição leva ao verbete no glossário', async () => {
+      // D15, e é o portão do C8: o conteúdo do cartão não pode ser o único
+      // caminho para a informação, e num componente que em touch não tem caminho
+      // acessível nenhum o gatilho é QUEM leva a ela. A composição publicada
+      // modela a saída em vez de deixá-la implícita — era o exemplo ao lado da
+      // regra que a violava.
+      //
+      // A URL vai LITERAL, e não pela `HREF_GLOSSARY` que o `render` usa. Com a
+      // constante nos dois lados, trocá-la trocaria o `expect` junto e a
+      // asserção passaria com qualquer destino — é a forma que deixou a D8
+      // passar meses, e ela reapareceu aqui. O destino é contrato: quem o mudar
+      // muda também esta linha, de propósito.
+      const trigger = canvas.getByRole('link', { name: 'WCAG 2.2 AA' });
+      await expect(trigger).toHaveAttribute('href', '/glossario/wcag-2-2-aa');
     });
 
     await step('O painel não tem nome; o gatilho é que o DESCREVE', async () => {
-      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
+      const trigger = canvas.getByRole('link', { name: 'WCAG 2.2 AA' });
       const panel = await waitForOpen();
       // O painel perdeu o `role="dialog"` e, com ele, o nome próprio: sem papel,
       // `aria-label` é `aria-prohibited-attr` no axe. O que a pessoa ouve agora
       // é o CONTEÚDO, pela descrição que o gatilho aponta.
       await expect(accessibleName(panel)).toBe('');
       await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
-      await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
+      await expect(within(panel).getByText(/Web Content Accessibility Guidelines/)).toBeVisible();
     });
   },
 };
 
+// O nome da métrica e a linha de cálculo são os do conteúdo compartilhado
+// (`variants.items.metricExplainer.cardMetric` / `cardFormula`), e o valor é o
+// mesmo "3,42%" que as cinco docs pages mostram. A story cravava uma métrica
+// diferente da página ao lado — duas lições no mesmo assunto, e nenhuma das duas
+// errada sozinha.
 export const ExplainedMetric: Story = {
   parameters: {
     docs: {
@@ -242,16 +285,16 @@ export const ExplainedMetric: Story = {
         A página inicial fechou o mês em
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
-            <button type="button" class="${CLASSES_TRIGGER_BUTTON}">LCP 1.8s</button>
+            <a href="${HREF_METRIC}" class="${CLASSES_TRIGGER_EXPLAINER}">3,42%</a>
           </HoverCardTrigger>
           <HoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
-                <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-                <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+                <p class="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+                <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
               </div>
               <p class="nds-text-caption nds-text-muted-foreground">
-                Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+                Cliques no CTA / usuários únicos
               </p>
             </div>
           </HoverCardContent>
@@ -260,12 +303,25 @@ export const ExplainedMetric: Story = {
       </p>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O gatilho da métrica leva à página da métrica', async () => {
+      // D15, e é o portão do C8 — ver o passo irmão do `TermDefinition`. Quem
+      // lê o número tem onde conferir a conta sem depender do cartão, que em
+      // touch não abre.
+      //
+      // URL literal pelo mesmo motivo do passo irmão: afirmar pela constante que
+      // o `render` usa é comparar a constante com ela mesma.
+      const trigger = canvas.getByRole('link', { name: '3,42%' });
+      await expect(trigger).toHaveAttribute('href', '/metricas/conversao');
+    });
+
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
       const panel = await waitForOpen();
-      const value = within(panel).getByText('1.8s');
+      const value = within(panel).getByText('3,42%');
       await expect(value).toHaveClass(/nds-text-success/);
-      const descricao = within(panel).getByText(/Tempo até o maior elemento/);
+      const descricao = within(panel).getByText(/Cliques no CTA/);
       await expect(descricao).not.toHaveClass(/nds-text-success/);
     });
   },
@@ -380,6 +436,16 @@ export const ExtraPanelClass: Story = {
     `,
   }),
   play: async ({ step }) => {
+    await step('O cartão traz o miolo desta composição', async () => {
+      // Sem isto a story afirma a CAIXA e não o conteúdo: classe e largura
+      // continuam certas com o painel mostrando o cartão errado, ou nenhum. Foi
+      // assim que um ramo de conteúdo faltando sobreviveu meses no andaime de
+      // outra stack sem nada ficar vermelho.
+      const panel = await waitForOpen();
+      await expect(within(panel).getByText('Joana Silva')).toBeVisible();
+      await expect(within(panel).getByText(/14 tarefas nesta sprint/)).toBeVisible();
+    });
+
     await step('A classe extra convive com a classe do componente', async () => {
       const panel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do

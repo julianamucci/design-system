@@ -33,10 +33,15 @@
 //
 // WCAG 1.4.13, as três condições e onde cada uma é cumprida:
 //
-//  · **dispensável** — Escape fecha. O ouvinte é do DOCUMENTO porque o foco
-//    fica no gatilho, nunca dentro do painel;
+//  · **dispensável** — Escape fecha, e o clique fora também (D13). Os dois
+//    ouvintes são do DOCUMENTO porque o foco fica no gatilho, nunca dentro do
+//    painel;
 //  · **pairável** — o ponteiro entra no painel sem fechá-lo;
-//  · **persistente** — só some por Escape, pelo ponteiro sair ou pelo blur.
+//  · **persistente** — só some por Escape, por clique fora, pelo ponteiro sair
+//    ou pelo blur.
+//
+// E abrir por FOCO tem um filtro (D12): só o foco VISÍVEL abre. Tab abre; foco
+// movido por script, não — ver `handleFocus`.
 //
 // **Descrição sim, papel não** — decisão de 2026-09-02, e ela INVERTE a
 // anterior, que está registrada aqui porque o argumento dela continua correto.
@@ -92,6 +97,21 @@ import { autoUpdateFloating, positionFloating } from '@/lib/floating';
 export type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 export type HoverCardAlign = 'start' | 'center' | 'end';
 
+/**
+ * Por qual caminho o cartão fechou, no vocabulário do DESIGN SYSTEM.
+ *
+ * As mesmas palavras do popover e da família do dialog — `overlay` é o nome que
+ * esta casa dá ao clique FORA, e não ao véu, que este componente não tem. Sem
+ * um vocabulário declarado cada fábrica inventaria o seu, que foi como o mesmo
+ * campo acabou com três nomes no GA4 (D7).
+ *
+ * Fechar por PONTEIRO (o cursor saiu) e por BLUR não tem palavra, de propósito:
+ * é o caminho passivo, não um gesto de dispensa, e nomeá-lo obrigaria a
+ * inventar uma quinta palavra fora do vocabulário da casa. Nesses casos o
+ * motivo chega como `undefined` — e é por isso que ele é opcional na assinatura.
+ */
+export type HoverCardCloseReason = 'escape' | 'overlay' | 'api';
+
 export type HoverCardOptions = {
   trigger: HTMLElement;
   content: HTMLElement;
@@ -99,13 +119,19 @@ export type HoverCardOptions = {
   align?: HoverCardAlign;
   /** Vão entre gatilho e painel, em px. O `sideOffset` das outras quatro. */
   sideOffset?: number;
+  /** Deslocamento no eixo CRUZADO, em px. O `alignOffset` das outras quatro. */
+  alignOffset?: number;
   /** Espera em ms antes de abrir, depois que o ponteiro entra no gatilho. */
   openDelay?: number;
   /** Espera em ms antes de fechar, depois que o ponteiro sai. */
   closeDelay?: number;
   /** Abre já na montagem — o equivalente não-controlado das outras stacks. */
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  /**
+   * Cada abertura e cada fechamento. No fechamento vem também o MOTIVO, quando
+   * houve um gesto de dispensa — ver `HoverCardCloseReason`.
+   */
+  onOpenChange?: (open: boolean, reason?: HoverCardCloseReason) => void;
   class?: string;
 };
 
@@ -150,6 +176,20 @@ const WAIT_DEFAULT_CLOSE = 300;
 const SIDE_OFFSET_DEFAULT = 4;
 
 /**
+ * Deslocamento no eixo CRUZADO, e ele é ZERO nas cinco stacks (D11, 2026-09-17).
+ *
+ * Declarado, e não omitido: o react carregava 4 aqui enquanto as outras quatro
+ * valiam 0, e a divergência sobreviveu meses porque três das cinco não diziam
+ * número nenhum — o valor era o que a lib de cada uma tinha por padrão, e ausência
+ * de declaração não é comparável com nada. A D9 fixou o vão do eixo PRINCIPAL
+ * (`sideOffset`) e passou a impressão de ter tratado os dois.
+ *
+ * Zero porque o cartão é CENTRADO no gatilho: `align` é `center` em todas as
+ * stories das cinco, e o painel cresce a partir da peça que o pediu.
+ */
+const ALIGN_OFFSET_DEFAULT = 0;
+
+/**
  * Posiciona o painel com a conta COMPARTILHADA, não com uma cópia.
  *
  * Havia aqui uma quarta cópia da geometria — as três que `lib/floating.ts`
@@ -169,9 +209,10 @@ function positionHoverCard(
   panel: HTMLElement,
   side: HoverCardSide,
   align: HoverCardAlign,
-  sideOffset: number
+  sideOffset: number,
+  alignOffset: number
 ): void {
-  positionFloating(anchor, panel, side, align, sideOffset, { flip: true });
+  positionFloating(anchor, panel, side, align, sideOffset, { flip: true, alignOffset });
   // O `align` não muda com o flip, então continua sendo escrito aqui; o `side`
   // é do `positionFloating`, que conhece o lado final.
   panel.dataset.align = align;
@@ -186,6 +227,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     side = 'bottom',
     align = 'center',
     sideOffset = SIDE_OFFSET_DEFAULT,
+    alignOffset = ALIGN_OFFSET_DEFAULT,
     openDelay = WAIT_DEFAULT_OPEN,
     closeDelay = WAIT_DEFAULT_CLOSE,
     defaultOpen = false,
@@ -201,6 +243,9 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   // A limpeza do acompanhamento de posição — só existe com o cartão aberto, e
   // `hide()` a chama. Ver `autoUpdateFloating` em `@/lib/floating`.
   let stopAutoUpdate: (() => void) | null = null;
+  // O registro do ouvinte de clique fora é ADIADO um tique (ver `show()`), e o
+  // timer fica guardado porque o fechamento pode chegar antes dele.
+  let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
 
   // O elemento nasce sem os dois comandos e os recebe no fim desta função —
   // por isso a conversão passa por `unknown`: o `<div>` só vira `HoverCardElement`
@@ -220,7 +265,41 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   // está aberto: um listener por instância, permanente, vazaria em toda página
   // com muitas menções.
   function onKeyDown(evento: KeyboardEvent): void {
-    if (evento.key === 'Escape') hide();
+    if (evento.key === 'Escape') hide('escape');
+  }
+
+  // Clique FORA fecha (D13, decisão da dona de 2026-09-17). As outras quatro
+  // stacks já fechavam — cada uma pela dispensa da lib dela —, e esta não
+  // fechava por não ter o ouvinte: não era contrato, era ausência.
+  //
+  // Sem ele, as duas saídas que havia não bastavam. Escape não é caminho no
+  // toque, e "tirar o ponteiro" não acontece quando o ponteiro foi para outro
+  // lugar CLICANDO — o cartão ficava na tela por cima do assunto seguinte.
+  //
+  // O gatilho conta como DENTRO: clicar na menção é seguir o link, não dispensar
+  // o cartão.
+  function handleOutsideClick(event: MouseEvent): void {
+    const target = event.target as Node;
+    if (panelEl?.contains(target) || trigger.contains(target)) return;
+    hide('overlay');
+  }
+
+  /**
+   * Abrir por foco, mas só pelo foco VISÍVEL (D12, decisão da dona de 2026-09-17).
+   *
+   * O que sustenta a WCAG 1.4.13 para quem navega por teclado é o TAB, e ele
+   * casa `:focus-visible` — continua abrindo. O que deixa de abrir é `.focus()`
+   * por script: foco movido por código não é gesto de quem lê, é a página se
+   * reorganizando, e um cartão que aparece aí é ruído sobre alguém que não pediu
+   * nada.
+   *
+   * O filtro é o MESMO teste que o base-ui (react) e o bits-ui (svelte) já
+   * faziam por dentro — as duas stacks que não abriam com foco cru. Aqui ele é
+   * explícito porque não há lib para fazê-lo.
+   */
+  function handleFocus(): void {
+    if (!trigger.matches(':focus-visible')) return;
+    scheduleShow();
   }
 
   function show(): void {
@@ -245,7 +324,8 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     // quando a rolagem faz o lado pedido deixar de caber. Só geometria: nada é
     // anunciado (`onOpenChange` fica de fora) e o foco não é tocado.
     const panel = panelEl;
-    const place = (): void => positionHoverCard(trigger, panel, side, align, sideOffset);
+    const place = (): void =>
+      positionHoverCard(trigger, panel, side, align, sideOffset, alignOffset);
     place();
     stopAutoUpdate?.();
     stopAutoUpdate = autoUpdateFloating(trigger, panel, place);
@@ -263,15 +343,28 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     });
     panelEl.addEventListener('mouseleave', scheduleHide);
     document.addEventListener('keydown', onKeyDown);
+    // ADIADO um tique, e o motivo é o modo comandado: quem abre o cartão por
+    // `open()` no `click` de um botão ainda está no meio desse clique, que
+    // chegaria ao `document` DEPOIS de o ouvinte entrar — e o cartão fecharia no
+    // mesmo gesto que o abriu. Mesma forma do `popover.ts` desta stack.
+    //
+    // O timer é guardado porque o fechamento pode chegar antes dele: sem
+    // cancelar, o ouvinte era registrado DEPOIS da limpeza e ficava para sempre.
+    timerClickOutside = setTimeout(() => {
+      timerClickOutside = null;
+      document.addEventListener('click', handleOutsideClick);
+    }, 0);
 
     onOpenChange?.(true);
   }
 
-  function hide(): void {
+  function hide(reason?: HoverCardCloseReason): void {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (timerClickOutside !== null) { clearTimeout(timerClickOutside); timerClickOutside = null; }
     if (!panelEl) return;
     document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('click', handleOutsideClick);
     // Antes de remover o painel: um quadro já agendado não pode medir um nó que
     // saiu do documento.
     stopAutoUpdate?.();
@@ -281,7 +374,9 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     trigger.removeAttribute('aria-describedby');
     panelEl.remove();
     panelEl = null;
-    onOpenChange?.(false);
+    // O motivo só existe quando houve GESTO de dispensa. Ponteiro que saiu,
+    // blur e desmonte chegam sem palavra — ver `HoverCardCloseReason`.
+    onOpenChange?.(false, reason);
   }
 
   function scheduleShow(): void {
@@ -300,28 +395,38 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
 
   // Abrir por FOCO, e não só por ponteiro: é o que sustenta a WCAG 1.4.13 para
   // quem navega por teclado, e é o comportamento que as outras quatro stacks
-  // herdam da lib. Sem isto o cartão era inalcançável sem mouse.
-  trigger.addEventListener('focus', scheduleShow);
+  // herdam da lib. Sem isto o cartão era inalcançável sem mouse. O filtro de
+  // foco VISÍVEL está em `handleFocus` (D12).
+  trigger.addEventListener('focus', handleFocus);
   trigger.addEventListener('blur', scheduleHide);
 
   // `panelEl` É o estado: o painel existe enquanto o cartão está aberto e é
   // removido ao fechar. Não há sinalizador paralelo a dessincronizar.
+  //
+  // Os comandos fecham com `api`: quem chama `close()` é código de quem consome,
+  // e é essa a palavra da casa para fechamento decidido de dentro.
   wrapper.open = show;
-  wrapper.close = hide;
-  wrapper.toggle = () => { if (panelEl) hide(); else show(); };
+  wrapper.close = () => { hide('api'); };
+  wrapper.toggle = () => { if (panelEl) hide('api'); else show(); };
   wrapper.isOpen = () => panelEl !== null;
 
   /*
-   * O painel mora no `document.body` e o `keydown` de Escape vive no
-   * `document` — os dois só enquanto o cartão está EXIBIDO, e os dois soltos
-   * por `hide()`. Quem removia o wrapper com o cartão aberto não passava por
-   * `hide()`: sobravam o painel órfão e o ouvinte preso a um nó desanexado.
+   * O painel mora no `document.body` e os dois ouvintes de dispensa — o
+   * `keydown` de Escape e o `click` de fora — vivem no `document`, só enquanto o
+   * cartão está EXIBIDO e todos soltos por `hide()`. Quem removia o wrapper com
+   * o cartão aberto não passava por `hide()`: sobravam o painel órfão e os
+   * ouvintes presos a um nó desanexado.
    *
-   * `hide()` também derruba os dois temporizadores. Sem isso, um `show()`
-   * agendado dispararia DEPOIS da remoção e poria um painel novo na página,
-   * junto com um ouvinte novo — vazamento criado pela própria saída.
+   * `hide()` também derruba os TRÊS temporizadores (abrir, fechar e o tique que
+   * arma o clique fora). Sem isso, um `show()` agendado dispararia DEPOIS da
+   * remoção e poria um painel novo na página, junto com ouvintes novos —
+   * vazamento criado pela própria saída.
+   *
+   * SEM motivo: desmontar não é fechar. A saída da raiz é troca de story, troca
+   * de idioma ou desmonte de página, e anunciar um gesto ali poria no GA4 um
+   * fechamento que ninguém fez.
    */
-  tornarDestruivel(wrapper, wrapper, hide);
+  tornarDestruivel(wrapper, wrapper, () => { hide(); });
 
   if (defaultOpen) {
     // `requestAnimationFrame` e não `queueMicrotask`: posicionar exige o

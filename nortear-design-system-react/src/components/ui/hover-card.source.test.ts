@@ -126,10 +126,14 @@ describe('composições', () => {
     expect(saida).toContain('design-system.dev/overlays');
   });
 
-  it('a definição usa botão com type, e o painel não carrega nome próprio', () => {
+  it('a definição leva ao glossário, e o painel não carrega nome próprio', () => {
     const saida = hoverCardDefinicaoSource();
-    // Sem `type="button"` o mesmo gatilho dentro de um <form> enviaria o form.
-    expect(saida).toContain('<button type="button"');
+    // D15: o gatilho LEVA ao verbete. O C8 exige que o cartão não seja o único
+    // caminho para a informação, e num snippet que alguém copia o destino é a
+    // parte que não pode faltar — sem ele, publica-se a composição sem escolher
+    // para onde ela leva.
+    expect(saida).toContain('<a href="/glossario/wcag-2-2-aa"');
+    expect(saida).not.toContain('<button');
     // O painel não tem papel desde 2026-09-02, e nome próprio em elemento sem
     // papel é `aria-prohibited-attr` no axe. Quem descreve é o gatilho, por
     // `aria-describedby` — escrito pelo componente, não pelo snippet.
@@ -139,7 +143,14 @@ describe('composições', () => {
   it('na métrica a cor semântica fica no número, e o texto corrido não a recebe', () => {
     const saida = hoverCardMetricaSource();
     expect(saida).toContain('<span className="nds-text-caption nds-font-medium nds-text-success">');
-    const descricao = saida.slice(saida.indexOf('Tempo até o maior elemento'));
+    // D15, o par do destino do glossário: o gatilho leva à página da métrica.
+    expect(saida).toContain('<a href="/metricas/conversao"');
+    // O índice é afirmado antes do corte: `indexOf` devolve -1 para texto que
+    // saiu do snippet, e `slice(-1)` é um caractere que nunca contém a classe —
+    // a asserção seguinte passaria justamente quando o exemplo mudasse.
+    const descriptionStart = saida.indexOf('Cliques no CTA');
+    expect(descriptionStart).toBeGreaterThan(-1);
+    const descricao = saida.slice(descriptionStart);
     expect(descricao).not.toContain('nds-text-success');
   });
 

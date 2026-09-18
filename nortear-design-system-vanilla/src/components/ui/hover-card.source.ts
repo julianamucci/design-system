@@ -16,11 +16,16 @@ export type HoverCardSnippetOptions = {
   /** Texto do gatilho — conteúdo natural, nunca "passe o mouse aqui". */
   triggerLabel?: string;
   /**
-   * `link` quando há para onde navegar; `button` quando não há (um termo, uma
-   * métrica). A escolha é do conteúdo: no toque não existe hover, e o caminho
-   * alternativo tem de existir.
+   * A escolha é do conteúdo, e no toque não existe hover: o caminho alternativo
+   * tem de existir.
+   *
+   *  · `link` — navegação comum (uma menção, um domínio);
+   *  · `definition` — termo ou métrica que LEVA ao verbete ou à página da
+   *    métrica (D15). Mesmo desenho do gatilho de botão, com destino;
+   *  · `botao` — o gatilho sem destino. Continua demonstrado (a story dos lados
+   *    o usa), mas não onde o cartão carrega informação que só existe nele.
    */
-  triggerTipo?: 'link' | 'botao';
+  triggerTipo?: 'link' | 'definition' | 'botao';
   triggerHref?: string;
   /** Nome acessível do gatilho — e, por tabela, do painel. */
   triggerAriaLabel?: string;
@@ -51,6 +56,8 @@ export type HoverCardSnippetOptions = {
 const CLASSES_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
 const CLASSES_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+const CLASSES_DEFINITION =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
 
 /**
  * O gatilho.
@@ -67,9 +74,27 @@ function triggerBlock(o: HoverCardSnippetOptions): string {
       ? `\ngatilho.setAttribute('aria-label', ${text(o.triggerAriaLabel)});`
       : '';
 
+  if (o.triggerTipo === 'definition') {
+    // Fora do template, e não `?? '…'` dentro dele: o contador de identificadores
+    // em português descasca literais por PAREAMENTO de aspas, e aspas simples
+    // aninhadas dentro de uma crase movem o pareamento para a frente — o que
+    // vaza pedaço de template como se fosse código. A linha equivalente do ramo
+    // de link já faz isso vazar; somar uma segunda mudava o que vaza.
+    const href = o.triggerHref ?? '/glossario';
+    return `// O cartão não pode ser o ÚNICO caminho para o que ele diz (D15): o termo
+// leva ao verbete, a métrica leva à página da métrica. O sublinhado pontilhado
+// é o que separa isto de um link de navegação comum.
+const gatilho = document.createElement('a');
+gatilho.href = '${href}';
+gatilho.className = '${CLASSES_DEFINITION}';
+gatilho.textContent = ${label};${accessibleLabel}`;
+  }
+
   if (o.triggerTipo === 'botao') {
-    return `// Gatilho que NÃO navega (um termo, uma métrica): botão sem moldura. Sem
-// \`type="button"\`, dentro de um <form> ele enviaria o formulário.
+    return `// Gatilho que NÃO navega: botão sem moldura. Serve onde o cartão só
+// reforça o que já está na tela — onde ele carrega informação própria, o gatilho
+// tem de levar a ela (D15). Sem \`type="button"\`, dentro de um <form> ele
+// enviaria o formulário.
 const gatilho = document.createElement('button');
 gatilho.type = 'button';
 gatilho.className = '${CLASSES_BUTTON}';

@@ -51,13 +51,26 @@ const IMPORT_WITH_STATE = `import { useState } from "react";
 ${IMPORT}`;
 
 /**
- * Classes do gatilho quando ele é um botão: não há para onde navegar, então o
- * elemento perde a pele de botão e fica com o sublinhado pontilhado que sinaliza
- * "há algo a mais aqui".
+ * Classes do gatilho de EXPLICAÇÃO. O sublinhado pontilhado e o `cursor-help`
+ * sinalizam "há algo a mais aqui" e distinguem o gatilho de um link comum de
+ * navegação — por isso ficam mesmo quando o gatilho TEM destino (D15).
+ */
+const CLASSES_TRIGGER_EXPLAINER =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+
+/**
+ * As mesmas classes mais as três que zeram o cromo nativo de `<button>` — só
+ * para o gatilho que não tem para onde levar, que é o da story dos lados.
  */
 const CLASSES_TRIGGER_BUTTON =
-  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted ' +
-  'nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+  `${CLASSES_TRIGGER_EXPLAINER} nds-bg-transparent nds-border-none nds-p-0`;
+
+/**
+ * Destinos das duas composições que carregam informação própria (D15/C8), em
+ * constante nomeada: URL não se traduz e é a mesma nas cinco stacks.
+ */
+const GLOSSARY_HREF = '/glossario/wcag-2-2-aa';
+const METRIC_HREF = '/metricas/conversao';
 
 /** Espera só entra no snippet quando difere do padrão do componente. */
 function propWait(name: string, value: unknown, padrao: number): string | undefined {
@@ -78,12 +91,24 @@ function triggerLink(label: string, href: string): string {
 </HoverCardTrigger>`;
 }
 
-/** Sem `type="button"` o mesmo gatilho dentro de um `<form>` enviaria o form. */
-function triggerButton(label: string): string {
+// O `triggerButton` saiu daqui em 2026-09-17 com a D15: os dois únicos snippets
+// que o usavam — definição e métrica — passaram a levar ao destino. O gatilho de
+// botão continua PUBLICADO, mas só na story dos lados, que o escreve inline
+// porque ali ele é o miolo de um `map` e não uma peça reaproveitada.
+
+/**
+ * Gatilho de explicação que LEVA ao destino (D15).
+ *
+ * `href` não tem valor padrão de propósito: um default convidaria a publicar a
+ * composição sem escolher para onde ela leva, que é exatamente o defeito que a
+ * D15 fechou — a página ensinava "sempre tenha um glossário ou página dedicada
+ * como alternativa" ao lado de um gatilho sem destino nenhum.
+ */
+function triggerExplainerLink(label: string, href: string): string {
   return `<HoverCardTrigger asChild>
-  <button type="button" className="${CLASSES_TRIGGER_BUTTON}">
+  <a href="${href}" className="${CLASSES_TRIGGER_EXPLAINER}">
     ${label}
-  </button>
+  </a>
 </HoverCardTrigger>`;
 }
 
@@ -312,13 +337,18 @@ export function hoverCardDefinicaoSource(): string {
       'Todo componente do sistema atende',
       cartao(
         '',
-        triggerButton('WCAG 2.2 AA'),
+        triggerExplainerLink('WCAG 2.2 AA', GLOSSARY_HREF),
         '',
+        // Termo e definição saem do conteúdo compartilhado
+        // (`variants.items.definitionTooltip.cardTerm` / `cardMeaning`): o
+        // snippet publica o mesmo exemplo que a story renderiza e que a docs
+        // page mostra nesta variante. Gatilho e termo em destaque são a MESMA
+        // sigla, e vêm da mesma chave.
         `<div className="nds-stack" data-spacing="xs">
-  <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
+  <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
   <p className="nds-text-caption nds-text-muted-foreground">
-    Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1,
-    operação por teclado e alvo de toque de 24px.
+    Web Content Accessibility Guidelines: padrão internacional de
+    acessibilidade para conteúdo web.
   </p>
 </div>`,
       ),
@@ -340,8 +370,11 @@ export function hoverCardMetricaSource(): string {
       'A página inicial fechou o mês em',
       cartao(
         '',
-        triggerButton('LCP 1.8s'),
+        triggerExplainerLink('3,42%', METRIC_HREF),
         '',
+        // Métrica e conta saem do conteúdo compartilhado
+        // (`variants.items.metricExplainer.cardMetric` / `cardFormula`), o mesmo
+        // exemplo que a story renderiza e que a docs page publica.
         `<div className="nds-stack" data-spacing="xs">
   <div
     className="nds-cluster"
@@ -349,11 +382,11 @@ export function hoverCardMetricaSource(): string {
     data-align="baseline"
     data-spacing="sm"
   >
-    <p className="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-    <span className="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+    <p className="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+    <span className="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
   </div>
   <p className="nds-text-caption nds-text-muted-foreground">
-    Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+    Cliques no CTA / usuários únicos
   </p>
 </div>`,
       ),

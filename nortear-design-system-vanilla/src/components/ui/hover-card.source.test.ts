@@ -56,10 +56,29 @@ describe('hoverCardSnippet', () => {
   });
 
   it('o gatilho que não navega é um botão, e não envia formulário', () => {
-    const code = hoverCardSnippet({ triggerTipo: 'botao', triggerLabel: 'WCAG 2.2 AA' });
+    const code = hoverCardSnippet({ triggerTipo: 'botao', triggerLabel: 'acima' });
     expect(code).toContain("document.createElement('button')");
     expect(code).toContain("gatilho.type = 'button';");
     expect(code).not.toContain('gatilho.href');
+  });
+
+  it('o gatilho de definição LEVA ao verbete, e não é um botão sem destino', () => {
+    // D15: nas composições em que o cartão carrega informação que só existe
+    // nele — o termo e a métrica —, o gatilho é um link com destino. O snippet é
+    // o que o leitor copia, então publicar o botão ali ensinaria exatamente o
+    // que o C8 proíbe.
+    const code = hoverCardSnippet({
+      triggerTipo: 'definition',
+      triggerLabel: 'WCAG 2.2 AA',
+      triggerHref: '/glossario/wcag-2-2-aa',
+    });
+    expect(code).toContain("document.createElement('a')");
+    expect(code).toContain("gatilho.href = '/glossario/wcag-2-2-aa';");
+    expect(code).toContain('nds-underline-dotted');
+    expect(code).not.toContain("gatilho.type = 'button';");
+    // As três declarações que só existiam por ser `<button>` não vêm junto: um
+    // `<a>` já não tem fundo, borda nem espaço interno.
+    expect(code).not.toContain('nds-bg-transparent');
   });
 
   it('cerca o gatilho de texto, que é o que dispensa o alvo em linha dos 24px', () => {

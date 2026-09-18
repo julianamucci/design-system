@@ -274,16 +274,11 @@ const codeCompLinkPreview = `<HoverCard :open-delay="500" :close-delay="200">
 
 const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
   <HoverCardTrigger as-child>
-    <button
-      type="button"
-      class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-    >
-      WCAG 2.2
-    </button>
+    <a href="/glossario/wcag-2-2-aa" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help">WCAG 2.2 AA</a>
   </HoverCardTrigger>
   <HoverCardContent>
     <div class="nds-stack" data-spacing="xs">
-      <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2</p>
+      <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
       <p class="nds-text-caption nds-text-muted-foreground">
         Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
       </p>
@@ -293,12 +288,7 @@ const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
 
 const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
   <HoverCardTrigger as-child>
-    <button
-      type="button"
-      class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-    >
-      3,42%
-    </button>
+    <a href="/metricas/conversao" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help">3,42%</a>
   </HoverCardTrigger>
   <HoverCardContent>
     <div class="nds-stack" data-spacing="xs">
@@ -441,10 +431,10 @@ const a11yCritCols = computed(() => ({
       menção dentro da frase, não o atraso, e a página exige ≥300ms para
       abrir. Quem quiser ver atraso customizado tem a variante própria.
     -->
-    <DocsDemonstration>
+    <DocsDemonstration component-slug="hover-card">
       <p
         class="nds-text-body nds-max-w-sm nds-min-h-50"
-        style="contain: layout; position: relative"
+        style="contain: layout"
       >
         {{ tContent('demonstration.sentenceBefore') }}
         <HoverCard
@@ -564,7 +554,7 @@ const a11yCritCols = computed(() => ({
            inalcançável por toque e por teclado. É a lição da legenda. -->
       <template #do-preview-0>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -603,7 +593,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -644,7 +634,7 @@ const a11yCritCols = computed(() => ({
            sem mostrar o efeito. -->
       <template #do-preview-1>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -685,7 +675,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -744,7 +734,7 @@ const a11yCritCols = computed(() => ({
         <!-- Esperas PADRÃO (600/300) — é o que esta variante documenta, e um
              valor de conveniência aqui mentiria sobre o produto. -->
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -783,7 +773,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -824,7 +814,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -865,7 +855,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -907,7 +897,7 @@ const a11yCritCols = computed(() => ({
         <!-- Gatilho que NÃO navega é botão sem moldura, com sublinhado
              pontilhado: as classes zeram o cromo nativo sem uma linha inline. -->
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -916,12 +906,10 @@ const a11yCritCols = computed(() => ({
             @update:open="(open: boolean) => trackHoverCard(open, 'definition-tooltip', 'docs_variantes')"
           >
             <HoverCardTrigger as-child>
-              <button
-                type="button"
-                class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-              >
-                {{ tContent('variants.items.definitionTooltip.cardTerm') }}
-              </button>
+              <a
+                href="/glossario/wcag-2-2-aa"
+                class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help"
+              >{{ tContent('variants.items.definitionTooltip.cardTerm') }}</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div
@@ -941,7 +929,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-5>
         <div
-          style="contain: layout; position: relative"
+          style="contain: layout"
           class="nds-w-full nds-min-h-40"
         >
           <HoverCard
@@ -950,12 +938,10 @@ const a11yCritCols = computed(() => ({
             @update:open="(open: boolean) => trackHoverCard(open, 'metric-explainer', 'docs_variantes')"
           >
             <HoverCardTrigger as-child>
-              <button
-                type="button"
-                class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-              >
-                3,42%
-              </button>
+              <a
+                href="/metricas/conversao"
+                class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help"
+              >3,42%</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div

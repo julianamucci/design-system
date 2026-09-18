@@ -10,6 +10,17 @@
 		class: className,
 		align = "center",
 		sideOffset = 4,
+		// Deslocamento no eixo CRUZADO, DECLARADO — e declarado ZERO (D11,
+		// 2026-09-17). O número tem de estar visível nas cinco: esta stack não o
+		// declarava, herdava o zero do `@floating-ui`, e foi essa ausência de
+		// declaração que deixou o `alignOffset: 4` do react passar meses sem que
+		// a divergência aparecesse em nenhuma leitura lado a lado.
+		//
+		// E a D9 não cobriu isto, embora parecesse: ela fixou o `sideOffset`, que
+		// é o eixo PRINCIPAL. Os dois moram um ao lado do outro aqui pelo mesmo
+		// motivo por que `SIDE_OFFSET_PADRAO` e `ALIGN_OFFSET_PADRAO` moram
+		// juntos na sonda — separados, o segundo some atrás do primeiro.
+		alignOffset = 0,
 		portalProps,
 		...restProps
 	}: HoverCardPrimitive.ContentProps & {
@@ -79,6 +90,7 @@
 		data-slot="hover-card-content"
 		{align}
 		{sideOffset}
+		{alignOffset}
 		class={cn("nds-hover-card-content", className)}
 		{...restProps}
 	/>

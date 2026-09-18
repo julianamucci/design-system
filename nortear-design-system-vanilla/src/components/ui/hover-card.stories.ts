@@ -6,6 +6,8 @@ import {
   accessibleName,
   panelOpen,
   leaveWithPointer,
+  withSceneAwayFromEdge,
+  expectCentradoNoEixoCruzado,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
 import { hoverCardSource } from './hover-card.source';
@@ -70,8 +72,9 @@ const meta: Meta<HoverCardArgs> = {
     },
     onOpenChange: {
       control: false,
-      description: 'Chamado a cada abertura e fechamento, com o novo estado.',
-      table: { type: { summary: '(open: boolean) => void' } },
+      description:
+        'Chamado a cada abertura e fechamento, com o novo estado — e, no fechamento por gesto de dispensa, com o motivo.',
+      table: { type: { summary: '(open: boolean, reason?: HoverCardCloseReason) => void' } },
     },
   },
   args: {
@@ -119,6 +122,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const label = new RegExp(args.triggerLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
     const trigger = canvas.getByRole('link', { name: label });
+    const requestedSide = args.side ?? 'bottom';
 
     await step('O gatilho continua sendo um link de verdade', async () => {
       // O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela,
@@ -154,6 +158,32 @@ export const Playground: Story = {
       ).toBeGreaterThan(callsBefore);
     });
 
+    await step('O painel fica centrado no gatilho no eixo cruzado', async () => {
+      // D11: o deslocamento no eixo cruzado é ZERO nas cinco, e o que se afirma
+      // aqui é a COORDENADA — afirmar `alignOffset === 0` repetiria a constante
+      // para ela mesma, que é a forma de asserção que deixou a D8 passar meses.
+      //
+      // O lado vem da story, que é quem o pediu: a fuga de colisão pode trocar o
+      // lado pelo oposto, mas nunca troca o EIXO, e é o eixo que decide qual das
+      // duas coordenadas é a cruzada.
+      //
+      // A cena é AFASTADA da borda antes de medir, e isto é metade da asserção.
+      // O executor de teste NÃO aplica `layout: 'centered'` — isso é do canvas do
+      // Storybook —, então o `canvasElement` nasce em x=0 num viewport de
+      // 1200×900 e o gatilho fica encostado à esquerda. Com o painel a 320px,
+      // centrá-lo pediria um `left` negativo, e o travamento de borda do
+      // `positionFloating` o encaixa no respiro da janela: travado, o painel fica
+      // fora do centro com o componente CERTO. Sem a folga o passo mediria o
+      // travamento, não a D11.
+      //
+      // O auxiliar é o da sonda COMPARTILHADA e não uma versão local: cinco
+      // formas de afastar a cena seriam cinco asserções diferentes, que é o
+      // defeito que esta passagem existe para fechar.
+      await withSceneAwayFromEdge(canvasElement, () => {
+        expectCentradoNoEixoCruzado(trigger, panelOpen()!, requestedSide);
+      });
+    });
+
     await step('Levar o ponteiro para longe fecha o cartão', async () => {
       await leaveWithPointer(trigger, panelOpen()!);
       await waitForClosed('depois do ponteiro sair');
@@ -163,6 +193,10 @@ export const Playground: Story = {
     await step('Tab alcança o gatilho e abre o cartão sem ponteiro nenhum', async () => {
       // É o que sustenta a WCAG 1.4.13 para quem navega por teclado: o mesmo
       // conteúdo, pelo foco.
+      //
+      // `userEvent.tab()` e não `.focus()`: desde a D12 só o foco VISÍVEL abre, e
+      // foco por script não é gesto de quem lê. O Tab é, e por isso este passo é
+      // a metade viva do par que a `States/Closed` fecha pelo lado da ausência.
       await userEvent.tab();
       await expect(trigger).toHaveFocus();
       const panel = await waitForOpen('depois do foco');

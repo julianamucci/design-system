@@ -17,10 +17,36 @@ export const CLASSES_TRIGGER_LINK = 'nds-text-primary nds-font-medium nds-hover-
 export const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
+/**
+ * Gatilho que carrega informação e LEVA a ela (D15): termo e métrica.
+ *
+ * É o mesmo desenho do gatilho de botão — sublinhado pontilhado e cursor de
+ * ajuda, que é o que distingue "isto explica alguma coisa" de um link comum de
+ * navegação — menos as três declarações que só existiam por ser `<button>`
+ * (fundo, borda e espaço interno), que um `<a>` já não tem.
+ */
+export const CLASSES_TRIGGER_DEFINITION =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+
 export function construirLink(label: string, href = '/users/joana'): HTMLAnchorElement {
   const a = document.createElement('a');
   a.href = href;
   a.className = CLASSES_TRIGGER_LINK;
+  a.textContent = label;
+  return a;
+}
+
+/**
+ * Link de DEFINIÇÃO: o gatilho do termo e o da métrica, com destino.
+ *
+ * O `href` é obrigatório e não tem padrão, de propósito: o ponto da D15 é que
+ * exista um caminho alternativo de verdade, e um destino default convidaria a
+ * publicar a composição sem escolher para onde ela leva.
+ */
+export function buildDefinitionLink(label: string, href: string): HTMLAnchorElement {
+  const a = document.createElement('a');
+  a.href = href;
+  a.className = CLASSES_TRIGGER_DEFINITION;
   a.textContent = label;
   return a;
 }

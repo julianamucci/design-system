@@ -5,7 +5,11 @@ import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createHoverCard } from '@/components/ui/hover-card';
 import { createAvatar } from '@/components/ui/avatar';
-import { CLASSES_TRIGGER_LINK, construirButton, construirLink } from '@/components/ui/hover-card.fixtures';
+import {
+  CLASSES_TRIGGER_LINK,
+  buildDefinitionLink,
+  construirLink,
+} from '@/components/ui/hover-card.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import hoverCardTranslations from '@shared/content/hover-card/translations.json';
 
@@ -75,14 +79,21 @@ function trackHoverCard(triggerId: string, location: string) {
 
 // ─── Preview builders ─────────────────────────────────────────────────────────
 //
-// Os gatilhos saem da fixture das stories (`construirLink`, `construirButton`):
-// uma fonte só para o Playground e para a docs page. O miolo dos cartões é
-// montado aqui porque o texto vem do conteúdo compartilhado — a
-// fixture não fala i18n.
+// Os gatilhos saem da fixture das stories (`construirLink`,
+// `buildDefinitionLink`): uma fonte só para o Playground e para a docs page. O
+// miolo dos cartões é montado aqui porque o texto vem do conteúdo compartilhado
+// — a fixture não fala i18n.
+//
+// Destinos das duas composições que carregam informação própria (D15). Fixos e
+// iguais nas cinco stacks e nos três idiomas — URL não se traduz, como o
+// `#joana` do cartão de perfil já fazia. São os mesmos da story.
 //
 // O espaçamento é o da fixture: `data-align="start"` no cluster e
 // `data-spacing="xs"` no stack. Sem os dois, o vão entre nome e subtítulo pula
 // de 4px para 16px.
+
+const HREF_GLOSSARY = '/glossario/wcag-2-2-aa';
+const HREF_METRIC = '/metricas/conversao';
 
 /** Cartão de perfil — avatar, nome e uma métrica curta. */
 function buildProfileCard(): HTMLElement {
@@ -108,7 +119,17 @@ function buildProfileCard(): HTMLElement {
   return root;
 }
 
+/**
+ * O cartão de perfil, que três lugares desta página reaproveitam.
+ *
+ * `triggerId` é PARÂMETRO, e era cravado em `'user-profile'`: as variantes
+ * `default`, `withDelay` e `userProfile` mandavam o mesmo valor, então as três
+ * viravam UMA série no GA4 e a pergunta "qual variante o leitor abre" deixava de
+ * ter resposta. As outras quatro stacks já mandavam `default` e `with-delay` —
+ * esta era a única a fundir as três.
+ */
 function buildProfilePreview(
+  triggerId: string,
   location: string,
   delays?: { openDelay?: number; closeDelay?: number },
 ): HTMLElement {
@@ -118,7 +139,7 @@ function buildProfilePreview(
     side: 'bottom',
     align: 'start',
     ...delays,
-    onOpenChange: trackHoverCard('user-profile', location),
+    onOpenChange: trackHoverCard(triggerId, location),
   });
 }
 
@@ -149,9 +170,14 @@ function buildDoDontPreview(
   const wrap = document.createElement('div');
   wrap.className = 'nds-min-h-40';
   // Mecânica de layout, não valor de design: o painel abre em portal, e a
-  // reserva de altura mais o `relative` impedem que ele empurre o par seguinte.
+  // reserva de altura impede que ele empurre o par seguinte ao abrir.
+  //
+  // Sem `position: relative`, e as cinco páginas escrevem o mesmo desde
+  // 2026-09-17: o painel mora em portal no `<body>` e é posicionado em
+  // coordenadas de DOCUMENTO, então não há ancestral posicionado a que ele se
+  // refira — a declaração era inerte, e inerte em quatro páginas contra cinco é
+  // divergência sem contrato atrás.
   wrap.style.contain = 'layout';
-  wrap.style.position = 'relative';
   wrap.append(
     createHoverCard({
       trigger,
@@ -220,9 +246,10 @@ function buildDefinitionPreview(location: string): HTMLElement {
   content.append(title, desc);
 
   return createHoverCard({
-    // Gatilho que NÃO navega: botão sem moldura, sublinhado pontilhado e cursor
-    // de ajuda. O glossário continua sendo o caminho alternativo obrigatório.
-    trigger: construirButton(term),
+    // O gatilho LEVA ao verbete (D15): o cartão explica, e o glossário é o
+    // caminho de quem está no toque — onde não existe hover — ou num leitor de
+    // tela. A página ensinava a regra ao lado do exemplo que a violava.
+    trigger: buildDefinitionLink(term, HREF_GLOSSARY),
     content,
     side: 'bottom',
     align: 'start',
@@ -247,7 +274,11 @@ function buildMetricPreview(location: string): HTMLElement {
 
   const value = document.createElement('span');
   value.className = 'nds-text-caption nds-font-medium nds-text-success';
-  value.textContent = '3,42%';
+  // O valor vem da CHAVE, e estava cravado aqui: em inglês a página mostrava
+  // "3,42%" com vírgula decimal no meio de um texto que não a usa. A chave nasceu
+  // em 2026-09-17 justamente porque o número era o único pedaço deste cartão que
+  // não vinha do conteúdo compartilhado.
+  value.textContent = t('variants.items.metricExplainer.cardValue');
   head.append(label, value);
 
   const desc = document.createElement('p');
@@ -257,7 +288,9 @@ function buildMetricPreview(location: string): HTMLElement {
   content.append(head, desc);
 
   return createHoverCard({
-    trigger: construirButton('3,42%'),
+    // Mesma razão do termo (D15): a conta que produz o número só existe dentro
+    // do cartão, então o número leva à página da métrica.
+    trigger: buildDefinitionLink(t('variants.items.metricExplainer.cardValue'), HREF_METRIC),
     content,
     side: 'bottom',
     align: 'start',
@@ -376,10 +409,9 @@ export function createHoverCardDocs(): HTMLElement {
             const sentence = document.createElement('p');
             sentence.className = 'nds-text-body nds-max-w-sm nds-min-h-50';
             // Mecânica de layout, não valor de design: o painel abre num portal,
-            // e a reserva de altura mais o `relative` impedem que ele empurre a
-            // seção seguinte ao abrir.
+            // e a reserva de altura impede que ele empurre a seção seguinte ao
+            // abrir. Sem `position: relative` — ver `buildDoDontPreview`.
             sentence.style.contain = 'layout';
-            sentence.style.position = 'relative';
 
             sentence.append(
               document.createTextNode(`${t('demonstration.sentenceBefore')} `),
@@ -387,7 +419,7 @@ export function createHoverCardDocs(): HTMLElement {
               // (600ms para abrir, 300ms para fechar). Um valor curto aqui
               // demonstraria o "dont" do par 2 desta mesma página, que cobra
               // ≥300ms, e contradiria o snippet ao lado.
-              buildProfilePreview('docs_demo'),
+              buildProfilePreview('user-profile', 'docs_demo'),
               document.createTextNode(` ${t('demonstration.sentenceAfter')}`),
             );
 
@@ -534,7 +566,7 @@ createHoverCard({
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
               code: codeDefault,
-              previewFactory: () => buildProfilePreview('docs_variantes'),
+              previewFactory: () => buildProfilePreview('default', 'docs_variantes'),
             },
             {
               trackId: 'withDelay',
@@ -542,7 +574,7 @@ createHoverCard({
               description: stripHtml(t('variants.styles.withDelay')),
               code: codeWithDelay,
               previewFactory: () =>
-                buildProfilePreview('docs_variantes', { openDelay: 500, closeDelay: 200 }),
+                buildProfilePreview('with-delay', 'docs_variantes', { openDelay: 500, closeDelay: 200 }),
             },
             {
               name: stripHtml(t('variants.items.userProfile.name')),
@@ -572,7 +604,7 @@ info.append(name, meta);
 content.append(createAvatar({ fallbackText: 'JS' }), info);
 
 const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
-              previewFactory: () => buildProfilePreview('docs_variantes'),
+              previewFactory: () => buildProfilePreview('user-profile', 'docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.linkPreview.name')),
@@ -615,18 +647,19 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               trackId: 'definitionTooltip',
               description: stripHtml(t('variants.items.definitionTooltip.description')),
               useWhen: stripHtml(t('variants.items.definitionTooltip.use')),
-              code: `const trigger = document.createElement('button');
-trigger.type = 'button';
+              code: `// O gatilho LEVA ao verbete: o cartão não pode ser o único caminho (D15).
+const trigger = document.createElement('a');
+trigger.href = '/glossario/wcag-2-2-aa';
 trigger.className =
-  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
-trigger.textContent = 'WCAG 2.2';
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+trigger.textContent = 'WCAG 2.2 AA';
 
 const content = document.createElement('div');
 content.className = 'nds-stack';
 content.dataset.spacing = 'xs';
 const term = document.createElement('p');
 term.className = 'nds-text-body nds-font-medium nds-leading-none';
-term.textContent = 'WCAG 2.2';
+term.textContent = 'WCAG 2.2 AA';
 const def = document.createElement('p');
 def.className = 'nds-text-caption nds-text-muted-foreground';
 def.textContent =
@@ -641,10 +674,11 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               trackId: 'metricExplainer',
               description: stripHtml(t('variants.items.metricExplainer.description')),
               useWhen: stripHtml(t('variants.items.metricExplainer.use')),
-              code: `const trigger = document.createElement('button');
-trigger.type = 'button';
+              code: `// O gatilho LEVA à página da métrica: o cartão não pode ser o único caminho (D15).
+const trigger = document.createElement('a');
+trigger.href = '/metricas/conversao';
 trigger.className =
-  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
 trigger.textContent = '3,42%';
 
 const content = document.createElement('div');
@@ -694,20 +728,33 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
         const interfaceCode = `// createHoverCard(options)
 export type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 export type HoverCardAlign = 'start' | 'center' | 'end';
+export type HoverCardCloseReason = 'escape' | 'overlay' | 'api';
 
 export type HoverCardOptions = {
   trigger: HTMLElement;
   content: HTMLElement;
   side?: HoverCardSide;
   align?: HoverCardAlign;
+  sideOffset?: number;   // vão do eixo principal, em px
+  alignOffset?: number;  // vão do eixo cruzado, em px
   openDelay?: number;
   closeDelay?: number;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, reason?: HoverCardCloseReason) => void;
   class?: string;
 };
 
-export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
+// O modo controlado desta fábrica é IMPERATIVO: não há prop reativa a observar,
+// então quem controla chama os verbos da raiz e recebe cada mudança de volta.
+export type HoverCardElement = HTMLElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  isOpen: () => boolean;
+  destroy: () => void;
+};
+
+export function createHoverCard(options: HoverCardOptions): HoverCardElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -727,7 +774,7 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
                 { name: 'content',      type: 'HTMLElement',                              defaultValue: '—',         required: 'Sim', description: 'Conteúdo flutuante exibido após o delay.' },
                 { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'",      defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) },
                 { name: 'align',        type: "'start' | 'center' | 'end'",               defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) },
-                { name: 'onOpenChange', type: '(open: boolean) => void',                  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
+                { name: 'onOpenChange', type: '(open: boolean, reason?: HoverCardCloseReason) => void', defaultValue: '—',   required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                                   defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
                 { name: 'openDelay',    type: 'number',                                   defaultValue: '600',       required: 'Não', description: toPlainText(t('props.table.openDelay.description')) },
                 { name: 'closeDelay',   type: 'number',                                   defaultValue: '300',       required: 'Não', description: toPlainText(t('props.table.closeDelay.description')) },

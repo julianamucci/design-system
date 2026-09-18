@@ -29,7 +29,7 @@ import {
 //
 // ─── Acessibilidade: o cartão é enriquecimento, e o teclado não entra nele ──
 //
-// Abre por PONTEIRO e por FOCO, fecha no `blur` do gatilho e não move o foco
+// Abre por PONTEIRO e por FOCO VISÍVEL, fecha no `blur` do gatilho e não move o foco
 // para o painel — então um Tab a partir do gatilho fecha o cartão antes de
 // alcançar o que houver dentro. Conteúdo interativo no painel é inalcançável
 // por teclado, e isso vale nas cinco stacks: é a forma do gesto, não defeito de
@@ -55,9 +55,11 @@ import {
 // existe — escrito na montagem seria `aria-valid-attr-value`.
 //
 // **Mecanismo desta stack** (medido em `node_modules`): o gatilho liga
-// `pointerenter`, `pointerleave`, `focus` e `blur` no host — o foco é o CRU,
-// sem guarda de foco visível. O painel cancela o fechamento no próprio
-// `pointerenter`, e o Escape sai da camada dispensável do popup.
+// `pointerenter`, `pointerleave`, `focus` e `blur` no host — o foco do
+// primitivo é o CRU, sem guarda de foco visível, e é este componente que
+// acrescenta o filtro da D12 (ver `NdsHoverCardTrigger`). O painel cancela o
+// fechamento no próprio `pointerenter`, e o Escape sai da camada dispensável
+// do popup.
 //
 // Bloco canônico, com a comparação contra tooltip e popover e as três condições
 // da WCAG 1.4.13: `hover-card.ts` do Vanilla.
@@ -81,8 +83,11 @@ import {
 //     fecha quando o ponteiro sai desse polígono. Sem isso, o espaço vazio
 //     entre os dois fecharia o cartão no meio do caminho — o defeito clássico
 //     do hover card feito à mão;
-//   · o portal, que só monta enquanto o cartão está presente e sobrevive à
-//     animação de saída (é o que dá o que animar em `[data-ending-style]`).
+//   · o portal, que só monta enquanto o cartão está presente. Ele publica
+//     `[data-ending-style]` na saída, mas NINGUÉM anima aqui desde a D14
+//     (2026-09-17): o atributo é de lib e não chega às cinco — no máximo três
+//     animariam —, então a folha compartilhada deixou de declarar a transição
+//     de saída e nenhuma story afirma movimento ao fechar.
 //
 // O que os primitivos NÃO entregam, e este componente acrescenta:
 //
@@ -131,7 +136,17 @@ export class NdsHoverCardContent {
    */
   readonly sideOffset = input<number>(4);
 
-  /** Deslocamento no eixo de alinhamento, em px. */
+  /**
+   * Deslocamento no eixo de alinhamento, em px.
+   *
+   * ZERO nas cinco stacks (D11, 2026-09-17), e o número fica declarado ao lado
+   * do vão de propósito. O react declarava 4 aqui enquanto as outras quatro
+   * diziam 0 ou não diziam nada, e a divergência sobreviveu meses porque a D9 —
+   * que fixou o `sideOffset` em 4 — dava a impressão de ter tratado os dois
+   * eixos: `sideOffset` é o eixo PRINCIPAL, este é o CRUZADO. Com
+   * `align: 'center'`, que é o que todas as stories usam, o radix-ng aplica o
+   * deslocamento cruzado — então 4 aqui tiraria o painel do centro do gatilho.
+   */
   readonly alignOffset = input<number>(0);
 
   /**
@@ -226,7 +241,7 @@ export class NdsHoverCard {
 }
 
 /**
- * Gatilho — o elemento que abre o cartão ao ponteiro E ao foco.
+ * Gatilho — o elemento que abre o cartão ao ponteiro E ao foco VISÍVEL.
  *
  * Só `<a>` e `<button>`: o cartão precisa ser alcançável por teclado, e um
  * `<span>` com hover deixaria de fora quem não usa mouse. O primitivo emite um
@@ -249,6 +264,11 @@ export class NdsHoverCard {
   host: {
     '[attr.data-slot]': '"hover-card-trigger"',
     '[attr.aria-describedby]': 'describedBy()',
+    // D12 — ver `cancelInvisibleFocus`. O ouvinte é do host e NÃO do host
+    // directive de propósito: os do host directive são registrados primeiro, e
+    // é por isso que este roda DEPOIS do `handleFocus` do primitivo — cancelar
+    // antes de a lib agendar a abertura não cancelaria nada.
+    '(focus)': 'cancelInvisibleFocus()',
   },
 })
 export class NdsHoverCardTrigger {
@@ -256,6 +276,8 @@ export class NdsHoverCardTrigger {
   // directive do `span[ndsHoverCard]`, e o gatilho é filho dele no template de
   // quem compõe — o mesmo injetor que o `RdxPreviewCardTrigger` já usa.
   private readonly root = injectRdxPreviewCardRootContext();
+
+  private readonly host = inject(ElementRef).nativeElement as HTMLElement;
 
   /**
    * `aria-describedby` só enquanto o cartão está aberto.
@@ -268,15 +290,45 @@ export class NdsHoverCardTrigger {
     this.root.isOpen() ? this.root.contentId : null,
   );
 
+  /**
+   * D12 · só foco VISÍVEL abre o cartão.
+   *
+   * O primitivo liga `focus` CRU (`handleFocus` chama `openWithDelay`), então
+   * qualquer `.focus()` de script armava a abertura. O cartão é apoio pedido
+   * por um GESTO: foco movido por script é a página se reorganizando, e um
+   * painel que aparece aí é ruído sobre quem não pediu nada. O Tab continua
+   * abrindo — é ele o caminho que a WCAG 1.4.13 cobre, e é `:focus-visible`.
+   *
+   * Roda DEPOIS do `handleFocus` do primitivo (ver a nota no `host` acima), e
+   * por isso o conserto é cancelar o temporizador que a lib acabou de armar, no
+   * mesmo evento. `cancelHoverOpen` e não `close`: o segundo passaria pela
+   * espera de fechamento e emitiria mudança de estado que nunca houve.
+   *
+   * As duas saídas antecipadas não são zelo:
+   *
+   *  · ABERTO — o foco não pediu abertura nenhuma (é o `.focus()` que o clique
+   *    traz junto, com o cartão já aberto pelo ponteiro), e cancelar aqui não
+   *    fecharia nada, mas mataria o agendamento de um segundo gatilho;
+   *  · SOB O PONTEIRO — quem armou o temporizador foi o `pointerenter`, e o
+   *    `focus` do clique só o rearmou. Cancelar ali impediria o cartão de abrir
+   *    no caminho mais comum de todos: mouse sobre a menção, clique antes dos
+   *    600ms.
+   */
+  protected cancelInvisibleFocus(): void {
+    if (this.host.matches(':focus-visible')) return;
+    if (this.root.isOpen()) return;
+    if (this.host.matches(':hover')) return;
+    this.root.cancelHoverOpen();
+  }
+
   constructor() {
     // `type="button"` de criação, e só quando o host é `<button>` e quem
     // escreveu não pediu outro tipo. Sem isso, um gatilho dentro de `<form>`
     // herdaria `type="submit"` e passar o mouse — depois um Enter — enviaria o
     // formulário. Não pode ser `host: { type: 'button' }` porque o mesmo
     // seletor atende `<a>`, onde `type` significa outra coisa.
-    const el = inject(ElementRef).nativeElement as HTMLElement;
-    if (el.tagName === 'BUTTON' && !el.hasAttribute('type')) {
-      el.setAttribute('type', 'button');
+    if (this.host.tagName === 'BUTTON' && !this.host.hasAttribute('type')) {
+      this.host.setAttribute('type', 'button');
     }
   }
 }

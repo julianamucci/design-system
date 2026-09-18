@@ -22,6 +22,14 @@ const props = withDefaults(
   {
     align: 'center',
     sideOffset: 4,
+    // D11 · o deslocamento no eixo CRUZADO é ZERO nas cinco stacks, e ele é
+    // declarado mesmo sem mudar um pixel AQUI: quem posiciona nesta stack é o
+    // `@floating-ui`, que ignora o deslocamento cruzado quando o alinhamento é
+    // `center` — o padrão de todas as stories. Declarar é o ponto: enquanto vue e
+    // svelte não escreviam o número, o 4 do react atravessou meses sem ninguém
+    // ter contra o que comparar. A D9 fixou o vão (`sideOffset`, eixo PRINCIPAL)
+    // e deixou este de fora sem uma linha dizendo.
+    alignOffset: 0,
   },
 )
 

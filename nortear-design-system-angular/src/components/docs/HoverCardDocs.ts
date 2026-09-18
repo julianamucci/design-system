@@ -106,10 +106,16 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 ];
 
 const CLASSES_TRIGGER = 'nds-text-primary nds-font-medium nds-hover-underline';
-// Botão sem moldura para gatilhos que não navegam (termo, métrica): as classes
-// zeram o cromo nativo do `<button>` sem uma linha de CSS inline.
-const CLASSES_TRIGGER_BUTTON =
-  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+// Gatilho EM LINHA que explica (termo, métrica): o sublinhado pontilhado e o
+// cursor de ajuda dizem que ali há explicação, sem uma linha de CSS inline.
+//
+// Sem `nds-bg-transparent`, `nds-border-none` e `nds-p-0`: as três existem para
+// apagar o cromo nativo do `<button>`, e desde a D15 (2026-09-17) os dois
+// gatilhos desta página são LINKS com destino — num `<a>` elas não neutralizam
+// nada. Elas continuam válidas onde ainda há botão, que nesta stack é a story
+// dos lados.
+const CLASSES_TRIGGER_EXPLAINER =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
 
 // As três peças são diretivas de ATRIBUTO sobre elementos nativos
 // (`span[ndsHoverCard]`, `a|button[ndsHoverCardTrigger]`,
@@ -183,9 +189,8 @@ export class NdsHoverCardTrigger {}
 export class NdsHoverCardContent {
   side = input<HoverCardSide>('bottom');
   align = input<HoverCardAlign>('center');
-  sideOffset = input(8);
-  alignOffset = input(0);
-  label = input('');         // nome acessível do painel
+  sideOffset = input(4);     // o vão, em px — igual nas cinco stacks (D9)
+  alignOffset = input(0);    // deslocamento no eixo cruzado — zero nas cinco (D11)
   contentClass = input('');  // classes extras do painel
 }`;
 
@@ -271,12 +276,14 @@ const VARIANT_CODE = {
   </ng-template>
 </span>`,
   definitionTooltip: `<span ndsHoverCard>
-  <!-- Botão, não link: não há para onde navegar. O glossário continua sendo
-       o caminho alternativo obrigatório. -->
-  <button
+  <!-- Link com destino, e não botão: o cartão adianta a definição, mas o
+       glossário é onde ela mora — e é por ele que chega quem está no toque,
+       onde não existe hover. -->
+  <a
     ndsHoverCardTrigger
-    class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-  >WCAG 2.2 AA</button>
+    href="/glossario/wcag-2-2-aa"
+    class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help"
+  >WCAG 2.2 AA</a>
 
   <ng-template ndsHoverCardContent>
     <div class="nds-stack" data-spacing="xs">
@@ -286,10 +293,13 @@ const VARIANT_CODE = {
   </ng-template>
 </span>`,
   metricExplainer: `<span ndsHoverCard>
-  <button
+  <!-- Link com destino, pelo mesmo motivo do termo: o cartão explica a métrica,
+       a página dela é onde o número mora. -->
+  <a
     ndsHoverCardTrigger
-    class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
-  >3,42%</button>
+    href="/metricas/conversao"
+    class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help"
+  >3,42%</a>
 
   <ng-template ndsHoverCardContent>
     <div class="nds-stack" data-spacing="xs">
@@ -336,7 +346,7 @@ const VARIANT_CODE = {
         <span ndsHoverCard (onOpenChange)="onChange('par1-do', 'docs_do_dont', $event)">
           <a
             ndsHoverCardTrigger
-            href="?path=/docs/components-display-avatar--docs"
+            href="#joana"
             [class]="classesGatilho"
           >{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
@@ -367,7 +377,7 @@ const VARIANT_CODE = {
         <span ndsHoverCard (onOpenChange)="onChange('par2-do', 'docs_do_dont', $event)">
           <a
             ndsHoverCardTrigger
-            href="?path=/docs/components-display-avatar--docs"
+            href="#joana"
             [class]="classesGatilho"
             [openDelay]="500"
             [closeDelay]="200"
@@ -383,7 +393,7 @@ const VARIANT_CODE = {
         <span ndsHoverCard (onOpenChange)="onChange('par2-dont', 'docs_do_dont', $event)">
           <a
             ndsHoverCardTrigger
-            href="?path=/docs/components-display-avatar--docs"
+            href="#joana"
             [class]="classesGatilho"
             [openDelay]="0"
             [closeDelay]="200"
@@ -402,7 +412,7 @@ const VARIANT_CODE = {
     <ng-template #tplVarDefault>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('default', 'docs_variantes', $event)">
-          <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
+          <a ndsHoverCardTrigger href="#joana" [class]="classesGatilho">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -415,7 +425,7 @@ const VARIANT_CODE = {
         <span ndsHoverCard (onOpenChange)="onChange('with-delay', 'docs_variantes', $event)">
           <a
             ndsHoverCardTrigger
-            href="?path=/docs/components-display-avatar--docs"
+            href="#joana"
             [class]="classesGatilho"
             [openDelay]="500"
             [closeDelay]="200"
@@ -430,7 +440,7 @@ const VARIANT_CODE = {
     <ng-template #tplVarUserProfile>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_variantes', $event)">
-          <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
+          <a ndsHoverCardTrigger href="#joana" [class]="classesGatilho">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -465,9 +475,11 @@ const VARIANT_CODE = {
     <ng-template #tplVarDefinition>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('definition-tooltip', 'docs_variantes', $event)">
-          <button ndsHoverCardTrigger [class]="classesGatilhoBotao">
+          <!-- D15: o gatilho leva ao glossário. O destino é fixo nos três
+               idiomas — URL não se traduz, como o /users/joana do perfil. -->
+          <a ndsHoverCardTrigger href="/glossario/wcag-2-2-aa" [class]="triggerExplainerClasses">
             {{ t('variants.items.definitionTooltip.cardTerm') }}
-          </button>
+          </a>
           <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <p class="nds-text-body nds-font-medium nds-leading-none">
@@ -485,7 +497,10 @@ const VARIANT_CODE = {
     <ng-template #tplVarMetric>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('metric-explainer', 'docs_variantes', $event)">
-          <button ndsHoverCardTrigger [class]="classesGatilhoBotao">3,42%</button>
+          <!-- D15: o gatilho leva à página da métrica. -->
+          <a ndsHoverCardTrigger href="/metricas/conversao" [class]="triggerExplainerClasses">{{
+            t('variants.items.metricExplainer.cardValue')
+          }}</a>
           <ng-template ndsHoverCardContent>
             <div class="nds-stack" data-spacing="xs">
               <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
@@ -493,8 +508,12 @@ const VARIANT_CODE = {
                   {{ t('variants.items.metricExplainer.cardMetric') }}
                 </p>
                 <!-- A cor semântica fica no número; a fórmula segue na cor de
-                     corpo, que é o que garante o contraste do texto corrido. -->
-                <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
+                     corpo, que é o que garante o contraste do texto corrido.
+                     O valor sai da chave cardValue, e não cravado: em inglês
+                     ele é 3.42%, com ponto. -->
+                <span class="nds-text-caption nds-font-medium nds-text-success">{{
+                  t('variants.items.metricExplainer.cardValue')
+                }}</span>
               </div>
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('variants.items.metricExplainer.cardFormula') }}
@@ -551,7 +570,7 @@ const VARIANT_CODE = {
           >
             {{ t('demonstration.sentenceBefore') }}
             <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_demo', $event)">
-              <a ndsHoverCardTrigger href="?path=/docs/components-display-avatar--docs" [class]="classesGatilho">{{ mencao() }}</a>
+              <a ndsHoverCardTrigger href="#joana" [class]="classesGatilho">{{ mencao() }}</a>
               <ng-template ndsHoverCardContent>
                 <ng-container [ngTemplateOutlet]="cartaoPerfil" />
               </ng-template>
@@ -653,7 +672,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeAvatar = IMPORT_CODE_AVATAR;
   protected readonly classesGatilho = CLASSES_TRIGGER;
-  protected readonly classesGatilhoBotao = CLASSES_TRIGGER_BUTTON;
+  protected readonly triggerExplainerClasses = CLASSES_TRIGGER_EXPLAINER;
 
   /**
    * A menção TEM chave no conteúdo compartilhado (`demonstration.mention`), e
@@ -1059,21 +1078,30 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
     // desta página: todo cartão vivo, na Demonstração e nas Variantes, passa
     // pelo handler `onChange`. O payload aqui é o que o evento tipado carrega
     // de fato — `trigger_id` é id estável do gatilho, nunca o texto dele.
+    // A tabela é a mesma das outras quatro stacks: uma linha por evento, com o
+    // GATILHO na forma em que ele aparece no código (`onOpenChange(true|false)`)
+    // e o payload como o objeto que o evento tipado carrega.
+    //
+    // Três correções de 2026-09-17, todas de página ensinando o que o código não
+    // faz: `reason` saiu do fechamento em 2026-09-10 (o campo ia em 1 de 5
+    // stacks, e amostra enviesada com cara de completa é pior que campo
+    // nenhum); `docs_page_view` não é evento deste componente e não aparece em
+    // stack nenhuma; e o payload em lista solta escondia que ele é um objeto.
     return [
       {
         event: 'hover_card_open',
-        trigger: toPlainText(t('analytics.description')),
-        payload: 'component, trigger_id, location',
+        trigger: 'onOpenChange(true)',
+        payload: "{ component: 'hover-card', trigger_id, location }",
       },
       {
         event: 'hover_card_close',
-        trigger: toPlainText(t('analytics.description')),
-        payload: 'component, reason, location',
+        trigger: 'onOpenChange(false)',
+        payload: "{ component: 'hover-card', location }",
       },
       {
-        event: 'docs_page_view',
-        trigger: toPlainText(t('states.closed.trigger')),
-        payload: 'component_name, locale, page_title',
+        event: '—',
+        trigger: toPlainText(t('analytics.description')),
+        payload: '—',
       },
     ];
   });

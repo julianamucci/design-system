@@ -4,6 +4,8 @@ import {
   waitForOpen,
   waitForClosed,
   accessibleName,
+  withSceneAwayFromEdge,
+  expectCentradoNoEixoCruzado,
   panelOpen,
   leaveWithPointer,
 } from '@shared/testing/hover-card-probe';
@@ -181,6 +183,16 @@ export const Playground: Story = {
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);
+    });
+
+    await step('O painel fica centrado no gatilho no eixo cruzado', async () => {
+      // D11: o deslocamento no eixo cruzado é zero nas cinco stacks. O que se
+      // afirma é a COORDENADA em que o painel pousou, e não o valor da opção —
+      // afirmar `alignOffset === 0` seria a constante confirmando a si mesma,
+      // que é a forma de asserção que deixou a D8 passar meses.
+      await withSceneAwayFromEdge(canvasElement, () => {
+        expectCentradoNoEixoCruzado(trigger, panelOpen()!, args.side);
+      });
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {

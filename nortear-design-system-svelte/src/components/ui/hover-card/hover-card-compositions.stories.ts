@@ -130,29 +130,39 @@ export const TermDefinition: Story = {
       source: { transform: hoverCardDefinicaoSource },
       description: {
         story:
-          'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho é um botão, não um link: não há para onde navegar — o glossário continua sendo o caminho alternativo obrigatório.',
+          'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho leva ao verbete do glossário: no toque não há hover, então o cartão nunca pode ser o único caminho para a informação.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('O gatilho de definição é um botão, e não envia formulário', async () => {
-      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
-      // Sem `type="button"`, o mesmo gatilho dentro de um <form> enviaria o
-      // formulário ao ser ativado por Enter.
-      await expect(trigger).toHaveAttribute('type', 'button');
+    await step('O gatilho de definição leva ao verbete no glossário', async () => {
+      // D15, e é o portão do C8: o cartão não pode ser o único caminho para a
+      // informação, e esta composição era um dos dois casos em que o julgamento
+      // morde — no toque não há hover, e um gatilho de BOTÃO não oferecia saída
+      // nenhuma. O destino é o mesmo nas cinco stacks e nos três idiomas: URL
+      // não se traduz.
+      const trigger = canvas.getByRole('link', { name: 'WCAG 2.2 AA' });
+      await expect(trigger).toHaveAttribute('href', '/glossario/wcag-2-2-aa');
+      // O sublinhado pontilhado fica: é ele que diz que há explicação ali, e
+      // trocar o elemento não pode trocar a affordance.
+      await expect(trigger).toHaveClass(/nds-underline-dotted/);
     });
 
     await step('O painel não tem nome; o gatilho é que o DESCREVE', async () => {
-      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
+      const trigger = canvas.getByRole('link', { name: 'WCAG 2.2 AA' });
       const panel = await waitForOpen();
       // O painel perdeu o `role="dialog"` e, com ele, o nome próprio: sem papel,
       // `aria-label` é `aria-prohibited-attr` no axe. O que a pessoa ouve agora
       // é o CONTEÚDO, pela descrição que o gatilho aponta.
       await expect(accessibleName(panel)).toBe('');
       await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
-      await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
+      // O termo em destaque é a MESMA sigla do gatilho, e sai de
+      // `variants.items.definitionTooltip.cardTerm`. `within(panel)` é o que
+      // mantém a busca sem ambiguidade agora que as duas strings são iguais.
+      await expect(within(panel).getByText('WCAG 2.2 AA')).toBeVisible();
+      await expect(within(panel).getByText(/Web Content Accessibility Guidelines/)).toBeVisible();
     });
   },
 };
@@ -161,23 +171,34 @@ export const ExplainedMetric: Story = {
   args: {
     ...mountOpen,
     variant: 'metric',
-    triggerLabel: 'LCP 1.8s',
+    // O gatilho é o VALOR, de `variants.items.metricExplainer.cardValue`.
+    triggerLabel: '3,42%',
   },
   parameters: {
     docs: {
       source: { transform: hoverCardMetricaSource },
       description: {
         story:
-          'Valor de painel com o nome completo da métrica e os limiares. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.',
+          'Valor de painel com o nome completo da métrica e a conta que a produz. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.',
       },
     },
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O gatilho da métrica leva à página da métrica', async () => {
+      // D15, e o outro caso em que o C8 morde: o cartão explica a conta, e quem
+      // precisa do número em si — ou está no toque — chega pela página dela.
+      const trigger = canvas.getByRole('link', { name: '3,42%' });
+      await expect(trigger).toHaveAttribute('href', '/metricas/conversao');
+      await expect(trigger).toHaveClass(/nds-underline-dotted/);
+    });
+
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
       const panel = await waitForOpen();
-      const value = within(panel).getByText('1.8s');
+      const value = within(panel).getByText('3,42%');
       await expect(value).toHaveClass(/nds-text-success/);
-      const descricao = within(panel).getByText(/Tempo até o maior elemento/);
+      const descricao = within(panel).getByText(/Cliques no CTA/);
       await expect(descricao).not.toHaveClass(/nds-text-success/);
     });
   },
@@ -248,6 +269,13 @@ export const ExtraPanelClass: Story = {
       await expect(panel).toHaveClass(/nds-w-md/);
       await expect(getComputedStyle(panel).textAlign).toBe('center');
       await expect(panelsAbertos()).toHaveLength(1);
+      // O MIOLO também, e não só a classe: a variante não tinha ramo no andaime
+      // e caía no cartão de perfil, então esta stack fotografava avatar e
+      // seguidores enquanto as outras quatro fotografavam a entrega — e a story
+      // passava, porque afirmava largura e alinhamento e mais nada. Cartão de
+      // perfil ainda por cima não mostra `nds-text-center`, que é metade do que
+      // esta story existe para provar.
+      await expect(within(panel).getByText(/Fechou 14 tarefas nesta sprint/)).toBeVisible();
     });
 
     await step('E a largura customizada vence a largura padrão do cartão', async () => {

@@ -8,6 +8,7 @@ import {
   accessibleName,
   panelOpen,
   contrastRatio,
+  focusWithoutGesture,
 } from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import {
@@ -16,6 +17,7 @@ import {
   hoverCardSource,
 } from "./hover-card.source";
 import { Button } from "./button";
+import { checkPanelFollowsTrigger } from "./floating-follow-probe";
 
 import { figmaDesign } from "@shared/figma/design-links";
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -53,9 +55,25 @@ type Story = StoryObj<typeof meta>;
 // layout, que não tem token nem escala.
 const CLASSES_PARAGRAPH = "nds-text-body nds-max-w-sm nds-min-h-50";
 const LAYOUT_PARAGRAPH: React.CSSProperties = {
+  // Só `contain: layout`, como o `emFrase` do Vanilla — a referência. O
+  // `position: relative` que morava aqui não ancorava nada: o painel vive num
+  // portal no `<body>`, e o bloco contentor de um descendente do canvas não o
+  // alcança.
   contain: "layout",
-  position: "relative",
 };
+
+/**
+ * Motivos de fechamento observados na story `Open`, em ordem de chegada.
+ *
+ * Um array e não um espião: o `onOpenChange` do base-ui entrega o motivo no
+ * SEGUNDO argumento, tipado pelo próprio primitivo, e ler `mock.calls[0][1]` o
+ * devolveria como `any`. Aqui o tipo do callback continua valendo.
+ *
+ * A ORDEM importa: o clique fora fecha na hora, e o mesmo clique também tira o
+ * ponteiro de cima do painel, o que agendaria um segundo fechamento 80ms depois.
+ * É o primeiro motivo que responde à pergunta da story.
+ */
+const CLOSE_REASONS: string[] = [];
 
 const CartaoPerfil = () => (
   <div className="nds-cluster" data-spacing="sm" data-align="start">
@@ -126,6 +144,29 @@ export const Closed: Story = {
       // `aria-valid-attr-value` no axe.
       await expect(trigger).not.toHaveAttribute("aria-describedby");
     });
+
+    await step("Foco programático não abre o cartão", async () => {
+      // D12: só foco VISÍVEL abre. Foco movido por script não é gesto de quem
+      // lê — é a página se reorganizando —, e um cartão que aparece aí é ruído
+      // sobre alguém que não pediu nada. O caminho de teclado que a WCAG 1.4.13
+      // exige é o Tab, e ele segue abrindo (passo do Playground).
+      //
+      // `focusWithoutGesture` e não `trigger.focus()` cru: medido nesta suíte, o
+      // `.focus()` pelado dá `matches(':focus-visible') === true` — o Chromium
+      // só trata foco de script como invisível quando o foco ANTERIOR veio do
+      // mouse, e o evento sintético do executor não produz esse estado. O passo
+      // reprovaria o comportamento CERTO, inclusive aqui, onde o filtro do
+      // base-ui é exatamente `matches(':focus-visible')`.
+      //
+      // Espera de RELÓGIO, e não `waitFor`: a prova é de AUSÊNCIA, e `waitFor`
+      // só sabe esperar por algo que chega. Os 800ms ficam acima dos 600ms da
+      // espera de abertura — abaixo disso o passo passaria por ser cedo demais.
+      focusWithoutGesture(trigger);
+      await expect(trigger).toHaveFocus();
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      await expect(panelOpen()).toBeNull();
+      await expect(trigger).not.toHaveAttribute("aria-describedby");
+    });
   },
 };
 
@@ -142,7 +183,13 @@ export const Open: Story = {
   render: () => (
     <p className={CLASSES_PARAGRAPH} style={LAYOUT_PARAGRAPH}>
       Comentário de{" "}
-      <HoverCard openDelay={100} closeDelay={80}>
+      <HoverCard
+        openDelay={100}
+        closeDelay={80}
+        onOpenChange={(isOpen, details) => {
+          if (!isOpen) CLOSE_REASONS.push(details.reason);
+        }}
+      >
         <HoverCardTrigger asChild>
           <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
             @joana
@@ -210,6 +257,47 @@ export const Open: Story = {
       const styles = getComputedStyle(panel);
       await expect(contrastRatio(styles.color, styles.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
+
+    await step("Clique fora fecha o cartão", async () => {
+      // D13: cartão de apoio que sobrevive a um clique noutro assunto é overlay
+      // preso — fica na tela cobrindo o que veio depois. As duas outras saídas
+      // não bastam: Escape não existe no toque, e "tirar o ponteiro" não
+      // acontece quando o ponteiro foi para outro lugar CLICANDO.
+      //
+      // O clique vai no `<body>`, fora do gatilho e fora do painel: é o ALVO do
+      // evento que a lib consulta para decidir se o toque veio de fora.
+      CLOSE_REASONS.length = 0;
+      await expect(panelOpen()).toBe(panel);
+      await userEvent.click(document.body);
+      await waitForClosed("depois do clique fora");
+      await expect(panelOpen()).toBeNull();
+
+      // E o fechamento foi PEDIDO pelo clique, não herdado do ponteiro que saiu
+      // junto: o motivo do primeiro fechamento é o de clique fora. O vocabulário
+      // do motivo é o da lib desta stack — divergência de API de framework,
+      // registrada no PRD; o que as cinco afirmam igual é o painel desmontado.
+      await expect(CLOSE_REASONS.length).toBeGreaterThan(0);
+      await expect(CLOSE_REASONS[0]).toBe("outside-press");
+    });
+
+    await step("Perder o foco do gatilho fecha o cartão", async () => {
+      // É o que `accessibility.keyboard.shiftTab` do conteúdo compartilhado
+      // afirma — "ao perder o foco, o Content fecha" — e que nenhuma story
+      // cobrava. Sem isto, a página ensina uma saída de teclado que nada prova:
+      // o cartão não recebe foco, então quem sai do gatilho pelo teclado tem de
+      // deixar a tela limpa atrás de si.
+      await userEvent.tab();
+      await expect(trigger).toHaveFocus();
+      await waitForOpen("depois do foco por Tab");
+
+      await userEvent.tab();
+      await expect(trigger).not.toHaveFocus();
+      await waitForClosed("depois de o foco sair do gatilho");
+      await expect(panelOpen()).toBeNull();
+      // A descrição sai com o painel: sobrando, apontaria para um `id` que já
+      // não está no documento.
+      await expect(trigger).not.toHaveAttribute("aria-describedby");
+    });
   },
 };
 
@@ -258,7 +346,7 @@ export const Controlled: Story = {
           </p>
 
           <p className="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
-            State externo: {isOpen ? "aberto" : "fechado"}
+            Estado externo: {isOpen ? "aberto" : "fechado"}
           </p>
         </div>
       );
@@ -279,6 +367,20 @@ export const Controlled: Story = {
       await expect(panel).toBeVisible();
       await expect(espelho).toHaveTextContent("aberto");
     });
+
+    await step(
+      "Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele",
+      async () => {
+        // D10. Nesta story, e não na `Open`, porque aqui ninguém abriu por
+        // ponteiro — deslocar o canvas sob um cursor parado no gatilho poderia
+        // fechar o cartão por `mouseleave`.
+        const panel = panelOpen()!;
+        await checkPanelFollowsTrigger(panel, canvasElement, { startAt: 200 });
+        // Reposicionar não é mudança de estado: nada é anunciado a quem controla.
+        await expect(panelOpen()).toBe(panel);
+        await expect(espelho).toHaveTextContent("aberto");
+      },
+    );
 
     await step("E fecha pelo mesmo caminho", async () => {
       await userEvent.click(close);

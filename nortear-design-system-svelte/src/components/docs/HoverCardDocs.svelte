@@ -125,11 +125,22 @@
     }
   }
 
-  // Gatilho que NÃO navega (termo, métrica): as classes zeram o cromo nativo do
-  // `<button>` sem uma linha de estilo inline. Mesmo conjunto da fixture das
-  // stories (`hover-card.fixtures` no vanilla, `HoverCardStory` aqui).
-  const CLASSES_TRIGGER_BUTTON =
-    'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+  // Gatilho de TERMO e de MÉTRICA. Desde a D15 ele NAVEGA — o verbete no
+  // glossário, a página da métrica —, porque o C8 não admite que o cartão seja o
+  // único caminho para a informação e no toque não há hover nenhum. Era `<button>`
+  // e as três utilitárias que zeravam o cromo nativo (`nds-bg-transparent`,
+  // `nds-border-none`, `nds-p-0`) saíram com ele; num `<a>` não neutralizam nada.
+  //
+  // O sublinhado pontilhado e o cursor de ajuda FICAM: são eles que dizem que há
+  // explicação ali, e trocar o elemento não pode trocar a affordance. Mesmo
+  // conjunto do `HoverCardStory` das stories.
+  const CLASSES_TRIGGER_DOTTED =
+    'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+
+  // URL não se traduz: os destinos são os mesmos nas cinco stacks e nos três
+  // idiomas, como o `/users/joana` do cartão de perfil já era.
+  const HREF_GLOSSARIO = '/glossario/wcag-2-2-aa';
+  const HREF_METRICA = '/metricas/conversao';
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
@@ -232,7 +243,7 @@ interface HoverCardContentProps {
          empurraria a seção seguinte. -->
     <p
       class="nds-text-body nds-max-w-sm nds-min-h-50"
-      style="contain: layout; position: relative"
+      style="contain: layout"
     >
       {$tStore('demonstration.sentenceBefore')}
       <HoverCard
@@ -360,7 +371,7 @@ interface HoverCardContentProps {
        O par 2 é a espera de abertura, e cada lado carrega o valor que a
        legenda descreve (500ms contra zero). -->
   {#snippet doPair1()}
-    <div class="nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-min-h-40" style="contain: layout">
       <HoverCard
         onOpenChange={(o: boolean) => trackHoverCard(o, 'par1-do', 'docs_do_dont')}
       >
@@ -380,7 +391,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-min-h-40" style="contain: layout">
       <HoverCard
         onOpenChange={(o: boolean) => trackHoverCard(o, 'par1-dont', 'docs_do_dont')}
       >
@@ -401,7 +412,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={500}
         closeDelay={200}
@@ -423,7 +434,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={0}
         closeDelay={200}
@@ -516,14 +527,14 @@ interface HoverCardContentProps {
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
-      <button type="button" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0" {...props}>
-        WCAG 2.2
-      </button>
+      <a href="/glossario/wcag-2-2-aa" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help" {...props}>
+        WCAG 2.2 AA
+      </a>
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent side="bottom" align="start">
     <div class="nds-stack" data-spacing="xs">
-      <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2</p>
+      <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
       <p class="nds-text-caption nds-text-muted-foreground">
         Web Content Accessibility Guidelines: padrão internacional de acessibilidade para conteúdo web.
       </p>
@@ -540,9 +551,9 @@ interface HoverCardContentProps {
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
-      <button type="button" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0" {...props}>
+      <a href="/metricas/conversao" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help" {...props}>
         3,42%
-      </button>
+      </a>
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent side="bottom" align="start">
@@ -567,7 +578,7 @@ interface HoverCardContentProps {
     §15). Nascem fechadas — quem lê é que abre, e é a espera que se compara.
   -->
   {#snippet variantDefault()}
-    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout">
       <HoverCard onOpenChange={(o: boolean) => trackHoverCard(o, 'default', 'docs_variantes')}>
         <HoverCardTrigger>
           {#snippet child({ props })}
@@ -581,7 +592,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
   {#snippet variantWithDelay()}
-    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={500}
         closeDelay={200}
@@ -617,7 +628,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantUserProfile()}
-    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={50}
         closeDelay={50}
@@ -636,7 +647,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantLinkPreview()}
-    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={50}
         closeDelay={50}
@@ -665,7 +676,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantDefinitionTooltip()}
-    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={50}
         closeDelay={50}
@@ -673,11 +684,11 @@ interface HoverCardContentProps {
       >
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <!-- Gatilho que NÃO navega: botão sem moldura, sublinhado pontilhado
-                 e cursor de ajuda, como na fixture das stories. -->
-            <button type="button" class={CLASSES_TRIGGER_BUTTON} {...props}>
+            <!-- Gatilho que NAVEGA até o verbete (D15), com o sublinhado
+                 pontilhado e o cursor de ajuda da definição. -->
+            <a href={HREF_GLOSSARIO} class={CLASSES_TRIGGER_DOTTED} {...props}>
               {$tStore('variants.items.definitionTooltip.cardTerm')}
-            </button>
+            </a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side="bottom" align="start">
@@ -695,7 +706,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet variantMetricExplainer()}
-    <div class="nds-w-full nds-min-h-40" style="contain: layout; position: relative">
+    <div class="nds-w-full nds-min-h-40" style="contain: layout">
       <HoverCard
         openDelay={50}
         closeDelay={50}
@@ -703,7 +714,11 @@ interface HoverCardContentProps {
       >
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <button type="button" class={CLASSES_TRIGGER_BUTTON} {...props}>3,42%</button>
+            <!-- O valor sai de `cardValue`, que nasceu hoje: o número vivia
+                 cravado aqui e em lugar nenhum do conteúdo compartilhado. -->
+            <a href={HREF_METRICA} class={CLASSES_TRIGGER_DOTTED} {...props}>
+              {$tStore('variants.items.metricExplainer.cardValue')}
+            </a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side="bottom" align="start">
@@ -712,7 +727,9 @@ interface HoverCardContentProps {
               <p class="nds-text-body nds-font-medium">
                 {$tStore('variants.items.metricExplainer.cardMetric')}
               </p>
-              <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
+              <span class="nds-text-caption nds-font-medium nds-text-success">
+                {$tStore('variants.items.metricExplainer.cardValue')}
+              </span>
             </div>
             <p class="nds-text-caption nds-text-muted-foreground">
               {$tStore('variants.items.metricExplainer.cardFormula')}

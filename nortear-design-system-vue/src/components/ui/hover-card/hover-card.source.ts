@@ -41,11 +41,32 @@ const CLOSE_DEFAULT = 300;
 const TRIGGER_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
 
 /**
- * Gatilho que NÃO navega — sigla, métrica. Botão, e não link: não há para onde
- * ir. As classes zeram a aparência de botão e devolvem a do texto em volta.
+ * Gatilho que NÃO navega — o rótulo é o LADO, e não há para onde ir. Só a story
+ * dos lados. As três últimas classes zeram a aparência nativa de botão e
+ * devolvem a do texto em volta.
  */
 const TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+
+/**
+ * Gatilho que EXPLICA e LEVA ao caminho alternativo (D15) — a sigla vai ao
+ * verbete, a métrica vai à página dela.
+ *
+ * O sublinhado pontilhado e o `cursor-help` ficam: são eles que distinguem
+ * "isto explica alguma coisa" de um link de navegação comum, e é por isso que a
+ * classe não é a do `@joana`. As utilitárias que zeravam o cromo de `<button>`
+ * saíram — num `<a>` elas não neutralizam nada.
+ */
+const TRIGGER_EXPLAINER =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+
+/**
+ * Os destinos são FIXOS, iguais nas cinco stacks e nos três idiomas: URL não se
+ * traduz, como o `/users/joana` já fazia. Sem default de propósito — destino
+ * default convida a publicar a composição sem escolher para onde ela leva.
+ */
+const HREF_GLOSSARY = '/glossario/wcag-2-2-aa';
+const HREF_METRIC = '/metricas/conversao';
 
 const CARTAO_PERFIL = `<div class="nds-cluster" data-spacing="sm" data-align="start">
   <div class="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium" data-align="center" data-justify="center" aria-hidden="true">JS</div>
@@ -59,10 +80,8 @@ function link(href: string, label: string): string {
   return `<a href="${href}" class="${TRIGGER_LINK}">${label}</a>`;
 }
 
-function button(label: string): string {
-  // Sem `type="button"`, o mesmo gatilho dentro de um formulário o enviaria ao
-  // ser ativado por Enter.
-  return `<button type="button" class="${TRIGGER_BUTTON}">${label}</button>`;
+function explainerLink(href: string, label: string): string {
+  return `<a href="${href}" class="${TRIGGER_EXPLAINER}">${label}</a>`;
 }
 
 /** O cartão no meio de uma frase: o texto antes, o gatilho, o texto depois. */
@@ -263,13 +282,13 @@ export function hoverCardDefinicaoSource(): string {
     frase({
       antes: 'Todo componente do sistema atende',
       depois: ', sem exceção.',
-      trigger: button('WCAG 2.2 AA'),
+      trigger: explainerLink(HREF_GLOSSARY, 'WCAG 2.2 AA'),
       panel: '',
       content: `<div class="nds-stack" data-spacing="xs">
-  <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
+  <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
   <p class="nds-text-caption nds-text-muted-foreground">
-    Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1,
-    operação por teclado e alvo de toque de 24px.
+    Web Content Accessibility Guidelines: padrão internacional de acessibilidade
+    para conteúdo web.
   </p>
 </div>`,
     }),
@@ -287,15 +306,15 @@ export function hoverCardMetricaSource(): string {
     frase({
       antes: 'A página inicial fechou o mês em',
       depois: ', dentro da meta.',
-      trigger: button('LCP 1.8s'),
+      trigger: explainerLink(HREF_METRIC, '3,42%'),
       panel: '',
       content: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
-    <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-    <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+    <p class="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+    <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
   </div>
   <p class="nds-text-caption nds-text-muted-foreground">
-    Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+    Cliques no CTA / usuários únicos
   </p>
 </div>`,
     }),

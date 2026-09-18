@@ -9,8 +9,8 @@ import { figmaDesign } from '@shared/figma/design-links';
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
 // e essa escolha é de conteúdo, não de estilo: preview rico pede 300-500ms;
-// enriquecimento opcional pede 700ms ou mais, para não abrir a cada passada de
-// cursor.
+// enriquecimento opcional fica na espera padrão de 600ms (D2), para não abrir a
+// cada passada de cursor.
 
 const meta: Meta = {
   title: 'Components/Overlay/HoverCard/Variants',
@@ -42,6 +42,17 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Andaime da frase que cerca o gatilho, alinhado ao `emFrase` do Vanilla — a
+ * referência de markup. A reserva de espaço e a largura saem de CLASSE
+ * (`nds-min-h-50`, `nds-max-w-sm`): cravadas em `style`, venceriam a folha e
+ * sairiam do tema, da densidade e da escala. No `style` fica só mecânica de
+ * layout, que não tem token nem escala — e só `contain`, que é o que
+ * `notes.item2` do conteúdo compartilhado pede para confinar o portal.
+ */
+const SENTENCE_CLASSES = 'nds-text-body nds-max-w-sm nds-min-h-50';
+const SENTENCE_LAYOUT = 'contain: layout';
+
 export const Default: Story = {
   parameters: {
     docs: {
@@ -55,7 +66,7 @@ export const Default: Story = {
   },
   render: () => ({
     template: `
-      <p class="nds-text-body nds-max-w-sm">
+      <p class="${SENTENCE_CLASSES}" style="${SENTENCE_LAYOUT}">
         Comentário de
         <span ndsHoverCard [defaultOpen]="true">
           <a ndsHoverCardTrigger href="/users/joana" class="nds-text-primary nds-font-medium">@joana</a>
@@ -79,8 +90,16 @@ export const Default: Story = {
     await step('Sem atraso escrito no markup, o cartão usa o padrão do gatilho', async () => {
       const panel = await waitForOpen();
       await expect(panel).toBeVisible();
-      // Nada de `openDelay`/`closeDelay` no elemento: o valor vem do primitivo.
-      await expect(canvas.getByRole('link')).not.toHaveAttribute('openDelay');
+      // O gatilho é a peça nomeada do design system, e é por `data-slot` que as
+      // outras quatro stacks o afirmam aqui.
+      //
+      // Estava escrito `not.toHaveAttribute('openDelay')`, e essa asserção NUNCA
+      // podia reprovar: `[openDelay]` é binding de PROPRIEDADE de input de
+      // diretiva, e o atributo DOM não é escrito em caso nenhum — ela passa
+      // idêntica na story ao lado, que DECLARA `[openDelay]="150"`. É a forma
+      // exata que o `data-side` tinha antes da D8: afirmar o que a lib garante,
+      // e não o efeito.
+      await expect(canvas.getByRole('link')).toHaveAttribute('data-slot', 'hover-card-trigger');
       await expect(within(panel).getByText(/600ms/)).toBeVisible();
     });
   },
@@ -101,7 +120,7 @@ export const WithShortDelay: Story = {
   },
   render: () => ({
     template: `
-      <p class="nds-text-body nds-max-w-sm">
+      <p class="${SENTENCE_CLASSES}" style="${SENTENCE_LAYOUT}">
         Documentação em
         <span ndsHoverCard>
           <a

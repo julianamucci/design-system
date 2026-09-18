@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
 import { NDS_HOVER_CARD } from './hover-card';
-import { NDS_AVATAR } from './avatar';
 import {
   CARTAO_PERFIL,
   accessibleName,
@@ -10,6 +9,8 @@ import {
   waitForClosed,
   panelOpen,
   leaveWithPointer,
+  expectCentradoNoEixoCruzado,
+  withSceneAwayFromEdge,
 } from './hover-card.fixtures';
 import { hoverCardPlaygroundSource, type HoverCardArgs } from './hover-card.source';
 import { NdsHoverCardDocs } from '@/components/docs/HoverCardDocs';
@@ -19,7 +20,10 @@ import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<HoverCardArgs> = {
   title: 'Components/Overlay/HoverCard',
   tags: ['autodocs', 'overlay'],
-  decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
+  // Sem o Avatar: o disco com as iniciais do cartão de perfil é um `<div>` com
+  // as utilitárias, que é o markup das outras quatro stacks (ver
+  // `hover-card.fixtures.ts`).
+  decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD] })],
   parameters: {
     design: figmaDesign('hoverCard'),
     layout: 'padded',
@@ -89,7 +93,7 @@ export const Playground: Story = {
     template: `
       <p
         class="nds-text-body nds-max-w-sm nds-min-h-50"
-        style="contain: layout; position: relative"
+        style="contain: layout"
       >
         Comentário de
         <span ndsHoverCard (openChange)="onOpenChange($event)">
@@ -112,6 +116,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('link');
+    const sidePedido = args.side ?? 'bottom';
 
     await step('O markup é o mesmo das outras stacks', async () => {
       // Raiz e gatilho são elementos nativos com diretiva de atributo: o DOM
@@ -154,6 +159,28 @@ export const Playground: Story = {
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);
+    });
+
+    await step('O painel fica centrado no gatilho no eixo cruzado', async () => {
+      // D11: o deslocamento no eixo cruzado é ZERO nas cinco, e o que se afirma
+      // aqui é a COORDENADA — afirmar `alignOffset === 0` repetiria a constante
+      // para ela mesma, que é a forma de asserção que deixou a D8 passar meses.
+      //
+      // O lado vem da story, que é quem o pediu: a fuga de colisão pode trocar
+      // o lado pelo oposto, mas nunca troca o EIXO, e é o eixo que decide qual
+      // das duas coordenadas é a cruzada.
+      //
+      // A cena é AFASTADA da borda antes de medir, e isto é a asserção inteira.
+      // O executor de teste não aplica o `layout` do meta — isso é do canvas do
+      // Storybook —, então a story renderiza encostada à esquerda: o painel de
+      // 320px trava no respiro da janela, e travado ele fica fora do centro com
+      // o componente CERTO. Sem a folga o passo mediria o travamento.
+      //
+      // O auxiliar é o da sonda COMPARTILHADA e não uma versão local: cinco
+      // formas de afastar a cena seriam cinco asserções diferentes.
+      await withSceneAwayFromEdge(canvasElement, () => {
+        expectCentradoNoEixoCruzado(trigger, panelOpen()!, sidePedido);
+      });
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {

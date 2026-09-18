@@ -22,9 +22,8 @@
  *    `play` não esperar 600ms. A diretriz de uso desta página desaconselha
  *    espera abaixo de ~300ms — o único snippet que escreve espera curta é o da
  *    story que tem a espera curta por assunto, e ele diz 150/100.
- *  · `nds-min-h-50` e o `style="contain: layout; position: relative"` do
- *    Playground, que dão ao painel portalizado contra o que se posicionar
- *    dentro do quadro do Storybook.
+ *  · `nds-min-h-50` e o `style="contain: layout"` das prévias, que confinam o
+ *    portal no quadro do Storybook (`notes.item2` do conteúdo compartilhado).
  *  · `data-testid="estado-externo"` em States/Controlled, que é gancho da `play`.
  *
  * O que NÃO é andaime, e por isso fica: o `nds-p-8` de Compositions/Sides. Ele é
@@ -48,7 +47,6 @@ export type HoverCardArgs = {
 };
 
 const HOVER_CARD_IMPORT = "import { NDS_HOVER_CARD } from '@/components/ui/hover-card';";
-const AVATAR_IMPORT = "import { NDS_AVATAR } from '@/components/ui/avatar';";
 const BUTTON_IMPORT = "import { NdsButton } from '@/components/ui/button';";
 const SIGNAL_IMPORT = "import { signal } from '@angular/core';";
 
@@ -60,12 +58,26 @@ const CLOSE_DEFAULT = 300;
 const LINK_CLASS = 'nds-text-primary nds-font-medium';
 
 /**
- * Gatilho que NÃO navega — uma sigla, uma métrica. Botão, e não link: não há
- * para onde ir. As classes zeram o cromo nativo e devolvem a aparência do texto
- * em volta, sem uma linha de CSS inline.
+ * Gatilho EM LINHA que explica — uma sigla, uma métrica, um rótulo no meio da
+ * prosa. O sublinhado pontilhado e o cursor de ajuda dizem que ali há
+ * explicação, sem uma linha de CSS inline.
+ *
+ * É o que os LINKS do termo e da métrica publicam desde a D15 (2026-09-17): o
+ * C8 exige que o conteúdo do cartão não seja o único caminho para a informação,
+ * e essas duas eram justamente as composições sem caminho nenhum.
  */
-const BUTTON_CLASS =
-  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
+const EXPLAINER_CLASS =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help';
+
+/**
+ * O mesmo, mais o que apaga o cromo nativo do `<button>`.
+ *
+ * As três utilitárias de reset ficaram só no gatilho da story de lados, que é o
+ * único que continua sendo botão: num `<a>` elas não neutralizam nada, e um
+ * snippet que as levasse ensinaria a copiar reset de elemento que não tem o que
+ * resetar.
+ */
+const BUTTON_CLASS = `${EXPLAINER_CLASS} nds-bg-transparent nds-border-none nds-p-0`;
 
 /**
  * O cartão de perfil, no recuo em que ele aparece no exemplo.
@@ -99,9 +111,21 @@ function triggerAcrossLines(tag: 'a' | 'button', attrs: string[], label: string)
   return [`<${tag}`, ...attrs.map((a) => `  ${a}`), `>${label}</${tag}>`].join('\n');
 }
 
-/** O gatilho de sigla/métrica, que é botão e leva a classe longa. */
+/** O gatilho da story de lados: botão em linha, sem destino e sem cromo. */
 function buttonTrigger(label: string): string {
   return triggerAcrossLines('button', ['ndsHoverCardTrigger', `class="${BUTTON_CLASS}"`], label);
+}
+
+/**
+ * O gatilho de sigla/métrica: LINK em linha, com a mesma aparência do botão
+ * acima e com o destino que a D15 exige.
+ */
+function inlineLinkTrigger(href: string, label: string): string {
+  return triggerAcrossLines(
+    'a',
+    ['ndsHoverCardTrigger', `href="${href}"`, `class="${EXPLAINER_CLASS}"`],
+    label,
+  );
 }
 
 /**
@@ -168,9 +192,19 @@ ${template}
 export class Exemplo {${body ? `\n${body}\n` : ''}}`;
 }
 
-const PROFILE_IMPORTS = [HOVER_CARD_IMPORT, AVATAR_IMPORT];
-const PROFILE_MODULE = '...NDS_HOVER_CARD, ...NDS_AVATAR';
 const CARD_ONLY_MODULE = '...NDS_HOVER_CARD';
+
+/**
+ * O cartão de perfil não importa mais o Avatar.
+ *
+ * O disco com as iniciais passou a ser um `<div>` com as utilitárias, que é o
+ * markup das outras quatro stacks nesta story (ver a nota em
+ * `hover-card.fixtures.ts`). Só o angular montava a diretiva ali, e o snippet
+ * ensinava um import que o exemplo não usa mais. A docs page continua compondo
+ * com o Avatar de verdade, como react e vanilla.
+ */
+const PROFILE_IMPORTS = [HOVER_CARD_IMPORT];
+const PROFILE_MODULE = CARD_ONLY_MODULE;
 
 /**
  * Playground — o único construtor guiado pelos controls.
@@ -381,7 +415,8 @@ export function hoverCardPreviaDeLinkSource(): string {
 }
 
 /**
- * Compositions/TermDefinition — a sigla explicada, com gatilho que não navega.
+ * Compositions/TermDefinition — a sigla explicada, com gatilho que LEVA ao
+ * glossário (D15).
  *
  * O painel não recebe `aria-label`: ele não tem papel, e nome próprio em
  * elemento sem papel é `aria-prohibited-attr` no axe. Quem descreve é o gatilho,
@@ -394,15 +429,20 @@ export function hoverCardDefinicaoSource(): string {
     inSentence({
       before: 'Todo componente do sistema atende',
       after: ', sem exceção.',
-      trigger: `<!-- Botão sem moldura: as classes zeram o cromo nativo sem uma linha de CSS
-     inline. O sublinhado pontilhado e o cursor de ajuda vêm das utilitárias
-     compartilhadas nds-underline-dotted e nds-cursor-help. -->
-${buttonTrigger('WCAG 2.2 AA')}`,
+      trigger: `<!-- Link sem moldura: as classes zeram o cromo nativo sem uma linha de CSS
+     inline, e o sublinhado pontilhado com o cursor de ajuda vêm das utilitárias
+     compartilhadas. O destino é obrigatório: o cartão adianta a definição, o
+     glossário é onde ela mora — e é por ele que chega quem está no toque. -->
+${inlineLinkTrigger('/glossario/wcag-2-2-aa', 'WCAG 2.2 AA')}`,
+      // Termo e definição saem do conteúdo compartilhado
+      // (`variants.items.definitionTooltip.cardTerm` / `cardMeaning`): o snippet
+      // publica o mesmo exemplo que a story renderiza e que a docs page mostra
+      // nesta variante.
       content: `<div class="nds-stack" data-spacing="xs">
-  <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
+  <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
   <p class="nds-text-caption nds-text-muted-foreground">
-    Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1,
-    operação por teclado e alvo de toque de 24px.
+    Web Content Accessibility Guidelines: padrão internacional de
+    acessibilidade para conteúdo web.
   </p>
 </div>`,
     }),
@@ -410,7 +450,8 @@ ${buttonTrigger('WCAG 2.2 AA')}`,
 }
 
 /**
- * Compositions/ExplainedMetric — o valor de painel com o nome inteiro e os limiares.
+ * Compositions/ExplainedMetric — o valor de painel com o nome inteiro da
+ * métrica e a conta que a produz.
  *
  * A cor semântica fica no NÚMERO, que é elemento curto. O texto corrido do
  * cartão continua na cor de corpo: cor semântica sobre fundo suave raramente
@@ -423,14 +464,18 @@ export function hoverCardMetricaSource(): string {
     inSentence({
       before: 'A página inicial fechou o mês em',
       after: ', dentro da meta.',
-      trigger: buttonTrigger('LCP 1.8s'),
+      trigger: inlineLinkTrigger('/metricas/conversao', '3,42%'),
+      // Métrica, conta e valor saem do conteúdo compartilhado
+      // (`variants.items.metricExplainer.cardMetric` / `cardFormula` /
+      // `cardValue`), o mesmo exemplo que a story renderiza e que a docs page
+      // publica.
       content: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
-    <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-    <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+    <p class="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+    <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
   </div>
   <p class="nds-text-caption nds-text-muted-foreground">
-    Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+    Cliques no CTA / usuários únicos
   </p>
 </div>`,
     }),

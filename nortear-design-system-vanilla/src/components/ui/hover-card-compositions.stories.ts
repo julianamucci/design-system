@@ -11,12 +11,26 @@ import {
 import { createHoverCard } from './hover-card';
 import { hoverCardSource, hoverCardSourceWith } from './hover-card.source';
 import {
+  buildDefinitionLink,
   construirButton,
   construirCartaoPerfil,
   construirDuasLines,
   construirLink,
   emFrase,
 } from './hover-card.fixtures';
+
+/**
+ * Destinos das duas composições que carregam informação própria (D15).
+ *
+ * Fixos e iguais nas cinco stacks e nos três idiomas — URL não se traduz, como o
+ * `/users/joana` do cartão de perfil já fazia.
+ *
+ * São usados pelo `render`, e NÃO pelas asserções: cada passo repete a URL por
+ * extenso, para que trocar a constante reprove em vez de mover os dois lados do
+ * `expect` de uma vez.
+ */
+const HREF_GLOSSARY = '/glossario/wcag-2-2-aa';
+const HREF_METRIC = '/metricas/conversao';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os padrões de conteúdo que o cartão hospeda. Todos seguem a mesma regra: o
@@ -139,39 +153,50 @@ export const LinkPreview: Story = {
   },
 };
 
+// O termo e a definição são os do conteúdo compartilhado
+// (`variants.items.definitionTooltip.cardTerm` / `cardMeaning`), que é o que a
+// docs page publica nesta variante. A story dizia "WCAG 2.2 nível AA" e uma
+// definição própria: quem comparasse a página e a story via duas respostas para
+// a mesma variante, e nenhuma das duas errada sozinha. A story não LÊ o conteúdo
+// — é markup de captura, num idioma só —, mas copia dele.
+//
+// O gatilho e o termo em destaque são a MESMA sigla, e os dois saem de
+// `cardTerm`: foi a fresta entre um `cardTerm` que dizia "WCAG 2.2" e um `use`
+// que citava "WCAG 2.2 AA" que dividiu as cinco stacks.
 export const TermDefinition: Story = {
   parameters: {
     covers: ['visual.item3'],
-    // Override de story: o gatilho é OUTRO elemento — um botão, porque não há
-    // para onde navegar — e carrega rótulo próprio, de onde sai o nome do
-    // painel. O snippet do meta mostraria o link, que aqui seria errado.
+    // Override de story: o gatilho leva ao VERBETE (D15) e carrega rótulo
+    // próprio. O snippet do meta mostraria o link de perfil, que aqui seria
+    // outro destino e outro desenho.
     docs: {
       source: {
         transform: hoverCardSourceWith({
-          triggerTipo: 'botao',
+          triggerTipo: 'definition',
           triggerLabel: 'WCAG 2.2 AA',
+          triggerHref: HREF_GLOSSARY,
           triggerAriaLabel: 'Definição de WCAG 2.2 AA',
-          contentTitle: 'WCAG 2.2 nível AA',
+          contentTitle: 'WCAG 2.2 AA',
           contentApoio:
-            'Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1, operação por teclado e alvo de toque de 24px.',
+            'Web Content Accessibility Guidelines: padrão internacional de acessibilidade para conteúdo web.',
           fraseAntes: 'Todo componente do sistema atende',
           fraseDepois: ', sem exceção.',
         }),
       },
       description: {
         story:
-          'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho é um botão, não um link: não há para onde navegar — o glossário continua sendo o caminho alternativo obrigatório.',
+          'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho leva ao verbete do glossário: o cartão explica, e o link é o caminho de quem está no toque ou num leitor de tela.',
       },
     },
   },
   render: () => {
-    const trigger = construirButton('WCAG 2.2 AA');
+    const trigger = buildDefinitionLink('WCAG 2.2 AA', HREF_GLOSSARY);
     trigger.setAttribute('aria-label', 'Definição de WCAG 2.2 AA');
     const cartao = createHoverCard({
       trigger: trigger,
       content: construirDuasLines(
-        'WCAG 2.2 nível AA',
-        'Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1, operação por teclado e alvo de toque de 24px.',
+        'WCAG 2.2 AA',
+        'Web Content Accessibility Guidelines: padrão internacional de acessibilidade para conteúdo web.',
       ),
       defaultOpen: true,
     });
@@ -180,46 +205,58 @@ export const TermDefinition: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('O gatilho de definição é um botão, e não envia formulário', async () => {
-      const trigger = canvas.getByRole('button', { name: 'Definição de WCAG 2.2 AA' });
-      // Sem `type="button"`, o mesmo gatilho dentro de um <form> enviaria o
-      // formulário ao ser ativado por Enter.
-      await expect(trigger).toHaveAttribute('type', 'button');
+    await step('O gatilho de definição leva ao verbete no glossário', async () => {
+      // D15, e é o portão do C8: o conteúdo do cartão não pode ser o único
+      // caminho para a informação. Em touch não existe hover, então sem destino
+      // no gatilho o termo é BECO SEM SAÍDA — e esta era uma das duas
+      // composições publicadas em que o julgamento morde.
+      //
+      // A URL é LITERAL aqui, e não `HREF_GLOSSARY`. Afirmar pela constante que
+      // o `render` também usa compara a constante com ela mesma: trocá-la moveria
+      // os dois lados do `expect` e nada reprovaria. É a forma exata que deixou a
+      // D8 passar meses, e ela reapareceu nesta mesma rodada noutra stack.
+      const trigger = canvas.getByRole('link', { name: 'Definição de WCAG 2.2 AA' });
+      await expect(trigger).toHaveAttribute('href', '/glossario/wcag-2-2-aa');
     });
 
     await step('O rótulo nomeia o GATILHO; o painel é descrição, e não tem nome', async () => {
-      const trigger = canvas.getByRole('button', { name: 'Definição de WCAG 2.2 AA' });
+      const trigger = canvas.getByRole('link', { name: 'Definição de WCAG 2.2 AA' });
       const panel = await waitForOpen();
       // O `aria-label` do gatilho continua valendo — ele nomeia o botão, que
       // sem ele se chamaria só "WCAG 2.2 AA". O que saiu foi o nome do PAINEL:
       // sem papel, `aria-label` nele é `aria-prohibited-attr` no axe.
       await expect(accessibleName(panel)).toBe('');
       await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
-      await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
+      await expect(within(panel).getByText(/Web Content Accessibility Guidelines/)).toBeVisible();
     });
   },
 };
 
+// O nome da métrica, a linha de cálculo e o valor são os do conteúdo
+// compartilhado (`variants.items.metricExplainer.cardMetric` / `cardFormula` /
+// `cardValue`), que é o que a docs page publica. A story cravava "Largest
+// Contentful Paint" e "LCP 1.8s" — outra métrica, outro assunto — e quem
+// comparasse a página com a story não teria como saber qual é a do sistema.
 export const ExplainedMetric: Story = {
   parameters: {
-    // Override de story: mesma razão do termo — o gatilho é um botão com rótulo
-    // próprio, porque uma métrica não navega para lugar nenhum.
+    // Override de story: mesma razão do termo — o gatilho leva à página da
+    // métrica (D15) e carrega rótulo próprio.
     docs: {
       source: {
         transform: hoverCardSourceWith({
-          triggerTipo: 'botao',
-          triggerLabel: 'LCP 1.8s',
-          triggerAriaLabel: 'Explicação da métrica LCP',
-          contentTitle: 'Largest Contentful Paint',
-          contentApoio:
-            'Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.',
+          triggerTipo: 'definition',
+          triggerLabel: '3,42%',
+          triggerHref: HREF_METRIC,
+          triggerAriaLabel: 'Explicação da métrica de conversão',
+          contentTitle: 'Conversão (últimos 30d)',
+          contentApoio: 'Cliques no CTA / usuários únicos',
           fraseAntes: 'A página inicial fechou o mês em',
           fraseDepois: ', dentro da meta.',
         }),
       },
       description: {
         story:
-          'Valor de painel com o nome completo da métrica e os limiares. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.',
+          'Valor de painel com o nome completo da métrica e a conta que a produz. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.',
       },
     },
   },
@@ -236,33 +273,44 @@ export const ExplainedMetric: Story = {
 
     const name = document.createElement('p');
     name.className = 'nds-text-body nds-font-medium';
-    name.textContent = 'Largest Contentful Paint';
+    name.textContent = 'Conversão (últimos 30d)';
 
     const value = document.createElement('span');
     value.className = 'nds-text-caption nds-font-medium nds-text-success';
-    value.textContent = '1.8s';
+    value.textContent = '3,42%';
 
     header.append(name, value);
 
-    const descricao = document.createElement('p');
-    descricao.className = 'nds-text-caption nds-text-muted-foreground';
-    descricao.textContent =
-      'Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.';
+    const formula = document.createElement('p');
+    formula.className = 'nds-text-caption nds-text-muted-foreground';
+    formula.textContent = 'Cliques no CTA / usuários únicos';
 
-    content.append(header, descricao);
+    content.append(header, formula);
 
-    const trigger = construirButton('LCP 1.8s');
-    trigger.setAttribute('aria-label', 'Explicação da métrica LCP');
+    const trigger = buildDefinitionLink('3,42%', HREF_METRIC);
+    trigger.setAttribute('aria-label', 'Explicação da métrica de conversão');
     const cartao = createHoverCard({ trigger: trigger, content: content, defaultOpen: true });
     return emFrase(cartao, 'A página inicial fechou o mês em', ', dentro da meta.');
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O gatilho da métrica leva à página da métrica', async () => {
+      // D15, e é o portão do C8 — a mesma razão do termo: a conta que produz o
+      // número só existe dentro do cartão, e no toque não há hover que o abra.
+      // Sem destino, o número é beco sem saída.
+      //
+      // URL LITERAL, e não `HREF_METRIC` — ver o passo equivalente do termo.
+      const trigger = canvas.getByRole('link', { name: 'Explicação da métrica de conversão' });
+      await expect(trigger).toHaveAttribute('href', '/metricas/conversao');
+    });
+
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
       const panel = await waitForOpen();
-      const value = within(panel).getByText('1.8s');
+      const value = within(panel).getByText('3,42%');
       await expect(value).toHaveClass('nds-text-success');
-      const descricao = within(panel).getByText(/Tempo até o maior elemento/);
-      await expect(descricao).not.toHaveClass('nds-text-success');
+      const formula = within(panel).getByText(/Cliques no CTA/);
+      await expect(formula).not.toHaveClass('nds-text-success');
     });
   },
 };
@@ -390,6 +438,16 @@ export const ExtraPanelClass: Story = {
     return emFrase(cartao, 'Resumo da entrega de', 'nesta sprint.');
   },
   play: async ({ step }) => {
+    await step('O painel mostra o miolo que a story compôs', async () => {
+      // Dente que faltava aqui: a play afirmava classe e largura e não olhava o
+      // CONTEÚDO. Foi assim que um ramo de conteúdo faltando sobreviveu meses no
+      // andaime de outra stack — a story passava mostrando o cartão errado, e
+      // nem a foto acusava, porque cada stack fotografa o próprio resultado.
+      const panel = await waitForOpen();
+      await expect(within(panel).getByText('Joana Silva')).toBeVisible();
+      await expect(within(panel).getByText(/14 tarefas nesta sprint/)).toBeVisible();
+    });
+
     await step('A classe extra convive com a classe do componente', async () => {
       const panel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do

@@ -1,11 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, fn } from 'storybook/test';
 import {
   waitForOpen,
   waitForClosed,
   accessibleName,
   panelOpen,
   leaveWithPointer,
+  expectCentradoNoEixoCruzado,
+  withSceneAwayFromEdge,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.svelte';
@@ -69,6 +71,11 @@ const meta: Meta = {
       description: 'Composição interna usada na demonstração.',
       table: { type: { summary: 'string' }, defaultValue: { summary: "'default'" } },
     },
+    onOpenChange: {
+      control: false,
+      description: 'Chamado a cada abertura e fechamento, com o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
+    },
   },
   args: {
     side: 'bottom',
@@ -85,6 +92,7 @@ const meta: Meta = {
     // A variante `default` continua existindo para a story de Variantes, que é
     // onde a espera padrão de 600ms/300ms é o assunto.
     variant: 'userProfile',
+    onOpenChange: fn(),
   },
 };
 
@@ -99,9 +107,10 @@ export const Playground: Story = {
       'accessibility.item6',
     ],
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('link', { name: /@joana/i });
+    const onOpenChange = args.onOpenChange as ReturnType<typeof fn>;
 
     await step('O gatilho continua sendo um link de verdade', async () => {
       // O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela,
@@ -121,6 +130,10 @@ export const Playground: Story = {
     });
 
     await step('Passar o ponteiro abre o cartão', async () => {
+      // O contador é lido ANTES do gesto, e comparado depois: a play reexecuta
+      // no mesmo DOM pelo painel Interactions, e `toHaveBeenCalled()` seco
+      // passaria na segunda rodada com o callback desligado.
+      const callsBefore = onOpenChange.mock.calls.length;
       await userEvent.hover(trigger);
       const panel = await waitForOpen();
       await expect(panel).toBeVisible();
@@ -131,6 +144,7 @@ export const Playground: Story = {
       await expect(accessibleName(panel)).toBe('');
       await expect(trigger).toHaveAttribute('aria-describedby', panel.id);
       await expect(panel).toHaveClass(/nds-hover-card-content/);
+      await expect(onOpenChange.mock.calls.length).toBeGreaterThan(callsBefore);
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {
@@ -146,6 +160,29 @@ export const Playground: Story = {
       await expect(trigger).toHaveFocus();
       const panel = await waitForOpen('depois do foco');
       await expect(panel).toBeVisible();
+    });
+
+    await step('O painel fica centrado no gatilho no eixo cruzado', async () => {
+      // D11: o deslocamento cruzado é ZERO nas cinco. O que se afirma é a
+      // COORDENADA — onde o painel FICOU —, e não o valor da opção: comparar
+      // `alignOffset` com a constante seria repeti-la para ela mesma, que é a
+      // forma de asserção que deixou a D8 passar meses.
+      //
+      // `withSceneAwayFromEdge` porque o executor não aplica o `layout:
+      // 'centered'` — medido aqui: sem `#storybook-root`, canvas em bloco a
+      // partir de `left 0`, gatilho com o centro em 144,8px de uma janela de
+      // 1200, e o painel de 320px travado em `left 0` pelo posicionador. O
+      // desvio de 15,2px que sobrava era da BORDA, não do deslocamento cruzado.
+      // O auxiliar é o compartilhado de propósito: cinco formas de afastar a
+      // cena seriam cinco asserções diferentes com o mesmo rótulo.
+      //
+      // Depois do passo do Tab, e não do passo do ponteiro: afastar a cena com
+      // o ponteiro parado sobre o gatilho arriscaria fechar o cartão pela saída
+      // do ponteiro, e a medida viraria outra coisa. Aberto por Tab, não há
+      // ponteiro nenhum em jogo.
+      await withSceneAwayFromEdge(canvasElement, () =>
+        expectCentradoNoEixoCruzado(trigger, panelOpen()!, args.side ?? 'bottom'),
+      );
     });
 
     await step('Escape fecha o cartão', async () => {

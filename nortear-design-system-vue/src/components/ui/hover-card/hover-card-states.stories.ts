@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect, fn } from 'storybook/test';
 import {
   panelEntrar,
   waitForOpen,
   waitForClosed,
   accessibleName,
+  focusWithoutGesture,
   panelOpen,
   contrastRatio,
 } from '@shared/testing/hover-card-probe';
@@ -14,6 +15,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
+import { checkPanelFollowsTrigger } from '@/components/ui/floating-follow-probe';
 import { Button } from '@/components/ui/button';
 import { hoverCardControlledSource, hoverCardPerfilSource } from './hover-card.source';
 
@@ -67,6 +69,26 @@ const CARTAO_PERFIL = `
 const CLASSES_PARAGRAPH = 'nds-text-body nds-max-w-sm nds-min-h-50';
 const LAYOUT_PARAGRAPH = 'contain: layout;';
 
+/**
+ * Um clique fora do gatilho e do painel: `pointerdown`, `mousedown` e `click` no
+ * `<body>`. É a camada dispensável da lib que escuta o `pointerdown` no
+ * documento, e não o `click`. Não exportado: toda exportação de um
+ * `*.stories.ts` vira story.
+ */
+function clickOutside(): void {
+  for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
+    document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
+  }
+}
+
+/**
+ * Espião do MOTIVO do fechamento (D13). Fechar por clique fora e fechar porque
+ * o ponteiro saiu deixam o mesmo rastro — o painel some —, e sem o motivo a
+ * asserção passaria com o cartão fechando pela espera de 80ms desta story.
+ * Fica fora dos `args` porque não é controle: é instrumento da play.
+ */
+const dispensaPorCliqueFora = fn();
+
 export const Closed: Story = {
   parameters: {
     docs: {
@@ -115,6 +137,29 @@ export const Closed: Story = {
       // `aria-valid-attr-value` no axe.
       await expect(trigger).not.toHaveAttribute('aria-describedby');
     });
+
+    await step('Foco programático não abre o cartão', async () => {
+      // D12: o cartão é apoio pedido por um GESTO. Foco movido por script é a
+      // página se reorganizando, não alguém pedindo o cartão. O Tab continua
+      // abrindo — é ele o caminho de teclado que a WCAG 1.4.13 cobre, e está
+      // provado no Playground.
+      //
+      // `focusWithoutGesture` e não um `.focus()` pelado, e o motivo é do EXECUTOR,
+      // não do componente — a sonda compartilhada carrega a medição. O resumo:
+      // medido nesta suíte em 2026-09-17, `trigger.focus()` casa
+      // `:focus-visible` (e o cartão abre) e `userEvent.tab()` também casa (o
+      // cartão abre, e é a C2); com `.focus()` cru o passo provaria a heurística
+      // do navegador em vez do filtro do componente.
+      focusWithoutGesture(trigger);
+      await expect(trigger).toHaveFocus();
+      await expect(trigger.matches(':focus-visible')).toBe(false);
+      // Espera de RELÓGIO, e não `waitFor`: a prova é de AUSÊNCIA, e `waitFor`
+      // só sabe esperar por algo que chega. 800ms fica acima dos 600ms de
+      // abertura, então o painel já teria aparecido se fosse aparecer.
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      await expect(panelOpen()).toBeNull();
+      await expect(trigger).not.toHaveAttribute('aria-describedby');
+    });
   },
 };
 
@@ -130,6 +175,9 @@ export const Open: Story = {
   },
   render: () => ({
     components: sharedComponents,
+    setup() {
+      return { dispensaPorCliqueFora };
+    },
     template: `
       <p class="${CLASSES_PARAGRAPH}" style="${LAYOUT_PARAGRAPH}">
         Comentário de
@@ -137,7 +185,7 @@ export const Open: Story = {
           <HoverCardTrigger as-child>
             <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
           </HoverCardTrigger>
-          <HoverCardContent>${CARTAO_PERFIL}</HoverCardContent>
+          <HoverCardContent @pointer-down-outside="dispensaPorCliqueFora">${CARTAO_PERFIL}</HoverCardContent>
         </HoverCard>
         há 2 horas.
       </p>
@@ -148,6 +196,7 @@ export const Open: Story = {
     const trigger = canvas.getByRole('link', { name: /@joana/i });
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
+    dispensaPorCliqueFora.mockClear();
     await userEvent.keyboard('{Escape}');
     await waitForClosed();
     await userEvent.hover(trigger);
@@ -197,6 +246,39 @@ export const Open: Story = {
       // --popover), e não deduzido do token: é o valor que o navegador aplicou.
       const styles = getComputedStyle(panel);
       await expect(contrastRatio(styles.color, styles.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+    });
+
+    await step('Clique fora fecha o cartão', async () => {
+      // D13: cartão de apoio que sobrevive a um clique noutro lugar é overlay
+      // preso — quem clicou já mudou de assunto e ele continua cobrindo o que
+      // veio depois. O clique vai no `<body>`, fora do gatilho e fora do painel.
+      await expect(panelOpen()).toBe(panel);
+      clickOutside();
+      await waitForClosed('depois do clique fora');
+      await expect(panelOpen()).toBeNull();
+      // O MOTIVO, e não só o efeito: sem esta linha o passo passaria com o
+      // cartão fechando pela espera de 80ms desta story, que é o outro caminho
+      // de fechamento e não prova nada sobre clique fora.
+      await expect(dispensaPorCliqueFora).toHaveBeenCalled();
+    });
+
+    await step('Perder o foco do gatilho fecha o cartão', async () => {
+      // O conteúdo compartilhado promete isso em `accessibility.keyboard.shiftTab`
+      // ("ao perder o foco, o Content fecha") e nenhuma stack afirmava.
+      //
+      // Abre por Tab, e não por `.focus()`: desde a D12 só foco VISÍVEL abre.
+      await userEvent.tab();
+      await expect(trigger).toHaveFocus();
+      const openPanel = await waitForOpen('depois do foco por Tab');
+
+      await userEvent.tab();
+      await expect(trigger).not.toHaveFocus();
+      await waitForClosed('depois de o gatilho perder o foco');
+      await expect(panelOpen()).toBeNull();
+      // A descrição sai com o painel: sobrando, apontaria para um `id` que já
+      // não está no documento.
+      await expect(trigger).not.toHaveAttribute('aria-describedby');
+      await expect(openPanel.isConnected).toBe(false);
     });
   },
 };
@@ -258,6 +340,29 @@ export const Controlled: Story = {
       await userEvent.click(open);
       const panel = await waitForOpen();
       await expect(panel).toBeVisible();
+      await expect(espelho).toHaveTextContent('aberto');
+    });
+
+    await step('Com o painel aberto, o gatilho deslocado reposiciona o painel junto dele', async () => {
+      // D10: aberto, o cartão acompanha o gatilho. Nesta stack quem faz isso é o
+      // `autoUpdate` do `@floating-ui`, que a lib liga em `whileElementsMounted`
+      // — e era acompanhamento sem portão nenhum: um bump de lib que o
+      // desligasse deixaria a suíte verde com o cartão parado onde abriu.
+      //
+      // Nesta story, e não na `Open`, porque aqui ninguém abriu por ponteiro —
+      // deslocar o canvas sob um cursor parado no gatilho poderia fechar o
+      // cartão por saída de ponteiro.
+      //
+      // `startAt`: no executor de teste a story renderiza encostada à ESQUERDA
+      // (o `layout: 'centered'` é do canvas do Storybook e não chega aqui), e o
+      // painel de 320px centrado num gatilho a 145px da borda já nasce travado
+      // no respiro da janela — medido: `left` 0. Travado, ele andaria MENOS que
+      // o gatilho estando certo. A 200px da borda a medida é só do
+      // acompanhamento.
+      const panel = panelOpen()!;
+      await checkPanelFollowsTrigger(panel, canvasElement, { startAt: 200 });
+      // Reposicionar não é mudança de estado: nada é anunciado a quem controla.
+      await expect(panelOpen()).toBe(panel);
       await expect(espelho).toHaveTextContent('aberto');
     });
 

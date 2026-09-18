@@ -544,6 +544,29 @@ não reporta nada (`[]`): nenhum item abaixo tem portão hoje. Caminhos curtos:
 `ui/` é `src/components/ui/` de cada stack (`ui/hover-card/` no vue e no svelte),
 `docs/` é `src/components/docs/HoverCardDocs.*`.
 
+> **DESFECHO · 2026-09-18.** A passagem `fix` reconferiu os 22 contra o código e
+> **os 22 continuavam valendo em substância** — só as linhas tinham andado, e só
+> no vanilla, empurradas pela D10. Nenhum tinha caducado sozinho em três dias, o
+> que é a informação mais útil desta lista: inconsistência medida e não fechada
+> não evapora.
+>
+> Fecharam agora: os itens **1 a 4** viraram as decisões **D11 a D14**; os
+> **10 a 16** eram a pendência de paridade de asserção, e as cinco ganharam os
+> quatro passos canônicos e perderam as asserções sem dentes; os **18 a 22**
+> eram docs page e conteúdo ensinando o que o código não faz.
+>
+> **Continuam abertos, e de propósito**: os itens **5 a 9**, que são mecânica de
+> lib ou forma de framework — atributo de estado no painel, formato do `id`,
+> presença da raiz no DOM, os delays morando no gatilho no angular, e a contagem
+> de stories. Estes se REGISTRAM, não se alinham. A única coisa que mudou neles é
+> que o item 5 deixou de ter asserção exclusiva do svelte.
+>
+> **O que a reconferência acrescentou, e a lista de 2026-09-15 não tinha:** a
+> leitura do item 1 subestimava o defeito (dizia que o deslocamento cruzado só
+> aparece em `start`/`end`; aparece em `center`, que é o que todas as stories
+> usam), e o item 4 tinha precedente pronto no tooltip desde 2026-09-16 sem que
+> ninguém ligasse os dois.
+
 **Comportamento**
 
 1. **Default de `alignOffset`.** react `4` (`ui/hover-card.tsx:178`); angular `0`
@@ -820,7 +843,7 @@ duas regras cobra, não se alguma cobra.
 > defeito no `dialog.css` (4 → 10 → 4 achados, plantio e restauro na mesma
 > chamada).
 
-> **PENDÊNCIA · 2026-09-15** — docs pages e conteúdo compartilhado ensinam ou medem
+> **FECHADA · 2026-09-18** — docs pages e conteúdo compartilhado ensinavam ou mediam
 > o que o código não faz: `reason` na tabela de analytics do angular e
 > `sideOffset = input(8)` e `label = input('')` no `INTERFACE_CODE` dele (§7, itens
 > 19 e 20); `card.abrir()` no `props.extensibilityCode.vanilla` e delays na raiz no
@@ -831,8 +854,22 @@ duas regras cobra, não se alguma cobra.
 > `docs/shared/content/hover-card/translations.json`; a variante `angular` de
 > `props.extensibilityCode` põe as esperas no `ndsHoverCardTrigger` e a classe em
 > `contentClass`; e o vanilla manda `default` e `with-delay`.
+>
+> **Fechou, e com dois itens que a lista não tinha.** O `reason`, o `input(8)`, o
+> `label`, o `abrir()`, os delays e os três `trigger_id` saíram. A reconferência
+> achou mais: `anatomy.structureCode.vanilla` chamava DOIS helpers inexistentes,
+> com nome diferente em cada idioma (`criarAvatar`/`buildAvatar`/`construirAvatar`
+> — identificador não se traduz, e nenhum dos seis existia); e
+> `tokens.customizationCode` ensinava a acelerar uma transição que a D14 acabava
+> de remover. Os dois são snippet que o leitor COPIA, publicado nas cinco páginas
+> de uma vez.
+>
+> Fechou também o que a lista chamava de item 22: o gatilho da demonstração do
+> angular apontava para a docs page do Avatar enquanto as outras quatro apontavam
+> para `#joana`. Alinhado à maioria, que inclui a referência — o cartão é prévia
+> de perfil, e a página do Avatar não é o assunto dele.
 
-> **PENDÊNCIA · 2026-09-15** — paridade de asserção entre as stories (§7, itens 10 a
+> **FECHADA · 2026-09-18** — paridade de asserção entre as stories (§7, itens 10 a
 > 16): `onOpenChange` sem asserção no Playground do svelte; `States/Controlled` do
 > svelte sem botões externos; `Variants/Default` sem `data-slot` no vanilla e no
 > angular; `TermDefinition` sem `accessibleName` e `LinkPreview` sem `href` no angular;
@@ -841,6 +878,23 @@ duas regras cobra, não se alguma cobra.
 > **Fecha quando**: cada story citada afirma nas cinco o que a maioria afirma, ou
 > declara na própria story por que não afirma (premissa verificada); e o
 > `hover-card.fixtures.ts` do angular deixa de redefinir a espera.
+>
+> **Fechou, e o que ela custava estava subestimado.** As cinco ganharam quatro
+> passos canônicos com rótulo idêntico, e caíram: quatro asserções do angular que
+> não podiam reprovar (uma delas afirmando um atributo DOM que binding de
+> propriedade nunca escreve, e que passava igual na story ao lado que o declara);
+> um `waitFor` lendo `CSSStyleDeclaration` VIVO, que não reprovava e penduraria;
+> o `posicionado()` local do angular, que devolvia painel possivelmente invisível;
+> a `States/Controlled` do svelte, com 3 asserções contra 11 do vanilla; e a play
+> do `ExtraPanelClass`, que afirmava classe e largura e não afirmava o miolo — foi
+> por ela que um ramo de conteúdo faltando sobreviveu meses no svelte, com a story
+> VERDE mostrando o cartão errado.
+>
+> E uma forma NOVA quase entrou junto: a asserção de `href` da D15 nasceu
+> comparando a constante do próprio arquivo com ela mesma, em duas stacks. Medido:
+> com as duas URLs trocadas para um destino errado, a forma tautológica fecha
+> **6/6 verde**. A lição está em `.claude/commands/quality.md`, na lista das
+> asserções que não podem reprovar.
 
 > **DECIDIDA · 2026-09-17** — comportamento que divergia sem decisão registrada
 > (§7, itens 1 a 4): `alignOffset` 4 só no react; foco programático não abre no

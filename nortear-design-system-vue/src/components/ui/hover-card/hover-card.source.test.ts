@@ -132,10 +132,35 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('Guia de overlays acessíveis');
   });
 
-  it('o gatilho de definição é botão, e não envia formulário', () => {
+  it('o gatilho de definição LEVA ao verbete no glossário', () => {
+    // D15: o caminho alternativo do C8 é o destino do próprio gatilho, e o
+    // snippet tem de ensinar isso — quem copiar um `<button>` daqui publica a
+    // composição sem saída nenhuma em touch.
     const saida = hoverCardDefinicaoSource();
-    expect(saida).toContain('<button type="button"');
-    expect(saida).not.toContain('<a href');
+    expect(saida).toContain('<a href="/glossario/wcag-2-2-aa"');
+    expect(saida).not.toContain('<button');
+  });
+
+  it('o gatilho da métrica LEVA à página da métrica', () => {
+    const saida = hoverCardMetricaSource();
+    expect(saida).toContain('<a href="/metricas/conversao"');
+    expect(saida).not.toContain('<button');
+  });
+
+  it('os dois gatilhos de explicação largam as utilitárias que zeravam o botão', () => {
+    // `nds-bg-transparent`, `nds-border-none` e `nds-p-0` existiam para
+    // neutralizar o cromo nativo de `<button>`. Num `<a>` não neutralizam nada,
+    // e copiadas viram três classes que o leitor não sabe por que estão ali.
+    for (const fn of [hoverCardDefinicaoSource, hoverCardMetricaSource]) {
+      const saida = fn();
+      // O que DISTINGUE "isto explica alguma coisa" de um link de navegação
+      // continua no lugar.
+      expect(saida).toContain('nds-underline-dotted');
+      expect(saida).toContain('nds-cursor-help');
+      expect(saida).not.toContain('nds-bg-transparent');
+      expect(saida).not.toContain('nds-border-none');
+      expect(saida).not.toContain('nds-p-0');
+    }
   });
 
   it('o painel de definição não declara rótulo próprio', () => {
@@ -148,8 +173,8 @@ describe('transforms das stories de composição', () => {
 
   it('na métrica a cor semântica fica no número, não no texto corrido', () => {
     const saida = hoverCardMetricaSource();
-    expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>');
-    const descricao = saida.slice(saida.indexOf('Tempo até o maior elemento'));
+    expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>');
+    const descricao = saida.slice(saida.indexOf('Cliques no CTA'));
     expect(descricao).not.toContain('nds-text-success');
   });
 

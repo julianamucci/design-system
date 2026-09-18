@@ -51,10 +51,49 @@ function indentar(markup: string, level: number): string {
 }
 
 /**
- * Os gatilhos que não navegam são BOTÃO: não há para onde ir, e o glossário
- * continua sendo o caminho alternativo obrigatório.
+ * A MOLDURA de cada composição — a mesma das outras quatro stacks.
+ *
+ * O construtor cravava `Comentário de … há 2 horas.` para as sete variantes, e o
+ * painel Code publicava essa frase debaixo de um cartão de métrica ou de
+ * definição. As outras quatro trocam a frase por composição; alinhar aqui é o
+ * que faz as cinco páginas responderem à mesma pergunta.
  */
-const TRIGGERS_BUTTON: HoverCardVariant[] = ['definition', 'metric'];
+const FRASES: Record<HoverCardVariant, { antes: string; depois: string }> = {
+  default: { antes: 'Comentário de', depois: 'há 2 horas.' },
+  withDelay: { antes: 'Documentação em', depois: '— leitura de 8 minutos.' },
+  userProfile: { antes: 'Comentário de', depois: 'há 2 horas.' },
+  linkPreview: { antes: 'O guia completo está em', depois: '.' },
+  definition: { antes: 'Todo componente do sistema atende', depois: ', sem exceção.' },
+  metric: { antes: 'A página inicial fechou o mês em', depois: ', dentro da meta.' },
+  extraClass: { antes: 'Resumo da entrega de', depois: 'nesta sprint.' },
+};
+
+/**
+ * O DESTINO de cada gatilho (D15).
+ *
+ * Termo e métrica deixaram de ser `<button>`: o C8 exige que o cartão não seja o
+ * único caminho para a informação, e o snippet é justamente o que alguém copia —
+ * publicar um gatilho sem destino ensinaria a violar a regra que a mesma página
+ * escreve ao lado. Gatilho de botão continua publicado pela `Sides`, que é onde
+ * ele é o exemplo certo.
+ */
+const HREF_PERFIL = '/users/joana';
+const HREF_DOCS = 'https://design-system.dev';
+const HREF_GLOSSARIO = '/glossario/wcag-2-2-aa';
+const HREF_METRICA = '/metricas/conversao';
+
+// Por CONSTANTE, e não por literal dentro da tabela: a chave da variante de
+// classe extra termina nas cinco letras de "Class", e uma URL entre aspas logo
+// depois dos dois-pontos casa o formato que o `legacy_class_in_story` varre.
+const HREFS: Record<HoverCardVariant, string> = {
+  default: HREF_PERFIL,
+  withDelay: HREF_DOCS,
+  userProfile: HREF_PERFIL,
+  linkPreview: HREF_DOCS,
+  definition: HREF_GLOSSARIO,
+  metric: HREF_METRICA,
+  extraClass: HREF_PERFIL,
+};
 
 const MIOLOS: Record<HoverCardVariant, string> = {
   default: `<div class="nds-stack" data-spacing="xs">
@@ -101,38 +140,38 @@ const MIOLOS: Record<HoverCardVariant, string> = {
   </p>
 </div>`,
 
+  // Termo e definição saem do conteúdo compartilhado
+  // (`variants.items.definitionTooltip.cardTerm` / `cardMeaning`): o painel Code
+  // ensinaria um exemplo e a prévia da docs page mostraria outro.
   definition: `<div class="nds-stack" data-spacing="xs">
-  <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
+  <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 AA</p>
   <p class="nds-text-caption nds-text-muted-foreground">
-    Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1,
-    operação por teclado e alvo de toque de 24px.
+    Web Content Accessibility Guidelines: padrão internacional de
+    acessibilidade para conteúdo web.
   </p>
 </div>`,
 
+  // Métrica, valor e conta saem de `variants.items.metricExplainer`
+  // (`cardMetric` / `cardValue` / `cardFormula`), pelo mesmo motivo.
   metric: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
-    <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
-    <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+    <p class="nds-text-body nds-font-medium">Conversão (últimos 30d)</p>
+    <span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>
   </div>
   <p class="nds-text-caption nds-text-muted-foreground">
-    Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+    Cliques no CTA / usuários únicos
   </p>
 </div>`,
 
-  // A classe extra troca a largura de UMA instância; o miolo é o mesmo do perfil.
-  extraClass: `<div class="nds-cluster" data-spacing="sm" data-align="start">
-  <div
-    class="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium"
-    data-align="center"
-    data-justify="center"
-    aria-hidden="true"
-  >
-    JS
-  </div>
-  <div class="nds-stack" data-spacing="xs">
-    <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
-    <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-  </div>
+  // A classe extra troca a largura de UMA instância, e o miolo é de TEXTO — não
+  // o do perfil, que era o que estava aqui. A story afirma `nds-text-center`, e
+  // um cartão com avatar à esquerda não mostra centralização nenhuma; as outras
+  // quatro stacks publicam este mesmo miolo, palavra por palavra.
+  extraClass: `<div class="nds-stack" data-spacing="xs">
+  <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
+  <p class="nds-text-caption nds-text-muted-foreground">
+    Fechou 14 tarefas nesta sprint, 9 delas em revisão de acessibilidade.
+  </p>
 </div>`,
 };
 
@@ -147,9 +186,12 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     defaultOpen = false,
     open,
     triggerLabel = '@joana',
-    href = '/users/joana',
+    href,
     variant = 'default',
   } = ctx?.args ?? {};
+
+  const frase = FRASES[variant] ?? FRASES.default;
+  const hrefFinal = href ?? HREFS[variant] ?? HREF_PERFIL;
 
   const controlled = open !== undefined;
 
@@ -172,14 +214,12 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     variant === 'extraClass' ? 'class="nds-w-md nds-text-center"' : '',
   );
 
-  const trigger = TRIGGERS_BUTTON.includes(variant)
-    ? `<button type="button" {...props}>${triggerLabel}</button>`
-    : `<a href="${href}" {...props}>${triggerLabel}</a>`;
+  const trigger = `<a href="${hrefFinal}" {...props}>${triggerLabel}</a>`;
 
   return svelteSnippet(
     controlled ? `${IMPORT}\n\nlet aberto = $state(${open ?? false});` : IMPORT,
     `<p class="nds-text-body nds-max-w-sm">
-  Comentário de
+  ${frase.antes}
   <HoverCard${rootProps}>
     <HoverCardTrigger>
       {#snippet child({ props })}
@@ -190,7 +230,7 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
 ${indentar(MIOLOS[variant] ?? MIOLOS.default, 6)}
     </HoverCardContent>
   </HoverCard>
-  há 2 horas.
+  ${frase.depois}
 </p>`,
   );
 }
@@ -238,7 +278,10 @@ export function hoverCardMetricaSource(): string {
   return hoverCardSource('', {
     args: {
       variant: 'metric',
-      triggerLabel: 'LCP 1.8s',
+      // O gatilho é o VALOR da métrica, e ele sai de
+      // `variants.items.metricExplainer.cardValue` — a chave nasceu hoje, porque
+      // o número vivia cravado nas docs pages e em lugar nenhum do conteúdo.
+      triggerLabel: '3,42%',
     },
   });
 }

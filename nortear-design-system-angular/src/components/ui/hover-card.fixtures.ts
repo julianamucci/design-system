@@ -4,16 +4,31 @@
 // story: `export function waitForOpen()` dentro de um `*.stories.ts` viraria
 // uma story "PainelAberto" que não renderiza nada.
 //
-// O grosso das consultas ao PORTAL mora agora em
-// `docs/shared/testing/hover-card-probe.ts` e é o MESMO código nas cinco
-// stacks — era duplicado aqui, e duplicata de helper de teste é como duplicata
-// de CSS: uma das cópias envelhece sozinha. O que sobra local é o que só vale
-// para este stack (a espera gateada em `data-side`) e o markup repetido.
+// As consultas ao PORTAL moram em `docs/shared/testing/hover-card-probe.ts` e
+// são o MESMO código nas cinco stacks — eram duplicadas aqui, e duplicata de
+// helper de teste é como duplicata de CSS: uma das cópias envelhece sozinha.
+//
+// **A espera também é a compartilhada, desde 2026-09-17.** Este arquivo
+// redefinia `waitForOpen`/`waitForQuantidade` gateando só em `data-side` e
+// dispensava o `assentado` do colhedor — que checa `visibility`, `opacity` e o
+// lugar de espera da lib. O positioner do radix-ng mantém o painel em
+// `visibility: hidden` com `transform: translate(0, -200%)` até o floating-ui
+// devolver a medida (`radix-ng-primitives-popper.mjs`, o `style` computado do
+// `RdxPopperContentWrapper`), e `data-side` é escrito no MESMO ciclo — ou seja,
+// a espera local devolvia um painel possivelmente invisível, e todo
+// `expect(panel).toBeVisible()` depois dela era corrida. O degrau que ela tinha
+// a mais já foi absorvido pela sonda compartilhada.
+//
+// O que sobra local é o markup repetido. A medição de acompanhamento do painel
+// (D10) também não mora aqui: ela vale para os seis consumidores do
+// posicionamento flutuante desta stack, e por isso vive em
+// `floating-follow-probe.ts` — o mesmo nome e os mesmos exports nas cinco.
 
-import { waitFor } from 'storybook/test';
 import {
   SELECTOR_PANEL,
   panelEntrar,
+  waitForOpen,
+  waitForQuantidade,
   waitForClosed,
   accessibleName,
   panelsAbertos,
@@ -22,11 +37,16 @@ import {
   leaveWithPointer,
   paresAbertos,
   expectOndeDiz,
+  expectCentradoNoEixoCruzado,
+  withSceneAwayFromEdge,
+  focusWithoutGesture,
 } from '@shared/testing/hover-card-probe';
 
 export {
   SELECTOR_PANEL,
   panelEntrar,
+  waitForOpen,
+  waitForQuantidade,
   waitForClosed,
   accessibleName,
   panelsAbertos,
@@ -35,42 +55,10 @@ export {
   leaveWithPointer,
   paresAbertos,
   expectOndeDiz,
+  expectCentradoNoEixoCruzado,
+  withSceneAwayFromEdge,
+  focusWithoutGesture,
 };
-
-/**
- * Aberto E POSICIONADO.
- *
- * O painel entra no DOM antes de o floating-ui devolver a medida, e até lá o
- * positioner o mantém em `visibility: hidden` — esperar só pela existência do
- * elemento reprova em `toBeVisible` por corrida, não por defeito. `data-side` é
- * o sinal público de que a medição terminou: o primitivo só o escreve depois de
- * decidir o lado, e é um sinal mais preciso, neste stack, que a opacidade que o
- * colhedor compartilhado usa.
- */
-function posicionado(panel: HTMLElement | null): panel is HTMLElement {
-  return !!panel && panel.hasAttribute('data-side');
-}
-
-export async function waitForOpen(): Promise<HTMLElement> {
-  await waitFor(
-    () => {
-      if (!posicionado(panelOpen())) throw new Error('o cartão ainda não abriu e mediu');
-    },
-    { timeout: 3000 },
-  );
-  return panelOpen()!;
-}
-
-export async function waitForQuantidade(quantos: number): Promise<HTMLElement[]> {
-  await waitFor(
-    () => {
-      const prontos = panelsAbertos().filter(posicionado).length;
-      if (prontos !== quantos) throw new Error(`abertos ${prontos} cartões, esperado ${quantos}`);
-    },
-    { timeout: 3000 },
-  );
-  return panelsAbertos();
-}
 
 // ─── Markup repetido ──────────────────────────────────────────────────────────
 //
@@ -78,13 +66,22 @@ export async function waitForQuantidade(quantos: number): Promise<HTMLElement[]>
 // de um texto) e também o que mantém o `target-size` da WCAG 2.5.8 satisfeito:
 // o axe dispensa alvos em linha dentro de um bloco de texto — um link solto de
 // 20px de altura seria violação.
+//
+// O disco do avatar é um `<div>` com as utilitárias, e não a diretiva
+// `ndsAvatar`: é o markup que as outras quatro stacks renderizam nesta story, e
+// a comparação entre as cinco páginas só responde alguma coisa se o cartão for
+// o mesmo. A docs page continua usando o componente Avatar de verdade — lá o
+// assunto é composição real, e react e vanilla fazem igual.
 
 export const CARTAO_PERFIL = `
       <div class="nds-cluster" data-spacing="sm" data-align="start">
-        <span ndsAvatar>
-          <!-- aria-hidden: o nome logo ao lado já identifica a pessoa. -->
-          <span ndsAvatarFallback aria-hidden="true">JS</span>
-        </span>
+        <!-- aria-hidden: o nome logo ao lado já identifica a pessoa. -->
+        <div
+          aria-hidden="true"
+          class="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium"
+          data-align="center"
+          data-justify="center"
+        >JS</div>
         <div class="nds-stack" data-spacing="xs">
           <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
           <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>

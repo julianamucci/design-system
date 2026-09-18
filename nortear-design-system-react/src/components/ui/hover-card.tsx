@@ -175,7 +175,12 @@ function HoverCardContent({
   side = "bottom",
   sideOffset = 4,
   align = "center",
-  alignOffset = 4,
+  // D11 (2026-09-17): o deslocamento no eixo CRUZADO é ZERO nas cinco stacks.
+  // Aqui era 4, e o base-ui o aplica TAMBÉM com `align: "center"` — que é o que
+  // todas as stories usam —, então o painel saía 4px fora do centro do gatilho
+  // em relação às outras quatro. Quem cobra é `expectCentradoNoEixoCruzado`, no
+  // colhedor compartilhado: ele afirma a COORDENADA, não o valor desta opção.
+  alignOffset = 0,
   ...props
 }: PreviewCardPrimitive.Popup.Props &
   Pick<

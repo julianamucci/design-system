@@ -49,8 +49,11 @@ type Story = StoryObj<typeof meta>;
 // layout, que não tem token nem escala.
 const CLASSES_PARAGRAPH = "nds-text-body nds-max-w-sm nds-min-h-50";
 const LAYOUT_PARAGRAPH: React.CSSProperties = {
+  // Só `contain: layout`, como o `emFrase` do Vanilla — a referência. O
+  // `position: relative` que morava aqui não ancorava nada: o painel vive num
+  // portal no `<body>`, e o bloco contentor de um descendente do canvas não o
+  // alcança.
   contain: "layout",
-  position: "relative",
 };
 
 export const Default: Story = {

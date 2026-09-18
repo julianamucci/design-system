@@ -91,7 +91,7 @@ describe('hoverCardSource', () => {
       'design-system.dev/overlays',
     );
     expect(hoverCardSource('', { args: { variant: 'metric' } })).toContain(
-      'Largest Contentful Paint',
+      'Conversão (últimos 30d)',
     );
   });
 });
@@ -129,18 +129,24 @@ describe('transforms das stories de variação e composição', () => {
     expect(saida).toContain('<a href="https://design-system.dev" {...props}>design-system.dev</a>');
   });
 
-  it('a definição usa botão, porque não há para onde navegar', () => {
+  it('a definição leva ao verbete do glossário, e o snippet publica o destino', () => {
     const saida = hoverCardDefinicaoSource();
-    // Sem `type="button"`, o mesmo gatilho dentro de um formulário o enviaria.
-    expect(saida).toContain('<button type="button" {...props}>WCAG 2.2 AA</button>');
-    expect(saida).not.toContain('<a href');
+    // D15: o gatilho era `<button>` e não oferecia saída nenhuma. O snippet é o
+    // que alguém copia — publicá-lo sem destino ensinaria a violar o C8, que a
+    // mesma página escreve ao lado.
+    expect(saida).toContain('<a href="/glossario/wcag-2-2-aa" {...props}>WCAG 2.2 AA</a>');
+    expect(saida).not.toContain('<button');
     // O painel não carrega nome: sem papel, `aria-label` é `aria-prohibited-attr`.
     expect(saida).not.toContain('aria-label');
   });
 
   it('a métrica deixa a cor semântica no número, e não no texto corrido', () => {
     const saida = hoverCardMetricaSource();
-    expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>');
+    // O valor é o de `variants.items.metricExplainer.cardValue`, e ele aparece
+    // duas vezes de propósito: no gatilho e no cartão. O gatilho leva à página
+    // da métrica (D15).
+    expect(saida).toContain('<a href="/metricas/conversao" {...props}>3,42%</a>');
+    expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>');
     expect(saida).toContain('<p class="nds-text-caption nds-text-muted-foreground">');
     expect(saida).not.toContain('aria-label');
   });
@@ -149,6 +155,27 @@ describe('transforms das stories de variação e composição', () => {
     expect(hoverCardClassNameExtraSource()).toContain(
       '<HoverCardContent class="nds-w-md nds-text-center">',
     );
+  });
+
+  it('cada composição publica a MOLDURA dela, e não a do cartão de perfil', () => {
+    // O construtor cravava `Comentário de … há 2 horas.` para as sete variantes,
+    // e o painel Code publicava essa frase debaixo de um cartão de métrica ou de
+    // definição — moldura errada em volta do conteúdo certo. As frases são as
+    // das outras quatro stacks; sem este caso, voltar a cravar uma só não
+    // reprovaria em lugar nenhum.
+    const molduras: Array<[string, () => string, string, string]> = [
+      ['perfil', hoverCardPerfilSource, 'Comentário de', 'há 2 horas.'],
+      ['espera padrão', hoverCardWaitDefaultSource, 'Comentário de', 'há 2 horas.'],
+      ['prévia de link', hoverCardPreviaDeLinkSource, 'O guia completo está em', '.'],
+      ['definição', hoverCardDefinicaoSource, 'Todo componente do sistema atende', ', sem exceção.'],
+      ['métrica', hoverCardMetricaSource, 'A página inicial fechou o mês em', ', dentro da meta.'],
+      ['classe extra', hoverCardClassNameExtraSource, 'Resumo da entrega de', 'nesta sprint.'],
+    ];
+    for (const [nome, fn, antes, depois] of molduras) {
+      const saida = fn();
+      expect(saida, nome).toContain(`\n  ${antes}\n`);
+      expect(saida, nome).toContain(`\n  ${depois}\n`);
+    }
   });
 
   it('os quatro lados saem de uma lista, e nenhum painel carrega nome próprio', () => {

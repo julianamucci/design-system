@@ -250,6 +250,14 @@ const SCAFFOLD_OF_THE_THREE = [
     pattern: /\s*\[closeDelay\]="80"/g,
     why: 'A outra metade da pressa da play em States/Open.',
   },
+  {
+    name: '(onOpenChange)="recordCloseReason($event)"',
+    pattern: /\s*\(onOpenChange\)="recordCloseReason\(\$event\)"/g,
+    why:
+      'States/Open colhe o MOTIVO do fechamento para provar que o clique fora o ' +
+      'pediu (D13). É gancho da play: quem compõe não precisa do output para o ' +
+      'cartão fechar.',
+  },
 ];
 
 /** O template sem o andaime declarado, e sem a diferença que é só de formatação. */
@@ -314,8 +322,13 @@ describe('premissa da exceção: um construtor para três stories', () => {
     );
     expect(code).toContain('<span ndsHoverCard>');
     expect(code).toContain('<ng-template ndsHoverCardContent>');
-    // O cartão de perfil vem da MESMA fixture que as stories interpolam.
-    expect(code).toContain('<span ndsAvatarFallback aria-hidden="true">JS</span>');
+    // O cartão de perfil vem da MESMA fixture que as stories interpolam — com o
+    // disco do avatar em `<div>` utilitário, que é o markup das outras quatro
+    // stacks nesta story. A diretiva `ndsAvatar` saiu daqui em 2026-09-17: só o
+    // angular a montava, e o snippet ensinava um import que o exemplo não usa.
+    expect(code).toContain('nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted');
+    expect(code).not.toContain('ndsAvatar');
+    expect(code).not.toContain('NDS_AVATAR');
     expect(code).toContain('Designer · 142 seguidores');
     // E nada do andaime das três.
     expect(code).not.toContain('[defaultOpen]');
@@ -495,26 +508,39 @@ describe('composições', () => {
     expect(code).toContain('design-system.dev/overlays');
   });
 
-  it('a definição usa botão, e NÃO escreve o type que a diretiva já põe', () => {
+  it('a definição usa LINK com destino, que é o caminho alternativo do C8', () => {
     const code = hoverCardDefinicaoSource();
-    expect(code).toMatch(/<button\n\s+ndsHoverCardTrigger/);
-    // `NdsHoverCardTrigger` põe `type="button"` na construção quando o host é
-    // `<button>` — a story não o escreve, e o snippet também não. Escrevê-lo
-    // ensinaria a duplicar o que o componente já garante.
+    // D15: o gatilho era `<button>` e não levava a lugar nenhum — num
+    // componente que em touch não tem caminho acessível, era o exemplo violando
+    // a regra que a própria página ensina.
+    expect(code).toMatch(/<a\n\s+ndsHoverCardTrigger/);
+    expect(code).toContain('href="/glossario/wcag-2-2-aa"');
+    expect(code).not.toContain('<button');
     expect(code).not.toContain('type="button"');
     // O painel não tem papel, e nome próprio em elemento sem papel é
     // `aria-prohibited-attr` no axe. Quem descreve é o gatilho, por
     // `aria-describedby` — escrito pela diretiva, não pelo snippet.
     expect(code).not.toContain('aria-label');
-    expect(code).toContain('WCAG 2.2 nível AA');
+    // Termo e definição são os do conteúdo compartilhado
+    // (`variants.items.definitionTooltip.cardTerm` / `cardMeaning`): snippet,
+    // story e docs page publicam o mesmo exemplo desta variante.
+    // O gatilho e o termo em destaque são a MESMA sigla, e ela sai da chave —
+    // o conteúdo se contradizia (o `use` citava `WCAG 2.2 AA`, o `cardTerm`
+    // dizia `WCAG 2.2`) e as cinco stacks se dividiram exatamente aí.
+    expect(code.match(/WCAG 2\.2 AA/g)).toHaveLength(2);
+    expect(code).toContain('Web Content Accessibility Guidelines');
   });
 
   it('na métrica a cor semântica fica no número, e o texto corrido não a recebe', () => {
     const code = hoverCardMetricaSource();
+    // Métrica, conta e valor são os de `variants.items.metricExplainer`, e o
+    // gatilho leva à página da métrica (D15).
+    expect(code).toContain('href="/metricas/conversao"');
+    expect(code).toContain('Conversão (últimos 30d)');
     expect(code).toContain(
-      '<span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>',
+      '<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>',
     );
-    const description = code.slice(code.indexOf('Tempo até o maior elemento'));
+    const description = code.slice(code.indexOf('Cliques no CTA'));
     expect(description).not.toContain('nds-text-success');
   });
 

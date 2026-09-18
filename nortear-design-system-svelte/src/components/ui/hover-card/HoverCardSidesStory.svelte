@@ -24,14 +24,19 @@
   {#each LADOS as side (side.side)}
     <p class="nds-text-body nds-p-8">
       Abre
-      <HoverCard open={true}>
+      <!-- `defaultOpen`, e não `open={true}`: os quatro cartões nascem abertos
+           para a foto, mas continuam FECHÁVEIS. Com a abertura controlada e sem
+           ninguém para devolvê-la, esta era a única `Sides` controlada das cinco
+           e os quatro painéis não podiam fechar — nem por Escape, nem por clique
+           fora (D13). -->
+      <HoverCard defaultOpen>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <button type="button" class={CLASSES_BUTTON} {...props}>{side.label}</button>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side={side.side}>
-          <p class="nds-text-caption">Side preferido: {side.label}.</p>
+          <p class="nds-text-caption">Lado preferido: {side.label}.</p>
         </HoverCardContent>
       </HoverCard>
       do gatilho.
