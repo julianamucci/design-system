@@ -102,13 +102,13 @@ export const TEXTS = {
   warning: 'Sua sessão expira em 5 minutos.',
   info: 'Nova versão disponível.',
   loading: 'Enviando arquivo...',
-  comDescricao: 'Preferências atualizadas.',
-  comDescricaoDetalhe:
+  withDescription: 'Preferências atualizadas.',
+  withDescriptionDetail:
     'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',
   withAction: 'Item excluído.',
   withActionLabel: 'Desfazer',
-  promessaCarregando: 'Enviando arquivo...',
-  promessaSucesso: 'Arquivo enviado com sucesso.',
-  promessaErro: 'Erro ao enviar. Tente novamente.',
-  persistente: 'Falha crítica no servidor.',
+  promiseLoading: 'Enviando arquivo...',
+  promiseSuccess: 'Arquivo enviado com sucesso.',
+  promiseError: 'Erro ao enviar. Tente novamente.',
+  persistent: 'Falha crítica no servidor.',
 } as const;

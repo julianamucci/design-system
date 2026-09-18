@@ -318,8 +318,8 @@ export function sonnerWithDescriptionSource(): string {
     ],
     body: [
       'confirmar(): void {',
-      `    ${queueCall('success', TEXTS.comDescricao, [
-        `description: ${text(TEXTS.comDescricaoDetalhe)},`,
+      `    ${queueCall('success', TEXTS.withDescription, [
+        `description: ${text(TEXTS.withDescriptionDetail)},`,
       ])}`,
       '}',
     ],
@@ -361,9 +361,9 @@ export function sonnerPromiseSource(): string {
     body: [
       'enviar(): void {',
       '    toast.promise(this.enviarArquivo(), {',
-      `      loading: ${text(TEXTS.promessaCarregando)},`,
-      `      success: ${text(TEXTS.promessaSucesso)},`,
-      `      error: ${text(TEXTS.promessaErro)},`,
+      `      loading: ${text(TEXTS.promiseLoading)},`,
+      `      success: ${text(TEXTS.promiseSuccess)},`,
+      `      error: ${text(TEXTS.promiseError)},`,
       '    });',
       '}',
       '',
@@ -390,7 +390,7 @@ export function sonnerPersistentSource(): string {
     ],
     body: [
       'avisarFalhaCritica(): void {',
-      `    ${queueCall('error', TEXTS.persistente, [
+      `    ${queueCall('error', TEXTS.persistent, [
         'duration: Number.POSITIVE_INFINITY,',
         'closeButton: true,',
       ])}`,

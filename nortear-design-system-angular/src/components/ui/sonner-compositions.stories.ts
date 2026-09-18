@@ -69,16 +69,16 @@ export const WithDescription: Story = {
     await clearToasts();
 
     await step('Título e descrição vivem no mesmo bloco de conteúdo', async () => {
-      toast.success(TEXTS.comDescricao, {
+      toast.success(TEXTS.withDescription, {
         ...PERSISTENT,
-        description: TEXTS.comDescricaoDetalhe,
+        description: TEXTS.withDescriptionDetail,
       });
       const toastEl = await waitForToast({ type: 'success' });
 
       const title = toastEl.querySelector<HTMLElement>('.nds-sonner-title')!;
       const description = toastEl.querySelector<HTMLElement>('.nds-sonner-description')!;
-      await expect(title).toHaveTextContent(TEXTS.comDescricao);
-      await expect(description).toHaveTextContent(TEXTS.comDescricaoDetalhe);
+      await expect(title).toHaveTextContent(TEXTS.withDescription);
+      await expect(description).toHaveTextContent(TEXTS.withDescriptionDetail);
 
       // Os dois dentro do mesmo `.nds-sonner-content`: é isso que faz o leitor de
       // tela anunciar a notificação como uma coisa só, e não como dois avisos.
@@ -96,9 +96,9 @@ export const WithDescription: Story = {
       // Ver sonner-probe.ts.
       await clearToasts();
       await withDarkDocument(async () => {
-        toast(TEXTS.comDescricao, {
+        toast(TEXTS.withDescription, {
           ...PERSISTENT,
-          description: TEXTS.comDescricaoDetalhe,
+          description: TEXTS.withDescriptionDetail,
         });
         const toastEl = await waitForToast({ type: 'default' });
         const description = toastEl.querySelector<HTMLElement>('.nds-sonner-description')!;
@@ -218,19 +218,19 @@ export const PromiseResolved: Story = {
       toast.promise(
         operation,
         {
-          loading: TEXTS.promessaCarregando,
-          success: TEXTS.promessaSucesso,
-          error: TEXTS.promessaErro,
+          loading: TEXTS.promiseLoading,
+          success: TEXTS.promiseSuccess,
+          error: TEXTS.promiseError,
         },
         PERSISTENT,
       );
 
       const loading = await waitForToast({ type: 'loading' });
-      await expect(loading).toHaveTextContent(TEXTS.promessaCarregando);
+      await expect(loading).toHaveTextContent(TEXTS.promiseLoading);
 
       resolve();
       const resolved = await waitForToast({ type: 'success' });
-      await expect(resolved).toHaveTextContent(TEXTS.promessaSucesso);
+      await expect(resolved).toHaveTextContent(TEXTS.promiseSuccess);
 
       // Mesmo elemento: trocar o nó faria o leitor de tela anunciar duas
       // notificações para um evento só.
@@ -266,9 +266,9 @@ export const PromiseRejected: Story = {
       toast.promise(
         operation,
         {
-          loading: TEXTS.promessaCarregando,
-          success: TEXTS.promessaSucesso,
-          error: TEXTS.promessaErro,
+          loading: TEXTS.promiseLoading,
+          success: TEXTS.promiseSuccess,
+          error: TEXTS.promiseError,
         },
         PERSISTENT,
       );
@@ -278,7 +278,7 @@ export const PromiseRejected: Story = {
 
       fail();
       const failed = await waitForToast({ type: 'error' });
-      await expect(failed).toHaveTextContent(TEXTS.promessaErro);
+      await expect(failed).toHaveTextContent(TEXTS.promiseError);
       await expect(failed).toBe(loading);
     });
   },
@@ -307,7 +307,7 @@ export const Persistent: Story = {
     await step('A notificação sobrevive ao prazo que valeria para as outras', async () => {
       // functional.item6 — 700ms com prazo default de 300ms: se o `Infinity`
       // fosse ignorado, ela já teria saído duas vezes.
-      toast.error(TEXTS.persistente, { ...PERSISTENT, closeButton: true });
+      toast.error(TEXTS.persistent, { ...PERSISTENT, closeButton: true });
       const toastEl = await waitForToast({ type: 'error' });
 
       await new Promise<void>((resolve) => setTimeout(resolve, 700));
