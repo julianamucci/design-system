@@ -203,12 +203,51 @@ generalizava a partir de UMA medição e de uma semelhança de implementação
 comportamento nas outras quatro** — a D10 nasceu com portão só no vanilla. O
 portão que falta é sempre o que deixa a frase envelhecer.
 
-**Nenhuma das cinco afirma que rolar NÃO fecha o cartão**, e essa é a asserção
-que separaria reposicionar de dispensar. As cinco sondas cutucam o
-reposicionamento (quatro por `resize`, uma por `scroll`), e em todas as libs que
-reposicionam os dois eventos passam pelo MESMO `update` do mesmo `autoUpdate` —
-então o cutucão atual prova reposicionamento, e não prova sobrevivência à
-rolagem. Fica registrado como o próximo degrau possível deste portão.
+**O degrau que faltava foi construído em 2026-09-18, e a exceção do vue passou a
+ser COBRADA em vez de só declarada.**
+
+Até então nenhuma das cinco afirmava o que acontece ao rolar. As sondas cutucavam
+o reposicionamento por `resize`, e nas libs que reposicionam `ancestorScroll` e
+`ancestorResize` registram o MESMO callback — então o cutucão provava
+reposicionamento e **não provava sobrevivência à rolagem**. A diferença entre
+reposicionar e dispensar, que é a única divergência de comportamento desta
+decisão, vivia só na leitura de fonte.
+
+As cinco ganharam um passo na `States/Controlled`, com o gatilho dentro de um
+ancestral rolável de verdade, e **os rótulos são diferentes de propósito** —
+rótulo igual sobre comportamento oposto seria mentira para quem compara as cinco
+páginas:
+
+| stack | rótulo do passo | o que ele afirma |
+|---|---|---|
+| react · svelte · vanilla · angular | `'Rolar um ancestral não fecha o cartão, e ele acompanha o gatilho'` | o painel aberto continua sendo o MESMO nó, e andou junto com o gatilho |
+| vue | `'Rolar um ancestral dispensa o cartão — exceção declarada da D10'` | o painel DESMONTA, e quem fechou foi a rolagem, não a espera |
+
+**O passo do vue é o que fecha o argumento.** Ele foi provado neutralizando a
+condição EXATA que a reka testa (`target.contains(gatilho)`): com ela desligada o
+cartão sobrevive, e a asserção reprova dizendo que a exceção da D10 caiu. Ou
+seja, o passo mede o mecanismo descrito aqui e não um efeito parecido — e no dia
+em que um bump da reka mudar isso, a decisão volta para a mesa em vez de
+envelhecer em silêncio.
+
+**Três defeitos de cena e de instrumento apareceram ao construir o degrau**, e
+todos os três reprovavam o componente CERTO:
+
+- **flip lido como falta de acompanhamento.** Com o primeiro comentário curto, o
+  gatilho nasce perto do topo, o painel abre para cima e rolar 60px o joga para
+  fora da janela — a lib vira para baixo, o gatilho desce 60px e o painel SOBE
+  42px. Reposicionamento correto, medida descaracterizada. Corrigiu-se a CENA,
+  não a asserção;
+- **leitura intermediária.** A sonda devolvia na PRIMEIRA mudança da coordenada,
+  o que bastava quando o reposicionamento acontecia num passo só. Dentro de um
+  ancestral rolável ele acontece em vários, com plateau no meio: leu `left 177`
+  onde o final era 185 — os 8px do respiro do `shift` — e acusou o painel de ter
+  andado 48px. Agora exige leituras iguais consecutivas, com a espera-por-mudança
+  antes, para não aprovar painel que nunca se moveu;
+- **contêiner sem curso.** Cena em que o ancestral não rola faz as duas metades
+  passarem sem nada acontecer. A sonda cobra curso mínimo e deslocamento real do
+  gatilho antes de medir — e essa guarda pegou um plantio mal feito na primeira
+  tentativa, que é a evidência de que ela não é enfeite.
 **Mecanismo**: `autoUpdateFloating` (`nortear-design-system-vanilla/src/lib/floating.ts`)
 escuta rolagem em cada ancestral rolável do gatilho e na janela, redimensionamento
 da janela, e mudança de tamanho do gatilho e do cartão, agrupando por quadro. É
@@ -217,11 +256,24 @@ MESMO `side`, `align` e `flip` (D9), e reescreve o `data-side` e o `data-align`
 finais.
 **O que não acontece**: reposicionar não chama `onOpenChange` nem move foco — o
 cartão continua o mesmo, só em outro lugar.
-**Portão**: passo `'Com o painel aberto, o gatilho deslocado e a página rolada
-reposicionam o painel junto dele'` na `States/Controlled` do vanilla. O gatilho
-dessa story fica encostado à esquerda, então o passo começa o deslocamento em
-200 px — com o respiro de borda, 40 px a partir de zero seriam parcialmente
-engolidos com o componente CERTO.
+**Portão**: DOIS passos na `States/Controlled`, e desde 2026-09-18 eles existem
+nas cinco stacks.
+
+1. **O gatilho deslocado reposiciona o painel junto dele** — `'Com o painel
+   aberto, o gatilho deslocado e a página rolada reposicionam o painel junto
+   dele'`. Nasceu no vanilla. O gatilho dessa story fica encostado à esquerda,
+   então o passo começa o deslocamento em 200 px — com o respiro de borda, 40 px
+   a partir de zero seriam parcialmente engolidos com o componente CERTO.
+2. **Rolar um ancestral**, com o rótulo de cada stack na tabela acima: quatro
+   afirmam que o cartão sobrevive e acompanha; o vue afirma que ele é dispensado.
+
+Os dois moram em `floating-follow-probe.ts`, que existe nas cinco com a MESMA
+assinatura — `checkPanelSurvivesAncestorScroll(panel, trigger, scroller,
+{ stillOpen, by })`. A uniformidade não é estética: os dois elementos do meio são
+ambos `HTMLElement`, então trocá-los de ordem numa stack faria a chamada copiada
+de outra medir a coisa errada **sem o compilador ver nada**. Uma das cinco nasceu
+com a ordem trocada nesta mesma rodada, por corrida entre agentes, e foi
+realinhada — é a forma que o `fixture_duplicada_entre_stories` existe para pegar.
 **Limite declarado**: a sonda de vazamento das stories só conta ouvintes de
 `window` e `document`; os de contêiner rolável e o observador ficam provados
 pelo teste unitário do utilitário.

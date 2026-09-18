@@ -3,7 +3,10 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { NDS_HOVER_CARD } from './hover-card';
 import { NdsButton } from './button';
-import { checkPanelFollowsTrigger } from './floating-follow-probe';
+import {
+  checkPanelFollowsTrigger,
+  checkPanelSurvivesAncestorScroll,
+} from './floating-follow-probe';
 import {
   CARTAO_PERFIL,
   accessibleName,
@@ -325,17 +328,57 @@ export const Controlled: Story = {
           </button>
         </div>
 
-        <p class="nds-text-body">
-          Comentário de
-          <span ndsHoverCard [open]="isOpen" (openChange)="isOpen = $event">
-            <a ndsHoverCardTrigger href="/users/joana" class="nds-text-primary nds-font-medium">@joana</a>
+        <!-- A lista de comentários rola DENTRO da caixa, e o gatilho vive nela.
+             É cena de produto, e é também o que a D10 precisa para ser medida:
+             um ancestral rolável de verdade. Rolar aqui move o gatilho sem mover
+             a janela, que é o único jeito de separar reposicionar o cartão de
+             dispensá-lo — cutucar por redimensionamento não serve, porque nas
+             libs que reposicionam os dois eventos entram pelo mesmo update.
+             A altura sai da escada \`--box-height-*\` pelo \`data-size\` da
+             folha, e não de um \`style\`: cravada, sairia do tema e da escala.
+             Marcação igual à do vanilla, que é a referência: o \`ScrollArea\` de
+             lib traria viewport e barra próprios de cada lib, e a cena das cinco
+             deixaria de ser comparável. -->
+        <div class="nds-scroll-area" data-size="md">
+          <div class="nds-scroll-area-viewport nds-stack" data-spacing="md" data-testid="ancestral-rolavel">
+            <!-- O primeiro comentário é o mais longo de propósito, e não é
+                 capricho de texto: é ele que dá RESPIRO VERTICAL ao gatilho.
+                 Com um comentário curto o gatilho nasce perto do topo da janela,
+                 e rolar o ancestral empurra o painel para fora — a lib então
+                 VIRA o cartão de lado, o que é reposicionamento certo mas
+                 descaracteriza a medição de deslocamento. Medido no svelte em
+                 2026-09-18 (gatilho -60px, painel +42px, lado top → bottom); a
+                 cena é a mesma nas cinco para que comparar as páginas continue
+                 respondendo alguma coisa. -->
+            <p class="nds-text-body">
+              A última rodada de testes com pessoas usuárias apontou duas telas em que o resumo
+              some antes da hora. Vale revisar antes de fechar a sprint, porque as duas aparecem
+              no fluxo de entrada e é lá que a maior parte das pessoas chega pela primeira vez.
+            </p>
 
-            <ng-template ndsHoverCardContent>
-              ${CARTAO_PERFIL}
-            </ng-template>
-          </span>
-          há 2 horas.
-        </p>
+            <p class="nds-text-body">
+              Comentário de
+              <span ndsHoverCard [open]="isOpen" (openChange)="isOpen = $event">
+                <a ndsHoverCardTrigger href="/users/joana" class="nds-text-primary nds-font-medium">@joana</a>
+
+                <ng-template ndsHoverCardContent>
+                  ${CARTAO_PERFIL}
+                </ng-template>
+              </span>
+              há 2 horas.
+            </p>
+
+            <p class="nds-text-body">
+              Concordo com a primeira parte. A segunda depende de a equipe de conteúdo confirmar
+              o texto novo, que ainda está em revisão.
+            </p>
+
+            <p class="nds-text-body">
+              Deixei as duas telas anotadas no arquivo compartilhado, com a gravação da sessão
+              ao lado de cada uma.
+            </p>
+          </div>
+        </div>
 
         <p class="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
           Estado externo: {{ isOpen ? 'aberto' : 'fechado' }}
@@ -376,6 +419,28 @@ export const Controlled: Story = {
         await expect(espelho).toHaveTextContent('aberto');
       },
     );
+
+    await step('Rolar um ancestral não fecha o cartão, e ele acompanha o gatilho', async () => {
+      // O degrau que faltava à D10, e ele NÃO é o passo de cima com outra
+      // roupa. O passo de cima desloca o gatilho e cutuca por `scroll` de
+      // janela; aqui o `autoUpdate` escuta `ancestorScroll` e `ancestorResize`
+      // pelo MESMO callback, então aquele cutucão prova reposicionamento e não
+      // prova sobrevivência à rolagem. Quem separa reposicionar de DISPENSAR o
+      // cartão — que é o que a `reka-ui` faz no vue, e por isso a exceção dela
+      // fica declarada no PRD em vez de alinhada — é rolar um contêiner de
+      // verdade e olhar as duas metades:
+      //
+      //   1. o painel continua montado, e é o MESMO nó;
+      //   2. ele andou junto com o gatilho.
+      //
+      // Sem a metade 1 o passo passaria com o cartão sumindo e voltando; sem a
+      // metade 2 passaria com o cartão parado no lugar de antes da rolagem.
+      const panel = panelOpen()!;
+      const scroller = canvas.getByTestId('ancestral-rolavel');
+      const trigger = canvas.getByRole('link');
+      await checkPanelSurvivesAncestorScroll(panel, trigger, scroller, { stillOpen: panelOpen });
+      await expect(espelho).toHaveTextContent('aberto');
+    });
 
     await step('E fecha pelo mesmo caminho', async () => {
       await userEvent.click(close);

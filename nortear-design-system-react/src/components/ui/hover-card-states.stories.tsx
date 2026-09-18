@@ -17,7 +17,10 @@ import {
   hoverCardSource,
 } from "./hover-card.source";
 import { Button } from "./button";
-import { checkPanelFollowsTrigger } from "./floating-follow-probe";
+import {
+  checkPanelFollowsTrigger,
+  checkPanelSurvivesAncestorScroll,
+} from "./floating-follow-probe";
 
 import { figmaDesign } from "@shared/figma/design-links";
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -330,20 +333,63 @@ export const Controlled: Story = {
             </Button>
           </div>
 
-          <p className="nds-text-body">
-            Comentário de{" "}
-            <HoverCard open={isOpen} onOpenChange={setAberto}>
-              <HoverCardTrigger asChild>
-                <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
-                  @joana
-                </a>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <CartaoPerfil />
-              </HoverCardContent>
-            </HoverCard>{" "}
-            há 2 horas.
-          </p>
+          {/* A lista de comentários rola DENTRO da caixa, e o gatilho vive nela.
+              É cena de produto, e é também o que a D10 precisa para ser medida:
+              um ancestral rolável de verdade. Rolar aqui move o gatilho sem
+              mover a janela — que é o caso em que uma das cinco libs DISPENSA o
+              cartão em vez de reposicioná-lo. A altura sai da escada
+              `--box-height-*` pela classe `.nds-scroll-area`, e não de um
+              `style`: cravada, sairia do tema e da escala. */}
+          <div className="nds-scroll-area" data-size="md">
+            <div
+              className="nds-scroll-area-viewport nds-stack"
+              data-spacing="md"
+              data-testid="ancestral-rolavel"
+            >
+              {/* O primeiro comentário é o mais longo de propósito, e não é
+                  capricho de texto: é ele que dá RESPIRO VERTICAL ao gatilho.
+                  Com um comentário curto o gatilho nasce perto do topo da
+                  janela, e rolar o ancestral empurra o painel para fora — a lib
+                  então VIRA o cartão de lado, o que é reposicionamento certo mas
+                  descaracteriza a medição de deslocamento. Medido no svelte em
+                  2026-09-18 (gatilho -60px, painel +42px, lado top → bottom); a
+                  cena é a mesma nas cinco para que comparar as páginas continue
+                  respondendo alguma coisa. Aqui a lib já abre o painel PARA
+                  BAIXO e não vira — medido nesta stack em 2026-09-18, DEPOIS de
+                  alongar, em rodada fria e isolada: `data-side` bottom, e o
+                  ancestral com 160px de curso para os 60px que a sonda rola. */}
+              <p className="nds-text-body">
+                A última rodada de testes com pessoas usuárias apontou duas telas em que o resumo
+                some antes da hora. Vale revisar antes de fechar a sprint, porque as duas aparecem
+                no fluxo de entrada e é lá que a maior parte das pessoas chega pela primeira vez.
+              </p>
+
+              <p className="nds-text-body">
+                Comentário de{" "}
+                <HoverCard open={isOpen} onOpenChange={setAberto}>
+                  <HoverCardTrigger asChild>
+                    <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+                      @joana
+                    </a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <CartaoPerfil />
+                  </HoverCardContent>
+                </HoverCard>{" "}
+                há 2 horas.
+              </p>
+
+              <p className="nds-text-body">
+                Concordo com a primeira parte. A segunda depende de a equipe de conteúdo
+                confirmar o texto novo, que ainda está em revisão.
+              </p>
+
+              <p className="nds-text-body">
+                Deixei as duas telas anotadas no arquivo compartilhado, com a gravação da
+                sessão ao lado de cada uma.
+              </p>
+            </div>
+          </div>
 
           <p className="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
             Estado externo: {isOpen ? "aberto" : "fechado"}
@@ -381,6 +427,29 @@ export const Controlled: Story = {
         await expect(espelho).toHaveTextContent("aberto");
       },
     );
+
+    await step("Rolar um ancestral não fecha o cartão, e ele acompanha o gatilho", async () => {
+      // O degrau que faltava à D10, nas cinco. O passo acima cutuca o
+      // acompanhamento por evento sintético na janela, e nas libs que
+      // reposicionam rolagem e redimensionamento passam pelo MESMO `update` do
+      // mesmo `autoUpdate`: ele prova que a conta roda de novo, e não prova que
+      // o cartão sobrevive à rolagem. Há lib que DISPENSA o cartão aí, e ela
+      // passaria no passo de cima.
+      //
+      // `stillOpen` é a consulta ao portal, que é do componente e não da sonda —
+      // por isso entra por parâmetro. É com ela que a sonda separa "o painel
+      // continua montado" de "o painel aberto ainda é O MESMO nó": um cartão
+      // dispensado e reaberto no meio da rolagem satisfaz a primeira com um nó
+      // órfão e reprova na segunda.
+      const panel = panelOpen()!;
+      const scroller = canvas.getByTestId("ancestral-rolavel");
+      const trigger = canvas.getByRole("link", { name: "@joana" });
+      await checkPanelSurvivesAncestorScroll(panel, trigger, scroller, {
+        stillOpen: panelOpen,
+      });
+      await expect(panelOpen()).toBe(panel);
+      await expect(espelho).toHaveTextContent("aberto");
+    });
 
     await step("E fecha pelo mesmo caminho", async () => {
       await userEvent.click(close);

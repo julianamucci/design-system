@@ -18,7 +18,10 @@ import { hoverCardWithComandosSource, hoverCardSource } from './hover-card.sourc
 import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
-import { checkPanelFollowsTrigger } from './floating-follow-probe';
+import {
+  checkPanelFollowsTrigger,
+  checkPanelSurvivesAncestorScroll,
+} from './floating-follow-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -47,6 +50,18 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+/**
+ * Um comentário vizinho da lista da `Controlled` — texto de tela, sem gatilho.
+ *
+ * Função local e não export: neste arquivo todo export nomeado vira story.
+ */
+function comentario(text: string): HTMLParagraphElement {
+  const p = document.createElement('p');
+  p.className = 'nds-text-body';
+  p.textContent = text;
+  return p;
+}
 
 export const Closed: Story = {
   parameters: {
@@ -297,7 +312,59 @@ export const Controlled: Story = {
     controles.dataset.spacing = 'sm';
     controles.append(open, close);
 
-    root.append(controles, emFrase(cartao, 'Comentário de', 'há 2 horas.'), espelho);
+    // A lista de comentários rola DENTRO da caixa, e o gatilho vive nela. É cena
+    // de produto, e é também o que a D10 precisa para ser medida: um ancestral
+    // rolável de verdade. Rolar aqui move o gatilho sem mover a janela — que é o
+    // caso em que uma das cinco libs DISPENSA o cartão em vez de reposicioná-lo.
+    // A altura sai da escada `--box-height-*` pela classe `.nds-scroll-area`, e
+    // não de um `style`: cravada, sairia do tema e da escala.
+    const area = document.createElement('div');
+    area.className = 'nds-scroll-area';
+    area.dataset.size = 'md';
+
+    const viewport = document.createElement('div');
+    viewport.className = 'nds-scroll-area-viewport nds-stack';
+    viewport.dataset.spacing = 'md';
+    viewport.dataset.testid = 'ancestral-rolavel';
+
+    // A frase do gatilho SEM o `emFrase`: ele reserva 200px de altura para o
+    // painel caber ao lado, e aqui quem reserva espaço é a própria caixa
+    // rolável. O cerco de texto — que é o que a `emFrase` existe para garantir,
+    // pela WCAG 2.5.8 — continua, e vem dos comentários vizinhos.
+    const frase = document.createElement('p');
+    frase.className = 'nds-text-body';
+    frase.append(document.createTextNode('Comentário de '), cartao, document.createTextNode(' há 2 horas.'));
+
+    viewport.append(
+      // O primeiro comentário é o mais longo de propósito, e não é capricho de
+      // texto: é ele que dá RESPIRO VERTICAL ao gatilho. Com um comentário curto
+      // o gatilho nasce perto do topo da janela, e rolar o ancestral empurra o
+      // painel para fora — a lib então VIRA o cartão de lado, o que é
+      // reposicionamento certo mas descaracteriza a medição de deslocamento.
+      // Medido no svelte em 2026-09-18 (gatilho -60px, painel +42px, lado
+      // top → bottom); a cena é a mesma nas cinco para que comparar as páginas
+      // continue respondendo alguma coisa. Aqui a fábrica já abre o painel PARA
+      // BAIXO e não vira — medido nesta stack em 2026-09-18, DEPOIS de alongar,
+      // em rodada fria e isolada: `data-side` bottom, e o ancestral com 160px de
+      // curso para os 60px que a sonda rola.
+      comentario(
+        'A última rodada de testes com pessoas usuárias apontou duas telas em que o resumo '
+          + 'some antes da hora. Vale revisar antes de fechar a sprint, porque as duas aparecem '
+          + 'no fluxo de entrada e é lá que a maior parte das pessoas chega pela primeira vez.',
+      ),
+      frase,
+      comentario(
+        'Concordo com a primeira parte. A segunda depende de a equipe de conteúdo '
+          + 'confirmar o texto novo, que ainda está em revisão.',
+      ),
+      comentario(
+        'Deixei as duas telas anotadas no arquivo compartilhado, com a gravação da '
+          + 'sessão ao lado de cada uma.',
+      ),
+    );
+    area.append(viewport);
+
+    root.append(controles, area, espelho);
     return root;
   },
   play: async ({ canvasElement, step }) => {
@@ -328,6 +395,29 @@ export const Controlled: Story = {
       const panel = panelOpen()!;
       await checkPanelFollowsTrigger(panel, canvasElement, { startAt: 200 });
       // Reposicionar não é mudança de estado: nada é anunciado a quem controla.
+      await expect(panelOpen()).toBe(panel);
+      await expect(espelho).toHaveTextContent('aberto');
+    });
+
+    await step('Rolar um ancestral não fecha o cartão, e ele acompanha o gatilho', async () => {
+      // O degrau que faltava à D10, nas cinco. O passo acima cutuca o
+      // acompanhamento por evento sintético na janela, e nas libs que
+      // reposicionam rolagem e redimensionamento passam pelo MESMO `update` do
+      // mesmo `autoUpdate`: ele prova que a conta roda de novo, e não prova que
+      // o cartão sobrevive à rolagem. Há lib que DISPENSA o cartão aí, e ela
+      // passaria no passo de cima.
+      //
+      // `stillOpen` é a consulta ao portal, que é do componente e não da sonda —
+      // por isso entra por parâmetro. É com ela que a sonda separa "o painel
+      // continua montado" de "o painel aberto ainda é O MESMO nó": um cartão
+      // dispensado e reaberto no meio da rolagem satisfaz a primeira com um nó
+      // órfão e reprova na segunda.
+      const panel = panelOpen()!;
+      const scroller = canvas.getByTestId('ancestral-rolavel');
+      const trigger = canvas.getByRole('link', { name: '@joana' });
+      await checkPanelSurvivesAncestorScroll(panel, trigger, scroller, {
+        stillOpen: panelOpen,
+      });
       await expect(panelOpen()).toBe(panel);
       await expect(espelho).toHaveTextContent('aberto');
     });

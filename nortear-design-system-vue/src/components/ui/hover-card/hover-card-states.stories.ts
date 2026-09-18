@@ -15,7 +15,10 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
-import { checkPanelFollowsTrigger } from '@/components/ui/floating-follow-probe';
+import {
+  checkAncestorScrollDismissesPanel,
+  checkPanelFollowsTrigger,
+} from '@/components/ui/floating-follow-probe';
 import { Button } from '@/components/ui/button';
 import { hoverCardControlledSource, hoverCardPerfilSource } from './hover-card.source';
 
@@ -311,16 +314,55 @@ export const Controlled: Story = {
           <Button size="sm" variant="outline" @click="isOpen = false">Fechar pelo estado externo</Button>
         </div>
 
-        <p class="nds-text-body">
-          Comentário de
-          <HoverCard :open="isOpen" @update:open="(v) => isOpen = v">
-            <HoverCardTrigger as-child>
-              <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
-            </HoverCardTrigger>
-            <HoverCardContent>${CARTAO_PERFIL}</HoverCardContent>
-          </HoverCard>
-          há 2 horas.
-        </p>
+        <!-- A lista de comentários rola DENTRO da caixa, e o gatilho vive nela.
+             É cena de produto, e é também o que a D10 precisa para ser medida:
+             um ancestral rolável de verdade. Rolar aqui move o gatilho sem mover
+             a janela — e é exatamente aí que ESTA lib dispensa o cartão em vez
+             de reposicioná-lo. A altura sai da escada \`--box-height-*\` pelo
+             \`data-size\` da folha, e não de um \`style\`: cravada, sairia do
+             tema e da escala.
+             Marcação igual à do vanilla, que é a referência: o \`ScrollArea\` de
+             lib traria viewport e barra próprios de cada lib, e a cena das cinco
+             deixaria de ser comparável. -->
+        <div class="nds-scroll-area" data-size="md">
+          <div class="nds-scroll-area-viewport nds-stack" data-spacing="md" data-testid="ancestral-rolavel">
+            <!-- O primeiro comentário é o mais longo de propósito, e não é
+                 capricho de texto: é ele que dá RESPIRO VERTICAL ao gatilho.
+                 Com um comentário curto o gatilho nasce perto do topo da janela,
+                 e rolar o ancestral empurra o painel para fora — a lib então
+                 VIRA o cartão de lado, o que é reposicionamento certo mas
+                 descaracteriza a medição de deslocamento. Medido no svelte em
+                 2026-09-18 (gatilho -60px, painel +42px, lado top → bottom); a
+                 cena é a mesma nas duas para que comparar as páginas continue
+                 respondendo alguma coisa. -->
+            <p class="nds-text-body">
+              A última rodada de testes com pessoas usuárias apontou duas telas em que o resumo
+              some antes da hora. Vale revisar antes de fechar a sprint, porque as duas aparecem
+              no fluxo de entrada e é lá que a maior parte das pessoas chega pela primeira vez.
+            </p>
+
+            <p class="nds-text-body">
+              Comentário de
+              <HoverCard :open="isOpen" @update:open="(v) => isOpen = v">
+                <HoverCardTrigger as-child>
+                  <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+                </HoverCardTrigger>
+                <HoverCardContent>${CARTAO_PERFIL}</HoverCardContent>
+              </HoverCard>
+              há 2 horas.
+            </p>
+
+            <p class="nds-text-body">
+              Concordo com a primeira parte. A segunda depende de a equipe de conteúdo confirmar
+              o texto novo, que ainda está em revisão.
+            </p>
+
+            <p class="nds-text-body">
+              Deixei as duas telas anotadas no arquivo compartilhado, com a gravação da sessão
+              ao lado de cada uma.
+            </p>
+          </div>
+        </div>
 
         <p class="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
           Estado externo: {{ isOpen ? 'aberto' : 'fechado' }}
@@ -369,6 +411,44 @@ export const Controlled: Story = {
     await step('E fecha pelo mesmo caminho', async () => {
       await userEvent.click(close);
       await waitForClosed();
+      await expect(panelOpen()).toBeNull();
+      await expect(espelho).toHaveTextContent('fechado');
+    });
+
+    await step('Rolar um ancestral dispensa o cartão — exceção declarada da D10', async () => {
+      // Este passo afirma o OPOSTO do irmão das outras quatro stacks, e é de
+      // propósito: lá o rótulo é "Rolar um ancestral não fecha o cartão, e ele
+      // acompanha o gatilho". Rótulo igual sobre comportamento oposto seria
+      // mentira para quem compara as cinco páginas.
+      //
+      // A `reka-ui` escuta `scroll` em `window` na fase de CAPTURA e chama
+      // `onDismiss()` quando o alvo do evento contém o gatilho
+      // (`HoverCardContentImpl.js:150-153`). Um ancestral rolável que rola é
+      // exatamente esse caso, e o cartão some onde as outras quatro o veem
+      // acompanhar. A D10 registra a exceção; ATÉ AQUI ela não tinha portão
+      // nenhum, e um bump da lib que passasse a reposicionar deixaria a suíte
+      // verde e o documento errado.
+      //
+      // A sonda rola de VERDADE (`scrollTop` do viewport). Sintetizar
+      // `new Event('scroll')` em `window` explodiria dentro do ouvinte da lib,
+      // que faz `event.target.contains(gatilho)` — e `window` não tem
+      // `contains`.
+      //
+      // O cartão é reaberto aqui porque o passo anterior o fechou: a cena de
+      // rolagem precisa de um painel vivo para dispensar.
+      await userEvent.click(open);
+      const panel = await waitForOpen('para a cena de rolagem');
+      const scroller = canvas.getByTestId('ancestral-rolavel');
+      const trigger = canvas.getByRole('link', { name: '@joana' });
+
+      // `(panel, trigger, scroller)` — a mesma ordem das outras quatro stacks,
+      // ainda que o nome da função diverja. Ver o docblock da sonda: os três são
+      // `HTMLElement`, e trocar dois deles não acorda compilador nenhum.
+      await checkAncestorScrollDismissesPanel(panel, trigger, scroller);
+
+      // Dispensa não é o painel evaporar em silêncio: a lib devolve o estado a
+      // quem controla. Sem estas duas linhas, um portal que some sem avisar
+      // deixaria o espelho dizendo "aberto" sobre um cartão que já não existe.
       await expect(panelOpen()).toBeNull();
       await expect(espelho).toHaveTextContent('fechado');
     });

@@ -16,7 +16,10 @@ import { hoverCardSource } from './hover-card.source';
 // vue: em arquivo de story todo export nomeado vira story, e três stacks
 // fazendo a mesma pergunta de três formas é a divergência que esta passagem
 // existe para fechar.
-import { checkPanelFollowsTrigger } from '../floating-follow-probe';
+import {
+  checkPanelFollowsTrigger,
+  checkPanelSurvivesAncestorScroll,
+} from '../floating-follow-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -296,6 +299,29 @@ export const Controlled: StoryObj<Record<string, never>> = {
         await expect(espelho).toHaveTextContent('aberto');
       },
     );
+
+    await step('Rolar um ancestral não fecha o cartão, e ele acompanha o gatilho', async () => {
+      // O degrau que faltava à D10, nas cinco. O passo acima cutuca o
+      // acompanhamento por evento sintético na janela, e nas libs que
+      // reposicionam rolagem e redimensionamento passam pelo MESMO `update` do
+      // mesmo `autoUpdate`: ele prova que a conta roda de novo, e não prova que
+      // o cartão sobrevive à rolagem. Há lib que DISPENSA o cartão aí — a do
+      // vue —, e ela passaria no passo de cima.
+      //
+      // `stillOpen` é a consulta ao portal, que é do componente e não da sonda —
+      // por isso entra por parâmetro. É com ela que a sonda separa "o painel
+      // continua montado" de "o painel aberto ainda é O MESMO nó": um cartão
+      // dispensado e reaberto no meio da rolagem satisfaz a primeira com um nó
+      // órfão e reprova na segunda.
+      const panel = panelOpen()!;
+      const scroller = canvas.getByTestId('ancestral-rolavel');
+      const trigger = canvas.getByRole('link', { name: '@joana' });
+      await checkPanelSurvivesAncestorScroll(panel, trigger, scroller, {
+        stillOpen: panelOpen,
+      });
+      await expect(panelOpen()).toBe(panel);
+      await expect(espelho).toHaveTextContent('aberto');
+    });
 
     await step('E fecha pelo mesmo caminho', async () => {
       await userEvent.click(close);
