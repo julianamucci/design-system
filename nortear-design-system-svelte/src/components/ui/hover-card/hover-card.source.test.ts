@@ -113,42 +113,42 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a espera padrão não aparece como número em lugar nenhum do markup', () => {
-    const saida = hoverCardWaitDefaultSource();
-    expect(saida).not.toContain('openDelay');
-    expect(saida).not.toContain('closeDelay');
+    const output = hoverCardWaitDefaultSource();
+    expect(output).not.toContain('openDelay');
+    expect(output).not.toContain('closeDelay');
   });
 
   it('o perfil traz o avatar escondido do leitor de tela, e o link continua navegável', () => {
-    const saida = hoverCardPerfilSource();
-    expect(saida).toContain('aria-hidden="true"');
-    expect(saida).toContain('<a href="/users/joana" {...props}>@joana</a>');
+    const output = hoverCardPerfilSource();
+    expect(output).toContain('aria-hidden="true"');
+    expect(output).toContain('<a href="/users/joana" {...props}>@joana</a>');
   });
 
   it('a prévia de link aponta o gatilho para o destino externo', () => {
-    const saida = hoverCardPreviaDeLinkSource();
-    expect(saida).toContain('<a href="https://design-system.dev" {...props}>design-system.dev</a>');
+    const output = hoverCardPreviaDeLinkSource();
+    expect(output).toContain('<a href="https://design-system.dev" {...props}>design-system.dev</a>');
   });
 
   it('a definição leva ao verbete do glossário, e o snippet publica o destino', () => {
-    const saida = hoverCardDefinicaoSource();
+    const output = hoverCardDefinicaoSource();
     // D15: o gatilho era `<button>` e não oferecia saída nenhuma. O snippet é o
     // que alguém copia — publicá-lo sem destino ensinaria a violar o C8, que a
     // mesma página escreve ao lado.
-    expect(saida).toContain('<a href="/glossario/wcag-2-2-aa" {...props}>WCAG 2.2 AA</a>');
-    expect(saida).not.toContain('<button');
+    expect(output).toContain('<a href="/glossario/wcag-2-2-aa" {...props}>WCAG 2.2 AA</a>');
+    expect(output).not.toContain('<button');
     // O painel não carrega nome: sem papel, `aria-label` é `aria-prohibited-attr`.
-    expect(saida).not.toContain('aria-label');
+    expect(output).not.toContain('aria-label');
   });
 
   it('a métrica deixa a cor semântica no número, e não no texto corrido', () => {
-    const saida = hoverCardMetricaSource();
+    const output = hoverCardMetricaSource();
     // O valor é o de `variants.items.metricExplainer.cardValue`, e ele aparece
     // duas vezes de propósito: no gatilho e no cartão. O gatilho leva à página
     // da métrica (D15).
-    expect(saida).toContain('<a href="/metricas/conversao" {...props}>3,42%</a>');
-    expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>');
-    expect(saida).toContain('<p class="nds-text-caption nds-text-muted-foreground">');
-    expect(saida).not.toContain('aria-label');
+    expect(output).toContain('<a href="/metricas/conversao" {...props}>3,42%</a>');
+    expect(output).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>');
+    expect(output).toContain('<p class="nds-text-caption nds-text-muted-foreground">');
+    expect(output).not.toContain('aria-label');
   });
 
   it('a classe extra convive com a classe do componente, não a substitui', () => {
@@ -171,18 +171,18 @@ describe('transforms das stories de variação e composição', () => {
       ['métrica', hoverCardMetricaSource, 'A página inicial fechou o mês em', ', dentro da meta.'],
       ['classe extra', hoverCardClassNameExtraSource, 'Resumo da entrega de', 'nesta sprint.'],
     ];
-    for (const [nome, fn, antes, depois] of molduras) {
-      const saida = fn();
-      expect(saida, nome).toContain(`\n  ${antes}\n`);
-      expect(saida, nome).toContain(`\n  ${depois}\n`);
+    for (const [name, fn, antes, depois] of molduras) {
+      const output = fn();
+      expect(output, name).toContain(`\n  ${antes}\n`);
+      expect(output, name).toContain(`\n  ${depois}\n`);
     }
   });
 
   it('os quatro lados saem de uma lista, e nenhum painel carrega nome próprio', () => {
-    const saida = hoverCardLadosSource();
-    expect(saida).toContain('{#each LADOS as lado (lado.side)}');
-    expect(saida).toContain('<HoverCardContent side={lado.side}>');
-    expect(saida).not.toContain('aria-label');
-    expect(saida.match(/side: "/g)).toHaveLength(4);
+    const output = hoverCardLadosSource();
+    expect(output).toContain('{#each LADOS as lado (lado.side)}');
+    expect(output).toContain('<HoverCardContent side={lado.side}>');
+    expect(output).not.toContain('aria-label');
+    expect(output.match(/side: "/g)).toHaveLength(4);
   });
 });

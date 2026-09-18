@@ -76,11 +76,11 @@ export const IconButtonWithShortcut: Story = {
     const label = document.createElement('span');
     label.textContent = 'Salvar';
     content.appendChild(label);
-    for (const nome of ['Ctrl', 'S']) {
+    for (const name of ['Ctrl', 'S']) {
       const tecla = document.createElement('kbd');
       tecla.dataset.slot = 'kbd';
       tecla.className = 'nds-kbd';
-      tecla.textContent = nome;
+      tecla.textContent = name;
       content.appendChild(tecla);
     }
 

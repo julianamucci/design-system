@@ -53,9 +53,9 @@ import { Button } from '@/components/ui/button'
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = cardSource('', { args: { size: (() => {}) as never } });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('size=');
+    const output = cardSource('', { args: { size: (() => {}) as never } });
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('size=');
   });
 
   it('o título vira heading de verdade — o padrão do componente é neutro', () => {
@@ -64,93 +64,93 @@ import { Button } from '@/components/ui/button'
   });
 
   it('cada ação do rodapé diz sobre qual item ela age', () => {
-    const saida = cardSource();
+    const output = cardSource();
     // "Excluir" sozinho vira uma fileira de botões idênticos numa lista.
-    expect(saida).toContain('aria-label="Editar produto Cadeira Gamer Pro"');
-    expect(saida).toContain('aria-label="Excluir produto Cadeira Gamer Pro"');
+    expect(output).toContain('aria-label="Editar produto Cadeira Gamer Pro"');
+    expect(output).toContain('aria-label="Excluir produto Cadeira Gamer Pro"');
   });
 });
 
 describe('transforms das stories de tamanho e de estado', () => {
   it('a unidade mínima é cabeçalho e corpo, e não importa o que não usa', () => {
-    const saida = cardSimpleSource();
-    expect(saida).not.toContain('CardFooter');
-    expect(saida).not.toContain('CardAction');
-    expect(saida).not.toContain('@/components/ui/button');
+    const output = cardSimpleSource();
+    expect(output).not.toContain('CardFooter');
+    expect(output).not.toContain('CardAction');
+    expect(output).not.toContain('@/components/ui/button');
     // Container passivo: nenhum papel, nenhuma entrada na ordem de foco.
-    expect(saida).not.toContain('tabindex');
-    expect(saida).not.toContain('role=');
+    expect(output).not.toContain('tabindex');
+    expect(output).not.toContain('role=');
   });
 
   it('o tamanho compacto propaga sozinho às partes internas', () => {
-    const saida = cardCompactoSource();
-    expect(saida).toContain('<Card size="sm" class="nds-w-xs">');
+    const output = cardCompactoSource();
+    expect(output).toContain('<Card size="sm" class="nds-w-xs">');
     // Não há prop de tamanho a repetir em cada peça.
-    expect(saida).not.toContain('<CardHeader size=');
-    expect(saida).not.toContain('<CardTitle size=');
+    expect(output).not.toContain('<CardHeader size=');
+    expect(output).not.toContain('<CardTitle size=');
   });
 
   it('o card clicável põe o destino no elemento de fora, não no card', () => {
-    const saida = cardClickableSource();
-    expect(saida).toContain('href="/produtos/cadeira-gamer-pro"');
-    expect(saida).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
-    expect(saida).toContain('nds-focus-ring');
+    const output = cardClickableSource();
+    expect(output).toContain('href="/produtos/cadeira-gamer-pro"');
+    expect(output).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
+    expect(output).toContain('nds-focus-ring');
     // O card continua sem prop de ativação nenhuma.
-    expect(saida).toContain('  <Card>');
-    expect(saida).not.toContain('<Card @click');
+    expect(output).toContain('  <Card>');
+    expect(output).not.toContain('<Card @click');
   });
 
   it('o rodapé é filho direto do card, e vem depois do corpo', () => {
-    const saida = cardWithFooterSource();
-    const root = saida.slice(saida.indexOf('<Card '));
+    const output = cardWithFooterSource();
+    const root = output.slice(output.indexOf('<Card '));
     expect(root.indexOf('</CardContent>')).toBeLessThan(root.indexOf('<CardFooter'));
     // Um invólucro entre os dois mataria a regra que zera o respiro de baixo.
-    expect(saida).toContain('    <CardFooter class="nds-cluster"');
+    expect(output).toContain('    <CardFooter class="nds-cluster"');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a ação vive dentro do cabeçalho, depois do título e da descrição', () => {
-    const saida = headerCardWithActionSource();
-    expect(saida).toContain('  CardAction,');
-    const header = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
+    const output = headerCardWithActionSource();
+    expect(output).toContain('  CardAction,');
+    const header = output.slice(output.indexOf('<CardHeader>'), output.indexOf('</CardHeader>'));
     expect(header.indexOf('<CardTitle')).toBeLessThan(header.indexOf('<CardDescription'));
     expect(header.indexOf('<CardDescription')).toBeLessThan(header.indexOf('<CardAction>'));
   });
 
   it('a imagem é o primeiro filho, e o canto vem do card, não de classe nela', () => {
-    const saida = cardWithImageSource();
-    const root = saida.slice(saida.indexOf('<Card '));
+    const output = cardWithImageSource();
+    const root = output.slice(output.indexOf('<Card '));
     expect(root.indexOf('<img')).toBeLessThan(root.indexOf('<CardHeader>'));
-    expect(saida).not.toContain('nds-rounded-t');
+    expect(output).not.toContain('nds-rounded-t');
     // Imagem informativa: alt vazio a esconderia de quem usa leitor de tela.
-    expect(saida).toContain('alt="Cadeira Gamer Pro vista de frente, em fundo neutro"');
+    expect(output).toContain('alt="Cadeira Gamer Pro vista de frente, em fundo neutro"');
   });
 
   it('o card de produto monta as sete peças, com o status na ação do cabeçalho', () => {
-    const saida = productCardSource();
+    const output = productCardSource();
     for (const part of ['CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle']) {
-      expect(saida).toContain(`  ${part},`);
+      expect(output).toContain(`  ${part},`);
     }
-    const header = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
+    const header = output.slice(output.indexOf('<CardHeader>'), output.indexOf('</CardHeader>'));
     expect(header).toContain('<Badge variant="info">Em estoque</Badge>');
   });
 
   it('na métrica o título nomeia e o corpo carrega o valor', () => {
-    const saida = cardDeMetricaSource();
-    expect(saida).toContain('<CardTitle as="h3">Assinantes ativos</CardTitle>');
-    const body = saida.slice(saida.indexOf('<CardContent>'), saida.indexOf('</CardContent>'));
+    const output = cardDeMetricaSource();
+    expect(output).toContain('<CardTitle as="h3">Assinantes ativos</CardTitle>');
+    const body = output.slice(output.indexOf('<CardContent>'), output.indexOf('</CardContent>'));
     expect(body).toContain('8.742');
     // Trocar título e valor faria o leitor anunciar "8.742" como nome do card.
-    expect(saida).not.toContain('<CardTitle as="h3">8.742');
+    expect(output).not.toContain('<CardTitle as="h3">8.742');
   });
 
   it('o perfil termina no cabeçalho e o avatar fica fora da leitura', () => {
-    const saida = cardDePerfilSource();
-    expect(saida).toContain(`import { Avatar, AvatarFallback } from '@/components/ui/avatar'`);
-    expect(saida).not.toContain('CardFooter');
+    const output = cardDePerfilSource();
+    expect(output).toContain(`import { Avatar, AvatarFallback } from '@/components/ui/avatar'`);
+    expect(output).not.toContain('CardFooter');
     // O nome já está no título: um alt no avatar o anunciaria duas vezes.
-    expect(saida).not.toContain('alt=');
-    expect(saida).toContain('<AvatarFallback>MR</AvatarFallback>');
+    expect(output).not.toContain('alt=');
+    expect(output).toContain('<AvatarFallback>MR</AvatarFallback>');
   });
 });

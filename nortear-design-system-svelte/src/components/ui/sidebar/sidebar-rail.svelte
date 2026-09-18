@@ -32,7 +32,7 @@
 	aria-hidden="true"
 	tabindex={-1}
 	onclick={sidebar.toggle}
-	title={LABELS_SIDEBAR_DEFAULT.alternar}
+	title={LABELS_SIDEBAR_DEFAULT.toggle}
 	class={cn("nds-sidebar-rail", className)}
 	{...restProps}
 >

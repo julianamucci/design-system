@@ -68,11 +68,11 @@ export const WithIcons: Story = {
     await step('Cada ícone está marcado como decorativo', async () => {
       const icons = canvasElement.querySelectorAll('[data-slot="tabs-trigger"] svg');
       await expect(icons).toHaveLength(3);
-      for (const icone of icons) {
-        await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      for (const icon of icons) {
+        await expect(icon.getAttribute('aria-hidden')).toBe('true');
         // O `effect` do ícone monta os filhos por createElementNS — svg vazio
         // seria um ícone que não desenhou nada e ninguém veria falhar.
-        await expect(icone.childElementCount).toBeGreaterThan(0);
+        await expect(icon.childElementCount).toBeGreaterThan(0);
       }
     });
 

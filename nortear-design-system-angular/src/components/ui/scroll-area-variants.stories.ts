@@ -132,8 +132,8 @@ export const Bidirectional: Story = {
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (line of lines; track line) {
             <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
-              @for (coluna of colunas; track coluna) {
-                <span class="nds-text-body nds-shrink-0">{{ line }} · {{ coluna }}</span>
+              @for (column of colunas; track column) {
+                <span class="nds-text-body nds-shrink-0">{{ line }} · {{ column }}</span>
               }
             </div>
           }

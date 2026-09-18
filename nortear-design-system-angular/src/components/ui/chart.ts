@@ -250,7 +250,7 @@ export function formatarValue(value: number): string {
     '[attr.data-type]': 'type()',
   },
   template: `
-    @if (vazio()) {
+    @if (empty()) {
       <!-- Sem \`role="img"\` aqui de propósito: o papel PODA a subárvore da
            árvore de acessibilidade, e a frase que explica a ausência de dado é
            justamente o conteúdo — ficaria escondida atrás de um rótulo
@@ -301,8 +301,8 @@ export function formatarValue(value: number): string {
           <caption>{{ label() }}</caption>
           <thead>
             <tr>
-              @for (coluna of table().header; track coluna) {
-                <th scope="col">{{ coluna }}</th>
+              @for (column of table().header; track column) {
+                <th scope="col">{{ column }}</th>
               }
             </tr>
           </thead>
@@ -543,7 +543,7 @@ export class NdsChart {
     return this.categorias().map((label) => ({ label, max: ceiling }));
   });
 
-  protected readonly vazio = computed(() => {
+  protected readonly empty = computed(() => {
     // Rosca e funil — e SÓ eles — leem a lista simples. A dispersão também não
     // é cartesiana nem radar, e sem nomeá-la aqui ela caía neste ramo: media
     // `data()`, que na dispersão é vazio por definição, e o container trocava um

@@ -27,7 +27,7 @@ import { figmaDesign } from "@shared/figma/design-links";
 // o painel inteiro estava cravado em português.
 const LABEL = {
   trigger: "Abrir Drawer",
-  descricao: "Atualize seus dados pessoais e foto.",
+  description: "Atualize seus dados pessoais e foto.",
   confirmar: "Confirmar",
 };
 
@@ -131,7 +131,7 @@ export const Playground: Story = {
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>{t("demonstration.labels.title")}</DrawerTitle>
-              <DrawerDescription>{LABEL.descricao}</DrawerDescription>
+              <DrawerDescription>{LABEL.description}</DrawerDescription>
             </DrawerHeader>
             <DrawerBody className="nds-text-body nds-text-muted-foreground">
               Conteúdo do drawer.
@@ -164,7 +164,7 @@ export const Playground: Story = {
       // liga aos ids REAIS do título e da descrição — painel modal anônimo é o
       // defeito silencioso aqui.
       await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
-      await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
+      await expect(panel).toHaveAccessibleDescription(LABEL.description);
       await expect(panel).toHaveAttribute("data-direction", args.direction!);
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(

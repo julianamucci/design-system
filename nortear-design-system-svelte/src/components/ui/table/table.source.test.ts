@@ -80,70 +80,70 @@ describe('tableSource', () => {
     expect(tableSource('', { args: { caption: 'Faturas de maio' } })).toContain(
       '<TableCaption class="nds-sr-only">Faturas de maio</TableCaption>',
     );
-    expect(tableSource('', { args: { captionVisivel: true } })).toContain(
+    expect(tableSource('', { args: { captionVisible: true } })).toContain(
       '<TableCaption>Lista de faturas recentes</TableCaption>',
     );
   });
 
   it('sem rodapé, o TableFooter sai também do import', () => {
-    const saida = tableSource('', { args: { showFooter: false } });
-    expect(saida).not.toContain('TableFooter');
-    expect(saida).not.toContain('R$ 1.400,00');
+    const output = tableSource('', { args: { showFooter: false } });
+    expect(output).not.toContain('TableFooter');
+    expect(output).not.toContain('R$ 1.400,00');
   });
 });
 
 describe('transforms das stories de variação e estado', () => {
   it('a variante básica mostra a legenda e dispensa o rodapé', () => {
-    const saida = tableBasicaSource();
-    expect(saida).toContain('<TableCaption>Lista de faturas recentes</TableCaption>');
-    expect(saida).not.toContain('TableFooter');
+    const output = tableBasicaSource();
+    expect(output).toContain('<TableCaption>Lista de faturas recentes</TableCaption>');
+    expect(output).not.toContain('TableFooter');
   });
 
   it('a variante com rodapé fecha o total das cinco linhas', () => {
-    const saida = tableWithFooterSource();
-    expect(saida).toContain('<TableCell colspan={3}>Total</TableCell>');
-    expect(saida).toContain('R$ 1.400,00');
+    const output = tableWithFooterSource();
+    expect(output).toContain('<TableCell colspan={3}>Total</TableCell>');
+    expect(output).toContain('R$ 1.400,00');
   });
 
   it('a legenda oculta convive com um título visível acima da tabela', () => {
-    const saida = tableCaptionOcultaSource();
-    expect(saida).toContain('<h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes');
-    expect(saida).toContain('<TableCaption class="nds-sr-only">');
+    const output = tableCaptionOcultaSource();
+    expect(output).toContain('<h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes');
+    expect(output).toContain('<TableCaption class="nds-sr-only">');
     // A tabela recuada mora dentro do bloco do título.
-    expect(saida).toContain('  <Table>');
+    expect(output).toContain('  <Table>');
   });
 
   it('a coluna de ações nomeia o botão pela fatura da linha', () => {
-    const saida = tableWithActionsSource();
-    expect(saida).toContain('from "@/components/ui/button"');
-    expect(saida).toContain('aria-label="Ações para fatura {fatura.id}"');
-    expect(saida).toContain('variant="ghost"');
+    const output = tableWithActionsSource();
+    expect(output).toContain('from "@/components/ui/button"');
+    expect(output).toContain('aria-label="Ações para fatura {fatura.id}"');
+    expect(output).toContain('variant="ghost"');
   });
 
   it('a rolagem horizontal nasce de muitas colunas, não de uma classe', () => {
-    const saida = tableScrollHorizontalSource();
-    expect(saida).toContain('{#each meses as mes (mes)}');
-    expect(saida).not.toContain('overflow');
+    const output = tableScrollHorizontalSource();
+    expect(output).toContain('{#each meses as mes (mes)}');
+    expect(output).not.toContain('overflow');
   });
 
   it('o estado vazio ocupa as quatro colunas com a mensagem', () => {
-    const saida = tableVaziaSource();
-    expect(saida).toContain('<TableCell colspan={4} class="nds-table-empty">');
-    expect(saida).toContain('Nenhuma fatura encontrada.');
+    const output = tableVaziaSource();
+    expect(output).toContain('<TableCell colspan={4} class="nds-table-empty">');
+    expect(output).toContain('Nenhuma fatura encontrada.');
     // O ramo vazio é o `:else` do próprio each — sem lista, sem linha.
-    expect(saida).toContain('{:else}');
+    expect(output).toContain('{:else}');
   });
 
   it('a linha selecionada carrega o data-state, e as outras não', () => {
-    const saida = tableLineSelecionadaSource();
-    expect(saida).toContain('<TableRow data-state={fatura.selecionada ? "selected" : null}>');
-    expect(saida).toContain('selecionada: true');
+    const output = tableLineSelecionadaSource();
+    expect(output).toContain('<TableRow data-state={fatura.selecionada ? "selected" : null}>');
+    expect(output).toContain('selecionada: true');
   });
 
   it('o carregamento anuncia pela região e esconde o esqueleto', () => {
-    const saida = tableLoadingSource();
-    expect(saida).toContain('role="status" aria-busy="true" aria-label="Carregando faturas"');
-    expect(saida).toContain('from "@/components/ui/skeleton"');
-    expect(saida.match(/<Skeleton/g)).toHaveLength(4);
+    const output = tableLoadingSource();
+    expect(output).toContain('role="status" aria-busy="true" aria-label="Carregando faturas"');
+    expect(output).toContain('from "@/components/ui/skeleton"');
+    expect(output.match(/<Skeleton/g)).toHaveLength(4);
   });
 });

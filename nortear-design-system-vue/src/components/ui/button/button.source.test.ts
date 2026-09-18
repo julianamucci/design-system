@@ -41,28 +41,28 @@ import { Button } from '@/components/ui/button'
   });
 
   it('acompanha os controls que diferem do padrão', () => {
-    const saida = buttonSource('', { args: { variant: 'destructive', size: 'lg', disabled: true } });
-    expect(saida).toContain('<Button variant="destructive" size="lg" disabled>Botão</Button>');
+    const output = buttonSource('', { args: { variant: 'destructive', size: 'lg', disabled: true } });
+    expect(output).toContain('<Button variant="destructive" size="lg" disabled>Botão</Button>');
   });
 
   it('não escreve variante nem tamanho padrão — repetir padrão ensina ruído', () => {
-    const saida = buttonSource('', { args: { variant: 'default', size: 'default', disabled: false } });
-    expect(saida).toContain('<Button>Botão</Button>');
-    expect(saida).not.toContain('variant="default"');
-    expect(saida).not.toContain('size="default"');
-    expect(saida).not.toContain('disabled');
+    const output = buttonSource('', { args: { variant: 'default', size: 'default', disabled: false } });
+    expect(output).toContain('<Button>Botão</Button>');
+    expect(output).not.toContain('variant="default"');
+    expect(output).not.toContain('size="default"');
+    expect(output).not.toContain('disabled');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     // O Playground declara `onClick: fn()`, e todo arg de ação chega à
     // transform como FUNÇÃO. Interpolado direto, o corpo do mock apareceria no
     // lugar do exemplo.
-    const saida = buttonSource('', {
+    const output = buttonSource('', {
       args: { variant: (() => {}) as never, size: (() => {}) as never },
     });
-    expect(saida).toContain('<Button>Botão</Button>');
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('=>');
+    expect(output).toContain('<Button>Botão</Button>');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('=>');
   });
 });
 
@@ -84,7 +84,7 @@ describe('transforms das stories de variante', () => {
       buttonSecundarioSource(),
       buttonGhostSource(),
       buttonLinkSource(),
-    ].map((saida) => saida.match(/>([^<>]+)<\/Button>/)![1]);
+    ].map((output) => output.match(/>([^<>]+)<\/Button>/)![1]);
     expect(new Set(rotulos).size).toBe(rotulos.length);
   });
 });
@@ -101,8 +101,8 @@ describe('transforms das stories de tamanho', () => {
   });
 
   it('o botão só de ícone importa o ícone e nomeia a ação', () => {
-    const saida = buttonIconSource();
-    expect(saida).toBe(
+    const output = buttonIconSource();
+    expect(output).toBe(
       `<script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-vue-next'
@@ -117,15 +117,15 @@ import { Plus } from 'lucide-vue-next'
   });
 
   it('sem texto dentro, o rótulo acessível é o único nome que sobra', () => {
-    for (const saida of [
+    for (const output of [
       buttonIconSource(),
       buttonIconXsSource(),
       buttonIconSmSource(),
       buttonIconLgSource(),
     ]) {
-      expect(saida).toContain('aria-label="Adicionar item"');
+      expect(output).toContain('aria-label="Adicionar item"');
       // O SVG é decorativo: lido em voz alta duplicaria o rótulo.
-      expect(saida).toContain('aria-hidden="true"');
+      expect(output).toContain('aria-hidden="true"');
     }
     expect(buttonIconXsSource()).toContain('size="icon-xs"');
     expect(buttonIconSmSource()).toContain('size="icon-sm"');
@@ -139,18 +139,18 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o carregamento junta desabilitado, ocupado e rótulo de progresso', () => {
-    const saida = buttonLoadingSource();
-    expect(saida).toContain('<Button disabled aria-busy="true">');
-    expect(saida).toContain('class="nds-button-icon-svg nds-spin"');
+    const output = buttonLoadingSource();
+    expect(output).toContain('<Button disabled aria-busy="true">');
+    expect(output).toContain('class="nds-button-icon-svg nds-spin"');
     // O rótulo troca junto: um "Salvar" parado durante o envio mente sobre o
     // estado.
-    expect(saida).toContain('Salvando…');
+    expect(output).toContain('Salvando…');
   });
 
   it('o foco não tem prop — a ausência é o assunto da story', () => {
-    const saida = buttonFocusVisibleSource();
-    expect(saida).toContain('<Button>Foco visível</Button>');
-    expect(saida).not.toContain('focus');
+    const output = buttonFocusVisibleSource();
+    expect(output).toContain('<Button>Foco visível</Button>');
+    expect(output).not.toContain('focus');
   });
 
   it('o inválido sinaliza no atributo, não na cor', () => {
@@ -162,40 +162,40 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o ícone inicial vem antes do rótulo', () => {
-    const saida = buttonWithIconInitialSource();
-    expect(saida.indexOf('<Plus')).toBeLessThan(saida.indexOf('Adicionar item'));
-    expect(saida).toContain(`import { Plus } from 'lucide-vue-next'`);
+    const output = buttonWithIconInitialSource();
+    expect(output.indexOf('<Plus')).toBeLessThan(output.indexOf('Adicionar item'));
+    expect(output).toContain(`import { Plus } from 'lucide-vue-next'`);
   });
 
   it('o ícone final vem depois — é o que distingue as duas composições', () => {
-    const saida = buttonWithIconFinalSource();
-    expect(saida.indexOf('Próximo')).toBeLessThan(saida.indexOf('<ChevronRight'));
+    const output = buttonWithIconFinalSource();
+    expect(output.indexOf('Próximo')).toBeLessThan(output.indexOf('<ChevronRight'));
   });
 
   it('a composição destrutiva troca ícone e variante juntos', () => {
-    const saida = buttonDestructiveWithIconSource();
-    expect(saida).toContain(`import { Trash2 } from 'lucide-vue-next'`);
-    expect(saida).toContain('<Button variant="destructive">');
+    const output = buttonDestructiveWithIconSource();
+    expect(output).toContain(`import { Trash2 } from 'lucide-vue-next'`);
+    expect(output).toContain('<Button variant="destructive">');
   });
 
   it('o botão só de ícone da composição nomeia a própria ação', () => {
-    const saida = buttonSoIconSource();
-    expect(saida).toContain('aria-label="Baixar arquivo"');
-    expect(saida).toContain('<Download aria-hidden="true" />');
+    const output = buttonSoIconSource();
+    expect(output).toContain('aria-label="Baixar arquivo"');
+    expect(output).toContain('<Download aria-hidden="true" />');
   });
 
   it('o par de ações põe a primária à direita, com o respiro no container', () => {
-    const saida = actionsButtonPairSource();
-    expect(saida).toContain('<div class="nds-cluster" data-spacing="md">');
-    expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
+    const output = actionsButtonPairSource();
+    expect(output).toContain('<div class="nds-cluster" data-spacing="md">');
+    expect(output.indexOf('Cancelar')).toBeLessThan(output.indexOf('Confirmar'));
     // O respiro é do container: margem no botão vazaria para toda composição
     // que reusasse a variante.
-    expect(saida).not.toContain('nds-ml');
+    expect(output).not.toContain('nds-ml');
   });
 
   it('como link, o botão veste o elemento do consumidor', () => {
-    const saida = buttonAsLinkSource();
-    expect(saida).toContain('<Button as-child variant="link">');
-    expect(saida).toContain('<a href="#docs">Ver documentação</a>');
+    const output = buttonAsLinkSource();
+    expect(output).toContain('<Button as-child variant="link">');
+    expect(output).toContain('<a href="#docs">Ver documentação</a>');
   });
 });

@@ -67,7 +67,7 @@ export type ToggleGroupValue = string | string[];
         disabled: group.disabled,
         orientation: group.orientation,
         isValueInitialized: group.valorInicializado,
-        toggle: (value: string, next: boolean) => group.alternar(value, next),
+        toggle: (value: string, next: boolean) => group.toggle(value, next),
       };
     }),
   ],
@@ -181,7 +181,7 @@ export class NdsToggleGroup {
    * pressionado é o `RdxToggle` (paridade com o Base UI); aqui só se mapeia
    * esse booleano para a seleção, respeitando a forma do modo.
    */
-  alternar(value: string, next: boolean): void {
+  toggle(value: string, next: boolean): void {
     if (this.disabled()) return;
 
     const current = this.valoresSelecionados();

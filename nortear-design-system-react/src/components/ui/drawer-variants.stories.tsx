@@ -62,7 +62,7 @@ const wrapperStyle: React.CSSProperties = {
 function panel(
   direction: "bottom" | "top" | "left" | "right",
   title: string,
-  descricao: string,
+  description: string,
 ) {
   return () => (
     <div style={wrapperStyle}>
@@ -73,7 +73,7 @@ function panel(
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
-            <DrawerDescription>{descricao}</DrawerDescription>
+            <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
           <DrawerBody className="nds-text-body nds-text-muted-foreground">
             Conteúdo do painel.

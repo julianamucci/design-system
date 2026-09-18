@@ -80,8 +80,8 @@ export const Empty: Story = {
 
     await step('Sem dado não há desenho — há uma frase', async () => {
       await expect(root.querySelector('svg')).toBeNull();
-      const aviso = root.querySelector('.nds-chart-empty');
-      await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
+      const warning = root.querySelector('.nds-chart-empty');
+      await expect(warning?.textContent?.trim()).toBe(FRASE_VAZIA);
     });
 
     await step('Sem desenho, nada se anuncia como imagem', async () => {

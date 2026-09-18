@@ -116,8 +116,8 @@ export const DescriptionContrast: Story = {
       // descrição não caiu na cor do título por engano — o que passaria no axe
       // e apagaria a hierarquia visual.
       const title = canvasElement.querySelector<HTMLElement>('[data-slot="card-title"]')!;
-      const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="card-description"]')!;
-      await expect(getComputedStyle(descricao).color).not.toBe(getComputedStyle(title).color);
+      const description = canvasElement.querySelector<HTMLElement>('[data-slot="card-description"]')!;
+      await expect(getComputedStyle(description).color).not.toBe(getComputedStyle(title).color);
     });
 
     await step('O botão da ação tem nome acessível contextual', async () => {

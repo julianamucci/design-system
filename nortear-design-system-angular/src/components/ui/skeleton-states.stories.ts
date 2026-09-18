@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NDS_SKELETON } from './skeleton';
 import { skeletonStatesSource } from './skeleton.source';
 import {
-  animationAtiva,
+  animationActive,
   distinctionByTheme,
   ligarMovimentoReduzido,
   radiusAgainstToken,
@@ -55,7 +55,7 @@ export const Pulsing: Story = {
     const sk = canvasElement.querySelector<HTMLElement>('.nds-skeleton')!;
 
     await step('A classe base entrega pulso e o raio do token', async () => {
-      await expect(animationAtiva(sk)).toBe(true);
+      await expect(animationActive(sk)).toBe(true);
       // Contra o token, e não `!== '0px'`: o tema `cold` declara `--radius: 0`
       // como identidade, e a asserção antiga reprovaria um tema legítimo.
       const { radius, expected } = radiusAgainstToken(sk);
@@ -100,7 +100,7 @@ export const ReducedMotion: Story = {
       await step('Com movimento reduzido, o pulso é desligado', async () => {
         // Asserção pelo PAR, não pelo nome da animação: o nome muda por stack e
         // por versão, e `animationName !== 'none'` passava com duração zerada.
-        await expect(animationAtiva(sk)).toBe(false);
+        await expect(animationActive(sk)).toBe(false);
       });
 
       await step('O placeholder continua visível e ocupando a caixa', async () => {
@@ -112,7 +112,7 @@ export const ReducedMotion: Story = {
     }
 
     await step('Sem a preferência, o pulso volta', async () => {
-      await expect(animationAtiva(sk)).toBe(true);
+      await expect(animationActive(sk)).toBe(true);
     });
   },
 };

@@ -29,9 +29,9 @@ const ALL = [
 
 describe('drawerSource', () => {
   it('ensina a importação do design system, não a do primitivo', () => {
-    const saida = drawerSource();
-    expect(saida).toContain('} from "@/components/ui/drawer";');
-    expect(saida).toContain('import { Button } from "@/components/ui/button";');
+    const output = drawerSource();
+    expect(output).toContain('} from "@/components/ui/drawer";');
+    expect(output).toContain('import { Button } from "@/components/ui/button";');
   });
 
   it('o gatilho entrega o próprio botão por asChild', () => {
@@ -44,16 +44,16 @@ describe('drawerSource', () => {
     // `toContain('<DrawerTitle>')` deixaria de fora justamente o snippet que
     // exercita essa capacidade — passando a medir menos sem reprovar nada.
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida, `${fn.name}`).toMatch(/<DrawerTitle[\s>]/);
-      expect(saida).toContain('<DrawerDescription>');
+      const output = fn();
+      expect(output, `${fn.name}`).toMatch(/<DrawerTitle[\s>]/);
+      expect(output).toContain('<DrawerDescription>');
     }
   });
 
   it('omite direction quando é bottom, o padrão do componente', () => {
-    const saida = drawerSource(undefined, { args: { direction: 'bottom' } });
-    expect(saida).toContain('<Drawer>');
-    expect(saida).not.toContain('direction=');
+    const output = drawerSource(undefined, { args: { direction: 'bottom' } });
+    expect(output).toContain('<Drawer>');
+    expect(output).not.toContain('direction=');
   });
 
   it('escreve direction quando difere do padrão', () => {
@@ -80,9 +80,9 @@ describe('drawerSource', () => {
 
   it('não deixa o espião de onOpenChange virar código', () => {
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = drawerSource(undefined, { args: { onOpenChange: spy } as never });
-    expect(saida).not.toContain('CORPO_DO_MOCK');
-    expect(saida).not.toContain('onOpenChange');
+    const output = drawerSource(undefined, { args: { onOpenChange: spy } as never });
+    expect(output).not.toContain('CORPO_DO_MOCK');
+    expect(output).not.toContain('onOpenChange');
   });
 });
 
@@ -106,71 +106,71 @@ describe('estados', () => {
   });
 
   it('o modo controlado ensina o par open + onOpenChange e dispensa o gatilho', () => {
-    const saida = drawerControlledSource();
-    expect(saida).toContain('import { useState } from "react";');
-    expect(saida).toContain('const [aberto, setAberto] = useState(false);');
-    expect(saida).toContain('<Drawer open={aberto} onOpenChange={setAberto}>');
+    const output = drawerControlledSource();
+    expect(output).toContain('import { useState } from "react";');
+    expect(output).toContain('const [aberto, setAberto] = useState(false);');
+    expect(output).toContain('<Drawer open={aberto} onOpenChange={setAberto}>');
     // Quem abre é o botão de fora: é isso que o modo controlado torna possível.
-    expect(saida).not.toContain('<DrawerTrigger');
+    expect(output).not.toContain('<DrawerTrigger');
   });
 
   it('sem dispensa por gesto, a saída explícita é obrigatória', () => {
-    const saida = drawerNotDispensavelSource();
-    expect(saida).toContain('<Drawer dismissible={false}>');
+    const output = drawerNotDispensavelSource();
+    expect(output).toContain('<Drawer dismissible={false}>');
     // Escape e overlay deixam de fechar; sem o botão do rodapé quem navega por
     // teclado ficaria preso no painel.
-    expect(saida).toContain('<DrawerClose asChild>');
-    expect(saida).toContain('Confirmar e fechar');
+    expect(output).toContain('<DrawerClose asChild>');
+    expect(output).toContain('Confirmar e fechar');
   });
 });
 
 describe('composições', () => {
   it('o formulário casa htmlFor com id em cada campo', () => {
-    const saida = drawerWithFormSource();
-    expect(saida).toContain('import { Label } from "@/components/ui/label";');
-    expect(saida).toContain('<Label htmlFor="drawer-name">');
-    expect(saida).toContain('<Input id="drawer-name"');
-    expect(saida).toContain('<Label htmlFor="drawer-email">');
-    expect(saida).toContain('<Input id="drawer-email"');
+    const output = drawerWithFormSource();
+    expect(output).toContain('import { Label } from "@/components/ui/label";');
+    expect(output).toContain('<Label htmlFor="drawer-name">');
+    expect(output).toContain('<Input id="drawer-name"');
+    expect(output).toContain('<Label htmlFor="drawer-email">');
+    expect(output).toContain('<Input id="drawer-email"');
   });
 
   it('religa a ação primária ao formulário, que é irmão do rodapé', () => {
     // `type="submit"` sem o `form` é botão INERTE: não envia pelo clique nem
     // pelo Enter num campo, e nada na tela denuncia. Com dois campos não há
     // submissão implícita para salvar o caso.
-    const saida = drawerWithFormSource();
-    expect(saida).toContain('id="drawer-form"');
-    expect(saida).toContain('<Button type="submit" form="drawer-form">');
-    expect(saida).not.toContain('<Button>Confirmar</Button>');
+    const output = drawerWithFormSource();
+    expect(output).toContain('id="drawer-form"');
+    expect(output).toContain('<Button type="submit" form="drawer-form">');
+    expect(output).not.toContain('<Button>Confirmar</Button>');
   });
 
   it('a confirmação põe a ação principal na variante destrutiva', () => {
-    const saida = drawerWithConfirmSource();
-    expect(saida).toContain('<Button variant="destructive">Remover</Button>');
-    expect(saida).toContain('<Button variant="outline">Cancelar</Button>');
+    const output = drawerWithConfirmSource();
+    expect(output).toContain('<Button variant="destructive">Remover</Button>');
+    expect(output).toContain('<Button variant="outline">Cancelar</Button>');
   });
 
   it('a rolagem mora no corpo, e o rodapé fica fora dele', () => {
-    const saida = drawerWithScrollSource();
-    expect(saida).toContain('<DrawerBody className="nds-text-body" aria-label="Lista de itens">');
+    const output = drawerWithScrollSource();
+    expect(output).toContain('<DrawerBody className="nds-text-body" aria-label="Lista de itens">');
     // O `tabIndex` da região rolável vem do próprio componente — escrevê-lo
     // aqui ensinaria a repetir à mão o que ele já faz. O `aria-label`, não: sem
     // ele o corpo fica sem papel, e é quem compõe que sabe o que há lá dentro.
-    expect(saida).not.toContain('tabIndex');
-    expect(saida.indexOf('<DrawerFooter>')).toBeGreaterThan(saida.indexOf('</DrawerBody>'));
+    expect(output).not.toContain('tabIndex');
+    expect(output.indexOf('<DrawerFooter>')).toBeGreaterThan(output.indexOf('</DrawerBody>'));
   });
 });
 
 describe('guardas do painel', () => {
   it('nenhum snippet carrega o andaime do canvas da story', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
-      expect(saida).not.toContain('minHeight');
-      expect(saida).not.toContain('wrapperStyle');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
+      expect(output).not.toContain('minHeight');
+      expect(output).not.toContain('wrapperStyle');
       // Nenhum valor de design em style inline.
-      expect(saida).not.toContain('style={{');
+      expect(output).not.toContain('style={{');
     }
   });
 });
@@ -179,14 +179,14 @@ describe('nível do cabeçalho', () => {
   it('o título sai em h3 por asChild, e é a ÚNICA diferença para a composição padrão', () => {
     // O nível pertence à página: um painel aberto de dentro de uma seção já em
     // `h2` pede `h3` para não pôr dois irmãos onde há um pai e um filho.
-    const saida = drawerHeadingH3Source();
-    expect(saida).toContain('<DrawerTitle asChild>');
-    expect(saida).toContain('<h3>Editar perfil</h3>');
-    expect(saida).not.toContain('<DrawerTitle>Editar perfil</DrawerTitle>');
+    const output = drawerHeadingH3Source();
+    expect(output).toContain('<DrawerTitle asChild>');
+    expect(output).toContain('<h3>Editar perfil</h3>');
+    expect(output).not.toContain('<DrawerTitle>Editar perfil</DrawerTitle>');
     // Descrição, gatilho e saída continuam os canônicos — trocar mais de uma
     // coisa ensinaria que o nível pede outra composição.
-    expect(saida).toContain('<DrawerDescription>Atualize seus dados.</DrawerDescription>');
-    expect(saida).toContain('<DrawerTrigger asChild>');
+    expect(output).toContain('<DrawerDescription>Atualize seus dados.</DrawerDescription>');
+    expect(output).toContain('<DrawerTrigger asChild>');
   });
 
   it('o snippet não ensina a mexer no aria-labelledby à mão', () => {

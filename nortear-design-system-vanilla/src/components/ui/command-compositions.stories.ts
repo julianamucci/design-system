@@ -149,12 +149,12 @@ export const WithShortcuts: Story = {
     await expect(canvas.getAllByRole('option')).toHaveLength(4);
 
     await step('O atalho aparece à direita do comando', async () => {
-      const salvar = comando(canvasElement, 'salvar');
-      const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      const save = comando(canvasElement, 'salvar');
+      const atalho = save.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho).toHaveTextContent('Ctrl+S');
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
 
-      const boxItem = salvar.getBoundingClientRect();
+      const boxItem = save.getBoundingClientRect();
       const boxShortcut = atalho.getBoundingClientRect();
       await expect(boxItem.right - boxShortcut.right).toBeLessThan(
         boxShortcut.left - boxItem.left,
@@ -164,10 +164,10 @@ export const WithShortcuts: Story = {
     await step('O atalho faz parte do nome do comando', async () => {
       // Sem isso o leitor anunciaria "Salvar" e a pessoa nunca saberia que há
       // uma tecla — o atalho é informação, não decoração.
-      const salvar = comando(canvasElement, 'salvar');
-      const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      const save = comando(canvasElement, 'salvar');
+      const atalho = save.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho.getAttribute('aria-hidden')).toBeNull();
-      await expect(salvar).toHaveAccessibleName(/Ctrl\+S/);
+      await expect(save).toHaveAccessibleName(/Ctrl\+S/);
     });
 
     await step('Comando sem atalho não ganha um espaço vazio', async () => {

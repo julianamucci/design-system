@@ -44,7 +44,7 @@ export type SidebarSnippetOptions = {
   /** `false` monta a página sem gatilho — a barra fica sempre visível. */
   withTrigger?: boolean;
   /** Mostra o `destroy()` — quem tira a barra da página o chama. */
-  mostrarDestroy?: boolean;
+  showDestroy?: boolean;
 };
 
 const CALLBACK_COLUMN = '(aberta) => registrarBarra(aberta)';
@@ -189,7 +189,7 @@ pagina.append(nav, principal);`;
 }
 
 function blockFinal(o: SidebarSnippetOptions): string {
-  const destroy = o.mostrarDestroy
+  const destroy = o.showDestroy
     ? `
 
 // O atalho Ctrl+B é registrado no \`document\` na MONTAGEM: quem tira a barra da

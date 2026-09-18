@@ -49,12 +49,12 @@ describe('attrsMultilinha', () => {
   });
 
   it('quebra uma linha por atributo quando passa do limite', () => {
-    const saida = attrsMultilinha([
+    const output = attrsMultilinha([
       'aria-label="um rótulo bem comprido para caber em uma linha só"',
       'orientation="vertical"',
     ]);
-    expect(saida.startsWith('\n')).toBe(true);
-    expect(saida).toContain('\n  orientation="vertical"\n');
+    expect(output.startsWith('\n')).toBe(true);
+    expect(output).toContain('\n  orientation="vertical"\n');
   });
 
   it('devolve vazio sem nenhum atributo', () => {

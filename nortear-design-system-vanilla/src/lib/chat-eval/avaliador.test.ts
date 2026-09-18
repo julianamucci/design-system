@@ -80,9 +80,9 @@ describe('detecção de recusa', () => {
     'No lo sé: no encontré nada sobre eso.',
     'Esa propiedad no existe en Alert.',
   ];
-  for (const texto of recusas) {
-    it(`reconhece: ${texto.slice(0, 44)}…`, () => {
-      expect(detectarRecusa(texto).recusou).toBe(true);
+  for (const text of recusas) {
+    it(`reconhece: ${text.slice(0, 44)}…`, () => {
+      expect(detectarRecusa(text).recusou).toBe(true);
     });
   }
 
@@ -96,9 +96,9 @@ describe('detecção de recusa', () => {
     'O conteúdo não está visível até o gatilho ser acionado. (collapsible)',
     'The badge is not interactive by default. (badge)',
   ];
-  for (const texto of respostas) {
-    it(`não confunde com recusa: ${texto.slice(0, 44)}…`, () => {
-      expect(detectarRecusa(texto).recusou).toBe(false);
+  for (const text of respostas) {
+    it(`não confunde com recusa: ${text.slice(0, 44)}…`, () => {
+      expect(detectarRecusa(text).recusou).toBe(false);
     });
   }
 });

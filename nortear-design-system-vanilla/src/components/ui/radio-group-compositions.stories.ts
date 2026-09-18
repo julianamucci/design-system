@@ -274,14 +274,14 @@ export const InForm: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const submit = canvas.getByRole('button', { name: 'Continuar' });
-    const saida = () => canvasElement.querySelector('[data-testid="form-output"]')?.textContent ?? '';
+    const output = () => canvasElement.querySelector('[data-testid="form-output"]')?.textContent ?? '';
 
     // O caso "formulário sem escolha" é asserção de MONTAGEM — depois do
     // primeiro clique nenhum replay volta a ele. Ele mora em `States/Default`.
     await step('Selecionar "Pix" e submeter envia o valor escolhido', async () => {
       await choose(canvas.getByRole('radio', { name: 'Pix' }));
       await userEvent.click(submit);
-      await expect(saida()).toContain('pix');
+      await expect(output()).toContain('pix');
     });
 
     await step('Trocar a escolha troca o que o formulário envia', async () => {
@@ -289,7 +289,7 @@ export const InForm: Story = {
       // acompanha a seleção, e não que ele foi preenchido uma vez.
       await choose(canvas.getByRole('radio', { name: 'Boleto bancário' }));
       await userEvent.click(submit);
-      await expect(saida()).toContain('boleto');
+      await expect(output()).toContain('boleto');
     });
   },
 };

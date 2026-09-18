@@ -23,7 +23,7 @@ const meta: Meta = {
       description: 'Texto da legenda — descreve o propósito da tabela',
       table: { type: { summary: 'string' }, defaultValue: { summary: 'Lista de faturas recentes' } },
     },
-    captionVisivel: {
+    captionVisible: {
       control: 'boolean',
       description:
         'Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o nome da tabela.',
@@ -37,7 +37,7 @@ const meta: Meta = {
   },
   args: {
     caption: 'Lista de faturas recentes',
-    captionVisivel: false,
+    captionVisible: false,
     showFooter: true,
   },
 };
@@ -62,7 +62,7 @@ export const Playground: Story = {
     Component: TableStory,
     props: {
       caption: args.caption,
-      captionVisivel: args.captionVisivel,
+      captionVisible: args.captionVisible,
       showFooter: args.showFooter,
     },
   }),
@@ -120,7 +120,7 @@ export const Playground: Story = {
       const caption = canvasElement.querySelector<HTMLElement>('caption')!;
       await expect(caption).toHaveAttribute('data-slot', 'table-caption');
       await expect(caption).toHaveTextContent(String(args.caption));
-      await expect(caption.classList.contains('nds-sr-only')).toBe(!args.captionVisivel);
+      await expect(caption.classList.contains('nds-sr-only')).toBe(!args.captionVisible);
       await expect(canvas.getByRole('table', { name: /faturas recentes/ })).toBeTruthy();
     });
 

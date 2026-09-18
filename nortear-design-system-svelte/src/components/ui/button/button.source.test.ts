@@ -90,16 +90,16 @@ describe('transforms das stories de tamanho', () => {
   });
 
   it('os botões de ícone levam rótulo acessível e a classe que segue o tamanho', () => {
-    for (const [saida, size] of [
+    for (const [output, size] of [
       [buttonIconSource(), 'icon'],
       [buttonIconXsSource(), 'icon-xs'],
       [buttonIconSmSource(), 'icon-sm'],
       [buttonIconLgSource(), 'icon-lg'],
     ] as const) {
-      expect(saida).toContain(`<Button size="${size}" aria-label="Adicionar item">`);
+      expect(output).toContain(`<Button size="${size}" aria-label="Adicionar item">`);
       // A classe genérica de ícone não acompanha os modificadores de tamanho.
-      expect(saida).toContain('class="nds-button-icon-svg"');
-      expect(saida).toContain('aria-hidden="true"');
+      expect(output).toContain('class="nds-button-icon-svg"');
+      expect(output).toContain('aria-hidden="true"');
     }
   });
 });
@@ -110,11 +110,11 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o carregamento junta desabilitado, ocupado e rótulo progressivo', () => {
-    const saida = buttonLoadingSource();
-    expect(saida).toContain('<Button disabled aria-busy="true">');
-    expect(saida).toContain('Salvando…');
+    const output = buttonLoadingSource();
+    expect(output).toContain('<Button disabled aria-busy="true">');
+    expect(output).toContain('Salvando…');
     // O giro vem da classe do componente, que tem guarda de movimento reduzido.
-    expect(saida).toContain('nds-button-icon-svg nds-spin');
+    expect(output).toContain('nds-button-icon-svg nds-spin');
   });
 
   it('o foco visível não precisa de prop: o anel é do componente', () => {
@@ -122,9 +122,9 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o inválido sinaliza pelo atributo, e não pela variante destrutiva', () => {
-    const saida = buttonInvalidoSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('variant="outline"');
+    const output = buttonInvalidoSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('variant="outline"');
   });
 });
 
@@ -137,9 +137,9 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a variante destrutiva com ícone mantém o desenho decorativo', () => {
-    const saida = buttonDestructiveWithIconSource();
-    expect(saida).toContain('<Button variant="destructive">');
-    expect(saida).toContain('<Trash2 class="nds-button-icon-svg" aria-hidden="true" />');
+    const output = buttonDestructiveWithIconSource();
+    expect(output).toContain('<Button variant="destructive">');
+    expect(output).toContain('<Trash2 class="nds-button-icon-svg" aria-hidden="true" />');
   });
 
   it('o botão só de ícone traz o rótulo acessível, que é obrigatório', () => {
@@ -147,9 +147,9 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no par de ações a primária fica à direita, com o respiro do container', () => {
-    const saida = actionsButtonPairSource();
-    expect(saida).toContain('class="nds-cluster" data-spacing="md"');
-    expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
+    const output = actionsButtonPairSource();
+    expect(output).toContain('class="nds-cluster" data-spacing="md"');
+    expect(output.indexOf('Cancelar')).toBeLessThan(output.indexOf('Confirmar'));
   });
 
   it('com destino, a composição navegacional renderiza um link', () => {

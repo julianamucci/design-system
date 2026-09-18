@@ -68,11 +68,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const marcar = async (cb: HTMLElement) => {
+const check = async (cb: HTMLElement) => {
   if (cb.getAttribute('aria-checked') !== 'true') await userEvent.click(cb);
   await waitFor(() => expect(cb).toHaveAttribute('aria-checked', 'true'));
 };
-const desmarcar = async (cb: HTMLElement) => {
+const uncheck = async (cb: HTMLElement) => {
   if (cb.getAttribute('aria-checked') !== 'false') await userEvent.click(cb);
   await waitFor(() => expect(cb).toHaveAttribute('aria-checked', 'false'));
 };
@@ -108,15 +108,15 @@ export const Playground: Story = {
 
     const checkbox = canvas.getByRole('checkbox');
 
-    await desmarcar(checkbox);
+    await uncheck(checkbox);
 
     await step('Clicar em desmarcado marca e dispara o callback com true', async () => {
-      await marcar(checkbox);
+      await check(checkbox);
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
     });
 
     await step('Clicar em marcado desmarca e dispara o callback com false', async () => {
-      await desmarcar(checkbox);
+      await uncheck(checkbox);
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
 
@@ -125,7 +125,7 @@ export const Playground: Story = {
     // ela E dispara a ativação, sem nenhum ouvinte escrito na story.
     await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
       const label = canvas.getByText('Aceito os termos e condições');
-      await desmarcar(checkbox);                  // precondição própria
+      await uncheck(checkbox);                  // precondição própria
       checkbox.blur();
       await expect(checkbox).not.toHaveFocus();   // o foco tem que VIR do clique
       await userEvent.click(label);
@@ -135,7 +135,7 @@ export const Playground: Story = {
     });
 
     await step('Space com foco alterna o estado e dispara o callback', async () => {
-      await desmarcar(checkbox);                  // precondição própria
+      await uncheck(checkbox);                  // precondição própria
       checkbox.focus();
       await userEvent.keyboard(' ');
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));

@@ -45,12 +45,12 @@ const slides = [1, 2, 3, 4, 5]
   });
 
   it('acompanha o control de orientação, e com ele a altura do trilho', () => {
-    const saida = carouselSource('', { args: { orientation: 'vertical' } });
-    expect(saida).toContain('<Carousel orientation="vertical"');
+    const output = carouselSource('', { args: { orientation: 'vertical' } });
+    expect(output).toContain('<Carousel orientation="vertical"');
     // Sem altura DEFINIDA a base do slide não tem contra o que resolver e o
     // carrossel cresce em vez de recortar.
-    expect(saida).toContain('<CarouselContent class="nds-aspect-4-3">');
-    expect(saida).not.toContain('nds-aspect-16-9');
+    expect(output).toContain('<CarouselContent class="nds-aspect-4-3">');
+    expect(output).not.toContain('nds-aspect-16-9');
   });
 
   it('não escreve a orientação padrão — repetir valor padrão ensina ruído', () => {
@@ -60,16 +60,16 @@ const slides = [1, 2, 3, 4, 5]
   });
 
   it('a região se nomeia e os controles têm nome próprio', () => {
-    const saida = carouselSource();
-    expect(saida).toContain('aria-label="Galeria de exemplos"');
-    expect(saida).toContain('<CarouselPrevious aria-label="Item anterior" />');
-    expect(saida).toContain('<CarouselNext aria-label="Próximo item" />');
+    const output = carouselSource();
+    expect(output).toContain('aria-label="Galeria de exemplos"');
+    expect(output).toContain('<CarouselPrevious aria-label="Item anterior" />');
+    expect(output).toContain('<CarouselNext aria-label="Próximo item" />');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = carouselSource('', { args: { orientation: (() => {}) as never } });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('orientation=');
+    const output = carouselSource('', { args: { orientation: (() => {}) as never } });
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('orientation=');
   });
 });
 
@@ -80,11 +80,11 @@ describe('transforms das stories de variante e estado', () => {
   });
 
   it('a vertical troca o eixo, a largura e a altura do trilho', () => {
-    const saida = carouselVerticalSource();
-    expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('nds-w-xs');
-    expect(saida).toContain('<CarouselContent class="nds-aspect-4-3">');
-    expect(saida).toContain('nds-h-full');
+    const output = carouselVerticalSource();
+    expect(output).toContain('orientation="vertical"');
+    expect(output).toContain('nds-w-xs');
+    expect(output).toContain('<CarouselContent class="nds-aspect-4-3">');
+    expect(output).toContain('nds-h-full');
   });
 
   it('os extremos saem de uma opção do motor, não de navegação na play', () => {
@@ -100,62 +100,62 @@ describe('transforms das stories de variante e estado', () => {
 
 describe('transforms das stories de configuração', () => {
   it('item único não põe base própria no item', () => {
-    const saida = carouselItemUnicoSource();
-    expect(saida).toContain('<CarouselItem v-for="n in slides" :key="n">');
-    expect(saida).not.toContain('nds-md-basis-half');
+    const output = carouselItemUnicoSource();
+    expect(output).toContain('<CarouselItem v-for="n in slides" :key="n">');
+    expect(output).not.toContain('nds-md-basis-half');
   });
 
   it('conjunto longo de slides: a base responsiva mora no ITEM', () => {
-    const saida = carouselMultiResponsivoSource();
-    expect(saida).toContain('class="nds-md-basis-half nds-lg-basis-third"');
-    expect(saida).toContain('const slides = [1, 2, 3, 4, 5, 6]');
+    const output = carouselMultiResponsivoSource();
+    expect(output).toContain('class="nds-md-basis-half nds-lg-basis-third"');
+    expect(output).toContain('const slides = [1, 2, 3, 4, 5, 6]');
     // A base é do item; o trilho continua sem classe própria.
-    expect(saida).toContain('<CarouselContent>');
+    expect(output).toContain('<CarouselContent>');
   });
 
   it('o autoplay vem de plugin do motor, com parada na interação', () => {
-    const saida = carouselAutoplaySource();
-    expect(saida).toContain(`import AutoplayPlugin from 'embla-carousel-autoplay'`);
-    expect(saida).toContain('AutoplayPlugin({ delay: 4000, stopOnInteraction: true })');
-    expect(saida).toContain(':plugins="plugins"');
+    const output = carouselAutoplaySource();
+    expect(output).toContain(`import AutoplayPlugin from 'embla-carousel-autoplay'`);
+    expect(output).toContain('AutoplayPlugin({ delay: 4000, stopOnInteraction: true })');
+    expect(output).toContain(':plugins="plugins"');
   });
 
   it('o arraste não tem prop a ligar — o motor já escuta o ponteiro', () => {
-    const saida = carouselArrastarSource();
-    expect(saida).toContain('const slides = [1, 2, 3, 4]');
-    expect(saida).not.toContain('draggable');
+    const output = carouselArrastarSource();
+    expect(output).toContain('const slides = [1, 2, 3, 4]');
+    expect(output).not.toContain('draggable');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a galeria dá um rótulo próprio a cada slide', () => {
-    const saida = carouselGaleriaSource();
-    expect(saida).toContain('v-for="(rotulo, i) in slides"');
-    const rotulos = [...saida.matchAll(/^ {2}'([^']+)',$/gm)].map((m) => m[1]);
+    const output = carouselGaleriaSource();
+    expect(output).toContain('v-for="(rotulo, i) in slides"');
+    const rotulos = [...output.matchAll(/^ {2}'([^']+)',$/gm)].map((m) => m[1]);
     expect(rotulos.length).toBe(3);
     // Repetir o mesmo rótulo em todos equivale a não ter nenhum.
     expect(new Set(rotulos).size).toBe(rotulos.length);
   });
 
   it('os dots se montam sobre a instância que o componente entrega', () => {
-    const saida = carouselWithDotsSource();
-    expect(saida).toContain('@init-api="aoIniciar"');
-    expect(saida).toContain('@click="api?.scrollTo(i)"');
+    const output = carouselWithDotsSource();
+    expect(output).toContain('@init-api="aoIniciar"');
+    expect(output).toContain('@click="api?.scrollTo(i)"');
   });
 
   it('o dot é botão comum, e só o atual carrega aria-current', () => {
-    const saida = carouselWithDotsSource();
-    expect(saida).toContain('type="button"');
-    expect(saida).toContain(`:aria-current="atual === i ? 'true' : null"`);
+    const output = carouselWithDotsSource();
+    expect(output).toContain('type="button"');
+    expect(output).toContain(`:aria-current="atual === i ? 'true' : null"`);
     // Nem `tablist` nem `tab`: o controle não comanda painel nenhum.
-    expect(saida).not.toContain('role="tab"');
+    expect(output).not.toContain('role="tab"');
     // A string "false" ainda casaria com um seletor de presença.
-    expect(saida).not.toContain(`'false'`);
+    expect(output).not.toContain(`'false'`);
   });
 
   it('o rótulo visível do dot é um pedaço do nome acessível (WCAG 2.5.3)', () => {
-    const saida = carouselWithDotsSource();
-    expect(saida).toContain('Ir para o slide ${i + 1} de ${slides.length}');
-    expect(saida).toContain('<span class="nds-carousel-dot-label">Slide {{ i + 1 }}</span>');
+    const output = carouselWithDotsSource();
+    expect(output).toContain('Ir para o slide ${i + 1} de ${slides.length}');
+    expect(output).toContain('<span class="nds-carousel-dot-label">Slide {{ i + 1 }}</span>');
   });
 });

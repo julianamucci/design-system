@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import {
   waitForOpen,
-  waitForQuantidade,
+  waitForCount,
   accessibleName,
   panelsAbertos,
   paresAbertos,
@@ -374,7 +374,7 @@ export const Sides: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Os quatro cartões abrem e cada um declara o lado que usou', async () => {
-      const panels = await waitForQuantidade(4);
+      const panels = await waitForCount(4);
       await expect(panels).toHaveLength(4);
 
       const lados = panels.map((p) => p.getAttribute('data-side'));

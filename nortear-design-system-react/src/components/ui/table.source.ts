@@ -21,7 +21,7 @@
 import type { SourceTransform } from '@/lib/story-source';
 
 export type TableArgs = {
-  captionVisivel: boolean;
+  captionVisible: boolean;
   withFooter: boolean;
 };
 
@@ -139,7 +139,7 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
 
 ${DATA}
 
-${table(caption(args.captionVisivel === true), HEADER, BODY, withFooter && FOOTER)}`;
+${table(caption(args.captionVisible === true), HEADER, BODY, withFooter && FOOTER)}`;
 };
 
 /**

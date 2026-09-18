@@ -1313,7 +1313,7 @@ export function ChartContainer({
   // Sem série com dado não existe desenho a anunciar: entra a frase, como no
   // Vanilla (referência). O `min-height` de `.nds-chart` segura o bloco, e é
   // por isso que a página não salta quando o dado chega.
-  const vazio = isChartOptionEmpty(option);
+  const empty = isChartOptionEmpty(option);
 
   // Registra o tema AINDA NA RENDERIZAÇÃO, antes de o filho montar.
   //
@@ -1356,7 +1356,7 @@ export function ChartContainer({
       observer.disconnect();
       resizeObserver.disconnect();
     };
-  }, [vazio]);
+  }, [empty]);
 
   // Deriva um aria-label do título do option caso o consumidor não tenha fornecido um.
   const derivedLabel = React.useMemo(() => {
@@ -1385,7 +1385,7 @@ export function ChartContainer({
 
   return (
     <div data-slot="chart" className={cn('nds-chart', className)} style={style} {...rest}>
-      {vazio ? (
+      {empty ? (
         // Sem `role="img"` aqui de propósito: o papel PODA a subárvore da
         // árvore de acessibilidade, e a frase que explica a ausência de dado é
         // justamente o conteúdo — ficaria escondida atrás de um rótulo

@@ -23,16 +23,16 @@ describe('codeBlockSource', () => {
   });
 
   it('declara o trecho num template literal em vez de espremê-lo na prop', () => {
-    const saida = codeBlockSource();
-    expect(saida).toContain('const source = `');
-    expect(saida).toContain('code={source}');
+    const output = codeBlockSource();
+    expect(output).toContain('const source = `');
+    expect(output).toContain('code={source}');
     // As quebras de linha do trecho sobrevivem ao copiar — é o motivo do literal.
-    expect(saida).toContain('const items = await load();\nconst total = items.length;');
-    expect(saida).not.toContain('\\n');
+    expect(output).toContain('const items = await load();\nconst total = items.length;');
+    expect(output).not.toContain('\\n');
   });
 
   it('mapeia os args para as props reais', () => {
-    const saida = codeBlockSource(undefined, {
+    const output = codeBlockSource(undefined, {
       args: {
         code: 'const total = items.length;',
         language: 'ts',
@@ -41,11 +41,11 @@ describe('codeBlockSource', () => {
         footer: 'A ação de copiar leva apenas o código.',
       },
     });
-    expect(saida).toContain('language="ts"');
-    expect(saida).toContain('title="lista.ts"');
-    expect(saida).toContain('highlightLines="1, 4-5"');
-    expect(saida).toContain('footer="A ação de copiar leva apenas o código."');
-    expect(saida).toContain('const source = `const total = items.length;`;');
+    expect(output).toContain('language="ts"');
+    expect(output).toContain('title="lista.ts"');
+    expect(output).toContain('highlightLines="1, 4-5"');
+    expect(output).toContain('footer="A ação de copiar leva apenas o código."');
+    expect(output).toContain('const source = `const total = items.length;`;');
   });
 
   it('aceita as duas formas de highlightLines, como a API', () => {
@@ -65,73 +65,73 @@ describe('codeBlockSource', () => {
   });
 
   it('escapa o que abriria uma interpolação no literal publicado', () => {
-    const saida = codeBlockSource(undefined, {
+    const output = codeBlockSource(undefined, {
       args: { code: 'const s = `total: ${n}`;' },
     });
-    expect(saida).toContain('\\`total: \\${n}\\`');
+    expect(output).toContain('\\`total: \\${n}\\`');
   });
 
   it('não deixa o espião do control virar código', () => {
     const spy = (() => 'CORPO_DO_MOCK') as never;
-    const saida = codeBlockSource(undefined, { args: { code: spy, language: spy } });
-    expect(saida).not.toContain('CORPO_DO_MOCK');
-    expect(saida).toContain('<CodeBlock code={source} />');
+    const output = codeBlockSource(undefined, { args: { code: spy, language: spy } });
+    expect(output).not.toContain('CORPO_DO_MOCK');
+    expect(output).toContain('<CodeBlock code={source} />');
   });
 });
 
 describe('overrides de story', () => {
   it('a rolagem não tem prop: o snippet mostra só um trecho que não cabe', () => {
-    const saida = codeBlockRolagemSource();
-    expect(saida).toContain('<CodeBlock code={source} language="ts" />');
+    const output = codeBlockRolagemSource();
+    expect(output).toContain('<CodeBlock code={source} language="ts" />');
     // A região de rolagem é do componente: não há prop nem tabIndex a escrever.
-    expect(saida).not.toContain('tabIndex');
-    expect(saida).not.toContain('overflow');
+    expect(output).not.toContain('tabIndex');
+    expect(output).not.toContain('overflow');
     // A parede de 40 linhas geradas da story fica de fora.
-    expect(saida.split('\n').length).toBeLessThan(12);
+    expect(output.split('\n').length).toBeLessThan(12);
   });
 
   it('a paleta é a mesma nos dois temas: o snippet não carrega tema nenhum', () => {
-    const saida = codeBlockPaletteSource();
-    expect(saida).toContain('highlightLines={[2]}');
-    expect(saida).not.toContain('dark');
-    expect(saida).not.toContain('theme');
+    const output = codeBlockPaletteSource();
+    expect(output).toContain('highlightLines={[2]}');
+    expect(output).not.toContain('dark');
+    expect(output).not.toContain('theme');
   });
 
   it('o bloco removível ensina montagem condicional, não a limpeza interna', () => {
-    const saida = codeBlockRemovivelSource();
-    expect(saida).toContain('import { useState } from "react";');
-    expect(saida).toContain('{visivel && <CodeBlock code={source} language="ts" />}');
-    expect(saida).toContain('<Button variant="outline"');
-    expect(saida).not.toContain('setTimeout');
+    const output = codeBlockRemovivelSource();
+    expect(output).toContain('import { useState } from "react";');
+    expect(output).toContain('{visivel && <CodeBlock code={source} language="ts" />}');
+    expect(output).toContain('<Button variant="outline"');
+    expect(output).not.toContain('setTimeout');
   });
 });
 
 describe('codeBlockLineKindsSource', () => {
   it('mostra a lista de espécies junto do trecho que ela indexa', () => {
-    const saida = codeBlockLineKindsSource();
-    expect(saida).toContain('lineKinds={["context", "removed", "added", "context"]}');
+    const output = codeBlockLineKindsSource();
+    expect(output).toContain('lineKinds={["context", "removed", "added", "context"]}');
     // Uma entrada por linha: lista e trecho precisam ter o mesmo comprimento,
     // senão o exemplo ensina uma classificação que não fecha.
-    expect(saida).toContain('const total = items.filter(Boolean).length;');
+    expect(output).toContain('const total = items.filter(Boolean).length;');
   });
 });
 
 describe('codeBlockHeaderActionsSource', () => {
   it('ensina a importar o botão que ele monta na fila', () => {
-    const saida = codeBlockHeaderActionsSource();
-    expect(saida).toContain('import { Button } from "@/components/ui/button";');
-    expect(saida).toContain('actions={<Button variant="ghost" size="sm">Executar</Button>}');
+    const output = codeBlockHeaderActionsSource();
+    expect(output).toContain('import { Button } from "@/components/ui/button";');
+    expect(output).toContain('actions={<Button variant="ghost" size="sm">Executar</Button>}');
   });
 });
 
 describe('regras do repositório', () => {
   it('nenhum snippet leva estilo inline nem andaime da story', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).toContain('code={source}');
-      expect(saida).not.toContain('style={{');
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
+      const output = fn();
+      expect(output).toContain('code={source}');
+      expect(output).not.toContain('style={{');
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
     }
   });
 });

@@ -52,22 +52,22 @@ import { Button } from '@/components/ui/button'
   });
 
   it('não repete os padrões do painel nem o andaime do quadro do Storybook', () => {
-    const saida = dropdownMenuSource();
+    const output = dropdownMenuSource();
     // `side="bottom"` e `align="start"` são os padrões do painel — as stories os
     // escrevem, o snippet não.
-    expect(saida).not.toContain('side=');
-    expect(saida).not.toContain('align=');
+    expect(output).not.toContain('side=');
+    expect(output).not.toContain('align=');
     // O `<div>` de contenção com altura mínima só existe para o popup caber no
     // canvas.
-    expect(saida).not.toContain('style=');
-    expect(saida).not.toContain('min-height');
+    expect(output).not.toContain('style=');
+    expect(output).not.toContain('min-height');
   });
 
   it('fechado e modal são os padrões da raiz, e ficam fora do snippet', () => {
-    const saida = dropdownMenuSource('', { args: { defaultOpen: false, modal: true } });
-    expect(saida).toContain('  <DropdownMenu>\n');
-    expect(saida).not.toContain('default-open');
-    expect(saida).not.toContain('modal');
+    const output = dropdownMenuSource('', { args: { defaultOpen: false, modal: true } });
+    expect(output).toContain('  <DropdownMenu>\n');
+    expect(output).not.toContain('default-open');
+    expect(output).not.toContain('modal');
   });
 
   it('cada control que sai do padrão escreve a sua prop', () => {
@@ -82,11 +82,11 @@ import { Button } from '@/components/ui/button'
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     // `onUpdate:open` é `fn()` no meta: interpolado direto, o corpo do mock
     // apareceria no painel como se fosse o exemplo.
-    const saida = dropdownMenuSource('', {
+    const output = dropdownMenuSource('', {
       args: { defaultOpen: (() => {}) as never, modal: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).toContain('  <DropdownMenu>\n');
+    expect(output).not.toContain('function');
+    expect(output).toContain('  <DropdownMenu>\n');
   });
 });
 
@@ -97,9 +97,9 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a ação irreversível se declara por prop e vem separada das demais', () => {
-    const saida = dropdownMenuDestructiveSource();
-    expect(saida).toContain('<DropdownMenuSeparator />');
-    expect(saida).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
+    const output = dropdownMenuDestructiveSource();
+    expect(output).toContain('<DropdownMenuSeparator />');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
   });
 });
 
@@ -113,64 +113,64 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o controlado mantém o gatilho e liga o par prop+evento', () => {
-    const saida = dropdownMenuControlledSource();
-    expect(saida).toContain('const aberto = ref(false)');
-    expect(saida).toContain('<DropdownMenu :open="aberto" @update:open="aberto = $event">');
+    const output = dropdownMenuControlledSource();
+    expect(output).toContain('const aberto = ref(false)');
+    expect(output).toContain('<DropdownMenu :open="aberto" @update:open="aberto = $event">');
     // O gatilho continua ali: o que muda é quem manda na abertura.
-    expect(saida).toContain('<DropdownMenuTrigger as-child>');
+    expect(output).toContain('<DropdownMenuTrigger as-child>');
     // O botão de fora lê o MESMO estado — é o que prova que o evento voltou.
-    expect(saida).toContain(`{{ aberto ? 'Fechar pelo estado' : 'Abrir pelo estado' }}`);
+    expect(output).toContain(`{{ aberto ? 'Fechar pelo estado' : 'Abrir pelo estado' }}`);
   });
 
   it('o item indisponível continua no menu, declarado por prop', () => {
-    const saida = dropdownMenuItemDisabledSource();
-    expect(saida).toContain('<DropdownMenuItem disabled>Arquivar</DropdownMenuItem>');
+    const output = dropdownMenuItemDisabledSource();
+    expect(output).toContain('<DropdownMenuItem disabled>Arquivar</DropdownMenuItem>');
     // Pular a seta e barrar o ponteiro vêm da prop; escrever `tabindex` ou
     // `pointer-events` aqui ensinaria API que não existe.
-    expect(saida).not.toContain('tabindex');
-    expect(saida).not.toContain('pointer-events');
+    expect(output).not.toContain('tabindex');
+    expect(output).not.toContain('pointer-events');
   });
 
   it('os três estados da marcação aparecem lado a lado, por valor fixo', () => {
-    const saida = dropdownMenuMarkupMistaSource();
-    expect(saida).toContain('<DropdownMenuCheckboxItem model-value="indeterminate">Nome');
-    expect(saida).toContain('<DropdownMenuCheckboxItem :model-value="true">E-mail');
-    expect(saida).toContain('<DropdownMenuCheckboxItem :model-value="false">Telefone');
+    const output = dropdownMenuMarkupMistaSource();
+    expect(output).toContain('<DropdownMenuCheckboxItem model-value="indeterminate">Nome');
+    expect(output).toContain('<DropdownMenuCheckboxItem :model-value="true">E-mail');
+    expect(output).toContain('<DropdownMenuCheckboxItem :model-value="false">Telefone');
     // Valor fixo, e não ligado: um `v-model` pediria um estado que a story não
     // tem — e o primeiro clique num item misto o resolveria para marcado.
-    expect(saida).not.toContain('v-model');
+    expect(output).not.toContain('v-model');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('cada grupo é nomeado pelo próprio rótulo, e o separador os divide', () => {
-    const saida = dropdownMenuWithLabelSource();
-    expect([...saida.matchAll(/<DropdownMenuGroup>/g)].length).toBe(2);
-    expect(saida).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
-    expect(saida).toContain('<DropdownMenuLabel>Suporte</DropdownMenuLabel>');
-    expect([...saida.matchAll(/<DropdownMenuSeparator \/>/g)].length).toBe(1);
+    const output = dropdownMenuWithLabelSource();
+    expect([...output.matchAll(/<DropdownMenuGroup>/g)].length).toBe(2);
+    expect(output).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
+    expect(output).toContain('<DropdownMenuLabel>Suporte</DropdownMenuLabel>');
+    expect([...output.matchAll(/<DropdownMenuSeparator \/>/g)].length).toBe(1);
   });
 
   it('na marcação cada item guarda o seu próprio estado', () => {
-    const saida = dropdownMenuWithMarkupSource();
-    expect(saida).toContain('const mostrarNome = ref(true)');
-    expect(saida).toContain('const mostrarEmail = ref(false)');
-    expect(saida).toContain('const mostrarFuncao = ref(false)');
+    const output = dropdownMenuWithMarkupSource();
+    expect(output).toContain('const mostrarNome = ref(true)');
+    expect(output).toContain('const mostrarEmail = ref(false)');
+    expect(output).toContain('const mostrarFuncao = ref(false)');
     // Um `ref` por item — é o que separa marcação de escolha única.
-    expect(saida).toContain('<DropdownMenuCheckboxItem v-model="mostrarNome">Nome');
-    expect(saida).toContain('<DropdownMenuCheckboxItem v-model="mostrarEmail">E-mail');
-    expect(saida).toContain('<DropdownMenuCheckboxItem v-model="mostrarFuncao">Função');
+    expect(output).toContain('<DropdownMenuCheckboxItem v-model="mostrarNome">Nome');
+    expect(output).toContain('<DropdownMenuCheckboxItem v-model="mostrarEmail">E-mail');
+    expect(output).toContain('<DropdownMenuCheckboxItem v-model="mostrarFuncao">Função');
     // TRÊS alternadores, como a story ao lado e como a referência.
-    expect([...saida.matchAll(/<DropdownMenuCheckboxItem /g)].length).toBe(3);
+    expect([...output.matchAll(/<DropdownMenuCheckboxItem /g)].length).toBe(3);
   });
 
   it('na escolha única o valor vive no grupo, e cada item traz o seu `value`', () => {
-    const saida = dropdownMenuWithChoiceUnicaSource();
-    expect(saida).toContain(`const tema = ref('light')`);
-    expect(saida).toContain('<DropdownMenuRadioGroup v-model="tema">');
-    expect(saida).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');
+    const output = dropdownMenuWithChoiceUnicaSource();
+    expect(output).toContain(`const tema = ref('light')`);
+    expect(output).toContain('<DropdownMenuRadioGroup v-model="tema">');
+    expect(output).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');
     // O valor NÃO se repete em cada item.
-    expect(saida).not.toContain('<DropdownMenuRadioItem v-model');
+    expect(output).not.toContain('<DropdownMenuRadioItem v-model');
   });
 
   it('o submenu é a tríade completa, com o conteúdo dentro dela', () => {
@@ -187,16 +187,16 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o atalho mora dentro do item e não se esconde do leitor de tela', () => {
-    const saida = dropdownMenuWithShortcutsSource();
-    expect(saida).toContain('Copiar<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
+    const output = dropdownMenuWithShortcutsSource();
+    expect(output).toContain('Copiar<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
     // Escondido, a pessoa ouviria só "Copiar" e nunca saberia da tecla.
-    expect(saida).not.toContain('aria-hidden');
+    expect(output).not.toContain('aria-hidden');
   });
 });
 
 describe('dropdownMenuSnippet — o menu descrito por dados', () => {
   it('imprime os rótulos que recebe: o código diz o que a prévia diz, em qualquer idioma', () => {
-    const saida = dropdownMenuSnippet({
+    const output = dropdownMenuSnippet({
       triggerLabel: 'Account',
       entries: [
         { kind: 'item', label: 'Rename', value: 'rename' },
@@ -204,16 +204,16 @@ describe('dropdownMenuSnippet — o menu descrito por dados', () => {
         { kind: 'item', label: 'Delete account', value: 'delete-account', destructive: true },
       ],
     });
-    expect(saida).toContain('<Button variant="outline">Account</Button>');
-    expect(saida).toContain('<DropdownMenuItem>Rename</DropdownMenuItem>');
-    expect(saida).toContain('<DropdownMenuItem variant="destructive">Delete account</DropdownMenuItem>');
-    expect(saida).not.toContain('Conta');
+    expect(output).toContain('<Button variant="outline">Account</Button>');
+    expect(output).toContain('<DropdownMenuItem>Rename</DropdownMenuItem>');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Delete account</DropdownMenuItem>');
+    expect(output).not.toContain('Conta');
     // O id estável é do evento, não do código: o item de ação não tem valor.
-    expect(saida).not.toContain('delete-account');
+    expect(output).not.toContain('delete-account');
   });
 
   it('declara o ESTADO INICIAL de cada marcação e da escolha única, com o nome do id estável', () => {
-    const saida = dropdownMenuSnippet({
+    const output = dropdownMenuSnippet({
       triggerLabel: 'Columns',
       entries: [
         {
@@ -238,28 +238,28 @@ describe('dropdownMenuSnippet — o menu descrito por dados', () => {
     });
     // Sem os `ref` o trecho ligava `v-model` a nomes que não existiam — era o
     // defeito do card de marcação.
-    expect(saida).toContain(`import { ref } from 'vue'
+    expect(output).toContain(`import { ref } from 'vue'
 
 const columnName = ref(true)
 const columnEmail = ref(false)
 const theme = ref('light')`);
-    expect(saida).toContain('<DropdownMenuCheckboxItem v-model="columnName">');
+    expect(output).toContain('<DropdownMenuCheckboxItem v-model="columnName">');
     // O rótulo mora DENTRO do grupo que ele nomeia — nos dois tipos de grupo.
-    expect(saida).toContain(`      <DropdownMenuGroup>
+    expect(output).toContain(`      <DropdownMenuGroup>
         <DropdownMenuLabel>Visible columns</DropdownMenuLabel>`);
-    expect(saida).toContain(`      <DropdownMenuRadioGroup v-model="theme">
+    expect(output).toContain(`      <DropdownMenuRadioGroup v-model="theme">
         <DropdownMenuLabel>Appearance</DropdownMenuLabel>
         <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>`);
   });
 
   it('importa só as peças usadas, e só declara `ref` quando há estado', () => {
-    const saida = dropdownMenuSnippet({
+    const output = dropdownMenuSnippet({
       entries: [
         { kind: 'item', label: 'Undo', value: 'undo', shortcut: 'Ctrl+Z' },
         { kind: 'submenu', label: 'Export', items: [{ kind: 'item', label: 'PDF', value: 'pdf' }] },
       ],
     });
-    expect(saida).toContain(`import {
+    expect(output).toContain(`import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -269,21 +269,21 @@ const theme = ref('light')`);
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'`);
-    expect(saida).not.toContain(`from 'vue'`);
-    expect(saida).toContain(`      <DropdownMenuItem>
+    expect(output).not.toContain(`from 'vue'`);
+    expect(output).toContain(`      <DropdownMenuItem>
         Undo
         <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
       </DropdownMenuItem>`);
   });
 
   it('um rótulo com sinal de menor vira expressão, e o trecho continua válido', () => {
-    const saida = dropdownMenuSnippet({ entries: [{ kind: 'item', label: 'a < b', value: 'a' }] });
-    expect(saida).toContain(`<DropdownMenuItem>{{ 'a < b' }}</DropdownMenuItem>`);
+    const output = dropdownMenuSnippet({ entries: [{ kind: 'item', label: 'a < b', value: 'a' }] });
+    expect(output).toContain(`<DropdownMenuItem>{{ 'a < b' }}</DropdownMenuItem>`);
   });
 
   it('sem args, o menu canônico: grupo nomeado, divisor e a saída destrutiva', () => {
-    const saida = dropdownMenuSnippet();
-    expect(saida).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
-    expect(saida).toContain('<DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>');
+    const output = dropdownMenuSnippet();
+    expect(output).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>');
   });
 });

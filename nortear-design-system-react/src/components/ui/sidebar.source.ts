@@ -105,7 +105,7 @@ function importingIcons(icons: string[]): string {
  * precisa ouvir que aquele é o item da página aberta.
  */
 function destination(
-  icone: string,
+  icon: string,
   label: string,
   options: { active?: boolean; depois?: string } = {},
 ): string {
@@ -117,7 +117,7 @@ function destination(
   const extra = options.depois ? `\n${level(options.depois, 1)}` : '';
   return `<SidebarMenuItem>
   <SidebarMenuButton${props}>
-    <${icone} aria-hidden="true" />
+    <${icon} aria-hidden="true" />
     <span>${label}</span>
   </SidebarMenuButton>${extra}
 </SidebarMenuItem>`;

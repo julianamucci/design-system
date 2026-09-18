@@ -132,8 +132,8 @@ export const WithIcons: Story = {
       const listbox = await waitForPortal('listbox');
       const options = within(listbox).getAllByRole('option');
       await expect(options).toHaveLength(4);
-      for (const opcao of options) {
-        await expect(opcao.querySelector('svg')).toBeTruthy();
+      for (const option of options) {
+        await expect(option.querySelector('svg')).toBeTruthy();
       }
       await expect(options[0]).toHaveAccessibleName('São Paulo');
     });

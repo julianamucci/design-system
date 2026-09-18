@@ -69,7 +69,7 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
   const names = ['createButton'];
   if (o.icon) names.push('createButtonIcon');
 
-  const icone = o.icon
+  const icon = o.icon
     ? `createButtonIcon(${text(o.icon)}${o.iconSpin ? ', { spin: true }' : ''})`
     : undefined;
 
@@ -85,10 +85,10 @@ rotulo.textContent = ${text(o.label!)};`
 
   const composition = withTextEIcone
     ? o.iconSide === 'right'
-      ? `botao.append(rotulo, ${icone});`
-      : `botao.append(${icone}, rotulo);`
-    : icone
-      ? `botao.appendChild(${icone});`
+      ? `botao.append(rotulo, ${icon});`
+      : `botao.append(${icon}, rotulo);`
+    : icon
+      ? `botao.appendChild(${icon});`
       : undefined;
 
   return snippet(

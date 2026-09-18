@@ -208,13 +208,13 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
 
-    const saida = document.createElement('p');
-    saida.className = 'nds-text-caption nds-text-muted-foreground';
+    const output = document.createElement('p');
+    output.className = 'nds-text-caption nds-text-muted-foreground';
 
     const value = document.createElement('code');
     value.className = 'nds-font-mono';
     value.textContent = 'false';
-    saida.append('Estado atual: ', value);
+    output.append('Estado atual: ', value);
 
     const btn = toggle({
       icon: Bold,
@@ -224,7 +224,7 @@ export const Controlled: Story = {
       },
     });
 
-    wrapper.append(btn, saida);
+    wrapper.append(btn, output);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {

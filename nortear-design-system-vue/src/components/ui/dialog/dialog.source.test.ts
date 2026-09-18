@@ -62,18 +62,18 @@ import { Button } from '@/components/ui/button'
   });
 
   it('a ação primária é a ÚLTIMA do rodapé, que é a ordem de leitura e de foco', () => {
-    const saida = dialogSource();
-    const cancelar = saida.indexOf('Cancelar');
-    const primaria = saida.indexOf('Salvar alterações');
+    const output = dialogSource();
+    const cancelar = output.indexOf('Cancelar');
+    const primaria = output.indexOf('Salvar alterações');
     expect(cancelar).toBeGreaterThan(-1);
     expect(primaria).toBeGreaterThan(cancelar);
   });
 
   it('modal ligado e fechado na montagem são os padrões, e não entram no snippet', () => {
-    const saida = dialogSource('', { args: { defaultOpen: false, modal: true } });
-    expect(saida).toContain('  <Dialog>\n');
-    expect(saida).not.toContain('modal');
-    expect(saida).not.toContain('default-open');
+    const output = dialogSource('', { args: { defaultOpen: false, modal: true } });
+    expect(output).toContain('  <Dialog>\n');
+    expect(output).not.toContain('modal');
+    expect(output).not.toContain('default-open');
   });
 
   it('desligar a modalidade escreve a negação; abrir na montagem escreve a prop nua', () => {
@@ -84,11 +84,11 @@ import { Button } from '@/components/ui/button'
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     // `onUpdate:open` é `fn()` no meta: interpolado direto, o corpo do mock
     // apareceria no painel como se fosse o exemplo.
-    const saida = dialogSource('', {
+    const output = dialogSource('', {
       args: { defaultOpen: (() => {}) as never, modal: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).toContain('  <Dialog>\n');
+    expect(output).not.toContain('function');
+    expect(output).toContain('  <Dialog>\n');
   });
 });
 
@@ -103,112 +103,112 @@ describe('transforms das stories de estado', () => {
   });
 
   it('esconder o X do canto não tira a saída do rodapé', () => {
-    const saida = dialogNoButtonCloseSource();
-    expect(saida).toContain('<DialogContent :show-close-button="false">');
+    const output = dialogNoButtonCloseSource();
+    expect(output).toContain('<DialogContent :show-close-button="false">');
     // Retirar todas as saídas de uma vez deixaria o diálogo sem fechamento
     // acessível.
-    expect(saida).toContain('<DialogClose as-child>');
-    expect(saida).toContain('Mais tarde');
+    expect(output).toContain('<DialogClose as-child>');
+    expect(output).toContain('Mais tarde');
   });
 
   it('o controlado troca o gatilho por um botão comum e liga o par prop+evento', () => {
-    const saida = dialogControlledSource();
-    expect(saida).toContain(`const aberto = ref(false)`);
-    expect(saida).toContain('<Dialog :open="aberto" @update:open="aberto = $event">');
+    const output = dialogControlledSource();
+    expect(output).toContain(`const aberto = ref(false)`);
+    expect(output).toContain('<Dialog :open="aberto" @update:open="aberto = $event">');
     // Sem gatilho: quem abre é o botão de fora.
-    expect(saida).not.toContain('DialogTrigger');
-    expect(saida).toContain('<Button @click="aberto = true">Abrir via estado externo</Button>');
+    expect(output).not.toContain('DialogTrigger');
+    expect(output).toContain('<Button @click="aberto = true">Abrir via estado externo</Button>');
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('o formulário traz os campos rotulados e a ação primária vira submit', () => {
-    const saida = dialogWithFormSource();
-    expect(saida).toContain(`import { Label } from '@/components/ui/label'`);
+    const output = dialogWithFormSource();
+    expect(output).toContain(`import { Label } from '@/components/ui/label'`);
     // `for`/`id` é o que liga rótulo e campo; sem ele o campo chega sem nome.
-    expect(saida).toContain('<Label for="dialog-email">E-mail</Label>');
-    expect(saida).toContain('<Input id="dialog-email" type="email"');
-    expect(saida).toContain('<Button type="submit">Salvar alterações</Button>');
+    expect(output).toContain('<Label for="dialog-email">E-mail</Label>');
+    expect(output).toContain('<Input id="dialog-email" type="email"');
+    expect(output).toContain('<Button type="submit">Salvar alterações</Button>');
   });
 
   it('a rolagem é do CORPO, e o corpo chega alcançável por teclado', () => {
-    const saida = dialogWithScrollSource();
+    const output = dialogWithScrollSource();
     // Rota única: o painel é o centralizado, e quem rola é o corpo dentro dele.
-    expect(saida).toContain('<DialogContent class="nds-max-w-lg">');
-    expect(saida).toContain('nds-dialog-body-scroll');
-    expect(saida).toContain('tabindex="0"');
-    expect(saida).toContain('role="group"');
-    expect(saida).toContain('aria-label="Termos de uso"');
-    expect(saida).toContain('<p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>');
+    expect(output).toContain('<DialogContent class="nds-max-w-lg">');
+    expect(output).toContain('nds-dialog-body-scroll');
+    expect(output).toContain('tabindex="0"');
+    expect(output).toContain('role="group"');
+    expect(output).toContain('aria-label="Termos de uso"');
+    expect(output).toContain('<p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>');
     // Cabeçalho e rodapé continuam DENTRO do painel, parados.
-    expect(saida).toContain('    <DialogHeader>');
-    expect(saida).toContain('    <DialogFooter>');
+    expect(output).toContain('    <DialogHeader>');
+    expect(output).toContain('    <DialogFooter>');
   });
 
   it('sem rodapé, as peças do rodapé saem também do import', () => {
-    const saida = dialogNoFooterSource();
-    expect(saida).not.toContain('DialogFooter');
-    expect(saida).not.toContain('DialogClose');
+    const output = dialogNoFooterSource();
+    expect(output).not.toContain('DialogFooter');
+    expect(output).not.toContain('DialogClose');
   });
 
   it('a ação destrutiva se declara por variante, e só ela', () => {
-    const saida = dialogActionDestructiveSource();
-    expect(saida).toContain('<Button variant="destructive">Remover item</Button>');
+    const output = dialogActionDestructiveSource();
+    expect(output).toContain('<Button variant="destructive">Remover item</Button>');
     // O painel continua sendo um diálogo comum: confirmação irreversível é
     // outro componente.
-    expect(saida).not.toContain('alertdialog');
+    expect(output).not.toContain('alertdialog');
   });
 
   it('o nível do título é escrito, e é a ÚNICA coisa que difere da forma canônica', () => {
-    const saida = dialogHeadingH3Source();
-    expect(saida).toContain('<DialogTitle as="h3">Editar perfil</DialogTitle>');
+    const output = dialogHeadingH3Source();
+    expect(output).toContain('<DialogTitle as="h3">Editar perfil</DialogTitle>');
     // `h2` é o padrão do primitivo: quem não pede nível não escreve prop
     // nenhuma, e o snippet não ensina a repetir o padrão.
     expect(dialogSource()).toContain('<DialogTitle>Editar perfil</DialogTitle>');
     // Tirado o nível, sobra exatamente o snippet canônico — a lição é a tag, e
     // não uma composição nova que o leitor teria de comparar linha a linha.
-    expect(saida.replace(' as="h3"', '')).toBe(dialogSource());
+    expect(output.replace(' as="h3"', '')).toBe(dialogSource());
   });
 
   it('o fechar sai do canto e volta no rodapé como a ação de MENOR ênfase', () => {
-    const saida = footerDialogCloseSource();
-    expect(saida).toContain('<DialogContent :show-close-button="false">');
+    const output = footerDialogCloseSource();
+    expect(output).toContain('<DialogContent :show-close-button="false">');
     // Quem emite o fechar é o próprio rodapé: a prop o coloca ANTES do slot e
     // em `ghost`, a variante da ação terciária. Enquanto ela cravava `outline`,
     // todo call site a contornava com um `DialogClose` escrito à mão.
-    expect(saida).toContain('<DialogFooter show-close-button>');
-    expect(saida).not.toContain('DialogClose');
+    expect(output).toContain('<DialogFooter show-close-button>');
+    expect(output).not.toContain('DialogClose');
     // Valor padrão não se escreve: `close-label` já vale "Fechar".
-    expect(saida).not.toContain('close-label');
+    expect(output).not.toContain('close-label');
     // As outras duas ênfases continuam escritas, na ordem do DOM.
-    expect(saida).toContain('<Button variant="outline">Voltar</Button>');
-    expect(saida).toContain('<Button>Continuar</Button>');
+    expect(output).toContain('<Button variant="outline">Voltar</Button>');
+    expect(output).toContain('<Button>Continuar</Button>');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a confirmação de e-mail mantém a ação primária neutra', () => {
-    const saida = dialogConfirmarEmailSource();
-    expect(saida).toContain('<Input id="new-email" type="email" placeholder="voce@example.com" />');
+    const output = dialogConfirmarEmailSource();
+    expect(output).toContain('<Input id="new-email" type="email" placeholder="voce@example.com" />');
     // A operação é reversível: cor de perigo aqui seria alarme falso.
-    expect(saida).not.toContain('variant="destructive"');
+    expect(output).not.toContain('variant="destructive"');
   });
 
   it('a edição de perfil rotula os três campos', () => {
-    const saida = dialogEditarPerfilSource();
-    const rotulos = [...saida.matchAll(/<Label for="([^"]+)">/g)].map((m) => m[1]);
+    const output = dialogEditarPerfilSource();
+    const rotulos = [...output.matchAll(/<Label for="([^"]+)">/g)].map((m) => m[1]);
     expect(rotulos).toEqual(['profile-name', 'profile-handle', 'profile-bio']);
   });
 
   it('a mídia carrega papel e nome próprios, e dispensa o rodapé', () => {
-    const saida = dialogPreviaDeMidiaSource();
+    const output = dialogPreviaDeMidiaSource();
     // Sem os dois, o conteúdo inteiro do diálogo some para quem usa leitor.
-    expect(saida).toContain('role="img"');
-    expect(saida).toContain('aria-label="Imagem em destaque"');
-    expect(saida).not.toContain('DialogFooter');
+    expect(output).toContain('role="img"');
+    expect(output).toContain('aria-label="Imagem em destaque"');
+    expect(output).not.toContain('DialogFooter');
     // Nenhum valor de design em `style`: a proporção e a largura são classes.
-    expect(saida).not.toContain('style=');
-    expect(saida).toContain('nds-aspect-16-9 nds-w-full');
+    expect(output).not.toContain('style=');
+    expect(output).toContain('nds-aspect-16-9 nds-w-full');
   });
 });
 

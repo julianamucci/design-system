@@ -113,21 +113,21 @@ export const WithTitle: Story = {
     await step('Tab caminha entre os controles internos', async () => {
       const ctx = within(panel()!);
       const cancelar = ctx.getByRole('button', { name: 'Cancelar' });
-      const salvar = ctx.getByRole('button', { name: 'Salvar' });
+      const save = ctx.getByRole('button', { name: 'Salvar' });
       cancelar.focus();
       await userEvent.tab();
-      await expect(salvar).toHaveFocus();
+      await expect(save).toHaveFocus();
     });
 
     await step('E o elemento focado por teclado mostra o anel de foco', async () => {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
       // casaria a pseudo-classe e o anel não apareceria.
-      const salvar = within(panel()!).getByRole('button', { name: 'Salvar' });
-      await expect(salvar.matches(':focus-visible')).toBe(true);
+      const save = within(panel()!).getByRole('button', { name: 'Salvar' });
+      await expect(save.matches(':focus-visible')).toBe(true);
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
-      await expect(getComputedStyle(salvar).boxShadow).not.toBe('none');
+      await expect(getComputedStyle(save).boxShadow).not.toBe('none');
     });
   },
 };

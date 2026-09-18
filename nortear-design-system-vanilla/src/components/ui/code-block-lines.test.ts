@@ -28,21 +28,21 @@ describe('espécie de linha', () => {
     // As duas juntas, e é o ponto: a marca cobre quem não separa verde de
     // vermelho, a palavra cobre quem não vê nenhuma das duas. Tinta sozinha é a
     // codificação que a regra 4 da §8 recusa.
-    const saida = marks(['added', 'removed'], 2);
-    expect(saida[0].mark).toBe('+');
-    expect(saida[0].label).toBe(labels.lineAdded);
-    expect(saida[1].mark).toBe('−');
-    expect(saida[1].label).toBe(labels.lineRemoved);
-    for (const item of saida) {
+    const output = marks(['added', 'removed'], 2);
+    expect(output[0].mark).toBe('+');
+    expect(output[0].label).toBe(labels.lineAdded);
+    expect(output[1].mark).toBe('−');
+    expect(output[1].label).toBe(labels.lineRemoved);
+    for (const item of output) {
       expect(item.mark.length, item.kind).toBeGreaterThan(0);
       expect(item.label.length, item.kind).toBeGreaterThan(0);
     }
   });
 
   it('as duas marcas são DIFERENTES entre si', () => {
-    const saida = marks(['added', 'removed'], 2);
-    expect(saida[0].mark).not.toBe(saida[1].mark);
-    expect(saida[0].label).not.toBe(saida[1].label);
+    const output = marks(['added', 'removed'], 2);
+    expect(output[0].mark).not.toBe(output[1].mark);
+    expect(output[0].label).not.toBe(output[1].label);
   });
 
   it('o menos é o sinal tipográfico, não o hífen do teclado', () => {
@@ -68,15 +68,15 @@ describe('espécie de linha', () => {
   });
 
   it('valor desconhecido cai em contexto em vez de vazar para a folha', () => {
-    const saida = marks(['ruído' as CodeLineKind], 1);
-    expect(saida[0].kind).toBe('context');
-    expect(saida[0].mark).toBe('');
+    const output = marks(['ruído' as CodeLineKind], 1);
+    expect(output[0].kind).toBe('context');
+    expect(output[0].mark).toBe('');
   });
 
   it('a palavra vem dos rótulos passados, não de cadeia cravada', () => {
     const outros = { ...labels, lineAdded: 'Line added', lineRemoved: 'Line removed' };
-    const saida = codeLineMarks(['added', 'removed'], 2, outros);
-    expect(saida[0].label).toBe('Line added');
-    expect(saida[1].label).toBe('Line removed');
+    const output = codeLineMarks(['added', 'removed'], 2, outros);
+    expect(output[0].label).toBe('Line added');
+    expect(output[1].label).toBe('Line removed');
   });
 });

@@ -541,7 +541,7 @@ export const ListenerCleanup: Story = {
           onClose: (reason) => avisos.push(`motivo:${reason}`),
         }),
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
-        seletorDePortal: '[data-slot="dropdown-menu-content"]',
+        portalSelector: '[data-slot="dropdown-menu-content"]',
       });
     });
 

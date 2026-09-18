@@ -75,27 +75,27 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a aba desabilitada é a única com a prop', () => {
-    const saida = tabsDesabilitadaSource();
-    expect(saida).toContain('<TabsTrigger value="properties" disabled>Propriedades</TabsTrigger>');
-    expect(saida.match(/disabled/g)).toHaveLength(1);
+    const output = tabsDesabilitadaSource();
+    expect(output).toContain('<TabsTrigger value="properties" disabled>Propriedades</TabsTrigger>');
+    expect(output.match(/disabled/g)).toHaveLength(1);
   });
 
   it('a composição de configurações nomeia a fileira pelo assunto', () => {
-    const saida = tabsConfigSource();
-    expect(saida).toContain('aria-label="Configurações"');
-    expect(saida).toContain('let value = $state("profile");');
+    const output = tabsConfigSource();
+    expect(output).toContain('aria-label="Configurações"');
+    expect(output).toContain('let value = $state("profile");');
   });
 
   it('a composição preview/código usa a variante sem trilho e duas abas', () => {
-    const saida = tabsPreviewCodeSource();
-    expect(saida).toContain('variant="line"');
-    expect(saida.match(/<TabsTrigger /g)).toHaveLength(2);
+    const output = tabsPreviewCodeSource();
+    expect(output).toContain('variant="line"');
+    expect(output.match(/<TabsTrigger /g)).toHaveLength(2);
   });
 
   it('a navegação vertical tem quatro seções no eixo vertical', () => {
-    const saida = tabsNavigationVerticalSource();
-    expect(saida).toContain('orientation="vertical"');
-    expect(saida.match(/<TabsContent /g)).toHaveLength(4);
+    const output = tabsNavigationVerticalSource();
+    expect(output).toContain('orientation="vertical"');
+    expect(output.match(/<TabsContent /g)).toHaveLength(4);
   });
 
   it('a ativação manual escreve o modo na raiz', () => {

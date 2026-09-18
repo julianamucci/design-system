@@ -258,33 +258,33 @@ export const Playground: Story = {
       await userEvent.clear(field);
       await userEvent.type(field, 'zzz');
 
-      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const empty = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       // Sem item na tela não há destaque — e `aria-activedescendant` apontando
       // para um nó que o filtro removeu é violação de verdade.
       await expect(field).not.toHaveAttribute('aria-activedescendant');
-      await expect(vazio).toHaveAttribute('data-empty', '');
-      await expect(vazio).toHaveTextContent(args.emptyMessage);
+      await expect(empty).toHaveAttribute('data-empty', '');
+      await expect(empty).toHaveTextContent(args.emptyMessage);
       // Região viva montada o tempo todo: é a mudança DENTRO dela que o leitor
       // de tela anuncia. Criá-la só na hora não anunciaria nada.
-      await expect(vazio).toHaveAttribute('role', 'status');
-      await expect(vazio).toHaveAttribute('aria-live', 'polite');
-      await expect(vazio).toHaveAttribute('aria-atomic', 'true');
-      await expect(vazio).toHaveClass(/nds-command-empty/);
+      await expect(empty).toHaveAttribute('role', 'status');
+      await expect(empty).toHaveAttribute('aria-live', 'polite');
+      await expect(empty).toHaveAttribute('aria-atomic', 'true');
+      await expect(empty).toHaveClass(/nds-command-empty/);
       // E ela mora FORA do listbox: `role="status"` não é filho permitido de
       // `role="listbox"` (axe: aria-required-children).
-      await expect(list.contains(vazio)).toBe(false);
+      await expect(list.contains(empty)).toBe(false);
     });
 
     await step('Com resultado, a região viva volta a ocupar zero', async () => {
       await userEvent.clear(field);
-      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const empty = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(canvas.getAllByRole('option')).toHaveLength(5);
-      await expect(vazio).not.toHaveAttribute('data-empty');
+      await expect(empty).not.toHaveAttribute('data-empty');
       // Continua no DOM (é o que preserva o anúncio), mas sem a classe que traz
       // 24px de respiro em cima e embaixo.
-      await expect(vazio).not.toHaveClass(/nds-command-empty/);
-      await expect(vazio.getBoundingClientRect().height).toBe(0);
+      await expect(empty).not.toHaveClass(/nds-command-empty/);
+      await expect(empty.getBoundingClientRect().height).toBe(0);
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {

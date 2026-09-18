@@ -9,12 +9,12 @@
  *
  * São QUATRO arquivos de story mostrando o mesmo componente, e até esta rodada
  * só o Playground tinha construtor: as outras onze stories imprimiam o template
- * CRU — `{{ tituloPainel }}` ligado a uma prop que só existe dentro da story,
+ * CRU — `{{ panelTitle }}` ligado a uma prop que só existe dentro da story,
  * `[side]="side"` apontando para um control que o leitor não tem. Quem lê a docs
  * page copia o snippet, não o preview.
  *
  * O que é ANDAIME e por isso não entra em snippet nenhum: as props de rótulo que
- * a story injeta para trazer o conteúdo trilíngue (`tituloPainel`, `panelBody`,
+ * a story injeta para trazer o conteúdo trilíngue (`panelTitle`, `panelBody`,
  * `rotuloCancelar`) e o `(openChange)` do Playground, que está ligado ao espião
  * da `play`. No snippet o texto entra RESOLVIDO, que é o que a pessoa escreve.
  *

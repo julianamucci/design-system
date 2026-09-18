@@ -32,8 +32,8 @@ describe('aspectRatioSource', () => {
   });
 
   it('proporção fora da tabela sai arredondada, e nunca como dízima inteira', () => {
-    const saida = aspectRatioSource('', { args: { ratio: 1.55 } });
-    expect(saida).toContain('ratio={1.55}');
+    const output = aspectRatioSource('', { args: { ratio: 1.55 } });
+    expect(output).toContain('ratio={1.55}');
   });
 
   it('o control de largura máxima chega ao contêiner que envolve a caixa', () => {
@@ -43,40 +43,40 @@ describe('aspectRatioSource', () => {
   });
 
   it('o iframe leva o nome acessível que a story escolheu', () => {
-    const saida = aspectRatioSource('', {
+    const output = aspectRatioSource('', {
       args: { child: 'iframe', title: 'Mapa do escritório em São Paulo' },
     });
-    expect(saida).toContain('<iframe');
-    expect(saida).toContain('title="Mapa do escritório em São Paulo"');
-    expect(saida).not.toContain('<img');
+    expect(output).toContain('<iframe');
+    expect(output).toContain('title="Mapa do escritório em São Paulo"');
+    expect(output).not.toContain('<img');
   });
 
   it('o vídeo vem com controles e com a faixa de legendas', () => {
-    const saida = aspectRatioSource('', { args: { child: 'video' } });
-    expect(saida).toContain('<video');
-    expect(saida).toContain('controls');
-    expect(saida).toContain('kind="captions"');
+    const output = aspectRatioSource('', { args: { child: 'video' } });
+    expect(output).toContain('<video');
+    expect(output).toContain('controls');
+    expect(output).toContain('kind="captions"');
   });
 
   it('o bloco reservado mostra o rótulo e não traz mídia nenhuma', () => {
-    const saida = aspectRatioSource('', { args: { child: 'placeholder', label: 'Carregando…' } });
-    expect(saida).toContain('Carregando…');
-    expect(saida).not.toContain('<img');
-    expect(saida).not.toContain('<video');
+    const output = aspectRatioSource('', { args: { child: 'placeholder', label: 'Carregando…' } });
+    expect(output).toContain('Carregando…');
+    expect(output).not.toContain('<img');
+    expect(output).not.toContain('<video');
   });
 
   it('imagem decorativa mantém o alt, vazio — nunca o atributo ausente', () => {
     // Sem o alt o leitor de tela anuncia o nome do arquivo; `alt=""` o cala.
-    const saida = aspectRatioSource('', { args: { alt: '' } });
-    expect(saida).toContain('alt=""');
+    const output = aspectRatioSource('', { args: { alt: '' } });
+    expect(output).toContain('alt=""');
   });
 });
 
 describe('aspectRatioEmGradeSource', () => {
   it('a grade repete a mesma proporção em larguras diferentes', () => {
-    const saida = gridAspectRatioSource();
-    expect(saida).toContain('nds-grid');
-    expect(saida).toContain('<AspectRatio ratio={4 / 3}>');
-    expect(saida).toContain('{#each imagens as imagem (imagem.src)}');
+    const output = gridAspectRatioSource();
+    expect(output).toContain('nds-grid');
+    expect(output).toContain('<AspectRatio ratio={4 / 3}>');
+    expect(output).toContain('{#each imagens as imagem (imagem.src)}');
   });
 });

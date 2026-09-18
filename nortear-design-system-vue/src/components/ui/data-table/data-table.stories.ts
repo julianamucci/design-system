@@ -167,7 +167,7 @@ export const Playground: Story = {
       await waitFor(() => expect(th).toHaveAttribute('aria-sort', 'none'));
     };
     /** Clica só se o estado ainda não é o desejado — sobrevive ao replay. */
-    const marcar = async (box: HTMLElement, target: 'true' | 'false') => {
+    const check = async (box: HTMLElement, target: 'true' | 'false') => {
       if (box.getAttribute('aria-checked') !== target) await userEvent.click(box);
       await waitFor(() => expect(box).toHaveAttribute('aria-checked', target));
     };
@@ -298,7 +298,7 @@ export const Playground: Story = {
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
       const all = allBox();
-      await marcar(all, 'true');
+      await check(all, 'true');
 
       for (const line of lines()) {
         await expect(line).toHaveAttribute('data-state', 'selected');
@@ -312,7 +312,7 @@ export const Playground: Story = {
 
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
       const first = lineBox(lines()[0]);
-      await marcar(first, 'false');
+      await check(first, 'false');
       await waitFor(() => expect(allBox()).toHaveAttribute('aria-checked', 'mixed'));
       await expect(lines()[0].hasAttribute('data-state')).toBe(false);
     });
@@ -322,8 +322,8 @@ export const Playground: Story = {
       // não só marcar. Partindo do misto, o primeiro clique completa a página e
       // o segundo esvazia.
       const all = allBox();
-      await marcar(all, 'true');
-      await marcar(all, 'false');
+      await check(all, 'true');
+      await check(all, 'false');
       await expect(regiaoViva()).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
       await expect(
         canvasElement.querySelectorAll("tbody tr[data-state='selected']").length,
@@ -341,15 +341,15 @@ export const Playground: Story = {
       // e uma referência colhida antes pode não ser mais a que está na tela.
       const clearMarkup = async () => {
         for (let i = 0; i < lines().length; i++) {
-          await marcar(lineBox(lines()[i]), 'false');
+          await check(lineBox(lines()[i]), 'false');
         }
       };
       await clearMarkup();
 
       // Marcadas por NOME: por posição, o passo não distinguiria "a mesma
       // linha" de "a mesma linha da tela".
-      await marcar(byInvoice('INV-002'), 'true');
-      await marcar(byInvoice('INV-009'), 'true');
+      await check(byInvoice('INV-002'), 'true');
+      await check(byInvoice('INV-009'), 'true');
       const contagemBefore = regiaoViva().textContent!.trim();
       await expect(contagemBefore).toBe('2 de 12 linha(s) selecionada(s).');
 
@@ -376,8 +376,8 @@ export const Playground: Story = {
     await step('A story termina com seleção parcial na tela', async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção".
-      await marcar(lineBox(lines()[0]), 'true');
-      await marcar(lineBox(lines()[2]), 'true');
+      await check(lineBox(lines()[0]), 'true');
+      await check(lineBox(lines()[2]), 'true');
       await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
     });
   },

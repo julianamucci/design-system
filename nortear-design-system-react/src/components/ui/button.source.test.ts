@@ -56,39 +56,39 @@ const ALL: Array<() => string> = [
 
 describe('buttonSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
-    const saida = buttonSource();
-    expect(saida).toContain('import { Button } from "@/components/ui/button";');
-    expect(saida).not.toContain('@base-ui');
+    const output = buttonSource();
+    expect(output).toContain('import { Button } from "@/components/ui/button";');
+    expect(output).not.toContain('@base-ui');
   });
 
   it('omite variant e size quando são o padrão', () => {
-    const saida = buttonSource(undefined, {
+    const output = buttonSource(undefined, {
       args: { variant: 'default', size: 'default', disabled: false, children: 'Botão' },
     });
-    expect(saida).toContain('<Button>Botão</Button>');
+    expect(output).toContain('<Button>Botão</Button>');
   });
 
   it('escreve cada control que difere do padrão, na ordem da API', () => {
-    const saida = buttonSource(undefined, {
+    const output = buttonSource(undefined, {
       args: { variant: 'ghost', size: 'lg', disabled: true, children: 'Enviar' },
     });
-    expect(saida).toContain('<Button variant="ghost" size="lg" disabled>Enviar</Button>');
+    expect(output).toContain('<Button variant="ghost" size="lg" disabled>Enviar</Button>');
   });
 
   it('não inventa valor fora da união quando o control é adulterado', () => {
-    const saida = buttonSource(undefined, {
+    const output = buttonSource(undefined, {
       args: { variant: 'roxo' as never, size: 'gigante' as never, children: 'X' },
     });
-    expect(saida).toContain('<Button>X</Button>');
+    expect(output).toContain('<Button>X</Button>');
   });
 
   it('cai no texto padrão quando o control entrega um espião no lugar da string', () => {
     // O Storybook cria espião para os args de callback; interpolado, o corpo do
     // mock apareceria no painel como se fosse código do design system.
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = buttonSource(undefined, { args: { children: spy as never } });
-    expect(saida).toContain('<Button>Botão</Button>');
-    expect(saida).not.toContain('CORPO_DO_MOCK');
+    const output = buttonSource(undefined, { args: { children: spy as never } });
+    expect(output).toContain('<Button>Botão</Button>');
+    expect(output).not.toContain('CORPO_DO_MOCK');
   });
 
   it('não imprime o onClick do control', () => {
@@ -123,32 +123,32 @@ describe('tamanhos', () => {
       'icon-sm': buttonIconSmSource(),
       'icon-lg': buttonIconLgSource(),
     };
-    for (const [size, saida] of Object.entries(bySize)) {
-      expect(saida).toContain(`size="${size}"`);
+    for (const [size, output] of Object.entries(bySize)) {
+      expect(output).toContain(`size="${size}"`);
       // Sem texto dentro, quem nomeia é o aria-label e o ícone sai da árvore de
       // acessibilidade — as duas coisas juntas, ou o botão fica sem nome.
-      expect(saida).toContain('aria-label="Adicionar item"');
-      expect(saida).toContain('<Plus aria-hidden="true" />');
-      expect(saida).toContain('import { Plus } from "lucide-react";');
+      expect(output).toContain('aria-label="Adicionar item"');
+      expect(output).toContain('<Plus aria-hidden="true" />');
+      expect(output).toContain('import { Plus } from "lucide-react";');
     }
   });
 });
 
 describe('estados', () => {
   it('desabilitado é o atributo nativo, não uma classe', () => {
-    const saida = buttonDisabledSource();
-    expect(saida).toContain('<Button disabled>Salvar</Button>');
-    expect(saida).not.toContain('nds-button-disabled');
+    const output = buttonDisabledSource();
+    expect(output).toContain('<Button disabled>Salvar</Button>');
+    expect(output).not.toContain('nds-button-disabled');
   });
 
   it('carregando soma desabilitado, aria-busy e rótulo em progresso', () => {
-    const saida = buttonLoadingSource();
-    expect(saida).toContain('disabled');
-    expect(saida).toContain('aria-busy="true"');
-    expect(saida).toContain('Salvando…');
+    const output = buttonLoadingSource();
+    expect(output).toContain('disabled');
+    expect(output).toContain('aria-busy="true"');
+    expect(output).toContain('Salvando…');
     // `.nds-spin` tem guarda de prefers-reduced-motion; `.nds-animate-spin` não.
-    expect(saida).toContain('nds-spin');
-    expect(saida).not.toContain('nds-animate-spin');
+    expect(output).toContain('nds-spin');
+    expect(output).not.toContain('nds-animate-spin');
   });
 
   it('inválido se sinaliza por aria-invalid, que é o que o leitor anuncia', () => {
@@ -166,37 +166,37 @@ describe('composições', () => {
   });
 
   it('todo ícone dentro de botão com texto sai da árvore de acessibilidade', () => {
-    for (const saida of [
+    for (const output of [
       buttonIconEsquerdaSource(),
       buttonIconDireitaSource(),
       buttonDestructiveWithIconSource(),
       buttonSomenteIconSource(),
     ]) {
-      expect(saida).toContain('aria-hidden="true"');
+      expect(output).toContain('aria-hidden="true"');
     }
   });
 
   it('sem texto dentro, o aria-label é o único nome que sobra', () => {
-    const saida = buttonSomenteIconSource();
-    expect(saida).toContain('aria-label="Baixar arquivo"');
-    expect(saida).toContain('size="icon"');
+    const output = buttonSomenteIconSource();
+    expect(output).toContain('aria-label="Baixar arquivo"');
+    expect(output).toContain('size="icon"');
   });
 
   it('o par de ações deixa a primária à direita, e o respiro é do contêiner', () => {
-    const saida = actionsButtonPairSource();
-    expect(saida).toContain('className="nds-cluster" data-spacing="md"');
-    expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
-    expect(saida).toContain('<Button variant="outline">Cancelar</Button>');
-    expect(saida).toContain('<Button>Confirmar</Button>');
+    const output = actionsButtonPairSource();
+    expect(output).toContain('className="nds-cluster" data-spacing="md"');
+    expect(output.indexOf('Cancelar')).toBeLessThan(output.indexOf('Confirmar'));
+    expect(output).toContain('<Button variant="outline">Cancelar</Button>');
+    expect(output).toContain('<Button>Confirmar</Button>');
   });
 
   it('link com aparência de botão é um <a> de verdade, não o componente', () => {
-    const saida = buttonAsLinkSource();
-    expect(saida).toContain('import { buttonVariants } from "@/components/ui/button";');
-    expect(saida).toContain('className={buttonVariants({ variant: "link" })}');
+    const output = buttonAsLinkSource();
+    expect(output).toContain('import { buttonVariants } from "@/components/ui/button";');
+    expect(output).toContain('className={buttonVariants({ variant: "link" })}');
     // Um `<Button>` aqui ensinaria o oposto: a semântica de link se perderia.
-    expect(saida).not.toContain('<Button');
-    expect(saida).toContain('href="/docs"');
+    expect(output).not.toContain('<Button');
+    expect(output).toContain('href="/docs"');
   });
 });
 
@@ -208,10 +208,10 @@ describe('regras que valem para todo snippet de botão', () => {
 
   it('nenhum ensina o andaime da story', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
-      expect(saida).not.toContain('undefined');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
+      expect(output).not.toContain('undefined');
     }
   });
 });

@@ -252,8 +252,8 @@ export const Directional: Story = {
     await step('O ícone é decoração, não conteúdo', async () => {
       const icons = canvasElement.querySelectorAll('svg');
       await expect(icons.length).toBe(2);
-      for (const icone of icons) {
-        await expect(icone).toHaveAttribute('aria-hidden', 'true');
+      for (const icon of icons) {
+        await expect(icon).toHaveAttribute('aria-hidden', 'true');
       }
     });
   },

@@ -54,7 +54,7 @@ function importing(parts: string[], comCampos = false): string {
  * Frase inteira numa linha só some na barra de rolagem do painel — e a descrição
  * é justamente o texto que explica o diálogo a quem usa leitor de tela.
  */
-function descricao(frase: string): string {
+function description(frase: string): string {
   if (frase.length <= 70) {
     return `      <DialogDescription>${frase}</DialogDescription>`;
   }
@@ -76,7 +76,7 @@ type Frame = {
   titleProps?: string;
   trigger: string;
   title: string;
-  descricao: string;
+  description: string;
   /** Miolo entre o cabeçalho e o rodapé, já indentado em 4 espaços. */
   body?: string;
   /** Rodapé completo, já indentado em 4 espaços. Vazio significa sem rodapé. */
@@ -104,7 +104,7 @@ function dialogo(m: Frame): string {
   <DialogContent${attrs(painelProps)}>
     <DialogHeader>
       <DialogTitle${attrs(titleProps)}>${m.title}</DialogTitle>
-${descricao(m.descricao)}
+${description(m.description)}
     </DialogHeader>${miolo}
   </DialogContent>
 </Dialog>`;
@@ -157,7 +157,7 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
       ).trim(),
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+      description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
       footer: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
@@ -176,7 +176,7 @@ export function dialogOpenSource(): string {
       root: 'default-open',
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+      description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
       footer: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
@@ -195,7 +195,7 @@ export function dialogNoButtonCloseSource(): string {
       painelProps: ':show-close-button="false"',
       trigger: 'Ver atualização',
       title: 'Aceitar atualização',
-      descricao: 'Uma nova versão está disponível. Clique em continuar para atualizar.',
+      description: 'Uma nova versão está disponível. Clique em continuar para atualizar.',
       footer: footerDefault('Mais tarde', 'Atualizar agora'),
     }),
   );
@@ -256,7 +256,7 @@ export function dialogWithFormSource(): string {
     dialogo({
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize seu nome e email. As mudanças entram em vigor após salvar.',
+      description: 'Atualize seu nome e email. As mudanças entram em vigor após salvar.',
       body: `    <form class="nds-grid" data-spacing="sm">
       <div class="nds-grid" data-spacing="xs">
         <Label for="dialog-name">Nome</Label>
@@ -313,7 +313,7 @@ const termos = [
       painelProps: 'class="nds-max-w-lg"',
       trigger: 'Termos de uso',
       title: 'Termos de uso',
-      descricao: 'Leia atentamente antes de aceitar.',
+      description: 'Leia atentamente antes de aceitar.',
       body: `    <div
       class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
       data-slot="dialog-body"
@@ -348,7 +348,7 @@ export function dialogNoFooterSource(): string {
     dialogo({
       trigger: 'Sobre este recurso',
       title: 'Sobre este recurso',
-      descricao: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
+      description: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
       body: `    <div
       class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
       data-slot="dialog-body"
@@ -372,7 +372,7 @@ export function dialogActionDestructiveSource(): string {
     dialogo({
       trigger: 'Remover item',
       title: 'Remover item da lista',
-      descricao: 'O item sai desta lista e continua disponível no catálogo.',
+      description: 'O item sai desta lista e continua disponível no catálogo.',
       footer: footerDefault('Cancelar', 'Remover item', true),
     }),
   );
@@ -403,7 +403,7 @@ export function footerDialogCloseSource(): string {
       painelProps: ':show-close-button="false"',
       trigger: 'Abrir guia',
       title: 'Próximos passos',
-      descricao: 'Continue o fluxo ou volte ao início.',
+      description: 'Continue o fluxo ou volte ao início.',
       body: `    <div
       class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
       data-slot="dialog-body"
@@ -436,7 +436,7 @@ export function dialogHeadingH3Source(): string {
       titleProps: 'as="h3"',
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+      description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
       footer: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
@@ -449,7 +449,7 @@ export function dialogConfirmarEmailSource(): string {
     dialogo({
       trigger: 'Confirmar e-mail',
       title: 'Confirmar e-mail',
-      descricao:
+      description:
         'Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.',
       body: `    <div class="nds-grid" data-spacing="xs">
       <Label for="new-email">Novo email</Label>
@@ -468,7 +468,7 @@ export function dialogEditarPerfilSource(): string {
     dialogo({
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+      description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
       body: `    <form class="nds-grid" data-spacing="sm">
       <div class="nds-grid" data-spacing="xs">
         <Label for="profile-name">Nome</Label>
@@ -513,7 +513,7 @@ export function dialogPreviaDeMidiaSource(): string {
       painelProps: 'class="nds-sm-max-w-md"',
       trigger: 'Pré-visualizar imagem',
       title: 'Pré-visualização da imagem',
-      descricao: 'captura-de-tela.png · 1920×1080 · 248 KB',
+      description: 'captura-de-tela.png · 1920×1080 · 248 KB',
       body: `    <div
       data-slot="dialog-body"
       role="img"

@@ -199,7 +199,7 @@ export const SortableHeaders: Story = {
       props: {
         direction,
         ordenadas,
-        alternar: () =>
+        toggle: () =>
           direction.update((d) => (d === 'ascending' ? 'descending' : 'ascending')),
       },
       template: `
@@ -213,7 +213,7 @@ export const SortableHeaders: Story = {
                 <!-- aria-sort na CÉLULA de cabeçalho, não no botão: quem carrega
                      a relação com a coluna é o th. O botão só é o gatilho. -->
                 <th ndsTableHead [sort]="direction()">
-                  <button ndsButton variant="ghost" size="sm" (click)="alternar()">
+                  <button ndsButton variant="ghost" size="sm" (click)="toggle()">
                     Valor
                     <svg ndsButtonIcon kind="chevron-right" class="nds-icon"></svg>
                   </button>
@@ -285,7 +285,7 @@ export const RowSelection: Story = {
         selecionadas,
         all,
         algumas,
-        alternar: (id: string, checked: boolean) => {
+        toggle: (id: string, checked: boolean) => {
           const next = new Set(selecionadas());
           if (checked) next.add(id);
           else next.delete(id);
@@ -322,7 +322,7 @@ export const RowSelection: Story = {
                       ndsCheckbox
                       [attr.aria-label]="'Selecionar fatura ' + invoice.id"
                       [checked]="selecionadas().has(invoice.id)"
-                      (checkedChange)="alternar(invoice.id, $event)"
+                      (checkedChange)="toggle(invoice.id, $event)"
                     ></button>
                   </td>
                   <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>

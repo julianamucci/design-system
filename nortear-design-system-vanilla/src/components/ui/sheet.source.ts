@@ -56,7 +56,7 @@ export type SheetSnippetOptions = {
   /** `false` monta o painel sem o X do canto — a saída passa a ser o rodapé. */
   showCloseButton?: boolean;
   /** Mostra o `destroy()` — quem tira o painel da página o chama. */
-  mostrarDestroy?: boolean;
+  showDestroy?: boolean;
 };
 
 const CALLBACK_ABERTURA = '(aberto) => registrarPainel(aberto)';
@@ -312,7 +312,7 @@ export function sheetSnippet(o: SheetSnippetOptions = {}): string {
     pe.block,
     `const painel = ${callLine('createSheet', panelLines(o, trigger, pe.referencia))};`,
     appendLine('painel'),
-    o.mostrarDestroy
+    o.showDestroy
       ? `// O painel mora no \`body\` e o ouvinte de teclado mora no \`document\`: quem
 // tira o componente da página chama \`destroy()\` para não deixar nenhum dos
 // dois para trás.

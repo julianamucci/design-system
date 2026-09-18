@@ -98,7 +98,7 @@ export const Playground: Story = {
       // WCAG 1.4.4: `height` fixa impede o campo de crescer com a fonte do
       // navegador. A tabela de tokens já ensinou `--height-default` por engano.
       const measurement = heightResultante(fieldOf(canvasElement)!);
-      await expect(measurement.alturaCravada).toBe(false);
+      await expect(measurement.hardcodedHeight).toBe(false);
       await expect(measurement.heightCss).not.toBe("0px");
     });
 

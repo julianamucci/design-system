@@ -181,10 +181,10 @@ export const FormattingBar: Story = {
       await expect(bold).toHaveAttribute('data-state', 'on');
     });
     await step('visual.item5 — os itens são emendados, sem espaço entre eles', async () => {
-      const primeiro = bold.getBoundingClientRect();
+      const first = bold.getBoundingClientRect();
       const segundo = italic.getBoundingClientRect();
       // Meio pixel de folga: o arredondamento do layout, não um gap.
-      await expect(Math.abs(segundo.left - primeiro.right)).toBeLessThanOrEqual(0.5);
+      await expect(Math.abs(segundo.left - first.right)).toBeLessThanOrEqual(0.5);
     });
   },
 };

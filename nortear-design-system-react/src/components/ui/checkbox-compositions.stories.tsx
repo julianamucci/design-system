@@ -30,11 +30,11 @@ type Story = StoryObj<typeof meta>;
 // alterna — assim o clique desta rodada fica provado mesmo quando o replay
 // começa a partir do estado final da rodada anterior. `clickEl` é opcional
 // porque WithLabel/InsideCard clicam no <label>, não no checkbox.
-const desmarcar = async (assertEl: HTMLElement, clickEl: HTMLElement = assertEl) => {
+const uncheck = async (assertEl: HTMLElement, clickEl: HTMLElement = assertEl) => {
   if (assertEl.getAttribute("aria-checked") !== "false") await userEvent.click(clickEl);
   await waitFor(() => expect(assertEl).toHaveAttribute("aria-checked", "false"));
 };
-const marcar = async (assertEl: HTMLElement, clickEl: HTMLElement = assertEl) => {
+const check = async (assertEl: HTMLElement, clickEl: HTMLElement = assertEl) => {
   if (assertEl.getAttribute("aria-checked") !== "true") await userEvent.click(clickEl);
   await waitFor(() => expect(assertEl).toHaveAttribute("aria-checked", "true"));
 };
@@ -74,8 +74,8 @@ export const WithLabel: Story = {
     });
 
     await step("Clique no label alterna o checkbox — desmarca e marca de novo", async () => {
-      await desmarcar(checkbox, label);
-      await marcar(checkbox, label);
+      await uncheck(checkbox, label);
+      await check(checkbox, label);
     });
   },
 };
@@ -257,8 +257,8 @@ export const InsideCard: Story = {
     });
 
     await step("Clique no label alterna o checkbox — desmarca e marca de novo", async () => {
-      await desmarcar(checkbox, label);
-      await marcar(checkbox, label);
+      await uncheck(checkbox, label);
+      await check(checkbox, label);
     });
   },
 };
@@ -308,7 +308,7 @@ export const InForm: Story = {
     const form = canvasElement.querySelector("form") as HTMLFormElement;
 
     await step("Marcar o checkbox antes de enviar", async () => {
-      await marcar(checkbox);
+      await check(checkbox);
     });
 
     await step("FormData inclui name/value do checkbox marcado", async () => {

@@ -112,7 +112,7 @@
 
   // Sem série com dado não existe desenho a anunciar: entra a frase. É contrato
   // do componente, não detalhe desta implementação.
-  const vazio = $derived(isChartOptionEmpty(option));
+  const empty = $derived(isChartOptionEmpty(option));
 
   /**
    * Os números do desenho em forma de tabela.
@@ -383,7 +383,7 @@
   }
 
   onMount(() => {
-    if (!containerEl || vazio) return;
+    if (!containerEl || empty) return;
     applyTheme();
     const chart = echarts.init(containerEl, THEME_NAME, { renderer });
     chart.setOption(option);
@@ -468,7 +468,7 @@
   });
 </script>
 
-{#if vazio}
+{#if empty}
   <!--
     Sem `role="img"` de propósito: o papel PODA a subárvore da árvore de
     acessibilidade, e aqui a frase que explica a ausência de dado é justamente o

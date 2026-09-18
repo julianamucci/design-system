@@ -73,9 +73,9 @@ function trigger(label: string): string {
  * Cabeçalho nomeado. Com `PopoverTitle` a lib monta o `aria-labelledby`
  * sozinha — e `role="dialog"` sem nome reprova na regra `aria-dialog-name`.
  */
-function header(title: string, descricao?: string): string {
-  const lineDescription = descricao
-    ? `\n      <PopoverDescription>\n        ${descricao}\n      </PopoverDescription>`
+function header(title: string, description?: string): string {
+  const lineDescription = description
+    ? `\n      <PopoverDescription>\n        ${description}\n      </PopoverDescription>`
     : '';
   return `    <PopoverHeader>
       <PopoverTitle>${title}</PopoverTitle>${lineDescription}
@@ -559,7 +559,7 @@ ${FORM_ABERTURA}
  * Aplicar que não fechava nada.
  */
 export function popoverFilterSource(): string {
-  const opcao = (label: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
+  const option = (label: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
         <input type="checkbox" className="nds-size-4"${marcada ? ' defaultChecked' : ''} />
         <span>${label}</span>
       </label>`;
@@ -583,9 +583,9 @@ ${controlledPreamble('aplicar', 'aplique os filtros à listagem')}`,
       '',
       `${header('Filtrar por status', 'Combine quantos status quiser na listagem.')}
     <div className="nds-stack nds-text-body" data-spacing="xs">
-${opcao('Ativo', true)}
-${opcao('Pendente')}
-${opcao('Arquivado')}
+${option('Ativo', true)}
+${option('Pendente')}
+${option('Arquivado')}
     </div>
     <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <Button variant="ghost" size="sm">Limpar</Button>

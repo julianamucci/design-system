@@ -35,17 +35,17 @@ const ALL = [
 
 describe('chartSource', () => {
   it('ensina a importação do design system e o construtor que a chamada usa', () => {
-    const saida = chartSource();
-    expect(saida).toContain(
+    const output = chartSource();
+    expect(output).toContain(
       'import { ChartContainer, buildBarOption } from "@/components/ui/chart";',
     );
-    expect(saida).toContain('option={buildBarOption({ xAxis: meses, series })}');
+    expect(output).toContain('option={buildBarOption({ xAxis: meses, series })}');
   });
 
   it('declara os dados que a chamada referencia — o trecho cola inteiro', () => {
-    const saida = chartSource();
-    expect(saida).toContain('const meses = [');
-    expect(saida).toContain('const series = [');
+    const output = chartSource();
+    expect(output).toContain('const meses = [');
+    expect(output).toContain('const series = [');
   });
 
   /**
@@ -65,36 +65,36 @@ describe('chartSource', () => {
    */
   it('nunca escreve um rótulo vazio', () => {
     for (const args of [{}, { 'aria-label': '' }, { 'aria-label': '   ' }]) {
-      const saida = chartSource(undefined, { args: args as never });
-      expect(saida).not.toContain('aria-label=""');
-      expect(saida).toContain('aria-label="Acessos mensais no desktop, de janeiro a junho"');
+      const output = chartSource(undefined, { args: args as never });
+      expect(output).not.toContain('aria-label=""');
+      expect(output).toContain('aria-label="Acessos mensais no desktop, de janeiro a junho"');
     }
   });
 
   it('respeita o rótulo escolhido no control', () => {
-    const saida = chartSource(undefined, { args: { 'aria-label': 'Vendas por trimestre' } });
-    expect(saida).toContain('aria-label="Vendas por trimestre"');
+    const output = chartSource(undefined, { args: { 'aria-label': 'Vendas por trimestre' } });
+    expect(output).toContain('aria-label="Vendas por trimestre"');
   });
 
   it('omite o renderizador e a frase de vazio quando estão no padrão', () => {
-    const saida = chartSource(undefined, {
+    const output = chartSource(undefined, {
       args: { renderer: 'svg', emptyLabel: 'Sem dados para exibir' },
     });
-    expect(saida).not.toContain('renderer=');
-    expect(saida).not.toContain('emptyLabel=');
+    expect(output).not.toContain('renderer=');
+    expect(output).not.toContain('emptyLabel=');
   });
 
   it('escreve renderizador e frase de vazio quando diferem do padrão', () => {
-    const saida = chartSource(undefined, {
+    const output = chartSource(undefined, {
       args: { renderer: 'canvas', emptyLabel: 'Nada por aqui ainda.' },
     });
-    expect(saida).toContain('renderer="canvas"');
-    expect(saida).toContain('emptyLabel="Nada por aqui ainda."');
+    expect(output).toContain('renderer="canvas"');
+    expect(output).toContain('emptyLabel="Nada por aqui ainda."');
   });
 
   it('não inventa renderizador fora da união', () => {
-    const saida = chartSource(undefined, { args: { renderer: 'webgl' as never } });
-    expect(saida).not.toContain('webgl');
+    const output = chartSource(undefined, { args: { renderer: 'webgl' as never } });
+    expect(output).not.toContain('webgl');
   });
 
   it('a altura é número, e cai no padrão quando o control não entrega um', () => {
@@ -129,91 +129,91 @@ describe('tipos de desenho', () => {
   });
 
   it('a pizza recebe outra FORMA de dado — pares de rótulo e valor, sem eixo', () => {
-    const saida = chartPizzaSource();
-    expect(saida).toContain('option={buildPieOption({ data: dados })}');
-    expect(saida).toContain('{ label: "Desktop", value: 1224 }');
-    expect(saida).not.toContain('xAxis');
+    const output = chartPizzaSource();
+    expect(output).toContain('option={buildPieOption({ data: dados })}');
+    expect(output).toContain('{ label: "Desktop", value: 1224 }');
+    expect(output).not.toContain('xAxis');
   });
 
   it('o funil recebe pares de rótulo e valor, na ordem das etapas', () => {
-    const saida = chartFunnelSource();
-    expect(saida).toContain('option={buildFunnelOption({ data: etapas })}');
-    expect(saida).toContain('{ label: "Visitas", value: 4000 }');
+    const output = chartFunnelSource();
+    expect(output).toContain('option={buildFunnelOption({ data: etapas })}');
+    expect(output).toContain('{ label: "Visitas", value: 4000 }');
     // Sem eixo: aqui não há categoria contínua, há uma ordem de etapas.
-    expect(saida).not.toContain('xAxis');
+    expect(output).not.toContain('xAxis');
   });
 
   it('o radar traz as DUAS listas — os eixos com teto e as séries na ordem deles', () => {
-    const saida = chartRadarSource();
-    expect(saida).toContain('option={buildRadarOption({ axes: eixos, series: medicoes })}');
+    const output = chartRadarSource();
+    expect(output).toContain('option={buildRadarOption({ axes: eixos, series: medicoes })}');
     // O teto é a única informação do radar que não está em nenhum outro lugar:
     // sem ele, o vértice na tela não tem denominador.
-    expect(saida).toContain('{ label: "Boas práticas", max: 10 }');
-    expect(saida).toContain('{ name: "Antes", data: [72, 64, 6, 88, 2] }');
+    expect(output).toContain('{ label: "Boas práticas", max: 10 }');
+    expect(output).toContain('{ name: "Antes", data: [72, 64, 6, 88, 2] }');
     // A primeira coluna da tabela nomeia o EIXO, e a segunda traz o teto dele.
-    expect(saida).toContain('categoryLabel="Eixo"');
-    expect(saida).toContain('maxLabel="Máximo"');
+    expect(output).toContain('categoryLabel="Eixo"');
+    expect(output).toContain('maxLabel="Máximo"');
     // Sem eixo cartesiano: as grandezas não são categorias de um eixo x.
-    expect(saida).not.toContain('xAxis');
+    expect(output).not.toContain('xAxis');
   });
 
   it('a legenda nasce da pluralidade das séries, não de uma bandeira', () => {
-    const saida = chartMultiSerieSource();
-    expect(saida).toContain('{ name: "Desktop"');
-    expect(saida).toContain('{ name: "Mobile"');
-    expect(saida).toContain('{ name: "Tablet"');
-    expect(saida).not.toContain('showLegend');
+    const output = chartMultiSerieSource();
+    expect(output).toContain('{ name: "Desktop"');
+    expect(output).toContain('{ name: "Mobile"');
+    expect(output).toContain('{ name: "Tablet"');
+    expect(output).not.toContain('showLegend');
   });
 
   it('com uma série só a legenda some — e nada no snippet a desliga', () => {
-    const saida = chartSerieUnicaSource();
-    expect(saida).toContain('buildLineOption');
-    expect(saida).not.toContain('{ name: "Mobile"');
-    expect(saida).not.toContain('showLegend');
+    const output = chartSerieUnicaSource();
+    expect(output).toContain('buildLineOption');
+    expect(output).not.toContain('{ name: "Mobile"');
+    expect(output).not.toContain('showLegend');
   });
 });
 
 describe('rótulo e título', () => {
   it('título no desenho e rótulo autoral convivem — são textos de papéis distintos', () => {
-    const saida = chartWithTitleSource();
-    expect(saida).toContain('title: "Acessos por dispositivo"');
-    expect(saida).toContain('aria-label="Acessos por dispositivo, de janeiro a junho"');
+    const output = chartWithTitleSource();
+    expect(output).toContain('title: "Acessos por dispositivo"');
+    expect(output).toContain('aria-label="Acessos por dispositivo, de janeiro a junho"');
   });
 
   it('sem rótulo autoral, a ausência é o assunto — o container cai no título', () => {
-    const saida = chartTitleNoLabelSource();
-    expect(saida).toContain('title: "Vendas mensais"');
-    expect(saida).not.toContain('aria-label');
+    const output = chartTitleNoLabelSource();
+    expect(output).toContain('title: "Vendas mensais"');
+    expect(output).not.toContain('aria-label');
   });
 
   it('dois desenhos na mesma tela carregam um rótulo cada', () => {
-    const saida = chartDoisDesenhosSource();
-    const rotulos = [...saida.matchAll(/aria-label="([^"]+)"/g)].map(([, text]) => text);
+    const output = chartDoisDesenhosSource();
+    const rotulos = [...output.matchAll(/aria-label="([^"]+)"/g)].map(([, text]) => text);
     expect(rotulos.length).toBe(2);
     expect(new Set(rotulos).size).toBe(2);
-    expect(saida).toContain('buildBarOption');
-    expect(saida).toContain('buildLineOption');
+    expect(output).toContain('buildBarOption');
+    expect(output).toContain('buildLineOption');
   });
 });
 
 describe('estados e composição', () => {
   it('o estado vazio traz a frase e NENHUMA altura — quem segura o bloco é o piso', () => {
-    const saida = chartEmptySource();
-    expect(saida).toContain('series: []');
-    expect(saida).toContain('emptyLabel="Nenhum dado disponível para o período selecionado."');
-    expect(saida).not.toContain('height=');
+    const output = chartEmptySource();
+    expect(output).toContain('series: []');
+    expect(output).toContain('emptyLabel="Nenhum dado disponível para o período selecionado."');
+    expect(output).not.toContain('height=');
     // Sem desenho o container não se anuncia como imagem: a frase É o conteúdo,
     // e um rótulo genérico a esconderia. Nada no snippet força o contrário.
-    expect(saida).not.toContain('aria-label');
-    expect(saida).not.toContain('role=');
+    expect(output).not.toContain('aria-label');
+    expect(output).not.toContain('role=');
   });
 
   it('a tabela à vista aparece escrita na chamada — a entrada é o assunto', () => {
-    const saida = chartVisibleDataSource();
-    expect(saida).toContain('showData');
+    const output = chartVisibleDataSource();
+    expect(output).toContain('showData');
     // O rótulo continua obrigatório: ele é a `<caption>` da tabela, não só o
     // nome acessível do desenho.
-    expect(saida).toContain('aria-label="Acessos mensais por dispositivo');
+    expect(output).toContain('aria-label="Acessos mensais por dispositivo');
   });
 
   it('nenhum outro snippet liga a tabela à vista — o padrão é escondida', () => {
@@ -224,25 +224,25 @@ describe('estados e composição', () => {
   });
 
   it('no Card o gráfico fica DENTRO do corpo, e a altura é do gráfico', () => {
-    const saida = chartEmCardSource();
-    expect(saida).toContain('} from "@/components/ui/card";');
-    const body = saida.indexOf('<CardContent>');
-    const grafico = saida.indexOf('<ChartContainer');
+    const output = chartEmCardSource();
+    expect(output).toContain('} from "@/components/ui/card";');
+    const body = output.indexOf('<CardContent>');
+    const grafico = output.indexOf('<ChartContainer');
     expect(grafico).toBeGreaterThan(body);
-    expect(grafico).toBeLessThan(saida.indexOf('</CardContent>'));
-    expect(saida).toContain('<Card className="nds-max-w-lg">');
-    expect(saida).toContain('<CardTitle as="h3">');
+    expect(grafico).toBeLessThan(output.indexOf('</CardContent>'));
+    expect(output).toContain('<Card className="nds-max-w-lg">');
+    expect(output).toContain('<CardTitle as="h3">');
   });
 });
 
 describe('nenhum snippet ensina o andaime da story', () => {
   it('todos falam só do design system e das dependências reais', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('desenhoPronto');
-      expect(saida).not.toContain('chart-probe');
-      expect(saida).toContain('@/components/ui/chart');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('desenhoPronto');
+      expect(output).not.toContain('chart-probe');
+      expect(output).toContain('@/components/ui/chart');
     }
   });
 });

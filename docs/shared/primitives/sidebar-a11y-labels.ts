@@ -32,28 +32,28 @@ export interface SidebarLabels {
    * e a faixa é `aria-hidden` justamente para não virar um segundo controle com
    * o mesmo nome.
    */
-  alternar: string;
+  toggle: string;
   /** Nome da gaveta sobreposta, só para leitor de tela. */
-  tituloMovel: string;
+  mobileTitle: string;
   /** Descrição da gaveta sobreposta, só para leitor de tela. */
-  descricaoMovel: string;
+  mobileDescription: string;
 }
 
 const LABELS: Record<string, SidebarLabels> = {
   'pt-BR': {
-    alternar: 'Alternar barra lateral',
-    tituloMovel: 'Barra lateral',
-    descricaoMovel: 'Exibe a barra lateral como gaveta sobreposta.',
+    toggle: 'Alternar barra lateral',
+    mobileTitle: 'Barra lateral',
+    mobileDescription: 'Exibe a barra lateral como gaveta sobreposta.',
   },
   en: {
-    alternar: 'Toggle sidebar',
-    tituloMovel: 'Sidebar',
-    descricaoMovel: 'Displays the sidebar as an overlay drawer.',
+    toggle: 'Toggle sidebar',
+    mobileTitle: 'Sidebar',
+    mobileDescription: 'Displays the sidebar as an overlay drawer.',
   },
   es: {
-    alternar: 'Alternar barra lateral',
-    tituloMovel: 'Barra lateral',
-    descricaoMovel: 'Muestra la barra lateral como panel superpuesto.',
+    toggle: 'Alternar barra lateral',
+    mobileTitle: 'Barra lateral',
+    mobileDescription: 'Muestra la barra lateral como panel superpuesto.',
   },
 };
 

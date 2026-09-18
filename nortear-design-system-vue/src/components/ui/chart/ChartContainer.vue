@@ -496,7 +496,7 @@ const accessibleLabel = computed(() => {
 
 // Sem série com dado não existe desenho a anunciar: entra a frase. É contrato
 // do componente, não detalhe desta implementação.
-const vazio = computed(() => isChartOptionEmpty(props.option));
+const empty = computed(() => isChartOptionEmpty(props.option));
 const emptyText = computed(() => props.emptyLabel ?? CHART_EMPTY_LABEL);
 /**
  * Altura pedida. Veste o elemento do DESENHO quando há desenho — o bloco em
@@ -524,9 +524,9 @@ const heightStyle = computed(() =>
     ref="containerRef"
     data-slot="chart"
     :class="containerClass"
-    :style="vazio ? heightStyle : undefined"
+    :style="empty ? heightStyle : undefined"
   >
-    <p v-if="vazio" class="nds-chart-empty">{{ emptyText }}</p>
+    <p v-if="empty" class="nds-chart-empty">{{ emptyText }}</p>
     <template v-else>
       <!-- O elemento em que a lib desenha. A altura nasce da proporção aplicada
            à largura do container quando não vem pedida em pixel. -->

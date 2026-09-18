@@ -77,9 +77,9 @@ import {
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = resizableSource('', { args: { direction: (() => {}) as never } });
-    expect(saida).not.toContain('function');
-    expect(saida).toContain('direction="horizontal"');
+    const output = resizableSource('', { args: { direction: (() => {}) as never } });
+    expect(output).not.toContain('function');
+    expect(output).toContain('direction="horizontal"');
   });
 
   // O `:key="args.direction"` do render existe só para remontar o grupo quando
@@ -93,13 +93,13 @@ describe('a moldura de tamanho definido', () => {
   it('toda transform embrulha o grupo num contêiner com tamanho', () => {
     // Sem tamanho no pai não há o que dividir: o grupo vertical empilharia os
     // painéis no tamanho do conteúdo e nada se ajustaria.
-    for (const saida of ALL) {
-      expect(saida).toMatch(/<div class="nds-w-\w+ nds-aspect-[\w-]+ /);
+    for (const output of ALL) {
+      expect(output).toMatch(/<div class="nds-w-\w+ nds-aspect-[\w-]+ /);
     }
   });
 
   it('o tamanho vem de utilitária, nunca de style inline', () => {
-    for (const saida of ALL) expect(saida).not.toContain('style=');
+    for (const output of ALL) expect(output).not.toContain('style=');
   });
 
   it('o conteúdo de cada painel ocupa a faixa inteira', () => {
@@ -117,26 +117,26 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o aninhado tem dois grupos, e o de dentro tem eixo próprio', () => {
-    const saida = resizableNestedSource();
-    expect([...saida.matchAll(/<ResizablePanelGroup/g)]).toHaveLength(2);
-    expect(saida).toContain('<ResizablePanelGroup direction="vertical">');
+    const output = resizableNestedSource();
+    expect([...output.matchAll(/<ResizablePanelGroup/g)]).toHaveLength(2);
+    expect(output).toContain('<ResizablePanelGroup direction="vertical">');
     // O grupo de dentro entra COMO conteúdo de um painel do de fora.
-    expect(saida).toMatch(/<ResizablePanel :default-size="70" :min-size="50">\n\s+<ResizablePanelGroup/);
+    expect(output).toMatch(/<ResizablePanel :default-size="70" :min-size="50">\n\s+<ResizablePanelGroup/);
   });
 
   it('o pegador é flag do divisor, e não muda o nome acessível', () => {
-    const saida = resizableWithGrabberSource();
-    expect(saida).toContain('<ResizableHandle with-handle aria-label="Redimensionar painéis — use setas" />');
+    const output = resizableWithGrabberSource();
+    expect(output).toContain('<ResizableHandle with-handle aria-label="Redimensionar painéis — use setas" />');
     // O pegador é desenho: nenhum texto entra nele, senão comporia o nome.
-    expect(saida).not.toContain('nds-resizable-grip-bar');
+    expect(output).not.toContain('nds-resizable-grip-bar');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('os limites moram no painel, não no divisor', () => {
-    const saida = resizableLimitesSource();
-    expect(saida).toContain('<ResizablePanel :default-size="50" :min-size="30" :max-size="60">');
-    expect(saida).not.toContain('<ResizableHandle :min-size');
+    const output = resizableLimitesSource();
+    expect(output).toContain('<ResizablePanel :default-size="50" :min-size="30" :max-size="60">');
+    expect(output).not.toContain('<ResizableHandle :min-size');
   });
 
   it('o arrasto deixa o piso baixo para o divisor ter curso', () => {
@@ -144,51 +144,51 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a story de foco mostra a linha nua', () => {
-    const saida = resizableFocusSource();
-    expect(saida).not.toContain('with-handle');
+    const output = resizableFocusSource();
+    expect(output).not.toContain('with-handle');
     // O componente já põe o divisor na ordem de tabulação; escrever tabindex
     // ensinaria um atributo que ninguém precisa passar.
-    expect(saida).not.toContain('tabindex');
+    expect(output).not.toContain('tabindex');
   });
 
   it('o travado marca o divisor e mantém o rótulo', () => {
-    const saida = resizableTravadoSource();
-    expect(saida).toContain('<ResizableHandle disabled with-handle aria-label=');
+    const output = resizableTravadoSource();
+    expect(output).toContain('<ResizableHandle disabled with-handle aria-label=');
     // Travado continua anunciado: nada de sumir da ordem de tabulação.
-    expect(saida).not.toContain('tabindex="-1"');
+    expect(output).not.toContain('tabindex="-1"');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('três painéis pedem dois divisores, cada um com nome próprio', () => {
-    const saida = resizableEditorSource();
-    expect([...saida.matchAll(/<ResizablePanel /g)]).toHaveLength(3);
-    const names = [...saida.matchAll(/<ResizableHandle[^>]*aria-label="([^"]+)"/g)].map((m) => m[1]);
+    const output = resizableEditorSource();
+    expect([...output.matchAll(/<ResizablePanel /g)]).toHaveLength(3);
+    const names = [...output.matchAll(/<ResizableHandle[^>]*aria-label="([^"]+)"/g)].map((m) => m[1]);
     expect(names).toHaveLength(2);
     // Rótulos repetidos deixariam três entradas iguais na lista de marcos.
     expect(new Set(names).size).toBe(names.length);
   });
 
   it('as três faixas empilhadas somam 100 e dividem a altura', () => {
-    const saida = resizableFaixasSource();
-    expect(saida).toContain('direction="vertical"');
-    const sizes = [...saida.matchAll(/:default-size="(\d+)"/g)].map((m) => Number(m[1]));
+    const output = resizableFaixasSource();
+    expect(output).toContain('direction="vertical"');
+    const sizes = [...output.matchAll(/:default-size="(\d+)"/g)].map((m) => Number(m[1]));
     expect(sizes).toEqual([20, 60, 20]);
   });
 
   it('a sidebar com console aninha o segundo grupo dentro do painel maior', () => {
-    const saida = resizableSidebarConsoleSource();
-    expect([...saida.matchAll(/<ResizablePanelGroup/g)]).toHaveLength(2);
-    expect(saida).toContain('Workspace');
-    expect(saida).toContain('Console');
+    const output = resizableSidebarConsoleSource();
+    expect([...output.matchAll(/<ResizablePanelGroup/g)]).toHaveLength(2);
+    expect(output).toContain('Workspace');
+    expect(output).toContain('Console');
   });
 });
 
 describe('o andaime das stories não entra no snippet', () => {
   it('nenhuma transform cita a medição de proporção nem a caixa da story', () => {
-    for (const saida of ALL) {
-      expect(saida).not.toContain('fracaoDoPrimeiro');
-      expect(saida).not.toContain('resizable.fixtures');
+    for (const output of ALL) {
+      expect(output).not.toContain('fracaoDoPrimeiro');
+      expect(output).not.toContain('resizable.fixtures');
     }
   });
 });

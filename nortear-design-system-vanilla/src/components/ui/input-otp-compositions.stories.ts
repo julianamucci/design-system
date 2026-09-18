@@ -34,7 +34,7 @@ type Story = StoryObj;
  */
 const FRAME_HEIGHT = '180px';
 
-function coluna(): HTMLElement {
+function column(): HTMLElement {
   const root = document.createElement('div');
   root.className = 'nds-stack';
   root.dataset.spacing = 'sm';
@@ -70,7 +70,7 @@ export const WithLabel: Story = {
     },
   },
   render: () => {
-    const root = coluna();
+    const root = column();
     const otp = createInputOTP({ length: 6 });
     otp.removeAttribute('aria-label');
     otp.setAttribute('aria-labelledby', 'comp-label-texto');
@@ -100,7 +100,7 @@ export const WithHelpText: Story = {
     },
   },
   render: () => {
-    const root = coluna();
+    const root = column();
     const otp = createInputOTP({ length: 6, describedBy: 'comp-ajuda-texto' });
     const help = document.createElement('p');
     help.id = 'comp-ajuda-texto';
@@ -133,7 +133,7 @@ export const WithErrorMessage: Story = {
     },
   },
   render: () => {
-    const root = coluna();
+    const root = column();
     const otp = createInputOTP({
       length: 6,
       value: '482913',
@@ -174,7 +174,7 @@ export const WithResendButton: Story = {
     },
   },
   render: () => {
-    const root = coluna();
+    const root = column();
     const otp = createInputOTP({ length: 6 });
 
     const row = document.createElement('div');

@@ -40,7 +40,7 @@ const L = drawerTranslations['pt-BR'].demonstration.labels;
 const LABEL = {
   trigger: 'Abrir drawer',
   title: L.title,
-  descricao: 'Atualize seus dados pessoais e foto.',
+  description: 'Atualize seus dados pessoais e foto.',
   confirmar: 'Confirmar',
   cancelar: L.cancel,
 };
@@ -157,7 +157,7 @@ export const Playground: Story = {
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>{{ LABEL.title }}</DrawerTitle>
-              <DrawerDescription>{{ LABEL.descricao }}</DrawerDescription>
+              <DrawerDescription>{{ LABEL.description }}</DrawerDescription>
             </DrawerHeader>
             <DrawerBody class="nds-text-body nds-text-muted-foreground">
               Conteúdo do drawer.
@@ -191,7 +191,7 @@ export const Playground: Story = {
       // um aria-label fixo em inglês aqui, que vencia o título e deixava o
       // painel se anunciando "Drawer".
       await expect(panel).toHaveAccessibleName(LABEL.title);
-      await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
+      await expect(panel).toHaveAccessibleDescription(LABEL.description);
       await expect(panel).toHaveAttribute('data-direction', args.direction!);
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);

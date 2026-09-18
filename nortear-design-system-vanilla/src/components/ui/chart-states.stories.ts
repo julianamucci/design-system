@@ -125,11 +125,11 @@ export const Empty: Story = {
     const root = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
-      const aviso = root.querySelector('.nds-chart-empty');
-      await expect(aviso).not.toBeNull();
+      const warning = root.querySelector('.nds-chart-empty');
+      await expect(warning).not.toBeNull();
       // Frase completa e orientadora, não "Sem dados.": é a regra de UX writing
       // do próprio conteúdo do componente.
-      await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
+      await expect(warning?.textContent?.trim()).toBe(FRASE_VAZIA);
       await expect(root.querySelector('svg')).toBeNull();
     });
 

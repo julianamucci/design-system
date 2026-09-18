@@ -28,9 +28,9 @@ describe('labelSource', () => {
 
   it('cai no texto padrão quando o control entrega um espião no lugar da string', () => {
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = labelSource(undefined, { args: { children: spy as never } });
-    expect(saida).toContain('>Nome completo</Label>');
-    expect(saida).not.toContain('CORPO_DO_MOCK');
+    const output = labelSource(undefined, { args: { children: spy as never } });
+    expect(output).toContain('>Nome completo</Label>');
+    expect(output).not.toContain('CORPO_DO_MOCK');
   });
 
   it('omite o className quando o control está vazio', () => {
@@ -49,54 +49,54 @@ describe('labelSource', () => {
 describe('o par htmlFor ↔ id', () => {
   it('todo snippet mostra o rótulo ligado a um controle real', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      const target = saida.match(/<Label htmlFor="([a-z-]+)"/)?.[1];
+      const output = fn();
+      const target = output.match(/<Label htmlFor="([a-z-]+)"/)?.[1];
       expect(target, `${fn.name} não tem htmlFor`).toBeDefined();
       // O `id` correspondente precisa existir no MESMO snippet: um `for`
       // apontando para nada é o defeito que o componente existe para evitar.
-      expect(saida).toContain(`id="${target}"`);
+      expect(output).toContain(`id="${target}"`);
     }
   });
 
   it('nenhum snippet deixa o placeholder fazer as vezes do rótulo', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      if (!saida.includes('placeholder=')) continue;
-      expect(saida, `${fn.name} usa placeholder sem rótulo`).toContain('<Label htmlFor=');
+      const output = fn();
+      if (!output.includes('placeholder=')) continue;
+      expect(output, `${fn.name} usa placeholder sem rótulo`).toContain('<Label htmlFor=');
     }
   });
 });
 
 describe('estados', () => {
   it('o desabilitado põe a marca de irmão no CONTROLE, não no rótulo', () => {
-    const saida = labelDisabledSource();
-    expect(saida).toMatch(/<Input[^>]*className="nds-peer"/);
-    expect(saida).toMatch(/<Input[^>]*disabled/);
-    expect(saida).not.toMatch(/<Label[^>]*nds-peer/);
+    const output = labelDisabledSource();
+    expect(output).toMatch(/<Input[^>]*className="nds-peer"/);
+    expect(output).toMatch(/<Input[^>]*disabled/);
+    expect(output).not.toMatch(/<Label[^>]*nds-peer/);
   });
 
   it('o bloco desabilitado marca o ancestral, e não cada rótulo', () => {
-    const saida = blockLabelDisabledSource();
-    expect(saida).toContain('data-disabled="true"');
-    expect(saida.indexOf('data-disabled="true"')).toBeLessThan(saida.indexOf('<Label'));
+    const output = blockLabelDisabledSource();
+    expect(output).toContain('data-disabled="true"');
+    expect(output.indexOf('data-disabled="true"')).toBeLessThan(output.indexOf('<Label'));
   });
 
   it('a obrigatoriedade tem as duas metades: asterisco decorativo e aria-required', () => {
-    const saida = labelObrigatorioSource();
-    expect(saida).toContain('aria-hidden="true"');
-    expect(saida).toContain('nds-text-destructive');
+    const output = labelObrigatorioSource();
+    expect(output).toContain('aria-hidden="true"');
+    expect(output).toContain('nds-text-destructive');
     // Sem isto o asterisco seria só pintura: `aria-hidden` o esconde do leitor
     // de tela, e nada mais diria que o campo é obrigatório.
-    expect(saida).toContain('aria-required="true"');
+    expect(output).toContain('aria-required="true"');
   });
 });
 
 describe('composições', () => {
   it('a caixa de seleção continua ligada pelo mesmo par for/id', () => {
-    const saida = labelWithCheckboxSource();
-    expect(saida).toContain('import { Checkbox } from "@/components/ui/checkbox";');
-    expect(saida).toContain('<Checkbox id="termos" />');
-    expect(saida).toContain('<Label htmlFor="termos">');
+    const output = labelWithCheckboxSource();
+    expect(output).toContain('import { Checkbox } from "@/components/ui/checkbox";');
+    expect(output).toContain('<Checkbox id="termos" />');
+    expect(output).toContain('<Label htmlFor="termos">');
   });
 
   it('nenhum snippet crava altura nem valor de design em style', () => {

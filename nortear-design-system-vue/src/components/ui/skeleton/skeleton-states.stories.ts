@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Skeleton, SkeletonRegion } from './index';
 import {
-  animationAtiva,
+  animationActive,
   distinctionByTheme,
   ligarMovimentoReduzido,
   radiusAgainstToken,
@@ -56,7 +56,7 @@ export const Pulsing: Story = {
     await step('A classe base entrega pulso e o raio do token', async () => {
       // `borderRadius !== '0px'` era falso no tema `cold`, que declara
       // `--radius: 0` como identidade de forma. Mede contra o token.
-      await expect(animationAtiva(sk)).toBe(true);
+      await expect(animationActive(sk)).toBe(true);
       const { radius, expected } = radiusAgainstToken(sk);
       await expect(Math.abs(radius - expected)).toBeLessThanOrEqual(0.5);
     });
@@ -107,7 +107,7 @@ export const ReducedMotion: Story = {
       await step('Com movimento reduzido, o pulso é desligado', async () => {
         // Asserção pelo PAR, não pelo nome da animação: o nome muda por stack e
         // por versão, e `animationName !== 'none'` passava com duração zerada.
-        await expect(animationAtiva(sk)).toBe(false);
+        await expect(animationActive(sk)).toBe(false);
       });
 
       await step('O placeholder continua visível e ocupando a caixa', async () => {
@@ -119,7 +119,7 @@ export const ReducedMotion: Story = {
     }
 
     await step('Sem a preferência, o pulso volta', async () => {
-      await expect(animationAtiva(sk)).toBe(true);
+      await expect(animationActive(sk)).toBe(true);
     });
   },
 };

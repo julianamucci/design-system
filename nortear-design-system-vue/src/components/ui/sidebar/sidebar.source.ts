@@ -77,7 +77,7 @@ function usada(name: string, template: string): boolean {
  */
 function montar(template: string): string {
   const parts = PARTS.filter((part) => usada(part, template));
-  const icons = ICONS.filter((icone) => usada(icone, template));
+  const icons = ICONS.filter((icon) => usada(icon, template));
   const blocks = [
     `import {\n${parts.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/sidebar'`,
   ];
@@ -88,7 +88,7 @@ function montar(template: string): string {
 const MARCA = `<SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>`;
 
 type Item = {
-  icone?: string;
+  icon?: string;
   label: string;
   active?: boolean;
   /** O balão só aparece com a barra recolhida — é o rótulo que sobrou. */
@@ -109,7 +109,7 @@ function menu(items: Item[]): string {
         item.expandido ? 'aria-expanded="true"' : '',
         item.active ? 'aria-current="page"' : '',
       );
-      const icone = item.icone ? `      <${item.icone} aria-hidden="true" />\n` : '';
+      const icon = item.icon ? `      <${item.icon} aria-hidden="true" />\n` : '';
       // A chevron gira sozinha sob `[aria-expanded="true"]`: o estado no DOM é
       // que comanda, não uma classe trocada à mão.
       const chevron = item.expandido
@@ -137,7 +137,7 @@ function menu(items: Item[]): string {
       }
       return `  <SidebarMenuItem>
     <SidebarMenuButton${button}>
-${icone}      <span>${item.label}</span>${chevron}
+${icon}      <span>${item.label}</span>${chevron}
     </SidebarMenuButton>${extras.length ? `\n${extras.join('\n')}` : ''}
   </SidebarMenuItem>`;
     })
@@ -208,9 +208,9 @@ function frame(options: {
 }
 
 const APLICACAO: Item[] = [
-  { icone: 'LayoutDashboard', label: 'Dashboard', active: true },
-  { icone: 'Blocks', label: 'Componentes' },
-  { icone: 'Palette', label: 'Tokens' },
+  { icon: 'LayoutDashboard', label: 'Dashboard', active: true },
+  { icon: 'Blocks', label: 'Componentes' },
+  { icon: 'Palette', label: 'Tokens' },
 ];
 
 /**
@@ -235,8 +235,8 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
         group({
           label: 'Conta',
           miolo: menu([
-            { icone: 'Settings', label: 'Configurações' },
-            { icone: 'User', label: 'Perfil' },
+            { icon: 'Settings', label: 'Configurações' },
+            { icon: 'User', label: 'Perfil' },
           ]),
         }),
       ].join('\n'),
@@ -257,10 +257,10 @@ function variant(variant: 'sidebar' | 'floating' | 'inset'): string {
       header: MARCA,
       content: group({
         label: 'Aplicação',
-        miolo: menu([...APLICACAO, { icone: 'Settings', label: 'Configurações' }]),
+        miolo: menu([...APLICACAO, { icon: 'Settings', label: 'Configurações' }]),
       }),
       footer: `<SidebarFooter class="nds-p-2">
-${indentar(menu([{ icone: 'User', label: 'Perfil' }]), 2)}
+${indentar(menu([{ icon: 'User', label: 'Perfil' }]), 2)}
 </SidebarFooter>`,
       trigger: ' class="nds-lg-hidden"',
       caption: 'Conteúdo principal',
@@ -304,8 +304,8 @@ export function sidebarSideDireitoSource(): string {
 ${indentar(
   group({
     miolo: menu([
-      { icone: 'Settings', label: 'Configurações' },
-      { icone: 'User', label: 'Perfil' },
+      { icon: 'Settings', label: 'Configurações' },
+      { icon: 'User', label: 'Perfil' },
     ]),
   }),
   8,
@@ -349,7 +349,7 @@ export function sidebarRecolhidaIconSource(): string {
   <span class="nds-sidebar-hide-collapsed">Design System</span>
 </SidebarHeader>`,
       content: group({
-        miolo: menu([...APLICACAO, { icone: 'Settings', label: 'Configurações' }]),
+        miolo: menu([...APLICACAO, { icon: 'Settings', label: 'Configurações' }]),
       }),
       caption: 'Barra recolhida em ícones',
       paragrafo: 'Só os ícones ficam visíveis; o balão traz o nome da seção.',
@@ -444,22 +444,22 @@ export function sidebarGroupsSource(): string {
           label: 'Aplicação',
           acao: 'Adicionar item',
           miolo: menu([
-            { icone: 'LayoutDashboard', label: 'Dashboard', active: true, badge: '3' },
-            { icone: 'Blocks', label: 'Componentes' },
-            { icone: 'Palette', label: 'Tokens' },
+            { icon: 'LayoutDashboard', label: 'Dashboard', active: true, badge: '3' },
+            { icon: 'Blocks', label: 'Componentes' },
+            { icon: 'Palette', label: 'Tokens' },
           ]),
         }),
         '<SidebarSeparator />',
         group({
           label: 'Conta',
           miolo: menu([
-            { icone: 'Bell', label: 'Notificações', badge: '12', acao: 'Mais opções' },
-            { icone: 'Settings', label: 'Configurações' },
+            { icon: 'Bell', label: 'Notificações', badge: '12', acao: 'Mais opções' },
+            { icon: 'Settings', label: 'Configurações' },
           ]),
         }),
       ].join('\n'),
       footer: `<SidebarFooter class="nds-p-2">
-${indentar(menu([{ icone: 'User', label: 'Perfil do Usuário' }]), 2)}
+${indentar(menu([{ icon: 'User', label: 'Perfil do Usuário' }]), 2)}
 </SidebarFooter>`,
       trigger: ' class="nds-lg-hidden"',
       caption: 'Com grupos e contadores',
@@ -480,9 +480,9 @@ export function sidebarSubmenuSource(): string {
       content: group({
         label: 'Documentação',
         miolo: menu([
-          { icone: 'LayoutDashboard', label: 'Dashboard', active: true },
+          { icon: 'LayoutDashboard', label: 'Dashboard', active: true },
           {
-            icone: 'Blocks',
+            icon: 'Blocks',
             label: 'Componentes',
             expandido: true,
             sub: [
@@ -493,7 +493,7 @@ export function sidebarSubmenuSource(): string {
             ],
           },
           {
-            icone: 'Palette',
+            icon: 'Palette',
             label: 'Tokens',
             expandido: true,
             sub: [{ label: 'Cores' }, { label: 'Tipografia' }, { label: 'Espaçamento' }],
@@ -521,8 +521,8 @@ export function sidebarSearchSource(): string {
       content: group({
         miolo: menu([
           ...APLICACAO,
-          { icone: 'Settings', label: 'Configurações' },
-          { icone: 'User', label: 'Perfil' },
+          { icon: 'Settings', label: 'Configurações' },
+          { icon: 'User', label: 'Perfil' },
         ]),
       }),
       trigger: ' class="nds-lg-hidden"',

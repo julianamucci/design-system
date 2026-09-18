@@ -66,70 +66,70 @@ describe('accordionSource', () => {
 
 describe('transforms das stories de modo', () => {
   it('o fechar-no-segundo-clique nasce sem valor inicial e sem chave extra', () => {
-    const saida = segundoClickAccordionFechaSource();
-    expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
-    expect(saida).not.toContain('bind:value');
-    expect(saida).not.toContain('$state');
+    const output = segundoClickAccordionFechaSource();
+    expect(output).toContain('<Accordion type="single" class="nds-max-w-lg">');
+    expect(output).not.toContain('bind:value');
+    expect(output).not.toContain('$state');
   });
 
   it('o modo múltiplo mantém o valor como lista', () => {
-    const saida = accordionMultiploSource();
-    expect(saida).toContain('type="multiple"');
-    expect(saida).toContain('$state<string[]>([])');
+    const output = accordionMultiploSource();
+    expect(output).toContain('type="multiple"');
+    expect(output).toContain('$state<string[]>([])');
   });
 
   it('o modo controlado passa value e o callback de mudança', () => {
-    const saida = accordionControlledSource();
-    expect(saida).toContain('value={itemAtivo}');
-    expect(saida).toContain('onValueChange=');
-    expect(saida).not.toContain('bind:value');
+    const output = accordionControlledSource();
+    expect(output).toContain('value={itemAtivo}');
+    expect(output).toContain('onValueChange=');
+    expect(output).not.toContain('bind:value');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o estado fechado não traz valor inicial nenhum', () => {
-    const saida = accordionClosedSource();
-    expect(saida).not.toContain('bind:value');
-    expect(saida).toContain('Item fechado (estado padrão)');
+    const output = accordionClosedSource();
+    expect(output).not.toContain('bind:value');
+    expect(output).toContain('Item fechado (estado padrão)');
   });
 
   it('o estado aberto expande pelo valor inicial', () => {
-    const saida = accordionOpenSource();
-    expect(saida).toContain('let value = $state("item-1");');
-    expect(saida).toContain('bind:value');
+    const output = accordionOpenSource();
+    expect(output).toContain('let value = $state("item-1");');
+    expect(output).toContain('bind:value');
   });
 
   it('a prop disabled vai no item, e só ele para de responder', () => {
-    const saida = accordionItemDisabledSource();
-    expect(saida).toContain('<AccordionItem value="item-2" disabled>');
-    expect(saida).toContain('<AccordionItem value="item-1">');
+    const output = accordionItemDisabledSource();
+    expect(output).toContain('<AccordionItem value="item-2" disabled>');
+    expect(output).toContain('<AccordionItem value="item-1">');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o ícone do gatilho vai com aria-hidden — o texto é o nome acessível', () => {
-    const saida = accordionWithIconSource();
-    expect(saida).toContain('aria-hidden="true"');
-    expect(saida).toContain('@lucide/svelte/icons/info');
+    const output = accordionWithIconSource();
+    expect(output).toContain('aria-hidden="true"');
+    expect(output).toContain('@lucide/svelte/icons/info');
   });
 
   it('o badge do gatilho vem do próprio design system', () => {
-    const saida = accordionWithBadgeSource();
-    expect(saida).toContain('from "@/components/ui/badge"');
-    expect(saida).toContain('<Badge>Novo</Badge>');
-    expect(saida).toContain('<Badge variant="info">Beta</Badge>');
+    const output = accordionWithBadgeSource();
+    expect(output).toContain('from "@/components/ui/badge"');
+    expect(output).toContain('<Badge>Novo</Badge>');
+    expect(output).toContain('<Badge variant="info">Beta</Badge>');
   });
 
   it('o conteúdo rico mostra que o painel aceita qualquer marcação', () => {
-    const saida = accordionContentRichSource();
-    expect(saida).toContain('type="multiple"');
-    expect(saida).toContain('<table');
-    expect(saida).toContain('<ul');
+    const output = accordionContentRichSource();
+    expect(output).toContain('type="multiple"');
+    expect(output).toContain('<table');
+    expect(output).toContain('<ul');
   });
 
   it('o padrão FAQ traz o título da seção junto das perguntas', () => {
-    const saida = accordionFaqSource();
-    expect(saida).toContain('<h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>');
-    expect(saida.match(/<AccordionItem /g)).toHaveLength(3);
+    const output = accordionFaqSource();
+    expect(output).toContain('<h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>');
+    expect(output.match(/<AccordionItem /g)).toHaveLength(3);
   });
 });

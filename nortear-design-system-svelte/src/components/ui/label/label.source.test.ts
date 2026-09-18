@@ -47,22 +47,22 @@ describe('labelSource', () => {
 
 describe('transforms das stories de estado e composição', () => {
   it('o campo obrigatório mantém o asterisco fora do nome acessível', () => {
-    const saida = labelObrigatorioSource();
-    expect(saida).toContain('aria-hidden="true">*</span>');
-    expect(saida).toContain('aria-required="true"');
+    const output = labelObrigatorioSource();
+    expect(output).toContain('aria-hidden="true">*</span>');
+    expect(output).toContain('aria-required="true"');
   });
 
   it('o desabilitado por irmão marca o CONTROLE e põe o rótulo depois dele', () => {
-    const saida = labelDisabledSiblingSource();
-    expect(saida).toContain('class="nds-peer"');
+    const output = labelDisabledSiblingSource();
+    expect(output).toContain('class="nds-peer"');
     // Ordem é a lição: o seletor de irmão só alcança o que vem depois.
-    expect(saida.indexOf('<Input')).toBeLessThan(saida.indexOf('<Label'));
+    expect(output.indexOf('<Input')).toBeLessThan(output.indexOf('<Label'));
   });
 
   it('o desabilitado por bloco marca o ancestral, não o rótulo', () => {
-    const saida = blockLabelDisabledSource();
-    expect(saida).toContain('data-disabled="true"');
-    expect(saida).toContain('<Label for="documento">Documento</Label>');
+    const output = blockLabelDisabledSource();
+    expect(output).toContain('data-disabled="true"');
+    expect(output).toContain('<Label for="documento">Documento</Label>');
   });
 
   it('a composição com campo usa o tipo semântico do dado', () => {
@@ -70,8 +70,8 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('a composição com caixa de seleção importa o controle certo', () => {
-    const saida = labelWithBoxSource();
-    expect(saida).toContain('from "@/components/ui/checkbox"');
-    expect(saida).toContain('<Label for="termos">Concordo com os termos de uso</Label>');
+    const output = labelWithBoxSource();
+    expect(output).toContain('from "@/components/ui/checkbox"');
+    expect(output).toContain('<Label for="termos">Concordo com os termos de uso</Label>');
   });
 });

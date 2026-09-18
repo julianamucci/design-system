@@ -505,7 +505,7 @@ export const ListenerCleanup: Story = {
     chromatic: { disable: true },
     // O assunto é a limpeza: o atalho de teclado é registrado na montagem, e o
     // snippet mostra a chamada que o desfaz.
-    docs: { source: { transform: sidebarSourceWith({ mostrarDestroy: true }) } },
+    docs: { source: { transform: sidebarSourceWith({ showDestroy: true }) } },
   },
   render: () => probeHost(
     'Sonda de limpeza: a barra é montada, o atalho de teclado é registrado e a barra sai da página.',

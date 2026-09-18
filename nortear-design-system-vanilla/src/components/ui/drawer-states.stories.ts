@@ -384,7 +384,7 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
-        seletorDePortal: '[data-slot="drawer-content"], [data-slot="drawer-overlay"]',
+        portalSelector: '[data-slot="drawer-content"], [data-slot="drawer-overlay"]',
       });
     });
 

@@ -7,7 +7,7 @@ import { appendLine, snippet, text, type SourceTransform } from '@/lib/story-sou
 
 export type TableSnippetOptions = {
   /** Legenda desenhada na tela; sem isto ela fica só para o leitor de tela. */
-  captionVisivel?: boolean;
+  captionVisible?: boolean;
   caption?: string;
   /** Rodapé com o total das linhas exibidas. */
   withFooter?: boolean;
@@ -41,7 +41,7 @@ function importingParts(...names: string[]): string {
 }
 
 function caption(o: TableSnippetOptions): string {
-  const className = o.captionVisivel ? '' : ", 'nds-sr-only'";
+  const className = o.captionVisible ? '' : ", 'nds-sr-only'";
   return [
     '// A legenda é o NOME da tabela. `nds-sr-only` a tira da tela e nunca do',
     '// DOM: quem entra pela árvore de acessibilidade encontraria só "tabela".',

@@ -37,13 +37,13 @@ const CALLBACK_DEFAULT = '(pressed) => alternar(pressed)';
 export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
   const withText = Boolean(o.label);
   // O ícone segue o caso: com texto visível o par canônico é ícone + rótulo.
-  const icone = o.icon ?? (withText ? 'Eye' : 'Bold');
+  const icon = o.icon ?? (withText ? 'Eye' : 'Bold');
 
   // Ícone e texto são filhos DIRETOS — o espaço entre eles é o `gap` do próprio
   // `.nds-toggle`, e a medida do ícone vem da regra `.nds-toggle > svg`.
   const children = withText
-    ? `[createElement(${icone}), ${text(o.label as string)}]`
-    : `createElement(${icone})`;
+    ? `[createElement(${icon}), ${text(o.label as string)}]`
+    : `createElement(${icon})`;
 
   const lines = options([
     ['children', children],
@@ -59,7 +59,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    [importing('toggle', 'createToggle'), `import { ${icone}, createElement } from 'lucide';`].join('\n'),
+    [importing('toggle', 'createToggle'), `import { ${icon}, createElement } from 'lucide';`].join('\n'),
     `const alternador = ${callLine('createToggle', lines)};`,
     appendLine('alternador'),
   );
@@ -74,14 +74,14 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
   const icons = new Set<string>(['createElement']);
   const calls = variacoes.map((v) => {
     const withText = Boolean(v.label);
-    const icone = v.icon ?? (withText ? 'Eye' : 'Bold');
-    icons.add(icone);
+    const icon = v.icon ?? (withText ? 'Eye' : 'Bold');
+    icons.add(icon);
     const lines = options([
       [
         'children',
         withText
-          ? `[createElement(${icone}), ${text(v.label as string)}]`
-          : `createElement(${icone})`,
+          ? `[createElement(${icon}), ${text(v.label as string)}]`
+          : `createElement(${icon})`,
       ],
       ['aria-label', withText ? undefined : text(v['aria-label'] || 'Negrito')],
       ['variant', v.variant && v.variant !== 'default' ? text(v.variant) : undefined],

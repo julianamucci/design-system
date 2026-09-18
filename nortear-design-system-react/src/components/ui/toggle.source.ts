@@ -55,10 +55,10 @@ function importingIcons(...icons: string[]): string {
  * texto, e sem rótulo quem nomeia o botão é o `aria-label` — nos dois casos
  * anunciar o desenho diria a mesma coisa duas vezes.
  */
-function toggle(attrs: string, icone: string, labelVisible?: string): string {
+function toggle(attrs: string, icon: string, labelVisible?: string): string {
   const body = labelVisible
-    ? `  <${icone} aria-hidden="true" />\n  ${labelVisible}`
-    : `  <${icone} aria-hidden="true" />`;
+    ? `  <${icon} aria-hidden="true" />\n  ${labelVisible}`
+    : `  <${icon} aria-hidden="true" />`;
   return `<Toggle${attrs}>\n${body}\n</Toggle>`;
 }
 
@@ -85,7 +85,7 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const soIcon = args.iconOnly ?? true;
   const label = text(args.label) ?? (soIcon ? 'Negrito' : 'Mostrar ocultos');
-  const icone = soIcon ? 'Bold' : 'Eye';
+  const icon = soIcon ? 'Bold' : 'Eye';
 
   const attrList = attrs(
     propOption('variant', args.variant, VARIANTS, 'default'),
@@ -97,8 +97,8 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   );
 
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importingIcons(icone)}`,
-    toggle(attrList, icone, soIcon ? undefined : label),
+    `${IMPORT_TOGGLE}\n${importingIcons(icon)}`,
+    toggle(attrList, icon, soIcon ? undefined : label),
   );
 };
 
@@ -165,7 +165,7 @@ export function toggleBarFormattingSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-${buttons.map((icone, i) => insideOf(toggle(` aria-label="${rotulos[i]}"`, icone))).join('\n')}
+${buttons.map((icon, i) => insideOf(toggle(` aria-label="${rotulos[i]}"`, icon))).join('\n')}
 </div>`,
   );
 }

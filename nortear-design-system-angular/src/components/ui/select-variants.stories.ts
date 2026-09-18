@@ -219,8 +219,8 @@ export const WithIcon: Story = {
     await step('O ícone é dimensionado pela folha do componente', async () => {
       // `.nds-select-item svg:not([class*="size-"])` é a regra que dá 1rem; sem
       // ela o SVG viria no tamanho intrínseco e estouraria a linha.
-      const icone = options[0].querySelector('svg') as SVGElement;
-      await expect(getComputedStyle(icone).width).toBe('16px');
+      const icon = options[0].querySelector('svg') as SVGElement;
+      await expect(getComputedStyle(icon).width).toBe('16px');
     });
   },
 };

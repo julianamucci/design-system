@@ -55,7 +55,7 @@ type Frame = {
   /** Rótulo do gatilho. Vazio significa sem gatilho — quem abre está fora. */
   trigger?: string;
   title: string;
-  descricao: string;
+  description: string;
   /**
    * Props do título — hoje só o nível de cabeçalho (`as="h3"`).
    *
@@ -92,7 +92,7 @@ function drawer(m: Frame): string {
 ${disparo}  <DrawerContent${contentProps}>
     <DrawerHeader>
       <DrawerTitle${attrs(titleProps)}>${m.title}</DrawerTitle>
-      <DrawerDescription>${m.descricao}</DrawerDescription>
+      <DrawerDescription>${m.description}</DrawerDescription>
     </DrawerHeader>
 ${miolo}${m.footer}
   </DrawerContent>
@@ -111,20 +111,20 @@ ${miolo}${m.footer}
  * Isto já esteve invertido, com a ação primária primeiro no DOM: a folha era
  * column puro, o primário caía EMBAIXO na pilha, e a linha nunca acontecia.
  */
-function footer(acao: string, saida: string, destrutiva = false): string {
+function footer(acao: string, output: string, destrutiva = false): string {
   return `    <DrawerFooter>
       <DrawerClose as-child>
-        <Button variant="outline">${saida}</Button>
+        <Button variant="outline">${output}</Button>
       </DrawerClose>
       <Button${destrutiva ? ' variant="destructive"' : ''}>${acao}</Button>
     </DrawerFooter>`;
 }
 
 /** Rodapé de saída única: não há o que confirmar, só o que fechar. */
-function outputFooter(saida: string): string {
+function outputFooter(output: string): string {
   return `    <DrawerFooter>
       <DrawerClose as-child>
-        <Button variant="outline">${saida}</Button>
+        <Button variant="outline">${output}</Button>
       </DrawerClose>
     </DrawerFooter>`;
 }
@@ -162,7 +162,7 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
       ).trim(),
       trigger: 'Abrir drawer',
       title: 'Editar perfil',
-      descricao: 'Atualize seus dados pessoais e foto.',
+      description: 'Atualize seus dados pessoais e foto.',
       body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do drawer.
     </DrawerBody>`,
@@ -175,7 +175,7 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
 function byDirection(
   direction: DrawerArgs['direction'],
   title: string,
-  descricao: string,
+  description: string,
   trigger: string,
 ): string {
   return vueSnippet(
@@ -184,7 +184,7 @@ function byDirection(
       root: attr('direction', direction, 'bottom'),
       trigger,
       title,
-      descricao,
+      description,
       body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do painel.
     </DrawerBody>`,
@@ -248,7 +248,7 @@ export function drawerHeadingH3Source(): string {
       titleProps: 'as="h3"',
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize seus dados.',
+      description: 'Atualize seus dados.',
       body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do painel.
     </DrawerBody>`,
@@ -269,7 +269,7 @@ export function drawerClosedSource(): string {
     drawer({
       trigger: 'Abrir drawer',
       title: 'Editar perfil',
-      descricao: 'Atualize seus dados.',
+      description: 'Atualize seus dados.',
       footer: outputFooter('Cancelar'),
     }),
   );
@@ -287,7 +287,7 @@ export function drawerOpenSource(): string {
     drawer({
       root: 'default-open',
       title: 'Editar perfil',
-      descricao: 'Atualize seus dados pessoais. As mudanças são salvas ao confirmar.',
+      description: 'Atualize seus dados pessoais. As mudanças são salvas ao confirmar.',
       footer: footer('Confirmar', 'Cancelar'),
     }),
   );
@@ -341,7 +341,7 @@ export function drawerNotDispensavelSource(): string {
     drawer({
       root: ':dismissible="false"',
       title: 'Aceitar termos',
-      descricao: 'Você precisa aceitar os termos para continuar.',
+      description: 'Você precisa aceitar os termos para continuar.',
       footer: footer('Aceitar', 'Recusar'),
     }),
   );
@@ -364,7 +364,7 @@ export function drawerWithFormSource(): string {
     drawer({
       trigger: 'Editar perfil',
       title: 'Editar perfil',
-      descricao: 'Atualize seu nome e e-mail.',
+      description: 'Atualize seu nome e e-mail.',
       body: `    <DrawerBody>
       <form id="drawer-form" class="nds-grid" data-spacing="sm" @submit.prevent>
         <div class="nds-grid" data-spacing="xs">
@@ -404,7 +404,7 @@ export function drawerWithConfirmSource(): string {
     drawer({
       trigger: 'Remover anexo',
       title: 'Remover anexo?',
-      descricao: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
+      description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
       contentProps: ' initial-focus="close"',
       footer: footer('Remover', 'Cancelar', true),
     }),
@@ -430,7 +430,7 @@ const clausulas = [
     drawer({
       trigger: 'Ver termos',
       title: 'Termos de serviço',
-      descricao: 'Leia atentamente os termos antes de aceitar.',
+      description: 'Leia atentamente os termos antes de aceitar.',
       body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground" aria-label="Termos de serviço">
       <p v-for="(clausula, i) in clausulas" :key="i">{{ clausula }}</p>
     </DrawerBody>`,

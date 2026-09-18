@@ -50,16 +50,16 @@ function values(raw: unknown, padrao: number[]): number[] {
 function block(options: {
   label: string;
   state: string;
-  saida?: string;
+  output?: string;
   control: string;
   width?: string;
   extra?: string;
 }): string {
   const width = options.width ?? 'nds-stack nds-w-sm';
-  const header = options.saida
+  const header = options.output
     ? `  <div class="nds-cluster" data-justify="between">
     <Label>${options.label}</Label>
-    <span aria-live="polite" class="nds-text-body nds-tabular-nums">${options.saida}</span>
+    <span aria-live="polite" class="nds-text-body nds-tabular-nums">${options.output}</span>
   </div>`
     : `  <Label>${options.label}</Label>`;
   return `<div class="${width}" data-spacing="sm">
@@ -95,7 +95,7 @@ export const sliderPlaygroundSource: SourceTransform<SliderArgs> = (_gerado, ctx
     block({
       label: 'Volume',
       state: 'volume',
-      saida: '{{ volume[0] }}%',
+      output: '{{ volume[0] }}%',
       control: control('volume', 'Volume', extras),
     }),
   );
@@ -108,7 +108,7 @@ export function sliderUnicoSource(): string {
     block({
       label: 'Volume',
       state: 'volume',
-      saida: '{{ volume[0] }}%',
+      output: '{{ volume[0] }}%',
       control: control('volume', 'Volume'),
     }),
   );
@@ -125,7 +125,7 @@ export function sliderRangeSource(): string {
     block({
       label: 'Faixa de preço',
       state: 'faixa',
-      saida: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
+      output: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
       control: control('faixa', 'Faixa de preço'),
     }),
   );
@@ -142,7 +142,7 @@ export function sliderVerticalSource(): string {
     block({
       label: 'Brilho',
       state: 'brilho',
-      saida: '{{ brilho[0] }}%',
+      output: '{{ brilho[0] }}%',
       width: 'nds-stack',
       control: `<div class="nds-cluster" data-justify="center">
   ${control('brilho', 'Brilho', ' orientation="vertical"')}
@@ -199,7 +199,7 @@ export function minimumSliderSource(): string {
     block({
       label: 'Volume',
       state: 'volume',
-      saida: '{{ volume[0] }}%',
+      output: '{{ volume[0] }}%',
       control: control('volume', 'Volume'),
     }),
   );
@@ -212,7 +212,7 @@ export function sliderNoMaximoSource(): string {
     block({
       label: 'Volume',
       state: 'volume',
-      saida: '{{ volume[0] }}%',
+      output: '{{ volume[0] }}%',
       control: control('volume', 'Volume'),
     }),
   );
@@ -234,7 +234,7 @@ export function sliderPrecoSource(): string {
     block({
       label: 'Faixa de preço',
       state: 'faixa',
-      saida: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
+      output: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
       control: control('faixa', 'Faixa de preço', ' :max="500" :step="10"'),
       extra: `<div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
   <span>R$ 0</span>
@@ -276,7 +276,7 @@ ${indentar(
   block({
     label: 'Brilho',
     state: 'brilho',
-    saida: '{{ brilho[0] }}%',
+    output: '{{ brilho[0] }}%',
     control: control('brilho', 'Brilho'),
     width: 'nds-stack',
   }),
@@ -286,7 +286,7 @@ ${indentar(
   block({
     label: 'Opacidade',
     state: 'opacidade',
-    saida: '{{ opacidade[0] }}%',
+    output: '{{ opacidade[0] }}%',
     control: control('opacidade', 'Opacidade'),
     width: 'nds-stack',
   }),
@@ -308,7 +308,7 @@ export function sliderStepGrossoSource(): string {
     block({
       label: 'Avaliação',
       state: 'avaliacao',
-      saida: '{{ avaliacao[0] }} / 5',
+      output: '{{ avaliacao[0] }} / 5',
       control: control('avaliacao', 'Avaliação', ' :min="1" :max="5"'),
       extra: `<div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
   <span>1</span>

@@ -20,10 +20,10 @@ describe('avatarSource', () => {
   });
 
   it('monta foto com iniciais atrás — a forma completa do componente', () => {
-    const saida = avatarSource();
-    expect(saida).toContain('<Avatar>');
-    expect(saida).toContain('<AvatarImage src=');
-    expect(saida).toContain('<AvatarFallback>MR</AvatarFallback>');
+    const output = avatarSource();
+    expect(output).toContain('<Avatar>');
+    expect(output).toContain('<AvatarImage src=');
+    expect(output).toContain('<AvatarFallback>MR</AvatarFallback>');
   });
 
   it('omite o size quando é o preset padrão', () => {
@@ -46,9 +46,9 @@ describe('avatarSource', () => {
 
   it('nunca crava altura: o diâmetro sai do preset', () => {
     for (const size of ['sm', 'md', 'lg', 'xl', '2xl'] as const) {
-      const saida = avatarSource(undefined, { args: { size } });
-      expect(saida).not.toContain('height');
-      expect(saida).not.toContain('style=');
+      const output = avatarSource(undefined, { args: { size } });
+      expect(output).not.toContain('height');
+      expect(output).not.toContain('style=');
     }
   });
 
@@ -58,9 +58,9 @@ describe('avatarSource', () => {
 
   it('cai no padrão quando o control entrega um espião no lugar da string', () => {
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = avatarSource(undefined, { args: { className: spy as never } });
-    expect(saida).not.toContain('CORPO_DO_MOCK');
-    expect(saida).toContain('<Avatar>');
+    const output = avatarSource(undefined, { args: { className: spy as never } });
+    expect(output).not.toContain('CORPO_DO_MOCK');
+    expect(output).toContain('<Avatar>');
   });
 });
 
@@ -79,36 +79,36 @@ describe('composições', () => {
   });
 
   it('só iniciais: sem AvatarImage, e sem importar a peça', () => {
-    const saida = avatarSoIniciaisSource();
-    expect(saida).toContain('import { Avatar, AvatarFallback } from "@/components/ui/avatar";');
-    expect(saida).not.toContain('<AvatarImage');
-    expect(saida).not.toContain('delayMs');
+    const output = avatarSoIniciaisSource();
+    expect(output).toContain('import { Avatar, AvatarFallback } from "@/components/ui/avatar";');
+    expect(output).not.toContain('<AvatarImage');
+    expect(output).not.toContain('delayMs');
   });
 
   it('com ícone, quem nomeia é o rótulo do fallback — o svg é decorativo', () => {
-    const saida = avatarWithIconSource();
-    expect(saida).toContain('import { User } from "lucide-react";');
-    expect(saida).toContain('<AvatarFallback role="img" aria-label="Usuário genérico">');
-    expect(saida).toContain('<User aria-hidden="true" className="nds-icon-lg" />');
+    const output = avatarWithIconSource();
+    expect(output).toContain('import { User } from "lucide-react";');
+    expect(output).toContain('<AvatarFallback role="img" aria-label="Usuário genérico">');
+    expect(output).toContain('<User aria-hidden="true" className="nds-icon-lg" />');
   });
 
   it('no grupo o rótulo é do contêiner e cada foto fica com alt vazio', () => {
-    const saida = groupAvatarSource();
-    expect(saida).toContain('<AvatarGroup role="group" aria-label="Participantes">');
-    expect(saida.match(/alt=""/g)).toHaveLength(3);
-    expect(saida).toContain('<AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>');
+    const output = groupAvatarSource();
+    expect(output).toContain('<AvatarGroup role="group" aria-label="Participantes">');
+    expect(output.match(/alt=""/g)).toHaveLength(3);
+    expect(output).toContain('<AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>');
   });
 
   it('o grupo não empurra avatar com margem: o recuo é do contêiner', () => {
-    const saida = groupAvatarSource();
-    expect(saida).not.toContain('style=');
-    expect(saida).not.toContain('margin');
+    const output = groupAvatarSource();
+    expect(output).not.toContain('style=');
+    expect(output).not.toContain('margin');
   });
 
   it('o indicador de status é irmão da imagem e se anuncia por rótulo', () => {
-    const saida = avatarWithStatusSource();
-    expect(saida).toContain('<AvatarBadge role="img" aria-label="Online" />');
-    expect(saida.indexOf('<AvatarFallback>')).toBeLessThan(saida.indexOf('<AvatarBadge'));
+    const output = avatarWithStatusSource();
+    expect(output).toContain('<AvatarBadge role="img" aria-label="Online" />');
+    expect(output.indexOf('<AvatarFallback>')).toBeLessThan(output.indexOf('<AvatarBadge'));
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
@@ -124,11 +124,11 @@ describe('composições', () => {
       avatarSoIniciaisSource,
       avatarXlSource,
     ]) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('IMG_MARIA');
-      expect(saida).not.toContain('DEMO_IMAGE');
-      expect(saida).not.toContain('unsplash');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('IMG_MARIA');
+      expect(output).not.toContain('DEMO_IMAGE');
+      expect(output).not.toContain('unsplash');
     }
   });
 });

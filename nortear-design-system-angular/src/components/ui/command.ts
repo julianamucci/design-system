@@ -604,10 +604,10 @@ export class NdsCommandList {
     'aria-atomic': 'true',
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"command-empty"',
-    '[attr.data-empty]': 'vazio() ? "" : null',
+    '[attr.data-empty]': 'empty() ? "" : null',
   },
   template: `
-    @if (vazio()) {
+    @if (empty()) {
       <ng-content />
     }
   `,
@@ -615,9 +615,9 @@ export class NdsCommandList {
 export class NdsCommandEmpty {
   private readonly root = inject(RdxAutocompleteRoot);
 
-  protected readonly vazio = computed(() => this.root.visibleCount() === 0);
+  protected readonly empty = computed(() => this.root.visibleCount() === 0);
 
-  protected readonly hostClass = computed(() => (this.vazio() ? 'nds-command-empty' : ''));
+  protected readonly hostClass = computed(() => (this.empty() ? 'nds-command-empty' : ''));
 }
 
 // ─── NdsCommandGroup ──────────────────────────────────────────────────────────

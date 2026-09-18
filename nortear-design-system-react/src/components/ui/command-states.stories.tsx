@@ -112,20 +112,20 @@ export const EmptyState: Story = {
     });
 
     await step("A frase é anunciada, não só desenhada", async () => {
-      const vazio = emptyRegion();
-      await expect(vazio).toBeVisible();
-      await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
-      await expect(vazio).toHaveClass(/nds-command-empty/);
-      await expect(vazio).toHaveAttribute("data-empty", "");
+      const empty = emptyRegion();
+      await expect(empty).toBeVisible();
+      await expect(empty).toHaveTextContent("Nenhum resultado encontrado.");
+      await expect(empty).toHaveClass(/nds-command-empty/);
+      await expect(empty).toHaveAttribute("data-empty", "");
       // Sem a região viva, quem usa leitor de tela digitaria no vazio sem nunca
       // saber que a busca não achou nada: o foco não sai do campo e não sobra
       // item nenhum para onde navegar.
-      await expect(vazio).toHaveAttribute("role", "status");
-      await expect(vazio).toHaveAttribute("aria-live", "polite");
-      await expect(vazio).toHaveAttribute("aria-atomic", "true");
+      await expect(empty).toHaveAttribute("role", "status");
+      await expect(empty).toHaveAttribute("aria-live", "polite");
+      await expect(empty).toHaveAttribute("aria-atomic", "true");
       // `role="status"` não é filho permitido de `role="listbox"` (só `option`
       // e `group` são), e o axe reprova por aria-required-children.
-      await expect(list.contains(vazio)).toBe(false);
+      await expect(list.contains(empty)).toBe(false);
     });
 
     await step("Apagar a busca traz os 3 comandos de volta", async () => {
@@ -133,12 +133,12 @@ export const EmptyState: Story = {
       await waitFor(async () => {
         await expect(canvas.getAllByRole("option")).toHaveLength(3);
       });
-      const vazio = emptyRegion();
+      const empty = emptyRegion();
       // Continua no DOM (é o que preserva o anúncio da próxima busca vazia),
       // mas sem conteúdo, sem a classe e com altura zero.
-      await expect(vazio).not.toHaveAttribute("data-empty");
-      await expect(vazio).not.toHaveClass(/nds-command-empty/);
-      await expect(vazio.getBoundingClientRect().height).toBe(0);
+      await expect(empty).not.toHaveAttribute("data-empty");
+      await expect(empty).not.toHaveClass(/nds-command-empty/);
+      await expect(empty.getBoundingClientRect().height).toBe(0);
     });
 
     await step("A story termina SEM resultados", async () => {

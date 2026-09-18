@@ -69,7 +69,7 @@ export const Basic: Story = {
     covers: ['functional.item1', 'visual.item1'],
     // Legenda VISÍVEL: o snippet do meta a deixa fora da tela, que é o oposto
     // do que esta story mostra.
-    docs: { source: { transform: tableSourceWith({ captionVisivel: true }) } },
+    docs: { source: { transform: tableSourceWith({ captionVisible: true }) } },
   },
   render: () => {
     const { wrapper, table } = createTable();

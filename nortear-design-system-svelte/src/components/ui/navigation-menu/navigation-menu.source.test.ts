@@ -92,54 +92,54 @@ describe('navigationMenuSource', () => {
   });
 
   it('o item aberto ao montar declara o estado de fora, por bind:value', () => {
-    const saida = navigationMenuSource('', { args: { defaultValue: 'produtos' } });
-    expect(saida).toContain('let aberto = $state("produtos");');
-    expect(saida).toContain('bind:value={aberto}');
+    const output = navigationMenuSource('', { args: { defaultValue: 'produtos' } });
+    expect(output).toContain('let aberto = $state("produtos");');
+    expect(output).toContain('bind:value={aberto}');
   });
 
   it('a página atual marca o destino, e só ele', () => {
-    const saida = navigationMenuSource('', { args: { activeHref: '#inicio' } });
-    expect(saida).toContain('<NavigationMenuLink href="#inicio" active>');
-    expect(saida).toContain('<NavigationMenuLink href="#sobre">');
+    const output = navigationMenuSource('', { args: { activeHref: '#inicio' } });
+    expect(output).toContain('<NavigationMenuLink href="#inicio" active>');
+    expect(output).toContain('<NavigationMenuLink href="#sobre">');
   });
 
   it('a seta indicadora só entra quando pedida, e importa a peça junto', () => {
     expect(navigationMenuSource()).not.toContain('NavigationMenuIndicator');
-    const saida = navigationMenuSource('', { args: { indicator: true } });
-    expect(saida).toContain('  NavigationMenuIndicator,');
-    expect(saida).toContain('<NavigationMenuIndicator />');
+    const output = navigationMenuSource('', { args: { indicator: true } });
+    expect(output).toContain('  NavigationMenuIndicator,');
+    expect(output).toContain('<NavigationMenuIndicator />');
   });
 
   it('sem painel, a composição de destinos diretos não importa gatilho nem conteúdo', () => {
-    const saida = navigationMenuSource('', { args: { demonstration: 'simpleLink' } });
-    expect(saida).not.toContain('NavigationMenuTrigger');
-    expect(saida).not.toContain('NavigationMenuContent');
-    expect(saida).not.toContain('NavigationMenuChild');
-    expect(saida).toContain('<NavigationMenuLink href="#contato">Contato</NavigationMenuLink>');
+    const output = navigationMenuSource('', { args: { demonstration: 'simpleLink' } });
+    expect(output).not.toContain('NavigationMenuTrigger');
+    expect(output).not.toContain('NavigationMenuContent');
+    expect(output).not.toContain('NavigationMenuChild');
+    expect(output).toContain('<NavigationMenuLink href="#contato">Contato</NavigationMenuLink>');
   });
 
   it('a barra completa leva cinco itens, dois deles com painel', () => {
-    const saida = navigationMenuSource('', { args: { demonstration: 'bar' } });
-    expect(saida.match(/<NavigationMenuItem value=/g)).toHaveLength(5);
-    expect(saida.match(/<NavigationMenuTrigger>/g)).toHaveLength(2);
+    const output = navigationMenuSource('', { args: { demonstration: 'bar' } });
+    expect(output.match(/<NavigationMenuItem value=/g)).toHaveLength(5);
+    expect(output.match(/<NavigationMenuTrigger>/g)).toHaveLength(2);
   });
 
   it('o mega-menu abre em duas colunas e cada destino leva a sua linha de contexto', () => {
-    const saida = navigationMenuSource('', { args: { demonstration: 'megaMenuGrid' } });
-    expect(saida).toContain('data-cols="2"');
-    expect(saida).toContain('nds-navigation-menu-child-description');
-    expect(saida).toContain('Campanhas, automação e atribuição num lugar só.');
+    const output = navigationMenuSource('', { args: { demonstration: 'megaMenuGrid' } });
+    expect(output).toContain('data-cols="2"');
+    expect(output).toContain('nds-navigation-menu-child-description');
+    expect(output).toContain('Campanhas, automação e atribuição num lugar só.');
   });
 
   it('o painel com destaque estica o bloco principal pela altura da coluna', () => {
-    const saida = navigationMenuSource('', { args: { demonstration: 'withFeatured' } });
-    expect(saida).toContain('<NavigationMenuChild href="#comece" class="nds-h-full">');
-    expect(saida).toContain('Publique o primeiro projeto em menos de cinco minutos.');
+    const output = navigationMenuSource('', { args: { demonstration: 'withFeatured' } });
+    expect(output).toContain('<NavigationMenuChild href="#comece" class="nds-h-full">');
+    expect(output).toContain('Publique o primeiro projeto em menos de cinco minutos.');
   });
 
   it('o gatilho com lista vertical fica entre dois destinos diretos', () => {
-    const saida = navigationMenuSource('', { args: { demonstration: 'withDropdown' } });
-    expect(saida).toContain('<NavigationMenuTrigger>Planos</NavigationMenuTrigger>');
-    expect(saida.match(/<NavigationMenuTrigger>/g)).toHaveLength(1);
+    const output = navigationMenuSource('', { args: { demonstration: 'withDropdown' } });
+    expect(output).toContain('<NavigationMenuTrigger>Planos</NavigationMenuTrigger>');
+    expect(output.match(/<NavigationMenuTrigger>/g)).toHaveLength(1);
   });
 });

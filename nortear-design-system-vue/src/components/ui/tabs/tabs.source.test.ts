@@ -43,16 +43,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
   });
 
   it('o eixo vertical troca a moldura e move o respiro do painel para o lado', () => {
-    const saida = tabsSource('', { args: { orientation: 'vertical' } });
-    expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('nds-w-lg');
-    expect(saida).toContain('nds-pl-4');
+    const output = tabsSource('', { args: { orientation: 'vertical' } });
+    expect(output).toContain('orientation="vertical"');
+    expect(output).toContain('nds-w-lg');
+    expect(output).toContain('nds-pl-4');
   });
 
   it('não escreve os padrões de eixo e de ativação', () => {
-    const saida = tabsSource('', { args: { orientation: 'horizontal', activationMode: 'automatic' } });
-    expect(saida).not.toContain('orientation=');
-    expect(saida).not.toContain('activation-mode=');
+    const output = tabsSource('', { args: { orientation: 'horizontal', activationMode: 'automatic' } });
+    expect(output).not.toContain('orientation=');
+    expect(output).not.toContain('activation-mode=');
   });
 
   it('o modo manual do control chega ao snippet', () => {
@@ -62,10 +62,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = tabsSource('', { args: { defaultValue: (() => {}) as never } });
-    expect(saida).not.toContain('function');
+    const output = tabsSource('', { args: { defaultValue: (() => {}) as never } });
+    expect(output).not.toContain('function');
     // Sem aba de partida nenhuma nasceria ativa: o padrão da story assume o lugar.
-    expect(saida).toContain('default-value="overview"');
+    expect(output).toContain('default-value="overview"');
   });
 });
 
@@ -76,72 +76,72 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a variante line mora na LISTA, não na raiz', () => {
-    const saida = tabsLineSource();
-    expect(saida).toContain('<TabsList variant="line" aria-label="Seções do componente">');
-    expect(saida).not.toContain('<Tabs variant');
+    const output = tabsLineSource();
+    expect(output).toContain('<TabsList variant="line" aria-label="Seções do componente">');
+    expect(output).not.toContain('<Tabs variant');
   });
 
   it('a vertical declara o eixo na raiz e o respiro lateral no painel', () => {
-    const saida = tabsVerticalSource();
-    expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('class="nds-text-body nds-text-muted-foreground nds-pl-4"');
+    const output = tabsVerticalSource();
+    expect(output).toContain('orientation="vertical"');
+    expect(output).toContain('class="nds-text-body nds-text-muted-foreground nds-pl-4"');
     // Na vertical a lista fica ao lado: o respiro superior não separa nada.
-    expect(saida).not.toContain('nds-pt-');
+    expect(output).not.toContain('nds-pt-');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('a aba de partida aponta para o `value`, nunca para a posição', () => {
-    const saida = tabsAbaAtivaSource();
-    expect(saida).toContain('<Tabs default-value="properties"');
-    expect(saida).toContain('<TabsTrigger value="properties">Propriedades</TabsTrigger>');
+    const output = tabsAbaAtivaSource();
+    expect(output).toContain('<Tabs default-value="properties"');
+    expect(output).toContain('<TabsTrigger value="properties">Propriedades</TabsTrigger>');
   });
 
   it('a aba indisponível leva `disabled` no gatilho, e só nele', () => {
-    const saida = tabsAbaDesabilitadaSource();
-    expect(saida).toContain('<TabsTrigger value="properties" disabled>Propriedades</TabsTrigger>');
-    expect([...saida.matchAll(/ disabled/g)]).toHaveLength(1);
+    const output = tabsAbaDesabilitadaSource();
+    expect(output).toContain('<TabsTrigger value="properties" disabled>Propriedades</TabsTrigger>');
+    expect([...output.matchAll(/ disabled/g)]).toHaveLength(1);
     // O atributo nativo tiraria a aba do alcance do foco; quem marca é
     // `aria-disabled`, e é o componente que o emite.
-    expect(saida).not.toContain('aria-disabled');
+    expect(output).not.toContain('aria-disabled');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o controlado liga valor e evento, e fecha o tipo do valor recebido', () => {
-    const saida = tabsControlledSource();
-    expect(saida).toContain(':model-value="aba"');
-    expect(saida).toContain('@update:model-value="aba = String($event)"');
-    expect(saida).toContain(`const aba = ref('overview')`);
+    const output = tabsControlledSource();
+    expect(output).toContain(':model-value="aba"');
+    expect(output).toContain('@update:model-value="aba = String($event)"');
+    expect(output).toContain(`const aba = ref('overview')`);
     // Estado controlado e não-controlado no mesmo conjunto brigariam entre si.
-    expect(saida).not.toContain('default-value');
+    expect(output).not.toContain('default-value');
   });
 
   it('o ícone é decorativo e vem do conjunto de ícones, não do design system', () => {
-    const saida = tabsWithIconsSource();
-    expect(saida).toContain(`import { Code2, Eye, Settings2 } from 'lucide-vue-next'`);
-    expect([...saida.matchAll(/aria-hidden="true"/g)]).toHaveLength(3);
-    expect(saida).toContain('<Eye class="nds-size-4" aria-hidden="true" />');
+    const output = tabsWithIconsSource();
+    expect(output).toContain(`import { Code2, Eye, Settings2 } from 'lucide-vue-next'`);
+    expect([...output.matchAll(/aria-hidden="true"/g)]).toHaveLength(3);
+    expect(output).toContain('<Eye class="nds-size-4" aria-hidden="true" />');
   });
 
   it('o contador entra dentro do gatilho e não vira segundo alvo de foco', () => {
-    const saida = tabsWithCounterSource();
-    expect(saida).toContain(`<TabsTrigger value="inbox">
+    const output = tabsWithCounterSource();
+    expect(output).toContain(`<TabsTrigger value="inbox">
         Caixa de entrada
         <Badge as="span">12</Badge>
       </TabsTrigger>`);
     // `as="span"` é o que impede o contador de virar um controle dentro de outro.
-    expect(saida).not.toContain('<Badge>');
+    expect(output).not.toContain('<Badge>');
     // A terceira aba não tem contador: nem toda aba precisa de um.
-    expect(saida).toContain('<TabsTrigger value="trash">Lixeira</TabsTrigger>');
+    expect(output).toContain('<TabsTrigger value="trash">Lixeira</TabsTrigger>');
   });
 
   it('nas configurações o título fica em contraste cheio e só o parágrafo atenua', () => {
-    const saida = tabsConfigVerticaisSource();
-    expect(saida).toContain('<h3 class="nds-font-medium nds-text-foreground">Perfil público</h3>');
-    expect(saida).toContain('class="nds-text-body nds-pl-4"');
+    const output = tabsConfigVerticaisSource();
+    expect(output).toContain('<h3 class="nds-font-medium nds-text-foreground">Perfil público</h3>');
+    expect(output).toContain('class="nds-text-body nds-pl-4"');
     // A cor atenuada desceu para o parágrafo: o painel inteiro não a carrega mais.
-    expect(saida).not.toContain('nds-text-body nds-text-muted-foreground');
+    expect(output).not.toContain('nds-text-body nds-text-muted-foreground');
   });
 
   it('o modo manual é prop da raiz', () => {

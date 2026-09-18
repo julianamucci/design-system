@@ -60,11 +60,11 @@ function script(options: { kbd?: boolean; icons?: string[]; state?: string } = {
  * toque não há hover que o abra. O ícone entra `aria-hidden` para não competir
  * com esse nome.
  */
-function triggerIcon(options: { label: string; icone: string; variant?: string }): string {
+function triggerIcon(options: { label: string; icon: string; variant?: string }): string {
   const variant = options.variant ?? 'outline';
   return `<TooltipTrigger as-child>
   <Button variant="${variant}" size="icon" aria-label="${options.label}">
-    <${options.icone} aria-hidden="true" class="nds-size-4" />
+    <${options.icon} aria-hidden="true" class="nds-size-4" />
   </Button>
 </TooltipTrigger>`;
 }
@@ -143,7 +143,7 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
     withProvider(
       balao({
         root: [attrBool('default-open', args.defaultOpen, false)],
-        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
         content: [attr('side', args.side, 'top'), attr('align', args.align, 'center')],
         contentText: 'Salvar (Ctrl+S)',
       }),
@@ -158,7 +158,7 @@ export function tooltipTextCurtoSource(): string {
     withProvider(
       balao({
         root: ['default-open'],
-        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
         contentText: 'Salvar',
       }),
     ),
@@ -175,7 +175,7 @@ export function tooltipWithShortcutSource(): string {
     withProvider(
       balao({
         root: ['default-open'],
-        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
         contentText: `<span>Salvar</span>
 <Kbd>Ctrl</Kbd>
 <Kbd>S</Kbd>`,
@@ -208,7 +208,7 @@ export function tooltipClosedSource(): string {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
         contentText: 'Salvar',
       }),
     ),
@@ -222,7 +222,7 @@ export function tooltipOpenSource(): string {
     withProvider(
       balao({
         root: ['default-open'],
-        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
         contentText: 'Salvar (Ctrl+S)',
       }),
     ),
@@ -241,7 +241,7 @@ export function tooltipWithWaitSource(): string {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
         content: ['side="bottom"'],
         contentText: 'Salvar (Ctrl+S)',
       }),
@@ -288,7 +288,7 @@ export function tooltipControlledSource(): string {
 
 ${balao({
   root: [':open="aberto"', '@update:open="(valor) => (aberto = valor)"'],
-  trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+  trigger: triggerIcon({ label: 'Salvar', icon: 'Save' }),
   content: ['side="bottom"'],
   contentText: 'Salvar (Ctrl+S)',
 })}`,

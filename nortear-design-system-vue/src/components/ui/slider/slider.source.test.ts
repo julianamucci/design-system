@@ -65,48 +65,48 @@ const volume = ref([50])
   });
 
   it('não escreve os padrões — repetir valor padrão ensina ruído', () => {
-    const saida = sliderPlaygroundSource('', {
+    const output = sliderPlaygroundSource('', {
       args: { min: 0, max: 100, step: 1, orientation: 'horizontal', disabled: false },
     });
-    expect(saida).toContain('<Slider v-model="volume" aria-label="Volume" />');
-    expect(saida).not.toContain(':min');
-    expect(saida).not.toContain(':max');
-    expect(saida).not.toContain(':step');
-    expect(saida).not.toContain('orientation');
-    expect(saida).not.toContain('disabled');
+    expect(output).toContain('<Slider v-model="volume" aria-label="Volume" />');
+    expect(output).not.toContain(':min');
+    expect(output).not.toContain(':max');
+    expect(output).not.toContain(':step');
+    expect(output).not.toContain('orientation');
+    expect(output).not.toContain('disabled');
   });
 
   it('escreve o que difere, na ordem em que a API se lê', () => {
-    const saida = sliderPlaygroundSource('', {
+    const output = sliderPlaygroundSource('', {
       args: { min: 10, max: 50, step: 5, orientation: 'vertical', disabled: true },
     });
-    expect(saida).toContain(
+    expect(output).toContain(
       '<Slider v-model="volume" :min="10" :max="50" :step="5" orientation="vertical" disabled aria-label="Volume" />',
     );
   });
 
   it('ignora control que não é string nem número — o espião vira ruído no painel', () => {
-    const saida = sliderPlaygroundSource('', {
+    const output = sliderPlaygroundSource('', {
       args: {
         modelValue: (() => {}) as never,
         min: (() => {}) as never,
         orientation: (() => {}) as never,
       },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('[object Object]');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('[object Object]');
     // Cai no padrão em vez de interpolar o espião.
-    expect(saida).toContain('const volume = ref([50])');
-    expect(saida).toContain('<Slider v-model="volume" aria-label="Volume" />');
+    expect(output).toContain('const volume = ref([50])');
+    expect(output).toContain('<Slider v-model="volume" aria-label="Volume" />');
   });
 });
 
 describe('o que vale para todas as transforms do componente', () => {
   it('o valor é sempre um array, e sempre por v-model', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).toMatch(/const \w+ = ref\(\[/);
-      expect(saida).toContain('<Slider v-model="');
+      const output = fn();
+      expect(output).toMatch(/const \w+ = ref\(\[/);
+      expect(output).toContain('<Slider v-model="');
     }
   });
 
@@ -121,28 +121,28 @@ describe('o que vale para todas as transforms do componente', () => {
 
 describe('transforms das stories de variante', () => {
   it('a faixa vem do tamanho do array, não de uma prop de modo', () => {
-    const saida = sliderRangeSource();
-    expect(saida).toContain('const faixa = ref([20, 80])');
-    expect(saida).toContain('R$ {{ faixa[0] }} — R$ {{ faixa[1] }}');
-    expect(saida).not.toContain('range');
+    const output = sliderRangeSource();
+    expect(output).toContain('const faixa = ref([20, 80])');
+    expect(output).toContain('R$ {{ faixa[0] }} — R$ {{ faixa[1] }}');
+    expect(output).not.toContain('range');
   });
 
   it('a vertical troca o eixo e ganha o contêiner que a centraliza', () => {
-    const saida = sliderVerticalSource();
-    expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('<div class="nds-cluster" data-justify="center">');
+    const output = sliderVerticalSource();
+    expect(output).toContain('orientation="vertical"');
+    expect(output).toContain('<div class="nds-cluster" data-justify="center">');
     // Em pé o controle não ocupa a largura da coluna: a largura fixa sairia.
-    expect(saida).not.toContain('nds-w-sm');
+    expect(output).not.toContain('nds-w-sm');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o foco não tem o que escrever — nem prop, nem classe', () => {
-    const saida = sliderFocusSource();
-    expect(saida).not.toContain('focus');
-    expect(saida).not.toContain('tabindex');
+    const output = sliderFocusSource();
+    expect(output).not.toContain('focus');
+    expect(output).not.toContain('tabindex');
     // Sem a linha de valor, que disputaria a atenção com o desenho do foco.
-    expect(saida).not.toContain('aria-live');
+    expect(output).not.toContain('aria-live');
   });
 
   it('desabilitado liga a prop na raiz, que alcança todas as alças', () => {
@@ -161,27 +161,27 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o preço abre a faixa e engrossa o passo, com a escala embaixo', () => {
-    const saida = sliderPrecoSource();
-    expect(saida).toContain('<Slider v-model="faixa" :max="500" :step="10" aria-label="Faixa de preço" />');
+    const output = sliderPrecoSource();
+    expect(output).toContain('<Slider v-model="faixa" :max="500" :step="10" aria-label="Faixa de preço" />');
     // O mínimo continua sendo o padrão do componente.
-    expect(saida).not.toContain(':min');
-    expect(saida).toContain('<span>R$ 500</span>');
+    expect(output).not.toContain(':min');
+    expect(output).toContain('<span>R$ 500</span>');
   });
 
   it('no formulário, cada controle leva o próprio nome acessível', () => {
-    const saida = sliderFormSource();
-    expect(saida).toContain('aria-label="Brilho"');
-    expect(saida).toContain('aria-label="Opacidade"');
-    expect(saida).toContain('@submit.prevent="salvar"');
-    expect(saida).toContain('<Button type="submit" size="sm">Salvar preset</Button>');
+    const output = sliderFormSource();
+    expect(output).toContain('aria-label="Brilho"');
+    expect(output).toContain('aria-label="Opacidade"');
+    expect(output).toContain('@submit.prevent="salvar"');
+    expect(output).toContain('<Button type="submit" size="sm">Salvar preset</Button>');
     // O campo de texto se liga ao rótulo pelo id, não por proximidade.
-    expect(saida).toContain('<Label for="preset-nome">Nome do preset</Label>');
+    expect(output).toContain('<Label for="preset-nome">Nome do preset</Label>');
   });
 
   it('a faixa curta escreve só os limites que diferem do padrão', () => {
-    const saida = sliderStepGrossoSource();
-    expect(saida).toContain('<Slider v-model="avaliacao" :min="1" :max="5" aria-label="Avaliação" />');
+    const output = sliderStepGrossoSource();
+    expect(output).toContain('<Slider v-model="avaliacao" :min="1" :max="5" aria-label="Avaliação" />');
     // Passo 1 é o padrão do componente.
-    expect(saida).not.toContain(':step');
+    expect(output).not.toContain(':step');
   });
 });

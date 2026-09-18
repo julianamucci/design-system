@@ -35,45 +35,45 @@ const IMPORT = `import { ToggleGroup, ToggleGroupItem } from '@/components/ui/to
 type Item = {
   value: string;
   label: string;
-  icone: string;
+  icon: string;
   disabled?: boolean;
   variant?: string;
 };
 
 const ALIGNMENT: Item[] = [
-  { value: 'left', label: 'Alinhar à esquerda', icone: 'AlignLeft' },
-  { value: 'center', label: 'Centralizar', icone: 'AlignCenter' },
-  { value: 'right', label: 'Alinhar à direita', icone: 'AlignRight' },
+  { value: 'left', label: 'Alinhar à esquerda', icon: 'AlignLeft' },
+  { value: 'center', label: 'Centralizar', icon: 'AlignCenter' },
+  { value: 'right', label: 'Alinhar à direita', icon: 'AlignRight' },
 ];
 
 const ALIGNMENT_WITH_JUSTIFICAR: Item[] = [
   ...ALIGNMENT,
-  { value: 'justify', label: 'Justificar', icone: 'AlignJustify' },
+  { value: 'justify', label: 'Justificar', icon: 'AlignJustify' },
 ];
 
 const FORMATTING: Item[] = [
-  { value: 'bold', label: 'Negrito', icone: 'Bold' },
-  { value: 'italic', label: 'Itálico', icone: 'Italic' },
-  { value: 'underline', label: 'Sublinhado', icone: 'Underline' },
+  { value: 'bold', label: 'Negrito', icon: 'Bold' },
+  { value: 'italic', label: 'Itálico', icon: 'Italic' },
+  { value: 'underline', label: 'Sublinhado', icon: 'Underline' },
 ];
 
 const VISUALIZACAO: Item[] = [
-  { value: 'grid', label: 'Grade', icone: 'LayoutGrid' },
-  { value: 'list', label: 'Lista', icone: 'List' },
+  { value: 'grid', label: 'Grade', icon: 'LayoutGrid' },
+  { value: 'list', label: 'Lista', icon: 'List' },
 ];
 
 /** Os mesmos três alinhamentos, com o nome do tamanho no rótulo de cada um. */
 function sizeAlignment(sufixo: string): Item[] {
   return [
-    { value: 'left', label: `Esquerda ${sufixo}`, icone: 'AlignLeft' },
-    { value: 'center', label: `Centro ${sufixo}`, icone: 'AlignCenter' },
-    { value: 'right', label: `Direita ${sufixo}`, icone: 'AlignRight' },
+    { value: 'left', label: `Esquerda ${sufixo}`, icon: 'AlignLeft' },
+    { value: 'center', label: `Centro ${sufixo}`, icon: 'AlignCenter' },
+    { value: 'right', label: `Direita ${sufixo}`, icon: 'AlignRight' },
   ];
 }
 
 /** Importa da biblioteca de ícones só o que a composição usa, sem repetir. */
 function importIcons(...listas: Item[][]): string {
-  const names = [...new Set(listas.flat().map((item) => item.icone))];
+  const names = [...new Set(listas.flat().map((item) => item.icon))];
   return `import { ${names.join(', ')} } from 'lucide-vue-next'`;
 }
 
@@ -106,7 +106,7 @@ function group(options: {
         `aria-label="${item.label}"`,
       );
       return `${p}  <ToggleGroupItem${attrList}>
-${p}    <${item.icone} aria-hidden="true" />
+${p}    <${item.icon} aria-hidden="true" />
 ${p}  </ToggleGroupItem>`;
     })
     .join('\n');

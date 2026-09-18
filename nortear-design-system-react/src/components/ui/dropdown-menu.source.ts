@@ -64,9 +64,9 @@ function trigger(label: string): string {
 </DropdownMenuTrigger>`;
 }
 
-function menu(propsRaiz: string, rotuloGatilho: string, propsConteudo: string, items: string): string {
+function menu(propsRaiz: string, triggerLabel: string, propsConteudo: string, items: string): string {
   return `<DropdownMenu${propsRaiz}>
-${indentar(trigger(rotuloGatilho))}
+${indentar(trigger(triggerLabel))}
   <DropdownMenuContent${propsConteudo}>
 ${indentar(items, '    ')}
   </DropdownMenuContent>

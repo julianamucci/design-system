@@ -121,13 +121,13 @@ export const Playground: Story = {
     });
 
     await step('A descrição é LIDA junto com o campo, não só exibida', async () => {
-      const descricao = field.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+      const description = field.querySelector<HTMLElement>('[data-slot="field-description"]')!;
       // O id tem que existir E o alvo tem que ser este elemento: um
       // `aria-describedby` apontando para o nada passa em asserção de atributo
       // e não anuncia nada.
-      await expect(descricao.id).not.toBe('');
-      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
-      await expect(document.getElementById(descricao.id)).toBe(descricao);
+      await expect(description.id).not.toBe('');
+      await expect(control.getAttribute('aria-describedby')).toContain(description.id);
+      await expect(document.getElementById(description.id)).toBe(description);
     });
 
     await step('Clicar no rótulo leva o foco ao controle', async () => {

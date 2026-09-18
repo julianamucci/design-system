@@ -563,7 +563,7 @@ export const ListenerCleanup: Story = {
           description: 'Descrição do painel.',
           cancelLabel: false,
           applyLabel: false,
-          mostrarDestroy: true,
+          showDestroy: true,
         }),
       },
     },
@@ -595,7 +595,7 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
-        seletorDePortal: '[data-slot="sheet-content"], [data-slot="sheet-overlay"]',
+        portalSelector: '[data-slot="sheet-content"], [data-slot="sheet-overlay"]',
       });
     });
 

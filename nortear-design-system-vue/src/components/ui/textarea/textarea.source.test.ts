@@ -60,10 +60,10 @@ const maximo = 500
   });
 
   it('sem limite, o contador some junto — contar sem teto não informa nada', () => {
-    const saida = textareaSource('', { args: { ...PANEL_ARGS, maxlength: 0 } });
-    expect(saida).not.toContain('aria-live');
-    expect(saida).not.toContain('maxlength');
-    expect(saida).not.toContain('const maximo');
+    const output = textareaSource('', { args: { ...PANEL_ARGS, maxlength: 0 } });
+    expect(output).not.toContain('aria-live');
+    expect(output).not.toContain('maxlength');
+    expect(output).not.toContain('const maximo');
   });
 
   it('os bloqueios só aparecem quando ligados', () => {
@@ -83,93 +83,93 @@ const maximo = 500
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = textareaSource('', {
+    const output = textareaSource('', {
       args: { ...PANEL_ARGS, placeholder: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('placeholder');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('placeholder');
   });
 });
 
 describe('o par mínimo', () => {
   it('vincula rótulo e campo pelo mesmo id, e traz a moldura no class', () => {
-    const saida = textareaWithLabelSource();
-    expect(saida).toContain('<Label for="descricao">Descrição</Label>');
-    expect(saida).toContain('id="descricao"');
+    const output = textareaWithLabelSource();
+    expect(output).toContain('<Label for="descricao">Descrição</Label>');
+    expect(output).toContain('id="descricao"');
     // A moldura é escolha de uso, e por isso mora no `class`, não no componente.
-    expect(saida).toContain('class="nds-resize-y nds-min-h-30"');
+    expect(output).toContain('class="nds-resize-y nds-min-h-30"');
     // Sem estado, sem import de `ref`.
-    expect(saida).not.toContain(`from 'vue'`);
+    expect(output).not.toContain(`from 'vue'`);
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('a padrão é o par mínimo num campo de texto livre', () => {
-    const saida = textareaDefaultSource();
-    expect(saida).toContain('<Label for="biografia">Biografia</Label>');
-    expect(saida).toContain('nds-resize-y');
+    const output = textareaDefaultSource();
+    expect(output).toContain('<Label for="biografia">Biografia</Label>');
+    expect(output).toContain('nds-resize-y');
   });
 
   it('o contador anda junto com o limite, e é anunciado por extenso', () => {
-    const saida = textareaWithCounterSource();
-    expect(saida).toContain(':maxlength="maximo"');
-    expect(saida).toContain('aria-live="polite"');
+    const output = textareaWithCounterSource();
+    expect(output).toContain(':maxlength="maximo"');
+    expect(output).toContain('aria-live="polite"');
     // Lido cru, "123/500" vira "cento e vinte e três barra quinhentos".
-    expect(saida).toContain('caracteres usados');
-    expect(saida).toContain(`const maximo = 500`);
+    expect(output).toContain('caracteres usados');
+    expect(output).toContain(`const maximo = 500`);
   });
 
   it('sem alça, a troca é de classe — não existe prop de redimensionamento', () => {
-    const saida = textareaNoRedimensionarSource();
-    expect(saida).toContain('class="nds-resize-none nds-min-h-30"');
-    expect(saida).not.toContain('nds-resize-y');
-    expect(saida).not.toContain('resize=');
+    const output = textareaNoRedimensionarSource();
+    expect(output).toContain('class="nds-resize-none nds-min-h-30"');
+    expect(output).not.toContain('nds-resize-y');
+    expect(output).not.toContain('resize=');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o preenchido troca o placeholder pelo valor de partida', () => {
-    const saida = textareaPreenchidoSource();
-    expect(saida).toContain('default-value="Designer e desenvolvedora');
+    const output = textareaPreenchidoSource();
+    expect(output).toContain('default-value="Designer e desenvolvedora');
     // Os dois nunca aparecem juntos: o valor cobre o texto de exemplo.
-    expect(saida).not.toContain('placeholder');
+    expect(output).not.toContain('placeholder');
   });
 
   it('o desabilitado escreve só o bloqueio', () => {
-    const saida = textareaDisabledSource();
-    expect(saida).toContain('  disabled\n');
-    expect(saida).not.toContain('readonly');
+    const output = textareaDisabledSource();
+    expect(output).toContain('  disabled\n');
+    expect(output).not.toContain('readonly');
   });
 
   it('o somente leitura vem sempre com conteúdo — é o valor que se lê', () => {
-    const saida = textareaSomenteLeituraSource();
-    expect(saida).toContain('  readonly\n');
-    expect(saida).toContain('default-value="Pedido confirmado');
-    expect(saida).not.toContain('disabled');
+    const output = textareaSomenteLeituraSource();
+    expect(output).toContain('  readonly\n');
+    expect(output).toContain('default-value="Pedido confirmado');
+    expect(output).not.toContain('disabled');
   });
 
   it('o inválido aponta para a mensagem, e a mensagem tem o id apontado', () => {
-    const saida = textareaInvalidoSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="descricao-erro"');
-    expect(saida).toContain('<p id="descricao-erro" class="nds-text-caption nds-text-destructive">');
+    const output = textareaInvalidoSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="descricao-erro"');
+    expect(output).toContain('<p id="descricao-erro" class="nds-text-caption nds-text-destructive">');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o texto de apoio usa o mesmo vínculo do erro, e fica fora do rótulo', () => {
-    const saida = textareaWithHelperSource();
-    expect(saida).toContain('aria-describedby="biografia-apoio"');
-    expect(saida).toContain('<p id="biografia-apoio" class="nds-text-body">');
+    const output = textareaWithHelperSource();
+    expect(output).toContain('aria-describedby="biografia-apoio"');
+    expect(output).toContain('<p id="biografia-apoio" class="nds-text-body">');
     // Dentro do Label, a orientação viraria parte do nome acessível do campo.
-    expect(saida).toContain('<Label for="biografia">Biografia</Label>');
+    expect(output).toContain('<Label for="biografia">Biografia</Label>');
   });
 
   it('no obrigatório o asterisco é decoração e quem anuncia é aria-required', () => {
-    const saida = textareaObrigatorioSource();
-    expect(saida).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
-    expect(saida).toContain('aria-required="true"');
+    const output = textareaObrigatorioSource();
+    expect(output).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
+    expect(output).toContain('aria-required="true"');
     // A legenda é o que dá sentido ao asterisco para quem enxerga.
-    expect(saida).toContain('Campos com * são obrigatórios.');
+    expect(output).toContain('Campos com * são obrigatórios.');
   });
 });

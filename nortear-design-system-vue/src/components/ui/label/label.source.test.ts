@@ -39,9 +39,9 @@ import { Input } from '@/components/ui/input'
   it('o control de destino move os DOIS lados do par', () => {
     // Mover só o `for` deixaria o snippet com uma associação quebrada — e é
     // justamente essa igualdade que o componente inteiro produz.
-    const saida = labelSource('', { args: { for: 'email-corporativo' } });
-    expect(saida).toContain('<Label for="email-corporativo">');
-    expect(saida).toContain('<Input id="email-corporativo"');
+    const output = labelSource('', { args: { for: 'email-corporativo' } });
+    expect(output).toContain('<Label for="email-corporativo">');
+    expect(output).toContain('<Input id="email-corporativo"');
   });
 
   it('não escreve class vazia no rótulo', () => {
@@ -56,12 +56,12 @@ import { Input } from '@/components/ui/input'
   });
 
   it('ignora control que não é string — o espião vira ruído no painel', () => {
-    const saida = labelSource('', {
+    const output = labelSource('', {
       args: { for: (() => {}) as never, class: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('class="undefined"');
-    expect(saida).toContain('<Label for="nome-completo">');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('class="undefined"');
+    expect(output).toContain('<Label for="nome-completo">');
   });
 });
 
@@ -74,28 +74,28 @@ describe('contrato comum a todo snippet de rótulo', () => {
 
   it('o for do rótulo e o id do controle carregam o mesmo valor', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      const target = /<Label for="([^"]+)"/.exec(saida)?.[1];
+      const output = fn();
+      const target = /<Label for="([^"]+)"/.exec(output)?.[1];
       expect(target).toBeTruthy();
-      expect(saida).toContain(`id="${target}"`);
+      expect(output).toContain(`id="${target}"`);
     }
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o desabilitado pelo irmão marca o CONTROLE, e o rótulo não recebe prop', () => {
-    const saida = labelDisabledSource();
+    const output = labelDisabledSource();
     // Sem `nds-peer` no controle a folha não alcança o rótulo: o campo apaga e
     // o rótulo fica aceso, prometendo interação que não existe.
-    expect(saida).toContain('class="nds-peer"');
-    expect(saida).toContain(' disabled />');
-    expect(saida).toMatch(/<Label for="cpf">CPF<\/Label>/);
+    expect(output).toContain('class="nds-peer"');
+    expect(output).toContain(' disabled />');
+    expect(output).toMatch(/<Label for="cpf">CPF<\/Label>/);
   });
 
   it('o desabilitado pelo grupo age do contêiner, sem tocar o controle irmão', () => {
-    const saida = labelDisabledPeloGroupSource();
-    expect(saida).toContain('data-disabled="true"');
-    expect(saida).not.toContain('nds-peer');
+    const output = labelDisabledPeloGroupSource();
+    expect(output).toContain('data-disabled="true"');
+    expect(output).not.toContain('nds-peer');
   });
 
   it('os dois caminhos de desabilitar não se misturam', () => {
@@ -104,28 +104,28 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o obrigatório traz o asterisco decorativo e o anúncio no controle', () => {
-    const saida = labelObrigatorioSource();
-    expect(saida).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
-    expect(saida).toContain('aria-required="true"');
+    const output = labelObrigatorioSource();
+    expect(output).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
+    expect(output).toContain('aria-required="true"');
     // O asterisco fica DENTRO do rótulo, e fora da leitura: sem `aria-hidden` o
     // nome acessível do campo viraria "Email profissional asterisco".
-    expect(saida.indexOf('aria-hidden="true"')).toBeLessThan(saida.indexOf('</Label>'));
+    expect(output.indexOf('aria-hidden="true"')).toBeLessThan(output.indexOf('</Label>'));
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('com campo de texto, o rótulo vem ANTES do controle', () => {
-    const saida = labelWithFieldSource();
-    expect(saida.indexOf('<Label')).toBeLessThan(saida.indexOf('<Input'));
-    expect(saida).toContain('type="tel"');
+    const output = labelWithFieldSource();
+    expect(output.indexOf('<Label')).toBeLessThan(output.indexOf('<Input'));
+    expect(output).toContain('type="tel"');
   });
 
   it('com caixa de seleção, a ordem se inverte e o bloco deita', () => {
-    const saida = selectionLabelWithBoxSource();
-    expect(saida).toContain('<div class="nds-cluster" data-spacing="sm">');
-    expect(saida.indexOf('<Checkbox')).toBeLessThan(saida.indexOf('<Label'));
-    expect(saida).toContain(`import { Checkbox } from '@/components/ui/checkbox'`);
+    const output = selectionLabelWithBoxSource();
+    expect(output).toContain('<div class="nds-cluster" data-spacing="sm">');
+    expect(output.indexOf('<Checkbox')).toBeLessThan(output.indexOf('<Label'));
+    expect(output).toContain(`import { Checkbox } from '@/components/ui/checkbox'`);
     // Nada de Input nesta composição: o controle é outro.
-    expect(saida).not.toContain('<Input');
+    expect(output).not.toContain('<Input');
   });
 });

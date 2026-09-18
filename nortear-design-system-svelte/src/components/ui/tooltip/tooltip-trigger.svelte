@@ -4,7 +4,7 @@
 
 	let { ref = $bindable(null), ...restProps }: TooltipPrimitive.TriggerProps = $props();
 
-	const descricao = usarDescription();
+	const description = usarDescription();
 
 	// Escrito no nó, e não em prop: o `mergeProps` da lib põe as props DELA
 	// depois das nossas, então um `aria-describedby` passado por prop seria
@@ -14,9 +14,9 @@
 	// Ver tooltip-descricao.svelte.ts.
 	$effect(() => {
 		const target = ref;
-		if (!target || !descricao) return;
-		const ligado = descricao.isOpen && descricao.montado;
-		if (ligado) target.setAttribute("aria-describedby", descricao.id);
+		if (!target || !description) return;
+		const ligado = description.isOpen && description.montado;
+		if (ligado) target.setAttribute("aria-describedby", description.id);
 		else target.removeAttribute("aria-describedby");
 	});
 </script>

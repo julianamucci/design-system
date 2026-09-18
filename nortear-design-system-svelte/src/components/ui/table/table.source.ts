@@ -14,7 +14,7 @@ import { svelteSnippet } from '@/lib/story-source';
 
 export type TableArgs = {
   caption: string;
-  captionVisivel: boolean;
+  captionVisible: boolean;
   showFooter: boolean;
 };
 
@@ -100,11 +100,11 @@ function renderCaption(text: string, visible: boolean): string {
 export function tableSource(_gerado?: string, ctx?: { args?: Partial<TableArgs> }): string {
   const {
     caption = 'Lista de faturas recentes',
-    captionVisivel = false,
+    captionVisible = false,
     showFooter = true,
   } = ctx?.args ?? {};
 
-  const partes = [renderCaption(caption, captionVisivel), HEADER, BODY];
+  const partes = [renderCaption(caption, captionVisible), HEADER, BODY];
   if (showFooter) partes.push(FOOTER);
 
   return svelteSnippet(

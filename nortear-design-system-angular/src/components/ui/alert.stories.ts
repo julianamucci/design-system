@@ -157,10 +157,10 @@ export const Playground: Story = {
       // Filho DIRETO: é o seletor `.nds-alert:has(> svg)` que abre a coluna do
       // ícone. Um wrapper no meio deixaria o layout de uma coluna só.
       const alerta = canvas.getByRole(args.role);
-      const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
-      await expect(icone).toHaveAttribute('aria-hidden', 'true');
+      const icon = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
       // Sem `.nds-icon`: é `.nds-alert > svg` que dimensiona o ícone.
-      await expect(icone).not.toHaveClass('nds-icon');
+      await expect(icon).not.toHaveClass('nds-icon');
     });
   },
 };

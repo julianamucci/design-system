@@ -302,11 +302,11 @@ export const WithHighlightedCard: Story = {
       const [highlight, ...helper] = targets;
       // O destaque ocupa a coluna inteira; os complementares empilham na outra.
       highlight.classList.add('nds-h-full');
-      const coluna = document.createElement('div');
-      coluna.className = 'nds-stack';
-      coluna.dataset.spacing = 'xs';
-      for (const link of helper) coluna.appendChild(link);
-      panel.appendChild(coluna);
+      const column = document.createElement('div');
+      column.className = 'nds-stack';
+      column.dataset.spacing = 'xs';
+      for (const link of helper) column.appendChild(link);
+      panel.appendChild(column);
     }
     return wrap(nav, 340);
   },

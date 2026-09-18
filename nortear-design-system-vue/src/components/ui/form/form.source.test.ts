@@ -31,113 +31,113 @@ import { Input } from '@/components/ui/input'
   });
 
   it('não escreve id nem for — é o campo que fecha a associação', () => {
-    const saida = formSource();
+    const output = formSource();
     // Escrevê-los no snippet ensinaria a fazer à mão o que o componente faz, e
     // um id repetido entre dois campos quebra o aria-describedby dos dois.
-    expect(saida).not.toContain('id=');
-    expect(saida).not.toContain('for=');
+    expect(output).not.toContain('id=');
+    expect(output).not.toContain('for=');
   });
 
   it('a mensagem de erro entra no campo e marca o controle como inválido', () => {
-    const saida = formSource('', { args: { error: 'Endereço de email incompleto.' } });
-    expect(saida).toContain('error="Endereço de email incompleto."');
+    const output = formSource('', { args: { error: 'Endereço de email incompleto.' } });
+    expect(output).toContain('error="Endereço de email incompleto."');
     // Vermelho sozinho não alcança quem não enxerga cor.
-    expect(saida).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-invalid="true"');
   });
 
   it('aria-invalid sozinho não inventa mensagem de erro', () => {
-    const saida = formSource('', { args: { ariaInvalid: true } });
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).not.toContain('error=');
+    const output = formSource('', { args: { ariaInvalid: true } });
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).not.toContain('error=');
   });
 
   it('omite o que está no padrão — repetir valor padrão ensina ruído', () => {
-    const saida = formSource('', { args: { ariaInvalid: false, disabled: false } });
-    expect(saida).not.toContain('aria-invalid');
-    expect(saida).not.toContain('disabled');
-    expect(saida).not.toContain('error=');
+    const output = formSource('', { args: { ariaInvalid: false, disabled: false } });
+    expect(output).not.toContain('aria-invalid');
+    expect(output).not.toContain('disabled');
+    expect(output).not.toContain('error=');
   });
 
   it('apagar a descrição no control tira o parágrafo de apoio do snippet', () => {
-    const saida = formSource('', { args: { description: '' } });
-    expect(saida).not.toContain('description=');
-    expect(saida).toContain('label="Email"');
+    const output = formSource('', { args: { description: '' } });
+    expect(output).not.toContain('description=');
+    expect(output).toContain('label="Email"');
   });
 
   it('desabilitar liga o atributo no CONTROLE, não no campo', () => {
-    const saida = formSource('', { args: { disabled: true } });
-    expect(saida).toContain('<Input type="email" placeholder="ex: joao@empresa.com" disabled />');
-    expect(saida).not.toContain('<FormField disabled');
+    const output = formSource('', { args: { disabled: true } });
+    expect(output).toContain('<Input type="email" placeholder="ex: joao@empresa.com" disabled />');
+    expect(output).not.toContain('<FormField disabled');
   });
 
   it('ignora control que não é string — o espião vira ruído no painel', () => {
-    const saida = formSource('', { args: { label: (() => {}) as never } });
-    expect(saida).not.toContain('function');
+    const output = formSource('', { args: { label: (() => {}) as never } });
+    expect(output).not.toContain('function');
     // Cair no padrão do meta é melhor que um campo anônimo: o rótulo é o
     // produto inteiro deste componente.
-    expect(saida).toContain('label="Email"');
+    expect(output).toContain('label="Email"');
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('a combinação mínima não traz apoio nem erro', () => {
-    const saida = formLabelEControleSource();
-    expect(saida).toContain('label="Nome completo"');
-    expect(saida).not.toContain('description=');
-    expect(saida).not.toContain('error=');
+    const output = formLabelEControleSource();
+    expect(output).toContain('label="Nome completo"');
+    expect(output).not.toContain('description=');
+    expect(output).not.toContain('error=');
   });
 
   it('a variante com apoio troca o tipo do controle e traz o autocomplete', () => {
-    const saida = formWithDescriptionSource();
-    expect(saida).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
-    expect(saida).toContain('<Input type="password" autocomplete="new-password" />');
+    const output = formWithDescriptionSource();
+    expect(output).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
+    expect(output).toContain('<Input type="password" autocomplete="new-password" />');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o inválido traz valor de verdade, e o valor mora num ref', () => {
-    const saida = formInvalidoSource();
+    const output = formInvalidoSource();
     // `model-value` fixo é recurso de story: quem consome liga um estado.
-    expect(saida).toContain(`const senha = ref('123')`);
-    expect(saida).toContain('v-model="senha"');
-    expect(saida).not.toContain('model-value=');
-    expect(saida).toContain('error="A senha precisa ter pelo menos 8 caracteres."');
+    expect(output).toContain(`const senha = ref('123')`);
+    expect(output).toContain('v-model="senha"');
+    expect(output).not.toContain('model-value=');
+    expect(output).toContain('error="A senha precisa ter pelo menos 8 caracteres."');
   });
 
   it('o desabilitado mantém rótulo e apoio, e não vira erro', () => {
-    const saida = formDisabledSource();
-    expect(saida).toContain('label="CPF"');
-    expect(saida).toContain('description="Preenchido pelo cadastro da empresa."');
-    expect(saida).toContain('disabled');
-    expect(saida).not.toContain('error=');
-    expect(saida).not.toContain('aria-invalid');
+    const output = formDisabledSource();
+    expect(output).toContain('label="CPF"');
+    expect(output).toContain('description="Preenchido pelo cadastro da empresa."');
+    expect(output).toContain('disabled');
+    expect(output).not.toContain('error=');
+    expect(output).not.toContain('aria-invalid');
   });
 
   it('a paleta escura é tema do documento, não classe na marcação', () => {
-    const saida = formPaletteDarkSource();
+    const output = formPaletteDarkSource();
     // Escrever `.dark` no snippet ensinaria a prender a paleta ao componente.
-    expect(saida).not.toContain('dark');
-    expect(saida).toContain('<Fieldset legend="Endereço de entrega">');
+    expect(output).not.toContain('dark');
+    expect(output).toContain('<Fieldset legend="Endereço de entrega">');
     // Três campos numa pilha: é a composição que a story renderiza.
-    expect([...saida.matchAll(/<FormField/g)]).toHaveLength(3);
+    expect([...output.matchAll(/<FormField/g)]).toHaveLength(3);
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a legenda é o PRIMEIRO filho do grupo', () => {
-    const saida = formFieldsetSource();
+    const output = formFieldsetSource();
     // Fora da primeira posição ela deixa de rotular o grupo: o texto continua
     // na tela e o grupo fica anônimo. No snippet isso é ordem de atributo e de
     // linha, e é a única forma de ensinar a regra.
-    expect(saida).toContain('<Fieldset class="nds-max-w-sm" legend="Endereço de entrega">');
-    expect(saida.indexOf('legend=')).toBeLessThan(saida.indexOf('<FormField'));
+    expect(output).toContain('<Fieldset class="nds-max-w-sm" legend="Endereço de entrega">');
+    expect(output.indexOf('legend=')).toBeLessThan(output.indexOf('<FormField'));
   });
 
   it('o formulário inteiro passa três tipos de controle pelo mesmo campo', () => {
-    const saida = formMultiplosFieldsSource();
-    expect(saida).toContain('<Input type="text" name="nome"');
-    expect(saida).toContain('<Textarea name="bio" :rows="3" />');
-    expect(saida).toContain('<Button type="submit">Salvar</Button>');
+    const output = formMultiplosFieldsSource();
+    expect(output).toContain('<Input type="text" name="nome"');
+    expect(output).toContain('<Textarea name="bio" :rows="3" />');
+    expect(output).toContain('<Button type="submit">Salvar</Button>');
   });
 
   it('a ordem de tabulação é a do DOM — nenhum tabindex a escrever', () => {
@@ -145,8 +145,8 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o envio é barrado pelo modificador, não por um handler de story', () => {
-    const saida = formMultiplosFieldsSource();
-    expect(saida).toContain('@submit.prevent="salvar"');
-    expect(saida).not.toContain('preventDefault');
+    const output = formMultiplosFieldsSource();
+    expect(output).toContain('@submit.prevent="salvar"');
+    expect(output).not.toContain('preventDefault');
   });
 });

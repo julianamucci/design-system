@@ -783,8 +783,8 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
 
   /** Cliente e valor editáveis; o resto é leitura. */
   protected readonly colunasEditaveis = computed<DataTableColumn<InvoiceDT>[]>(() =>
-    this.colunas().map((coluna) =>
-      coluna.id === 'cliente' || coluna.id === 'valor' ? { ...coluna, editable: true } : coluna,
+    this.colunas().map((column) =>
+      column.id === 'cliente' || column.id === 'valor' ? { ...column, editable: true } : column,
     ),
   );
 
@@ -1288,8 +1288,8 @@ function valueOuField(base: string, field: string): string {
  * `NdsDocsCompositions` faria isto sozinho, mas não repassa `language` para o
  * `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function withQuandoUsar(descricao: string, quandoUsar: string): string {
-  return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
+function withQuandoUsar(description: string, quandoUsar: string): string {
+  return `${description}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
 /**

@@ -66,88 +66,88 @@ const estados = [
   });
 
   it('os controls da raiz viram atributos da raiz', () => {
-    const saida = selectSource('', { args: { defaultValue: 'rj', name: 'estado' } });
-    expect(saida).toContain('<Select default-value="rj" name="estado">');
+    const output = selectSource('', { args: { defaultValue: 'rj', name: 'estado' } });
+    expect(output).toContain('<Select default-value="rj" name="estado">');
   });
 
   it('o bloqueio chega à raiz E ao gatilho', () => {
     // A raiz impede a abertura; é o `disabled` NATIVO do gatilho que o tira do
     // percurso do Tab e cancela o clique no navegador.
-    const saida = selectSource('', { args: { disabled: true } });
-    expect(saida).toContain('<Select disabled>');
-    expect(saida).toContain('<SelectTrigger aria-label="Selecionar estado" class="nds-w-xs" disabled>');
+    const output = selectSource('', { args: { disabled: true } });
+    expect(output).toContain('<Select disabled>');
+    expect(output).toContain('<SelectTrigger aria-label="Selecionar estado" class="nds-w-xs" disabled>');
   });
 
   it('não escreve os padrões do componente', () => {
-    const saida = selectSource('', { args: { defaultValue: '', disabled: false } });
-    expect(saida).not.toContain('default-value');
-    expect(saida).not.toContain('disabled');
+    const output = selectSource('', { args: { defaultValue: '', disabled: false } });
+    expect(output).not.toContain('default-value');
+    expect(output).not.toContain('disabled');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     // `onUpdate:modelValue` chega como espião; qualquer leitura de arg que caia
     // num handler tem de sair vazia em vez de despejar o corpo do mock.
-    const saida = selectSource('', {
+    const output = selectSource('', {
       args: { name: (() => {}) as never, defaultValue: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('name=');
-    expect(saida).not.toContain('default-value');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('name=');
+    expect(output).not.toContain('default-value');
   });
 
   // O `:key="String(args.defaultValue)"` e o `<div style="contain: layout">`
   // existem para o canvas do Storybook, não para quem consome.
   it('não leva o enquadramento da story', () => {
-    for (const saida of ALL) {
-      expect(saida).not.toContain(':key="String');
-      expect(saida).not.toContain('contain: layout');
-      expect(saida).not.toContain('min-height');
-      expect(saida).not.toContain('style=');
+    for (const output of ALL) {
+      expect(output).not.toContain(':key="String');
+      expect(output).not.toContain('contain: layout');
+      expect(output).not.toContain('min-height');
+      expect(output).not.toContain('style=');
     }
   });
 
   it('o campo sempre se nomeia — combobox não tira nome do próprio conteúdo', () => {
-    for (const saida of ALL) {
-      expect(saida).toMatch(/<SelectTrigger[^>]*aria-(label|labelledby)=/);
+    for (const output of ALL) {
+      expect(output).toMatch(/<SelectTrigger[^>]*aria-(label|labelledby)=/);
     }
   });
 
   it('o gatilho recebe largura — ele nasce com fit-content e sanfonaria', () => {
-    for (const saida of ALL) {
-      expect(saida).toMatch(/<SelectTrigger[^>]*class="nds-w-(xs|full)"/);
+    for (const output of ALL) {
+      expect(output).toMatch(/<SelectTrigger[^>]*class="nds-w-(xs|full)"/);
     }
   });
 
   it('portal, listbox e teclado vêm do componente e não se escrevem', () => {
-    const saida = selectSource();
-    expect(saida).not.toContain('role="listbox"');
-    expect(saida).not.toContain('SelectPortal');
-    expect(saida).not.toContain('SelectViewport');
+    const output = selectSource();
+    expect(output).not.toContain('role="listbox"');
+    expect(output).not.toContain('SelectPortal');
+    expect(output).not.toContain('SelectViewport');
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('a lista plana não tem grupo nem cabeçalho', () => {
-    const saida = selectListPlanaSource();
-    expect(saida).not.toContain('SelectGroup');
-    expect(saida).not.toContain('SelectLabel');
-    expect([...saida.matchAll(/<SelectItem /g)]).toHaveLength(4);
+    const output = selectListPlanaSource();
+    expect(output).not.toContain('SelectGroup');
+    expect(output).not.toContain('SelectLabel');
+    expect([...output.matchAll(/<SelectItem /g)]).toHaveLength(4);
   });
 
   it('a agrupada importa grupo e cabeçalho, e nomeia cada categoria', () => {
-    const saida = selectAgrupadoSource();
-    expect(saida).toContain('  SelectGroup,');
-    expect(saida).toContain('  SelectLabel,');
-    expect(saida).toContain('<SelectLabel>Sudeste</SelectLabel>');
-    expect(saida).toContain('<SelectLabel>Sul</SelectLabel>');
-    expect([...saida.matchAll(/<SelectGroup>/g)]).toHaveLength(2);
+    const output = selectAgrupadoSource();
+    expect(output).toContain('  SelectGroup,');
+    expect(output).toContain('  SelectLabel,');
+    expect(output).toContain('<SelectLabel>Sudeste</SelectLabel>');
+    expect(output).toContain('<SelectLabel>Sul</SelectLabel>');
+    expect([...output.matchAll(/<SelectGroup>/g)]).toHaveLength(2);
   });
 
   it('o ícone da opção é decorativo e não ecoa no nome acessível', () => {
-    const saida = selectWithIconSource();
-    expect(saida).toContain(`import { Globe } from 'lucide-vue-next'`);
-    expect(saida).toContain('<Globe class="nds-size-4" aria-hidden="true" />');
-    expect(saida).toContain('<span>Português (BR)</span>');
+    const output = selectWithIconSource();
+    expect(output).toContain(`import { Globe } from 'lucide-vue-next'`);
+    expect(output).toContain('<Globe class="nds-size-4" aria-hidden="true" />');
+    expect(output).toContain('<span>Português (BR)</span>');
   });
 });
 
@@ -157,68 +157,68 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o preenchido resolve o rótulo antes da primeira abertura', () => {
-    const saida = selectPreenchidoSource();
-    expect(saida).toContain('<Select default-value="rj">');
+    const output = selectPreenchidoSource();
+    expect(output).toContain('<Select default-value="rj">');
     // Os rótulos só existem com a lista montada, e ela desmonta ao fechar: sem
     // o slot, o campo mostraria o valor cru.
-    expect(saida).toContain('<template #default="{ modelValue }">');
-    expect(saida).toContain('const rotulos = Object.fromEntries(');
+    expect(output).toContain('<template #default="{ modelValue }">');
+    expect(output).toContain('const rotulos = Object.fromEntries(');
   });
 
   it('o inválido marca o gatilho e traz o aviso em texto', () => {
-    const saida = selectInvalidoSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('<p class="nds-text-body nds-text-destructive">');
+    const output = selectInvalidoSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('<p class="nds-text-body nds-text-destructive">');
     // A folha é que pinta a borda de perigo — o snippet não pinta nada.
-    expect(saida).not.toContain('nds-border-destructive');
+    expect(output).not.toContain('nds-border-destructive');
   });
 
   it('o compacto compara os dois tamanhos, e a densidade mora no gatilho', () => {
-    const saida = selectCompactoSource();
-    expect([...saida.matchAll(/<Select>/g)]).toHaveLength(2);
-    expect(saida).toContain('<SelectTrigger aria-label="Selecionar cidade" size="sm"');
+    const output = selectCompactoSource();
+    expect([...output.matchAll(/<Select>/g)]).toHaveLength(2);
+    expect(output).toContain('<SelectTrigger aria-label="Selecionar cidade" size="sm"');
     // O padrão não se escreve: só o campo compacto declara o tamanho.
-    expect([...saida.matchAll(/size="/g)]).toHaveLength(1);
+    expect([...output.matchAll(/size="/g)]).toHaveLength(1);
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o rótulo externo fecha o par nos dois sentidos', () => {
-    const saida = selectWithLabelSource();
-    expect(saida).toContain('<Label id="estado-rotulo" for="estado">Estado</Label>');
-    expect(saida).toContain('id="estado"');
-    expect(saida).toContain('aria-labelledby="estado-rotulo"');
+    const output = selectWithLabelSource();
+    expect(output).toContain('<Label id="estado-rotulo" for="estado">Estado</Label>');
+    expect(output).toContain('id="estado"');
+    expect(output).toContain('aria-labelledby="estado-rotulo"');
   });
 
   it('o controlado declara a metade que entra e a que sai', () => {
-    const saida = selectControlledSource();
-    expect(saida).toContain(`import { ref } from 'vue'`);
-    expect(saida).toContain(`const estado = ref('')`);
-    expect(saida).toContain(':model-value="estado"');
-    expect(saida).toContain('@update:model-value="(valor) => (estado = valor)"');
+    const output = selectControlledSource();
+    expect(output).toContain(`import { ref } from 'vue'`);
+    expect(output).toContain(`const estado = ref('')`);
+    expect(output).toContain(':model-value="estado"');
+    expect(output).toContain('@update:model-value="(valor) => (estado = valor)"');
   });
 
   it('no formulário o nome mora na raiz — é ele que leva o valor no envio', () => {
-    const saida = formSelectSource();
-    expect(saida).toContain('<Select name="estado">');
-    expect(saida).toContain('@submit.prevent');
-    expect(saida).toContain('<Button type="submit">Enviar</Button>');
+    const output = formSelectSource();
+    expect(output).toContain('<Select name="estado">');
+    expect(output).toContain('@submit.prevent');
+    expect(output).toContain('<Button type="submit">Enviar</Button>');
   });
 
   it('o separador entra entre grupos, e não dentro de um', () => {
-    const saida = selectWithSeparatorSource();
-    expect(saida).toContain('</SelectGroup>\n      <SelectSeparator />\n      <SelectGroup>');
-    expect(saida).toContain('  SelectSeparator,');
+    const output = selectWithSeparatorSource();
+    expect(output).toContain('</SelectGroup>\n      <SelectSeparator />\n      <SelectGroup>');
+    expect(output).toContain('  SelectSeparator,');
   });
 });
 
 describe('o andaime das stories não entra no snippet', () => {
   it('nenhuma transform cita a sonda nem os utilitários de portal', () => {
-    for (const saida of ALL) {
-      expect(saida).not.toContain('select-probe');
-      expect(saida).not.toContain('ESTADOS_POR_VALOR');
-      expect(saida).not.toContain('waitForPortal');
-      expect(saida).not.toContain('sharedComponents');
+    for (const output of ALL) {
+      expect(output).not.toContain('select-probe');
+      expect(output).not.toContain('ESTADOS_POR_VALOR');
+      expect(output).not.toContain('waitForPortal');
+      expect(output).not.toContain('sharedComponents');
     }
   });
 });

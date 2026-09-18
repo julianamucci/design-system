@@ -68,41 +68,41 @@ describe('sliderSource', () => {
 
 describe('transforms das stories de variação e composição', () => {
   it('a variante única tem uma alça só, e mesmo assim o valor é lista', () => {
-    const saida = sliderUnicoSource();
-    expect(saida).toContain('$state([50])');
-    expect(saida.match(/<Slider/g)).toHaveLength(1);
+    const output = sliderUnicoSource();
+    expect(output).toContain('$state([50])');
+    expect(output.match(/<Slider/g)).toHaveLength(1);
   });
 
   it('a faixa nomeia cada alça — sem isso as duas seriam anunciadas igual', () => {
-    const saida = sliderRangeSource();
-    expect(saida).toContain('$state([20, 80])');
-    expect(saida).toContain('thumbAriaLabels={["Preço mínimo", "Preço máximo"]}');
+    const output = sliderRangeSource();
+    expect(output).toContain('$state([20, 80])');
+    expect(output).toContain('thumbAriaLabels={["Preço mínimo", "Preço máximo"]}');
   });
 
   it('a variante vertical declara a orientação e a linha que a centra', () => {
-    const saida = sliderVerticalSource();
-    expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('data-justify="center"');
+    const output = sliderVerticalSource();
+    expect(output).toContain('orientation="vertical"');
+    expect(output).toContain('data-justify="center"');
   });
 
   it('a faixa de preço carrega o passo grosso e a escala maior', () => {
-    const saida = precoSliderRangeSource();
-    expect(saida).toContain('max={500}');
-    expect(saida).toContain('step={10}');
-    expect(saida).toContain('$state([100, 400])');
+    const output = precoSliderRangeSource();
+    expect(output).toContain('max={500}');
+    expect(output).toContain('step={10}');
+    expect(output).toContain('$state([100, 400])');
   });
 
   it('no formulário cada faixa tem nome acessível próprio', () => {
-    const saida = formSliderSource();
-    expect(saida).toContain('<form');
-    expect(saida).toContain('aria-label="Brilho"');
-    expect(saida).toContain('aria-label="Opacidade"');
-    expect(saida.match(/<Slider/g)).toHaveLength(2);
+    const output = formSliderSource();
+    expect(output).toContain('<form');
+    expect(output).toContain('aria-label="Brilho"');
+    expect(output).toContain('aria-label="Opacidade"');
+    expect(output.match(/<Slider/g)).toHaveLength(2);
   });
 
   it('a escala curta anda de 1 a 5', () => {
-    const saida = sliderEscalaCurtaSource();
-    expect(saida).toContain('min={1}');
-    expect(saida).toContain('max={5}');
+    const output = sliderEscalaCurtaSource();
+    expect(output).toContain('min={1}');
+    expect(output).toContain('max={5}');
   });
 });

@@ -117,10 +117,10 @@ export function clearPortal(): void {
  * Moldura da demonstração: centraliza o gatilho e reserva altura para o balão
  * abrir sem empurrar o resto da página.
  */
-export function wrap(child: HTMLElement, alturaMinima = '180px'): HTMLElement {
+export function wrap(child: HTMLElement, minHeight = '180px'): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.style.minHeight = alturaMinima;
+  wrapper.style.minHeight = minHeight;
   wrapper.className = 'nds-cluster nds-w-full';
   wrapper.dataset.justify = 'center';
   wrapper.appendChild(child);

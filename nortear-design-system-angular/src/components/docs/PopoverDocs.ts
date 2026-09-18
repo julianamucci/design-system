@@ -471,10 +471,10 @@ const COMPOSITION_CODE = {
           </div>
 
           <div class="nds-stack" data-spacing="sm">
-            @for (opcao of opcoesFiltro(); track opcao.id) {
+            @for (option of opcoesFiltro(); track option.id) {
               <div class="nds-cluster" data-spacing="sm">
-                <button ndsCheckbox [id]="opcao.id"></button>
-                <label ndsLabel [attr.for]="opcao.id">{{ opcao.label }}</label>
+                <button ndsCheckbox [id]="option.id"></button>
+                <label ndsLabel [attr.for]="option.id">{{ option.label }}</label>
               </div>
             }
           </div>

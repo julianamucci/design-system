@@ -185,13 +185,13 @@ function block(type: BlockType, parcial: Partial<FoundationBlock> = {}): Foundat
 function codeResolveVariants(no: unknown): unknown {
   if (Array.isArray(no)) return no.map(codeResolveVariants);
   if (!ehObjeto(no)) return no;
-  const saida: Registro = {};
+  const output: Registro = {};
   for (const [key, value] of Object.entries(no)) {
-    saida[key] = isCodeVariantNode(key, value)
+    output[key] = isCodeVariantNode(key, value)
       ? (resolveCodeVariant(value, STACK) ?? '')
       : codeResolveVariants(value);
   }
-  return saida;
+  return output;
 }
 
 // Chaves candidatas a título e a corpo de um cartão, na ordem de preferência.
@@ -396,8 +396,8 @@ const METADADO_KEYS = new Set([
             <table ndsTable>
               <thead ndsTableHeader>
                 <tr ndsTableRow>
-                  @for (coluna of b.colunas; track $index) {
-                    <th ndsTableHead>{{ coluna }}</th>
+                  @for (column of b.colunas; track $index) {
+                    <th ndsTableHead>{{ column }}</th>
                   }
                 </tr>
               </thead>
@@ -489,7 +489,7 @@ const METADADO_KEYS = new Set([
 
           <p
             class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
-            [innerHTML]="DOMPurify.sanitize(descricao())"
+            [innerHTML]="DOMPurify.sanitize(description())"
           ></p>
         </header>
 
@@ -598,7 +598,7 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
   });
 
   protected readonly title = computed(() => text(this.dicionario()['title']));
-  protected readonly descricao = computed(() => text(this.dicionario()['description']));
+  protected readonly description = computed(() => text(this.dicionario()['description']));
   protected readonly categoria = computed(() => text(this.dicionario()['category']));
   protected readonly type = computed(() => text(this.dicionario()['type']));
 

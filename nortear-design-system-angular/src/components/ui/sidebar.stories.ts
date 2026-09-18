@@ -145,10 +145,10 @@ export const Playground: Story = {
       // O ícone reforça o rótulo, nunca o substitui. Sem `aria-hidden` o item
       // "Painel" viraria "gráfico Painel" — ou pior, só "gráfico" se o ícone
       // tivesse um title.
-      const icone = canvasElement.querySelector<SVGElement>(
+      const icon = canvasElement.querySelector<SVGElement>(
         '[data-slot="sidebar-menu-button"] svg',
       )!;
-      await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      await expect(icon.getAttribute('aria-hidden')).toBe('true');
     });
 
     await step('O item ativo é anunciado como página atual', async () => {

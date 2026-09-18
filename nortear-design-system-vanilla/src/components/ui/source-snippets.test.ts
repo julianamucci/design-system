@@ -59,20 +59,20 @@ const slugDoCaminho = (caminho: string) => caminho.replace(/^\.\//, '').replace(
 
 /** O que um módulo desta pasta exporta, lido da declaração. */
 function exportadosPor(slug: string): Set<string> | null {
-  const texto = fontes[`./${slug}.ts`];
-  if (texto === undefined) return null;
+  const text = fontes[`./${slug}.ts`];
+  if (text === undefined) return null;
 
   const nomes = new Set<string>();
-  for (const m of texto.matchAll(
+  for (const m of text.matchAll(
     /export\s+(?:declare\s+)?(?:abstract\s+)?(?:async\s+)?(?:const|let|var|class|function|type|interface|enum)\s+([A-Za-z_$][\w$]*)/g,
   )) {
     nomes.add(m[1]);
   }
   // `export { A, B as C }` — o nome que vale é o de fora.
-  for (const m of texto.matchAll(/export\s*\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/export\s*\{([^}]*)\}/g)) {
     for (const parte of m[1].split(',')) {
-      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
-      if (nome) nomes.add(nome.replace(/^type\s+/, ''));
+      const name = parte.trim().split(/\s+as\s+/).pop()?.trim();
+      if (name) nomes.add(name.replace(/^type\s+/, ''));
     }
   }
   return nomes;
@@ -89,8 +89,8 @@ function exportadosPor(slug: string): Set<string> | null {
 const publicadosPeloDesignSystem = new Set<string>();
 for (const caminho of Object.keys(fontes)) {
   if (/\.(source|test|stories|fixtures|play-helpers)\.ts$/.test(caminho)) continue;
-  for (const nome of exportadosPor(caminho.replace(/^\.\//, '').replace(/\.ts$/, '')) ?? []) {
-    publicadosPeloDesignSystem.add(nome);
+  for (const name of exportadosPor(caminho.replace(/^\.\//, '').replace(/\.ts$/, '')) ?? []) {
+    publicadosPeloDesignSystem.add(name);
   }
 }
 
@@ -120,8 +120,8 @@ const SCAFFOLD = /\b[A-Z][A-Za-z0-9]*Story\b|\bwrapper\b|\bcaso\b/g;
 const OTHER_STACK = /\b(React|Vue|Svelte|Angular)\b|reka-ui|base-ui|bits-ui|radix/i;
 
 /** Apaga literais de texto, preservando o comprimento do resto da linha. */
-const semLiterais = (texto: string) =>
-  texto.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
+const semLiterais = (text: string) =>
+  text.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
 
 /**
  * `undefined` que VAZOU, e não `undefined` escrito de propósito.
@@ -186,12 +186,12 @@ const CONVENCAO = /(?:Source|Snippet)(?:[A-Z][\w$]*)?$/;
  * fora faria a checagem PULAR o snippet em vez de verificá-lo — o modo de
  * falhar que este repositório já pagou caro duas vezes.
  */
-function importesDoDesignSystem(texto: string): Array<{ slug: string; nomes: string[] }> {
-  const saida: Array<{ slug: string; nomes: string[] }> = [];
-  for (const m of texto.matchAll(
+function importesDoDesignSystem(text: string): Array<{ slug: string; nomes: string[] }> {
+  const output: Array<{ slug: string; nomes: string[] }> = [];
+  for (const m of text.matchAll(
     /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*'@\/components\/ui\/([a-z0-9-]+)'/g,
   )) {
-    saida.push({
+    output.push({
       slug: m[2],
       nomes: m[1]
         .split(',')
@@ -199,37 +199,37 @@ function importesDoDesignSystem(texto: string): Array<{ slug: string; nomes: str
         .filter(Boolean),
     });
   }
-  return saida;
+  return output;
 }
 
 /** Todo nome que o snippet liga por `import`, venha de onde vier. */
-function importadosNo(texto: string): Set<string> {
+function importadosNo(text: string): Set<string> {
   const nomes = new Set<string>();
-  for (const m of texto.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s*from/g)) {
+  for (const m of text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s*from/g)) {
     for (const parte of m[1].split(',')) {
-      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
-      if (nome) nomes.add(nome);
+      const name = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
+      if (name) nomes.add(name);
     }
   }
   // `import DOMPurify from 'dompurify'` e `import * as x from '…'`.
-  for (const m of texto.matchAll(/import\s+(?:\*\s+as\s+)?([A-Za-z_$][\w$]*)\s*(?:,|from)/g)) {
+  for (const m of text.matchAll(/import\s+(?:\*\s+as\s+)?([A-Za-z_$][\w$]*)\s*(?:,|from)/g)) {
     nomes.add(m[1]);
   }
   return nomes;
 }
 
 /** Nomes que o próprio snippet declara — função, const, let, class. */
-function declaradosNo(texto: string): Set<string> {
+function declaradosNo(text: string): Set<string> {
   const nomes = new Set<string>();
-  for (const m of texto.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z_$][\w$]*)/g)) {
+  for (const m of text.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z_$][\w$]*)/g)) {
     nomes.add(m[1]);
   }
   return nomes;
 }
 
 /** Especificadores de módulo citados pelo snippet. */
-function modulosCitadosEm(texto: string): string[] {
-  return [...texto.matchAll(/from\s+'([^']+)'/g)].map((m) => m[1]);
+function modulosCitadosEm(text: string): string[] {
+  return [...text.matchAll(/from\s+'([^']+)'/g)].map((m) => m[1]);
 }
 
 /**
@@ -240,15 +240,15 @@ function modulosCitadosEm(texto: string): string[] {
  * pasta publica — o que ninguém aqui exporta não é promessa que este arquivo
  * possa cobrar.
  */
-function chamadasSemOrigem(texto: string): string[] {
-  const importados = importadosNo(texto);
-  const locais = declaradosNo(texto);
+function chamadasSemOrigem(text: string): string[] {
+  const importados = importadosNo(text);
+  const locais = declaradosNo(text);
   const soltas = new Set<string>();
-  for (const m of texto.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)\s*\(/g)) {
-    const nome = m[1];
-    if (importados.has(nome) || locais.has(nome)) continue;
-    if (!publicadosPeloDesignSystem.has(nome)) continue;
-    soltas.add(nome);
+  for (const m of text.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)\s*\(/g)) {
+    const name = m[1];
+    if (importados.has(name) || locais.has(name)) continue;
+    if (!publicadosPeloDesignSystem.has(name)) continue;
+    soltas.add(name);
   }
   return [...soltas].sort();
 }
@@ -282,7 +282,7 @@ const GLOBAIS = new Set([
  * resolve os dois casos, e é por isso que `cru` existe em vez de um regex por
  * forma.
  */
-function escopoDo(texto: string): Set<string> {
+function escopoDo(text: string): Set<string> {
   const nomes = new Set<string>();
   const cru = (lista: string) => {
     for (const parte of lista.split(',')) {
@@ -293,24 +293,24 @@ function escopoDo(texto: string): Set<string> {
       if (id) nomes.add(id);
     }
   };
-  for (const m of texto.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z_$][\w$]*)/g)) {
+  for (const m of text.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z_$][\w$]*)/g)) {
     nomes.add(m[1]);
   }
   // `const { a, b: c } = …` e `const [a, b] = …`
-  for (const m of texto.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]/g)) cru(m[1]);
+  for (const m of text.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]/g)) cru(m[1]);
   // Parâmetro de arrow, com ou sem desestruturação.
-  for (const m of texto.matchAll(/\(\s*[{[]?([^)]*?)[}\]]?\s*\)\s*=>/g)) cru(m[1]);
-  for (const m of texto.matchAll(/(?:^|[^\w$.)])([A-Za-z_$][\w$]*)\s*=>/gm)) nomes.add(m[1]);
+  for (const m of text.matchAll(/\(\s*[{[]?([^)]*?)[}\]]?\s*\)\s*=>/g)) cru(m[1]);
+  for (const m of text.matchAll(/(?:^|[^\w$.)])([A-Za-z_$][\w$]*)\s*=>/gm)) nomes.add(m[1]);
   // Parâmetro de função nomeada ou anônima.
-  for (const m of texto.matchAll(/function\s*[A-Za-z_$\w]*\s*\(\s*[{[]?([^)]*?)[}\]]?\s*\)/g)) {
+  for (const m of text.matchAll(/function\s*[A-Za-z_$\w]*\s*\(\s*[{[]?([^)]*?)[}\]]?\s*\)/g)) {
     cru(m[1]);
   }
   // `for (const x of …)` e `for (const [k, v] of …)`
-  for (const m of texto.matchAll(/for\s*\(\s*(?:const|let|var)\s*[{[]?([^)]*?)[}\]]?\s+(?:of|in)\s/g)) {
+  for (const m of text.matchAll(/for\s*\(\s*(?:const|let|var)\s*[{[]?([^)]*?)[}\]]?\s+(?:of|in)\s/g)) {
     cru(m[1]);
   }
-  for (const m of texto.matchAll(/catch\s*\(\s*([A-Za-z_$][\w$]*)/g)) nomes.add(m[1]);
-  for (const nome of importadosNo(texto)) nomes.add(nome);
+  for (const m of text.matchAll(/catch\s*\(\s*([A-Za-z_$][\w$]*)/g)) nomes.add(m[1]);
+  for (const name of importadosNo(text)) nomes.add(name);
   return nomes;
 }
 
@@ -320,10 +320,10 @@ function escopoDo(texto: string): Set<string> {
  * Só a raiz é conferida: em `${usuario.nome}` quem precisa existir é `usuario`,
  * e o que vem depois do ponto é do objeto, não do escopo.
  */
-function interpolacoesSemOrigem(texto: string): string[] {
-  const escopo = escopoDo(texto);
+function interpolacoesSemOrigem(text: string): string[] {
+  const escopo = escopoDo(text);
   const soltas = new Set<string>();
-  for (const m of texto.matchAll(/\$\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/\$\{([^}]*)\}/g)) {
     const raiz = /^\s*([A-Za-z_$][\w$]*)/.exec(m[1])?.[1];
     if (!raiz || escopo.has(raiz) || GLOBAIS.has(raiz)) continue;
     soltas.add(raiz);
@@ -357,7 +357,7 @@ function semComentarios(bruto: string): string {
  * `(item: ComboboxItem, query: string) =>`. Com `escopoDo`, esses parâmetros
  * ficavam de fora e viravam acusação.
  */
-function ligadosNoTexto(texto: string): Set<string> {
+function ligadosNoTexto(text: string): Set<string> {
   const nomes = new Set<string>();
   const cru = (lista: string) => {
     for (const parte of lista.split(',')) {
@@ -367,26 +367,26 @@ function ligadosNoTexto(texto: string): Set<string> {
       }
     }
   };
-  for (const m of texto.matchAll(
+  for (const m of text.matchAll(
     /(?:function|const|let|var|class|type|interface|enum)\s+([A-Za-z_$][\w$]*)/g,
   )) {
     nomes.add(m[1]);
   }
-  for (const m of texto.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]/g)) cru(m[1]);
-  for (const m of texto.matchAll(/\(([^()]*)\)\s*(?::[^=]*)?=>/g)) cru(m[1]);
-  for (const m of texto.matchAll(/(?:^|[^\w$.)])([A-Za-z_$][\w$]*)\s*=>/gm)) nomes.add(m[1]);
-  for (const m of texto.matchAll(/function\s*[A-Za-z_$\w]*\s*\(([\s\S]*?)\)\s*[:{]/g)) cru(m[1]);
-  for (const m of texto.matchAll(/for\s*\(\s*(?:const|let|var)\s*[{[]?([^)]*?)[}\]]?\s+(?:of|in)\s/g)) {
+  for (const m of text.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]/g)) cru(m[1]);
+  for (const m of text.matchAll(/\(([^()]*)\)\s*(?::[^=]*)?=>/g)) cru(m[1]);
+  for (const m of text.matchAll(/(?:^|[^\w$.)])([A-Za-z_$][\w$]*)\s*=>/gm)) nomes.add(m[1]);
+  for (const m of text.matchAll(/function\s*[A-Za-z_$\w]*\s*\(([\s\S]*?)\)\s*[:{]/g)) cru(m[1]);
+  for (const m of text.matchAll(/for\s*\(\s*(?:const|let|var)\s*[{[]?([^)]*?)[}\]]?\s+(?:of|in)\s/g)) {
     cru(m[1]);
   }
-  for (const m of texto.matchAll(/catch\s*\(\s*([A-Za-z_$][\w$]*)/g)) nomes.add(m[1]);
-  for (const nome of importadosNo(texto)) nomes.add(nome);
+  for (const m of text.matchAll(/catch\s*\(\s*([A-Za-z_$][\w$]*)/g)) nomes.add(m[1]);
+  for (const name of importadosNo(text)) nomes.add(name);
   // `importing('slug', 'A', 'B')` — a linha de import que o snippet PUBLICA não
   // existe como `import` no texto; ela é montada, e os nomes chegam citados.
-  for (const m of texto.matchAll(/importing\w*\s*\(([\s\S]*?)\)/g)) {
+  for (const m of text.matchAll(/importing\w*\s*\(([\s\S]*?)\)/g)) {
     for (const parte of m[1].split(',').slice(1)) {
-      const nome = /'([A-Za-z_$][\w$]*)'/.exec(parte)?.[1];
-      if (nome) nomes.add(nome);
+      const name = /'([A-Za-z_$][\w$]*)'/.exec(parte)?.[1];
+      if (name) nomes.add(name);
     }
   }
   return nomes;
@@ -443,17 +443,17 @@ function lacosSemOrigemNoTexto(bruto: string): string[] {
   // `${…}` sai DEPOIS de colher o escopo e antes de procurar laço: o que está
   // lá dentro é do construtor, e contá-lo inventaria nome faltando em todo
   // módulo que interpola.
-  const texto = semCom.replace(/\$\{[^}]*\}/g, '');
+  const text = semCom.replace(/\$\{[^}]*\}/g, '');
 
   const soltos = new Set<string>();
-  const registra = (nome: string) => {
-    if (ligados.has(nome) || GLOBAIS.has(nome)) return;
-    soltos.add(nome);
+  const registra = (name: string) => {
+    if (ligados.has(name) || GLOBAIS.has(name)) return;
+    soltos.add(name);
   };
-  for (const m of texto.matchAll(/for\s*\(\s*(?:const|let|var)\s+[^)]*?\s+of\s+([A-Za-z_$][\w$]*)/g)) {
+  for (const m of text.matchAll(/for\s*\(\s*(?:const|let|var)\s+[^)]*?\s+of\s+([A-Za-z_$][\w$]*)/g)) {
     registra(m[1]);
   }
-  for (const m of texto.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)\s*\.\s*([A-Za-z_$][\w$]*)\s*\(/g)) {
+  for (const m of text.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)\s*\.\s*([A-Za-z_$][\w$]*)\s*\(/g)) {
     if (METODOS_DE_LACO.test(m[2])) registra(m[1]);
   }
   return [...soltos].sort();
@@ -483,8 +483,8 @@ const CONSTANTE = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/;
  *     snippet pode trazer CSS (o `activity-graph` ensina o vão da casa numa
  *     folha), e ali as palavras do token não são identificador de JavaScript.
  */
-function semTextoNemFolha(texto: string): string {
-  let corpo = semComentarios(texto);
+function semTextoNemFolha(text: string): string {
+  let corpo = semComentarios(text);
   corpo = corpo.replace(/`(?:[^`\\]|\\.)*`/g, "''");
   corpo = corpo.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
   corpo = corpo.replace(/\/(?![/*])(?:\[[^\]\n]*\]|\\.|[^/\\\n[])+\/[dgimsuvy]*/g, '0');
@@ -541,19 +541,19 @@ function semTextoNemFolha(texto: string): string {
  *  · nome em minúscula, pelo motivo medido acima;
  *  · o que estiver depois de um ponto: `document.createElement` é do navegador.
  */
-function referenciasSemOrigem(texto: string): string[] {
+function referenciasSemOrigem(text: string): string[] {
   // O binder de TEXTO, e não o do snippet: `escopoDo` resolve `a: b` pegando o
   // lado direito do `:`, e o snippet desta stack nem sempre é JavaScript sem
   // tipos — `(text: string, href: string) =>` no breadcrumb, `(item:
   // ComboboxItem, query: string) =>` no filtro do combobox. Medido: com
   // `escopoDo`, esses parâmetros ficavam de fora e viravam acusação.
-  const ligados = ligadosNoTexto(texto);
+  const ligados = ligadosNoTexto(text);
   const soltas = new Set<string>();
-  for (const m of semTextoNemFolha(texto).matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
-    const nome = m[1];
-    if (!CONSTANTE.test(nome) && !publicadosPeloDesignSystem.has(nome)) continue;
-    if (ligados.has(nome) || GLOBAIS.has(nome)) continue;
-    soltas.add(nome);
+  for (const m of semTextoNemFolha(text).matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
+    const name = m[1];
+    if (!CONSTANTE.test(name) && !publicadosPeloDesignSystem.has(name)) continue;
+    if (ligados.has(name) || GLOBAIS.has(name)) continue;
+    soltas.add(name);
   }
   return [...soltas].sort();
 }
@@ -636,9 +636,9 @@ const ARGUMENTOS: Record<string, readonly unknown[]> = {
  */
 function snippetDe(name: string, fn: Chamavel): string {
   const args = (ARGUMENTOS[name] ?? [undefined, {}]) as never[];
-  const primeiro = fn(...args);
-  const saida = typeof primeiro === 'function' ? (primeiro as Chamavel)(undefined as never, {} as never) : primeiro;
-  return saida as string;
+  const first = fn(...args);
+  const output = typeof first === 'function' ? (first as Chamavel)(undefined as never, {} as never) : first;
+  return output as string;
 }
 
 describe('transforms do painel Code', () => {
@@ -696,9 +696,9 @@ describe('transforms do painel Code', () => {
 
       for (const [name, fn] of exportadas) {
         it(`${name} devolve um snippet honesto`, () => {
-          let saida: unknown;
+          let output: unknown;
           try {
-            saida = snippetDe(name, fn);
+            output = snippetDe(name, fn);
           } catch (erro) {
             throw new Error(
               `${name} não pôde ser chamado: ${(erro as Error).message}. ` +
@@ -707,44 +707,44 @@ describe('transforms do painel Code', () => {
               { cause: erro },
             );
           }
-          expect(typeof saida, `${name} deve devolver string`).toBe('string');
-          const texto = saida as string;
-          expect(texto.trim().length).toBeGreaterThan(0);
+          expect(typeof output, `${name} deve devolver string`).toBe('string');
+          const text = output as string;
+          expect(text.trim().length).toBeGreaterThan(0);
 
           // O andaime da story não é parte do design system — menos a palavra
           // que o próprio componente usa, que ali é API.
-          const andaimes = [...texto.matchAll(SCAFFOLD)]
+          const andaimes = [...text.matchAll(SCAFFOLD)]
             .map((achado) => achado[0])
             .filter((palavra) => !new RegExp(`\\b${palavra}\\b`).test(fonteDoComponente));
           expect(andaimes, `${name}: nome de andaime de story no snippet publicado`).toEqual([]);
 
           // Docs de cada stack são consumidas isoladamente.
-          const codigo = semLiterais(texto);
+          const codigo = semLiterais(text);
           expect(codigo, `${name}: nome de outra stack fora de literal`).not.toMatch(OTHER_STACK);
-          for (const modulo of modulosCitadosEm(texto)) {
+          for (const modulo of modulosCitadosEm(text)) {
             expect(modulo, `${name}: import de outra stack`).not.toMatch(OTHER_STACK);
           }
 
           // Sobra de template literal mal fechado, ou de arg que não veio.
-          expect(texto, `${name}: undefined dentro de um literal de texto`).not.toMatch(
+          expect(text, `${name}: undefined dentro de um literal de texto`).not.toMatch(
             UNDEFINED_EM_TEXTO,
           );
-          expect(texto, `${name}: opção com valor undefined`).not.toMatch(UNDEFINED_EM_OPCAO);
-          expect(texto).not.toContain('[object Object]');
-          expect(texto).not.toContain('NaN');
+          expect(text, `${name}: opção com valor undefined`).not.toMatch(UNDEFINED_EM_OPCAO);
+          expect(text).not.toContain('[object Object]');
+          expect(text).not.toContain('NaN');
         });
 
         it(`${name} importa só o que o componente exporta`, () => {
-          const texto = snippetDe(name, fn);
+          const text = snippetDe(name, fn);
           const faltando: string[] = [];
-          for (const { slug: alvo, nomes } of importesDoDesignSystem(texto)) {
+          for (const { slug: alvo, nomes } of importesDoDesignSystem(text)) {
             const exportados = exportadosPor(alvo);
             if (!exportados) {
               faltando.push(`o módulo ${alvo}`);
               continue;
             }
-            for (const nome of nomes) {
-              if (!exportados.has(nome)) faltando.push(`${nome} (de ${alvo})`);
+            for (const name of nomes) {
+              if (!exportados.has(name)) faltando.push(`${name} (de ${alvo})`);
             }
           }
           expect(
@@ -754,8 +754,8 @@ describe('transforms do painel Code', () => {
         });
 
         it(`${name} chama só fábrica que importou`, () => {
-          const texto = snippetDe(name, fn);
-          const soltas = chamadasSemOrigem(texto);
+          const text = snippetDe(name, fn);
+          const soltas = chamadasSemOrigem(text);
           expect(
             soltas,
             `${name}: o snippet chama ${soltas.join(', ')} sem importar — ` +
@@ -764,8 +764,8 @@ describe('transforms do painel Code', () => {
         });
 
         it(`${name} referencia só nome que o snippet liga`, () => {
-          const texto = snippetDe(name, fn);
-          const soltas = referenciasSemOrigem(texto);
+          const text = snippetDe(name, fn);
+          const soltas = referenciasSemOrigem(text);
           expect(
             soltas,
             `${name}: o snippet referencia ${soltas.join(', ')} sem ligar — ` +
@@ -776,8 +776,8 @@ describe('transforms do painel Code', () => {
         });
 
         it(`${name} interpola só nome que o snippet liga`, () => {
-          const texto = snippetDe(name, fn);
-          const soltas = interpolacoesSemOrigem(texto);
+          const text = snippetDe(name, fn);
+          const soltas = interpolacoesSemOrigem(text);
           expect(
             soltas,
             `${name}: o snippet interpola ${soltas.join(', ')}, que ele não liga — ` +

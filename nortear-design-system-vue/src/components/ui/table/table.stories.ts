@@ -17,7 +17,7 @@ import { INVOICES, TOTAL } from './table.fixtures';
 import { tableSource } from './table.source';
 
 interface TableArgs {
-  captionVisivel: boolean;
+  captionVisible: boolean;
   withFooter: boolean;
 }
 
@@ -30,7 +30,7 @@ const meta: Meta<TableArgs> = {
     docs: { page: withAutoDocsTab(TableDocs), source: { transform: tableSource } },
   },
   argTypes: {
-    captionVisivel: {
+    captionVisible: {
       control: 'boolean',
       description:
         'Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o nome da tabela.',
@@ -43,7 +43,7 @@ const meta: Meta<TableArgs> = {
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
   },
-  args: { captionVisivel: false, withFooter: true },
+  args: { captionVisible: false, withFooter: true },
 };
 
 export default meta;
@@ -76,8 +76,8 @@ export const Playground: Story = {
     setup() {
       // A classe da legenda é resolvida aqui, e não num ternário dentro do
       // template: no template ela vira texto, e o auditor de classe morta lê
-      // `args.captionVisivel` e `undefined` como se fossem nomes de classe.
-      const captionClass = computed(() => (args.captionVisivel ? undefined : 'nds-sr-only'));
+      // `args.captionVisible` e `undefined` como se fossem nomes de classe.
+      const captionClass = computed(() => (args.captionVisible ? undefined : 'nds-sr-only'));
       return { args, captionClass, invoices: INVOICES, total: TOTAL };
     },
     template: `
@@ -173,7 +173,7 @@ export const Playground: Story = {
       const caption = canvasElement.querySelector<HTMLElement>('caption')!;
       await expect(caption).toHaveAttribute('data-slot', 'table-caption');
       await expect(caption).toHaveTextContent('Lista de faturas recentes');
-      await expect(caption.classList.contains('nds-sr-only')).toBe(!args.captionVisivel);
+      await expect(caption.classList.contains('nds-sr-only')).toBe(!args.captionVisible);
       await expect(canvas.getByRole('table', { name: /faturas recentes/ })).toBeTruthy();
     });
 

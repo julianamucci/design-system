@@ -57,31 +57,31 @@ describe('radioGroupSource', () => {
   it('a orientação horizontal escreve a prop e o atributo ARIA', () => {
     // A prop governa as setas e o layout; o atributo anuncia a direção, que num
     // radiogroup o leitor supõe empilhada.
-    const saida = radioGroupSource('', { args: { orientation: 'horizontal' } });
-    expect(saida).toContain('orientation="horizontal"');
-    expect(saida).toContain('aria-orientation="horizontal"');
+    const output = radioGroupSource('', { args: { orientation: 'horizontal' } });
+    expect(output).toContain('orientation="horizontal"');
+    expect(output).toContain('aria-orientation="horizontal"');
   });
 });
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a variante vertical não escreve orientação nenhuma — é o padrão', () => {
-    const saida = radioGroupVerticalSource();
-    expect(saida).not.toContain('orientation');
-    expect(saida.match(/<RadioGroupItem /g)).toHaveLength(3);
+    const output = radioGroupVerticalSource();
+    expect(output).not.toContain('orientation');
+    expect(output.match(/<RadioGroupItem /g)).toHaveLength(3);
   });
 
   it('a variante horizontal põe as três opções curtas na mesma linha', () => {
-    const saida = radioGroupHorizontalSource();
-    expect(saida).toContain('aria-orientation="horizontal"');
-    expect(saida).toContain('<Label for="pickup">Retirar</Label>');
+    const output = radioGroupHorizontalSource();
+    expect(output).toContain('aria-orientation="horizontal"');
+    expect(output).toContain('<Label for="pickup">Retirar</Label>');
   });
 
   it('a variante com descrição liga cada texto auxiliar ao seu item', () => {
-    const saida = radioGroupWithDescriptionSource();
-    expect(saida).toContain('aria-describedby="cartao-desc"');
-    expect(saida).toContain('<p id="cartao-desc" class="nds-text-caption nds-text-muted-foreground">');
+    const output = radioGroupWithDescriptionSource();
+    expect(output).toContain('aria-describedby="cartao-desc"');
+    expect(output).toContain('<p id="cartao-desc" class="nds-text-caption nds-text-muted-foreground">');
     // Alinha o rádio com a primeira linha do rótulo, não com o bloco inteiro.
-    expect(saida).toContain('class="nds-mt-1"');
+    expect(output).toContain('class="nds-mt-1"');
   });
 
   it('o estado padrão nasce sem escolha, e o foco não muda a marcação', () => {
@@ -94,15 +94,15 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o grupo desabilitado leva a prop na raiz, não em cada item', () => {
-    const saida = radioGroupDisabledSource();
-    expect(saida).toContain('<RadioGroup bind:value={forma} disabled aria-label=');
-    expect(saida).not.toContain('<RadioGroupItem value="pix" id="pix" disabled />');
+    const output = radioGroupDisabledSource();
+    expect(output).toContain('<RadioGroup bind:value={forma} disabled aria-label=');
+    expect(output).not.toContain('<RadioGroupItem value="pix" id="pix" disabled />');
   });
 
   it('o item indisponível carrega a prop sozinho', () => {
-    const saida = radioGroupItemDisabledSource();
-    expect(saida).toContain('<RadioGroupItem value="pix" id="pix" disabled />');
-    expect(saida).toContain('Pix (indisponível)');
+    const output = radioGroupItemDisabledSource();
+    expect(output).toContain('<RadioGroupItem value="pix" id="pix" disabled />');
+    expect(output).toContain('Pix (indisponível)');
   });
 
   it('o estado inválido marca o grupo, e é dele que sai a borda de cada item', () => {
@@ -110,14 +110,14 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de entrega horizontal traz o prazo no próprio rótulo', () => {
-    const saida = radioGroupEntregaHorizontalSource();
-    expect(saida).toContain('aria-orientation="horizontal"');
-    expect(saida).toContain('Expressa (1 dia)');
+    const output = radioGroupEntregaHorizontalSource();
+    expect(output).toContain('aria-orientation="horizontal"');
+    expect(output).toContain('Expressa (1 dia)');
   });
 
   it('a composição de entrega com descrição move o prazo para o texto auxiliar', () => {
-    const saida = radioGroupEntregaWithDescriptionSource();
-    expect(saida).toContain('aria-describedby="standard-desc"');
-    expect(saida).toContain('Entrega em até 5 dias úteis.');
+    const output = radioGroupEntregaWithDescriptionSource();
+    expect(output).toContain('aria-describedby="standard-desc"');
+    expect(output).toContain('Entrega em até 5 dias úteis.');
   });
 });

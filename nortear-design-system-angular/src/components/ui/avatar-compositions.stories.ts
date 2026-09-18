@@ -132,16 +132,16 @@ export const WithIcon: Story = {
     await step('O fallback tem nome acessível e o desenho não', async () => {
       const fallback = canvas.getByRole('img', { name: /Usuário genérico/i });
       await expect(fallback).toBeVisible();
-      const icone = fallback.querySelector('svg')!;
-      await expect(icone).toHaveAttribute('aria-hidden', 'true');
+      const icon = fallback.querySelector('svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('O ícone é desenhado, não é um SVG vazio', async () => {
       // Os filhos vêm de `createElementNS` num effect; um effect que não roda
       // deixa um <svg> com caixa certa e nada dentro.
-      const icone = canvasElement.querySelector<SVGSVGElement>('svg')!;
-      await expect(icone.childElementCount).toBeGreaterThan(0);
-      await expect(icone.getBoundingClientRect().width).toBeGreaterThan(0);
+      const icon = canvasElement.querySelector<SVGSVGElement>('svg')!;
+      await expect(icon.childElementCount).toBeGreaterThan(0);
+      await expect(icon.getBoundingClientRect().width).toBeGreaterThan(0);
     });
   },
 };

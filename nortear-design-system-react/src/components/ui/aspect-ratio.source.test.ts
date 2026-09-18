@@ -48,17 +48,17 @@ describe('aspectRatioSource', () => {
   });
 
   it('usa <img> comum — o invólucro de fallback é andaime das stories', () => {
-    const saida = aspectRatioSource();
-    expect(saida).toContain('<img');
-    expect(saida).not.toContain('ImageWithFallback');
-    expect(saida).not.toContain('components/figma');
+    const output = aspectRatioSource();
+    expect(output).toContain('<img');
+    expect(output).not.toContain('ImageWithFallback');
+    expect(output).not.toContain('components/figma');
   });
 
   it('object-fit e raio ficam no FILHO, nunca no contêiner', () => {
-    const saida = aspectRatioSource();
-    expect(saida).toContain('style={{ objectFit: "cover" }}');
-    expect(saida).toContain('className="nds-rounded-md"');
-    expect(saida).not.toContain('<AspectRatio ratio={16 / 9} className');
+    const output = aspectRatioSource();
+    expect(output).toContain('style={{ objectFit: "cover" }}');
+    expect(output).toContain('className="nds-rounded-md"');
+    expect(output).not.toContain('<AspectRatio ratio={16 / 9} className');
   });
 
   it('a imagem informativa tem alt descritivo', () => {
@@ -77,36 +77,36 @@ describe('proporções canônicas', () => {
 
 describe('composições', () => {
   it('a imagem decorativa usa alt vazio, e não omite o atributo', () => {
-    const saida = aspectRatioImageDecorativaSource();
-    expect(saida).toContain('alt=""');
+    const output = aspectRatioImageDecorativaSource();
+    expect(output).toContain('alt=""');
   });
 
   it('o iframe carrega title — é o nome acessível do quadro embutido', () => {
-    const saida = aspectRatioWithIframeSource();
-    expect(saida).toContain('<iframe');
-    expect(saida).toContain('title="Mapa do escritório em São Paulo"');
+    const output = aspectRatioWithIframeSource();
+    expect(output).toContain('<iframe');
+    expect(output).toContain('title="Mapa do escritório em São Paulo"');
   });
 
   it('o vídeo traz faixa de legendas e controles alcançáveis pelo teclado', () => {
-    const saida = aspectRatioWithVideoSource();
-    expect(saida).toContain('<track');
-    expect(saida).toContain('kind="captions"');
-    expect(saida).toContain('controls');
+    const output = aspectRatioWithVideoSource();
+    expect(output).toContain('<track');
+    expect(output).toContain('kind="captions"');
+    expect(output).toContain('controls');
   });
 
   it('o espaço reservado não tem mídia dentro e ainda assim se anuncia', () => {
-    const saida = aspectRatioPlaceholderSource();
-    expect(saida).not.toContain('<img');
-    expect(saida).not.toContain('<video');
-    expect(saida).toContain('role="img"');
-    expect(saida).toContain('aria-label="Conteúdo carregando"');
+    const output = aspectRatioPlaceholderSource();
+    expect(output).not.toContain('<img');
+    expect(output).not.toContain('<video');
+    expect(output).toContain('role="img"');
+    expect(output).toContain('aria-label="Conteúdo carregando"');
   });
 
   it('na grade a proporção é a mesma em todas as células', () => {
-    const saida = gridAspectRatioSource();
-    expect(saida).toContain('nds-grid');
-    expect(saida.match(/ratio=\{4 \/ 3\}/g)).toHaveLength(1);
-    expect(saida).toContain('itens.map');
+    const output = gridAspectRatioSource();
+    expect(output).toContain('nds-grid');
+    expect(output.match(/ratio=\{4 \/ 3\}/g)).toHaveLength(1);
+    expect(output).toContain('itens.map');
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
@@ -122,12 +122,12 @@ describe('composições', () => {
       aspectRatioTresQuartosSource,
       aspectRatioUltraWideSource,
     ]) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('ImageWithFallback');
-      expect(saida).not.toContain('LANDSCAPE_SRC');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('ImageWithFallback');
+      expect(output).not.toContain('LANDSCAPE_SRC');
       // O ponto flutuante cru do control era o que o painel imprimia antes.
-      expect(saida).not.toContain('1.7777');
+      expect(output).not.toContain('1.7777');
     }
   });
 });

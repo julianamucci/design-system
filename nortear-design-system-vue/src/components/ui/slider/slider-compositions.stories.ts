@@ -122,13 +122,13 @@ export const InForm: Story = {
       const brightness = ref<number[]>([70]);
       const opacity = ref<number[]>([100]);
       const salvo = ref<string>('');
-      const salvar = () => {
+      const save = () => {
         salvo.value = `Brilho ${brightness.value[0]}% · Opacidade ${opacity.value[0]}%`;
       };
-      return { brightness, opacity, salvo, salvar };
+      return { brightness, opacity, salvo, save };
     },
     template: `
-      <form class="nds-stack nds-w-sm" data-spacing="md" aria-label="Configurações de áudio" @submit.prevent="salvar">
+      <form class="nds-stack nds-w-sm" data-spacing="md" aria-label="Configurações de áudio" @submit.prevent="save">
         <div class="nds-stack" data-spacing="sm">
           <Label for="form-name">Nome do preset</Label>
           <Input id="form-name" placeholder="Meu preset" />

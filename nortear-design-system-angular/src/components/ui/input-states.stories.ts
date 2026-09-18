@@ -253,8 +253,8 @@ export const Types: Story = {
       // `::file-selector-button` é a única parte do campo que o navegador
       // desenha sozinho; sem a regra do design system ele sai com o cinza do
       // sistema operacional e o exemplo mente sobre o resultado.
-      const arquivo = canvasElement.querySelector<HTMLInputElement>('#tipo-file')!;
-      const button = getComputedStyle(arquivo, '::file-selector-button');
+      const file = canvasElement.querySelector<HTMLInputElement>('#tipo-file')!;
+      const button = getComputedStyle(file, '::file-selector-button');
       await expect(button.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       await expect(parseFloat(button.borderTopLeftRadius)).toBeGreaterThan(0);
     });

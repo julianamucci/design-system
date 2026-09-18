@@ -104,104 +104,104 @@ const chaveDaFatura = (f: Invoice) => f.id
   });
 
   it('as doze faturas são literais, e não um import de massa de teste', () => {
-    const saida = dataTableSource();
+    const output = dataTableSource();
     // A contagem importa: a paginação em fatias de cinco e as contagens
     // anunciadas só fazem sentido contra o conjunto inteiro.
-    expect([...saida.matchAll(/^ {2}\{ id: 'INV-\d{3}',/gm)].length).toBe(12);
-    expect(saida).toContain('const invoices: Invoice[] = [');
+    expect([...output.matchAll(/^ {2}\{ id: 'INV-\d{3}',/gm)].length).toBe(12);
+    expect(output).toContain('const invoices: Invoice[] = [');
   });
 
   it('nenhum dos quatro interruptores ligados por padrão aparece ligado', () => {
-    const saida = dataTableSource();
+    const output = dataTableSource();
     // Repetir o padrão do componente ensina ruído.
-    expect(saida).not.toContain('enable-global-filter');
-    expect(saida).not.toContain('enable-column-visibility');
-    expect(saida).not.toContain('enable-pagination');
-    expect(saida).not.toContain('page-size');
+    expect(output).not.toContain('enable-global-filter');
+    expect(output).not.toContain('enable-column-visibility');
+    expect(output).not.toContain('enable-pagination');
+    expect(output).not.toContain('page-size');
     // A seleção de linha, essa sim, nasce DESLIGADA no componente.
-    expect(saida).toContain('    enable-row-selection\n');
+    expect(output).toContain('    enable-row-selection\n');
   });
 
   it('desligar um interruptor escreve a negação, e não o silêncio', () => {
-    const saida = dataTableSource('', {
+    const output = dataTableSource('', {
       args: { enableGlobalFilter: false, enablePagination: false, pageSize: 25 },
     });
-    expect(saida).toContain(':enable-global-filter="false"');
-    expect(saida).toContain(':enable-pagination="false"');
-    expect(saida).toContain(':page-size="25"');
+    expect(output).toContain(':enable-global-filter="false"');
+    expect(output).toContain(':enable-pagination="false"');
+    expect(output).toContain(':page-size="25"');
     // Sem busca livre não há campo a nomear.
-    expect(saida).not.toContain('global-filter-placeholder');
+    expect(output).not.toContain('global-filter-placeholder');
   });
 
   it('sem seleção de linha, os rótulos e a chave saem junto do import', () => {
-    const saida = dataTableSource('', { args: { enableRowSelection: false } });
-    expect(saida).not.toContain('DataTableLabels');
-    expect(saida).not.toContain(':labels="rotulos"');
-    expect(saida).not.toContain(':row-key=');
+    const output = dataTableSource('', { args: { enableRowSelection: false } });
+    expect(output).not.toContain('DataTableLabels');
+    expect(output).not.toContain(':labels="rotulos"');
+    expect(output).not.toContain(':row-key=');
   });
 
   it('o texto padrão do vazio e da busca fica de fora', () => {
-    const saida = dataTableSource('', {
+    const output = dataTableSource('', {
       args: { emptyMessage: 'Sem resultados.', globalFilterPlaceholder: 'Buscar...' },
     });
-    expect(saida).not.toContain('empty-message');
-    expect(saida).not.toContain('global-filter-placeholder');
+    expect(output).not.toContain('empty-message');
+    expect(output).not.toContain('global-filter-placeholder');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     // `onCellEdit` e `onTableReady` são `fn()` no meta: qualquer arg pode chegar
     // como função, e o corpo do mock apareceria como se fosse o exemplo.
-    const saida = dataTableSource('', {
+    const output = dataTableSource('', {
       args: { caption: (() => {}) as never, globalFilterPlaceholder: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('caption=');
-    expect(saida).not.toContain('global-filter-placeholder');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('caption=');
+    expect(output).not.toContain('global-filter-placeholder');
   });
 });
 
 describe('transforms das stories de estado e configuração', () => {
   it('o vazio é uma lista vazia, e a grade continua montada', () => {
-    const saida = dataTableNoResultsSource();
-    expect(saida).toContain('const invoices: Invoice[] = []');
-    expect(saida).toContain('empty-message="Nenhuma fatura encontrada."');
+    const output = dataTableNoResultsSource();
+    expect(output).toContain('const invoices: Invoice[] = []');
+    expect(output).toContain('empty-message="Nenhuma fatura encontrada."');
     // As colunas ficam: quem esvaziou o resultado com um filtro precisa saber
     // o que volta.
-    expect(saida).toContain(`{ accessorKey: 'id', header: 'Fatura', size: 110 }`);
+    expect(output).toContain(`{ accessorKey: 'id', header: 'Fatura', size: 110 }`);
   });
 
   it('a paginada põe o tamanho inicial DENTRO das opções do seletor', () => {
-    const saida = dataTablePaginadaSource();
-    expect(saida).toContain(':page-size="5"');
+    const output = dataTablePaginadaSource();
+    expect(output).toContain(':page-size="5"');
     // Fora da lista, nenhuma opção fica marcada e o rodapé exibe a primeira.
-    expect(saida).toContain(':page-size-options="[5, 10]"');
+    expect(output).toContain(':page-size-options="[5, 10]"');
   });
 
   it('o rótulo de linha explícito vem acompanhado da chave, e vence a primeira coluna', () => {
-    const saida = lineDataTableLabelSource();
-    expect(saida).toContain('const rotuloDaFatura = (f: Invoice) => f.customer');
-    expect(saida).toContain(':row-label="rotuloDaFatura"');
-    expect(saida).toContain(':row-key="chaveDaFatura"');
+    const output = lineDataTableLabelSource();
+    expect(output).toContain('const rotuloDaFatura = (f: Invoice) => f.customer');
+    expect(output).toContain(':row-label="rotuloDaFatura"');
+    expect(output).toContain(':row-key="chaveDaFatura"');
   });
 
   it('a virtualizada gera as mil linhas e não pagina junto', () => {
-    const saida = dataTableVirtualizadaSource();
-    expect(saida).toContain('Array.from({ length: 1000 }');
-    expect(saida).toContain('max-height="400px"');
+    const output = dataTableVirtualizadaSource();
+    expect(output).toContain('Array.from({ length: 1000 }');
+    expect(output).toContain('max-height="400px"');
     // Recortar em páginas e virtualizar a janela resolvem o mesmo problema.
-    expect(saida).not.toContain('page-size');
+    expect(output).not.toContain('page-size');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o filtro de cada coluna é declarado na própria coluna', () => {
-    const saida = columnDataTableFiltersSource();
-    expect(saida).toContain(`meta: { filter: { type: 'text' } }`);
-    expect(saida).toContain(`type: 'select', options: ['Pago', 'Pendente', 'Cancelado']`);
+    const output = columnDataTableFiltersSource();
+    expect(output).toContain(`meta: { filter: { type: 'text' } }`);
+    expect(output).toContain(`type: 'select', options: ['Pago', 'Pendente', 'Cancelado']`);
     // A coluna de valor fica SEM filtro: é ela que exercita a célula que anuncia
     // de qual coluna o espaço vazio é.
-    expect(saida).toContain(`    accessorKey: 'amount',\n    header: 'Valor',\n    cell:`);
-    expect(saida).toContain('enable-column-filters');
+    expect(output).toContain(`    accessorKey: 'amount',\n    header: 'Valor',\n    cell:`);
+    expect(output).toContain('enable-column-filters');
   });
 
   it('redimensionar e reordenar são flags distintas, e a fixação anda em par com a ordem', () => {
@@ -212,22 +212,22 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na edição inline o array é do consumidor, e o evento é quem avisa', () => {
-    const saida = dataTableEditInlineSource();
-    expect(saida).toContain(`import { h, ref } from 'vue'`);
-    expect(saida).toContain('const data = ref<Invoice[]>(invoices.slice(0, 6))');
+    const output = dataTableEditInlineSource();
+    expect(output).toContain(`import { h, ref } from 'vue'`);
+    expect(output).toContain('const data = ref<Invoice[]>(invoices.slice(0, 6))');
     // O payload tem os três campos; sem eles quem consome não sabe o que mudou.
-    expect(saida).toContain(
+    expect(output).toContain(
       'function aoEditarCelula(rowIndex: number, columnId: string, value: unknown)',
     );
-    expect(saida).toContain('@cell-edit="aoEditarCelula"');
-    expect(saida).toContain(':data="data"');
+    expect(output).toContain('@cell-edit="aoEditarCelula"');
+    expect(output).toContain(':data="data"');
   });
 
   it('a coluna editável se declara na coluna, e não numa lista de fora', () => {
-    const saida = dataTableEditInlineSource();
-    expect(saida).toContain(`{ accessorKey: 'customer', header: 'Cliente', meta: { editable: true } }`);
+    const output = dataTableEditInlineSource();
+    expect(output).toContain(`{ accessorKey: 'customer', header: 'Cliente', meta: { editable: true } }`);
     // A primeira coluna continua não editável: o identificador da linha não é
     // campo de digitação.
-    expect(saida).toContain(`{ accessorKey: 'id', header: 'Fatura' },`);
+    expect(output).toContain(`{ accessorKey: 'id', header: 'Fatura' },`);
   });
 });

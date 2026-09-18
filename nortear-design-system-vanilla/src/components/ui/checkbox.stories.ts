@@ -104,11 +104,11 @@ function buildCheckboxWithLabel(args: CheckboxArgs): HTMLElement {
 // aguardam a transição. Um clique cego seguido de asserção inverte o
 // resultado no replay do painel Interactions, que reaproveita o DOM da
 // rodada anterior em vez de remontar a story.
-const marcar = async (cb: HTMLElement) => {
+const check = async (cb: HTMLElement) => {
   if (cb.getAttribute('aria-checked') !== 'true') await userEvent.click(cb);
   await waitFor(() => expect(cb).toHaveAttribute('aria-checked', 'true'));
 };
-const desmarcar = async (cb: HTMLElement) => {
+const uncheck = async (cb: HTMLElement) => {
   if (cb.getAttribute('aria-checked') !== 'false') await userEvent.click(cb);
   await waitFor(() => expect(cb).toHaveAttribute('aria-checked', 'false'));
 };
@@ -142,16 +142,16 @@ export const Playground: Story = {
 
     // Baseline conhecida: garante desmarcado antes de provar a transição.
     await step('Estado parte desmarcado', async () => {
-      await desmarcar(checkbox);
+      await uncheck(checkbox);
     });
 
     await step('Clique em desmarcado marca e dispara o callback com true', async () => {
-      await marcar(checkbox);
+      await check(checkbox);
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
     });
 
     await step('Clique em marcado desmarca e dispara o callback com false', async () => {
-      await desmarcar(checkbox);
+      await uncheck(checkbox);
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
 
@@ -161,7 +161,7 @@ export const Playground: Story = {
     // inerte: a caixa era um <div>, que `label[for]` não alcança.
     await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
       const label = canvas.getByText(args.label);
-      await desmarcar(checkbox);                       // precondição própria
+      await uncheck(checkbox);                       // precondição própria
       (checkbox as HTMLElement).blur();
       await expect(checkbox).not.toHaveFocus();        // o foco tem que VIR do clique
       await userEvent.click(label);
@@ -171,7 +171,7 @@ export const Playground: Story = {
     });
 
     await step('Space alterna o estado e dispara o callback', async () => {
-      await desmarcar(checkbox);                       // precondição própria
+      await uncheck(checkbox);                       // precondição própria
       (checkbox as HTMLElement).focus();
       await userEvent.keyboard(' ');
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));

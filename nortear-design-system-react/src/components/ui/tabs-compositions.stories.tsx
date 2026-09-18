@@ -101,11 +101,11 @@ export const WithIcons: Story = {
         '[data-slot="tabs-trigger"] svg'
       );
       await expect(icons).toHaveLength(3);
-      for (const icone of icons) {
-        await expect(icone).toHaveAttribute("aria-hidden", "true");
+      for (const icon of icons) {
+        await expect(icon).toHaveAttribute("aria-hidden", "true");
         // Um svg vazio seria um ícone que não desenhou nada, e ninguém veria
         // falhar — o desenho tem que estar lá dentro.
-        await expect(icone.childElementCount).toBeGreaterThan(0);
+        await expect(icon.childElementCount).toBeGreaterThan(0);
       }
     });
 

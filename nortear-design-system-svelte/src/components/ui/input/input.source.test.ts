@@ -54,9 +54,9 @@ describe('inputSource', () => {
   });
 
   it('mantém o rótulo em qualquer combinação de args', () => {
-    const saida = inputSource('', { args: { type: 'password', disabled: true } });
-    expect(saida).toContain('<Label for="nome">');
-    expect(saida).toContain('from "@/components/ui/label"');
+    const output = inputSource('', { args: { type: 'password', disabled: true } });
+    expect(output).toContain('<Label for="nome">');
+    expect(output).toContain('from "@/components/ui/label"');
   });
 });
 
@@ -81,49 +81,49 @@ describe('transforms das stories de tipo', () => {
 
 describe('transforms das stories de estado e composição', () => {
   it('o desabilitado escreve o atributo e mantém o rótulo', () => {
-    const saida = inputDisabledSource();
-    expect(saida).toContain('disabled');
-    expect(saida).toContain('<Label for="indisponivel">Campo desabilitado</Label>');
+    const output = inputDisabledSource();
+    expect(output).toContain('disabled');
+    expect(output).toContain('<Label for="indisponivel">Campo desabilitado</Label>');
   });
 
   it('o erro liga a mensagem ao campo, e não confia só na cor', () => {
-    const saida = inputWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="email-erro"');
-    expect(saida).toContain('<p id="email-erro"');
+    const output = inputWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="email-erro"');
+    expect(output).toContain('<p id="email-erro"');
   });
 
   it('o texto de apoio chega pelo mesmo caminho da descrição', () => {
-    const saida = helperInputWithTextSource();
-    expect(saida).toContain('aria-describedby="email-apoio"');
-    expect(saida).toContain('<p id="email-apoio"');
-    expect(saida).not.toContain('aria-invalid');
+    const output = helperInputWithTextSource();
+    expect(output).toContain('aria-describedby="email-apoio"');
+    expect(output).toContain('<p id="email-apoio"');
+    expect(output).not.toContain('aria-invalid');
   });
 
   it('a senha com apoio traz a política ligada ao campo', () => {
-    const saida = inputSenhaWithHelperSource();
-    expect(saida).toContain('type="password"');
-    expect(saida).toContain('aria-describedby="senha-apoio"');
+    const output = inputSenhaWithHelperSource();
+    expect(output).toContain('type="password"');
+    expect(output).toContain('aria-describedby="senha-apoio"');
   });
 
   it('a paleta escura mostra os três estados na mesma marcação', () => {
-    const saida = inputPaletteDarkSource();
-    expect(saida.match(/<Input\b/g)).toHaveLength(3);
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('disabled');
+    const output = inputPaletteDarkSource();
+    expect(output.match(/<Input\b/g)).toHaveLength(3);
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('disabled');
   });
 
   it('o grupo traz os três alinhamentos do acessório', () => {
-    const saida = groupInputSource();
-    expect(saida).toContain('from "@/components/ui/input-group"');
-    expect(saida).toContain('align="inline-start"');
-    expect(saida).toContain('align="inline-end"');
-    expect(saida).toContain('align="block-start"');
+    const output = groupInputSource();
+    expect(output).toContain('from "@/components/ui/input-group"');
+    expect(output).toContain('align="inline-start"');
+    expect(output).toContain('align="inline-end"');
+    expect(output).toContain('align="block-start"');
   });
 
   it('o grupo com ação traz o botão dentro do acessório final', () => {
-    const saida = groupWithButtonInputSource();
-    expect(saida).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
-    expect(saida).toContain('aria-hidden="true"');
+    const output = groupWithButtonInputSource();
+    expect(output).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
+    expect(output).toContain('aria-hidden="true"');
   });
 });

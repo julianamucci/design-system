@@ -28,9 +28,9 @@ describe('progressSource', () => {
 
   it('min e max só entram quando saem do padrão 0–100', () => {
     expect(progressSource('', { args: { value: 42, min: 0, max: 100 } })).not.toMatch(/min=|max=/);
-    const saida = progressSource('', { args: { value: 30, min: 20, max: 60 } });
-    expect(saida).toContain('min={20}');
-    expect(saida).toContain('max={60}');
+    const output = progressSource('', { args: { value: 30, min: 20, max: 60 } });
+    expect(output).toContain('min={20}');
+    expect(output).toContain('max={60}');
   });
 
   it('a cor semântica sai do atributo, não de uma classe', () => {
@@ -39,24 +39,24 @@ describe('progressSource', () => {
   });
 
   it('WithLabel: rótulo e percentual sobem para uma linha acima da trilha', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: { value: 42, 'aria-label': 'Enviando arquivo', label: 'Enviando arquivo', showValue: true },
     });
-    expect(saida).toContain('<span class="nds-text-foreground">Enviando arquivo</span>');
+    expect(output).toContain('<span class="nds-text-foreground">Enviando arquivo</span>');
     // `polite` e não `assertive`: a cada passo o leitor seria interrompido.
-    expect(saida).toContain('<span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">42%</span>');
-    expect(saida).toContain('data-justify="between"');
-    expect(saida).not.toContain('style=');
+    expect(output).toContain('<span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">42%</span>');
+    expect(output).toContain('data-justify="between"');
+    expect(output).not.toContain('style=');
   });
 
   it('sem valor não há percentual para exibir, mas o rótulo permanece', () => {
-    const saida = progressSource('', { args: { value: null, label: 'Processando…', showValue: true } });
-    expect(saida).toContain('Processando…');
-    expect(saida).not.toContain('aria-live');
+    const output = progressSource('', { args: { value: null, label: 'Processando…', showValue: true } });
+    expect(output).toContain('Processando…');
+    expect(output).not.toContain('aria-live');
   });
 
   it('WizardSteps: a etapa ocupa o lugar do percentual, sem números tabulares', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         value: 60,
         label: 'Etapa 3 de 5',
@@ -65,12 +65,12 @@ describe('progressSource', () => {
         'aria-label': 'Progresso do cadastro: etapa 3 de 5',
       },
     });
-    expect(saida).toContain('<span class="nds-text-foreground nds-font-medium">Etapa 3 de 5</span>');
-    expect(saida).toContain('<span class="nds-text-muted-foreground" aria-live="polite">Endereço</span>');
+    expect(output).toContain('<span class="nds-text-foreground nds-font-medium">Etapa 3 de 5</span>');
+    expect(output).toContain('<span class="nds-text-muted-foreground" aria-live="polite">Endereço</span>');
   });
 
   it('SemanticColor: duas barras, uma por variante, numa pilha', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         items: [
           { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
@@ -78,15 +78,15 @@ describe('progressSource', () => {
         ],
       },
     });
-    expect(saida).toContain('<div class="nds-stack" data-spacing="sm">');
-    expect(saida).toContain('<Progress value={100} data-variant="success" aria-label="Sincronização concluída" />');
-    expect(saida).toContain(
+    expect(output).toContain('<div class="nds-stack" data-spacing="sm">');
+    expect(output).toContain('<Progress value={100} data-variant="success" aria-label="Sincronização concluída" />');
+    expect(output).toContain(
       '<Progress value={92} data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />',
     );
   });
 
   it('MultipleUploads: cada barra leva o próprio rótulo e nome acessível', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         spacing: 'md',
         items: [
@@ -95,14 +95,14 @@ describe('progressSource', () => {
         ],
       },
     });
-    expect(saida).toContain('data-spacing="md"');
-    expect(saida).toContain('aria-live="polite">100%</span>');
-    expect(saida).toContain('aria-live="polite">0%</span>');
-    expect(saida.match(/<Progress /g)).toHaveLength(2);
+    expect(output).toContain('data-spacing="md"');
+    expect(output).toContain('aria-live="polite">100%</span>');
+    expect(output).toContain('aria-live="polite">0%</span>');
+    expect(output.match(/<Progress /g)).toHaveLength(2);
   });
 
   it('FileUpload: o cartão traz arquivo e tamanho, sem se declarar ocupado', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         card: { title: 'documento-final.pdf', meta: '2.4 MB de 5.0 MB' },
         value: 48,
@@ -111,13 +111,13 @@ describe('progressSource', () => {
         'aria-label': 'Progresso do upload de documento-final.pdf',
       },
     });
-    expect(saida).toContain('<div class="nds-text-body nds-font-medium">documento-final.pdf</div>');
-    expect(saida).toContain('<div class="nds-text-caption nds-text-muted-foreground">2.4 MB de 5.0 MB</div>');
-    expect(saida).not.toContain('aria-busy');
+    expect(output).toContain('<div class="nds-text-body nds-font-medium">documento-final.pdf</div>');
+    expect(output).toContain('<div class="nds-text-caption nds-text-muted-foreground">2.4 MB de 5.0 MB</div>');
+    expect(output).not.toContain('aria-busy');
   });
 
   it('AriaBusyContainer: o contêiner se declara ocupado ao redor da barra', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         card: { title: 'Processando relatório', meta: 'Isso pode levar alguns minutos.', busy: true },
         value: 35,
@@ -126,12 +126,12 @@ describe('progressSource', () => {
         'aria-label': 'Progresso da análise de dados',
       },
     });
-    expect(saida).toContain('role="status" aria-busy="true"');
-    expect(saida).toContain('<Progress value={35} aria-label="Progresso da análise de dados" />');
+    expect(output).toContain('role="status" aria-busy="true"');
+    expect(output).toContain('<Progress value={35} aria-label="Progresso da análise de dados" />');
   });
 
   it('Animated: o relógio que faz a barra andar viaja com o snippet', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         value: 0,
         animated: true,
@@ -142,12 +142,12 @@ describe('progressSource', () => {
         'aria-label': 'Progresso do upload',
       },
     });
-    expect(saida).toContain('let value = $state(0);');
-    expect(saida).toContain('value = value >= 100 ? 0 : value + 5;');
-    expect(saida).toContain('}, 400);');
-    expect(saida).toContain('return () => clearInterval(id);');
-    expect(saida).toContain('<Progress value={value} aria-label="Progresso do upload" />');
-    expect(saida).toContain('aria-live="polite">{value}%</span>');
+    expect(output).toContain('let value = $state(0);');
+    expect(output).toContain('value = value >= 100 ? 0 : value + 5;');
+    expect(output).toContain('}, 400);');
+    expect(output).toContain('return () => clearInterval(id);');
+    expect(output).toContain('<Progress value={value} aria-label="Progresso do upload" />');
+    expect(output).toContain('aria-live="polite">{value}%</span>');
   });
 });
 
@@ -170,7 +170,7 @@ describe('cada story sai dos PRÓPRIOS args', () => {
   });
 
   it('a Animated traz o bloco inteiro: rótulo, região polite e o laço', () => {
-    const saida = progressSource('', {
+    const output = progressSource('', {
       args: {
         value: 0,
         'aria-label': 'Progresso do upload',
@@ -181,21 +181,21 @@ describe('cada story sai dos PRÓPRIOS args', () => {
         step: 5,
       },
     });
-    expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
-    expect(saida).toContain('<span class="nds-text-foreground">Enviando arquivo</span>');
-    expect(saida).toContain('aria-live="polite">{value}%</span>');
-    expect(saida).toContain('const id = setInterval(() => {');
-    expect(saida).toContain('<Progress value={value} aria-label="Progresso do upload" />');
+    expect(output).toContain('<div class="nds-stack" data-spacing="xs">');
+    expect(output).toContain('<span class="nds-text-foreground">Enviando arquivo</span>');
+    expect(output).toContain('aria-live="polite">{value}%</span>');
+    expect(output).toContain('const id = setInterval(() => {');
+    expect(output).toContain('<Progress value={value} aria-label="Progresso do upload" />');
   });
 });
 
 describe('progressValueTextSource', () => {
   it('CustomValueText: ensina a função com a assinatura do wrapper', () => {
-    const saida = progressValueTextSource();
-    expect(saida).toContain('import { Progress } from "@/components/ui/progress";');
-    expect(saida).toContain('aria-label="Processamento de arquivos"');
-    expect(saida).toContain('function filesText(value: number | null, min: number, max: number): string {');
-    expect(saida).toContain("return value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`;");
-    expect(saida).toContain('getAriaValueText={filesText} />');
+    const output = progressValueTextSource();
+    expect(output).toContain('import { Progress } from "@/components/ui/progress";');
+    expect(output).toContain('aria-label="Processamento de arquivos"');
+    expect(output).toContain('function filesText(value: number | null, min: number, max: number): string {');
+    expect(output).toContain("return value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`;");
+    expect(output).toContain('getAriaValueText={filesText} />');
   });
 });

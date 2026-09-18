@@ -258,7 +258,7 @@ ${indentar(conjunto)}
  * anunciado viraria um segundo pedaço de nome, sem acrescentar informação.
  */
 export function tabsWithIconsSource(): string {
-  const icone = (name: string) => `<${name} class="nds-size-4" aria-hidden="true" />`;
+  const icon = (name: string) => `<${name} class="nds-size-4" aria-hidden="true" />`;
   return vueSnippet(
     `${IMPORT}
 import { Code2, Eye, Settings2 } from 'lucide-vue-next'`,
@@ -269,17 +269,17 @@ import { Code2, Eye, Settings2 } from 'lucide-vue-next'`,
       abas: [
         {
           value: 'preview',
-          trigger: `${icone('Eye')}\nPreview`,
+          trigger: `${icon('Eye')}\nPreview`,
           panel: 'Visualização renderizada do componente.',
         },
         {
           value: 'code',
-          trigger: `${icone('Code2')}\nCódigo`,
+          trigger: `${icon('Code2')}\nCódigo`,
           panel: 'Trecho copiável do componente.',
         },
         {
           value: 'settings',
-          trigger: `${icone('Settings2')}\nAjustes`,
+          trigger: `${icon('Settings2')}\nAjustes`,
           panel: 'Ajustes de tema, idioma e variantes.',
         },
       ],
@@ -322,7 +322,7 @@ import { Badge } from '@/components/ui/badge'`,
  * então a cor atenuada desce para o parágrafo — título em `--foreground`.
  */
 export function tabsConfigVerticaisSource(): string {
-  const icone = (name: string) => `<${name} class="nds-size-4" aria-hidden="true" />`;
+  const icon = (name: string) => `<${name} class="nds-size-4" aria-hidden="true" />`;
   const panel = (title: string, text: string) =>
     `<h3 class="nds-font-medium nds-text-foreground">${title}</h3>\n<p class="nds-mt-1 nds-text-muted-foreground">${text}</p>`;
   return vueSnippet(
@@ -335,17 +335,17 @@ import { Settings2, Shield, User } from 'lucide-vue-next'`,
       abas: [
         {
           value: 'profile',
-          trigger: `${icone('User')}\nPerfil`,
+          trigger: `${icon('User')}\nPerfil`,
           panel: panel('Perfil público', 'Nome, foto e bio visíveis para outros usuários.'),
         },
         {
           value: 'account',
-          trigger: `${icone('Settings2')}\nConta`,
+          trigger: `${icon('Settings2')}\nConta`,
           panel: panel('Conta', 'E-mail, idioma e preferências regionais.'),
         },
         {
           value: 'security',
-          trigger: `${icone('Shield')}\nSegurança`,
+          trigger: `${icon('Shield')}\nSegurança`,
           panel: panel('Segurança', 'Senha, autenticação em dois fatores e sessões.'),
         },
       ],

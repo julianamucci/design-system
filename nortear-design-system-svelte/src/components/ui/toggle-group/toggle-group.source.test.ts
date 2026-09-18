@@ -40,9 +40,9 @@ describe('toggleGroupSource', () => {
   });
 
   it('o modo combinado troca o valor de texto para lista', () => {
-    const saida = toggleGroupSource('', { args: { type: 'multiple' } });
-    expect(saida).toContain('type="multiple"');
-    expect(saida).toContain('let alinhamento: string[] = $state([]);');
+    const output = toggleGroupSource('', { args: { type: 'multiple' } });
+    expect(output).toContain('type="multiple"');
+    expect(output).toContain('let alinhamento: string[] = $state([]);');
   });
 
   it('a seleção inicial chega ao estado, nos dois modos', () => {
@@ -65,18 +65,18 @@ describe('toggleGroupSource', () => {
   });
 
   it('o desabilitado vale para o grupo inteiro, não item a item', () => {
-    const saida = toggleGroupSource('', { args: { disabled: true } });
-    expect(saida).toMatch(/^ {2}disabled$/m);
-    expect(saida).not.toContain('<ToggleGroupItem value="left" disabled');
+    const output = toggleGroupSource('', { args: { disabled: true } });
+    expect(output).toMatch(/^ {2}disabled$/m);
+    expect(output).not.toContain('<ToggleGroupItem value="left" disabled');
   });
 });
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a formatação é o modo combinado, com o valor em lista', () => {
-    const saida = toggleGroupFormattingSource();
-    expect(saida).toContain('type="multiple"');
-    expect(saida).toContain('aria-label="Formatação"');
-    expect(saida).toContain('let formatacao: string[] = $state([]);');
+    const output = toggleGroupFormattingSource();
+    expect(output).toContain('type="multiple"');
+    expect(output).toContain('aria-label="Formatação"');
+    expect(output).toContain('let formatacao: string[] = $state([]);');
   });
 
   it('a seleção múltipla nasce com duas opções combinadas', () => {
@@ -93,14 +93,14 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a barra de alinhamento completa tem a quarta opção', () => {
-    const saida = alignmentToggleGroupBarSource();
-    expect(saida.match(/<ToggleGroupItem /g)).toHaveLength(4);
-    expect(saida).toContain('aria-label="Justificar"');
+    const output = alignmentToggleGroupBarSource();
+    expect(output.match(/<ToggleGroupItem /g)).toHaveLength(4);
+    expect(output).toContain('aria-label="Justificar"');
   });
 
   it('o item desabilitado é um só, e o grupo continua de pé', () => {
-    const saida = toggleGroupItemDisabledSource();
-    expect(saida).toContain('<ToggleGroupItem value="center" disabled aria-label="Centralizar">');
-    expect(saida.match(/disabled/g)).toHaveLength(1);
+    const output = toggleGroupItemDisabledSource();
+    expect(output).toContain('<ToggleGroupItem value="center" disabled aria-label="Centralizar">');
+    expect(output.match(/disabled/g)).toHaveLength(1);
   });
 });

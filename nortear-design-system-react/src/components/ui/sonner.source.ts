@@ -106,7 +106,7 @@ function call(type: string, title: string, options: string[] = []): string {
   const target = type === 'default' ? 'toast' : `toast.${type}`;
   if (!options.length) return `${target}("${title}");`;
   return `${target}("${title}", {
-${options.map((opcao) => `  ${opcao}`).join('\n')}
+${options.map((option) => `  ${option}`).join('\n')}
 });`;
 }
 

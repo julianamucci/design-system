@@ -54,7 +54,7 @@ const LABEL = {
   // de `demonstration.labels` porque ali cada chave nomeia uma DIREÇÃO, e a
   // story de nível de cabeçalho não é sobre direção.
   title: () => t('usage.uxWriting.table.title.good'),
-  descricao: () => t('usage.uxWriting.table.description.good'),
+  description: () => t('usage.uxWriting.table.description.good'),
   close: () => t('usage.uxWriting.table.close.good'),
 };
 
@@ -63,19 +63,19 @@ function panel(direction: DrawerDirection) {
   return () => ({
     props: {
       direction,
-      tituloPainel: stripHtml(t(`demonstration.labels.${direction}`)),
-      descricaoPainel: LABEL.descricao(),
-      rotuloGatilho: LABEL.trigger(),
+      panelTitle: stripHtml(t(`demonstration.labels.${direction}`)),
+      panelDescription: LABEL.description(),
+      triggerLabel: LABEL.trigger(),
       rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [direction]="direction" [defaultOpen]="true">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>
@@ -212,9 +212,9 @@ export const WithScroll: Story = {
   },
   render: () => ({
     props: {
-      tituloPainel: t('variants.items.withScroll.name'),
-      descricaoPainel: LABEL.descricao(),
-      rotuloGatilho: LABEL.trigger(),
+      panelTitle: t('variants.items.withScroll.name'),
+      panelDescription: LABEL.description(),
+      triggerLabel: LABEL.trigger(),
       rotuloFechar: LABEL.close(),
       paragrafos: Array.from({ length: 30 }, (_, i) => ({
         id: `p-${i}`,
@@ -223,15 +223,15 @@ export const WithScroll: Story = {
     },
     template: `
       <nds-drawer [defaultOpen]="true">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
-          <div ndsDrawerBody class="nds-stack" data-spacing="sm" aria-label="{{ tituloPainel }}">
+          <div ndsDrawerBody class="nds-stack" data-spacing="sm" aria-label="{{ panelTitle }}">
             @for (p of paragrafos; track p.id) {
               <p class="nds-text-body nds-text-muted-foreground">{{ p.text }}</p>
             }
@@ -300,19 +300,19 @@ export const HeadingH3: Story = {
   },
   render: () => ({
     props: {
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
-      rotuloGatilho: LABEL.trigger(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
+      triggerLabel: LABEL.trigger(),
       rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ tituloPainel }}</h3>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h3 ndsDrawerTitle>{{ panelTitle }}</h3>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>

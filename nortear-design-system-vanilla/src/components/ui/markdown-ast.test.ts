@@ -287,8 +287,8 @@ describe('ALLOW_PRESETS — as listas que a documentação nomeia', () => {
   it('`full` é a mesma lista que o parser assume sozinho', () => {
     // Provado por comportamento, e não por igualdade de array: é o default que
     // a documentação chama de `full`, não uma segunda lista parecida.
-    const texto = '# t\n\n| a |\n|---|\n| 1 |';
-    expect(parseMarkdown(texto, { allow: ALLOW_PRESETS.full })).toEqual(parseMarkdown(texto));
+    const text = '# t\n\n| a |\n|---|\n| 1 |';
+    expect(parseMarkdown(text, { allow: ALLOW_PRESETS.full })).toEqual(parseMarkdown(text));
   });
 
   it('`chat` não estrutura título nem tabela — que é o que a doc promete', () => {

@@ -76,9 +76,8 @@ const DESTROY_MESSAGE = 'Você pode desfazer esta ação nos próximos 30 dias.'
  * contar, mas não descasca regex.
  */
 const STORY_PROPS = [
-  'tituloPainel',
-  'descricaoPainel',
-  'rotuloGatilho',
+  'panelTitle',
+  'panelDescription',
   'rotuloFechar',
   'rotuloCampo',
   'emailFieldLabel',

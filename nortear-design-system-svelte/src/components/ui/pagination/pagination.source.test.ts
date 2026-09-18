@@ -62,27 +62,27 @@ describe('paginationSource', () => {
   });
 
   it('a composição direcional fica só com as pontas, sem números nem reticências', () => {
-    const saida = paginationSource('', { args: { demonstration: 'directional', page: 2 } });
-    expect(saida).toContain('<PaginationPrevious />');
-    expect(saida).toContain('<PaginationNext />');
-    expect(saida).not.toContain('PaginationLink');
-    expect(saida).not.toContain('PaginationEllipsis');
+    const output = paginationSource('', { args: { demonstration: 'directional', page: 2 } });
+    expect(output).toContain('<PaginationPrevious />');
+    expect(output).toContain('<PaginationNext />');
+    expect(output).not.toContain('PaginationLink');
+    expect(output).not.toContain('PaginationEllipsis');
   });
 
   it('a composição controlada leva o estado para fora, por bind:page', () => {
-    const saida = paginationSource('', { args: { count: 40, demonstration: 'controlada' } });
-    expect(saida).toContain('let paginaAtual = $state(1);');
-    expect(saida).toContain('bind:page={paginaAtual}');
-    expect(saida).toContain('Página {paginaAtual} de {totalPaginas}');
+    const output = paginationSource('', { args: { count: 40, demonstration: 'controlada' } });
+    expect(output).toContain('let paginaAtual = $state(1);');
+    expect(output).toContain('bind:page={paginaAtual}');
+    expect(output).toContain('Página {paginaAtual} de {totalPaginas}');
   });
 
   it('o rodapé de tabela encosta a faixa à direita e conta o intervalo exibido', () => {
-    const saida = paginationSource('', {
+    const output = paginationSource('', {
       args: { count: 120, page: 2, siblingCount: 1, demonstration: 'tabela' },
     });
-    expect(saida).toContain('data-align="end"');
-    expect(saida).toContain('Mostrando 11–20 de 120 resultados');
-    expect(saida).toContain('data-justify="between"');
+    expect(output).toContain('data-align="end"');
+    expect(output).toContain('Mostrando 11–20 de 120 resultados');
+    expect(output).toContain('data-justify="between"');
   });
 
   it('não carrega o rótulo de landmark que só existe para separar as stories', () => {

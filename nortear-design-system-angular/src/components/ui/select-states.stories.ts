@@ -206,8 +206,8 @@ export const Open: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(list);
       });
-      for (const opcao of options) {
-        await expect(opcao.hasAttribute('tabindex')).toBe(false);
+      for (const option of options) {
+        await expect(option.hasAttribute('tabindex')).toBe(false);
       }
     });
 

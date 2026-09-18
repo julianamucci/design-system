@@ -411,8 +411,8 @@ export const WithGroupActions: Story = {
     await step('Os ícones dos controles são decorativos', async () => {
       const icons = canvasElement.querySelectorAll<SVGElement>('[data-sidebar="group-action"] svg, [data-sidebar="menu-action"] svg');
       await expect(icons.length).toBe(2);
-      for (const icone of icons) {
-        await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      for (const icon of icons) {
+        await expect(icon.getAttribute('aria-hidden')).toBe('true');
       }
     });
 

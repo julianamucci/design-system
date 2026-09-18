@@ -166,7 +166,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
     const triggers = within(barra).getAllByRole('menuitem');
-    const [arquivo, editar] = triggers;
+    const [file, editar] = triggers;
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
       await expect(triggers).toHaveLength(MENUS.length);
@@ -186,7 +186,7 @@ export const Playground: Story = {
 
       // Roving tabindex: um só gatilho é alcançável pelo Tab, e é o primeiro.
       // Sem isto, atravessar uma barra de seis menus custaria seis Tabs.
-      await expect(document.activeElement).toBe(arquivo);
+      await expect(document.activeElement).toBe(file);
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
@@ -195,13 +195,13 @@ export const Playground: Story = {
       // e um passo que clicava deixava a declaração sem verificação nenhuma.
       // Idempotente: só digita com o menu fechado, então o replay parte do
       // mesmo estado da primeira rodada.
-      if (arquivo.getAttribute('aria-expanded') !== 'true') {
-        arquivo.focus();
+      if (file.getAttribute('aria-expanded') !== 'true') {
+        file.focus();
         await userEvent.keyboard('{Enter}');
       }
 
       const menu = await waitForPortal('menu');
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      await expect(file.getAttribute('aria-expanded')).toBe('true');
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
 
       const items = within(menu).getAllByRole('menuitem');
@@ -220,7 +220,7 @@ export const Playground: Story = {
       await waitForAncorado(panel);
       // 8, e não 4: o vão declarado para o painel raiz DESTA barra é maior que o
       // do DropdownMenu (o submenu usa 0). Quem manda é o declarado.
-      expectOndeDiz(arquivo, panel, 8);
+      expectOndeDiz(file, panel, 8);
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
@@ -260,13 +260,13 @@ export const Playground: Story = {
       // fecharia.
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
       });
 
-      arquivo.focus();
+      file.focus();
       await userEvent.keyboard(' ');
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
       });
 
       // O passo seguinte digita DENTRO do menu, então a precondição não é o
@@ -301,12 +301,12 @@ export const Playground: Story = {
         await expect(document.activeElement).toBe(editar);
         await expect(editar.getAttribute('aria-expanded')).toBe('true');
       });
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(file.getAttribute('aria-expanded')).toBe('false');
 
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(arquivo);
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+        await expect(document.activeElement).toBe(file);
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
       });
       await expect(editar.getAttribute('aria-expanded')).toBe('false');
     });
@@ -314,21 +314,21 @@ export const Playground: Story = {
     await step('Escape fecha o menu e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('menu');
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(file.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(arquivo);
+        await expect(document.activeElement).toBe(file);
       });
     });
 
     await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
-      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      if (file.getAttribute('aria-expanded') !== 'true') await userEvent.click(file);
       await waitForPortal('menu');
 
-      await userEvent.click(arquivo);
+      await userEvent.click(file);
       await waitForPortalVanish('menu');
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(file.getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('Clicar fora da barra fecha o menu sem executar nenhum item', async () => {
@@ -336,13 +336,13 @@ export const Playground: Story = {
       // em vez de `userEvent.click(document.body)`: com `modal` (o padrão) a lib
       // põe `pointer-events: none` no resto da página, e o `userEvent` se RECUSA
       // a clicar ali — a play morreria com erro em vez de falha.
-      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      if (file.getAttribute('aria-expanded') !== 'true') await userEvent.click(file);
       await waitForPortal('menu');
       itemChoice.mockClear();
 
       await clickOutside();
       await waitForPortalVanish('menu');
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(file.getAttribute('aria-expanded')).toBe('false');
       // "Sem executar": o clique fora não é escolha — nenhum item ativou, e
       // quem escuta a abertura ficou sabendo que o menu fechou.
       await expect(itemChoice).not.toHaveBeenCalled();

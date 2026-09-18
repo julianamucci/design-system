@@ -99,10 +99,10 @@ export const WithoutTitle: Story = {
 
     await step('A descrição ocupa a coluna do conteúdo, sem quebra de layout', async () => {
       const alerta = canvas.getByRole('alert');
-      const descricao = alerta.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
+      const description = alerta.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
       // Sem título a descrição sobe para a primeira linha; o que não pode é
       // escorregar para a coluna do ícone.
-      await expect(descricao.getBoundingClientRect().left).toBeGreaterThan(
+      await expect(description.getBoundingClientRect().left).toBeGreaterThan(
         alerta.getBoundingClientRect().left,
       );
     });

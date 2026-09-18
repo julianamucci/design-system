@@ -31,14 +31,14 @@ const SIZES = ['sm', 'default', 'lg'] as const;
 const IMPORT_GROUP = 'import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";';
 
 /** Um item por linha, já indentado para dentro do grupo. */
-function items(list: Array<[value: string, label: string, icone: string, extra?: string]>): string {
+function items(list: Array<[value: string, label: string, icon: string, extra?: string]>): string {
   return list
-    .map(([value, label, icone, extra]) => {
+    .map(([value, label, icon, extra]) => {
       const abertura = extra
         ? `<ToggleGroupItem ${extra} value="${value}" aria-label="${label}">`
         : `<ToggleGroupItem value="${value}" aria-label="${label}">`;
       return `  ${abertura}
-    <${icone} aria-hidden="true" />
+    <${icon} aria-hidden="true" />
   </ToggleGroupItem>`;
     })
     .join('\n');

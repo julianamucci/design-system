@@ -12,7 +12,7 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		label = LABELS_SIDEBAR_DEFAULT.alternar,
+		label = LABELS_SIDEBAR_DEFAULT.toggle,
 		onclick,
 		...restProps
 	}: ComponentProps<typeof Button> & {

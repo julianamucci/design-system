@@ -24,10 +24,10 @@ describe('separatorSource', () => {
   });
 
   it('acompanha o control de orientação, trocando também o contêiner', () => {
-    const saida = separatorSource('', { args: { orientation: 'vertical' } });
-    expect(saida).toContain('<Separator orientation="vertical" />');
+    const output = separatorSource('', { args: { orientation: 'vertical' } });
+    expect(output).toContain('<Separator orientation="vertical" />');
     // A linha vertical precisa de uma linha de flex contra a qual esticar.
-    expect(saida).toContain('nds-cluster');
+    expect(output).toContain('nds-cluster');
   });
 
   it('só escreve decorative quando o valor difere do padrão', () => {
@@ -43,8 +43,8 @@ describe('separatorSource', () => {
 
 describe('transforms das stories de variação e composição', () => {
   it('a variante vertical mostra as duas linhas da barra de navegação', () => {
-    const saida = separatorVerticalSource();
-    expect(saida.match(/<Separator orientation="vertical" \/>/g)).toHaveLength(2);
+    const output = separatorVerticalSource();
+    expect(output.match(/<Separator orientation="vertical" \/>/g)).toHaveLength(2);
   });
 
   it('a variante horizontal separa dois blocos empilhados', () => {
@@ -57,9 +57,9 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a composição em card importa o Card junto do Separator', () => {
-    const saida = separatorEmCardSource();
-    expect(saida).toContain('from "@/components/ui/card"');
-    expect(saida).toContain('<Separator orientation="horizontal" />');
+    const output = separatorEmCardSource();
+    expect(output).toContain('from "@/components/ui/card"');
+    expect(output).toContain('<Separator orientation="horizontal" />');
   });
 
   it('a composição em menu marca o divisor como semântico', () => {
@@ -67,8 +67,8 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a ênfase forte aparece ao lado da linha padrão, com classe extra', () => {
-    const saida = separatorEnfaseForteSource();
-    expect(saida).toContain('emphasis="strong"');
-    expect(saida).toContain('class="nds-mt-4"');
+    const output = separatorEnfaseForteSource();
+    expect(output).toContain('emphasis="strong"');
+    expect(output).toContain('class="nds-mt-4"');
   });
 });

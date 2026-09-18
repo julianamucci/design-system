@@ -158,10 +158,10 @@ export const WithIcons: Story = {
     await step('Os ícones são decorativos, desenham algo e não interceptam o clique', async () => {
       const icons = Array.from(canvasElement.querySelectorAll('[role="tab"] svg'));
       await expect(icons).toHaveLength(3);
-      for (const icone of icons) {
-        await expect(icone).toHaveAttribute('aria-hidden', 'true');
-        await expect(icone.childElementCount).toBeGreaterThan(0);
-        await expect(getComputedStyle(icone).pointerEvents).toBe('none');
+      for (const icon of icons) {
+        await expect(icon).toHaveAttribute('aria-hidden', 'true');
+        await expect(icon.childElementCount).toBeGreaterThan(0);
+        await expect(getComputedStyle(icon).pointerEvents).toBe('none');
       }
     });
   },

@@ -34,7 +34,7 @@ type Option = {
   id: string;
   label: string;
   disabled?: boolean;
-  descricao?: string;
+  description?: string;
 };
 
 const PAGAMENTO: Option[] = [
@@ -120,10 +120,10 @@ export function radioGroupHorizontalSource(): string {
  * o leitor de tela leria o parágrafo inteiro a cada seta.
  */
 export function radioGroupWithDescriptionSource(): string {
-  const options: Array<Option & { descricao: string }> = [
-    { ...PAGAMENTO[0], descricao: 'Aprovação imediata em até 12x.' },
-    { ...PAGAMENTO[1], descricao: 'Pagamento instantâneo com 5% de desconto.' },
-    { ...PAGAMENTO[2], descricao: 'Compensação em até 3 dias úteis.' },
+  const options: Array<Option & { description: string }> = [
+    { ...PAGAMENTO[0], description: 'Aprovação imediata em até 12x.' },
+    { ...PAGAMENTO[1], description: 'Pagamento instantâneo com 5% de desconto.' },
+    { ...PAGAMENTO[2], description: 'Compensação em até 3 dias úteis.' },
   ];
   const body = options
     .map(
@@ -137,7 +137,7 @@ export function radioGroupWithDescriptionSource(): string {
     <div class="nds-stack" data-spacing="xs">
       <Label for="${o.id}">${o.label}</Label>
       <p id="${o.id}-desc" class="nds-text-caption nds-text-muted-foreground">
-        ${o.descricao}
+        ${o.description}
       </p>
     </div>
   </div>`,

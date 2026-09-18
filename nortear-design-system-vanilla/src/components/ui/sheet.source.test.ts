@@ -74,7 +74,7 @@ describe('sheetSnippet', () => {
 
   it('mostra a limpeza só quando a story trata dela', () => {
     expect(sheetSnippet()).not.toContain('destroy()');
-    expect(sheetSnippet({ mostrarDestroy: true })).toContain('painel.destroy();');
+    expect(sheetSnippet({ showDestroy: true })).toContain('painel.destroy();');
   });
 
   it('não repete o import do botão quando o corpo também o usa', () => {

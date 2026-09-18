@@ -68,11 +68,11 @@ const DESCRIPTION = 'Configure os filtros para refinar os resultados.';
  * o `aria-labelledby` e o `aria-describedby` do painel, e um diálogo modal sem
  * nome chega ao leitor de tela como uma região anônima.
  */
-function header(title = TITLE, descricao = DESCRIPTION): string {
+function header(title = TITLE, description = DESCRIPTION): string {
   return `    <SheetHeader>
       <SheetTitle>${title}</SheetTitle>
       <SheetDescription>
-        ${descricao}
+        ${description}
       </SheetDescription>
     </SheetHeader>`;
 }
@@ -111,13 +111,13 @@ function body(): string {
  * navegador não faz o envio implícito, e o Enter num campo não dispara nada, em
  * silêncio (PRD D9). Fora desse caso os dois atributos seriam ruído.
  */
-function footer(acao = 'Aplicar filtros', saida = 'Cancelar', comFormulario?: string): string {
+function footer(acao = 'Aplicar filtros', output = 'Cancelar', comFormulario?: string): string {
   const tipo = comFormulario ? 'type="button" ' : '';
   const primaria = comFormulario
     ? `<Button type="submit" form="${comFormulario}">${acao}</Button>`
     : `<Button>${acao}</Button>`;
   return `    <SheetFooter>
-      <SheetClose render={<Button ${tipo}variant="outline" />}>${saida}</SheetClose>
+      <SheetClose render={<Button ${tipo}variant="outline" />}>${output}</SheetClose>
       ${primaria}
     </SheetFooter>`;
 }

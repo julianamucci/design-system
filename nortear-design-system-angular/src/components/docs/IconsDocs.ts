@@ -250,27 +250,27 @@ const REGRAS_DE_ACESSIBILIDADE = [
           [class.is-hidden]="noResults()"
           [attr.aria-label]="textoDeDisponiveis()"
         >
-          @for (icone of catalogo; track icone.name) {
+          @for (icon of catalogo; track icon.name) {
             <li
               class="nds-icon-grid-item"
-              [class.is-hidden]="!visiveis().has(icone.name)"
-              [attr.data-icon-name]="icone.name"
+              [class.is-hidden]="!visible().has(icon.name)"
+              [attr.data-icon-name]="icon.name"
             >
               <button
                 type="button"
                 class="nds-icon-tile"
-                [attr.aria-label]="t('copy.tooltip') + ' ' + icone.name"
-                (click)="copiar(icone.name)"
+                [attr.aria-label]="t('copy.tooltip') + ' ' + icon.name"
+                (click)="copiar(icon.name)"
               >
                 <span class="nds-icon-tile-svg">
-                  <svg [ndsLucideGlyph]="icone.no" class="nds-icon-lg"></svg>
+                  <svg [ndsLucideGlyph]="icon.no" class="nds-icon-lg"></svg>
                 </span>
-                <span class="nds-icon-tile-name">{{ icone.name }}</span>
+                <span class="nds-icon-tile-name">{{ icon.name }}</span>
                 <span
                   class="nds-icon-tile-tooltip"
-                  [class.is-visible]="copiado() === icone.name"
+                  [class.is-visible]="copiado() === icon.name"
                   aria-hidden="true"
-                  >{{ copiado() === icone.name ? t('copy.copied') : t('copy.tooltip') }}</span
+                  >{{ copiado() === icon.name ? t('copy.copied') : t('copy.tooltip') }}</span
                 >
               </button>
             </li>
@@ -309,7 +309,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   protected readonly copiado = signal<string | null>(null);
 
   /** Nomes que passam no filtro. Set, e não array: o template consulta 2000×. */
-  protected readonly visiveis = computed(() => {
+  protected readonly visible = computed(() => {
     const query = normalizar(this.search());
     if (!query) return new Set(CATALOGO.map((i) => i.name));
     return new Set(
@@ -317,14 +317,14 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
     );
   });
 
-  protected readonly noResults = computed(() => this.visiveis().size === 0);
+  protected readonly noResults = computed(() => this.visible().size === 0);
 
   protected readonly textoDeDisponiveis = computed(() =>
     t('iconsAvailable').replace('{count}', String(CATALOGO.length)),
   );
 
   protected readonly contagemText = computed(() => {
-    const total = this.visiveis().size;
+    const total = this.visible().size;
     const query = this.search().trim();
     if (!query) return t('search.count').replace('{count}', String(total));
     return t('search.results')

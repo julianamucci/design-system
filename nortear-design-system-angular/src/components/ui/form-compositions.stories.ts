@@ -156,8 +156,8 @@ export const ReactiveForm: Story = {
     });
 
     await step('O envio fica bloqueado enquanto o formulário é inválido', async () => {
-      const salvar = canvas.getByRole('button', { name: 'Salvar' }) as HTMLButtonElement;
-      await expect(salvar.disabled).toBe(true);
+      const save = canvas.getByRole('button', { name: 'Salvar' }) as HTMLButtonElement;
+      await expect(save.disabled).toBe(true);
     });
   },
 };

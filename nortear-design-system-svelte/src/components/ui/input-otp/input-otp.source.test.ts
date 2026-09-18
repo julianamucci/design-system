@@ -79,32 +79,32 @@ describe('inputOtpSource', () => {
 
 describe('transforms das stories de variação e composição', () => {
   it('o separador parte o código em dois blocos de três', () => {
-    const saida = inputOtpWithSeparatorSource();
-    expect(saida).toContain('InputOTPSeparator');
-    expect(saida).toContain('cells.slice(0, 3)');
-    expect(saida).toContain('cells.slice(3)');
-    expect(saida.match(/<InputOTPGroup>/g)).toHaveLength(2);
+    const output = inputOtpWithSeparatorSource();
+    expect(output).toContain('InputOTPSeparator');
+    expect(output).toContain('cells.slice(0, 3)');
+    expect(output).toContain('cells.slice(3)');
+    expect(output.match(/<InputOTPGroup>/g)).toHaveLength(2);
   });
 
   it('o texto de apoio é lido junto com o campo', () => {
-    const saida = helperInputOtpWithTextSource();
-    expect(saida).toContain('aria-describedby="codigo-apoio"');
-    expect(saida).toContain('<p id="codigo-apoio"');
-    expect(saida).not.toContain('aria-invalid');
+    const output = helperInputOtpWithTextSource();
+    expect(output).toContain('aria-describedby="codigo-apoio"');
+    expect(output).toContain('<p id="codigo-apoio"');
+    expect(output).not.toContain('aria-invalid');
   });
 
   it('o erro marca o campo e liga a mensagem pelo mesmo caminho', () => {
-    const saida = inputOtpWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="codigo-erro"');
-    expect(saida).toContain('<p id="codigo-erro"');
+    const output = inputOtpWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="codigo-erro"');
+    expect(output).toContain('<p id="codigo-erro"');
     // A story nasce com o código completo: é o erro depois da tentativa.
-    expect(saida).toContain('let codigo = $state("482913");');
+    expect(output).toContain('let codigo = $state("482913");');
   });
 
   it('o reenvio vem depois do campo na ordem do documento', () => {
-    const saida = inputOtpWithReenvioSource();
-    expect(saida).toContain('from "@/components/ui/button"');
-    expect(saida.indexOf('</InputOTP>')).toBeLessThan(saida.indexOf('Reenviar código'));
+    const output = inputOtpWithReenvioSource();
+    expect(output).toContain('from "@/components/ui/button"');
+    expect(output.indexOf('</InputOTP>')).toBeLessThan(output.indexOf('Reenviar código'));
   });
 });

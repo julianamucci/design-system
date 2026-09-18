@@ -378,15 +378,15 @@ interface LineRenderizada {
                 <div ndsDropdownMenuGroup class="nds-data-table-columns-menu-content">
                   <div ndsDropdownMenuLabel>{{ rotulos().showColumns }}</div>
                   <div ndsDropdownMenuSeparator></div>
-                  @for (coluna of colunasOcultaveis(); track coluna.id) {
+                  @for (column of colunasOcultaveis(); track column.id) {
                     <div class="nds-data-table-columns-menu-row">
                       <div
                         ndsDropdownMenuCheckboxItem
                         class="nds-data-table-columns-menu-check"
-                        [checked]="!ocultas().has(coluna.id)"
-                        (checkedChange)="alternarVisibilidade(coluna.id, $event)"
+                        [checked]="!ocultas().has(column.id)"
+                        (checkedChange)="alternarVisibilidade(column.id, $event)"
                       >
-                        {{ coluna.header }}
+                        {{ column.header }}
                       </div>
                     </div>
                   }
@@ -425,25 +425,25 @@ interface LineRenderizada {
                   </div>
                 </th>
               }
-              @for (coluna of colunasVisiveis(); track coluna.id) {
-                <th ndsTableHead class="nds-data-table-th" [sort]="direcaoAria(coluna)">
+              @for (column of colunasVisiveis(); track column.id) {
+                <th ndsTableHead class="nds-data-table-th" [sort]="direcaoAria(column)">
                   <div class="nds-data-table-th-inner">
-                    @if (coluna.sortable) {
+                    @if (column.sortable) {
                       <button
                         type="button"
                         class="nds-data-table-sort-btn"
-                        [attr.aria-label]="rotuloOrdenar(coluna)"
-                        (click)="alternarOrdenacao(coluna.id)"
+                        [attr.aria-label]="rotuloOrdenar(column)"
+                        (click)="alternarOrdenacao(column.id)"
                       >
-                        <span>{{ coluna.header }}</span>
+                        <span>{{ column.header }}</span>
                         <svg
                           ndsDataTableIcon
-                          [kind]="iconeDaOrdem(coluna.id)"
-                          [tone]="ordenacao()?.id === coluna.id ? 'default' : 'muted'"
+                          [kind]="iconeDaOrdem(column.id)"
+                          [tone]="ordenacao()?.id === column.id ? 'default' : 'muted'"
                         ></svg>
                       </button>
                     } @else {
-                      <div class="nds-data-table-th-label">{{ coluna.header }}</div>
+                      <div class="nds-data-table-th-label">{{ column.header }}</div>
                     }
                   </div>
                 </th>
@@ -457,24 +457,24 @@ interface LineRenderizada {
                     <span class="nds-sr-only">{{ rotuloSemFiltro(rotulos().selectAll) }}</span>
                   </th>
                 }
-                @for (coluna of colunasVisiveis(); track coluna.id) {
+                @for (column of colunasVisiveis(); track column.id) {
                   <th ndsTableHead>
                     <!-- Todo th da linha de filtros carrega texto para leitor de
                          tela. O valor de um input NÃO entra no nome acessível da
                          célula, então uma célula que só tem o campo chega ao axe
                          como cabeçalho vazio (empty-table-header). -->
-                    @if (coluna.filter) {
-                      <span class="nds-sr-only">{{ rotuloFiltrar(coluna) }}</span>
-                      @if (coluna.filter.type === 'select') {
+                    @if (column.filter) {
+                      <span class="nds-sr-only">{{ rotuloFiltrar(column) }}</span>
+                      @if (column.filter.type === 'select') {
                         <select
                           class="nds-data-table-filter-select"
-                          [attr.aria-label]="rotuloFiltrar(coluna)"
-                          (change)="aoEscolherFiltro(coluna.id, $event)"
+                          [attr.aria-label]="rotuloFiltrar(column)"
+                          (change)="aoEscolherFiltro(column.id, $event)"
                         >
                           <option value="">{{ rotulos().allOption }}</option>
-                          @for (opcao of coluna.filter.options ?? []; track opcao) {
-                            <option [value]="opcao" [selected]="filtroDaColuna(coluna.id) === opcao">
-                              {{ opcao }}
+                          @for (option of column.filter.options ?? []; track option) {
+                            <option [value]="option" [selected]="filtroDaColuna(column.id) === option">
+                              {{ option }}
                             </option>
                           }
                         </select>
@@ -482,14 +482,14 @@ interface LineRenderizada {
                         <input
                           ndsInput
                           class="nds-data-table-filter-input"
-                          [value]="filtroDaColuna(coluna.id)"
-                          [placeholder]="coluna.filter.placeholder ?? rotulos().filterPlaceholder"
-                          [attr.aria-label]="rotuloFiltrar(coluna)"
-                          (input)="aoDigitarFiltroDeColuna(coluna.id, $event)"
+                          [value]="filtroDaColuna(column.id)"
+                          [placeholder]="column.filter.placeholder ?? rotulos().filterPlaceholder"
+                          [attr.aria-label]="rotuloFiltrar(column)"
+                          (input)="aoDigitarFiltroDeColuna(column.id, $event)"
                         />
                       }
                     } @else {
-                      <span class="nds-sr-only">{{ rotuloSemFiltro(coluna.header) }}</span>
+                      <span class="nds-sr-only">{{ rotuloSemFiltro(column.header) }}</span>
                     }
                   </th>
                 }
@@ -578,8 +578,8 @@ interface LineRenderizada {
               [attr.aria-label]="rotulos().rowsPerPage"
               (change)="aoTrocarTamanhoDePagina($event)"
             >
-              @for (opcao of pageSizeOptions(); track opcao) {
-                <option [value]="opcao" [selected]="opcao === tamanhoDePagina()">{{ opcao }}</option>
+              @for (option of pageSizeOptions(); track option) {
+                <option [value]="option" [selected]="option === tamanhoDePagina()">{{ option }}</option>
               }
             </select>
           </div>
@@ -708,12 +708,12 @@ export class NdsDataTable<TData> implements OnInit {
     ...this.labels(),
   }));
 
-  protected rotuloOrdenar(coluna: DataTableColumn<TData>): string {
-    return preencher(this.rotulos().sortBy, { col: coluna.header });
+  protected rotuloOrdenar(column: DataTableColumn<TData>): string {
+    return preencher(this.rotulos().sortBy, { col: column.header });
   }
 
-  protected rotuloFiltrar(coluna: DataTableColumn<TData>): string {
-    return preencher(this.rotulos().filter, { col: coluna.header });
+  protected rotuloFiltrar(column: DataTableColumn<TData>): string {
+    return preencher(this.rotulos().filter, { col: column.header });
   }
 
   protected rotuloSemFiltro(col: string): string {
@@ -746,9 +746,9 @@ export class NdsDataTable<TData> implements OnInit {
 
   // ─── Derivação: bruto → filtrado → ordenado → paginado ──────────────────────
 
-  private text(coluna: DataTableColumn<TData>, row: TData): string {
-    const value = coluna.accessor(row);
-    if (coluna.format) return coluna.format(value, row);
+  private text(column: DataTableColumn<TData>, row: TData): string {
+    const value = column.accessor(row);
+    if (column.format) return column.format(value, row);
     // Nunca a string "undefined" numa célula: travessão é o vazio tipográfico,
     // e é o que as outras stacks mostram.
     return value === null || value === undefined || value === '' ? CELL_VAZIA : String(value);
@@ -812,10 +812,10 @@ export class NdsDataTable<TData> implements OnInit {
       if (search && !line.search.includes(search)) return false;
       for (const [colunaId, value] of byColumn) {
         if (!value) continue;
-        const coluna = colunas.find((c) => c.id === colunaId);
-        if (!coluna) continue;
-        const text = this.text(coluna, data[line.index]);
-        const casa = coluna.filter?.type === 'select'
+        const column = colunas.find((c) => c.id === colunaId);
+        if (!column) continue;
+        const text = this.text(column, data[line.index]);
+        const casa = column.filter?.type === 'select'
           ? text === value
           : text.toLowerCase().includes(value.toLowerCase());
         if (!casa) return false;
@@ -829,14 +829,14 @@ export class NdsDataTable<TData> implements OnInit {
     const lines = this.linhasFiltradas();
     if (!order) return lines;
 
-    const coluna = this.columns().find((c) => c.id === order.id);
-    if (!coluna) return lines;
+    const column = this.columns().find((c) => c.id === order.id);
+    if (!column) return lines;
 
     const data = this.data();
     const sinal = order.dir === 'asc' ? 1 : -1;
     return [...lines].sort((a, b) => {
-      const va = coluna.accessor(data[a.index]);
-      const vb = coluna.accessor(data[b.index]);
+      const va = column.accessor(data[a.index]);
+      const vb = column.accessor(data[b.index]);
       if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * sinal;
       return String(va ?? '').localeCompare(String(vb ?? ''), undefined, { numeric: true }) * sinal;
     });
@@ -867,12 +867,12 @@ export class NdsDataTable<TData> implements OnInit {
 
   // ─── Ordenação ──────────────────────────────────────────────────────────────
 
-  protected direcaoAria(coluna: DataTableColumn<TData>): TableSortDirection | undefined {
+  protected direcaoAria(column: DataTableColumn<TData>): TableSortDirection | undefined {
     // Coluna que não ordena não anuncia ordenação: `aria-sort="none"` prometeria
     // uma capacidade que ela não tem.
-    if (!coluna.sortable) return undefined;
+    if (!column.sortable) return undefined;
     const order = this.ordenacao();
-    if (order?.id !== coluna.id) return 'none';
+    if (order?.id !== column.id) return 'none';
     return order.dir === 'asc' ? 'ascending' : 'descending';
   }
 
@@ -1013,8 +1013,8 @@ export class NdsDataTable<TData> implements OnInit {
     if (this.emEdicao() !== celula.key) return;
     this.emEdicao.set(null);
 
-    const coluna = this.columns().find((c) => c.id === celula.colunaId);
-    const previous = coluna?.accessor(this.data()[line.index]);
+    const column = this.columns().find((c) => c.id === celula.colunaId);
+    const previous = column?.accessor(this.data()[line.index]);
     const raw = this.rascunho();
     // O tipo do valor anterior manda: uma coluna numérica que voltasse como
     // string reordenaria por texto na próxima ordenação, sem erro nenhum.

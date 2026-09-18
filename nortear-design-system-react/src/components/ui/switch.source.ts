@@ -175,14 +175,14 @@ export function switchInvalidoSource(): string {
  * importa é a FORMA de cada linha, e um `map` esconderia justamente ela.
  */
 export function switchPreferenciasSource(): string {
-  const painel = (id: string, label: string, descricao: string, ligado = false) => `    <div
+  const painel = (id: string, label: string, description: string, ligado = false) => `    <div
       className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
       data-align="center"
       data-justify="between"
     >
       <div className="nds-stack nds-pr-4" data-spacing="xs">
         <Label htmlFor="${id}">${label}</Label>
-        <p className="nds-text-body">${descricao}</p>
+        <p className="nds-text-body">${description}</p>
       </div>
       <Switch id="${id}"${ligado ? ' defaultChecked' : ''} />
     </div>`;

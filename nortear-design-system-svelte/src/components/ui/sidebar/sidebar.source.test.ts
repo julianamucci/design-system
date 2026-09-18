@@ -99,10 +99,10 @@ describe('sidebarSource', () => {
   it('o marco de navegação fica DENTRO da barra, não em volta dela', () => {
     // Em largura estreita o conteúdo da barra vai para a gaveta: um <nav> por
     // fora ficaria para trás vazio, prometendo navegação e sem itens.
-    const saida = sidebarSource();
-    const nav = saida.indexOf('<nav aria-label="Navegação principal">');
-    expect(nav).toBeGreaterThan(saida.indexOf('<SidebarContent>'));
-    expect(nav).toBeLessThan(saida.indexOf('</SidebarContent>'));
+    const output = sidebarSource();
+    const nav = output.indexOf('<nav aria-label="Navegação principal">');
+    expect(nav).toBeGreaterThan(output.indexOf('<SidebarContent>'));
+    expect(nav).toBeLessThan(output.indexOf('</SidebarContent>'));
   });
 
   it('os controls de lado e variante chegam à barra', () => {
@@ -120,10 +120,10 @@ describe('sidebarSource', () => {
   });
 
   it('sem recolhimento não há gatilho, faixa nem balão de dica', () => {
-    const saida = sidebarSource('', { args: { collapsible: 'none' } });
-    expect(saida).not.toContain('<SidebarTrigger />');
-    expect(saida).not.toContain('<SidebarRail />');
-    expect(saida).not.toContain('tooltip=');
+    const output = sidebarSource('', { args: { collapsible: 'none' } });
+    expect(output).not.toContain('<SidebarTrigger />');
+    expect(output).not.toContain('<SidebarRail />');
+    expect(output).not.toContain('tooltip=');
   });
 });
 
@@ -148,10 +148,10 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o modo ícone nomeia o item, porque o rótulo visível some', () => {
-    const saida = sidebarModeIconSource();
-    expect(saida).toContain('collapsible="icon"');
-    expect(saida).toContain('aria-label={item.label}');
-    expect(saida).toContain('nds-sidebar-hide-collapsed');
+    const output = sidebarModeIconSource();
+    expect(output).toContain('collapsible="icon"');
+    expect(output).toContain('aria-label={item.label}');
+    expect(output).toContain('nds-sidebar-hide-collapsed');
   });
 
   it('a barra fixa dispensa o gatilho, e a gaveta força o ponto de virada', () => {
@@ -160,24 +160,24 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de grupos traz busca, separador, contador e ações nomeadas', () => {
-    const saida = navigationSidebarGroupsSource();
-    expect(saida).toContain('<SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />');
-    expect(saida).toContain('<SidebarSeparator />');
-    expect(saida).toContain('<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>');
-    expect(saida).toContain('aria-label="Adicionar atalho"');
-    expect(saida).toContain('aria-label="Mais opções de {item.label}"');
+    const output = navigationSidebarGroupsSource();
+    expect(output).toContain('<SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />');
+    expect(output).toContain('<SidebarSeparator />');
+    expect(output).toContain('<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>');
+    expect(output).toContain('aria-label="Adicionar atalho"');
+    expect(output).toContain('aria-label="Mais opções de {item.label}"');
   });
 
   it('o submenu anuncia o nível abaixo e o estado dele', () => {
-    const saida = sidebarSubmenuSource();
-    expect(saida).toContain('aria-expanded={componentesAberto}');
-    expect(saida).toContain('<SidebarMenuSub>');
-    expect(saida).toContain('href={sub.href}');
+    const output = sidebarSubmenuSource();
+    expect(output).toContain('aria-expanded={componentesAberto}');
+    expect(output).toContain('<SidebarMenuSub>');
+    expect(output).toContain('href={sub.href}');
   });
 
   it('o carregamento troca cada item por um espaço reservado com ícone', () => {
-    const saida = sidebarSkeletonSource();
-    expect(saida).toContain('<SidebarMenuSkeleton showIcon />');
-    expect(saida).not.toContain('<SidebarMenuButton');
+    const output = sidebarSkeletonSource();
+    expect(output).toContain('<SidebarMenuSkeleton showIcon />');
+    expect(output).not.toContain('<SidebarMenuButton');
   });
 });

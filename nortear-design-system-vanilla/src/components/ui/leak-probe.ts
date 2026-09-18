@@ -53,7 +53,7 @@ export function probeHost(caption: string): HTMLElement {
  */
 export async function checkLimpeza(probe: ProbeResult): Promise<void> {
   await expect(probe.hasDestroy).toBe(true);
-  await expect(probe.descricao).toBe(
+  await expect(probe.description).toBe(
     'apos-saida=[nenhum] apos-reprise=[nenhum] orfaos=0/0',
   );
   await expect(probe.leaveReagiuAfter).toBe(false);
@@ -76,7 +76,7 @@ export type ProbeResult = {
   /** A fábrica devolveu algo com `destroy()`? */
   hasDestroy: boolean;
   /** Texto para a mensagem de falha dizer O QUE sobrou. */
-  descricao: string;
+  description: string;
 };
 
 const BATERIA: Array<() => Event> = [
@@ -112,8 +112,8 @@ async function countOrfaos(selector: string | undefined, limit = 1200): Promise<
   return n;
 }
 
-function assinatura(no: HTMLElement, seletorDePortal?: string): string {
-  const portais = seletorDePortal ? document.querySelectorAll(seletorDePortal).length : 0;
+function assinatura(no: HTMLElement, portalSelector?: string): string {
+  const portais = portalSelector ? document.querySelectorAll(portalSelector).length : 0;
   return [
     no.dataset.state ?? '',
     String(no.hidden),
@@ -135,14 +135,14 @@ export async function sondarOuvintes(opts: {
    */
   destruirAlvo?: () => void;
   /** Nós que a fábrica pendura no `body`, para contar órfãos. */
-  seletorDePortal?: string;
+  portalSelector?: string;
 }): Promise<ProbeResult> {
-  const { host, montar, exercitar, destruirAlvo, seletorDePortal } = opts;
+  const { host, montar, exercitar, destruirAlvo, portalSelector } = opts;
 
   // Precondição do REPLAY: o que estiver aqui é resíduo da execução anterior.
   host.replaceChildren();
-  if (seletorDePortal) {
-    document.querySelectorAll(seletorDePortal).forEach((el) => el.remove());
+  if (portalSelector) {
+    document.querySelectorAll(portalSelector).forEach((el) => el.remove());
   }
   document.body.style.overflow = '';
   await sleep(20);
@@ -162,17 +162,17 @@ export async function sondarOuvintes(opts: {
     await sleep(200);
 
     const vivosAposOutput = spy.vivos();
-    const orfaosAposOutput = await countOrfaos(seletorDePortal);
+    const orfaosAposOutput = await countOrfaos(portalSelector);
 
     // A referência do teste de comportamento é o estado JÁ LIMPO, não o estado
     // aberto de antes da saída: a limpeza legítima muda o nó (fecha o painel,
     // zera `data-state`), e comparar com o "antes" acusava reação em toda
     // fábrica que funcionava.
-    const aposLimpeza = assinatura(no, seletorDePortal);
+    const aposLimpeza = assinatura(no, portalSelector);
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
     await sleep(80);
-    const leaveReagiuAfter = assinatura(no, seletorDePortal) !== aposLimpeza;
+    const leaveReagiuAfter = assinatura(no, portalSelector) !== aposLimpeza;
 
     const withDestroy = no as HTMLElement & { destroy?: () => void };
     const destruir = destruirAlvo ?? withDestroy.destroy?.bind(withDestroy);
@@ -189,7 +189,7 @@ export async function sondarOuvintes(opts: {
       idempotenceError = e instanceof Error ? e.message : String(e);
     }
 
-    const orfaosAposDestroy = await countOrfaos(seletorDePortal, 400);
+    const orfaosAposDestroy = await countOrfaos(portalSelector, 400);
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
     await sleep(80);
@@ -203,7 +203,7 @@ export async function sondarOuvintes(opts: {
       orfaosAposDestroy,
       leaveReagiuAfter,
       hasDestroy,
-      descricao:
+      description:
         `apos-saida=[${describeVivos(vivosAposOutput)}]` +
         ` apos-reprise=[${describeVivos(vivosAposReprise)}]` +
         ` orfaos=${orfaosAposOutput}/${orfaosAposDestroy}`,

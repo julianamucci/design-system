@@ -29,9 +29,9 @@ const ALL = [
 
 describe('inputOtpSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
-    const saida = inputOtpSource();
-    expect(saida).toContain('} from "@/components/ui/input-otp";');
-    expect(saida).toContain('InputOTPSlot');
+    const output = inputOtpSource();
+    expect(output).toContain('} from "@/components/ui/input-otp";');
+    expect(output).toContain('InputOTPSlot');
   });
 
   it('nunca imprime a fixture que as stories usam para achar o campo', () => {
@@ -47,17 +47,17 @@ describe('inputOtpSource', () => {
     // O Storybook entrega `onComplete` como FUNÇÃO; interpolá-la despejaria o
     // corpo do mock como se fosse API do design system.
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = inputOtpSource(undefined, { args: { onComplete: spy as never } });
-    expect(saida).not.toContain('CORPO_DO_MOCK');
-    expect(saida).toContain('onComplete={(valor) => verificarCodigo(valor)}');
+    const output = inputOtpSource(undefined, { args: { onComplete: spy as never } });
+    expect(output).not.toContain('CORPO_DO_MOCK');
+    expect(output).toContain('onComplete={(valor) => verificarCodigo(valor)}');
   });
 
   it('o comprimento do control manda nas duas pontas ao mesmo tempo', () => {
     // `maxLength` e a contagem de caixas são o MESMO número: declarar seis
     // slots num campo de quatro deixa duas caixas mortas na tela.
-    const saida = inputOtpSource(undefined, { args: { maxLength: 4 } });
-    expect(saida).toContain('maxLength={4}');
-    expect(saida).toContain('{ length: 4 }');
+    const output = inputOtpSource(undefined, { args: { maxLength: 4 } });
+    expect(output).toContain('maxLength={4}');
+    expect(output).toContain('{ length: 4 }');
   });
 
   it('cai em seis dígitos quando o control não diz nada', () => {
@@ -75,10 +75,10 @@ describe('inputOtpSource', () => {
 describe('o contrato que faz o componente funcionar', () => {
   it('todo snippet é controlado: sem value/onChange as caixas ficam vazias', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida, `${fn.name} sem estado`).toContain('import { useState } from "react";');
-      expect(saida).toContain('value={codigo}');
-      expect(saida).toContain('onChange={setCodigo}');
+      const output = fn();
+      expect(output, `${fn.name} sem estado`).toContain('import { useState } from "react";');
+      expect(output).toContain('value={codigo}');
+      expect(output).toContain('onChange={setCodigo}');
     }
   });
 
@@ -86,9 +86,9 @@ describe('o contrato que faz o componente funcionar', () => {
     // São os dois atributos que fazem o sistema oferecer o código que acabou de
     // chegar por SMS — o motivo de existir do componente.
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida, `${fn.name} sem autoComplete`).toContain('autoComplete="one-time-code"');
-      expect(saida).toMatch(/inputMode="(numeric|text)"/);
+      const output = fn();
+      expect(output, `${fn.name} sem autoComplete`).toContain('autoComplete="one-time-code"');
+      expect(output).toMatch(/inputMode="(numeric|text)"/);
     }
   });
 
@@ -96,46 +96,46 @@ describe('o contrato que faz o componente funcionar', () => {
     // O `<input>` real fica recortado atrás das caixas: sem rótulo ligado, o
     // campo não tem nome nenhum para quem usa leitor de tela.
     for (const fn of ALL) {
-      const saida = fn();
-      const target = saida.match(/<Label htmlFor="([a-z0-9-]+)"/)?.[1];
+      const output = fn();
+      const target = output.match(/<Label htmlFor="([a-z0-9-]+)"/)?.[1];
       expect(target, `${fn.name} sem rótulo`).toBeDefined();
-      expect(saida).toContain(`id="${target}"`);
+      expect(output).toContain(`id="${target}"`);
     }
   });
 });
 
 describe('variantes', () => {
   it('o PIN de quatro casa o maxLength com a contagem de caixas', () => {
-    const saida = inputOtpQuatroDigitosSource();
-    expect(saida).toContain('maxLength={4}');
-    expect(saida).toContain('{ length: 4 }');
+    const output = inputOtpQuatroDigitosSource();
+    expect(output).toContain('maxLength={4}');
+    expect(output).toContain('{ length: 4 }');
   });
 
   it('o separador divide a LEITURA, e o campo continua sendo um só', () => {
-    const saida = inputOtpWithSeparatorSource();
-    expect(saida).toContain('<InputOTPSeparator />');
-    expect(saida).toContain('maxLength={6}');
+    const output = inputOtpWithSeparatorSource();
+    expect(output).toContain('<InputOTPSeparator />');
+    expect(output).toContain('maxLength={6}');
     // Índices explícitos e contínuos entre os dois grupos: é o que mostra que a
     // quebra é visual, não de valor.
-    for (let i = 0; i < 6; i += 1) expect(saida).toContain(`index={${i}}`);
-    expect(saida.match(/<InputOTPGroup>/g)).toHaveLength(2);
+    for (let i = 0; i < 6; i += 1) expect(output).toContain(`index={${i}}`);
+    expect(output.match(/<InputOTPGroup>/g)).toHaveLength(2);
   });
 
   it('o alfanumérico troca o pattern E o teclado', () => {
     // O componente recusa tudo que não for dígito por padrão; aceitar letra sem
     // trocar o `inputMode` abriria o teclado numérico para um código com letras.
-    const saida = inputOtpAlfanumericoSource();
-    expect(saida).toContain('import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";');
-    expect(saida).toContain('pattern={REGEXP_ONLY_DIGITS_AND_CHARS}');
-    expect(saida).toContain('inputMode="text"');
+    const output = inputOtpAlfanumericoSource();
+    expect(output).toContain('import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";');
+    expect(output).toContain('pattern={REGEXP_ONLY_DIGITS_AND_CHARS}');
+    expect(output).toContain('inputMode="text"');
   });
 });
 
 describe('estados', () => {
   it('o vazio nasce com o cursor posto', () => {
-    const saida = inputOtpEmptySource();
-    expect(saida).toContain('autoFocus');
-    expect(saida).toContain('useState("")');
+    const output = inputOtpEmptySource();
+    expect(output).toContain('autoFocus');
+    expect(output).toContain('useState("")');
   });
 
   it('preenchendo e completo se distinguem pelo valor inicial', () => {
@@ -150,31 +150,31 @@ describe('estados', () => {
   });
 
   it('o erro liga a mensagem ao campo pelas duas pontas', () => {
-    const saida = inputOtpWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    const target = saida.match(/aria-describedby="([a-z0-9-]+)"/)?.[1];
+    const output = inputOtpWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    const target = output.match(/aria-describedby="([a-z0-9-]+)"/)?.[1];
     expect(target).toBeDefined();
-    expect(saida).toContain(`<p id="${target}"`);
+    expect(output).toContain(`<p id="${target}"`);
     // Sem `role="alert"`: a mensagem já está no DOM ao carregar, e uma live
     // region em conteúdo estático faz o leitor anunciar erro sem que nada tenha
     // acontecido.
-    expect(saida).not.toContain('role="alert"');
+    expect(output).not.toContain('role="alert"');
   });
 });
 
 describe('composições', () => {
   it('o texto auxiliar é ligado, e não só posto ao lado', () => {
-    const saida = inputOtpWithTextAuxiliarSource();
-    expect(saida).toContain('aria-describedby="codigo-ajuda-texto"');
-    expect(saida).toContain('<p id="codigo-ajuda-texto"');
+    const output = inputOtpWithTextAuxiliarSource();
+    expect(output).toContain('aria-describedby="codigo-ajuda-texto"');
+    expect(output).toContain('<p id="codigo-ajuda-texto"');
   });
 
   it('o reenvio vem DEPOIS do campo na ordem do DOM', () => {
     // Quem termina de digitar encontra o reenvio no próximo Tab, sem voltar
     // pelo caminho.
-    const saida = inputOtpWithReenvioSource();
-    expect(saida.indexOf('</InputOTP>')).toBeLessThan(saida.indexOf('<Button'));
-    expect(saida).toContain('import { Button } from "@/components/ui/button";');
+    const output = inputOtpWithReenvioSource();
+    expect(output.indexOf('</InputOTP>')).toBeLessThan(output.indexOf('<Button'));
+    expect(output).toContain('import { Button } from "@/components/ui/button";');
   });
 
   it('nenhum snippet crava altura nem valor de design em style', () => {

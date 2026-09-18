@@ -61,21 +61,21 @@ import { Switch } from "@/components/ui/switch";
   });
 
   it('omite toda prop igual ao padrão do componente', () => {
-    const saida = switchSource(undefined, {
+    const output = switchSource(undefined, {
       args: { defaultChecked: false, disabled: false, size: 'default' },
     });
-    expect(saida).toContain('<Switch id="notificacoes" />');
-    expect(saida).not.toContain('defaultChecked');
-    expect(saida).not.toContain('disabled');
+    expect(output).toContain('<Switch id="notificacoes" />');
+    expect(output).not.toContain('defaultChecked');
+    expect(output).not.toContain('disabled');
   });
 
   it('não interpola o espião de onCheckedChange', () => {
     // O Storybook entrega um mock em `args`; o corpo dele apareceria no painel
     // como se fosse código do design system.
-    const saida = switchSource(undefined, {
+    const output = switchSource(undefined, {
       args: { onCheckedChange: () => undefined } as never,
     });
-    expect(saida).not.toContain('onCheckedChange');
+    expect(output).not.toContain('onCheckedChange');
   });
 });
 
@@ -88,50 +88,50 @@ describe('estados', () => {
   });
 
   it('desabilitado mantém o rótulo — bloquear não é motivo para esconder o sentido', () => {
-    const saida = switchDisabledSource();
-    expect(saida).toContain('disabled');
-    expect(saida).toContain('<Label htmlFor="notificacoes">Receber notificações</Label>');
+    const output = switchDisabledSource();
+    expect(output).toContain('disabled');
+    expect(output).toContain('<Label htmlFor="notificacoes">Receber notificações</Label>');
   });
 
   it('desabilitado e ligado escreve as duas props, que são o assunto do exemplo', () => {
-    const saida = switchDisabledLigadoSource();
-    expect(saida).toContain('disabled');
-    expect(saida).toContain('defaultChecked');
+    const output = switchDisabledLigadoSource();
+    expect(output).toContain('disabled');
+    expect(output).toContain('defaultChecked');
   });
 
   it('inválido leva o par aria-invalid + aria-describedby, nunca um sozinho', () => {
-    const saida = switchInvalidoSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="aceitar-termos-erro"');
+    const output = switchInvalidoSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="aceitar-termos-erro"');
     // O anel de erro sem mensagem apontada diz que algo falhou e não diz o quê.
-    expect(saida).toContain('id="aceitar-termos-erro"');
-    expect(saida).toContain('Este campo é obrigatório.');
+    expect(output).toContain('id="aceitar-termos-erro"');
+    expect(output).toContain('Este campo é obrigatório.');
   });
 });
 
 describe('composições', () => {
   it('sem rótulo visível, o nome vive em aria-label — e existe', () => {
-    const saida = switchSemRotuloSource();
-    expect(saida).toContain('aria-label="Ativar modo escuro"');
+    const output = switchSemRotuloSource();
+    expect(output).toContain('aria-label="Ativar modo escuro"');
     // É a única composição em que o par rótulo ↔ controle não aparece; se um
     // `<Label>` voltasse aqui, o exemplo deixaria de ensinar o que se propõe.
-    expect(saida).not.toContain('<Label');
+    expect(output).not.toContain('<Label');
   });
 
   it('em formulário, o name é o que faz o campo participar do envio', () => {
-    const saida = switchFormSource();
-    expect(saida).toContain('<form');
-    expect(saida).toContain('name="newsletter"');
-    expect(saida).toContain('type="submit"');
+    const output = switchFormSource();
+    expect(output).toContain('<form');
+    expect(output).toContain('name="newsletter"');
+    expect(output).toContain('type="submit"');
   });
 });
 
 describe('todos os construtores', () => {
   it('ensinam a importação do design system, não a da lib headless', () => {
     for (const construir of TODOS) {
-      const saida = construir();
-      expect(saida).toContain('import { Switch } from "@/components/ui/switch";');
-      expect(saida).not.toContain('@base-ui');
+      const output = construir();
+      expect(output).toContain('import { Switch } from "@/components/ui/switch";');
+      expect(output).not.toContain('@base-ui');
     }
   });
 
@@ -139,8 +139,8 @@ describe('todos os construtores', () => {
     // `flex`, `items-center` e afins têm forma de Tailwind, que saiu do projeto:
     // quem copiar recebe markup sem estilo, porque a folha não define nada disso.
     for (const construir of TODOS) {
-      const saida = construir();
-      const classes = [...saida.matchAll(/className="([^"]+)"/g)].flatMap(([, v]) =>
+      const output = construir();
+      const classes = [...output.matchAll(/className="([^"]+)"/g)].flatMap(([, v]) =>
         v.split(/\s+/),
       );
       const forasteiras = classes.filter((c) => c && !c.startsWith('nds-'));
@@ -152,8 +152,8 @@ describe('todos os construtores', () => {
     // Sem rótulo associado o controle é anunciado como "botão", sem dizer o que
     // ele liga. É a regra que faz todo snippet daqui montar o PAR.
     for (const construir of TODOS) {
-      const saida = construir();
-      const temRotulo = saida.includes('<Label') || saida.includes('aria-label');
+      const output = construir();
+      const temRotulo = output.includes('<Label') || output.includes('aria-label');
       expect(temRotulo, `${construir.name} entrega Switch sem rótulo`).toBe(true);
     }
   });

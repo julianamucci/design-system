@@ -131,9 +131,9 @@ export const WithIcon: Story = {
     // O nome acessível vem do rótulo, não do ícone: svg decorativo não fala.
     const fallback = canvas.getByRole("img", { name: /Usuário genérico/i });
     await expect(fallback).toBeVisible();
-    const icone = fallback.querySelector("svg");
-    await expect(icone).not.toBeNull();
-    await expect(icone).toHaveAttribute("aria-hidden", "true");
+    const icon = fallback.querySelector("svg");
+    await expect(icon).not.toBeNull();
+    await expect(icon).toHaveAttribute("aria-hidden", "true");
   },
 };
 

@@ -240,8 +240,8 @@ export const WithIcon: Story = {
       // `.nds-select-item svg:not([class*="size-"])` é a regra que dá 1rem; sem
       // ela o SVG viria no tamanho intrínseco e estouraria a linha.
       const listbox = await waitForPortal("listbox");
-      const icone = within(listbox).getAllByRole("option")[0].querySelector("svg") as SVGElement;
-      await expect(getComputedStyle(icone).width).toBe("16px");
+      const icon = within(listbox).getAllByRole("option")[0].querySelector("svg") as SVGElement;
+      await expect(getComputedStyle(icon).width).toBe("16px");
     });
   },
 };

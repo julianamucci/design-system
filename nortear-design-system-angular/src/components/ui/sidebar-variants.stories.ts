@@ -121,10 +121,10 @@ export const Collapse: Story = {
     });
 
     await step('No modo icon o painel estreita para a largura de ícone', async () => {
-      const icone = canvasElement.querySelector<HTMLElement>('[data-testid="col-icon"]')!;
-      const panel = icone.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      const icon = canvasElement.querySelector<HTMLElement>('[data-testid="col-icon"]')!;
+      const panel = icon.querySelector<HTMLElement>('.nds-sidebar-panel')!;
       const widthIcon = parseFloat(
-        getComputedStyle(icone).getPropertyValue('--sidebar-width-icon'),
+        getComputedStyle(icon).getPropertyValue('--sidebar-width-icon'),
       );
       // A custom property vem em rem; comparar em px exige a raiz.
       const px = widthIcon * parseFloat(getComputedStyle(document.documentElement).fontSize);

@@ -315,9 +315,9 @@ export function accordionFocusVisibleSource(): string {
  * categoria em toda leitura.
  */
 export function accordionWithIconSource(): string {
-  const withIcon = (icone: string, cor: string, label: string) =>
+  const withIcon = (icon: string, cor: string, label: string) =>
     `<span class="nds-cluster" data-spacing="sm">
-  <${icone} class="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />
+  <${icon} class="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />
   ${label}
 </span>`;
   return vueSnippet(

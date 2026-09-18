@@ -225,7 +225,7 @@ const ICON_TRACO = () => createIcon(Minus as unknown as LucideIconNode[]);
 // ─── Peças do painel ──────────────────────────────────────────────────────────
 
 /** Marcador à direita do item, presente em marcação e escolha única. */
-function createIndicador(icone: SVGSVGElement | null, slot: string): HTMLSpanElement {
+function createIndicador(icon: SVGSVGElement | null, slot: string): HTMLSpanElement {
   const span = document.createElement('span');
   span.className = 'nds-dropdown-menu-item-indicator';
   // O `data-slot` é por TIPO de item, como nas outras quatro stacks
@@ -234,7 +234,7 @@ function createIndicador(icone: SVGSVGElement | null, slot: string): HTMLSpanEle
   // sem endereço próprio.
   span.dataset.slot = slot;
   span.setAttribute('aria-hidden', 'true');
-  if (icone) span.appendChild(icone);
+  if (icon) span.appendChild(icon);
   return span;
 }
 
@@ -513,7 +513,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         createLabelEAtalho(box, item);
         box.appendChild(indicador);
 
-        const alternar = (): void => {
+        const toggle = (): void => {
           if (item.disabled) return;
           if (misto) {
             // O primeiro clique RESOLVE o misto para marcado, como faz a
@@ -532,11 +532,11 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           item.onCheckedChange?.(checked);
           // Marcar NÃO fecha: quem marca uma preferência quer marcar a próxima.
         };
-        box.addEventListener('click', alternar);
+        box.addEventListener('click', toggle);
         box.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            alternar();
+            toggle();
           }
         });
 
@@ -564,19 +564,19 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         const options = item.options ?? [];
         const elementos: Array<{ el: HTMLElement; indicador: HTMLElement; value: string }> = [];
 
-        for (const opcao of options) {
+        for (const option of options) {
           const choice = document.createElement('div');
           choice.className = 'nds-dropdown-menu-radio-item';
           choice.dataset.slot = 'menubar-radio-item';
           choice.setAttribute('role', 'menuitemradio');
-          choice.dataset.value = opcao.value;
-          applyComuns(choice, { disabled: opcao.disabled });
+          choice.dataset.value = option.value;
+          applyComuns(choice, { disabled: option.disabled });
 
-          const checked = escolhido === opcao.value;
+          const checked = escolhido === option.value;
           choice.setAttribute('aria-checked', String(checked));
           if (checked) choice.dataset.checked = '';
 
-          createLabelEAtalho(choice, { label: opcao.label });
+          createLabelEAtalho(choice, { label: option.label });
           const indicador = createIndicador(
             checked ? ICON_MARCA() : null,
             'menubar-radio-item-indicator',
@@ -597,9 +597,9 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
            * dos casos: quem escolhe o tema quer ver o resultado com o menu ali.
            */
           const choose = (): void => {
-            if (opcao.disabled) return;
-            if (escolhido !== opcao.value) {
-              escolhido = opcao.value;
+            if (option.disabled) return;
+            if (escolhido !== option.value) {
+              escolhido = option.value;
               for (const other of elementos) {
                 const active = other.value === escolhido;
                 other.el.setAttribute('aria-checked', String(active));
@@ -610,7 +610,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
               }
               item.onValueChange?.(escolhido);
             }
-            opcao.onClick?.();
+            option.onClick?.();
           };
           choice.addEventListener('click', choose);
           choice.addEventListener('keydown', (e) => {
@@ -620,7 +620,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
             }
           });
 
-          elementos.push({ el: choice, indicador, value: opcao.value });
+          elementos.push({ el: choice, indicador, value: option.value });
           focaveis.push(choice);
           group.appendChild(choice);
         }

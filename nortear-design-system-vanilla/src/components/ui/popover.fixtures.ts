@@ -25,10 +25,10 @@ import { userEvent, waitFor } from 'storybook/test';
  * sairia do tema e da densidade, e a indireção do parâmetro ainda a escondia do
  * portão que varre valor cravado.
  */
-export function centralizar(child: HTMLElement, alturaMinima = 'nds-min-h-80'): HTMLElement {
+export function centralizar(child: HTMLElement, minHeight = 'nds-min-h-80'): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = `nds-cluster nds-w-full ${alturaMinima}`;
+  w.className = `nds-cluster nds-w-full ${minHeight}`;
   w.dataset.justify = 'center';
   w.appendChild(child);
   return w;
@@ -41,10 +41,10 @@ export function centralizar(child: HTMLElement, alturaMinima = 'nds-min-h-80'): 
  * sobre o outro — gatilho, alvo externo, leitura de estado —, e é o `nds-stack`
  * que dá o respiro entre eles.
  */
-export function empilharCentrado(children: HTMLElement[], alturaMinima = 'nds-min-h-70'): HTMLElement {
+export function empilharCentrado(children: HTMLElement[], minHeight = 'nds-min-h-70'): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = `nds-stack nds-w-full ${alturaMinima}`;
+  w.className = `nds-stack nds-w-full ${minHeight}`;
   w.dataset.spacing = 'sm';
   w.dataset.align = 'center';
   w.append(...children);

@@ -246,21 +246,21 @@ export const Playground: Story = {
         await waitFor(async () => {
           await expect(canvas.queryAllByRole("option")).toHaveLength(0);
         });
-        const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
-        await expect(vazio).toBeVisible();
-        await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
-        await expect(vazio).toHaveAttribute("data-empty", "");
-        await expect(vazio).toHaveClass(/nds-command-empty/);
+        const empty = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+        await expect(empty).toBeVisible();
+        await expect(empty).toHaveTextContent("Nenhum resultado encontrado.");
+        await expect(empty).toHaveAttribute("data-empty", "");
+        await expect(empty).toHaveClass(/nds-command-empty/);
         // Região viva montada o tempo todo: é a mudança DENTRO dela que o
         // leitor de tela anuncia. Criá-la só na hora não anunciaria nada — e é
         // o único ponto da paleta em que a mudança acontece fora do foco e sem
         // outro canal, porque não sobra item nenhum para onde navegar.
-        await expect(vazio).toHaveAttribute("role", "status");
-        await expect(vazio).toHaveAttribute("aria-live", "polite");
-        await expect(vazio).toHaveAttribute("aria-atomic", "true");
+        await expect(empty).toHaveAttribute("role", "status");
+        await expect(empty).toHaveAttribute("aria-live", "polite");
+        await expect(empty).toHaveAttribute("aria-atomic", "true");
         // E ela mora FORA do listbox: `role="status"` não é filho permitido de
         // `role="listbox"` (axe: aria-required-children).
-        await expect(list.contains(vazio)).toBe(false);
+        await expect(list.contains(empty)).toBe(false);
       });
 
       await step("Apagar a busca traz os cinco comandos de volta", async () => {
@@ -268,12 +268,12 @@ export const Playground: Story = {
         await waitFor(async () => {
           await expect(canvas.getAllByRole("option")).toHaveLength(5);
         });
-        const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
-        await expect(vazio).not.toHaveAttribute("data-empty");
+        const empty = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+        await expect(empty).not.toHaveAttribute("data-empty");
         // Continua no DOM (é o que preserva o anúncio da próxima busca vazia),
         // mas sem a classe que traz 24px de respiro em cima e embaixo.
-        await expect(vazio).not.toHaveClass(/nds-command-empty/);
-        await expect(vazio.getBoundingClientRect().height).toBe(0);
+        await expect(empty).not.toHaveClass(/nds-command-empty/);
+        await expect(empty.getBoundingClientRect().height).toBe(0);
         // Os dois lados de volta, o traço de volta (C11).
         await expect(separators()).toHaveLength(1);
       });

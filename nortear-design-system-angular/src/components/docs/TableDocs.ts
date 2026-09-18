@@ -553,8 +553,8 @@ const LINHAS_DEMO: {
           <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
           <thead ndsTableHeader>
             <tr ndsTableRow>
-              @for (coluna of colunasCurtas(); track coluna) {
-                <th ndsTableHead>{{ coluna }}</th>
+              @for (column of colunasCurtas(); track column) {
+                <th ndsTableHead>{{ column }}</th>
               }
             </tr>
           </thead>
@@ -1390,8 +1390,8 @@ function valueNumerico(value: string): number {
  * O `NdsDocsCompositions` faria isto sozinho, mas ele não repassa `language`
  * para o `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function withQuandoUsar(descricao: string, quandoUsar: string): string {
-  return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
+function withQuandoUsar(description: string, quandoUsar: string): string {
+  return `${description}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
 const priorityKeyMap: Record<string, string> = {

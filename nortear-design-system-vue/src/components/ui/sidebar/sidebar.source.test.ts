@@ -125,22 +125,22 @@ import { Blocks, LayoutDashboard, Palette, Settings, User } from 'lucide-vue-nex
   });
 
   it('os controls de desenho moram na BARRA', () => {
-    const saida = sidebarPlaygroundSource('', {
+    const output = sidebarPlaygroundSource('', {
       args: { side: 'right', variant: 'floating', collapsible: 'icon' },
     });
-    expect(saida).toContain('<Sidebar side="right" variant="floating" collapsible="icon">');
+    expect(output).toContain('<Sidebar side="right" variant="floating" collapsible="icon">');
     // O provider guarda o estado; ele não sabe de lado, variante nem recolhimento.
-    expect(saida).toContain('<SidebarProvider>');
+    expect(output).toContain('<SidebarProvider>');
   });
 
   it('o ponto de virada mora no PROVIDER', () => {
-    const saida = sidebarPlaygroundSource('', { args: { mobileQuery: '(max-width: 1024px)' } });
-    expect(saida).toContain('<SidebarProvider mobile-query="(max-width: 1024px)">');
-    expect(saida).toContain('<Sidebar>');
+    const output = sidebarPlaygroundSource('', { args: { mobileQuery: '(max-width: 1024px)' } });
+    expect(output).toContain('<SidebarProvider mobile-query="(max-width: 1024px)">');
+    expect(output).toContain('<Sidebar>');
   });
 
   it('não escreve os padrões — repetir valor padrão ensina ruído', () => {
-    const saida = sidebarPlaygroundSource('', {
+    const output = sidebarPlaygroundSource('', {
       args: {
         side: 'left',
         variant: 'sidebar',
@@ -148,20 +148,20 @@ import { Blocks, LayoutDashboard, Palette, Settings, User } from 'lucide-vue-nex
         mobileQuery: '(max-width: 767px)',
       },
     });
-    expect(saida).toContain('<Sidebar>');
-    expect(saida).not.toContain('side=');
-    expect(saida).not.toContain('variant=');
-    expect(saida).not.toContain('collapsible=');
-    expect(saida).not.toContain('mobile-query');
+    expect(output).toContain('<Sidebar>');
+    expect(output).not.toContain('side=');
+    expect(output).not.toContain('variant=');
+    expect(output).not.toContain('collapsible=');
+    expect(output).not.toContain('mobile-query');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = sidebarPlaygroundSource('', {
+    const output = sidebarPlaygroundSource('', {
       args: { variant: (() => {}) as never, mobileQuery: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('variant=');
-    expect(saida).not.toContain('mobile-query');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('variant=');
+    expect(output).not.toContain('mobile-query');
   });
 });
 
@@ -205,11 +205,11 @@ describe('transforms das stories de variante', () => {
   });
 
   it('à direita, o conteúdo vem antes da navegação', () => {
-    const saida = sidebarSideDireitoSource();
-    expect(saida).toContain('<Sidebar side="right">');
+    const output = sidebarSideDireitoSource();
+    expect(output).toContain('<Sidebar side="right">');
     // A ordem é o segundo assunto da story: `side` posiciona na tela, mas quem
     // decide a ordem de leitura e de tabulação é a ordem no documento.
-    expect(saida.indexOf('<SidebarInset>')).toBeLessThan(saida.indexOf('<nav '));
+    expect(output.indexOf('<SidebarInset>')).toBeLessThan(output.indexOf('<nav '));
   });
 });
 
@@ -219,64 +219,64 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o modo ícone é um par: prop na barra e estado inicial no provider', () => {
-    const saida = sidebarRecolhidaIconSource();
-    expect(saida).toContain('<SidebarProvider :default-open="false">');
-    expect(saida).toContain('<Sidebar collapsible="icon">');
+    const output = sidebarRecolhidaIconSource();
+    expect(output).toContain('<SidebarProvider :default-open="false">');
+    expect(output).toContain('<Sidebar collapsible="icon">');
     // Sem rótulo visível, o balão é o nome que sobra para quem usa ponteiro.
-    expect(saida).toContain('tooltip="Dashboard"');
-    expect(saida).toContain('<span class="nds-sidebar-hide-collapsed">Design System</span>');
+    expect(output).toContain('tooltip="Dashboard"');
+    expect(output).toContain('<span class="nds-sidebar-hide-collapsed">Design System</span>');
   });
 
   it('fixa tira o recolhimento e, com ele, o gatilho, a faixa e o balão', () => {
-    const saida = sidebarFixaSource();
-    expect(saida).toContain('<Sidebar collapsible="none">');
-    expect(saida).not.toContain('SidebarTrigger');
-    expect(saida).not.toContain('SidebarRail');
-    expect(saida).not.toContain('tooltip=');
+    const output = sidebarFixaSource();
+    expect(output).toContain('<Sidebar collapsible="none">');
+    expect(output).not.toContain('SidebarTrigger');
+    expect(output).not.toContain('SidebarRail');
+    expect(output).not.toContain('tooltip=');
   });
 
   it('carregando troca o item de menu pelo placeholder', () => {
-    const saida = sidebarLoadingSource();
-    expect(saida).toContain('<SidebarMenuItem v-for="i in 5" :key="i">');
-    expect(saida).toContain('<SidebarMenuSkeleton show-icon />');
-    expect(saida).not.toContain('SidebarMenuButton');
+    const output = sidebarLoadingSource();
+    expect(output).toContain('<SidebarMenuItem v-for="i in 5" :key="i">');
+    expect(output).toContain('<SidebarMenuSkeleton show-icon />');
+    expect(output).not.toContain('SidebarMenuButton');
   });
 
   it('a gaveta vem de uma consulta sempre verdadeira no provider', () => {
-    const saida = sidebarGavetaMovelSource();
-    expect(saida).toContain('<SidebarProvider mobile-query="(min-width: 0px)">');
+    const output = sidebarGavetaMovelSource();
+    expect(output).toContain('<SidebarProvider mobile-query="(min-width: 0px)">');
     // Quem abre a gaveta é o gatilho; a faixa é da coluna e não existe aqui.
-    expect(saida).toContain('<SidebarTrigger />');
-    expect(saida).not.toContain('SidebarRail');
+    expect(output).toContain('<SidebarTrigger />');
+    expect(output).not.toContain('SidebarRail');
     // A marca de classe que a story usa para medir é andaime do teste.
-    expect(saida).not.toContain('story-sidebar-marca');
+    expect(output).not.toContain('story-sidebar-marca');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o contador fica FORA do botão, e a ação leva nome próprio', () => {
-    const saida = sidebarGroupsSource();
-    expect(saida).toContain('</SidebarMenuButton>\n                  <SidebarMenuBadge>3</SidebarMenuBadge>');
-    expect(saida).toContain('<SidebarGroupAction title="Adicionar item">');
-    expect(saida).toContain('<span class="nds-sr-only">Adicionar item</span>');
-    expect(saida).toContain('<span class="nds-sr-only">Mais opções</span>');
-    expect(saida).toContain('<SidebarSeparator />');
+    const output = sidebarGroupsSource();
+    expect(output).toContain('</SidebarMenuButton>\n                  <SidebarMenuBadge>3</SidebarMenuBadge>');
+    expect(output).toContain('<SidebarGroupAction title="Adicionar item">');
+    expect(output).toContain('<span class="nds-sr-only">Adicionar item</span>');
+    expect(output).toContain('<span class="nds-sr-only">Mais opções</span>');
+    expect(output).toContain('<SidebarSeparator />');
   });
 
   it('o submenu é lista aninhada dentro do item pai, e o pai se declara aberto', () => {
-    const saida = sidebarSubmenuSource();
-    expect(saida).toContain('<SidebarMenuButton tooltip="Componentes" aria-expanded="true">');
-    expect(saida).toContain('<ChevronRight class="nds-spacer-start nds-chevron" aria-hidden="true" />');
+    const output = sidebarSubmenuSource();
+    expect(output).toContain('<SidebarMenuButton tooltip="Componentes" aria-expanded="true">');
+    expect(output).toContain('<ChevronRight class="nds-spacer-start nds-chevron" aria-hidden="true" />');
     // A sub-lista é irmã do botão e filha do item — nunca filha do botão.
-    expect(saida).toContain('</SidebarMenuButton>\n                  <SidebarMenuSub>');
-    expect(saida).toContain('<SidebarMenuSubButton is-active>');
+    expect(output).toContain('</SidebarMenuButton>\n                  <SidebarMenuSub>');
+    expect(output).toContain('<SidebarMenuSubButton is-active>');
   });
 
   it('o campo de busca leva nome porque o placeholder some ao digitar', () => {
-    const saida = sidebarSearchSource();
-    expect(saida).toContain(
+    const output = sidebarSearchSource();
+    expect(output).toContain(
       '<SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />',
     );
-    expect(saida).toContain('<SidebarHeader class="nds-p-2" data-spacing="sm">');
+    expect(output).toContain('<SidebarHeader class="nds-p-2" data-spacing="sm">');
   });
 });

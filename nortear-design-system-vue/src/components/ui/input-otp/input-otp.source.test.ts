@@ -72,15 +72,15 @@ const codigo = ref('')
   });
 
   it('não escreve o desligado nem o foco quando estão no padrão', () => {
-    const saida = inputOtpSource('', { args: { disabled: false, autoFocus: false } });
-    expect(saida).not.toContain('disabled');
-    expect(saida).not.toContain('auto-focus');
+    const output = inputOtpSource('', { args: { disabled: false, autoFocus: false } });
+    expect(output).not.toContain('disabled');
+    expect(output).not.toContain('auto-focus');
   });
 
   it('liga bloqueio e foco inicial quando o control pede', () => {
-    const saida = inputOtpSource('', { args: { disabled: true, autoFocus: true } });
-    expect(saida).toContain('disabled');
-    expect(saida).toContain('auto-focus');
+    const output = inputOtpSource('', { args: { disabled: true, autoFocus: true } });
+    expect(output).toContain('disabled');
+    expect(output).toContain('auto-focus');
   });
 
   it('não copia o :key composto que a story usa para remontar', () => {
@@ -90,12 +90,12 @@ const codigo = ref('')
   });
 
   it('ignora control que não é número — o espião de ação vira ruído no painel', () => {
-    const saida = inputOtpSource('', {
+    const output = inputOtpSource('', {
       args: { maxLength: (() => {}) as never, onComplete: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
+    expect(output).not.toContain('function');
     // Cai no comprimento padrão em vez de sumir com as caixas.
-    expect(saida).toContain(':max-length="6"');
+    expect(output).toContain(':max-length="6"');
   });
 });
 
@@ -116,21 +116,21 @@ describe('contrato comum a todo snippet de OTP', () => {
 
   it('todo campo chega rotulado, e o for casa com o id', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      const target = /<Label for="([^"]+)">/.exec(saida)?.[1];
+      const output = fn();
+      const target = /<Label for="([^"]+)">/.exec(output)?.[1];
       expect(target).toBeTruthy();
-      expect(saida).toContain(`id="${target}"`);
+      expect(output).toContain(`id="${target}"`);
     }
   });
 
   it('nenhum snippet carrega andaime de story', () => {
     for (const fn of ALL) {
-      const saida = fn();
+      const output = fn();
       // Reserva de altura para o exemplo caber no canvas centralizado.
-      expect(saida).not.toContain('style=');
-      expect(saida).not.toContain('min-height');
+      expect(output).not.toContain('style=');
+      expect(output).not.toContain('min-height');
       // Ganchos das plays.
-      expect(saida).not.toContain('data-testid');
+      expect(output).not.toContain('data-testid');
     }
   });
 });
@@ -142,13 +142,13 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o separador quebra o miolo em dois grupos de três índices nomeados', () => {
-    const saida = inputOtpWithSeparatorSource();
-    expect([...saida.matchAll(/<InputOTPGroup>/g)]).toHaveLength(2);
-    expect(saida).toContain('<InputOTPSeparator />');
-    expect([...saida.matchAll(/<InputOTPSlot :index="\d" \/>/g)]).toHaveLength(6);
+    const output = inputOtpWithSeparatorSource();
+    expect([...output.matchAll(/<InputOTPGroup>/g)]).toHaveLength(2);
+    expect(output).toContain('<InputOTPSeparator />');
+    expect([...output.matchAll(/<InputOTPSlot :index="\d" \/>/g)]).toHaveLength(6);
     // O laço sobre o escopo do slot não separaria grupo nenhum.
-    expect(saida).not.toContain('v-for');
-    expect(saida).toContain(`import {
+    expect(output).not.toContain('v-for');
+    expect(output).toContain(`import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
@@ -157,15 +157,15 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o alfanumérico troca o conjunto aceito E o teclado', () => {
-    const saida = inputOtpAlfanumericoSource();
+    const output = inputOtpAlfanumericoSource();
     // O `pattern` é o que RECUSA o caractere; o inputmode sozinho é só uma dica
     // de teclado de software, e num teclado físico a letra entraria.
-    expect(saida).toContain('pattern="^[a-zA-Z0-9]+$"');
-    expect(saida).toContain('inputmode="text"');
+    expect(output).toContain('pattern="^[a-zA-Z0-9]+$"');
+    expect(output).toContain('inputmode="text"');
     // A constante da lib não é reexportada pelo design system: o padrão vai
     // literal, e o snippet não manda ninguém importar por fora.
-    expect(saida).not.toContain('REGEXP');
-    expect(saida).not.toContain('vue-input-otp');
+    expect(output).not.toContain('REGEXP');
+    expect(output).not.toContain('vue-input-otp');
   });
 });
 
@@ -183,40 +183,40 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado bloqueia o campo e mantém o valor já digitado', () => {
-    const saida = inputOtpDisabledSource();
-    expect(saida).toContain('disabled');
-    expect(saida).toContain(`const codigo = ref('4829')`);
+    const output = inputOtpDisabledSource();
+    expect(output).toContain('disabled');
+    expect(output).toContain(`const codigo = ref('4829')`);
   });
 
   it('o erro liga o campo à mensagem, e a mensagem existe no snippet', () => {
-    const saida = inputOtpWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    const target = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
-    expect(saida).toContain(`<p id="${target}"`);
+    const output = inputOtpWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    const target = /aria-describedby="([^"]+)"/.exec(output)?.[1];
+    expect(output).toContain(`<p id="${target}"`);
     // Um campo só: a segunda instância da story existe para a play comparar
     // bordas, e é andaime de medição.
-    expect([...saida.matchAll(/<InputOTP\b/g)]).toHaveLength(1);
+    expect([...output.matchAll(/<InputOTP\b/g)]).toHaveLength(1);
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o apoio é apontado pelo campo, e não é erro', () => {
-    const saida = inputOtpWithHelperSource();
-    expect(saida).toContain('aria-describedby="codigo-sms-apoio"');
-    expect(saida).toContain('<p id="codigo-sms-apoio"');
-    expect(saida).not.toContain('aria-invalid');
+    const output = inputOtpWithHelperSource();
+    expect(output).toContain('aria-describedby="codigo-sms-apoio"');
+    expect(output).toContain('<p id="codigo-sms-apoio"');
+    expect(output).not.toContain('aria-invalid');
   });
 
   it('o reenvio vem DEPOIS do campo, e é botão de verdade', () => {
-    const saida = inputOtpWithReenvioSource();
-    expect(saida.indexOf('</InputOTP>')).toBeLessThan(saida.indexOf('Reenviar código'));
-    expect(saida).toContain('<Button variant="link" size="sm" type="button">Reenviar código</Button>');
+    const output = inputOtpWithReenvioSource();
+    expect(output.indexOf('</InputOTP>')).toBeLessThan(output.indexOf('Reenviar código'));
+    expect(output).toContain('<Button variant="link" size="sm" type="button">Reenviar código</Button>');
   });
 
   it('a composição com rótulo não inventa estado nem erro', () => {
-    const saida = inputOtpWithLabelSource();
-    expect(saida).not.toContain('aria-invalid');
-    expect(saida).not.toContain('aria-describedby');
-    expect(saida).not.toContain('auto-focus');
+    const output = inputOtpWithLabelSource();
+    expect(output).not.toContain('aria-invalid');
+    expect(output).not.toContain('aria-describedby');
+    expect(output).not.toContain('auto-focus');
   });
 });

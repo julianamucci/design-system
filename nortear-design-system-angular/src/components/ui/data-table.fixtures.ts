@@ -93,19 +93,19 @@ export const COLUMNS_INVOICES: DataTableColumn<InvoiceDT>[] = [
 ];
 
 /** As mesmas colunas, com filtro por coluna: texto em cliente, select em status. */
-export const COLUMNS_WITH_FILTER: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.map((coluna) => {
-  if (coluna.id === 'cliente') {
-    return { ...coluna, filter: { type: 'text' as const, placeholder: 'Filtrar cliente' } };
+export const COLUMNS_WITH_FILTER: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.map((column) => {
+  if (column.id === 'cliente') {
+    return { ...column, filter: { type: 'text' as const, placeholder: 'Filtrar cliente' } };
   }
-  if (coluna.id === 'status') {
-    return { ...coluna, filter: { type: 'select' as const, options: STATUS_DT } };
+  if (column.id === 'status') {
+    return { ...column, filter: { type: 'select' as const, options: STATUS_DT } };
   }
-  return coluna;
+  return column;
 });
 
 /** Cliente e valor editáveis inline — o resto é leitura. */
-export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.map((coluna) =>
-  coluna.id === 'cliente' || coluna.id === 'valor' ? { ...coluna, editable: true } : coluna,
+export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.map((column) =>
+  column.id === 'cliente' || column.id === 'valor' ? { ...column, editable: true } : column,
 );
 
 /**

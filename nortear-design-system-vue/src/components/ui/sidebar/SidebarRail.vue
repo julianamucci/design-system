@@ -8,7 +8,7 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
 
-const titleDefault = LABELS_SIDEBAR_DEFAULT.alternar
+const titleDefault = LABELS_SIDEBAR_DEFAULT.toggle
 
 const { toggleSidebar } = useSidebar()
 </script>

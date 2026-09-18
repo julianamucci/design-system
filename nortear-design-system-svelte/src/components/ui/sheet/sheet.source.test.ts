@@ -83,7 +83,7 @@ describe('sheetSource', () => {
   });
 
   it('os textos dos controls chegam ao gatilho, ao título e ao rodapé', () => {
-    const saida = sheetSource('', {
+    const output = sheetSource('', {
       args: {
         triggerLabel: 'Abrir menu',
         title: 'Painel esquerdo',
@@ -92,31 +92,31 @@ describe('sheetSource', () => {
         cancelLabel: 'Fechar',
       },
     });
-    expect(saida).toContain('>Abrir menu</Button>');
-    expect(saida).toContain('<SheetTitle>Painel esquerdo</SheetTitle>');
-    expect(saida).toContain(
+    expect(output).toContain('>Abrir menu</Button>');
+    expect(output).toContain('<SheetTitle>Painel esquerdo</SheetTitle>');
+    expect(output).toContain(
       '<SheetDescription>Acesse seções adicionais sem trocar de página.</SheetDescription>',
     );
-    expect(saida).toContain('>Fechar</Button>');
-    expect(saida).toContain('<Button>Ver todas</Button>');
+    expect(output).toContain('>Fechar</Button>');
+    expect(output).toContain('<Button>Ver todas</Button>');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('os filtros avançados trazem o formulário no corpo do painel', () => {
-    const saida = sheetFiltersAvancadosSource();
-    expect(saida).toContain('<SheetBody>');
-    expect(saida).toContain('import { Input } from "@/components/ui/input";');
-    expect(saida).toContain('<Label for="sheet-categoria">Categoria</Label>');
-    expect(saida).toContain('<Input id="sheet-categoria" value="Eletrônicos" />');
+    const output = sheetFiltersAvancadosSource();
+    expect(output).toContain('<SheetBody>');
+    expect(output).toContain('import { Input } from "@/components/ui/input";');
+    expect(output).toContain('<Label for="sheet-categoria">Categoria</Label>');
+    expect(output).toContain('<Input id="sheet-categoria" value="Eletrônicos" />');
     // Empilhamento, e não grade: é o que a folha compartilhada define para
     // formulário de painel, e o que o Vanilla renderiza.
-    expect(saida).toContain('<form id="filters" class="nds-stack" data-spacing="sm"');
-    expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
-    expect(saida).not.toContain('nds-grid');
+    expect(output).toContain('<form id="filters" class="nds-stack" data-spacing="sm"');
+    expect(output).toContain('<div class="nds-stack" data-spacing="xs">');
+    expect(output).not.toContain('nds-grid');
     // Por ÍNDICE: são os DOIS campos que o conteúdo compartilhado documenta. O
     // snippet ensinava Nome e Email, que não são composição nenhuma.
-    const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
+    const rotulos = [...output.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
     expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
   });
 
@@ -127,20 +127,20 @@ describe('transforms das stories de composição', () => {
     // publicava um painel com formulário e NENHUMA forma de submeter: com dois
     // ou mais campos não há envio implícito, e o Enter não dispara nada. É a
     // ponta oposta do submit órfão, e igualmente silenciosa.
-    for (const [saida, id] of [
+    for (const [output, id] of [
       [sheetFiltersAvancadosSource(), 'filters'],
       [perfilSheetEditSource(), 'profile'],
     ] as const) {
-      expect(saida).toContain(`<form id="${id}" class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>`);
-      expect(saida).toContain(`form="${id}">`);
+      expect(output).toContain(`<form id="${id}" class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>`);
+      expect(output).toContain(`form="${id}">`);
       // O manipulador é DECLARADO no snippet: sem ele, quem copia recebe um
       // `onsubmit` apontando para um símbolo que não existe.
-      expect(saida).toContain('function handleSubmit(evento: SubmitEvent) {');
+      expect(output).toContain('function handleSubmit(evento: SubmitEvent) {');
     }
 
     // Fora dos corpos com formulário não há o que submeter, e `type="submit"`
     // ali seria promessa vazia.
-    for (const saida of [
+    for (const output of [
       sheetSource(),
       sheetTermosWithScrollSource(),
       sheetBottomPanelSource(),
@@ -149,49 +149,49 @@ describe('transforms das stories de composição', () => {
       sheetControlledSource(),
       sheetSecondPanelSource(),
     ]) {
-      expect(saida).not.toContain('type="submit"');
-      expect(saida).not.toContain('handleSubmit');
+      expect(output).not.toContain('type="submit"');
+      expect(output).not.toContain('handleSubmit');
     }
   });
 
   it('a navegação secundária publica as CINCO seções e o marco com nome', () => {
-    const saida = sheetNavegacaoSecundariaSource();
-    expect(saida).toContain('<SheetContent side="left">');
-    expect(saida).toContain(
+    const output = sheetNavegacaoSecundariaSource();
+    expect(output).toContain('<SheetContent side="left">');
+    expect(output).toContain(
       "const secoes = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];",
     );
-    expect(saida).toContain('<nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">');
+    expect(output).toContain('<nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">');
     // Um menu não confirma nada: a saída é o X do canto.
-    expect(saida).not.toContain('SheetFooter');
+    expect(output).not.toContain('SheetFooter');
   });
 
   it('o painel inferior traz a fileira de ações e um rodapé só de saída', () => {
-    const saida = sheetBottomPanelSource();
-    expect(saida).toContain('<SheetContent side="bottom">');
-    expect(saida).toContain('<div class="nds-cluster" data-spacing="md">');
-    expect(saida).toContain('{#each acoes as acao (acao.label)}');
-    expect(saida).toContain("{ label: 'Excluir', variant: 'destructive' },");
-    expect(saida).toContain('<SheetFooter>');
-    expect(saida).toContain('<Button variant="outline" {...props}>Fechar</Button>');
+    const output = sheetBottomPanelSource();
+    expect(output).toContain('<SheetContent side="bottom">');
+    expect(output).toContain('<div class="nds-cluster" data-spacing="md">');
+    expect(output).toContain('{#each acoes as acao (acao.label)}');
+    expect(output).toContain("{ label: 'Excluir', variant: 'destructive' },");
+    expect(output).toContain('<SheetFooter>');
+    expect(output).toContain('<Button variant="outline" {...props}>Fechar</Button>');
     // A decisão é a ação clicada: não há confirmação a repetir no rodapé.
-    expect(saida).not.toContain('Aplicar filtros');
+    expect(output).not.toContain('Aplicar filtros');
   });
 
   it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
-    const saida = sheetHeadingH3Source();
+    const output = sheetHeadingH3Source();
     // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
     // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
     // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
     // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
-    expect(saida).toContain('<SheetTitle level={3}>');
-    expect(saida).toContain('{#snippet child({ props })}');
-    expect(saida).toContain('<h3 {...props}>Filtros avançados</h3>');
+    expect(output).toContain('<SheetTitle level={3}>');
+    expect(output).toContain('{#snippet child({ props })}');
+    expect(output).toContain('<h3 {...props}>Filtros avançados</h3>');
 
     // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
     // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
     // exemplo deixaria de ensinar uma coisa só.
     expect(
-      saida.replace(
+      output.replace(
         `<SheetTitle level={3}>
         {#snippet child({ props })}
           <h3 {...props}>Filtros avançados</h3>
@@ -202,58 +202,58 @@ describe('transforms das stories de composição', () => {
     ).toBe(sheetSource('', { args: { open: true } }));
   });
   it('a edição de perfil traz os três campos, na ordem das outras stacks', () => {
-    const saida = perfilSheetEditSource();
-    expect(saida).toContain('<SheetTitle>Editar perfil</SheetTitle>');
-    expect(saida).toContain('<Button type="submit" form="profile">Salvar alterações</Button>');
+    const output = perfilSheetEditSource();
+    expect(output).toContain('<SheetTitle>Editar perfil</SheetTitle>');
+    expect(output).toContain('<Button type="submit" form="profile">Salvar alterações</Button>');
     // A primária SOLTA é o defeito: sem o religamento pelo `form`, o snippet
     // ensinava um painel com formulário e nenhuma forma de submeter.
-    expect(saida).not.toContain('<Button>Salvar alterações</Button>');
+    expect(output).not.toContain('<Button>Salvar alterações</Button>');
     // Por ÍNDICE: a ordem é a das outras stacks, e o campo do meio já saiu do
     // snippet uma vez sem que nada reprovasse.
-    const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
+    const rotulos = [...output.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
     expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
   });
 
   it('os termos com rolagem deixam o corpo rolar, e o rodapé fica', () => {
-    const saida = sheetTermosWithScrollSource();
+    const output = sheetTermosWithScrollSource();
     // O corpo é peça do componente: quem traz o overflow e o tabindex da região
     // rolável é o SheetBody, não um contêiner improvisado na página.
-    expect(saida).toContain('<SheetBody class="nds-stack');
-    expect(saida).toContain('{#each paragrafos as paragrafo (paragrafo)}');
+    expect(output).toContain('<SheetBody class="nds-stack');
+    expect(output).toContain('{#each paragrafos as paragrafo (paragrafo)}');
     // Os rótulos são os do Vanilla, literais — gatilho, título e as duas ações.
     // Este exemplo é comparado lado a lado nas cinco páginas, e quatro das cinco
     // palavras eram outras aqui.
-    expect(saida).toContain('<Button variant="outline" {...props}>Ler termos</Button>');
-    expect(saida).toContain('<SheetTitle>Termos de uso</SheetTitle>');
-    expect(saida).toContain('<Button variant="outline" {...props}>Cancelar</Button>');
-    expect(saida).toContain('<Button>Aceitar termos</Button>');
+    expect(output).toContain('<Button variant="outline" {...props}>Ler termos</Button>');
+    expect(output).toContain('<SheetTitle>Termos de uso</SheetTitle>');
+    expect(output).toContain('<Button variant="outline" {...props}>Cancelar</Button>');
+    expect(output).toContain('<Button>Aceitar termos</Button>');
     // O NOME do corpo vai junto com a rolagem: sem ele o `SheetBody` não emite
     // `role="group"`, e o exemplo ensinaria a metade que o axe não acusa (C7).
-    expect(saida).toContain('aria-label="Termos de uso"');
+    expect(output).toContain('aria-label="Termos de uso"');
     // Vinte e quatro, como no Vanilla: com catorze o corpo só rola em painel
     // baixo, e o exemplo deixa de mostrar o que diz mostrar.
-    expect(saida).toContain('{ length: 24 },');
+    expect(output).toContain('{ length: 24 },');
   });
 
   it('o painel controlado abre por ESTADO, e não publica gatilho nenhum', () => {
-    const saida = sheetControlledSource();
-    expect(saida).toContain('let open = $state(false);');
-    expect(saida).toContain('<Sheet bind:open>');
+    const output = sheetControlledSource();
+    expect(output).toContain('let open = $state(false);');
+    expect(output).toContain('<Sheet bind:open>');
     // O assunto do exemplo é a AUSÊNCIA do gatilho do componente: quem abre é o
     // botão de quem consome, e ele anuncia o diálogo por conta própria.
-    expect(saida).not.toContain('SheetTrigger');
-    expect(saida).toContain('<Button aria-haspopup="dialog"');
+    expect(output).not.toContain('SheetTrigger');
+    expect(output).toContain('<Button aria-haspopup="dialog"');
   });
 
   it('os dois painéis ficam lado a lado, e o segundo é controlado por estado', () => {
-    const saida = sheetSecondPanelSource();
-    expect(saida).toContain('let secondOpen = $state(false);');
-    expect(saida).toContain('<SheetContent side="left">');
+    const output = sheetSecondPanelSource();
+    expect(output).toContain('let secondOpen = $state(false);');
+    expect(output).toContain('<SheetContent side="left">');
     // O segundo painel é CONTROLADO: com um painel modal na tela o clique no
     // gatilho irmão não chega, e quem o abre de verdade é o estado.
-    expect(saida).toContain('<Sheet bind:open={secondOpen}>');
-    expect(saida).toContain('<SheetTitle>Segundo painel</SheetTitle>');
+    expect(output).toContain('<Sheet bind:open={secondOpen}>');
+    expect(output).toContain('<SheetTitle>Segundo painel</SheetTitle>');
     // Os dois gatilhos, como na referência.
-    expect(saida.match(/<SheetTrigger>/g)).toHaveLength(2);
+    expect(output.match(/<SheetTrigger>/g)).toHaveLength(2);
   });
 });

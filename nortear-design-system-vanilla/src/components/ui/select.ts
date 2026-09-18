@@ -243,7 +243,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   for (const entry of items) {
     if (entry.type === 'separator') continue;
     if (entry.type === 'group') {
-      for (const opcao of entry.items) rotulos.set(opcao.value, opcao.label);
+      for (const option of entry.items) rotulos.set(option.value, option.label);
       continue;
     }
     rotulos.set(entry.value, entry.label);
@@ -329,10 +329,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   function definirValue(novo: string): void {
     value = novo;
     pintarValue();
-    for (const opcao of optionList) {
-      const escolhido = opcao.value === value;
-      opcao.el.setAttribute('aria-selected', String(escolhido));
-      opcao.el.replaceChild(createIndicador(escolhido), opcao.el.lastElementChild!);
+    for (const option of optionList) {
+      const escolhido = option.value === value;
+      option.el.setAttribute('aria-selected', String(escolhido));
+      option.el.replaceChild(createIndicador(escolhido), option.el.lastElementChild!);
     }
     onValueChange?.(novo);
   }
@@ -694,9 +694,9 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   }
 
   function choose(index: number): void {
-    const opcao = optionList[index];
-    if (!opcao || opcao.disabled) return;
-    definirValue(opcao.value);
+    const option = optionList[index];
+    if (!option || option.disabled) return;
+    definirValue(option.value);
     close();
   }
 

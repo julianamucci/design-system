@@ -340,7 +340,7 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
-        seletorDePortal: '[data-slot="dialog-content"], [data-slot="dialog-overlay"]',
+        portalSelector: '[data-slot="dialog-content"], [data-slot="dialog-overlay"]',
       });
     });
 

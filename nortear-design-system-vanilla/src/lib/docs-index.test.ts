@@ -37,11 +37,11 @@ const CONTEUDO = join(AQUI, '..', '..', '..', 'docs', 'shared', 'content');
 function carregarCorpus(locale: string): DocsIndexEntry[] {
   const entries: DocsIndexEntry[] = [];
   for (const slug of readdirSync(CONTEUDO)) {
-    const arquivo = join(CONTEUDO, slug, 'translations.json');
+    const file = join(CONTEUDO, slug, 'translations.json');
     // `foundations` é um diretório sem `translations.json`. Pular em silêncio é
     // certo aqui: o corpus é o que existe, não uma lista declarada à parte.
-    if (!existsSync(arquivo)) continue;
-    const json = JSON.parse(readFileSync(arquivo, 'utf8')) as Record<
+    if (!existsSync(file)) continue;
+    const json = JSON.parse(readFileSync(file, 'utf8')) as Record<
       string,
       TranslationsLocaleDocument
     >;

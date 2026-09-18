@@ -97,9 +97,9 @@ export const Default: Story = {
 
     await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
       // Critério 1.4.1 na prática: o estado ativo não pode depender de matiz.
-      const ativa = canvas.getByRole('tab', { name: 'Visão geral' });
+      const active = canvas.getByRole('tab', { name: 'Visão geral' });
       const inativa = canvas.getByRole('tab', { name: 'Exemplos' });
-      await expect(getComputedStyle(ativa).backgroundColor).not.toBe(
+      await expect(getComputedStyle(active).backgroundColor).not.toBe(
         getComputedStyle(inativa).backgroundColor,
       );
     });
@@ -142,12 +142,12 @@ export const Line: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const l = list(canvasElement);
-    const ativa = canvas.getByRole('tab', { name: 'Visão geral' });
+    const active = canvas.getByRole('tab', { name: 'Visão geral' });
     const inativa = canvas.getByRole('tab', { name: 'Exemplos' });
 
     await step('A variante line chega ao markup', async () => {
       await waitFor(() => expect(l).toHaveAttribute('data-variant', 'line'));
-      await expect(ativa).toHaveAttribute('aria-selected', 'true');
+      await expect(active).toHaveAttribute('aria-selected', 'true');
     });
 
     await step('O trilho desaparece', async () => {
@@ -160,7 +160,7 @@ export const Line: Story = {
       // A linha é um `::after` com `opacity` — o único jeito de olhá-la é pelo
       // pseudo-elemento; procurar um nó no DOM não acharia nada. O `waitFor`
       // existe porque a opacidade tem transição.
-      await waitFor(() => expect(getComputedStyle(ativa, '::after').opacity).toBe('1'));
+      await waitFor(() => expect(getComputedStyle(active, '::after').opacity).toBe('1'));
       await expect(getComputedStyle(inativa, '::after').opacity).toBe('0');
     });
   },

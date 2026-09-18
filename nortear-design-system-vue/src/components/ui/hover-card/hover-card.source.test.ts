@@ -43,23 +43,23 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
   });
 
   it('omite lado, alinhamento e esperas quando batem com o padrão do componente', () => {
-    const saida = hoverCardSource('', {
+    const output = hoverCardSource('', {
       args: { side: 'bottom', align: 'center', openDelay: 600, closeDelay: 300, defaultOpen: false },
     });
-    expect(saida).toContain('<HoverCard>');
-    expect(saida).toContain('<HoverCardContent>');
-    expect(saida).not.toContain('open-delay');
-    expect(saida).not.toContain('default-open');
+    expect(output).toContain('<HoverCard>');
+    expect(output).toContain('<HoverCardContent>');
+    expect(output).not.toContain('open-delay');
+    expect(output).not.toContain('default-open');
   });
 
   it('escreve lado e alinhamento só quando o control os tira do padrão', () => {
-    const saida = hoverCardSource('', { args: { side: 'top', align: 'start' } });
-    expect(saida).toContain('<HoverCardContent side="top" align="start">');
+    const output = hoverCardSource('', { args: { side: 'top', align: 'start' } });
+    expect(output).toContain('<HoverCardContent side="top" align="start">');
   });
 
   it('a espera entra no markup quando difere dos 600/300 do componente', () => {
-    const saida = hoverCardSource('', { args: { openDelay: 150, closeDelay: 100 } });
-    expect(saida).toContain('<HoverCard :open-delay="150" :close-delay="100">');
+    const output = hoverCardSource('', { args: { openDelay: 150, closeDelay: 100 } });
+    expect(output).toContain('<HoverCard :open-delay="150" :close-delay="100">');
   });
 
   it('não copia o :key que a story usa só para remontar ao trocar o control', () => {
@@ -69,14 +69,14 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = hoverCardSource('', {
+    const output = hoverCardSource('', {
       args: { triggerLabel: (() => {}) as never, side: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('side=');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('side=');
     // Cair no padrão do meta é melhor que um gatilho sem texto: sem rótulo o
     // painel perde o nome acessível, que sai justamente do gatilho.
-    expect(saida).toContain('>@joana</a>');
+    expect(output).toContain('>@joana</a>');
   });
 
   it('o gatilho é um link de verdade — no toque não existe hover', () => {
@@ -86,10 +86,10 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 
 describe('transforms das stories de tempo', () => {
   it('a espera padrão não escreve atraso nenhum no markup', () => {
-    const saida = hoverCardDefaultSource();
-    expect(saida).toContain('<HoverCard>');
-    expect(saida).not.toContain('open-delay');
-    expect(saida).not.toContain('close-delay');
+    const output = hoverCardDefaultSource();
+    expect(output).toContain('<HoverCard>');
+    expect(output).not.toContain('open-delay');
+    expect(output).not.toContain('close-delay');
   });
 
   it('a espera curta escreve as duas, e é o que a distingue', () => {
@@ -101,50 +101,50 @@ describe('transforms das stories de tempo', () => {
 
 describe('transforms das stories de estado', () => {
   it('fechado e aberto compartilham a marcação, sem estado escrito nela', () => {
-    const saida = hoverCardPerfilSource();
+    const output = hoverCardPerfilSource();
     // Abrir é interação: `default-open` no snippet ensinaria a nascer aberto,
     // que é recurso de captura visual da story, não uso real.
-    expect(saida).not.toContain('default-open');
+    expect(output).not.toContain('default-open');
     // O gatilho não é um menu que o leitor comanda.
-    expect(saida).not.toContain('aria-expanded');
-    expect(saida).not.toContain('aria-haspopup');
+    expect(output).not.toContain('aria-expanded');
+    expect(output).not.toContain('aria-haspopup');
   });
 
   it('o controlado liga o estado externo nos dois sentidos', () => {
-    const saida = hoverCardControlledSource();
-    expect(saida).toContain('const aberto = ref(false)');
-    expect(saida).toContain('<HoverCard v-model:open="aberto">');
-    expect(saida).toContain('@click="aberto = true"');
+    const output = hoverCardControlledSource();
+    expect(output).toContain('const aberto = ref(false)');
+    expect(output).toContain('<HoverCard v-model:open="aberto">');
+    expect(output).toContain('@click="aberto = true"');
   });
 
   it('os botões do controlado têm nomes próprios, e não os do gatilho', () => {
-    const saida = hoverCardControlledSource();
+    const output = hoverCardControlledSource();
     // Dois controles com o mesmo nome acessível são ambíguos em leitor de tela.
-    expect(saida).toContain('>Abrir pelo estado externo</Button>');
-    expect(saida).toContain('>Fechar pelo estado externo</Button>');
+    expect(output).toContain('>Abrir pelo estado externo</Button>');
+    expect(output).toContain('>Fechar pelo estado externo</Button>');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a prévia de link mostra origem, título e descrição do destino', () => {
-    const saida = hoverCardPreviaDeLinkSource();
-    expect(saida).toContain('design-system.dev/overlays');
-    expect(saida).toContain('Guia de overlays acessíveis');
+    const output = hoverCardPreviaDeLinkSource();
+    expect(output).toContain('design-system.dev/overlays');
+    expect(output).toContain('Guia de overlays acessíveis');
   });
 
   it('o gatilho de definição LEVA ao verbete no glossário', () => {
     // D15: o caminho alternativo do C8 é o destino do próprio gatilho, e o
     // snippet tem de ensinar isso — quem copiar um `<button>` daqui publica a
     // composição sem saída nenhuma em touch.
-    const saida = hoverCardDefinicaoSource();
-    expect(saida).toContain('<a href="/glossario/wcag-2-2-aa"');
-    expect(saida).not.toContain('<button');
+    const output = hoverCardDefinicaoSource();
+    expect(output).toContain('<a href="/glossario/wcag-2-2-aa"');
+    expect(output).not.toContain('<button');
   });
 
   it('o gatilho da métrica LEVA à página da métrica', () => {
-    const saida = hoverCardMetricaSource();
-    expect(saida).toContain('<a href="/metricas/conversao"');
-    expect(saida).not.toContain('<button');
+    const output = hoverCardMetricaSource();
+    expect(output).toContain('<a href="/metricas/conversao"');
+    expect(output).not.toContain('<button');
   });
 
   it('os dois gatilhos de explicação largam as utilitárias que zeravam o botão', () => {
@@ -152,14 +152,14 @@ describe('transforms das stories de composição', () => {
     // neutralizar o cromo nativo de `<button>`. Num `<a>` não neutralizam nada,
     // e copiadas viram três classes que o leitor não sabe por que estão ali.
     for (const fn of [hoverCardDefinicaoSource, hoverCardMetricaSource]) {
-      const saida = fn();
+      const output = fn();
       // O que DISTINGUE "isto explica alguma coisa" de um link de navegação
       // continua no lugar.
-      expect(saida).toContain('nds-underline-dotted');
-      expect(saida).toContain('nds-cursor-help');
-      expect(saida).not.toContain('nds-bg-transparent');
-      expect(saida).not.toContain('nds-border-none');
-      expect(saida).not.toContain('nds-p-0');
+      expect(output).toContain('nds-underline-dotted');
+      expect(output).toContain('nds-cursor-help');
+      expect(output).not.toContain('nds-bg-transparent');
+      expect(output).not.toContain('nds-border-none');
+      expect(output).not.toContain('nds-p-0');
     }
   });
 
@@ -172,27 +172,27 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na métrica a cor semântica fica no número, não no texto corrido', () => {
-    const saida = hoverCardMetricaSource();
-    expect(saida).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>');
-    const descricao = saida.slice(saida.indexOf('Cliques no CTA'));
-    expect(descricao).not.toContain('nds-text-success');
+    const output = hoverCardMetricaSource();
+    expect(output).toContain('<span class="nds-text-caption nds-font-medium nds-text-success">3,42%</span>');
+    const description = output.slice(output.indexOf('Cliques no CTA'));
+    expect(description).not.toContain('nds-text-success');
   });
 
   it('os quatro lados saem de um laço sobre dados, não de quatro blocos copiados', () => {
-    const saida = hoverCardLadosSource();
-    expect(saida).toContain('v-for="l in lados"');
-    expect(saida).toContain(':side="l.side"');
-    expect([...saida.matchAll(/<HoverCard>/g)]).toHaveLength(1);
+    const output = hoverCardLadosSource();
+    expect(output).toContain('v-for="l in lados"');
+    expect(output).toContain(':side="l.side"');
+    expect([...output.matchAll(/<HoverCard>/g)]).toHaveLength(1);
     // Sem nome próprio em painel nenhum: sem `role`, `aria-label` ali é
     // `aria-prohibited-attr` no axe. Quem distingue os quatro é o gatilho de
     // cada um, que os descreve por `aria-describedby`.
-    expect(saida).not.toContain('aria-label');
+    expect(output).not.toContain('aria-label');
   });
 
   it('a largura do conjunto de lados vem de utilitária, não de style inline', () => {
-    const saida = hoverCardLadosSource();
-    expect(saida).toContain('class="nds-grid nds-max-w-lg"');
-    expect(saida).not.toContain('style=');
+    const output = hoverCardLadosSource();
+    expect(output).toContain('class="nds-grid nds-max-w-lg"');
+    expect(output).not.toContain('style=');
   });
 
   it('a classe extra convive com a do componente e troca a largura', () => {

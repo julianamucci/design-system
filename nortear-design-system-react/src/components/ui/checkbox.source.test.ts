@@ -33,13 +33,13 @@ describe('checkboxSource', () => {
   });
 
   it('escreve o par caixa+rótulo, que é a unidade mínima do componente', () => {
-    const saida = checkboxSource();
-    expect(saida).toContain('<Checkbox id="termos" />');
-    expect(saida).toContain('<label htmlFor="termos" className="nds-label">');
+    const output = checkboxSource();
+    expect(output).toContain('<Checkbox id="termos" />');
+    expect(output).toContain('<label htmlFor="termos" className="nds-label">');
   });
 
   it('omite toda prop que é igual ao padrão do componente', () => {
-    const saida = checkboxSource(undefined, {
+    const output = checkboxSource(undefined, {
       args: {
         defaultChecked: false,
         disabled: false,
@@ -49,13 +49,13 @@ describe('checkboxSource', () => {
         value: 'on',
       },
     });
-    expect(saida).toContain('<Checkbox id="termos" />');
-    expect(saida).not.toContain('value=');
-    expect(saida).not.toContain('disabled');
+    expect(output).toContain('<Checkbox id="termos" />');
+    expect(output).not.toContain('value=');
+    expect(output).not.toContain('disabled');
   });
 
   it('mapeia cada arg ligado para a prop real do componente', () => {
-    const saida = checkboxSource(undefined, {
+    const output = checkboxSource(undefined, {
       args: {
         name: 'termos',
         value: 'aceito',
@@ -75,18 +75,18 @@ describe('checkboxSource', () => {
       'required',
       'readOnly',
     ]) {
-      expect(saida).toContain(parte);
+      expect(output).toContain(parte);
     }
     // Fila longa quebra uma prop por linha; o fechamento volta à indentação da tag.
-    expect(saida).toContain('<Checkbox\n');
-    expect(saida).toContain('\n  />');
+    expect(output).toContain('<Checkbox\n');
+    expect(output).toContain('\n  />');
   });
 
   it('não deixa o espião do control virar atributo', () => {
     const spy = (() => 'CORPO_DO_MOCK') as never;
-    const saida = checkboxSource(undefined, { args: { name: spy, value: spy } });
-    expect(saida).toContain('<Checkbox id="termos" />');
-    expect(saida).not.toContain('CORPO_DO_MOCK');
+    const output = checkboxSource(undefined, { args: { name: spy, value: spy } });
+    expect(output).toContain('<Checkbox id="termos" />');
+    expect(output).not.toContain('CORPO_DO_MOCK');
   });
 });
 
@@ -96,77 +96,77 @@ describe('estados', () => {
   });
 
   it('o estado misto é propriedade dedicada, não um terceiro valor de checked', () => {
-    const saida = checkboxIndeterminadoSource();
-    expect(saida).toContain('indeterminate');
-    expect(saida).not.toContain('checked="indeterminate"');
-    expect(saida).not.toContain('defaultChecked');
+    const output = checkboxIndeterminadoSource();
+    expect(output).toContain('indeterminate');
+    expect(output).not.toContain('checked="indeterminate"');
+    expect(output).not.toContain('defaultChecked');
   });
 
   it('o esmaecimento do desabilitado é do grupo, e o rótulo apaga junto', () => {
-    for (const saida of [checkboxDisabledSource(), checkboxDisabledCheckedSource()]) {
-      expect(saida).toContain('data-disabled="true"');
-      expect(saida).toContain('disabled');
-      expect(saida).toContain('className="nds-label"');
+    for (const output of [checkboxDisabledSource(), checkboxDisabledCheckedSource()]) {
+      expect(output).toContain('data-disabled="true"');
+      expect(output).toContain('disabled');
+      expect(output).toContain('className="nds-label"');
     }
     expect(checkboxDisabledCheckedSource()).toContain('defaultChecked');
   });
 
   it('o erro é sinalizado por aria-invalid, com a mensagem fora do rótulo', () => {
-    const saida = checkboxErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('nds-text-destructive');
-    expect(saida).toContain('Você precisa aceitar os termos para continuar.');
+    const output = checkboxErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('nds-text-destructive');
+    expect(output).toContain('Você precisa aceitar os termos para continuar.');
     // A mensagem é irmã do par: dentro do <label> ela entraria no nome acessível.
-    expect(saida.indexOf('</label>')).toBeLessThan(saida.indexOf('nds-text-destructive'));
+    expect(output.indexOf('</label>')).toBeLessThan(output.indexOf('nds-text-destructive'));
   });
 });
 
 describe('composições', () => {
   it('o texto auxiliar alinha o par pelo topo', () => {
-    const saida = checkboxWithDescriptionSource();
-    expect(saida).toContain('data-align="start"');
-    expect(saida).toContain('Enviaremos no máximo 2 emails por semana.');
+    const output = checkboxWithDescriptionSource();
+    expect(output).toContain('data-align="start"');
+    expect(output).toContain('Enviaremos no máximo 2 emails por semana.');
   });
 
   it('o grupo existe por fieldset + legend, e não por proximidade visual', () => {
-    const saida = checkboxGroupSource();
-    expect(saida).toContain('<fieldset');
-    expect(saida).toContain('<legend');
-    expect(saida).toContain('Preferências de contato');
+    const output = checkboxGroupSource();
+    expect(output).toContain('<fieldset');
+    expect(output).toContain('<legend');
+    expect(output).toContain('Preferências de contato');
   });
 
   it('a seleção em massa ensina o modo controlado que produz o estado misto', () => {
-    const saida = checkboxSelectAllSource();
-    expect(saida).toContain('import { useState } from "react";');
-    expect(saida).toContain('const [marcados, setMarcados] = useState<string[]>([]);');
-    expect(saida).toContain('checked={todos}');
-    expect(saida).toContain('indeterminate={alguns}');
-    expect(saida).toContain('onCheckedChange={(marcado) =>');
+    const output = checkboxSelectAllSource();
+    expect(output).toContain('import { useState } from "react";');
+    expect(output).toContain('const [marcados, setMarcados] = useState<string[]>([]);');
+    expect(output).toContain('checked={todos}');
+    expect(output).toContain('indeterminate={alguns}');
+    expect(output).toContain('onCheckedChange={(marcado) =>');
   });
 
   it('o card é moldura: quem recebe o clique continua sendo o par', () => {
-    const saida = checkboxEmCardSource();
-    expect(saida).toContain('nds-shadow-sm');
-    expect(saida).toContain('<label htmlFor="plano-pro"');
-    expect(saida).not.toContain('onClick');
+    const output = checkboxEmCardSource();
+    expect(output).toContain('nds-shadow-sm');
+    expect(output).toContain('<label htmlFor="plano-pro"');
+    expect(output).not.toContain('onClick');
   });
 
   it('no formulário o estado que vale é o do FormData', () => {
-    const saida = formCheckboxSource();
-    expect(saida).toContain('name="termos"');
-    expect(saida).toContain('value="aceito"');
-    expect(saida).toContain('new FormData(evento.currentTarget)');
-    expect(saida).toContain('<Button type="submit">Enviar</Button>');
+    const output = formCheckboxSource();
+    expect(output).toContain('name="termos"');
+    expect(output).toContain('value="aceito"');
+    expect(output).toContain('new FormData(evento.currentTarget)');
+    expect(output).toContain('<Button type="submit">Enviar</Button>');
   });
 });
 
 describe('regras do repositório', () => {
   it('toda caixa tem rótulo associado, e nenhum snippet leva estilo inline', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).toContain('htmlFor=');
-      expect(saida).not.toContain('style={{');
-      expect(saida).not.toContain('fixtures');
+      const output = fn();
+      expect(output).toContain('htmlFor=');
+      expect(output).not.toContain('style={{');
+      expect(output).not.toContain('fixtures');
     }
   });
 });

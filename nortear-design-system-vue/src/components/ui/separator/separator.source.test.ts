@@ -41,23 +41,23 @@ import { Separator } from '@/components/ui/separator'
   // A transform anterior escrevia `orientation="horizontal"` SEMPRE, contra o
   // próprio comentário que dizia trazer só o que difere do padrão.
   it('não escreve nenhum dos três padrões do componente', () => {
-    const saida = separatorSource('', {
+    const output = separatorSource('', {
       args: { orientation: 'horizontal', decorative: true, emphasis: 'default' },
     });
-    expect(saida).not.toContain('orientation=');
-    expect(saida).not.toContain('decorative');
-    expect(saida).not.toContain('emphasis');
-    expect(saida).toContain('<Separator />');
+    expect(output).not.toContain('orientation=');
+    expect(output).not.toContain('decorative');
+    expect(output).not.toContain('emphasis');
+    expect(output).toContain('<Separator />');
   });
 
   // A transform anterior mostrava dois parágrafos SOLTOS, sem contêiner: no
   // eixo vertical o separador colapsa para zero fora de um flex, e o snippet
   // entregava um exemplo que não desenha linha nenhuma.
   it('o eixo vertical troca o contêiner para uma linha de flex', () => {
-    const saida = separatorSource('', { args: { orientation: 'vertical' } });
-    expect(saida).toContain('<div class="nds-cluster nds-w-md" data-spacing="md">');
-    expect(saida).toContain('<Separator orientation="vertical" />');
-    expect(saida).not.toContain('nds-stack');
+    const output = separatorSource('', { args: { orientation: 'vertical' } });
+    expect(output).toContain('<div class="nds-cluster nds-w-md" data-spacing="md">');
+    expect(output).toContain('<Separator orientation="vertical" />');
+    expect(output).not.toContain('nds-stack');
   });
 
   // …e trocava só o eixo, deixando "Seção superior" ao lado de uma linha
@@ -75,42 +75,42 @@ import { Separator } from '@/components/ui/separator'
   });
 
   it('ignora control que não é string nem booleano', () => {
-    const saida = separatorSource('', {
+    const output = separatorSource('', {
       args: { orientation: (() => {}) as never, emphasis: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('orientation=');
-    expect(saida).not.toContain('emphasis=');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('orientation=');
+    expect(output).not.toContain('emphasis=');
   });
 
   it('nenhuma transform crava medida em style inline', () => {
     // A altura da linha vertical nasce do vizinho; cravá-la esconderia o
     // contrato que o componente promete.
-    for (const saida of ALL) {
-      expect(saida).not.toContain('style=');
-      expect(saida).not.toContain('height');
+    for (const output of ALL) {
+      expect(output).not.toContain('style=');
+      expect(output).not.toContain('height');
     }
   });
 
   it('nenhuma transform leva marca de teste da story', () => {
-    for (const saida of ALL) expect(saida).not.toContain('data-testid');
+    for (const output of ALL) expect(output).not.toContain('data-testid');
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('a horizontal é a canônica, sem atributo de eixo', () => {
-    const saida = separatorHorizontalSource();
-    expect(saida).toContain('nds-stack');
-    expect(saida).not.toContain('orientation=');
+    const output = separatorHorizontalSource();
+    expect(output).toContain('nds-stack');
+    expect(output).not.toContain('orientation=');
   });
 
   it('a vertical põe duas linhas na mesma fileira', () => {
-    const saida = separatorVerticalSource();
-    expect(saida).toContain('nds-cluster');
-    expect([...saida.matchAll(/<Separator orientation="vertical" \/>/g)]).toHaveLength(2);
+    const output = separatorVerticalSource();
+    expect(output).toContain('nds-cluster');
+    expect([...output.matchAll(/<Separator orientation="vertical" \/>/g)]).toHaveLength(2);
     // A referência cross-stack usa o cluster comum: a classe de demonstração
     // das docs não é importável por quem consome.
-    expect(saida).not.toContain('nds-docs-demo-row');
+    expect(output).not.toContain('nds-docs-demo-row');
   });
 });
 
@@ -131,22 +131,22 @@ describe('transforms das stories de modo', () => {
 
 describe('transforms das stories de composição', () => {
   it('no cartão a linha é irmã do cabeçalho e do conteúdo', () => {
-    const saida = separatorEmCardSource();
-    expect(saida).toContain('</CardHeader>\n    <Separator />\n    <CardContent>');
-    expect(saida).toContain(`} from '@/components/ui/card'`);
+    const output = separatorEmCardSource();
+    expect(output).toContain('</CardHeader>\n    <Separator />\n    <CardContent>');
+    expect(output).toContain(`} from '@/components/ui/card'`);
   });
 
   it('no menu a divisão entre grupos é anunciada', () => {
-    const saida = separatorEmMenuSource();
-    expect(saida).toContain('<Separator :decorative="false" />');
+    const output = separatorEmMenuSource();
+    expect(output).toContain('<Separator :decorative="false" />');
     // Entre os dois grupos, nunca dentro de um deles.
-    expect(saida).toContain('Conta</div>\n    <Separator :decorative="false" />\n    <div');
+    expect(output).toContain('Conta</div>\n    <Separator :decorative="false" />\n    <div');
   });
 
   it('a ênfase forte aparece ao lado da padrão, e a classe extra convive', () => {
-    const saida = separatorEnfaseForteSource();
-    expect(saida).toContain('<Separator />');
-    expect(saida).toContain('<Separator emphasis="strong" class="nds-mt-4" />');
-    expect([...saida.matchAll(/<Separator/g)]).toHaveLength(2);
+    const output = separatorEnfaseForteSource();
+    expect(output).toContain('<Separator />');
+    expect(output).toContain('<Separator emphasis="strong" class="nds-mt-4" />');
+    expect([...output.matchAll(/<Separator/g)]).toHaveLength(2);
   });
 });

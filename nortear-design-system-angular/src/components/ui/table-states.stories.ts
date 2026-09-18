@@ -12,7 +12,7 @@ import {
   NdsTableWrapper,
 } from './table';
 import { NdsSkeleton } from './skeleton';
-import { animationAtiva, backgroundDistincao } from '@shared/testing/skeleton-probe';
+import { animationActive, backgroundDistincao } from '@shared/testing/skeleton-probe';
 import { INVOICES } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -74,8 +74,8 @@ export const Empty: Story = {
           <caption ndsTableCaption class="nds-sr-only">Lista de faturas recentes</caption>
           <thead ndsTableHeader>
             <tr ndsTableRow>
-              @for (coluna of colunas; track coluna) {
-                <th ndsTableHead>{{ coluna }}</th>
+              @for (column of colunas; track column) {
+                <th ndsTableHead>{{ column }}</th>
               }
             </tr>
           </thead>
@@ -231,15 +231,15 @@ export const Loading: Story = {
             <caption ndsTableCaption class="nds-sr-only">Lista de faturas recentes</caption>
             <thead ndsTableHeader>
               <tr ndsTableRow>
-                @for (coluna of colunas; track coluna) {
-                  <th ndsTableHead>{{ coluna }}</th>
+                @for (column of colunas; track column) {
+                  <th ndsTableHead>{{ column }}</th>
                 }
               </tr>
             </thead>
             <tbody ndsTableBody>
               @for (line of lines; track line) {
                 <tr ndsTableRow>
-                  @for (coluna of colunas; track coluna) {
+                  @for (column of colunas; track column) {
                     <td ndsTableCell>
                       <!-- Forma por atributo, nunca altura cravada: o esqueleto
                            de uma linha mede o que a linha vai medir quando o
@@ -293,7 +293,7 @@ export const Loading: Story = {
       // mesma pergunta divergem na primeira correção.
       const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
       await expect(backgroundDistincao(sk).ratio).toBeGreaterThan(1.05);
-      await expect(animationAtiva(sk)).toBe(true);
+      await expect(animationActive(sk)).toBe(true);
     });
   },
 };

@@ -36,22 +36,22 @@ describe('checkboxSource', () => {
   });
 
   it('sem rótulo, a caixa passa a ser nomeada por ARIA e o Label sai do import', () => {
-    const saida = checkboxSource('', { args: { withLabel: false } });
-    expect(saida).toContain('aria-label="Aceito os termos e condições"');
-    expect(saida).not.toContain('@/components/ui/label');
-    expect(saida).not.toContain('id="opcao"');
+    const output = checkboxSource('', { args: { withLabel: false } });
+    expect(output).toContain('aria-label="Aceito os termos e condições"');
+    expect(output).not.toContain('@/components/ui/label');
+    expect(output).not.toContain('id="opcao"');
   });
 
   it('o control de indeterminado acrescenta o segundo estado e a ligação', () => {
-    const saida = checkboxSource('', { args: { indeterminate: true } });
-    expect(saida).toContain('let parcial = $state(true);');
-    expect(saida).toContain('bind:indeterminate={parcial}');
+    const output = checkboxSource('', { args: { indeterminate: true } });
+    expect(output).toContain('let parcial = $state(true);');
+    expect(output).toContain('bind:indeterminate={parcial}');
   });
 
   it('desabilitado marca também a linha, que é o que apaga o rótulo', () => {
-    const saida = checkboxSource('', { args: { disabled: true } });
-    expect(saida).toContain('data-disabled="true"');
-    expect(saida).toContain('<Checkbox id="opcao" bind:checked={marcado} disabled />');
+    const output = checkboxSource('', { args: { disabled: true } });
+    expect(output).toContain('data-disabled="true"');
+    expect(output).toContain('<Checkbox id="opcao" bind:checked={marcado} disabled />');
   });
 
   it('só escreve aria-invalid quando o control pede o estado de erro', () => {
@@ -60,9 +60,9 @@ describe('checkboxSource', () => {
   });
 
   it('a descrição amarra o texto de apoio por aria-describedby', () => {
-    const saida = checkboxSource('', { args: { withDescription: true } });
-    expect(saida).toContain('aria-describedby="opcao-apoio"');
-    expect(saida).toContain('<p id="opcao-apoio" class="nds-text-body">');
+    const output = checkboxSource('', { args: { withDescription: true } });
+    expect(output).toContain('aria-describedby="opcao-apoio"');
+    expect(output).toContain('<p id="opcao-apoio" class="nds-text-body">');
   });
 });
 
@@ -80,9 +80,9 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a descrição traz o rótulo e o apoio da story', () => {
-    const saida = checkboxWithDescriptionSource();
-    expect(saida).toContain('Receber novidades por email');
-    expect(saida).toContain('você concorda em receber comunicações de marketing');
+    const output = checkboxWithDescriptionSource();
+    expect(output).toContain('Receber novidades por email');
+    expect(output).toContain('você concorda em receber comunicações de marketing');
   });
 
   it('o par marcado guarda o rótulo padrão, e a sessão guarda o próprio', () => {
@@ -100,16 +100,16 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o erro aparece pelo canal ARIA, sem desabilitar a caixa', () => {
-    const saida = checkboxWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).not.toContain('data-disabled');
+    const output = checkboxWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).not.toContain('data-disabled');
   });
 
   it('o formulário leva name e value, que é o que chega ao envio', () => {
-    const saida = formCheckboxSource();
-    expect(saida).toContain('<form class="nds-stack" data-spacing="md">');
-    expect(saida).toContain('name="termos"');
-    expect(saida).toContain('value="aceito"');
-    expect(saida).toContain('<Button type="submit">Enviar</Button>');
+    const output = formCheckboxSource();
+    expect(output).toContain('<form class="nds-stack" data-spacing="md">');
+    expect(output).toContain('name="termos"');
+    expect(output).toContain('value="aceito"');
+    expect(output).toContain('<Button type="submit">Enviar</Button>');
   });
 });

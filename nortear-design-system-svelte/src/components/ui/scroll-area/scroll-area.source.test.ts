@@ -76,15 +76,15 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a barra durante a rolagem traz o atraso próprio para sumir', () => {
-    const saida = scrollAreaDuranteScrollSource();
-    expect(saida).toContain('type="scroll"');
-    expect(saida).toContain('scrollHideDelay={1000}');
+    const output = scrollAreaDuranteScrollSource();
+    expect(output).toContain('type="scroll"');
+    expect(output).toContain('scrollHideDelay={1000}');
   });
 
   it('o conteúdo focável mora numa navegação com nome acessível', () => {
-    const saida = scrollAreaContentFocavelSource();
-    expect(saida).toContain('aria-label="Ações"');
-    expect(saida).toContain('<a href="#secao-{n}"');
+    const output = scrollAreaContentFocavelSource();
+    expect(output).toContain('aria-label="Ações"');
+    expect(output).toContain('<a href="#secao-{n}"');
   });
 
   it('sem teto de altura o snippet não declara size — é o erro que a story mostra', () => {
@@ -92,15 +92,15 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a lista em barra lateral nomeia a navegação da documentação', () => {
-    const saida = sidebarScrollAreaListSource();
-    expect(saida).toContain('aria-label="Seções da documentação"');
-    expect(saida).toContain('size="xl"');
+    const output = sidebarScrollAreaListSource();
+    expect(output).toContain('aria-label="Seções da documentação"');
+    expect(output).toContain('size="xl"');
   });
 
   it('a tabela ampla usa a janela mais alta da escada', () => {
-    const saida = scrollAreaTableAmplaSource();
-    expect(saida).toContain('orientation="both"');
-    expect(saida).toContain('size="xl"');
-    expect(saida).toContain('{ length: 15 }');
+    const output = scrollAreaTableAmplaSource();
+    expect(output).toContain('orientation="both"');
+    expect(output).toContain('size="xl"');
+    expect(output).toContain('{ length: 15 }');
   });
 });

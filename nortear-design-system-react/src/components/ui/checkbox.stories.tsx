@@ -115,11 +115,11 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole("checkbox");
 
-    const desmarcar = async () => {
+    const uncheck = async () => {
       if (checkbox.getAttribute("aria-checked") !== "false") await userEvent.click(checkbox);
       await waitFor(() => expect(checkbox).toHaveAttribute("aria-checked", "false"));
     };
-    const marcar = async () => {
+    const check = async () => {
       if (checkbox.getAttribute("aria-checked") !== "true") await userEvent.click(checkbox);
       await waitFor(() => expect(checkbox).toHaveAttribute("aria-checked", "true"));
     };
@@ -138,13 +138,13 @@ export const Playground: Story = {
     });
 
     await step("Clique desmarcado→marcado dispara o callback com true", async () => {
-      await desmarcar();
-      await marcar();
+      await uncheck();
+      await check();
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
     });
 
     await step("Clique marcado→desmarcado dispara o callback com false", async () => {
-      await desmarcar();
+      await uncheck();
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
 
@@ -154,7 +154,7 @@ export const Playground: Story = {
     // <button> nativo e a associação é a do HTML.
     await step("Clicar no texto do rótulo foca a caixa E alterna o estado", async () => {
       const label = canvas.getByText("Aceito os termos e condições");
-      await desmarcar();                          // precondição própria
+      await uncheck();                          // precondição própria
       checkbox.blur();
       await expect(checkbox).not.toHaveFocus();   // o foco tem que VIR do clique
       await userEvent.click(label);
@@ -164,7 +164,7 @@ export const Playground: Story = {
     });
 
     await step("Space com foco alterna o estado e dispara o callback", async () => {
-      await desmarcar();                          // precondição própria
+      await uncheck();                          // precondição própria
       checkbox.focus();
       await expect(checkbox).toHaveFocus();
       await userEvent.keyboard(" ");

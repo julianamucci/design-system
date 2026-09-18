@@ -76,21 +76,21 @@ describe('tooltipSource', () => {
   });
 
   it('o atalho vai em kbd, e sai do texto para não aparecer duas vezes', () => {
-    const saida = tooltipSource('', { args: { variant: 'withShortcut' } });
-    expect(saida).toContain('<span>Salvar</span>');
-    expect(saida).toContain('<kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>');
-    expect(saida).not.toContain('(Ctrl+S)');
+    const output = tooltipSource('', { args: { variant: 'withShortcut' } });
+    expect(output).toContain('<span>Salvar</span>');
+    expect(output).toContain('<kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>');
+    expect(output).not.toContain('(Ctrl+S)');
   });
 
   it('o texto longo ganha corpo próprio em vez de esticar a linha', () => {
-    const saida = tooltipSource('', {
+    const output = tooltipSource('', {
       args: {
         contentText:
           'Compartilhe o link público desta página com qualquer pessoa — o conteúdo pode ser visualizado sem login.',
       },
     });
-    expect(saida).toContain('\n      Compartilhe o link público');
-    expect(saida).toContain('\n    </TooltipContent>');
+    expect(output).toContain('\n      Compartilhe o link público');
+    expect(output).toContain('\n    </TooltipContent>');
   });
 
   it('o ícone do gatilho acompanha a ação que ele representa', () => {
@@ -100,7 +100,7 @@ describe('tooltipSource', () => {
   });
 
   it('o texto longo tem gatilho de TEXTO, sem ícone e sem import órfão', () => {
-    const saida = tooltipSource('', {
+    const output = tooltipSource('', {
       args: {
         variant: 'longText',
         triggerLabel: 'Compartilhar',
@@ -108,13 +108,13 @@ describe('tooltipSource', () => {
       },
     });
     // A tag INTEIRA: asserção por pedaço já aprovou markup errado nesta campanha.
-    expect(saida).toContain('        <Button variant="outline" {...props}>Compartilhar</Button>');
-    expect(saida).toContain(
+    expect(output).toContain('        <Button variant="outline" {...props}>Compartilhar</Button>');
+    expect(output).toContain(
       '\n      Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo\n    ',
     );
     // Import órfão é código que não compila na mão de quem copia.
-    expect(saida).not.toContain('@lucide/svelte/icons');
-    expect(saida).not.toContain('aria-label');
+    expect(output).not.toContain('@lucide/svelte/icons');
+    expect(output).not.toContain('aria-label');
   });
 
   it('o nome acessível do gatilho vem do control, e não do balão', () => {
@@ -126,66 +126,66 @@ describe('tooltipSource', () => {
 
 describe('transforms das stories de abertura', () => {
   it('o balão aberto por padrão usa o estado inicial, sem estado externo', () => {
-    const saida = tooltipOpenSource();
-    expect(saida).toContain('<Tooltip defaultOpen>');
-    expect(saida).not.toContain('$state');
+    const output = tooltipOpenSource();
+    expect(output).toContain('<Tooltip defaultOpen>');
+    expect(output).not.toContain('$state');
   });
 
   it('o controlado liga a abertura a um estado local', () => {
-    const saida = tooltipControlledSource();
-    expect(saida).toContain('let aberto = $state(true);');
-    expect(saida).toContain('<Tooltip bind:open={aberto}>');
+    const output = tooltipControlledSource();
+    expect(output).toContain('let aberto = $state(true);');
+    expect(output).toContain('<Tooltip bind:open={aberto}>');
   });
 });
 
 describe('transforms das stories de posicionamento e de grupo', () => {
   it('os quatro lados saem de uma lista declarada no próprio exemplo', () => {
-    const saida = tooltipPlacementSidesSource();
+    const output = tooltipPlacementSidesSource();
     // O `{#each}` só resolve se a lista viajar DENTRO do snippet: uma constante
     // do módulo fica para trás na mão de quem copia.
-    expect(saida).toContain('const SIDES = [');
-    expect(saida).toContain('{#each SIDES as item (item.side)}');
-    expect(saida).toContain('<TooltipContent side={item.side}>');
+    expect(output).toContain('const SIDES = [');
+    expect(output).toContain('{#each SIDES as item (item.side)}');
+    expect(output).toContain('<TooltipContent side={item.side}>');
   });
 
   it('o exemplo dos lados ensina UM provedor, e não o andaime da cena', () => {
-    const saida = tooltipPlacementSidesSource();
+    const output = tooltipPlacementSidesSource();
     // A story dá um provedor a cada balão para mostrar os quatro abertos ao
     // mesmo tempo — andaime de regressão visual. Em produção o provedor é
     // único, e a abertura vem do ponteiro ou do foco.
-    expect(saida.match(/<TooltipProvider/g)).toHaveLength(1);
-    expect(saida).not.toContain('defaultOpen');
+    expect(output.match(/<TooltipProvider/g)).toHaveLength(1);
+    expect(output).not.toContain('defaultOpen');
   });
 
   it('a colisão não se configura — o que o snippet ensina é que o lado é preferência', () => {
-    const saida = tooltipCollisionSource();
-    expect(saida).toContain('<TooltipContent side="top">');
+    const output = tooltipCollisionSource();
+    expect(output).toContain('<TooltipContent side="top">');
     // Fuga de colisão é o padrão: um exemplo que ligasse alguma coisa ensinaria
     // que ela precisa ser ligada.
-    expect(saida).not.toContain('avoidCollisions');
-    expect(saida).toContain('data-side');
+    expect(output).not.toContain('avoidCollisions');
+    expect(output).toContain('data-side');
   });
 
   it('a ajuda do campo nomeia o ícone e deixa o rótulo com o campo', () => {
-    const saida = tooltipFormFieldHelpSource();
+    const output = tooltipFormFieldHelpSource();
     // O `for`/`id` é o que mantém o rótulo ligado ao CAMPO: trocar isso pelo
     // balão deixaria o input sem nome em touch, onde não há ponteiro.
-    expect(saida).toContain('<label for="api-token"');
-    expect(saida).toContain('id="api-token"');
-    expect(saida).toContain('aria-label="Ajuda sobre Token de API"');
+    expect(output).toContain('<label for="api-token"');
+    expect(output).toContain('id="api-token"');
+    expect(output).toContain('aria-label="Ajuda sobre Token de API"');
   });
 
   it('a descrição de métrica define a sigla que o cabeçalho abrevia', () => {
-    const saida = tooltipMetricDescriptionSource();
-    expect(saida).toContain('aria-label="O que é LCP"');
-    expect(saida).toContain('Largest Contentful Paint');
+    const output = tooltipMetricDescriptionSource();
+    expect(output).toContain('aria-label="O que é LCP"');
+    expect(output).toContain('Largest Contentful Paint');
   });
 
   it('a espera de grupo publica os DOIS números, que só se leem juntos', () => {
-    const saida = tooltipGroupWaitSource();
-    expect(saida).toContain('<TooltipProvider delayDuration={600} skipDelayDuration={1000}>');
-    expect(saida).toContain('const ACTIONS = [');
-    expect(saida).toContain('{#each ACTIONS as action (action.id)}');
-    expect(saida).toContain('aria-label={action.label}');
+    const output = tooltipGroupWaitSource();
+    expect(output).toContain('<TooltipProvider delayDuration={600} skipDelayDuration={1000}>');
+    expect(output).toContain('const ACTIONS = [');
+    expect(output).toContain('{#each ACTIONS as action (action.id)}');
+    expect(output).toContain('aria-label={action.label}');
   });
 });

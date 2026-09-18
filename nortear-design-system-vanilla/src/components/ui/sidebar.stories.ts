@@ -217,8 +217,8 @@ export const Playground: Story = {
     });
 
     await step('O ícone do cabeçalho não é lido pelo leitor de tela', async () => {
-      const icone = canvasElement.querySelector<SVGElement>('[data-sidebar="header"] svg')!;
-      await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      const icon = canvasElement.querySelector<SVGElement>('[data-sidebar="header"] svg')!;
+      await expect(icon.getAttribute('aria-hidden')).toBe('true');
     });
 
     await step('O gatilho tem nome acessível, e em português', async () => {

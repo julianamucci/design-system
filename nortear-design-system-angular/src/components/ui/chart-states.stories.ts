@@ -58,10 +58,10 @@ type Story = StoryObj;
 export const Empty: Story = {
   parameters: { covers: ['functional.item1', 'visual.item3'] },
   render: () => ({
-    props: { vazio: [] },
+    props: { empty: [] },
     template: `
       <div ndsChart
-        [series]="vazio"
+        [series]="empty"
         label="Acessos mensais"
         emptyLabel="Nenhum dado disponível para o período selecionado."
       ></div>
@@ -75,8 +75,8 @@ export const Empty: Story = {
       // writing do estado vazio.
       await expect(chart.querySelector('[data-slot="chart-canvas"]')).toBeNull();
       await expect(chart.querySelector('svg')).toBeNull();
-      const aviso = chart.querySelector('.nds-chart-empty')!;
-      await expect(aviso.textContent?.trim())
+      const warning = chart.querySelector('.nds-chart-empty')!;
+      await expect(warning.textContent?.trim())
         .toBe('Nenhum dado disponível para o período selecionado.');
     });
 

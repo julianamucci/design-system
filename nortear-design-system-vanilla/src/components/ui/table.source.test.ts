@@ -31,7 +31,7 @@ describe('tableSnippet', () => {
     expect(tableSnippet()).toContain(
       "createTableCaption('Lista de faturas recentes', 'nds-sr-only')",
     );
-    expect(tableSnippet({ captionVisivel: true })).toContain(
+    expect(tableSnippet({ captionVisible: true })).toContain(
       "createTableCaption('Lista de faturas recentes')",
     );
   });
@@ -88,7 +88,7 @@ describe('tableSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const noArgs = tableSource('<table data-slot="table">', {});
     const withArgs = tableSource('<table data-slot="table">', {
-      args: { captionVisivel: true, withFooter: true },
+      args: { captionVisible: true, withFooter: true },
     });
     expect(noArgs).not.toBe(withArgs);
     expect(withArgs).toContain('createTableFooter');

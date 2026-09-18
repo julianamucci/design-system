@@ -43,17 +43,17 @@ describe('toggleSource', () => {
   });
 
   it('troca de ícone troca o import junto — snippet copiável não fica sem ele', () => {
-    const saida = toggleSource('', { args: { icon: 'eye' } });
-    expect(saida).toContain('import Eye from "@lucide/svelte/icons/eye";');
-    expect(saida).toContain('<Eye aria-hidden="true" />');
-    expect(saida).not.toContain('Bold');
+    const output = toggleSource('', { args: { icon: 'eye' } });
+    expect(output).toContain('import Eye from "@lucide/svelte/icons/eye";');
+    expect(output).toContain('<Eye aria-hidden="true" />');
+    expect(output).not.toContain('Bold');
   });
 
   it('com texto visível o aria-label sai de cena', () => {
-    const saida = toggleSource('', { args: { withLabel: true } });
-    expect(saida).not.toContain('aria-label');
-    expect(saida).toContain('<Toggle>');
-    expect(saida).toContain('Negrito');
+    const output = toggleSource('', { args: { withLabel: true } });
+    expect(output).not.toContain('aria-label');
+    expect(output).toContain('<Toggle>');
+    expect(output).toContain('Negrito');
   });
 
   it('o nome acessível segue o control de aria-label quando ele existe', () => {
@@ -65,61 +65,61 @@ describe('toggleSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('o par de variantes mostra a padrão ao lado da outline', () => {
-    const saida = variantsTogglePairSource();
-    expect(saida).toContain('<Toggle aria-label="Negrito">');
-    expect(saida).toContain('variant="outline"');
-    expect(saida).toContain('nds-cluster');
+    const output = variantsTogglePairSource();
+    expect(output).toContain('<Toggle aria-label="Negrito">');
+    expect(output).toContain('variant="outline"');
+    expect(output).toContain('nds-cluster');
   });
 
   it('a escada de tamanhos deixa o degrau padrão sem atributo', () => {
-    const saida = toggleSizesSource();
-    expect(saida).toContain('size="sm"');
-    expect(saida).toContain('size="lg"');
-    expect(saida).toContain('<Toggle variant="outline" aria-label="Negrito padrão">');
+    const output = toggleSizesSource();
+    expect(output).toContain('size="sm"');
+    expect(output).toContain('size="lg"');
+    expect(output).toContain('<Toggle variant="outline" aria-label="Negrito padrão">');
   });
 
   it('a variação com rótulo tem texto visível e nenhum aria-label', () => {
-    const saida = toggleWithLabelSource();
-    expect(saida).not.toContain('aria-label');
-    expect(saida).toContain('Mostrar ocultos');
-    expect(saida).toContain('bind:pressed={compacta}');
+    const output = toggleWithLabelSource();
+    expect(output).not.toContain('aria-label');
+    expect(output).toContain('Mostrar ocultos');
+    expect(output).toContain('bind:pressed={compacta}');
   });
 
   it('o estado ativo nasce de um estado local, não de um literal', () => {
-    const saida = toggleActiveSource();
-    expect(saida).toContain('let ativo = $state(true);');
-    expect(saida).toContain('bind:pressed={ativo}');
+    const output = toggleActiveSource();
+    expect(output).toContain('let ativo = $state(true);');
+    expect(output).toContain('bind:pressed={ativo}');
   });
 
   it('o desabilitado aparece nas duas pontas, ligado e desligado', () => {
-    const saida = toggleDisabledSource();
-    expect(saida.match(/disabled/g)).toHaveLength(2);
-    expect(saida).toContain('aria-label="Itálico ativo e desabilitado"');
+    const output = toggleDisabledSource();
+    expect(output.match(/disabled/g)).toHaveLength(2);
+    expect(output).toContain('aria-label="Itálico ativo e desabilitado"');
   });
 
   it('o inválido leva o par aria-invalid + aria-describedby', () => {
-    const saida = toggleInvalidoSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="toggle-invalid-msg"');
-    expect(saida).toContain('id="toggle-invalid-msg"');
+    const output = toggleInvalidoSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="toggle-invalid-msg"');
+    expect(output).toContain('id="toggle-invalid-msg"');
   });
 
   it('a barra de formatação é um grupo nomeado com quatro toggles', () => {
-    const saida = formattingToggleBarSource();
-    expect(saida).toContain('role="group"');
-    expect(saida).toContain('aria-label="Formatação de texto"');
-    expect(saida.match(/<Toggle /g)).toHaveLength(4);
+    const output = formattingToggleBarSource();
+    expect(output).toContain('role="group"');
+    expect(output).toContain('aria-label="Formatação de texto"');
+    expect(output.match(/<Toggle /g)).toHaveLength(4);
   });
 
   it('a lista de filtros usa a variante outline e rótulo visível', () => {
-    const saida = toggleFiltersSource();
-    expect(saida).toContain('Filtros de exibição');
-    expect(saida.match(/variant="outline"/g)).toHaveLength(2);
+    const output = toggleFiltersSource();
+    expect(output).toContain('Filtros de exibição');
+    expect(output.match(/variant="outline"/g)).toHaveLength(2);
   });
 
   it('o controlado mostra o valor externo acompanhando o toggle', () => {
-    const saida = toggleControlledSource();
-    expect(saida).toContain('let ativo = $state(false);');
-    expect(saida).toContain('{String(ativo)}');
+    const output = toggleControlledSource();
+    expect(output).toContain('let ativo = $state(false);');
+    expect(output).toContain('{String(ativo)}');
   });
 });

@@ -187,7 +187,7 @@ export const File: Story = {
 
     await step("A altura continua saindo do respiro, não de um valor cravado", async () => {
       const measurement = heightResultante(fieldOf(canvasElement)!);
-      await expect(measurement.alturaCravada).toBe(false);
+      await expect(measurement.hardcodedHeight).toBe(false);
       await expect(parseFloat(measurement.paddingBloco[0])).toBeGreaterThan(0);
     });
   },

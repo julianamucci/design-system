@@ -112,11 +112,11 @@ export const Playground: Story = {
 
     // O painel Interactions reexecuta a play no mesmo DOM: cada helper checa
     // o estado atual antes de clicar, então nunca afirma o oposto do que fez.
-    const marcar = async () => {
+    const check = async () => {
       if (checkbox.getAttribute('aria-checked') !== 'true') await userEvent.click(checkbox);
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
     };
-    const desmarcar = async () => {
+    const uncheck = async () => {
       if (checkbox.getAttribute('aria-checked') !== 'false') await userEvent.click(checkbox);
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'false'));
     };
@@ -131,16 +131,16 @@ export const Playground: Story = {
     });
 
     await step('Clique em desmarcado marca, e o callback dispara com true', async () => {
-      await desmarcar();
+      await uncheck();
       onUpdate.mockClear();
-      await marcar();
+      await check();
       await expect(onUpdate).toHaveBeenCalledWith(true);
     });
 
     await step('Clique em marcado desmarca, e o callback dispara com false', async () => {
-      await marcar();
+      await check();
       onUpdate.mockClear();
-      await desmarcar();
+      await uncheck();
       await expect(onUpdate).toHaveBeenCalledWith(false);
     });
 
@@ -149,7 +149,7 @@ export const Playground: Story = {
     // ela E dispara a ativação, sem nenhum ouvinte escrito na story.
     await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
       const label = canvas.getByText('Aceito os termos e condições');
-      await desmarcar();                                 // precondição própria
+      await uncheck();                                 // precondição própria
       (checkbox as HTMLElement).blur();
       await expect(checkbox).not.toHaveFocus();          // o foco tem que VIR do clique
       onUpdate.mockClear();
@@ -160,7 +160,7 @@ export const Playground: Story = {
     });
 
     await step('Space com foco alterna o estado e dispara o callback', async () => {
-      await desmarcar();
+      await uncheck();
       (checkbox as HTMLElement).focus();
       onUpdate.mockClear();
       await userEvent.keyboard(' ');

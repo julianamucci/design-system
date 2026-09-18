@@ -94,8 +94,8 @@ export const Playground: Story = {
     // virariam controls falsos na aba API Reference.
     props: {
       ...args,
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.description(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
       rotuloFechar: LABEL.close(),
     },
     template: `
@@ -109,8 +109,8 @@ export const Playground: Story = {
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>

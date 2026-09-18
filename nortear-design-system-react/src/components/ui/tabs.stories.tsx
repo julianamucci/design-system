@@ -114,12 +114,12 @@ export const Playground: Story = {
     await step("A aba e o painel apontam um para o outro", async () => {
       // Os dois lados do par: já encontramos componente em que só um deles
       // estava escrito, e o leitor de tela perde a volta do painel para a aba.
-      const ativa = abas()[0];
+      const active = abas()[0];
       const target = await panel();
-      await expect(ativa.id).not.toBe("");
+      await expect(active.id).not.toBe("");
       await expect(target.id).not.toBe("");
-      await expect(target).toHaveAttribute("aria-labelledby", ativa.id);
-      await expect(ativa).toHaveAttribute("aria-controls", target.id);
+      await expect(target).toHaveAttribute("aria-labelledby", active.id);
+      await expect(active).toHaveAttribute("aria-controls", target.id);
     });
 
     await step("Clicar em uma aba troca a aba e o painel", async () => {

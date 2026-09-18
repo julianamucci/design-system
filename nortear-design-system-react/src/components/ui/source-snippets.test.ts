@@ -220,7 +220,7 @@ function unescaped(c: string | undefined): string {
  */
 function publishedText(bruto: string): string {
   const BARRA = '\\';
-  let saida = '';
+  let output = '';
   let i = 0;
   const n = bruto.length;
   // Último caractere significativo, que é o que distingue `/` de divisão do
@@ -263,20 +263,20 @@ function publishedText(bruto: string): string {
       const aspa = c;
       i++;
       while (i < n && bruto[i] !== aspa) {
-        if (bruto[i] === BARRA) { saida += unescaped(bruto[i + 1]); i += 2; continue; }
+        if (bruto[i] === BARRA) { output += unescaped(bruto[i + 1]); i += 2; continue; }
         if (bruto[i] === '\n') break;
-        saida += bruto[i];
+        output += bruto[i];
         i++;
       }
       i++;
-      saida += '\n';
+      output += '\n';
       continue;
     }
 
     if (c === '`') {
       i++;
       while (i < n && bruto[i] !== '`') {
-        if (bruto[i] === BARRA) { saida += unescaped(bruto[i + 1]); i += 2; continue; }
+        if (bruto[i] === BARRA) { output += unescaped(bruto[i + 1]); i += 2; continue; }
         if (bruto[i] === '$' && bruto[i + 1] === '{') {
           // A interpolação inteira sai, respeitando aninhamento de chave, de
           // aspas e de template dentro dela.
@@ -303,55 +303,55 @@ function publishedText(bruto: string): string {
             }
             i++;
           }
-          saida += MARCA_INTERPOLACAO;
+          output += MARCA_INTERPOLACAO;
           continue;
         }
-        saida += bruto[i];
+        output += bruto[i];
         i++;
       }
       i++;
-      saida += '\n';
+      output += '\n';
       continue;
     }
 
     i++;
   }
-  return saida;
+  return output;
 }
 
 /** Nomes que o TEXTO PUBLICADO declara ou importa — em qualquer ramo. */
-function declaredIn(texto: string): Set<string> {
+function declaredIn(text: string): Set<string> {
   const nomes = new Set<string>();
-  for (const [, nome] of texto.matchAll(/(?:const|let|var|function|class)\s+([A-Za-z_$][\w$]*)/g)) {
-    nomes.add(nome);
+  for (const [, name] of text.matchAll(/(?:const|let|var|function|class)\s+([A-Za-z_$][\w$]*)/g)) {
+    nomes.add(name);
   }
   // Desestruturação: `const { a, b } = …` e `const [a, b] = …`.
-  for (const [, bloco] of texto.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]\s*=/g)) {
+  for (const [, bloco] of text.matchAll(/(?:const|let|var)\s*[{[]([^}\]]*)[}\]]\s*=/g)) {
     for (const parte of bloco.split(',')) {
-      const nome = parte.trim().split(/[:=]/).pop()?.trim().replace(/^\.\.\./, '');
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+      const name = parte.trim().split(/[:=]/).pop()?.trim().replace(/^\.\.\./, '');
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) nomes.add(name);
     }
   }
-  for (const [, bloco] of texto.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}/g)) {
+  for (const [, bloco] of text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}/g)) {
     for (const parte of bloco.split(',')) {
-      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
-      if (nome) nomes.add(nome);
+      const name = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
+      if (name) nomes.add(name);
     }
   }
-  for (const [, nome] of texto.matchAll(/import\s+(?:\*\s+as\s+)?([A-Za-z_$][\w$]*)\s*(?:,|from)/g)) {
-    nomes.add(nome);
+  for (const [, name] of text.matchAll(/import\s+(?:\*\s+as\s+)?([A-Za-z_$][\w$]*)\s*(?:,|from)/g)) {
+    nomes.add(name);
   }
   // Parâmetro de arrow e de função declarada: `(item) => …` liga `item`.
-  for (const [, lista] of texto.matchAll(/\(([^()]*)\)\s*=>/g)) {
+  for (const [, lista] of text.matchAll(/\(([^()]*)\)\s*=>/g)) {
     for (const parte of lista.split(',')) {
-      const nome = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+      const name = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) nomes.add(name);
     }
   }
-  for (const [, lista] of texto.matchAll(/function\s+[A-Za-z_$][\w$]*\s*\(([^()]*)\)/g)) {
+  for (const [, lista] of text.matchAll(/function\s+[A-Za-z_$][\w$]*\s*\(([^()]*)\)/g)) {
     for (const parte of lista.split(',')) {
-      const nome = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+      const name = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) nomes.add(name);
     }
   }
   return nomes;
@@ -373,8 +373,8 @@ function declaredIn(texto: string): Set<string> {
  * declaração a mais — que é o lado seguro de errar numa guarda que cobra
  * ORIGEM.
  */
-function tsBindings(texto: string): Set<string> {
-  const src = ts.createSourceFile('publicado.tsx', texto, ts.ScriptTarget.ESNext, true, ts.ScriptKind.TSX);
+function tsBindings(text: string): Set<string> {
+  const src = ts.createSourceFile('publicado.tsx', text, ts.ScriptTarget.ESNext, true, ts.ScriptKind.TSX);
   const nomes = new Set<string>();
   const ligar = (node: ts.Node | undefined): void => {
     if (!node) return;
@@ -428,17 +428,17 @@ function boundNames(caminho: string): Set<string> {
   for (const valor of Object.values(modulos[caminho] ?? {})) {
     if (typeof valor !== 'function') continue;
     try {
-      const saida = (valor as () => unknown)();
-      if (typeof saida === 'string') textos.push(saida);
+      const output = (valor as () => unknown)();
+      if (typeof output === 'string') textos.push(output);
     } catch {
       // Construtor que quebra sem args já reprova em `devolve um snippet
       // honesto`; aqui ele só não contribui com declaração.
     }
   }
   const nomes = new Set<string>();
-  for (const texto of textos) {
-    for (const nome of declaredIn(texto)) nomes.add(nome);
-    for (const nome of tsBindings(texto)) nomes.add(nome);
+  for (const text of textos) {
+    for (const name of declaredIn(text)) nomes.add(name);
+    for (const name of tsBindings(text)) nomes.add(name);
   }
   ligadosPorCaminho.set(caminho, nomes);
   return nomes;
@@ -471,23 +471,23 @@ const GLOBAIS = new Set([
  * analisar — e falha de análise é exclusão silenciosa, que é o modo de falhar
  * que este arquivo já pagou caro. Em JSX o `=` do atributo nunca tem espaço.
  */
-function attributeExpressions(texto: string): Array<{ attr: string; expr: string | null }> {
+function attributeExpressions(text: string): Array<{ attr: string; expr: string | null }> {
   const achados: Array<{ attr: string; expr: string | null }> = [];
   const re = /(?<![\w$.])([A-Za-z_$][\w$]*(?:-[\w$]+)*)=\{/g;
   let achado: RegExpExecArray | null;
-  while ((achado = re.exec(texto))) {
+  while ((achado = re.exec(text))) {
     const inicio = achado.index + achado[0].length;
     let prof = 1;
     let i = inicio;
-    while (i < texto.length && prof > 0) {
-      const c = texto[i];
+    while (i < text.length && prof > 0) {
+      const c = text[i];
       if (c === '{') prof++;
       else if (c === '}') prof--;
       else if (c === "'" || c === '"' || c === '`') {
         const aspa = c;
         i++;
-        while (i < texto.length && texto[i] !== aspa) {
-          if (texto[i] === '\\') i++;
+        while (i < text.length && text[i] !== aspa) {
+          if (text[i] === '\\') i++;
           i++;
         }
       }
@@ -497,7 +497,7 @@ function attributeExpressions(texto: string): Array<{ attr: string; expr: string
       achados.push({ attr: achado[1]!, expr: null });
       continue;
     }
-    achados.push({ attr: achado[1]!, expr: texto.slice(inicio, i - 1) });
+    achados.push({ attr: achado[1]!, expr: text.slice(inicio, i - 1) });
     re.lastIndex = i;
   }
   return achados;
@@ -570,7 +570,7 @@ function referencedIn(exprText: string): Set<string> {
   };
   walk(src);
 
-  for (const nome of ligados) refs.delete(nome);
+  for (const name of ligados) refs.delete(name);
   return refs;
 }
 
@@ -614,11 +614,11 @@ const GLOBAIS_COM_MAP = new Set(['Object', 'Array', 'React', 'Math', 'JSON', 'Pr
  *    logo abaixo, que passou a cobrar `labels={rotulos}` e companhia.
  */
 function loopsWithoutOrigin(bruto: string, ligados: Set<string>): string[] {
-  const texto = publishedText(bruto);
+  const text = publishedText(bruto);
   const soltos = new Set<string>();
-  for (const [, nome] of texto.matchAll(/(?:^|[^.\w$])([A-Za-z_$][\w$]*)\.map\s*\(/gm)) {
-    if (GLOBAIS_COM_MAP.has(nome) || ligados.has(nome) || nome.includes(MARCA_INTERPOLACAO)) continue;
-    soltos.add(nome);
+  for (const [, name] of text.matchAll(/(?:^|[^.\w$])([A-Za-z_$][\w$]*)\.map\s*\(/gm)) {
+    if (GLOBAIS_COM_MAP.has(name) || ligados.has(name) || name.includes(MARCA_INTERPOLACAO)) continue;
+    soltos.add(name);
   }
   return [...soltos].sort();
 }
@@ -657,9 +657,9 @@ function loopsWithoutOrigin(bruto: string, ligados: Set<string>): string[] {
  *    pergunta aqui é ORIGEM, não visibilidade.
  */
 function referencesWithoutOrigin(bruto: string, ligados: Set<string>): string[] {
-  const texto = publishedText(bruto);
+  const text = publishedText(bruto);
   const soltos = new Set<string>();
-  for (const { attr, expr } of attributeExpressions(texto)) {
+  for (const { attr, expr } of attributeExpressions(text)) {
     // Nunca em silêncio: expressão que não fecha é a varredura perdendo terreno,
     // e é isso que este repositório já pagou caro duas vezes.
     if (expr === null) {
@@ -667,9 +667,9 @@ function referencesWithoutOrigin(bruto: string, ligados: Set<string>): string[] 
       continue;
     }
     if (!expr.trim()) continue;
-    for (const nome of referencedIn(expr)) {
-      if (GLOBAIS.has(nome) || ligados.has(nome) || nome.includes(MARCA_INTERPOLACAO)) continue;
-      soltos.add(nome);
+    for (const name of referencedIn(expr)) {
+      if (GLOBAIS.has(name) || ligados.has(name) || name.includes(MARCA_INTERPOLACAO)) continue;
+      soltos.add(name);
     }
   }
   return [...soltos].sort();
@@ -750,9 +750,9 @@ describe('transforms do painel Code', () => {
 
       for (const [name, fn] of exportadas) {
         it(`${name} devolve um snippet honesto`, () => {
-          const saida = fn();
-          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
-          const text = saida as string;
+          const output = fn();
+          expect(typeof output, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = output as string;
           expect(text.trim().length).toBeGreaterThan(0);
 
           // Docs de cada stack são consumidas isoladamente.
@@ -769,7 +769,7 @@ describe('transforms do painel Code', () => {
           const publicados = slugExportados.get(slugDoCaminho(caminho)) ?? new Set<string>();
           const andaimes = [...text.matchAll(new RegExp(FORMA_SCAFFOLD.source, 'g'))]
             .map((achado) => achado[0])
-            .filter((nome) => !publicados.has(nome));
+            .filter((name) => !publicados.has(name));
           expect(
             andaimes,
             `${name}: nome de andaime de story no snippet publicado`,

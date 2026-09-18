@@ -279,9 +279,9 @@ export const WithRadioGroup: Story = {
       // slot, como nas outras stacks.
       await gestoOpen(area());
       const options = ["grid", "list", "columns"].map(target);
-      for (const opcao of options) {
+      for (const option of options) {
         await expect(
-          opcao.querySelector('[data-slot="context-menu-radio-item-indicator"]'),
+          option.querySelector('[data-slot="context-menu-radio-item-indicator"]'),
         ).not.toBeNull();
       }
       // O tique mora DENTRO do indicador — prova que o atributo ficou no

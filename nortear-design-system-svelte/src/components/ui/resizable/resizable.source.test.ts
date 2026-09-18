@@ -68,37 +68,37 @@ describe('resizableSource', () => {
   });
 
   it('o segundo painel recebe o complemento do primeiro', () => {
-    const saida = resizableSource('', { args: { defaultSize: 40, minSize: 15 } });
-    expect(saida).toContain('<ResizablePane defaultSize={40} minSize={15} maxSize={60}>');
-    expect(saida).toContain('<ResizablePane defaultSize={60} minSize={15}>');
+    const output = resizableSource('', { args: { defaultSize: 40, minSize: 15 } });
+    expect(output).toContain('<ResizablePane defaultSize={40} minSize={15} maxSize={60}>');
+    expect(output).toContain('<ResizablePane defaultSize={60} minSize={15}>');
   });
 });
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a variante horizontal reparte a largura em 30/70', () => {
-    const saida = resizableHorizontalSource();
-    expect(saida).toContain('direction="horizontal"');
-    expect(saida).toContain('<ResizablePane defaultSize={30} minSize={20}>');
+    const output = resizableHorizontalSource();
+    expect(output).toContain('direction="horizontal"');
+    expect(output).toContain('<ResizablePane defaultSize={30} minSize={20}>');
   });
 
   it('a variante vertical empilha os painéis e reparte a altura', () => {
-    const saida = resizableVerticalSource();
-    expect(saida).toContain('direction="vertical"');
-    expect(saida).toContain('<span class="nds-text-body">Rodapé</span>');
+    const output = resizableVerticalSource();
+    expect(output).toContain('direction="vertical"');
+    expect(output).toContain('<span class="nds-text-body">Rodapé</span>');
   });
 
   it('a variante aninhada põe um grupo no eixo oposto dentro do segundo painel', () => {
-    const saida = resizableNestedSource();
-    expect(saida.match(/<ResizablePaneGroup /g)).toHaveLength(2);
-    expect(saida).toContain('<ResizablePaneGroup direction="vertical">');
+    const output = resizableNestedSource();
+    expect(output.match(/<ResizablePaneGroup /g)).toHaveLength(2);
+    expect(output).toContain('<ResizablePaneGroup direction="vertical">');
     // Cada grupo tem o seu divisor, com nome próprio.
-    expect(saida).toContain('aria-label="Redimensionar editor e console — use setas"');
+    expect(output).toContain('aria-label="Redimensionar editor e console — use setas"');
   });
 
   it('a variante com pegador divide ao meio e mostra o controle', () => {
-    const saida = resizableWithGrabberSource();
-    expect(saida).toContain('<ResizableHandle withHandle');
-    expect(saida).toContain('<ResizablePane defaultSize={50} minSize={20}>');
+    const output = resizableWithGrabberSource();
+    expect(output).toContain('<ResizableHandle withHandle');
+    expect(output).toContain('<ResizablePane defaultSize={50} minSize={20}>');
   });
 
   it('o estado de arrasto abre o piso para o painel encolher de verdade', () => {
@@ -114,8 +114,8 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o divisor travado escreve a prop, e continua nomeado', () => {
-    const saida = resizableDisabledSource();
-    expect(saida).toContain('<ResizableHandle withHandle disabled aria-label=');
+    const output = resizableDisabledSource();
+    expect(output).toContain('<ResizableHandle withHandle disabled aria-label=');
   });
 
   it('a composição de sidebar nomeia o divisor pelo que ele redimensiona', () => {
@@ -125,21 +125,21 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de editor e preview reparte em partes iguais', () => {
-    const saida = resizableEditorPreviewSource();
-    expect(saida).toContain('<span class="nds-text-body">Preview</span>');
-    expect(saida).toContain('<ResizablePane defaultSize={50} minSize={20}>');
+    const output = resizableEditorPreviewSource();
+    expect(output).toContain('<span class="nds-text-body">Preview</span>');
+    expect(output).toContain('<ResizablePane defaultSize={50} minSize={20}>');
   });
 
   it('a divisão vertical empilha lista e detalhe em 40/60', () => {
-    const saida = resizableDivisaoVerticalSource();
-    expect(saida).toContain('direction="vertical"');
-    expect(saida).toContain('<ResizablePane defaultSize={60} minSize={20}>');
+    const output = resizableDivisaoVerticalSource();
+    expect(output).toContain('direction="vertical"');
+    expect(output).toContain('<ResizablePane defaultSize={60} minSize={20}>');
   });
 
   it('a composição de IDE aninha o console sob o editor', () => {
-    const saida = resizableIdeSource();
-    expect(saida.match(/<ResizablePaneGroup /g)).toHaveLength(2);
-    expect(saida).toContain('Arquivos');
-    expect(saida).toContain('Console');
+    const output = resizableIdeSource();
+    expect(output.match(/<ResizablePaneGroup /g)).toHaveLength(2);
+    expect(output).toContain('Arquivos');
+    expect(output).toContain('Console');
   });
 });

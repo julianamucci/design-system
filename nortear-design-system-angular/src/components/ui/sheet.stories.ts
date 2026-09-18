@@ -135,8 +135,8 @@ export const Playground: Story = {
     props: {
       ...args,
       recordCloseReason,
-      tituloPainel: t('demonstration.labels.title'),
-      descricaoPainel: t('demonstration.labels.description'),
+      panelTitle: t('demonstration.labels.title'),
+      panelDescription: t('demonstration.labels.description'),
       panelBody: t('demonstration.labels.body'),
       rotuloCancelar: t('demonstration.labels.cancel'),
       rotuloAplicar: t('demonstration.labels.apply'),
@@ -153,8 +153,8 @@ export const Playground: Story = {
 
         <ng-template ndsSheetContent [side]="side" [showCloseButton]="showCloseButton">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsSheetBody>

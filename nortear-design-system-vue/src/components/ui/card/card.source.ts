@@ -43,10 +43,10 @@ function card(partes: Array<string | ''>, ...children: string[]): string {
  * `as="h3"` porque o título nasce `div`: o CSS dá a aparência de título, e quem
  * dá a semântica é o elemento.
  */
-function header(title: string, descricao: string, acao = ''): string {
+function header(title: string, description: string, acao = ''): string {
   const body = [
     `  <CardTitle as="h3">${title}</CardTitle>`,
-    `  <CardDescription>${descricao}</CardDescription>`,
+    `  <CardDescription>${description}</CardDescription>`,
     acao ? `  <CardAction>\n${indentar(acao, 4)}\n  </CardAction>` : '',
   ].filter(Boolean);
   return `<CardHeader>\n${body.join('\n')}\n</CardHeader>`;

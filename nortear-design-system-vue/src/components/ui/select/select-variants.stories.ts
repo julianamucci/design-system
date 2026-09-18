@@ -254,10 +254,10 @@ export const WithIcon: Story = {
 
     await step('O ícone é dimensionado pela folha do componente', async () => {
       const listbox = await open();
-      const icone = within(listbox)
+      const icon = within(listbox)
         .getAllByRole('option')[0]
         .querySelector('svg') as SVGElement;
-      await expect(getComputedStyle(icone).width).toBe('16px');
+      await expect(getComputedStyle(icon).width).toBe('16px');
     });
   },
 };

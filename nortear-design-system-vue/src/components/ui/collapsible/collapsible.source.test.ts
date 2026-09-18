@@ -50,32 +50,32 @@ import {
   });
 
   it('desabilitado chega às duas pontas: a raiz guarda o estado, o gatilho é o botão', () => {
-    const saida = collapsibleSource('', { args: { disabled: true } });
-    expect(saida).toContain('<Collapsible disabled class="nds-w-sm">');
-    expect(saida).toMatch(/<CollapsibleTrigger\n {6}disabled\n/);
+    const output = collapsibleSource('', { args: { disabled: true } });
+    expect(output).toContain('<Collapsible disabled class="nds-w-sm">');
+    expect(output).toMatch(/<CollapsibleTrigger\n {6}disabled\n/);
   });
 
   it('não escreve o que já é padrão do componente', () => {
-    const saida = collapsibleSource('', { args: { defaultOpen: false, disabled: false } });
-    expect(saida).not.toContain('default-open');
-    expect(saida).not.toContain('disabled');
+    const output = collapsibleSource('', { args: { defaultOpen: false, disabled: false } });
+    expect(output).not.toContain('default-open');
+    expect(output).not.toContain('disabled');
   });
 
   it('ignora control que não é booleano — o espião de ação vira ruído no painel', () => {
     const spy = (() => {}) as never;
-    const saida = collapsibleSource('', { args: { defaultOpen: spy, disabled: spy } });
-    expect(saida).toBe(collapsibleSource());
-    expect(saida).not.toContain('function');
+    const output = collapsibleSource('', { args: { defaultOpen: spy, disabled: spy } });
+    expect(output).toBe(collapsibleSource());
+    expect(output).not.toContain('function');
   });
 
   it('o chevron é decorativo e não precisa de classe de estado', () => {
-    const saida = collapsibleSource();
-    expect(saida).toContain('<ChevronDown aria-hidden="true"');
+    const output = collapsibleSource();
+    expect(output).toContain('<ChevronDown aria-hidden="true"');
     // `.nds-chevron` gira sob `[aria-expanded="true"]`: não há ouvinte nem
     // classe condicional a escrever.
-    expect(saida).toContain('nds-chevron');
-    expect(saida).not.toContain('rotate');
-    expect(saida).not.toContain('data-state');
+    expect(output).toContain('nds-chevron');
+    expect(output).not.toContain('rotate');
+    expect(output).not.toContain('data-state');
   });
 });
 
@@ -86,63 +86,63 @@ describe('transforms das stories de estado', () => {
   });
 
   it('aberto por padrão troca o rótulo junto com o estado', () => {
-    const saida = defaultCollapsibleOpenSource();
-    expect(saida).toContain('<Collapsible default-open');
+    const output = defaultCollapsibleOpenSource();
+    expect(output).toContain('<Collapsible default-open');
     // "Exibir" num painel já aberto descreveria o contrário do que se vê.
-    expect(saida).toContain('<span>Ocultar filtros avançados</span>');
+    expect(output).toContain('<span>Ocultar filtros avançados</span>');
   });
 
   it('o controlado guarda o estado fora e o devolve pelo mesmo canal', () => {
-    const saida = collapsibleControlledSource();
-    expect(saida).toContain(`import { ref } from 'vue'`);
-    expect(saida).toContain('const aberto = ref(false)');
-    expect(saida).toContain('<Collapsible v-model:open="aberto" class="nds-w-full">');
+    const output = collapsibleControlledSource();
+    expect(output).toContain(`import { ref } from 'vue'`);
+    expect(output).toContain('const aberto = ref(false)');
+    expect(output).toContain('<Collapsible v-model:open="aberto" class="nds-w-full">');
     // Os botões de fora mandam no painel sem tocar no gatilho.
-    expect(saida).toContain('@click="aberto = true"');
-    expect(saida).toContain('@click="aberto = false"');
+    expect(output).toContain('@click="aberto = true"');
+    expect(output).toContain('@click="aberto = false"');
     // Nomes próprios: dois controles com o mesmo nome acessível ficam ambíguos.
-    expect(saida).toContain('Abrir pelo estado externo');
-    expect(saida).toContain('Fechar pelo estado externo');
+    expect(output).toContain('Abrir pelo estado externo');
+    expect(output).toContain('Fechar pelo estado externo');
   });
 
   it('o desabilitado tira a rotação do chevron — não há estado que o faça girar', () => {
-    const saida = collapsibleDisabledSource();
-    expect(saida).toContain('<Collapsible disabled');
-    expect(saida).toContain('<ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />');
-    expect(saida).not.toContain('nds-chevron');
+    const output = collapsibleDisabledSource();
+    expect(output).toContain('<Collapsible disabled');
+    expect(output).toContain('<ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />');
+    expect(output).not.toContain('nds-chevron');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o gatilho É o botão do design system, sem repasse para um filho', () => {
-    const saida = collapsibleWithButtonSource();
-    expect(saida).toContain('class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"');
+    const output = collapsibleWithButtonSource();
+    expect(output).toContain('class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"');
     // Nada de <Button> por dentro: o estado precisa morar no próprio gatilho.
-    expect(saida).not.toContain('<Button');
-    expect(saida).toContain('<p>Opção avançada 3</p>');
+    expect(output).not.toContain('<Button');
+    expect(output).toContain('<p>Opção avançada 3</p>');
   });
 
   it('os dois ícones do gatilho ficam fora do nome acessível', () => {
-    const saida = collapsibleWithIconSource();
-    expect(saida).toContain(`import { ChevronDown, Filter } from 'lucide-vue-next'`);
-    expect(saida.match(/aria-hidden="true"/g)).toHaveLength(2);
-    expect(saida).toContain('<Filter aria-hidden="true"');
+    const output = collapsibleWithIconSource();
+    expect(output).toContain(`import { ChevronDown, Filter } from 'lucide-vue-next'`);
+    expect(output.match(/aria-hidden="true"/g)).toHaveLength(2);
+    expect(output).toContain('<Filter aria-hidden="true"');
   });
 
   it('o chevron rotativo revela pares rótulo/valor', () => {
-    const saida = collapsibleWithChevronSource();
-    expect(saida).toContain('<span class="nds-font-medium">Modo estrito</span>');
-    expect(saida).toContain('nds-chevron');
+    const output = collapsibleWithChevronSource();
+    expect(output).toContain('<span class="nds-font-medium">Modo estrito</span>');
+    expect(output).toContain('nds-chevron');
   });
 
   it('nenhum snippet carrega valor de design em style inline', () => {
-    for (const saida of [
+    for (const output of [
       collapsibleSource(),
       collapsibleControlledSource(),
       collapsibleWithIconSource(),
       collapsibleWithChevronSource(),
     ]) {
-      expect(saida).not.toContain('style="');
+      expect(output).not.toContain('style="');
     }
   });
 });

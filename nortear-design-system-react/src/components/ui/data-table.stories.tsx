@@ -182,13 +182,13 @@ export const Playground: Story = {
       await waitFor(() => expect(th).toHaveAttribute("aria-sort", "none"))
     }
     /** Clica só se o estado ainda não é o desejado — sobrevive ao replay. */
-    const marcar = async (box: HTMLElement, target: "true" | "false") => {
+    const check = async (box: HTMLElement, target: "true" | "false") => {
       if (box.getAttribute("aria-checked") !== target) await userEvent.click(box)
       await waitFor(() => expect(box).toHaveAttribute("aria-checked", target))
     }
     /** Precondição de qualquer passo de seleção: nada marcado, venha de onde vier. */
     const clearSelection = async () => {
-      for (const line of lines()) await marcar(lineBox(line), "false")
+      for (const line of lines()) await check(lineBox(line), "false")
       await waitFor(() =>
         expect(
           canvasElement.querySelectorAll("tbody tr[data-state='selected']").length
@@ -344,7 +344,7 @@ export const Playground: Story = {
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
       const all = allBox()
-      await marcar(all, "true")
+      await check(all, "true")
 
       for (const line of lines()) {
         await expect(line).toHaveAttribute("data-state", "selected")
@@ -360,7 +360,7 @@ export const Playground: Story = {
 
     await step("Desmarcar uma linha deixa o cabeçalho em estado misto", async () => {
       const first = lines()[0].querySelector<HTMLElement>("[role='checkbox']")!
-      await marcar(first, "false")
+      await check(first, "false")
       await waitFor(() =>
         expect(allBox()).toHaveAttribute("aria-checked", "mixed")
       )
@@ -372,8 +372,8 @@ export const Playground: Story = {
       // não só marcar. Partindo do misto, o primeiro clique completa a página e
       // o segundo esvazia.
       const all = allBox()
-      await marcar(all, "true")
-      await marcar(all, "false")
+      await check(all, "true")
+      await check(all, "false")
       await expect(regiaoViva()).toHaveTextContent("0 de 12 fatura(s) selecionada(s).")
       await expect(canvasElement.querySelectorAll("tbody tr[data-state='selected']").length).toBe(0)
     })
@@ -390,7 +390,7 @@ export const Playground: Story = {
       await clearSelection()
 
       const targets = ["INV-002", "INV-005"]
-      for (const id of targets) await marcar(lineBox(lineOf(id)), "true")
+      for (const id of targets) await check(lineBox(lineOf(id)), "true")
       await expect(regiaoViva()).toHaveTextContent("2 de 12 fatura(s) selecionada(s).")
 
       const header = button.closest("th")!
@@ -415,8 +415,8 @@ export const Playground: Story = {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção".
       await clearSelection()
-      await marcar(lineBox(lines()[0]), "true")
-      await marcar(lineBox(lines()[2]), "true")
+      await check(lineBox(lines()[0]), "true")
+      await check(lineBox(lines()[2]), "true")
       await expect(regiaoViva()).toHaveTextContent("2 de 12 fatura(s) selecionada(s).")
     })
   },

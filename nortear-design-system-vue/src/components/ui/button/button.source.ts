@@ -31,11 +31,11 @@ function text(label: string, ...partes: Array<string | ''>): string {
  * tamanho pela cascata do componente, sem classe nenhuma. Sem o rótulo
  * acessível a ação fica sem nome, porque não sobrou texto para nomeá-la.
  */
-function soIcon(icone: string, size: string, label: string): string {
+function soIcon(icon: string, size: string, label: string): string {
   return vueSnippet(
-    withIcon(icone),
+    withIcon(icon),
     `<Button size="${size}" aria-label="${label}">
-  <${icone} aria-hidden="true" />
+  <${icon} aria-hidden="true" />
 </Button>`,
   );
 }

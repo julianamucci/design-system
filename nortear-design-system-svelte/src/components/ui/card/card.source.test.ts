@@ -49,8 +49,8 @@ describe('cardSource', () => {
   });
 
   it('o rodapé é filho DIRETO do Card — é o que aciona a borda superior', () => {
-    const saida = cardSource();
-    const lines = saida.split('\n');
+    const output = cardSource();
+    const lines = output.split('\n');
     const footer = lines.find((line) => line.includes('<CardFooter'))!;
     // Dois espaços de indentação: um nível abaixo do <Card>, sem invólucro no meio.
     expect(footer.match(/^ */)![0]).toBe('  ');
@@ -59,67 +59,67 @@ describe('cardSource', () => {
 
 describe('transforms das stories de tamanho, estado e composição', () => {
   it('o card padrão não traz rodapé nem botão', () => {
-    const saida = cardDefaultSource();
-    expect(saida).toContain('<CardHeader>');
-    expect(saida).not.toContain('CardFooter');
-    expect(saida).not.toContain('Button');
+    const output = cardDefaultSource();
+    expect(output).toContain('<CardHeader>');
+    expect(output).not.toContain('CardFooter');
+    expect(output).not.toContain('Button');
   });
 
   it('o tamanho pequeno escreve a prop e aperta a largura máxima', () => {
-    const saida = cardPequenoSource();
-    expect(saida).toContain('size="sm"');
-    expect(saida).toContain('nds-w-xs');
+    const output = cardPequenoSource();
+    expect(output).toContain('size="sm"');
+    expect(output).toContain('nds-w-xs');
   });
 
   it('o card clicável ativa pelo link em volta, nunca pelo Card', () => {
-    const saida = cardClickableSource();
-    expect(saida).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
-    expect(saida).toContain('nds-focus-ring');
+    const output = cardClickableSource();
+    expect(output).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
+    expect(output).toContain('nds-focus-ring');
     // Handler de clique no Card raiz é justamente o que a story desaconselha.
-    expect(saida).not.toContain('onclick');
-    expect(saida).not.toContain('tabindex');
+    expect(output).not.toContain('onclick');
+    expect(output).not.toContain('tabindex');
   });
 
   it('o rodapé traz as duas ações nomeando o card em que agem', () => {
-    const saida = cardWithFooterSource();
-    expect(saida).toContain('<CardFooter class="nds-cluster" data-justify="end" data-spacing="md">');
-    expect(saida).toContain('aria-label="Cancelar edição de Cadeira Gamer Pro"');
-    expect(saida).toContain('aria-label="Salvar alterações em Cadeira Gamer Pro"');
+    const output = cardWithFooterSource();
+    expect(output).toContain('<CardFooter class="nds-cluster" data-justify="end" data-spacing="md">');
+    expect(output).toContain('aria-label="Cancelar edição de Cadeira Gamer Pro"');
+    expect(output).toContain('aria-label="Salvar alterações em Cadeira Gamer Pro"');
   });
 
   it('a ação mora DENTRO do header, depois da descrição', () => {
-    const saida = cardWithActionSource();
-    expect(saida).toContain('CardAction');
-    expect(saida.indexOf('<CardAction>')).toBeGreaterThan(saida.indexOf('<CardDescription>'));
-    expect(saida.indexOf('<CardAction>')).toBeLessThan(saida.indexOf('</CardHeader>'));
+    const output = cardWithActionSource();
+    expect(output).toContain('CardAction');
+    expect(output.indexOf('<CardAction>')).toBeGreaterThan(output.indexOf('<CardDescription>'));
+    expect(output.indexOf('<CardAction>')).toBeLessThan(output.indexOf('</CardHeader>'));
   });
 
   it('a imagem é o primeiro filho do card e tem alternativa textual', () => {
-    const saida = cardWithImageSource();
-    expect(saida.indexOf('<img')).toBeLessThan(saida.indexOf('<CardHeader>'));
-    expect(saida).toContain('alt="Cadeira Gamer Pro vista de frente, em fundo neutro"');
+    const output = cardWithImageSource();
+    expect(output.indexOf('<img')).toBeLessThan(output.indexOf('<CardHeader>'));
+    expect(output).toContain('alt="Cadeira Gamer Pro vista de frente, em fundo neutro"');
   });
 
   it('o card de produto junta imagem, status no header e ações no rodapé', () => {
-    const saida = productCardSource();
-    expect(saida).toContain('from "@/components/ui/badge"');
-    expect(saida).toContain('<Badge variant="success">Em estoque</Badge>');
-    expect(saida.indexOf('<img')).toBeLessThan(saida.indexOf('<CardHeader>'));
-    expect(saida).toContain('<CardFooter');
+    const output = productCardSource();
+    expect(output).toContain('from "@/components/ui/badge"');
+    expect(output).toContain('<Badge variant="success">Em estoque</Badge>');
+    expect(output.indexOf('<img')).toBeLessThan(output.indexOf('<CardHeader>'));
+    expect(output).toContain('<CardFooter');
   });
 
   it('o card de métrica deixa o número no corpo, e o nome no título', () => {
-    const saida = cardDeMetricaSource();
-    expect(saida).toContain('<CardTitle as="h3">Assinantes ativos</CardTitle>');
-    expect(saida.indexOf('8.742')).toBeGreaterThan(saida.indexOf('<CardContent>'));
-    expect(saida).toContain('size="sm"');
+    const output = cardDeMetricaSource();
+    expect(output).toContain('<CardTitle as="h3">Assinantes ativos</CardTitle>');
+    expect(output.indexOf('8.742')).toBeGreaterThan(output.indexOf('<CardContent>'));
+    expect(output).toContain('size="sm"');
   });
 
   it('o card de perfil termina no header e traz o avatar', () => {
-    const saida = cardDePerfilSource();
-    expect(saida).toContain('from "@/components/ui/avatar"');
-    expect(saida).toContain('<AvatarFallback>MR</AvatarFallback>');
-    expect(saida).not.toContain('CardFooter');
-    expect(saida).not.toContain('CardContent');
+    const output = cardDePerfilSource();
+    expect(output).toContain('from "@/components/ui/avatar"');
+    expect(output).toContain('<AvatarFallback>MR</AvatarFallback>');
+    expect(output).not.toContain('CardFooter');
+    expect(output).not.toContain('CardContent');
   });
 });

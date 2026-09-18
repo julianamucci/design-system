@@ -209,7 +209,7 @@ export const Playground: Story = {
      * caixa é buscada de novo a cada chamada porque a factory REMONTA o corpo
      * a cada mudança de estado: o nó capturado antes do clique já morreu.
      */
-    const marcar = async (find: () => HTMLElement, target: 'true' | 'false') => {
+    const check = async (find: () => HTMLElement, target: 'true' | 'false') => {
       if (find().getAttribute('aria-checked') !== target) await userEvent.click(find());
       await waitFor(() => expect(find()).toHaveAttribute('aria-checked', target));
     };
@@ -343,7 +343,7 @@ export const Playground: Story = {
       // functional.item4 — e visual.item1: a linha marcada muda de fundo. Uma
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
-      await marcar(allBox, 'true');
+      await check(allBox, 'true');
 
       for (const line of lines()) {
         await expect(line).toHaveAttribute('data-state', 'selected');
@@ -356,7 +356,7 @@ export const Playground: Story = {
     });
 
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
-      await marcar(lineBox(0), 'false');
+      await check(lineBox(0), 'false');
       await waitFor(() => expect(allBox()).toHaveAttribute('aria-checked', 'mixed'));
       await expect(lines()[0].hasAttribute('data-state')).toBe(false);
     });
@@ -365,8 +365,8 @@ export const Playground: Story = {
       // O terceiro trecho de functional.item4: o cabeçalho precisa DESMARCAR,
       // não só marcar. Partindo do misto, o primeiro clique completa a página e
       // o segundo esvazia.
-      await marcar(allBox, 'true');
-      await marcar(allBox, 'false');
+      await check(allBox, 'true');
+      await check(allBox, 'false');
       await expect(regiaoViva()).toHaveTextContent('0 de 12 fatura(s) selecionada(s).');
       await expect(
         canvasElement.querySelectorAll("tbody tr[data-state='selected']").length,
@@ -380,11 +380,11 @@ export const Playground: Story = {
       // apontando para outra fatura.
       await zerarOrdenacao();
       // Precondição idempotente: nada marcado, venha o replay de onde vier.
-      await marcar(allBox, 'true');
-      await marcar(allBox, 'false');
+      await check(allBox, 'true');
+      await check(allBox, 'false');
 
-      await marcar(invoiceBox('INV-003'), 'true');
-      await marcar(invoiceBox('INV-007'), 'true');
+      await check(invoiceBox('INV-003'), 'true');
+      await check(invoiceBox('INV-007'), 'true');
       const contagemBefore = regiaoViva().textContent;
 
       const ordenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
@@ -407,15 +407,15 @@ export const Playground: Story = {
 
       // Devolve o estado ao passo seguinte: sem ordem e sem marcação.
       await zerarOrdenacao();
-      await marcar(allBox, 'true');
-      await marcar(allBox, 'false');
+      await check(allBox, 'true');
+      await check(allBox, 'false');
     });
 
     await step('A story termina com seleção parcial na tela', async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção".
-      await marcar(lineBox(0), 'true');
-      await marcar(lineBox(2), 'true');
+      await check(lineBox(0), 'true');
+      await check(lineBox(2), 'true');
       await expect(regiaoViva()).toHaveTextContent('2 de 12 fatura(s) selecionada(s).');
     });
   },

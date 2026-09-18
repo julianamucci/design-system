@@ -51,8 +51,8 @@ describe('dropdownMenuSource', () => {
     expect(dropdownMenuSource()).not.toContain('align=');
     expect(dropdownMenuSource()).not.toContain('sideOffset');
 
-    const saida = dropdownMenuSource('', { args: { side: 'top', align: 'end', sideOffset: 8 } });
-    expect(saida).toContain('<DropdownMenuContent side="top" align="end" sideOffset={8}>');
+    const output = dropdownMenuSource('', { args: { side: 'top', align: 'end', sideOffset: 8 } });
+    expect(output).toContain('<DropdownMenuContent side="top" align="end" sideOffset={8}>');
   });
 
   it('acompanha o control do rótulo do gatilho', () => {
@@ -130,17 +130,17 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a variante destrutiva marca só a ação irreversível', () => {
-    const saida = dropdownMenuDestructiveSource();
-    expect(saida).toContain('<DropdownMenuItem>Editar</DropdownMenuItem>');
-    expect(saida).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
-    expect(saida).toContain('>Ações da conta</Button>');
+    const output = dropdownMenuDestructiveSource();
+    expect(output).toContain('<DropdownMenuItem>Editar</DropdownMenuItem>');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
+    expect(output).toContain('>Ações da conta</Button>');
   });
 
   it('o override controlado liga o estado externo por bind:open', () => {
-    const saida = dropdownMenuControlledSource();
-    expect(saida).toContain('let aberto = $state(false);');
-    expect(saida).toContain('<DropdownMenu bind:open={aberto}>');
-    expect(saida).toContain('>Abrir via estado externo</Button>');
+    const output = dropdownMenuControlledSource();
+    expect(output).toContain('let aberto = $state(false);');
+    expect(output).toContain('<DropdownMenu bind:open={aberto}>');
+    expect(output).toContain('>Abrir via estado externo</Button>');
   });
 
   it('o item desabilitado continua no menu, escrito como tal', () => {
@@ -150,16 +150,16 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o indeterminado mostra os três estados do alternador de uma vez', () => {
-    const saida = dropdownMenuIndeterminadoSource();
-    expect(saida).toContain('<DropdownMenuCheckboxItem indeterminate>Nome</DropdownMenuCheckboxItem>');
-    expect(saida).toContain('<DropdownMenuCheckboxItem checked>E-mail</DropdownMenuCheckboxItem>');
-    expect(saida).toContain('<DropdownMenuCheckboxItem>Telefone</DropdownMenuCheckboxItem>');
+    const output = dropdownMenuIndeterminadoSource();
+    expect(output).toContain('<DropdownMenuCheckboxItem indeterminate>Nome</DropdownMenuCheckboxItem>');
+    expect(output).toContain('<DropdownMenuCheckboxItem checked>E-mail</DropdownMenuCheckboxItem>');
+    expect(output).toContain('<DropdownMenuCheckboxItem>Telefone</DropdownMenuCheckboxItem>');
   });
 
   it('o grupo com rótulo usa GroupHeading, que é quem nomeia o agrupamento', () => {
-    const saida = dropdownMenuWithLabelSource();
-    expect(saida).toContain('<DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>');
-    expect(saida).toContain('<DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>');
+    const output = dropdownMenuWithLabelSource();
+    expect(output).toContain('<DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>');
+    expect(output).toContain('<DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>');
   });
 
   it('o grupo com rótulo não marca "Sair" de vermelho — sair não é irreversível', () => {
@@ -172,62 +172,62 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('os alternadores ligam cada item ao seu próprio estado', () => {
-    const saida = dropdownMenuWithCheckboxSource();
-    expect(saida).toContain('let mostrarNome = $state(true);');
-    expect(saida).toContain('let mostrarEmail = $state(false);');
-    expect(saida).toContain('let mostrarFuncao = $state(false);');
-    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarEmail}>');
+    const output = dropdownMenuWithCheckboxSource();
+    expect(output).toContain('let mostrarNome = $state(true);');
+    expect(output).toContain('let mostrarEmail = $state(false);');
+    expect(output).toContain('let mostrarFuncao = $state(false);');
+    expect(output).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarEmail}>');
   });
 
   it('os alternadores são as TRÊS colunas da tabela, e o gatilho as anuncia', () => {
     // O snippet acompanha o preview: três itens, os mesmos rótulos, o mesmo
     // gatilho. Painel Code que mostra outra lista ensina um menu que a página
     // não tem. Três é o número do vanilla, que é a referência.
-    const saida = dropdownMenuWithCheckboxSource();
-    expect(saida).toContain('<DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>');
-    expect(saida).toContain('>Colunas</Button>');
-    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarFuncao}>');
-    expect(saida.match(/<DropdownMenuCheckboxItem /g)).toHaveLength(3);
+    const output = dropdownMenuWithCheckboxSource();
+    expect(output).toContain('<DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>');
+    expect(output).toContain('>Colunas</Button>');
+    expect(output).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarFuncao}>');
+    expect(output.match(/<DropdownMenuCheckboxItem /g)).toHaveLength(3);
   });
 
   it('a escolha única compartilha um valor só entre os itens', () => {
-    const saida = dropdownMenuWithRadioSource();
-    expect(saida).toContain('let tema = $state("light");');
-    expect(saida).toContain('<DropdownMenuRadioGroup bind:value={tema}>');
-    expect(saida.match(/<DropdownMenuRadioItem value="/g)).toHaveLength(3);
+    const output = dropdownMenuWithRadioSource();
+    expect(output).toContain('let tema = $state("light");');
+    expect(output).toContain('<DropdownMenuRadioGroup bind:value={tema}>');
+    expect(output.match(/<DropdownMenuRadioItem value="/g)).toHaveLength(3);
   });
 
   it('a escolha única é a aparência, e nasce no valor que a story mostra marcado', () => {
-    const saida = dropdownMenuWithRadioSource();
-    expect(saida).toContain('<DropdownMenuLabel>Aparência</DropdownMenuLabel>');
-    expect(saida).toContain('<DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>');
-    expect(saida).toContain('<DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>');
-    expect(saida).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');
-    expect(saida).toContain('>Tema</Button>');
+    const output = dropdownMenuWithRadioSource();
+    expect(output).toContain('<DropdownMenuLabel>Aparência</DropdownMenuLabel>');
+    expect(output).toContain('<DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>');
+    expect(output).toContain('<DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>');
+    expect(output).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');
+    expect(output).toContain('>Tema</Button>');
   });
 
   it('o submenu aninha conteúdo dentro do próprio item', () => {
-    const saida = dropdownMenuWithSubmenuSource();
-    expect(saida).toContain('<DropdownMenuSub>');
-    expect(saida).toContain('<DropdownMenuSubContent>');
+    const output = dropdownMenuWithSubmenuSource();
+    expect(output).toContain('<DropdownMenuSub>');
+    expect(output).toContain('<DropdownMenuSubContent>');
   });
 
   it('o submenu lista os dois formatos do preview, e nada depois dele', () => {
-    const saida = dropdownMenuWithSubmenuSource();
-    expect(saida).toContain('<DropdownMenuItem>Renomear</DropdownMenuItem>');
-    expect(saida).toContain('<DropdownMenuItem>PDF</DropdownMenuItem>');
-    expect(saida).toContain('<DropdownMenuItem>CSV</DropdownMenuItem>');
+    const output = dropdownMenuWithSubmenuSource();
+    expect(output).toContain('<DropdownMenuItem>Renomear</DropdownMenuItem>');
+    expect(output).toContain('<DropdownMenuItem>PDF</DropdownMenuItem>');
+    expect(output).toContain('<DropdownMenuItem>CSV</DropdownMenuItem>');
     // O terceiro formato e o item destrutivo saíram do preview; o painel Code
     // acompanha, senão ele mostra um menu que a story não monta.
-    expect(saida).not.toContain('<DropdownMenuItem>JSON</DropdownMenuItem>');
-    expect(saida).not.toContain('<DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>');
-    expect(saida).not.toContain('<DropdownMenuSeparator />');
+    expect(output).not.toContain('<DropdownMenuItem>JSON</DropdownMenuItem>');
+    expect(output).not.toContain('<DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>');
+    expect(output).not.toContain('<DropdownMenuSeparator />');
   });
 
   it('o atalho é filho do item, não texto solto ao lado dele', () => {
-    const saida = dropdownMenuWithShortcutsSource();
-    expect(saida).toContain('<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
-    expect(saida).toContain('>Editar</Button>');
+    const output = dropdownMenuWithShortcutsSource();
+    expect(output).toContain('<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
+    expect(output).toContain('>Editar</Button>');
   });
 });
 
@@ -248,31 +248,31 @@ describe('dropdownMenuEntriesSource — o código dos cards de Variantes', () =>
   ];
 
   it('escreve o gatilho e os rótulos que recebeu, sem português cravado', () => {
-    const saida = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
-    expect(saida).toContain('<Button variant="outline" {...props}>Account</Button>');
-    expect(saida).toContain('<DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>');
-    expect(saida).toContain('<DropdownMenuItem>Profile</DropdownMenuItem>');
-    expect(saida).toContain('<DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>');
-    expect(saida).not.toMatch(/Perfil|Conta|Sair/);
+    const output = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
+    expect(output).toContain('<Button variant="outline" {...props}>Account</Button>');
+    expect(output).toContain('<DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>');
+    expect(output).toContain('<DropdownMenuItem>Profile</DropdownMenuItem>');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>');
+    expect(output).not.toMatch(/Perfil|Conta|Sair/);
   });
 
   it('o rótulo do grupo mora DENTRO do grupo que ele nomeia', () => {
-    const saida = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
-    expect(saida).toContain(
+    const output = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
+    expect(output).toContain(
       '    <DropdownMenuGroup>\n      <DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>',
     );
   });
 
   it('importa só as peças que a lista usa, e nenhum estado quando nada liga', () => {
-    const saida = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
-    expect(saida).toContain('  DropdownMenuSeparator,');
-    expect(saida).not.toContain('DropdownMenuShortcut');
-    expect(saida).not.toContain('DropdownMenuCheckboxItem');
-    expect(saida).not.toContain('$state');
+    const output = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
+    expect(output).toContain('  DropdownMenuSeparator,');
+    expect(output).not.toContain('DropdownMenuShortcut');
+    expect(output).not.toContain('DropdownMenuCheckboxItem');
+    expect(output).not.toContain('$state');
   });
 
   it('a marcação e a escolha única declaram as variáveis que ligam, com o estado da lista', () => {
-    const saida = dropdownMenuEntriesSource({
+    const output = dropdownMenuEntriesSource({
       triggerLabel: 'Columns',
       entries: [
         { type: 'checkbox', label: 'Name', value: 'column-name', checked: true },
@@ -289,20 +289,20 @@ describe('dropdownMenuEntriesSource — o código dos cards de Variantes', () =>
         },
       ],
     });
-    expect(saida).toContain('let columnName = $state(true);');
-    expect(saida).toContain('let columnEmail = $state(false);');
-    expect(saida).toContain("let theme = $state('light');");
-    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={columnName}>');
-    expect(saida).toContain('<DropdownMenuRadioGroup bind:value={theme}>');
-    expect(saida).toContain('<DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>');
+    expect(output).toContain('let columnName = $state(true);');
+    expect(output).toContain('let columnEmail = $state(false);');
+    expect(output).toContain("let theme = $state('light');");
+    expect(output).toContain('<DropdownMenuCheckboxItem bind:checked={columnName}>');
+    expect(output).toContain('<DropdownMenuRadioGroup bind:value={theme}>');
+    expect(output).toContain('<DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>');
   });
 
   it('o atalho é filho do item, numa linha própria', () => {
-    const saida = dropdownMenuEntriesSource({
+    const output = dropdownMenuEntriesSource({
       triggerLabel: 'Edit',
       entries: [{ type: 'item', label: 'Undo', value: 'undo', shortcut: 'Ctrl+Z' }],
     });
-    expect(saida).toContain(
+    expect(output).toContain(
       '<DropdownMenuItem>\n      Undo\n      <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>\n    </DropdownMenuItem>',
     );
   });

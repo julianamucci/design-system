@@ -958,8 +958,8 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
  * O `NdsDocsCompositions` faria isto sozinho, mas ele não repassa `language`
  * para o `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function withQuandoUsar(descricao: string, quandoUsar: string): string {
-  return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
+function withQuandoUsar(description: string, quandoUsar: string): string {
+  return `${description}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
 const priorityKeyMap: Record<string, string> = {

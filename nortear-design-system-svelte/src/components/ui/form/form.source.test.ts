@@ -27,12 +27,12 @@ describe('formSource', () => {
   it('a associação é do campo: o snippet nunca escreve id nem for', () => {
     // É a lição do componente. Um snippet que escrevesse `for`/`id` ensinaria a
     // fazer à mão o que o campo já faz — e a duplicata é o que quebra depois.
-    const saida = formSource('', { args: { error: 'Campo obrigatório.' } });
+    const output = formSource('', { args: { error: 'Campo obrigatório.' } });
     // `\b` de propósito: `aria-invalid="true"` termina em `id="` e passaria num
     // `toContain('id=')` sem que exista atributo `id` nenhum no snippet.
-    expect(saida).not.toMatch(/\bid="/);
-    expect(saida).not.toMatch(/\bfor="/);
-    expect(saida).not.toContain('aria-describedby');
+    expect(output).not.toMatch(/\bid="/);
+    expect(output).not.toMatch(/\bfor="/);
+    expect(output).not.toContain('aria-describedby');
   });
 
   it('acompanha o control do rótulo', () => {
@@ -57,9 +57,9 @@ describe('formSource', () => {
   });
 
   it('o control de aria-invalid vale sozinho, sem mensagem escrita', () => {
-    const saida = formSource('', { args: { ariaInvalid: true } });
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).not.toContain('error=');
+    const output = formSource('', { args: { ariaInvalid: true } });
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).not.toContain('error=');
   });
 
   it('só escreve disabled quando o valor difere do padrão', () => {
@@ -68,14 +68,14 @@ describe('formSource', () => {
   });
 
   it('quebra uma linha por atributo quando a fila do campo fica longa', () => {
-    const saida = formSource('', {
+    const output = formSource('', {
       args: {
         label: 'Senha',
         description: 'Use pelo menos 8 caracteres, com letras e números.',
         error: 'A senha precisa ter pelo menos 8 caracteres.',
       },
     });
-    expect(saida).toContain(`<FormField
+    expect(output).toContain(`<FormField
   label="Senha"
   description="Use pelo menos 8 caracteres, com letras e números."
   error="A senha precisa ter pelo menos 8 caracteres."
@@ -85,51 +85,51 @@ describe('formSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a combinação mínima não traz nada abaixo do controle', () => {
-    const saida = formLabelEControleSource();
-    expect(saida).toContain('<FormField label="Nome completo">');
-    expect(saida).not.toContain('description=');
-    expect(saida).not.toContain('error=');
+    const output = formLabelEControleSource();
+    expect(output).toContain('<FormField label="Nome completo">');
+    expect(output).not.toContain('description=');
+    expect(output).not.toContain('error=');
   });
 
   it('a variação com apoio traz a descrição e o vocabulário de autocomplete', () => {
-    const saida = formWithDescriptionSource();
-    expect(saida).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
-    expect(saida).toContain('autocomplete="new-password"');
+    const output = formWithDescriptionSource();
+    expect(output).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
+    expect(output).toContain('autocomplete="new-password"');
   });
 
   it('o estado inválido escreve a mensagem e marca o controle', () => {
-    const saida = formInvalidoSource();
-    expect(saida).toContain('error="A senha precisa ter pelo menos 8 caracteres."');
-    expect(saida).toContain('aria-invalid="true"');
+    const output = formInvalidoSource();
+    expect(output).toContain('error="A senha precisa ter pelo menos 8 caracteres."');
+    expect(output).toContain('aria-invalid="true"');
   });
 
   it('o estado desabilitado mantém rótulo e apoio, e bloqueia só o controle', () => {
-    const saida = formDisabledSource();
-    expect(saida).toContain('label="CPF"');
-    expect(saida).toContain('description="Preenchido pelo cadastro da empresa."');
-    expect(saida).toContain('disabled');
+    const output = formDisabledSource();
+    expect(output).toContain('label="CPF"');
+    expect(output).toContain('description="Preenchido pelo cadastro da empresa."');
+    expect(output).toContain('disabled');
   });
 
   it('a paleta escura reúne campo simples, campo com erro e grupo', () => {
-    const saida = formPaletteDarkSource();
-    expect(saida).toContain('error="Endereço de email incompleto."');
-    expect(saida).toContain('<Fieldset legend="Endereço de entrega">');
+    const output = formPaletteDarkSource();
+    expect(output).toContain('error="Endereço de email incompleto."');
+    expect(output).toContain('<Fieldset legend="Endereço de entrega">');
   });
 
   it('o agrupamento usa Fieldset com legenda, e não um título por cima', () => {
-    const saida = formFieldsetSource();
-    expect(saida).toContain('import { Fieldset, FormField } from "@/components/ui/form";');
-    expect(saida).toContain('<Fieldset legend="Endereço de entrega">');
-    expect(saida.match(/<FormField label="/g)).toHaveLength(2);
+    const output = formFieldsetSource();
+    expect(output).toContain('import { Fieldset, FormField } from "@/components/ui/form";');
+    expect(output).toContain('<Fieldset legend="Endereço de entrega">');
+    expect(output.match(/<FormField label="/g)).toHaveLength(2);
   });
 
   it('o formulário inteiro passa por três controles diferentes', () => {
-    const saida = formMultipleFieldsSource();
-    expect(saida).toContain('<form class="nds-stack">');
-    expect(saida).toContain('<Textarea name="bio" rows={3} />');
-    expect(saida).toContain('<Button type="submit">Salvar</Button>');
+    const output = formMultipleFieldsSource();
+    expect(output).toContain('<form class="nds-stack">');
+    expect(output).toContain('<Textarea name="bio" rows={3} />');
+    expect(output).toContain('<Button type="submit">Salvar</Button>');
     // Cada campo embrulha o SEU controle: uma <textarea> passa pelo mesmo campo
     // que um <input>, e é isso que a composição precisa mostrar.
-    expect(saida.match(/<FormField /g)).toHaveLength(3);
+    expect(output.match(/<FormField /g)).toHaveLength(3);
   });
 });

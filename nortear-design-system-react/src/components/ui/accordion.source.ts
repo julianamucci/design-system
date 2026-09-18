@@ -220,20 +220,20 @@ export function accordionItemDisabledSource(): string {
  */
 export function accordionWithIconSource(): string {
   const lines = [
-    { value: 'info', icone: 'Info', cor: 'nds-text-info', label: 'Informação',
+    { value: 'info', icon: 'Info', cor: 'nds-text-info', label: 'Informação',
       resposta: 'Ícones facilitam a identificação rápida do tipo de conteúdo.' },
-    { value: 'warning', icone: 'AlertTriangle', cor: 'nds-text-warning', label: 'Aviso',
+    { value: 'warning', icon: 'AlertTriangle', cor: 'nds-text-warning', label: 'Aviso',
       resposta: 'Sinalize categorias distintas com ícones semânticos.' },
-    { value: 'success', icone: 'CheckCircle', cor: 'nds-text-success', label: 'Confirmação',
+    { value: 'success', icon: 'CheckCircle', cor: 'nds-text-success', label: 'Confirmação',
       resposta: 'Use ícones consistentes entre itens do mesmo accordion.' },
   ];
   const body = lines
-    .map(({ value, icone, cor, label, resposta }) =>
+    .map(({ value, icon, cor, label, resposta }) =>
       [
         `  <AccordionItem value="${value}">`,
         '    <AccordionTrigger>',
         '      <span className="nds-cluster" data-spacing="sm">',
-        `        <${icone} className="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />`,
+        `        <${icon} className="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />`,
         `        ${label}`,
         '      </span>',
         '    </AccordionTrigger>',

@@ -72,10 +72,10 @@ export const Empty: Story = {
 
     await step('Sem dado não há desenho — há uma frase', async () => {
       await expect(root.querySelector('svg')).toBeNull();
-      const aviso = root.querySelector('.nds-chart-empty');
+      const warning = root.querySelector('.nds-chart-empty');
       // Frase completa e orientadora, não "Sem dados.": é a regra de UX writing
       // do estado vazio, e é ela que a story passa em `emptyLabel`.
-      await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
+      await expect(warning?.textContent?.trim()).toBe(FRASE_VAZIA);
     });
 
     await step('Sem desenho, sem papel de imagem: a frase é o conteúdo', async () => {

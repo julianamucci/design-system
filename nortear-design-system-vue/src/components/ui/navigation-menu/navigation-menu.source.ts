@@ -44,10 +44,10 @@ function importa(...parts: string[]): string {
  * A descrição NÃO leva `aria-hidden`: "Para Marketing" sozinho não diz o que há
  * do outro lado, e é a descrição que completa o nome do destino (WCAG 2.4.4).
  */
-function destination(href: string, title: string, descricao?: string, recuo = 0): string {
+function destination(href: string, title: string, description?: string, recuo = 0): string {
   const p = ' '.repeat(recuo);
-  const body = descricao
-    ? `\n${p}  <p class="nds-navigation-menu-child-description">\n${p}    ${descricao}\n${p}  </p>`
+  const body = description
+    ? `\n${p}  <p class="nds-navigation-menu-child-description">\n${p}    ${description}\n${p}  </p>`
     : '';
   return `${p}<NavigationMenuChild href="${href}">
 ${p}  <div class="nds-navigation-menu-child-label">${title}</div>${body}

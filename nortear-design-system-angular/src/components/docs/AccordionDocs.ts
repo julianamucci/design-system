@@ -635,7 +635,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         incluso: 'O que está incluso',
         perguntasFrequentes: 'Perguntas frequentes',
         informacao: 'Informação',
-        aviso: 'Aviso',
+        warning: 'Aviso',
         confirm: 'Confirmação',
         informacaoTexto: 'Ícones facilitam a identificação rápida do tipo de conteúdo.',
         avisoTexto: 'Sinalize categorias distintas com ícones semânticos.',
@@ -659,7 +659,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         incluso: 'What is included',
         perguntasFrequentes: 'Frequently asked questions',
         informacao: 'Information',
-        aviso: 'Warning',
+        warning: 'Warning',
         confirm: 'Confirmation',
         informacaoTexto: 'Icons speed up recognition of the content type.',
         avisoTexto: 'Use semantic icons to signal distinct categories.',
@@ -683,7 +683,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         incluso: 'Qué incluye',
         perguntasFrequentes: 'Preguntas frecuentes',
         informacao: 'Información',
-        aviso: 'Aviso',
+        warning: 'Aviso',
         confirm: 'Confirmación',
         informacaoTexto: 'Los íconos facilitan identificar el tipo de contenido.',
         avisoTexto: 'Señala categorías distintas con íconos semánticos.',
@@ -714,7 +714,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
     const r = this.rotulos();
     return [
       { value: 'comp-info',    label: r.informacao,   content: r.informacaoTexto,   path: 'M12 16v-4M12 8h.01' },
-      { value: 'comp-aviso',   label: r.aviso,        content: r.avisoTexto,        path: 'M12 8v4M12 16h.01' },
+      { value: 'comp-warning',   label: r.warning,        content: r.avisoTexto,        path: 'M12 8v4M12 16h.01' },
       { value: 'comp-sucesso', label: r.confirm,  content: r.confirmacaoTexto,  path: 'm9 12 2 2 4-4' },
     ];
   });

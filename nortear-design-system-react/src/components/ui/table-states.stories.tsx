@@ -52,8 +52,8 @@ export const Empty: Story = {
       <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
       <TableHeader>
         <TableRow>
-          {COLUMNS.map((coluna) => (
-            <TableHead key={coluna}>{coluna}</TableHead>
+          {COLUMNS.map((column) => (
+            <TableHead key={column}>{column}</TableHead>
           ))}
         </TableRow>
       </TableHeader>
@@ -176,16 +176,16 @@ export const Loading: Story = {
         <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
         <TableHeader>
           <TableRow>
-            {COLUMNS.map((coluna) => (
-              <TableHead key={coluna}>{coluna}</TableHead>
+            {COLUMNS.map((column) => (
+              <TableHead key={column}>{column}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
         <TableBody>
           {LINES_SKELETON.map((line) => (
             <TableRow key={line}>
-              {COLUMNS.map((coluna) => (
-                <TableCell key={coluna}>
+              {COLUMNS.map((column) => (
+                <TableCell key={column}>
                   {/* Forma por atributo, nunca altura cravada: o esqueleto de
                       uma linha mede o que a linha vai medir quando o texto
                       chegar, e cresce junto com a fonte do navegador

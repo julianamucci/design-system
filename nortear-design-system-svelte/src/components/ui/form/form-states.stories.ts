@@ -61,19 +61,19 @@ export const Invalid: Story = {
     const field = canvasElement.querySelector<HTMLElement>('[data-slot="field"]')!;
     const control = canvas.getByLabelText('Senha');
     const label = field.querySelector<HTMLLabelElement>('label')!;
-    const mensagem = field.querySelector<HTMLElement>('[data-slot="field-error"]')!;
+    const message = field.querySelector<HTMLElement>('[data-slot="field-error"]')!;
 
     await step('A mensagem é anunciada sem roubar o foco', async () => {
       // `polite` e não `assertive`: em validação a cada tecla, interromper a
       // digitação a cada caractere é pior que esperar a pausa.
-      await expect(mensagem).toHaveAttribute('aria-live', 'polite');
+      await expect(message).toHaveAttribute('aria-live', 'polite');
     });
 
     await step('A mensagem está em --destructive, e não numa cor qualquer', async () => {
       // Comparar com o token RESOLVIDO pelo navegador, não com um rgb literal:
       // o literal quebraria a cada ajuste de paleta e não valeria nos temas de
       // marca. É a metade do item de contrato que ninguém verificava.
-      await expect(getComputedStyle(mensagem).color).toBe(
+      await expect(getComputedStyle(message).color).toBe(
         resolveColor(field, 'hsl(var(--destructive))'),
       );
     });
@@ -81,8 +81,8 @@ export const Invalid: Story = {
     await step('O erro chega ao controle e ao rótulo, não só à cor da mensagem', async () => {
       // Vermelho sozinho não alcança quem não enxerga cor. O `aria-describedby`
       // é o que faz o leitor anunciar a mensagem junto com o nome do campo.
-      await expect(control.getAttribute('aria-describedby')).toContain(mensagem.id);
-      await expect(document.getElementById(mensagem.id)).toBe(mensagem);
+      await expect(control.getAttribute('aria-describedby')).toContain(message.id);
+      await expect(document.getElementById(message.id)).toBe(message);
       await expect(control).toHaveAttribute('aria-invalid', 'true');
       await expect(label).toHaveAttribute('data-error', 'true');
     });
@@ -138,8 +138,8 @@ export const Disabled: Story = {
     });
 
     await step('A descrição segue sendo lida junto com o campo', async () => {
-      const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
-      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
+      const description = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+      await expect(control.getAttribute('aria-describedby')).toContain(description.id);
     });
   },
 };
@@ -178,9 +178,9 @@ export const DarkPalette: Story = {
     await step('A mensagem de erro se distingue do texto de apoio', async () => {
       // Se as duas caíssem na mesma cor, o erro deixaria de ser visível como
       // erro — e nenhum teste de contraste pegaria, porque as duas passariam.
-      const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
-      const mensagem = canvasElement.querySelector<HTMLElement>('[data-slot="field-error"]')!;
-      await expect(getComputedStyle(mensagem).color).not.toBe(getComputedStyle(descricao).color);
+      const description = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+      const message = canvasElement.querySelector<HTMLElement>('[data-slot="field-error"]')!;
+      await expect(getComputedStyle(message).color).not.toBe(getComputedStyle(description).color);
     });
   },
 };

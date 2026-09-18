@@ -12,7 +12,7 @@
 import { indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type TableArgs = {
-  captionVisivel: boolean;
+  captionVisible: boolean;
   withFooter: boolean;
 };
 
@@ -109,7 +109,7 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const withFooter = args.withFooter !== false;
   const sections = [
-    caption('Lista de faturas recentes', args.captionVisivel === true),
+    caption('Lista de faturas recentes', args.captionVisible === true),
     HEADER,
     BODY,
   ];

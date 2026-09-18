@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
   class?: HTMLAttributes['class']
   label?: string
 }>(), {
-  label: () => LABELS_SIDEBAR_DEFAULT.alternar,
+  label: () => LABELS_SIDEBAR_DEFAULT.toggle,
 })
 
 const { toggleSidebar } = useSidebar()

@@ -211,8 +211,8 @@ export const MultiResponsive: Story = {
     await step('Vários slides ficam enquadrados ao mesmo tempo', async () => {
       const slides = canvas.getAllByRole('group');
       await expect(slides.length).toBe(6);
-      const visiveis = slides.filter((s) => clipVisible(s, clip)).length;
-      await expect(visiveis).toBe(byScreen);
+      const visible = slides.filter((s) => clipVisible(s, clip)).length;
+      await expect(visible).toBe(byScreen);
     });
 
     await step('Todos os slides continuam anunciáveis com posição e total', async () => {

@@ -33,20 +33,20 @@ const ALL: Array<() => string> = [
 
 describe('calendarSource', () => {
   it('ensina a importação do design system, não a da lib de datas', () => {
-    const saida = calendarSource();
-    expect(saida).toContain('import { Calendar } from "@/components/ui/calendar";');
+    const output = calendarSource();
+    expect(output).toContain('import { Calendar } from "@/components/ui/calendar";');
     // O locale vem da lib de datas, que é dependência declarada; o COMPONENTE
     // vem do design system.
-    expect(saida).toContain('import { ptBR } from "react-day-picker/locale";');
-    expect(saida).not.toContain('<DayPicker');
+    expect(output).toContain('import { ptBR } from "react-day-picker/locale";');
+    expect(output).not.toContain('<DayPicker');
   });
 
   it('sem control algum cai no calendário controlado de uma data só', () => {
-    const saida = calendarSource();
-    expect(saida).toContain('const [data, setData] = useState(new Date());');
-    expect(saida).toContain('mode="single"');
-    expect(saida).toContain('selected={data}');
-    expect(saida).toContain('setData(escolhida)');
+    const output = calendarSource();
+    expect(output).toContain('const [data, setData] = useState(new Date());');
+    expect(output).toContain('mode="single"');
+    expect(output).toContain('selected={data}');
+    expect(output).toContain('setData(escolhida)');
   });
 
   it('o modo troca o FORMATO do estado, e não só o atributo', () => {
@@ -76,8 +76,8 @@ describe('calendarSource', () => {
   });
 
   it('não inventa modo fora da união quando o control é adulterado', () => {
-    const saida = calendarSource(undefined, { args: { mode: 'agenda' as never } });
-    expect(saida).toContain('mode="single"');
+    const output = calendarSource(undefined, { args: { mode: 'agenda' as never } });
+    expect(output).toContain('mode="single"');
   });
 
   it('só escreve a prop que difere do padrão do componente', () => {
@@ -111,9 +111,9 @@ describe('calendarSource', () => {
   it('não deixa o espião de onSelect virar código no painel', () => {
     const spy = () => 'CORPO_DO_MOCK';
     const args = { onSelect: spy } as unknown as Partial<CalendarArgs>;
-    const saida = calendarSource(undefined, { args });
-    expect(saida).toContain('setData(escolhida)');
-    expect(saida).not.toContain('CORPO_DO_MOCK');
+    const output = calendarSource(undefined, { args });
+    expect(output).toContain('setData(escolhida)');
+    expect(output).not.toContain('CORPO_DO_MOCK');
   });
 });
 
@@ -124,24 +124,24 @@ describe('modos', () => {
   });
 
   it('o intervalo guarda extremos, e abre dois meses para a travessia', () => {
-    const saida = calendarIntervaloSource();
-    expect(saida).toContain('useState<DateRange>({ from: new Date() })');
-    expect(saida).toContain('numberOfMonths={2}');
+    const output = calendarIntervaloSource();
+    expect(output).toContain('useState<DateRange>({ from: new Date() })');
+    expect(output).toContain('numberOfMonths={2}');
   });
 });
 
 describe('estados', () => {
   it('o bloqueio é uma regra de intervalo, não uma lista de datas', () => {
-    const saida = calendarBloqueadoSource();
-    expect(saida).toContain('disabled={{ before: new Date() }}');
+    const output = calendarBloqueadoSource();
+    expect(output).toContain('disabled={{ before: new Date() }}');
   });
 
   it('hoje é a AUSÊNCIA de seleção — destacar não é escolher', () => {
-    const saida = calendarHojeSource();
-    expect(saida).toContain('mode="single"');
-    expect(saida).not.toContain('selected=');
-    expect(saida).not.toContain('onSelect=');
-    expect(saida).not.toContain('useState');
+    const output = calendarHojeSource();
+    expect(output).toContain('mode="single"');
+    expect(output).not.toContain('selected=');
+    expect(output).not.toContain('onSelect=');
+    expect(output).not.toContain('useState');
   });
 
   it('a prop de dias de fora aparece porque é o assunto da story', () => {
@@ -149,9 +149,9 @@ describe('estados', () => {
   });
 
   it('o intervalo com miolo cabe num mês só', () => {
-    const saida = calendarIntervaloWithMioloSource();
-    expect(saida).toContain('mode="range"');
-    expect(saida).not.toContain('numberOfMonths');
+    const output = calendarIntervaloWithMioloSource();
+    expect(output).toContain('mode="range"');
+    expect(output).not.toContain('numberOfMonths');
   });
 });
 
@@ -162,9 +162,9 @@ describe('layouts', () => {
   });
 
   it('dois meses só fazem sentido com o modo de intervalo', () => {
-    const saida = calendarDoisMonthsSource();
-    expect(saida).toContain('numberOfMonths={2}');
-    expect(saida).toContain('mode="range"');
+    const output = calendarDoisMonthsSource();
+    expect(output).toContain('numberOfMonths={2}');
+    expect(output).toContain('mode="range"');
   });
 
   it('a coluna de semana precisa ser pedida — vem desligada', () => {
@@ -174,48 +174,48 @@ describe('layouts', () => {
 
 describe('composição com popover', () => {
   it('as três peças vêm do design system, e nenhuma é andaime da story', () => {
-    const saida = calendarWithPopoverSource();
-    expect(saida).toContain('from "@/components/ui/popover"');
-    expect(saida).toContain('from "@/components/ui/button"');
-    expect(saida).toContain('from "@/components/ui/calendar"');
+    const output = calendarWithPopoverSource();
+    expect(output).toContain('from "@/components/ui/popover"');
+    expect(output).toContain('from "@/components/ui/button"');
+    expect(output).toContain('from "@/components/ui/calendar"');
     // Era exatamente isto que o painel imprimia: um componente que só existe no
     // arquivo de story.
-    expect(saida).not.toContain('DatePicker');
+    expect(output).not.toContain('DatePicker');
   });
 
   it('o rótulo do gatilho acompanha a escolha, e escolher fecha o painel', () => {
-    const saida = calendarWithPopoverSource();
-    expect(saida).toContain('const [aberto, setAberto] = useState(false);');
-    expect(saida).toContain('open={aberto}');
-    expect(saida).toContain('onOpenChange={setAberto}');
+    const output = calendarWithPopoverSource();
+    expect(output).toContain('const [aberto, setAberto] = useState(false);');
+    expect(output).toContain('open={aberto}');
+    expect(output).toContain('onOpenChange={setAberto}');
     // Sem o rótulo derivado do estado, a pessoa fecha o popover sem saber o que
     // escolheu; sem o fechamento, precisa fechá-lo à mão para ver o resultado.
-    expect(saida).toContain('formatador.format(data)');
-    expect(saida).toContain('setAberto(false);');
+    expect(output).toContain('formatador.format(data)');
+    expect(output).toContain('setAberto(false);');
   });
 });
 
 describe('regras que valem para todo snippet de calendário', () => {
   it('nenhum ensina o andaime do arquivo de story', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
-      expect(saida).not.toContain('undefined');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
+      expect(output).not.toContain('undefined');
       // O wrapper de estado e o mês fixo existem para os controls e para a foto
       // do Chromatic; nenhum dos dois é API do design system.
-      expect(saida).not.toContain('Playground');
-      expect(saida).not.toContain('defaultMonth');
+      expect(output).not.toContain('Playground');
+      expect(output).not.toContain('defaultMonth');
     }
   });
 
   it('todo snippet com seleção é controlado de ponta a ponta', () => {
     const controlados = ALL.filter((fn) => fn !== calendarHojeSource);
     for (const fn of controlados) {
-      const saida = fn();
-      expect(saida).toContain('import { useState } from "react";');
-      expect(saida).toContain('selected={');
-      expect(saida).toContain('onSelect={');
+      const output = fn();
+      expect(output).toContain('import { useState } from "react";');
+      expect(output).toContain('selected={');
+      expect(output).toContain('onSelect={');
     }
   });
 });

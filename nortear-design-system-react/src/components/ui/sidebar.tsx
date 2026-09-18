@@ -197,8 +197,8 @@ function Sidebar({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
-  mobileTitle = LABELS_SIDEBAR_DEFAULT.tituloMovel,
-  mobileDescription = LABELS_SIDEBAR_DEFAULT.descricaoMovel,
+  mobileTitle = LABELS_SIDEBAR_DEFAULT.mobileTitle,
+  mobileDescription = LABELS_SIDEBAR_DEFAULT.mobileDescription,
   className,
   children,
   dir,
@@ -312,7 +312,7 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
-  label = LABELS_SIDEBAR_DEFAULT.alternar,
+  label = LABELS_SIDEBAR_DEFAULT.toggle,
   ...props
 }: React.ComponentProps<typeof Button> & { label?: string }) {
   const { toggleSidebar } = useSidebar()
@@ -358,7 +358,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       aria-hidden="true"
       tabIndex={-1}
       onClick={toggleSidebar}
-      title={LABELS_SIDEBAR_DEFAULT.alternar}
+      title={LABELS_SIDEBAR_DEFAULT.toggle}
       className={cn("nds-sidebar-rail", className)}
       {...props}
     />

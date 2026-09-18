@@ -258,11 +258,11 @@ const NOT_A_LOOP_SOURCE = new Set(['true', 'false', 'null', 'undefined']);
  *    invisível às duas passagens.
  */
 function loopsWithoutSource(source: string): string[] {
-  const texto = publishedText(source);
-  const declared = declaredNames(texto);
+  const text = publishedText(source);
+  const declared = declaredNames(text);
 
   const loose = new Set<string>();
-  for (const m of texto.matchAll(/v-for="[^"]*?\b(?:in|of)\s+([A-Za-z_$][\w$]*)/g)) {
+  for (const m of text.matchAll(/v-for="[^"]*?\b(?:in|of)\s+([A-Za-z_$][\w$]*)/g)) {
     const name = m[1]!;
     if (!NOT_A_LOOP_SOURCE.has(name) && !declared.has(name)) loose.add(name);
   }
@@ -287,45 +287,45 @@ function loopsWithoutSource(source: string): string[] {
  *  · parâmetro de função declarada no `script setup` — só o parâmetro de arrow
  *    ESCRITA DENTRO da expressão do template é reconhecido, mais abaixo.
  */
-function declaredNames(texto: string): Set<string> {
+function declaredNames(text: string): Set<string> {
   const declared = new Set<string>();
   const add = (name: string | undefined): void => {
     if (name && /^[A-Za-z_$][\w$]*$/.test(name)) declared.add(name);
   };
 
   // O que o `script setup` publicado declara.
-  for (const m of texto.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)/g)) add(m[1]);
-  for (const m of texto.matchAll(/\b(?:const|let|var)\s*\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)/g)) add(m[1]);
+  for (const m of text.matchAll(/\b(?:const|let|var)\s*\{([^}]*)\}/g)) {
     for (const part of m[1]!.split(',')) add(part.split(':').pop()?.split('=')[0]?.trim());
   }
-  for (const m of texto.matchAll(/\b(?:const|let|var)\s*\[([^\]]*)\]/g)) {
+  for (const m of text.matchAll(/\b(?:const|let|var)\s*\[([^\]]*)\]/g)) {
     for (const part of m[1]!.split(',')) add(part.split('=')[0]?.trim());
   }
-  for (const m of texto.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)/g)) add(m[1]);
+  for (const m of text.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)/g)) add(m[1]);
   // Import publicado conta, e é o caso de `RUN_STATUSES` e `CONNECTION_STATES`:
   // o snippet ensina a iterar o vocabulário compartilhado, e ensina a importá-lo
   // na linha de cima. `import type` também entra — deixá-lo de fora seria pular
   // em silêncio, que é o modo de falhar que este arquivo existe para fechar.
-  for (const m of texto.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}/g)) {
     for (const part of m[1]!.split(',')) {
       add(part.trim().split(/\s+as\s+/).pop()?.replace(/^type\s+/, '').trim());
     }
   }
-  for (const m of texto.matchAll(/import\s+([A-Za-z_$][\w$]*)\s*(?:,|from\b)/g)) add(m[1]);
+  for (const m of text.matchAll(/import\s+([A-Za-z_$][\w$]*)\s*(?:,|from\b)/g)) add(m[1]);
 
   // E o que o próprio TEMPLATE introduz: apelido de laço e prop de slot. Sem
   // isto, `v-for="i in m.itens"` acusaria `m`, que é o item do laço de fora.
-  for (const m of texto.matchAll(
+  for (const m of text.matchAll(
     /v-for="\s*\(?\s*([A-Za-z_$][\w$]*)\s*(?:,\s*([A-Za-z_$][\w$]*))?\s*(?:,\s*([A-Za-z_$][\w$]*))?\s*\)?\s+(?:in|of)\s/g,
   )) {
     add(m[1]);
     add(m[2]);
     add(m[3]);
   }
-  for (const m of texto.matchAll(/(?:v-slot(?::[\w.-]+)?|#[\w.-]+)="\s*\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/(?:v-slot(?::[\w.-]+)?|#[\w.-]+)="\s*\{([^}]*)\}/g)) {
     for (const part of m[1]!.split(',')) add(part.split(':').pop()?.split('=')[0]?.trim());
   }
-  for (const m of texto.matchAll(/(?:v-slot(?::[\w.-]+)?|#[\w.-]+)="\s*([A-Za-z_$][\w$]*)\s*"/g)) {
+  for (const m of text.matchAll(/(?:v-slot(?::[\w.-]+)?|#[\w.-]+)="\s*([A-Za-z_$][\w$]*)\s*"/g)) {
     add(m[1]);
   }
 
@@ -450,12 +450,12 @@ const BINDINGS = [
  *    que o ouvinte faz é da aplicação, e o exemplo não escolhe por ninguém.
  */
 function bindingsWithoutDeclaration(source: string): string[] {
-  const texto = publishedText(source);
-  const declared = declaredNames(texto);
+  const text = publishedText(source);
+  const declared = declaredNames(text);
 
   const loose = new Set<string>();
   for (const re of BINDINGS) {
-    for (const m of texto.matchAll(re)) {
+    for (const m of text.matchAll(re)) {
       for (const name of bindingRoots(m[1]!)) if (!declared.has(name)) loose.add(name);
     }
   }
@@ -491,11 +491,11 @@ const SLUGS_SEM_INDICE = new Set<string>([]);
 
 /** O que o índice de uma peça exporta, lido da declaração. */
 function exportedBy(slug: string): Set<string> | null {
-  const texto = indices[`./${slug}/index.ts`];
-  if (texto === undefined) return null;
+  const text = indices[`./${slug}/index.ts`];
+  if (text === undefined) return null;
 
   const nomes = new Set<string>();
-  for (const m of texto.matchAll(
+  for (const m of text.matchAll(
     /export\s+(?:declare\s+)?(?:abstract\s+)?(?:const|let|var|class|function|type|interface|enum)\s+([A-Za-z_$][\w$]*)/g,
   )) {
     nomes.add(m[1]!);
@@ -504,10 +504,10 @@ function exportedBy(slug: string): Set<string> | null {
   // nome que vale é o de fora, e o `type` entre a palavra e a chave precisa
   // entrar no casamento: quase metade dos índices desta stack reexporta tipo
   // assim, e um `export\s*\{` puro os perderia inteiros.
-  for (const m of texto.matchAll(/export\s+(?:type\s+)?\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/export\s+(?:type\s+)?\{([^}]*)\}/g)) {
     for (const parte of m[1]!.split(',')) {
-      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
-      if (nome) nomes.add(nome);
+      const name = parte.trim().split(/\s+as\s+/).pop()?.trim().replace(/^type\s+/, '');
+      if (name) nomes.add(name);
     }
   }
   return nomes;
@@ -521,20 +521,20 @@ function exportedBy(slug: string): Set<string> | null {
  * `type` que vem entre a palavra e a chave, e o `type` também aparece por nome
  * (`import { type Foo }`) — os dois são descascados.
  */
-function designSystemImports(texto: string): Array<{ slug: string; nomes: string[] }> {
-  const saida: Array<{ slug: string; nomes: string[] }> = [];
-  for (const m of texto.matchAll(
+function designSystemImports(text: string): Array<{ slug: string; nomes: string[] }> {
+  const output: Array<{ slug: string; nomes: string[] }> = [];
+  for (const m of text.matchAll(
     /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*'@\/components\/ui\/([a-z0-9-]+)'/g,
   )) {
-    saida.push({
+    output.push({
       slug: m[2]!,
       nomes: m[1]!
         .split(',')
-        .map((nome) => nome.trim().split(/\s+as\s+/)[0]!.trim().replace(/^type\s+/, ''))
+        .map((name) => name.trim().split(/\s+as\s+/)[0]!.trim().replace(/^type\s+/, ''))
         .filter(Boolean),
     });
   }
-  return saida;
+  return output;
 }
 
 /**
@@ -559,17 +559,17 @@ function designSystemImports(texto: string): Array<{ slug: string; nomes: string
  *    existe é assunto do type-check, que não alcança texto.
  */
 function importsWithoutExport(source: string): string[] {
-  const texto = publishedText(source);
+  const text = publishedText(source);
   const faltando: string[] = [];
-  for (const { slug, nomes } of designSystemImports(texto)) {
+  for (const { slug, nomes } of designSystemImports(text)) {
     const exportados = exportedBy(slug);
     if (!exportados) {
       if (SLUGS_SEM_INDICE.has(slug)) continue;
       faltando.push(`um nome de ${slug}, cujo índice não chegou à varredura`);
       continue;
     }
-    for (const nome of nomes) {
-      if (!exportados.has(nome)) faltando.push(`${nome} (de ${slug})`);
+    for (const name of nomes) {
+      if (!exportados.has(name)) faltando.push(`${name} (de ${slug})`);
     }
   }
   return faltando;
@@ -656,9 +656,9 @@ describe('transforms do painel Code', () => {
 
       for (const [name, fn] of construtores) {
         it(`${name} devolve um snippet honesto`, () => {
-          const saida = fn();
-          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
-          const text = saida as string;
+          const output = fn();
+          expect(typeof output, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = output as string;
           expect(text.trim().length).toBeGreaterThan(0);
           // O andaime da story não é parte do design system.
           expect(text).not.toMatch(SCAFFOLD);

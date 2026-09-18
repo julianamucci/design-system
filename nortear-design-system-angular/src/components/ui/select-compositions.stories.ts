@@ -197,11 +197,11 @@ export const WithReactiveForms: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Estado' });
-    const salvar = canvas.getByRole('button', { name: 'Salvar' }) as HTMLButtonElement;
+    const save = canvas.getByRole('button', { name: 'Salvar' }) as HTMLButtonElement;
 
     await step('Vazio, o campo reprova na validação e o envio fica bloqueado', async () => {
       await expect(trigger.getAttribute('aria-invalid')).toBe('true');
-      await expect(salvar.disabled).toBe(true);
+      await expect(save.disabled).toBe(true);
     });
 
     await step('Escolher uma opção escreve no FormControl', async () => {
@@ -216,7 +216,7 @@ export const WithReactiveForms: Story = {
       // O valor chegou ao formulário: é o `ControlValueAccessor` da raiz que o
       // leva, e é isso que `formControlName` promete.
       await waitFor(async () => {
-        await expect(salvar.disabled).toBe(false);
+        await expect(save.disabled).toBe(false);
       });
       await expect(trigger.getAttribute('aria-invalid')).toBe(null);
     });

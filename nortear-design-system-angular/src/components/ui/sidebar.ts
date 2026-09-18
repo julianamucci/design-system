@@ -100,7 +100,7 @@ export class NdsSidebarStore {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === SHORTCUT && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        this.alternar();
+        this.toggle();
       }
     };
     document.addEventListener('keydown', onKeyDown);
@@ -132,7 +132,7 @@ export class NdsSidebarStore {
     this._openMobile.set(isOpen);
   }
 
-  alternar(): void {
+  toggle(): void {
     if (this._isMobile()) this.definirMovel(!this._openMobile());
     else this.definir(!this._open());
   }
@@ -270,8 +270,8 @@ export class NdsSidebar {
    * stacks: era o inglês cravado no componente que fazia a gaveta ser anunciada
    * como "Sidebar / Displays the mobile sidebar." num produto em português.
    */
-  readonly mobileTitle = input(LABELS_SIDEBAR_DEFAULT.tituloMovel);
-  readonly mobileDescription = input(LABELS_SIDEBAR_DEFAULT.descricaoMovel);
+  readonly mobileTitle = input(LABELS_SIDEBAR_DEFAULT.mobileTitle);
+  readonly mobileDescription = input(LABELS_SIDEBAR_DEFAULT.mobileDescription);
 
   protected readonly store = inject(NdsSidebarStore);
 
@@ -336,11 +336,11 @@ export class NdsSidebar {
     '[attr.data-slot]': '"sidebar-trigger"',
     '[attr.aria-expanded]': 'store.open()',
     '[attr.aria-label]': 'ariaLabel()',
-    '(click)': 'store.alternar()',
+    '(click)': 'store.toggle()',
   },
 })
 export class NdsSidebarTrigger {
-  readonly ariaLabel = input(LABELS_SIDEBAR_DEFAULT.alternar, { alias: 'aria-label' });
+  readonly ariaLabel = input(LABELS_SIDEBAR_DEFAULT.toggle, { alias: 'aria-label' });
 
   protected readonly store = inject(NdsSidebarStore);
 }
@@ -369,11 +369,11 @@ export class NdsSidebarTrigger {
     'data-sidebar': 'rail',
     '[attr.data-slot]': '"sidebar-rail"',
     '[attr.title]': 'title()',
-    '(click)': 'store.alternar()',
+    '(click)': 'store.toggle()',
   },
 })
 export class NdsSidebarRail {
-  readonly title = input(LABELS_SIDEBAR_DEFAULT.alternar);
+  readonly title = input(LABELS_SIDEBAR_DEFAULT.toggle);
 
   protected readonly store = inject(NdsSidebarStore);
 }

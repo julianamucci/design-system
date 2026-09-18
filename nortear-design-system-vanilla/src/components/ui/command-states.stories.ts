@@ -79,7 +79,7 @@ export const EmptyState: Story = {
     const canvas = within(canvasElement);
     const field = canvas.getByRole('combobox');
     const list = canvas.getByRole('listbox');
-    const vazio = regiaoVazia(canvasElement);
+    const empty = regiaoVazia(canvasElement);
 
     await step('Buscando "xyznotfound" não sobra nenhum comando', async () => {
       await userEvent.clear(field);
@@ -91,25 +91,25 @@ export const EmptyState: Story = {
     });
 
     await step('A frase é anunciada, não só desenhada', async () => {
-      await expect(vazio).toBeVisible();
-      await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
-      await expect(vazio).toHaveClass(/nds-command-empty/);
-      await expect(vazio).toHaveAttribute('data-empty', '');
+      await expect(empty).toBeVisible();
+      await expect(empty).toHaveTextContent('Nenhum resultado encontrado.');
+      await expect(empty).toHaveClass(/nds-command-empty/);
+      await expect(empty).toHaveAttribute('data-empty', '');
       // Sem a região viva, quem usa leitor de tela digitaria no vazio sem nunca
       // saber que a busca não achou nada.
-      await expect(vazio).toHaveAttribute('role', 'status');
-      await expect(vazio).toHaveAttribute('aria-live', 'polite');
-      await expect(vazio).toHaveAttribute('aria-atomic', 'true');
+      await expect(empty).toHaveAttribute('role', 'status');
+      await expect(empty).toHaveAttribute('aria-live', 'polite');
+      await expect(empty).toHaveAttribute('aria-atomic', 'true');
       // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
       // axe reprova por aria-required-children.
-      await expect(list.contains(vazio)).toBe(false);
+      await expect(list.contains(empty)).toBe(false);
     });
 
     await step('Apagar a busca traz os 3 comandos de volta', async () => {
       await userEvent.clear(field);
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
-      await expect(vazio).not.toHaveAttribute('data-empty');
-      await expect(vazio).not.toHaveClass(/nds-command-empty/);
+      await expect(empty).not.toHaveAttribute('data-empty');
+      await expect(empty).not.toHaveClass(/nds-command-empty/);
       // A busca apagada é uma busca nova: o primeiro comando volta a ficar em
       // destaque (D11).
       await expect(comando(canvasElement, 'button')).toHaveAttribute('aria-selected', 'true');
@@ -124,7 +124,7 @@ export const EmptyState: Story = {
       // capturaria outra story.
       await userEvent.type(field, 'xyznotfound');
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
-      await expect(vazio).toHaveAttribute('data-empty', '');
+      await expect(empty).toHaveAttribute('data-empty', '');
       await expect(field).not.toHaveAttribute('aria-activedescendant');
     });
   },

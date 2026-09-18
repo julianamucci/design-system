@@ -22,7 +22,7 @@
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof TooltipPortal>>;
 	} = $props();
 
-	const descricao = usarDescription();
+	const description = usarDescription();
 
 	// Carimbado no nó, e não passado por prop: `PopperLayer` e `PopperLayerInner`
 	// tiram `id` das props antes de chegarem ao elemento, então um `id` por prop
@@ -30,13 +30,13 @@
 	// Ver tooltip-descricao.svelte.ts.
 	$effect(() => {
 		const target = ref;
-		const identificador = id ?? descricao?.id;
+		const identificador = id ?? description?.id;
 		if (!target || !identificador) return;
 		if (target.id !== identificador) target.id = identificador;
 		// Avisar a raiz é o que devolve a vez ao gatilho — sem isto ele escreve
 		// o `aria-describedby` antes de a lib escrever o dela, e perde.
-		descricao?.marcarMontado(true);
-		return () => descricao?.marcarMontado(false);
+		description?.marcarMontado(true);
+		return () => description?.marcarMontado(false);
 	});
 </script>
 

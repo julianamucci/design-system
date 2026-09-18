@@ -69,11 +69,11 @@ const sharedComponents = {
 };
 
 /** Mesmo painel nas quatro direções — o que muda é `direction` e o título. */
-function panel(direction: string, title: string, descricao: string) {
+function panel(direction: string, title: string, description: string) {
   return () => ({
     components: sharedComponents,
     setup() {
-      return { direction, title, descricao };
+      return { direction, title, description };
     },
     template: `
       <div style="contain: layout">
@@ -81,7 +81,7 @@ function panel(direction: string, title: string, descricao: string) {
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>{{ title }}</DrawerTitle>
-              <DrawerDescription>{{ descricao }}</DrawerDescription>
+              <DrawerDescription>{{ description }}</DrawerDescription>
             </DrawerHeader>
             <DrawerBody class="nds-text-body nds-text-muted-foreground">
               Conteúdo do painel.

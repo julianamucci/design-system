@@ -513,10 +513,10 @@ export const LoadingSkeleton: Story = {
       const first = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      const icone = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
+      const icon = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
       const text = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
-      await expect(icone).not.toBeNull();
-      await expect(icone.getBoundingClientRect().left).toBeLessThan(
+      await expect(icon).not.toBeNull();
+      await expect(icon.getBoundingClientRect().left).toBeLessThan(
         text.getBoundingClientRect().left,
       );
     });

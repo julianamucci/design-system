@@ -329,8 +329,8 @@ interface DensityTable {
                       <table ndsTable class="nds-axis-density-table">
                         <thead ndsTableHeader>
                           <tr ndsTableRow>
-                            @for (coluna of tabelaDeDensidade().tableCols; track $index) {
-                              <th ndsTableHead>{{ coluna }}</th>
+                            @for (column of tabelaDeDensidade().tableCols; track $index) {
+                              <th ndsTableHead>{{ column }}</th>
                             }
                           </tr>
                         </thead>

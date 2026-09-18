@@ -78,24 +78,24 @@ export const WithDescription: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const control = canvas.getByLabelText('Senha');
-    const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+    const description = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
 
     await step('A descrição é um parágrafo com a classe do design system', async () => {
-      await expect(descricao.tagName).toBe('P');
-      await expect(descricao).toHaveClass(/nds-form-description/);
+      await expect(description.tagName).toBe('P');
+      await expect(description).toHaveClass(/nds-form-description/);
     });
 
     await step('A descrição vem DEPOIS do controle', async () => {
       // A ordem importa para quem navega por teclado: a instrução aparece onde
       // o campo termina, não empurrando o campo para baixo da dobra.
-      await expect(descricao.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      await expect(description.getBoundingClientRect().top).toBeGreaterThanOrEqual(
         control.getBoundingClientRect().bottom,
       );
     });
 
     await step('O texto de apoio entra no aria-describedby, e o alvo existe', async () => {
-      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
-      await expect(document.getElementById(descricao.id)).toBe(descricao);
+      await expect(control.getAttribute('aria-describedby')).toContain(description.id);
+      await expect(document.getElementById(description.id)).toBe(description);
     });
   },
 };

@@ -98,7 +98,7 @@ export function heightResultante(el: HTMLElement) {
     alturaDeLinha: cs.lineHeight,
     tamanhoDaFonte: cs.fontSize,
     /** `true` quando a folha crava altura — o defeito que a regra proíbe. */
-    alturaCravada:
+    hardcodedHeight:
       ruleDeclaration(el.ownerDocument, (s) => /\.nds-input(?![\w-])/.test(s), 'height') !== null,
   };
 }

@@ -18,7 +18,7 @@ import {
 const GATILHOS = [MENTION_TRIGGER, COMMAND_TRIGGER];
 
 /** Acha o gatilho com o cursor no fim do texto, que é o caso de quem digita. */
-const noFim = (texto: string) => findTrigger(texto, texto.length, GATILHOS);
+const noFim = (text: string) => findTrigger(text, text.length, GATILHOS);
 
 describe('findTrigger — onde a menção vale', () => {
   it('no começo do campo', () => {
@@ -135,11 +135,11 @@ describe('normalizeTerm e matchesTerm — acento não pode esconder ninguém', (
 
 describe('rankByTerm — quem começa pelo termo vem antes', () => {
   const pessoas = ['Joana Lima', 'Ana Souza', 'Mariana Dias'];
-  const nome = (p: string) => p;
+  const name = (p: string) => p;
 
   it('quem começa pelo termo lidera', () => {
     // Quem digita `@an` quase sempre quer Ana, não Joana.
-    expect(rankByTerm(pessoas, 'an', nome)).toEqual([
+    expect(rankByTerm(pessoas, 'an', name)).toEqual([
       'Ana Souza',
       'Joana Lima',
       'Mariana Dias',
@@ -153,7 +153,7 @@ describe('rankByTerm — quem começa pelo termo vem antes', () => {
     // O termo põe DOIS no grupo de quem só contém — Joana e Mariana —, e é
     // entre esses dois que a ordem original tem de sobreviver. Com um termo
     // que deixasse um só no grupo, a asserção passaria sem medir nada.
-    expect(rankByTerm(pessoas, 'ana', nome)).toEqual([
+    expect(rankByTerm(pessoas, 'ana', name)).toEqual([
       'Ana Souza',
       'Joana Lima',
       'Mariana Dias',
@@ -161,30 +161,30 @@ describe('rankByTerm — quem começa pelo termo vem antes', () => {
   });
 
   it('quem não casa fica de fora', () => {
-    expect(rankByTerm(pessoas, 'bru', nome)).toEqual([]);
+    expect(rankByTerm(pessoas, 'bru', name)).toEqual([]);
   });
 
   it('termo vazio devolve tudo, na ordem original', () => {
-    expect(rankByTerm(pessoas, '', nome)).toEqual(pessoas);
+    expect(rankByTerm(pessoas, '', name)).toEqual(pessoas);
   });
 
   it('não devolve o mesmo array de entrada', () => {
     // Devolver a lista recebida faria quem ordena a saída reordenar a origem.
-    const saida = rankByTerm(pessoas, '', nome);
-    expect(saida).not.toBe(pessoas);
+    const output = rankByTerm(pessoas, '', name);
+    expect(output).not.toBe(pessoas);
   });
 });
 
 describe('applyTrigger — o que fica escrito depois da escolha', () => {
-  const acharNoFim = (texto: string): TriggerMatch => {
-    const achado = findTrigger(texto, texto.length, GATILHOS);
-    if (!achado) throw new Error(`sem gatilho em ${JSON.stringify(texto)}`);
+  const acharNoFim = (text: string): TriggerMatch => {
+    const achado = findTrigger(text, text.length, GATILHOS);
+    if (!achado) throw new Error(`sem gatilho em ${JSON.stringify(text)}`);
     return achado;
   };
 
   it('troca gatilho e termo, e deixa um espaço', () => {
-    const texto = 'avisa a @an';
-    const r = applyTrigger(texto, acharNoFim(texto), texto.length, '@Ana Souza');
+    const text = 'avisa a @an';
+    const r = applyTrigger(text, acharNoFim(text), text.length, '@Ana Souza');
     expect(r.text).toBe('avisa a @Ana Souza ');
     expect(r.caret).toBe(r.text.length);
   });
@@ -192,30 +192,30 @@ describe('applyTrigger — o que fica escrito depois da escolha', () => {
   it('não emenda dois espaços quando já há um adiante', () => {
     // Aplicar a escolha no meio de uma frase já escrita não deve deixar
     // buraco duplo — é a diferença entre inserir e emendar.
-    const texto = 'avisa a @an sobre o prazo';
-    const match = findTrigger(texto, 11, GATILHOS)!;
-    const r = applyTrigger(texto, match, 11, '@Ana Souza');
+    const text = 'avisa a @an sobre o prazo';
+    const match = findTrigger(text, 11, GATILHOS)!;
+    const r = applyTrigger(text, match, 11, '@Ana Souza');
     expect(r.text).toBe('avisa a @Ana Souza sobre o prazo');
   });
 
   it('o cursor fica logo depois do que foi inserido', () => {
-    const texto = 'avisa a @an sobre o prazo';
-    const match = findTrigger(texto, 11, GATILHOS)!;
-    const r = applyTrigger(texto, match, 11, '@Ana Souza');
+    const text = 'avisa a @an sobre o prazo';
+    const match = findTrigger(text, 11, GATILHOS)!;
+    const r = applyTrigger(text, match, 11, '@Ana Souza');
     // Depois do nome e do espaço que já existia: é dali que se continua a
     // escrever, e não do fim da frase.
     expect(r.text.slice(0, r.caret)).toBe('avisa a @Ana Souza ');
   });
 
   it('preserva o que vem depois do cursor', () => {
-    const texto = 'avisa a @an sobre o prazo';
-    const match = findTrigger(texto, 11, GATILHOS)!;
-    expect(applyTrigger(texto, match, 11, '@Ana Souza').text).toContain('sobre o prazo');
+    const text = 'avisa a @an sobre o prazo';
+    const match = findTrigger(text, 11, GATILHOS)!;
+    expect(applyTrigger(text, match, 11, '@Ana Souza').text).toContain('sobre o prazo');
   });
 
   it('serve ao comando do mesmo jeito', () => {
-    const texto = '/aju';
-    const r = applyTrigger(texto, acharNoFim(texto), texto.length, '/ajuda');
+    const text = '/aju';
+    const r = applyTrigger(text, acharNoFim(text), text.length, '/ajuda');
     expect(r.text).toBe('/ajuda ');
   });
 });

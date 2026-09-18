@@ -89,7 +89,7 @@ describe('sidebarSnippet', () => {
 
   it('mostra a limpeza só quando a story trata dela', () => {
     expect(sidebarSnippet()).not.toContain('destroy()');
-    expect(sidebarSnippet({ mostrarDestroy: true })).toContain('barra.destroy();');
+    expect(sidebarSnippet({ showDestroy: true })).toContain('barra.destroy();');
   });
 });
 

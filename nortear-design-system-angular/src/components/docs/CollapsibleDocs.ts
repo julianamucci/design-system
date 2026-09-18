@@ -490,10 +490,10 @@ const COMPOSITION_CODE = {
           {{ t('demonstration.labels.headerLabel') }}
         </button>
         <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
-          @for (opcao of opcoesRicas(); track opcao.id) {
+          @for (option of opcoesRicas(); track option.id) {
             <div class="nds-cluster" data-spacing="sm">
-              <button ndsCheckbox [id]="opcao.id"></button>
-              <label ndsLabel [attr.for]="opcao.id">{{ opcao.label }}</label>
+              <button ndsCheckbox [id]="option.id"></button>
+              <label ndsLabel [attr.for]="option.id">{{ option.label }}</label>
             </div>
           }
         </div>

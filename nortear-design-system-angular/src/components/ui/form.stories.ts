@@ -97,14 +97,14 @@ export const Playground: Story = {
     });
 
     await step('A descrição é LIDA junto com o campo, não só exibida', async () => {
-      const descricao = field.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+      const description = field.querySelector<HTMLElement>('[data-slot="field-description"]')!;
       // O alvo tem que EXISTIR, não só estar citado: um `aria-describedby`
       // apontando para id inexistente passa em asserção de atributo e o leitor
       // de tela não anuncia nada. Foi assim que a rodada do textarea ficou verde
       // com o campo mudo.
-      await expect(descricao.id).not.toBe('');
-      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
-      await expect(document.getElementById(descricao.id)).toBe(descricao);
+      await expect(description.id).not.toBe('');
+      await expect(control.getAttribute('aria-describedby')).toContain(description.id);
+      await expect(document.getElementById(description.id)).toBe(description);
     });
 
     await step('Clicar no rótulo leva o foco ao controle', async () => {

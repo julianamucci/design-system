@@ -17,16 +17,16 @@ describe('attrsMultilinha', () => {
   });
 
   it('quebra uma linha por atributo quando passa do limite', () => {
-    const saida = attrsMultilinha(['aaaa="1"', 'bbbb="2"'], '  ', 10);
-    expect(saida).toBe('\n  aaaa="1"\n  bbbb="2"\n');
+    const output = attrsMultilinha(['aaaa="1"', 'bbbb="2"'], '  ', 10);
+    expect(output).toBe('\n  aaaa="1"\n  bbbb="2"\n');
   });
 });
 
 describe('svelteSnippet', () => {
   it('fecha o bloco de script sem escapar a barra', () => {
     expect(END_SCRIPT).toBe('</script>');
-    const saida = svelteSnippet('import { X } from "@/components/ui/x";', '<X />');
-    expect(saida).toBe(
+    const output = svelteSnippet('import { X } from "@/components/ui/x";', '<X />');
+    expect(output).toBe(
       '<script lang="ts">\n  import { X } from "@/components/ui/x";\n</script>\n\n<X />',
     );
   });

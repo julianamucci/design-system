@@ -199,7 +199,7 @@ export const RemovedBeforeFeedback: Story = {
     wrap.dataset.spacing = 'md';
 
     const slot = document.createElement('div');
-    const alternar = createButton({ variant: 'outline' });
+    const toggle = createButton({ variant: 'outline' });
 
     let block: HTMLElement | null = null;
     const sincronizar = (visible: boolean) => {
@@ -210,13 +210,13 @@ export const RemovedBeforeFeedback: Story = {
         block.remove();
         block = null;
       }
-      alternar.textContent = visible ? 'Remover o bloco' : 'Restaurar o bloco';
+      toggle.textContent = visible ? 'Remover o bloco' : 'Restaurar o bloco';
     };
 
-    alternar.addEventListener('click', () => sincronizar(!block));
+    toggle.addEventListener('click', () => sincronizar(!block));
     sincronizar(true);
 
-    wrap.append(slot, alternar);
+    wrap.append(slot, toggle);
     return wrap;
   },
   play: async ({ canvasElement, step }) => {

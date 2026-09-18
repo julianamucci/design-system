@@ -42,12 +42,12 @@ describe('collapsibleSource', () => {
   });
 
   it('escreve `open`, e nunca o nome do control, quando o painel nasce aberto', () => {
-    const saida = collapsibleSource('', { args: { defaultOpen: true } });
-    expect(saida).toContain('<Collapsible class="nds-w-sm" open>');
+    const output = collapsibleSource('', { args: { defaultOpen: true } });
+    expect(output).toContain('<Collapsible class="nds-w-sm" open>');
     // `defaultOpen` é o rótulo do control; a prop publicada é `open`.
-    expect(saida).not.toContain('defaultOpen');
+    expect(output).not.toContain('defaultOpen');
     // Aberto, o gatilho promete o inverso do que faz fechado.
-    expect(saida).toContain('<span>Ocultar filtros avançados</span>');
+    expect(output).toContain('<span>Ocultar filtros avançados</span>');
   });
 
   it('só escreve disabled quando o valor difere do padrão', () => {
@@ -58,9 +58,9 @@ describe('collapsibleSource', () => {
   });
 
   it('o gatilho carrega as classes de botão, sem botão aninhado', () => {
-    const saida = collapsibleSource();
-    expect(saida).toContain('<CollapsibleTrigger');
-    expect(saida).not.toContain('<Button');
+    const output = collapsibleSource();
+    expect(output).toContain('<CollapsibleTrigger');
+    expect(output).not.toContain('<Button');
   });
 });
 
@@ -78,25 +78,25 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o modo controlado mostra o estado externo e o vínculo de duas vias', () => {
-    const saida = collapsibleControlledSource();
-    expect(saida).toContain('let aberto = $state(false);');
-    expect(saida).toContain('bind:open={aberto}');
-    expect(saida).toContain('from "@/components/ui/button"');
-    expect(saida).toContain('Abrir pelo estado externo');
-    expect(saida).toContain('Fechar pelo estado externo');
+    const output = collapsibleControlledSource();
+    expect(output).toContain('let aberto = $state(false);');
+    expect(output).toContain('bind:open={aberto}');
+    expect(output).toContain('from "@/components/ui/button"');
+    expect(output).toContain('Abrir pelo estado externo');
+    expect(output).toContain('Fechar pelo estado externo');
   });
 
   it('a composição com botão veste o gatilho de contorno', () => {
-    const saida = collapsibleWithButtonSource();
-    expect(saida).toContain('nds-button nds-button-outline');
-    expect(saida).toContain('<p>Opção avançada 3</p>');
+    const output = collapsibleWithButtonSource();
+    expect(output).toContain('nds-button nds-button-outline');
+    expect(output).toContain('<p>Opção avançada 3</p>');
   });
 
   it('a composição do chevron mantém a classe que o CSS gira', () => {
-    const saida = collapsibleWithChevronSource();
-    expect(saida).toContain('nds-transition-transform nds-chevron');
+    const output = collapsibleWithChevronSource();
+    expect(output).toContain('nds-transition-transform nds-chevron');
     // A rotação é 100% CSS: nada de ângulo, medida ou style no markup.
-    expect(saida).not.toContain('rotate');
-    expect(saida).not.toContain('style=');
+    expect(output).not.toContain('rotate');
+    expect(output).not.toContain('style=');
   });
 });

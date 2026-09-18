@@ -53,8 +53,8 @@ describe('attrsMultilinha', () => {
   });
 
   it('quebra um por linha quando a fila passa do limite', () => {
-    const saida = attrsMultilinha(['aaaaaaaaaa="1"', 'bbbbbbbbbb="2"'], '  ', 10);
-    expect(saida).toBe('\n  aaaaaaaaaa="1"\n  bbbbbbbbbb="2"\n');
+    const output = attrsMultilinha(['aaaaaaaaaa="1"', 'bbbbbbbbbb="2"'], '  ', 10);
+    expect(output).toBe('\n  aaaaaaaaaa="1"\n  bbbbbbbbbb="2"\n');
   });
 });
 

@@ -18,7 +18,7 @@ import { COLUMNS, INVOICES, TOTAL } from './table.fixtures';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 interface TableArgs {
-  captionVisivel: boolean;
+  captionVisible: boolean;
   withFooter: boolean;
 }
 
@@ -35,7 +35,7 @@ const meta: Meta<TableArgs> = {
     },
   },
   argTypes: {
-    captionVisivel: {
+    captionVisible: {
       control: 'boolean',
       description:
         'Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o nome da tabela.',
@@ -48,7 +48,7 @@ const meta: Meta<TableArgs> = {
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
   },
-  args: { captionVisivel: false, withFooter: true },
+  args: { captionVisible: false, withFooter: true },
 };
 
 export default meta;
@@ -64,7 +64,7 @@ function buildPlaygroundTable(args: TableArgs): HTMLElement {
   table.appendChild(
     createTableCaption(
       'Lista de faturas recentes',
-      args.captionVisivel ? undefined : 'nds-sr-only',
+      args.captionVisible ? undefined : 'nds-sr-only',
     ),
   );
 
@@ -173,7 +173,7 @@ export const Playground: Story = {
       const caption = canvasElement.querySelector<HTMLElement>('caption')!;
       await expect(caption).toHaveTextContent('Lista de faturas recentes');
       const escondida = getComputedStyle(caption).position === 'absolute';
-      await expect(escondida).toBe(!args.captionVisivel);
+      await expect(escondida).toBe(!args.captionVisible);
       await expect(canvas.getByRole('table', { name: /faturas recentes/ })).toBeTruthy();
     });
 

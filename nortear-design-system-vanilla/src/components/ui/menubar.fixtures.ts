@@ -22,19 +22,19 @@ export function triggersOf(barra: HTMLElement): HTMLElement[] {
 /**
  * Moldura da story, com espaço reservado para o painel aberto.
  *
- * `alturaMinima` é da story, não do helper: o painel abre para baixo e ocupa a
+ * `minHeight` é da story, não do helper: o painel abre para baixo e ocupa a
  * moldura, então uma barra de quatro menus e uma de um menu com submenu pedem
  * reservas diferentes. Sem a reserva, o canvas encolhe e o painel sai da foto
  * da regressão visual.
  */
-export function embrulhar(child: HTMLElement, alturaMinima = '260px'): HTMLElement {
+export function embrulhar(child: HTMLElement, minHeight = '260px'): HTMLElement {
   const wrapper = document.createElement('div');
   // `contain` é mecânica de layout, não valor de design.
   wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full nds-p-2';
   wrapper.dataset.justify = 'center';
   wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = alturaMinima;
+  wrapper.style.minHeight = minHeight;
   wrapper.appendChild(child);
   return wrapper;
 }

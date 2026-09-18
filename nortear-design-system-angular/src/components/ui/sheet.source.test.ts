@@ -29,10 +29,9 @@ import {
  * por nomear coisa nova.
  */
 const STORY_PROPS = [
-  'tituloPainel',
-  'descricaoPainel',
+  'panelTitle',
+  'panelDescription',
   'panelBody',
-  'rotuloGatilho',
   'rotuloCancelar',
   'rotuloAplicar',
   'rotuloExterno',

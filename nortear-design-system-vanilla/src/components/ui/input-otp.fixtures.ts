@@ -14,19 +14,19 @@
  * A moldura da story: reserva o espaço do campo no canvas e mantém o conjunto
  * centrado, para a foto do Chromatic sair sempre do mesmo tamanho.
  *
- * `alturaMinima` é o caminho de exceção. Ela vai para `style` por falta de
+ * `minHeight` é o caminho de exceção. Ela vai para `style` por falta de
  * utilitário nessa medida, e por isso entra por variável — nunca cravada aqui.
  */
-export function wrap(child: HTMLElement, alturaMinima?: string): HTMLElement {
+export function wrap(child: HTMLElement, minHeight?: string): HTMLElement {
   const wrapper = document.createElement('div');
   // `contain` é mecânica de layout, não valor de design: segura o reflow dentro
   // da moldura sem sair do tema nem da escala.
   wrapper.style.contain = 'layout';
-  wrapper.className = alturaMinima
+  wrapper.className = minHeight
     ? 'nds-cluster nds-w-full'
     : 'nds-cluster nds-w-full nds-min-h-30';
   wrapper.dataset.justify = 'center';
-  if (alturaMinima) wrapper.style.minHeight = alturaMinima;
+  if (minHeight) wrapper.style.minHeight = minHeight;
   wrapper.appendChild(child);
   return wrapper;
 }

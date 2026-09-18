@@ -234,8 +234,8 @@ export class NdsFormField implements AfterContentInit {
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  private readonly descricao = contentChild(NdsFormDescription, { descendants: true });
-  private readonly mensagem = contentChild(NdsFormMessage, { descendants: true });
+  private readonly description = contentChild(NdsFormDescription, { descendants: true });
+  private readonly message = contentChild(NdsFormMessage, { descendants: true });
 
   /**
    * O `NgControl` que `formControlName` / `[formControl]` / `ngModel` provê no
@@ -329,8 +329,8 @@ export class NdsFormField implements AfterContentInit {
 
   private aplicar(): void {
     const root = this.hostRef.nativeElement;
-    const descricao = this.descricao();
-    const mensagem = this.mensagem();
+    const description = this.description();
+    const message = this.message();
     const invalido = this.invalido();
     const gerenciaValidade = this.gerenciaValidade();
 
@@ -360,8 +360,8 @@ export class NdsFormField implements AfterContentInit {
 
     const ids = [
       ...this.describedByEscrito,
-      ...(descricao ? [descricao.id] : []),
-      ...(mensagem ? [mensagem.id] : []),
+      ...(description ? [description.id] : []),
+      ...(message ? [message.id] : []),
     ];
     if (ids.length) control.setAttribute('aria-describedby', ids.join(' '));
     else control.removeAttribute('aria-describedby');

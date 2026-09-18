@@ -157,8 +157,8 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     // Padrão em português, vindo do conteúdo compartilhado: é texto que o
     // usuário final OUVE, e num produto em português a gaveta anunciava
     // "Sidebar / Displays the mobile sidebar." Continua trocável.
-    mobileTitle = LABELS_SIDEBAR_DEFAULT.tituloMovel,
-    mobileDescription = LABELS_SIDEBAR_DEFAULT.descricaoMovel,
+    mobileTitle = LABELS_SIDEBAR_DEFAULT.mobileTitle,
+    mobileDescription = LABELS_SIDEBAR_DEFAULT.mobileDescription,
     onMobileOpenChange,
   } = options;
   let isOpen = defaultOpen;
@@ -250,11 +250,11 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     title.id = idTitle;
     title.className = 'nds-sheet-title';
     title.textContent = mobileTitle;
-    const descricao = document.createElement('p');
-    descricao.id = idDescription;
-    descricao.className = 'nds-sheet-description';
-    descricao.textContent = mobileDescription;
-    header.append(title, descricao);
+    const description = document.createElement('p');
+    description.id = idDescription;
+    description.className = 'nds-sheet-description';
+    description.textContent = mobileDescription;
+    header.append(title, description);
     gavetaEl.appendChild(header);
 
     // O conteúdo é MOVIDO, não copiado: quem compôs a barra guarda referências
@@ -375,11 +375,11 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     if (!root.isConnected) return;
     if (e.key === SIDEBAR_KEYBOARD_SHORTCUT && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      alternar();
+      toggle();
     }
   }
 
-  function alternar(): void {
+  function toggle(): void {
     if (movel) {
       if (gavetaAberta) closeGaveta();
       else openGaveta();
@@ -404,7 +404,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     root,
     {
       element: root,
-      toggle: alternar,
+      toggle: toggle,
       open: () => (movel ? openGaveta() : setState(true)),
       close: () => (movel ? closeGaveta() : setState(false)),
       getState: () => (isOpen ? 'expanded' : 'collapsed') as SidebarState,
@@ -458,7 +458,7 @@ export function createSidebarTrigger(
   const btn = createButton({ variant: 'ghost', size: 'icon', class: options.class });
   btn.dataset.slot = 'sidebar-trigger';
   btn.setAttribute('data-sidebar', 'trigger');
-  btn.setAttribute('aria-label', nameAccessibleOf(options) ?? LABELS_SIDEBAR_DEFAULT.alternar);
+  btn.setAttribute('aria-label', nameAccessibleOf(options) ?? LABELS_SIDEBAR_DEFAULT.toggle);
   btn.appendChild(panelLeftIcon());
   btn.addEventListener('click', toggleFn);
   return btn;
@@ -489,7 +489,7 @@ export function createSidebarRail(
   btn.setAttribute('data-sidebar', 'rail');
   btn.setAttribute('aria-hidden', 'true');
   btn.tabIndex = -1;
-  btn.title = options.title ?? LABELS_SIDEBAR_DEFAULT.alternar;
+  btn.title = options.title ?? LABELS_SIDEBAR_DEFAULT.toggle;
   btn.addEventListener('click', toggleFn);
   return btn;
 }

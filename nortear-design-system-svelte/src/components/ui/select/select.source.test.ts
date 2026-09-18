@@ -66,22 +66,22 @@ describe('selectSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a lista plana não traz cabeçalho nem divisão', () => {
-    const saida = selectListPlanaSource();
-    expect(saida).not.toContain('SelectGroupHeading');
-    expect(saida).not.toContain('SelectSeparator');
+    const output = selectListPlanaSource();
+    expect(output).not.toContain('SelectGroupHeading');
+    expect(output).not.toContain('SelectSeparator');
   });
 
   it('a lista agrupada nomeia cada grupo e divide entre eles', () => {
-    const saida = selectWithGroupsSource();
-    expect(saida).toContain('<SelectGroupHeading>{regiao.label}</SelectGroupHeading>');
-    expect(saida).toContain('<SelectSeparator />');
-    expect(saida).toContain('aria-label="Selecionar região"');
+    const output = selectWithGroupsSource();
+    expect(output).toContain('<SelectGroupHeading>{regiao.label}</SelectGroupHeading>');
+    expect(output).toContain('<SelectSeparator />');
+    expect(output).toContain('aria-label="Selecionar região"');
   });
 
   it('a opção com ícone importa o ícone e mantém o rótulo em texto', () => {
-    const saida = selectWithIconSource();
-    expect(saida).toContain('import MapPinIcon from "@lucide/svelte/icons/map-pin";');
-    expect(saida).toContain('<span>{estado.label}</span>');
+    const output = selectWithIconSource();
+    expect(output).toContain('import MapPinIcon from "@lucide/svelte/icons/map-pin";');
+    expect(output).toContain('<span>{estado.label}</span>');
   });
 
   it('o estado preenchido nasce com um valor escolhido', () => {

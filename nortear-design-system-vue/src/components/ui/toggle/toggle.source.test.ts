@@ -31,23 +31,23 @@ import { Bold } from 'lucide-vue-next'
   });
 
   it('com texto visível o aria-label sai, e o ícone troca junto', () => {
-    const saida = toggleSource('', { args: { iconOnly: false, label: 'Mostrar ocultos' } });
+    const output = toggleSource('', { args: { iconOnly: false, label: 'Mostrar ocultos' } });
     // Um `aria-label` que discorde do texto visível quebra a WCAG 2.5.3.
-    expect(saida).not.toContain('aria-label=');
-    expect(saida).toContain('<Eye aria-hidden="true" />');
-    expect(saida).toContain('  Mostrar ocultos');
-    expect(saida).not.toContain('Bold');
+    expect(output).not.toContain('aria-label=');
+    expect(output).toContain('<Eye aria-hidden="true" />');
+    expect(output).toContain('  Mostrar ocultos');
+    expect(output).not.toContain('Bold');
   });
 
   it('não escreve variante nem degrau padrão — no componente eles são a ausência', () => {
-    const saida = toggleSource('', { args: { variant: 'default', size: 'default' } });
-    expect(saida).not.toContain('variant=');
-    expect(saida).not.toContain('size=');
+    const output = toggleSource('', { args: { variant: 'default', size: 'default' } });
+    expect(output).not.toContain('variant=');
+    expect(output).not.toContain('size=');
   });
 
   it('variante e degrau fora do padrão chegam ao snippet', () => {
-    const saida = toggleSource('', { args: { variant: 'outline', size: 'lg', label: 'Negrito' } });
-    expect(saida).toContain('<Toggle variant="outline" size="lg" aria-label="Negrito">');
+    const output = toggleSource('', { args: { variant: 'outline', size: 'lg', label: 'Negrito' } });
+    expect(output).toContain('<Toggle variant="outline" size="lg" aria-label="Negrito">');
   });
 
   it('os booleanos só aparecem quando ligados', () => {
@@ -65,92 +65,92 @@ import { Bold } from 'lucide-vue-next'
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = toggleSource('', { args: { label: (() => {}) as never } });
-    expect(saida).not.toContain('function');
+    const output = toggleSource('', { args: { label: (() => {}) as never } });
+    expect(output).not.toContain('function');
     // Sem rótulo utilizável, o botão de ícone ainda precisa de um nome.
-    expect(saida).toContain('aria-label="Alternar"');
+    expect(output).toContain('aria-label="Alternar"');
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('o contorno se lê contra a variante sem borda ao lado', () => {
-    const saida = toggleContornoSource();
-    expect([...saida.matchAll(/<Toggle/g)]).toHaveLength(2);
-    expect(saida).toContain('<Toggle variant="outline" aria-label="Itálico">');
-    expect(saida).toContain('<Toggle aria-label="Negrito">');
+    const output = toggleContornoSource();
+    expect([...output.matchAll(/<Toggle/g)]).toHaveLength(2);
+    expect(output).toContain('<Toggle variant="outline" aria-label="Itálico">');
+    expect(output).toContain('<Toggle aria-label="Negrito">');
   });
 
   it('com rótulo visível nenhum dos dois carrega aria-label', () => {
-    const saida = toggleWithLabelSource();
-    expect(saida).not.toContain('aria-label=');
-    expect(saida).toContain('  Mostrar ocultos\n');
-    expect(saida).toContain('default-value');
+    const output = toggleWithLabelSource();
+    expect(output).not.toContain('aria-label=');
+    expect(output).toContain('  Mostrar ocultos\n');
+    expect(output).toContain('default-value');
   });
 
   it('na escada, só o degrau do meio fica sem `size`', () => {
-    const saida = toggleSizesSource();
-    expect(saida).toContain('size="sm"');
-    expect(saida).toContain('size="lg"');
-    expect([...saida.matchAll(/size="/g)]).toHaveLength(2);
-    expect(saida).not.toContain('size="default"');
+    const output = toggleSizesSource();
+    expect(output).toContain('size="sm"');
+    expect(output).toContain('size="lg"');
+    expect([...output.matchAll(/size="/g)]).toHaveLength(2);
+    expect(output).not.toContain('size="default"');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o ligado parte de `default-value`, e não de `v-model`', () => {
-    const saida = toggleActiveSource();
-    expect(saida).toContain('<Toggle default-value aria-label="Negrito ativo">');
-    expect(saida).not.toContain('v-model');
+    const output = toggleActiveSource();
+    expect(output).toContain('<Toggle default-value aria-label="Negrito ativo">');
+    expect(output).not.toContain('v-model');
   });
 
   it('o foco não escreve prop nenhuma — o anel vem do CSS do componente', () => {
-    const saida = toggleFocusSource();
-    expect(saida).not.toContain('focus');
-    expect(saida).not.toContain('tabindex');
+    const output = toggleFocusSource();
+    expect(output).not.toContain('focus');
+    expect(output).not.toContain('tabindex');
     // O par existe para comparar: a variante com borda já tem sombra em repouso.
-    expect([...saida.matchAll(/<Toggle/g)]).toHaveLength(2);
+    expect([...output.matchAll(/<Toggle/g)]).toHaveLength(2);
   });
 
   it('o desabilitado usa o atributo nativo, nos dois estados', () => {
-    const saida = toggleDisabledSource();
-    expect([...saida.matchAll(/ disabled/g)]).toHaveLength(2);
+    const output = toggleDisabledSource();
+    expect([...output.matchAll(/ disabled/g)]).toHaveLength(2);
     // `aria-disabled` sozinho deixaria o foco entrar num controle inerte.
-    expect(saida).not.toContain('aria-disabled');
-    expect(saida).toContain('disabled default-value');
+    expect(output).not.toContain('aria-disabled');
+    expect(output).toContain('disabled default-value');
   });
 
   it('o inválido aponta para a mensagem, e a mensagem tem o id apontado', () => {
-    const saida = toggleInvalidoSource();
-    expect(saida).toContain('aria-invalid="true" aria-describedby="formatacao-erro"');
-    expect(saida).toContain('<p id="formatacao-erro" class="nds-text-body nds-text-destructive">');
+    const output = toggleInvalidoSource();
+    expect(output).toContain('aria-invalid="true" aria-describedby="formatacao-erro"');
+    expect(output).toContain('<p id="formatacao-erro" class="nds-text-body nds-text-destructive">');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a barra é um grupo com nome próprio, e cada botão se nomeia sozinho', () => {
-    const saida = formattingToggleBarSource();
-    expect(saida).toContain('role="group"');
-    expect(saida).toContain('aria-label="Formatação de texto"');
-    const names = [...saida.matchAll(/<Toggle aria-label="([^"]+)"/g)].map((m) => m[1]);
+    const output = formattingToggleBarSource();
+    expect(output).toContain('role="group"');
+    expect(output).toContain('aria-label="Formatação de texto"');
+    const names = [...output.matchAll(/<Toggle aria-label="([^"]+)"/g)].map((m) => m[1]);
     expect(names).toEqual(['Negrito', 'Itálico', 'Sublinhado', 'Lista']);
     // Os ícones do exemplo vêm todos declarados, sem import morto e sem faltar.
-    expect(saida).toContain(`import { Bold, Italic, List, Underline } from 'lucide-vue-next'`);
+    expect(output).toContain(`import { Bold, Italic, List, Underline } from 'lucide-vue-next'`);
   });
 
   it('os filtros não formam grupo: o texto visível já nomeia cada um', () => {
-    const saida = filtersToggleListSource();
-    expect(saida).not.toContain('role="group"');
-    expect(saida).not.toContain('aria-label=');
-    expect(saida).toContain('<p class="nds-text-body nds-font-semibold">Filtros de exibição</p>');
+    const output = filtersToggleListSource();
+    expect(output).not.toContain('role="group"');
+    expect(output).not.toContain('aria-label=');
+    expect(output).toContain('<p class="nds-text-body nds-font-semibold">Filtros de exibição</p>');
   });
 
   it('o controlado leva o estado para a aplicação por v-model', () => {
-    const saida = toggleControlledSource();
-    expect(saida).toContain('<Toggle v-model="negrito" aria-label="Negrito">');
-    expect(saida).toContain(`import { ref } from 'vue'`);
-    expect(saida).toContain('const negrito = ref(false)');
+    const output = toggleControlledSource();
+    expect(output).toContain('<Toggle v-model="negrito" aria-label="Negrito">');
+    expect(output).toContain(`import { ref } from 'vue'`);
+    expect(output).toContain('const negrito = ref(false)');
     // Controlado e não-controlado no mesmo exemplo brigariam entre si.
-    expect(saida).not.toContain('default-value');
+    expect(output).not.toContain('default-value');
   });
 
   it('o toggle de ícone é a mesma forma mínima nos dois metas que o usam', () => {

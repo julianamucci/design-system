@@ -78,7 +78,7 @@ export async function waitForOpen(contexto = '', timeout = 3000): Promise<HTMLEl
   return panelOpen()!;
 }
 
-export async function waitForQuantidade(quantos: number, timeout = 3000): Promise<HTMLElement[]> {
+export async function waitForCount(quantos: number, timeout = 3000): Promise<HTMLElement[]> {
   await waitFor(
     () => {
       const prontos = panelsAbertos().filter(assentado).length;

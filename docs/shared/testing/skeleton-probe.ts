@@ -57,7 +57,7 @@ export function ligarMovimentoReduzido(doc: Document): () => void {
  * `animation-duration: 0ms` tem nome e não anima nada, e é exatamente assim que
  * o override de movimento reduzido a desliga.
  */
-export function animationAtiva(el: HTMLElement): boolean {
+export function animationActive(el: HTMLElement): boolean {
   const estilo = getComputedStyle(el);
   if (estilo.animationName === 'none' || estilo.animationName === '') return false;
   return Number.parseFloat(estilo.animationDuration) > 0;

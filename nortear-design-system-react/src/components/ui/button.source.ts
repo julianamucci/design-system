@@ -70,8 +70,8 @@ function button(
 }
 
 /** Ícone + rótulo importam do mesmo lugar; muda só qual peça do lucide entra. */
-function withIcon(icone: string): string {
-  return `${IMPORT}\nimport { ${icone} } from "lucide-react";`;
+function withIcon(icon: string): string {
+  return `${IMPORT}\nimport { ${icon} } from "lucide-react";`;
 }
 
 /**

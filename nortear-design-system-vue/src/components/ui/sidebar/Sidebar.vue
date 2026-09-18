@@ -20,8 +20,8 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   side: 'left',
   variant: 'sidebar',
   collapsible: 'offcanvas',
-  mobileTitle: () => LABELS_SIDEBAR_DEFAULT.tituloMovel,
-  mobileDescription: () => LABELS_SIDEBAR_DEFAULT.descricaoMovel,
+  mobileTitle: () => LABELS_SIDEBAR_DEFAULT.mobileTitle,
+  mobileDescription: () => LABELS_SIDEBAR_DEFAULT.mobileDescription,
 })
 
 const { isMobile, state, openMobile, setOpenMobile } = useSidebar()

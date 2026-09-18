@@ -185,10 +185,10 @@ export const Indeterminate: Story = {
       // o SVG condicional quebrar, os dois ficam iguais e só isto acusa.
       const checked = canvasElement.querySelector<HTMLElement>('#tri-on')!;
       const misto = canvasElement.querySelector<HTMLElement>('#tri-mixed')!;
-      const vazio = canvasElement.querySelector<HTMLElement>('#tri-off')!;
+      const empty = canvasElement.querySelector<HTMLElement>('#tri-off')!;
       await expect(checked.querySelector('polyline')).toBeTruthy();
       await expect(misto.querySelector('line')).toBeTruthy();
-      await expect(vazio.querySelector('svg')).toBeNull();
+      await expect(empty.querySelector('svg')).toBeNull();
     });
 
     await step('O erro é exposto por aria-invalid, via input do primitivo', async () => {

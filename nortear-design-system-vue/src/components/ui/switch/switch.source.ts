@@ -41,19 +41,19 @@ function linePair(id: string, label: string, extra = ''): string {
 function panelLine(options: {
   id: string;
   label: string;
-  descricao: string;
+  description: string;
   attrs?: string;
   border?: string;
   width?: string;
 }): string {
-  const { id, label, descricao, attrs: extra = '', border = 'nds-border-default', width } = options;
+  const { id, label, description, attrs: extra = '', border = 'nds-border-default', width } = options;
   const classes = ['nds-cluster', width, 'nds-rounded-lg', border, 'nds-p-4']
     .filter(Boolean)
     .join(' ');
   return `<div class="${classes}" data-align="center" data-justify="between">
   <div class="nds-stack nds-pr-4" data-spacing="xs">
     <Label for="${id}">${label}</Label>
-    <p class="nds-text-body">${descricao}</p>
+    <p class="nds-text-body">${description}</p>
   </div>
   <Switch id="${id}"${attrs(extra)} />
 </div>`;
@@ -99,7 +99,7 @@ export function switchWithDescriptionSource(): string {
     panelLine({
       id: 'marketing',
       label: 'Emails de marketing',
-      descricao: 'Receba novidades e promoções da plataforma.',
+      description: 'Receba novidades e promoções da plataforma.',
       width: 'nds-w-sm',
     }),
   );
@@ -165,7 +165,7 @@ ${indentar(
   panelLine({
     id: 'aceitar-termos',
     label: 'Aceitar termos',
-    descricao: 'Você precisa aceitar para continuar.',
+    description: 'Você precisa aceitar para continuar.',
     attrs: 'aria-invalid="true" aria-describedby="aceitar-termos-erro"',
     border: 'nds-border-destructive',
   }),
@@ -184,18 +184,18 @@ export function configSwitchPanelSource(): string {
     {
       id: 'pref-email',
       label: 'Receber novidades por email',
-      descricao: 'Resumo semanal sobre o produto.',
+      description: 'Resumo semanal sobre o produto.',
       attrs: 'default-value',
     },
     {
       id: 'pref-push',
       label: 'Receber notificações push',
-      descricao: 'Alertas no dispositivo em tempo real.',
+      description: 'Alertas no dispositivo em tempo real.',
     },
     {
       id: 'pref-sms',
       label: 'Alertas por SMS',
-      descricao: 'Eventos críticos via mensagem de texto.',
+      description: 'Eventos críticos via mensagem de texto.',
     },
   ];
   // É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores

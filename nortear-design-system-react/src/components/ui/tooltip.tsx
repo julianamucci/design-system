@@ -125,11 +125,11 @@ function Tooltip({
 }
 
 function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
-  const descricao = React.useContext(TooltipDescriptionContext)
+  const description = React.useContext(TooltipDescriptionContext)
   return (
     <TooltipPrimitive.Trigger
       data-slot="tooltip-trigger"
-      aria-describedby={descricao?.open ? descricao.id : undefined}
+      aria-describedby={description?.open ? description.id : undefined}
       {...props}
     />
   )
@@ -154,7 +154,7 @@ function TooltipContent({
     TooltipPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
-  const descricao = React.useContext(TooltipDescriptionContext)
+  const description = React.useContext(TooltipDescriptionContext)
   // O base-ui aceita `sideOffset` como número OU como função do contexto de
   // posicionamento; os dois ramos existem porque somar ao tipo união não
   // compila, e engolir o ramo de função apagaria em silêncio um offsetComArrow
@@ -185,7 +185,7 @@ function TooltipContent({
           // balão é um <div> qualquer para o leitor de tela. Vanilla
           // (referência cross-stack), Svelte e Angular já emitem o papel.
           role="tooltip"
-          id={descricao?.id}
+          id={description?.id}
           className={cn(
             "nds-tooltip-content",
             className

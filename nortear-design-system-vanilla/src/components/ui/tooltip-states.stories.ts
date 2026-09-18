@@ -414,7 +414,7 @@ export const ListenerCleanup: Story = {
           trigger?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
           trigger?.dispatchEvent(new FocusEvent('focus'));
         },
-        seletorDePortal: '[data-slot="tooltip-content"]',
+        portalSelector: '[data-slot="tooltip-content"]',
       });
     });
 

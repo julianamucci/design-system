@@ -65,15 +65,15 @@ export const WithIcon: Story = {
     await step('O ícone é filho direto e decorativo', async () => {
       // Filho DIRETO porque é `.nds-alert:has(> svg)` que abre a coluna do
       // ícone; `aria-hidden` porque o texto já descreve o estado (WCAG 1.4.1).
-      const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
-      await expect(icone).toHaveAttribute('aria-hidden', 'true');
-      await expect(icone.parentElement).toBe(alerta);
+      const icon = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon.parentElement).toBe(alerta);
     });
 
     await step('O ícone é alinhado à esquerda do texto', async () => {
-      const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
+      const icon = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
       const title = canvas.getByText('Informação');
-      await expect(icone.getBoundingClientRect().right).toBeLessThanOrEqual(
+      await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(
         title.getBoundingClientRect().left,
       );
     });

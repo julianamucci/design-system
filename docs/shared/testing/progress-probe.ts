@@ -21,12 +21,12 @@
 // Movimento reduzido: o mesmo gancho e a mesma leitura do Skeleton, reusados em
 // vez de copiados. O toolbar escreve `data-reduced-motion` no `<html>`, e
 // `motion.css` força UMA iteração de duração zero — o traço indeterminado termina
-// na hora e fica no início do trilho. `animationAtiva` lê nome E duração, porque
+// na hora e fica no início do trilho. `animationActive` lê nome E duração, porque
 // o nome continua lá depois que a duração é zerada.
 // Os nomes aqui são em inglês — o portão `identificador_pt_novo` reprova nome em
 // português novo em quem importa; o skeleton-probe guarda os originais.
 export {
-  animationAtiva as isAnimationRunning,
+  animationActive as isAnimationRunning,
   ligarMovimentoReduzido as enableReducedMotion,
 } from './skeleton-probe';
 

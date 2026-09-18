@@ -324,7 +324,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       fillItemContent(li, item);
 
       if (!item.disabled) {
-        const alternar = () => {
+        const toggle = () => {
           if (type === 'checkbox') {
             if (misto) {
               // O primeiro clique RESOLVE o misto para marcado, como faz a
@@ -357,11 +357,11 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
           // Marcar uma opção não fecha o menu: quem marca uma costuma querer
           // marcar a próxima. Só o item de AÇÃO fecha.
         };
-        li.addEventListener('click', alternar);
+        li.addEventListener('click', toggle);
         li.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            alternar();
+            toggle();
           }
         });
       }

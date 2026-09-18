@@ -229,8 +229,8 @@ export const WithIcon: Story = {
       // A regra que dá 1rem ao SVG sem classe de tamanho; sem ela o desenho viria
       // no tamanho intrínseco e estouraria a linha.
       const listbox = await waitForPortal('listbox');
-      const icone = within(listbox).getAllByRole('option')[0].querySelector('svg') as SVGElement;
-      await expect(getComputedStyle(icone).width).toBe('16px');
+      const icon = within(listbox).getAllByRole('option')[0].querySelector('svg') as SVGElement;
+      await expect(getComputedStyle(icon).width).toBe('16px');
     });
   },
 };

@@ -381,7 +381,7 @@ export const ListenerCleanup: Story = {
           const target = no.querySelector<HTMLElement>('[data-slot="context-menu-trigger"]');
           target?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 20, clientY: 20 }));
         },
-        seletorDePortal: '[data-slot="context-menu-content"]',
+        portalSelector: '[data-slot="context-menu-content"]',
       });
     });
 

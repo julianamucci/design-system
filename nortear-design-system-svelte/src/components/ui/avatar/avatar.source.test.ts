@@ -56,25 +56,25 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('a composição só com iniciais não importa nem renderiza imagem', () => {
-    const saida = avatarIniciaisSource();
-    expect(saida).toContain('<AvatarFallback>JP</AvatarFallback>');
-    expect(saida).not.toContain('AvatarImage');
+    const output = avatarIniciaisSource();
+    expect(output).toContain('<AvatarFallback>JP</AvatarFallback>');
+    expect(output).not.toContain('AvatarImage');
   });
 
   it('o ícone é decorativo e quem nomeia é o rótulo do fallback', () => {
-    const saida = avatarIconSource();
-    expect(saida).toContain('role="img" aria-label="Usuário genérico"');
-    expect(saida).toContain('aria-hidden="true"');
-    expect(saida).toContain('@lucide/svelte/icons/user');
+    const output = avatarIconSource();
+    expect(output).toContain('role="img" aria-label="Usuário genérico"');
+    expect(output).toContain('aria-hidden="true"');
+    expect(output).toContain('@lucide/svelte/icons/user');
   });
 
   it('o grupo traz três avatares e o contador que fecha a fila', () => {
-    const saida = avatarGroupSource();
-    expect(saida.match(/<Avatar>/g)).toHaveLength(3);
-    expect(saida).toContain('<AvatarGroup role="group" aria-label="Participantes">');
-    expect(saida).toContain('<AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>');
+    const output = avatarGroupSource();
+    expect(output.match(/<Avatar>/g)).toHaveLength(3);
+    expect(output).toContain('<AvatarGroup role="group" aria-label="Participantes">');
+    expect(output).toContain('<AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>');
     // Dentro do grupo, a foto é decorativa: quem nomeia o conjunto é o grupo.
-    expect(saida).toContain('alt=""');
+    expect(output).toContain('alt=""');
   });
 
   it('o indicador de status é nomeado, e não fica mudo no canto', () => {

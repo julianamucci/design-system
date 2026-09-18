@@ -491,7 +491,7 @@ export const ListenerCleanup: Story = {
           return createHoverCard({ trigger, content: content, openDelay: 0, closeDelay: 0 });
         },
         exercitar: (no) => (no as HTMLElement & { open?: () => void }).open?.(),
-        seletorDePortal: '[data-slot="hover-card-content"]',
+        portalSelector: '[data-slot="hover-card-content"]',
       });
     });
 

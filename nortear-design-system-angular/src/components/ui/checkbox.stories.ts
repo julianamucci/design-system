@@ -100,13 +100,13 @@ export const Playground: Story = {
       // Idempotentes por design (`!==`, não `===`): o painel Interactions
       // reexecuta esta play no mesmo DOM sem remontar, então cada helper só
       // clica quando o estado atual ainda não é o alvo.
-      const marcar = async () => {
+      const check = async () => {
         if (cb.getAttribute('aria-checked') !== 'true') await userEvent.click(cb);
         await waitFor(async () => {
           await expect(cb).toHaveAttribute('aria-checked', 'true');
         });
       };
-      const desmarcar = async () => {
+      const uncheck = async () => {
         if (cb.getAttribute('aria-checked') !== 'false') await userEvent.click(cb);
         await waitFor(async () => {
           await expect(cb).toHaveAttribute('aria-checked', 'false');
@@ -116,15 +116,15 @@ export const Playground: Story = {
       await step('Clicar em Checkbox desmarcado marca, e o callback dispara com true', async () => {
         // `desmarcar` primeiro normaliza o estado de entrada (que o replay
         // pode herdar marcado); o clique que prova o item é o de `marcar`.
-        await desmarcar();
-        await marcar();
+        await uncheck();
+        await check();
         await expect(cb).toHaveAttribute('data-state', 'checked');
         await expect(spy).toHaveBeenLastCalledWith(true);
       });
 
       await step('Clicar em Checkbox marcado desmarca, e o callback dispara com false', async () => {
-        await marcar();
-        await desmarcar();
+        await check();
+        await uncheck();
         await expect(cb).toHaveAttribute('data-state', 'unchecked');
         await expect(spy).toHaveBeenLastCalledWith(false);
       });
@@ -134,7 +134,7 @@ export const Playground: Story = {
       // para ela E dispara a ativação, sem nenhum ouvinte escrito na story.
       await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
         const label = canvas.getByText(args.label);
-        await desmarcar();                        // precondição própria
+        await uncheck();                        // precondição própria
         cb.blur();
         await expect(cb).not.toHaveFocus();       // o foco tem que VIR do clique
         await userEvent.click(label);

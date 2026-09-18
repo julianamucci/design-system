@@ -62,33 +62,33 @@ describe('codeBlockSource', () => {
 
 describe('transforms das stories de paleta e de remoção', () => {
   it('a paleta empilha um bloco por linguagem e um com linha em destaque', () => {
-    const saida = codeBlockPaletteSource();
-    expect(saida).toContain('{#each trechos as trecho (trecho.language)}');
-    expect(saida).toContain('showLineNumbers={false}');
-    expect(saida).toContain('highlightLines={[2]}');
+    const output = codeBlockPaletteSource();
+    expect(output).toContain('{#each trechos as trecho (trecho.language)}');
+    expect(output).toContain('showLineNumbers={false}');
+    expect(output).toContain('highlightLines={[2]}');
   });
 
   it('a remoção mostra a montagem condicional que cancela o temporizador', () => {
-    const saida = codeBlockRemovivelSource();
-    expect(saida).toContain('let visivel = $state(true);');
-    expect(saida).toContain('{#if visivel}');
-    expect(saida).toContain('<CodeBlock code={source} language="ts" />');
+    const output = codeBlockRemovivelSource();
+    expect(output).toContain('let visivel = $state(true);');
+    expect(output).toContain('{#if visivel}');
+    expect(output).toContain('<CodeBlock code={source} language="ts" />');
   });
 });
 
 describe('transforms das opções de espécie e de fila', () => {
   it('a lista de espécies aparece junto do trecho que ela indexa', () => {
-    const saida = codeBlockLineKindsSource();
-    expect(saida).toContain(`lineKinds={['context', 'removed', 'added', 'context']}`);
+    const output = codeBlockLineKindsSource();
+    expect(output).toContain(`lineKinds={['context', 'removed', 'added', 'context']}`);
     // Uma entrada por linha: lista e trecho precisam ter o mesmo comprimento,
     // senão o exemplo ensina uma classificação que não fecha.
-    expect(saida).toContain('const total = items.filter(Boolean).length;');
+    expect(output).toContain('const total = items.filter(Boolean).length;');
   });
 
   it('a fila do cabeçalho vem pelo encaixe, com o botão importado', () => {
-    const saida = codeBlockHeaderActionsSource();
-    expect(saida).toContain('import { Button } from "@/components/ui/button";');
-    expect(saida).toContain('{#snippet actions()}');
-    expect(saida).toContain('<Button variant="ghost" size="sm">Executar</Button>');
+    const output = codeBlockHeaderActionsSource();
+    expect(output).toContain('import { Button } from "@/components/ui/button";');
+    expect(output).toContain('{#snippet actions()}');
+    expect(output).toContain('<Button variant="ghost" size="sm">Executar</Button>');
   });
 });

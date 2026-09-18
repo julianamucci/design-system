@@ -56,8 +56,8 @@ export const WithNavGroups: StoryObj<Record<string, never>> = {
     await step('A ação do grupo tem nome — o "+" sozinho não diz nada', async () => {
       const acao = canvas.getByRole('button', { name: 'Adicionar atalho' });
       await expect(acao).toHaveAttribute('data-slot', 'sidebar-group-action');
-      const icone = acao.querySelector('svg')!;
-      await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      const icon = acao.querySelector('svg')!;
+      await expect(icon.getAttribute('aria-hidden')).toBe('true');
     });
 
     await step('A ação do item também, e não engole o item', async () => {
@@ -187,10 +187,10 @@ export const WithSkeleton: StoryObj<Record<string, never>> = {
       const first = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      const icone = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
+      const icon = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
       const text = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
-      await expect(icone).not.toBeNull();
-      await expect(icone.getBoundingClientRect().left).toBeLessThan(
+      await expect(icon).not.toBeNull();
+      await expect(icon.getBoundingClientRect().left).toBeLessThan(
         text.getBoundingClientRect().left,
       );
     });

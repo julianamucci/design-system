@@ -122,11 +122,11 @@ const GLOBALS = new Set([
  * fora de `components/ui`.
  */
 function exportadosPor(especificador: string): Set<string> | null {
-  const texto =
+  const text =
     componentes[`./${especificador}/index.ts`] ?? componentes[`./${especificador}.ts`];
-  if (texto === undefined) return null;
+  if (text === undefined) return null;
 
-  const limpo = texto.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+  const limpo = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
   const nomes = new Set<string>();
   for (const m of limpo.matchAll(
     /export\s+(?:declare\s+)?(?:abstract\s+)?(?:const|let|var|class|function|type|interface|enum)\s+([A-Za-z_$][\w$]*)/g,
@@ -139,13 +139,13 @@ function exportadosPor(especificador: string): Set<string> | null {
   // e `input-group` sem metade do que publicam.
   for (const m of limpo.matchAll(/export\s+(?:type\s+)?\{([^}]*)\}/g)) {
     for (const parte of m[1]!.split(',')) {
-      const nome = parte
+      const name = parte
         .trim()
         .split(/\s+as\s+/)
         .pop()
         ?.trim()
         .replace(/^type\s+/, '');
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) nomes.add(nome);
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) nomes.add(name);
     }
   }
   return nomes;
@@ -164,12 +164,12 @@ function exportadosPor(especificador: string): Set<string> | null {
  * não é promessa do design system; e `import Peça from …`, forma que nenhum
  * barril desta stack suporta porque nenhum tem `export default`.
  */
-function importesDoDesignSystem(texto: string): Array<{ modulo: string; nomes: string[] }> {
-  const saida: Array<{ modulo: string; nomes: string[] }> = [];
-  for (const m of texto.matchAll(
+function importesDoDesignSystem(text: string): Array<{ modulo: string; nomes: string[] }> {
+  const output: Array<{ modulo: string; nomes: string[] }> = [];
+  for (const m of text.matchAll(
     /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*["']@\/components\/ui\/([a-z0-9-]+(?:\/[a-z0-9-]+)*)["']/g,
   )) {
-    saida.push({
+    output.push({
       modulo: m[2]!,
       nomes: m[1]!
         .split(',')
@@ -177,7 +177,7 @@ function importesDoDesignSystem(texto: string): Array<{ modulo: string; nomes: s
         .filter((n) => /^[A-Za-z_$][\w$]*$/.test(n)),
     });
   }
-  return saida;
+  return output;
 }
 
 /**
@@ -200,23 +200,23 @@ function importesDoDesignSystem(texto: string): Array<{ modulo: string; nomes: s
  *     módulo.
  */
 function textoPublicado(bruto: string): string {
-  let texto = bruto.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
-  texto = texto.replace(/\\[\s\S]/g, '');
+  let text = bruto.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+  text = text.replace(/\\[\s\S]/g, '');
   let antes: string;
   do {
-    antes = texto;
-    texto = texto.replace(/\$\{[^{}]*\}/g, '');
-  } while (texto !== antes);
-  return texto;
+    antes = text;
+    text = text.replace(/\$\{[^{}]*\}/g, '');
+  } while (text !== antes);
+  return text;
 }
 
 /** Os trechos entre crases — onde o exemplo é escrito, e não montado. */
-function templateRegions(texto: string): Array<[number, number]> {
+function templateRegions(text: string): Array<[number, number]> {
   const regions: Array<[number, number]> = [];
   let inside = false;
   let start = 0;
-  for (let i = 0; i < texto.length; i += 1) {
-    if (texto[i] !== '`') continue;
+  for (let i = 0; i < text.length; i += 1) {
+    if (text[i] !== '`') continue;
     if (inside) {
       regions.push([start, i]);
       inside = false;
@@ -237,8 +237,8 @@ function collectDeclarations(trecho: string, into: Set<string>): void {
   // cartão de autorização fora da caixa era acusado por `waiting`.
   for (const m of trecho.matchAll(/(?:const|let|var)\s*\{([^}]*)\}\s*=/g)) {
     for (const parte of m[1]!.split(',')) {
-      const nome = parte.trim().split(/[:=]/).pop()?.trim();
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) into.add(nome);
+      const name = parte.trim().split(/[:=]/).pop()?.trim();
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) into.add(name);
     }
   }
   // IMPORT TAMBÉM DECLARA, e esquecê-lo acusou cinco módulos corretos de uma
@@ -247,13 +247,13 @@ function collectDeclarations(trecho: string, into: Set<string>): void {
   // import da constante no próprio `<script>` — ela chega ao exemplo por ali.
   for (const m of trecho.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s*from/g)) {
     for (const parte of m[1]!.split(',')) {
-      const nome = parte
+      const name = parte
         .trim()
         .split(/\s+as\s+/)
         .pop()
         ?.trim()
         .replace(/^type\s+/, '');
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) into.add(nome);
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) into.add(name);
     }
   }
   for (const m of trecho.matchAll(/import\s+([A-Za-z_$][\w$]*)\s+from/g)) into.add(m[1]!);
@@ -295,26 +295,26 @@ function collectDeclarations(trecho: string, into: Set<string>): void {
  *    `input-otp` e `pagination` eram acusados por `cells` e `pages`.
  */
 function loopsSemDeclaracaoNoTexto(bruto: string): string[] {
-  const texto = textoPublicado(bruto);
-  const declarados = declaradosNoTexto(texto);
-  const locais = nomesLocaisDaMarcacao(texto);
+  const text = textoPublicado(bruto);
+  const declarados = declaradosNoTexto(text);
+  const locais = nomesLocaisDaMarcacao(text);
 
   const soltos = new Set<string>();
-  for (const m of texto.matchAll(/\{#each\s+([A-Za-z_$][\w$]*)/g)) {
-    const nome = m[1]!;
-    if (GLOBALS.has(nome) || declarados.has(nome) || locais.has(nome)) continue;
-    soltos.add(nome);
+  for (const m of text.matchAll(/\{#each\s+([A-Za-z_$][\w$]*)/g)) {
+    const name = m[1]!;
+    if (GLOBALS.has(name) || declarados.has(name) || locais.has(name)) continue;
+    soltos.add(name);
   }
   return [...soltos].sort();
 }
 
 /** O que o `<script>` publicado — em crase ou em aspas — traz para o escopo. */
-function declaradosNoTexto(texto: string): Set<string> {
+function declaradosNoTexto(text: string): Set<string> {
   const declarados = new Set<string>();
-  for (const [inicio, fim] of templateRegions(texto)) {
-    collectDeclarations(texto.slice(inicio, fim), declarados);
+  for (const [inicio, fim] of templateRegions(text)) {
+    collectDeclarations(text.slice(inicio, fim), declarados);
   }
-  for (const m of texto.matchAll(/['"][^'"]*/g)) collectDeclarations(m[0]!, declarados);
+  for (const m of text.matchAll(/['"][^'"]*/g)) collectDeclarations(m[0]!, declarados);
   return declarados;
 }
 
@@ -329,25 +329,25 @@ function declaradosNoTexto(texto: string): Set<string> {
  * a versão que só aceitava identificador simples acusou o `cost-meter` por
  * `cap` — que o laço declara.
  */
-function nomesLocaisDaMarcacao(texto: string): Set<string> {
+function nomesLocaisDaMarcacao(text: string): Set<string> {
   const locais = new Set<string>();
   const nomeando = (lista: string) => {
     for (const parte of lista.replace(/[[\]{}]/g, ' ').split(',')) {
-      const nome = parte.trim().split(':').pop()?.trim();
-      if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) locais.add(nome);
+      const name = parte.trim().split(':').pop()?.trim();
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) locais.add(name);
     }
   };
 
-  for (const m of texto.matchAll(/\{#each\s+[^}\n]*?\s+as\s+([^}\n(]*)/g)) nomeando(m[1]!);
-  for (const m of texto.matchAll(/\{#snippet\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)/g)) {
+  for (const m of text.matchAll(/\{#each\s+[^}\n]*?\s+as\s+([^}\n(]*)/g)) nomeando(m[1]!);
+  for (const m of text.matchAll(/\{#snippet\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)/g)) {
     locais.add(m[1]!);
     nomeando(m[2]!);
   }
-  for (const m of texto.matchAll(/\{@const\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
-  for (const m of texto.matchAll(/\{#await\s+[^}\n]*?\s+then\s+([A-Za-z_$][\w$]*)/g)) {
+  for (const m of text.matchAll(/\{@const\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of text.matchAll(/\{#await\s+[^}\n]*?\s+then\s+([A-Za-z_$][\w$]*)/g)) {
     locais.add(m[1]!);
   }
-  for (const m of texto.matchAll(/\{:(?:then|catch)\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of text.matchAll(/\{:(?:then|catch)\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
   return locais;
 }
 
@@ -475,8 +475,8 @@ function ligacoesSemDeclaracao(snippet: string): string[] {
     const daExpressao = new Set<string>();
     for (const m of expressao.matchAll(/(?:\(([^)]*)\)|([A-Za-z_$][\w$]*))\s*=>/g)) {
       for (const parte of (m[1] ?? m[2] ?? '').replace(/[[\]{}()]/g, ' ').split(',')) {
-        const nome = parte.trim().split(':')[0]!.trim();
-        if (nome && /^[A-Za-z_$][\w$]*$/.test(nome)) daExpressao.add(nome);
+        const name = parte.trim().split(':')[0]!.trim();
+        if (name && /^[A-Za-z_$][\w$]*$/.test(name)) daExpressao.add(name);
       }
     }
 
@@ -499,10 +499,10 @@ function ligacoesSemDeclaracao(snippet: string): string[] {
     const semChave = semTipo.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
 
     for (const ident of semChave.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
-      const nome = ident[1]!;
-      if (NAO_E_REFERENCIA.has(nome)) continue;
-      if (declarados.has(nome) || locais.has(nome) || daExpressao.has(nome)) continue;
-      soltos.add(nome);
+      const name = ident[1]!;
+      if (NAO_E_REFERENCIA.has(name)) continue;
+      if (declarados.has(name) || locais.has(name) || daExpressao.has(name)) continue;
+      soltos.add(name);
     }
   };
 
@@ -596,9 +596,9 @@ describe('transforms do painel Code', () => {
 
       for (const [name, fn] of exportadas) {
         it(`${name} devolve um snippet honesto`, () => {
-          const saida = fn();
-          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
-          const text = saida as string;
+          const output = fn();
+          expect(typeof output, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = output as string;
           expect(text.trim().length).toBeGreaterThan(0);
           // O andaime da story não é parte do design system.
           expect(text).not.toMatch(SCAFFOLD);
@@ -615,10 +615,10 @@ describe('transforms do painel Code', () => {
         // A outra metade da mesma promessa: o laço já era cobrado, a ligação
         // nomeada não — e era por convenção, não por descuido.
         it(`${name} liga só o que o script do exemplo declara`, () => {
-          const saida = fn();
-          if (typeof saida !== 'string') return;
+          const output = fn();
+          if (typeof output !== 'string') return;
 
-          const soltos = ligacoesSemDeclaracao(saida);
+          const soltos = ligacoesSemDeclaracao(output);
           expect(
             soltos,
             `${name}: a marcação liga ${soltos.join(', ')}, que o <script> do exemplo não declara — quem copiar o bloco do painel recebe um nome que não existe`,
@@ -626,11 +626,11 @@ describe('transforms do painel Code', () => {
         });
 
         it(`${name} importa só o que o barril exporta`, () => {
-          const saida = fn();
-          if (typeof saida !== 'string') return;
+          const output = fn();
+          if (typeof output !== 'string') return;
 
           const faltando: string[] = [];
-          for (const { modulo, nomes } of importesDoDesignSystem(saida)) {
+          for (const { modulo, nomes } of importesDoDesignSystem(output)) {
             const exportados = exportadosPor(modulo);
             // REPROVA em vez de sair calada. `continue` aqui pareceria prudência
             // e seria o portão que encolhe sozinho: módulo que a varredura não

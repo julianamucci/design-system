@@ -21,7 +21,7 @@
  *
  * O que é ANDAIME e por isso não entra em snippet nenhum:
  *
- *  · `{{ tituloPainel }}`, `{{ rotuloGatilho }}` e companhia — nomes de campos
+ *  · `{{ panelTitle }}`, `{{ triggerLabel }}` e companhia — nomes de campos
  *    do objeto de `props` do renderer. O snippet escreve o texto por extenso,
  *    resolvido do conteúdo compartilhado;
  *  · `[defaultOpen]="true"` das stories de direção, de composição e da

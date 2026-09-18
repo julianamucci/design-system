@@ -434,9 +434,9 @@ export const WithRadioGroup: Story = {
     await step('O indicador publica o data-slot do seu tipo de item', async () => {
       // Endereço por TIPO de item: escolha única e marcação não compartilham
       // slot, como nas outras stacks.
-      for (const opcao of options) {
+      for (const option of options) {
         await expect(
-          opcao.querySelector('[data-slot="menubar-radio-item-indicator"]')
+          option.querySelector('[data-slot="menubar-radio-item-indicator"]')
         ).not.toBeNull();
       }
       // O tique mora DENTRO do indicador — prova que o atributo ficou no

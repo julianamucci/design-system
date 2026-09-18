@@ -53,7 +53,7 @@ const WIDTH_DEFAULT = 'nds-w-sm';
  */
 function partesDoCard(o: CardSnippetOptions): { names: string[]; blocks: string[] } {
   const title = o.title ?? TITLE_DEFAULT;
-  const descricao = o.description ?? DESCRIPTION_DEFAULT;
+  const description = o.description ?? DESCRIPTION_DEFAULT;
   const preco = o.price ?? PRECO_DEFAULT;
 
   const names = [
@@ -94,7 +94,7 @@ foto.style.objectFit = 'cover';`,
     'const cabecalho = createCardHeader();',
     'cabecalho.append(',
     `  createCardTitle({ text: ${text(title)}, level: 3 }),`,
-    `  createCardDescription({ text: ${text(descricao)} }),`,
+    `  createCardDescription({ text: ${text(description)} }),`,
     ');',
   ];
   if (o.action) {

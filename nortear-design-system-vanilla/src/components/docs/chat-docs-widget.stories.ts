@@ -155,15 +155,15 @@ export const Widget: Story = {
 
       // `querySelector` é leitura pura — não muta e não força layout.
       await ate(() => painel.querySelector('.chat-docs-notice') !== null);
-      const aviso = painel.querySelector<HTMLElement>('.chat-docs-notice')!;
+      const warning = painel.querySelector<HTMLElement>('.chat-docs-notice')!;
       // Este SIM é `role="alert"`: apareceu por causa de uma falha, depois de um
       // pedido da pessoa, e ela precisa saber sem ir procurar.
-      expect(aviso.getAttribute('role')).toBe('alert');
-      expect(aviso.textContent?.trim().length ?? 0).toBeGreaterThan(0);
+      expect(warning.getAttribute('role')).toBe('alert');
+      expect(warning.textContent?.trim().length ?? 0).toBeGreaterThan(0);
 
       // O aviso de falha carregava o MESMO defeito de largura do de demonstração.
       await proximoQuadro();
-      const cxAviso = aviso.getBoundingClientRect();
+      const cxAviso = warning.getBoundingClientRect();
       expect(cxAviso.right).toBeLessThanOrEqual(painel.getBoundingClientRect().right);
       expect(cxAviso.left).toBeGreaterThanOrEqual(painel.getBoundingClientRect().left);
 

@@ -246,11 +246,11 @@ export function switchSourceForm(
  * nada por conta própria.
  */
 export function switchInvalidoSnippet(
-  o: { id?: string; label?: string; mensagem?: string } = {},
+  o: { id?: string; label?: string; message?: string } = {},
 ): string {
   const id = o.id ?? 'aceitar-termos';
   const label = o.label ?? 'Aceitar termos';
-  const mensagem = o.mensagem ?? 'Este campo é obrigatório.';
+  const message = o.message ?? 'Este campo é obrigatório.';
 
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
@@ -265,7 +265,7 @@ linha.append(controle, createLabel({ htmlFor: ${text(id)}, text: ${text(label)} 
 const mensagem = document.createElement('p');
 mensagem.id = ${text(`${id}-msg`)};
 mensagem.className = 'nds-text-body nds-text-destructive';
-mensagem.textContent = ${text(mensagem)};
+mensagem.textContent = ${text(message)};
 
 const grupo = document.createElement('div');
 grupo.className = 'nds-stack';

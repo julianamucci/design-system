@@ -62,11 +62,11 @@ const FIELD = `import { Input } from '@/components/ui/input'\nimport { Label } f
  * na maioria das composições: `h2` é o padrão do primitivo, e valor padrão não
  * se escreve num snippet que alguém copia.
  */
-function header(title: string, descricao: string, recuo = 2, titleProps = ''): string {
+function header(title: string, description: string, recuo = 2, titleProps = ''): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetHeader>
 ${p}  <SheetTitle${attrs(titleProps)}>${title}</SheetTitle>
-${p}  <SheetDescription>${descricao}</SheetDescription>
+${p}  <SheetDescription>${description}</SheetDescription>
 ${p}</SheetHeader>`;
 }
 
@@ -91,11 +91,11 @@ ${p}</SheetBody>`;
  * Rodapé canônico: a saída à esquerda, a confirmação à direita. `SheetClose`
  * com `as-child` empresta o fechamento ao botão em vez de embrulhá-lo.
  */
-function footer(saida: string, confirm: string, recuo = 2): string {
+function footer(output: string, confirm: string, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetFooter>
 ${p}  <SheetClose as-child>
-${p}    <Button variant="outline">${saida}</Button>
+${p}    <Button variant="outline">${output}</Button>
 ${p}  </SheetClose>
 ${p}  <Button>${confirm}</Button>
 ${p}</SheetFooter>`;

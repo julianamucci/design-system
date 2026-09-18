@@ -365,7 +365,7 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
-        seletorDePortal: '[data-slot="alert-dialog-content"], [data-slot="alert-dialog-overlay"]',
+        portalSelector: '[data-slot="alert-dialog-content"], [data-slot="alert-dialog-overlay"]',
       });
     });
 

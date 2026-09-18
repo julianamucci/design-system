@@ -46,7 +46,7 @@ type Story = StoryObj;
 const LABEL = {
   trigger: () => t('usage.uxWriting.table.trigger.good'),
   title: () => t('usage.uxWriting.table.title.good'),
-  descricao: () => t('usage.uxWriting.table.description.good'),
+  description: () => t('usage.uxWriting.table.description.good'),
   close: () => t('usage.uxWriting.table.close.good'),
 };
 
@@ -67,18 +67,18 @@ export const Closed: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.trigger(),
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      triggerLabel: LABEL.trigger(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
     },
     template: `
       <nds-drawer>
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
         </ng-template>
       </nds-drawer>
@@ -115,19 +115,19 @@ export const Open: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.trigger(),
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      triggerLabel: LABEL.trigger(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
       rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>
@@ -175,8 +175,8 @@ export const Controlled: Story = {
     props: {
       isOpen: false,
       rotuloExterno: TRIGGER_EXTERNO,
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
       rotuloFechar: LABEL.close(),
     },
     template: `
@@ -186,8 +186,8 @@ export const Controlled: Story = {
         <nds-drawer [open]="isOpen" (openChange)="isOpen = $event">
           <ng-template ndsDrawerContent>
             <div ndsDrawerHeader>
-              <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-              <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+              <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+              <p ndsDrawerDescription>{{ panelDescription }}</p>
             </div>
 
             <div ndsDrawerFooter>
@@ -242,19 +242,19 @@ export const NotDismissible: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.trigger(),
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      triggerLabel: LABEL.trigger(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
       rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true" [disablePointerDismissal]="true">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>
@@ -379,19 +379,19 @@ export const DragToDismiss: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.trigger(),
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      triggerLabel: LABEL.trigger(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
       rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer>
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>

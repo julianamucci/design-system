@@ -84,11 +84,11 @@ ${indentar(content, '    ')}
 }
 
 /** Um destino do painel dentro de `<li>`, com descrição opcional. */
-function child(href: string, label: string, descricao?: string): string {
-  const body = descricao
+function child(href: string, label: string, description?: string): string {
+  const body = description
     ? `    <div className="nds-navigation-menu-child-label">${label}</div>
     <p className="nds-navigation-menu-child-description">
-      ${descricao}
+      ${description}
     </p>`
     : `    <div className="nds-navigation-menu-child-label">${label}</div>`;
   return `<li>

@@ -28,7 +28,7 @@ function text(el: Element | null): string {
 }
 
 /** Item visível = está no DOM e não carrega `is-hidden`. */
-export function itemsVisiveis(root: HTMLElement): HTMLElement[] {
+export function visibleItems(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(ITEM)).filter(
     (item) => !item.classList.contains('is-hidden')
   );
@@ -61,7 +61,7 @@ export function searchDigitar(root: HTMLElement, query: string): HTMLInputElemen
 }
 
 /** Texto da região viva que anuncia quantos ícones estão à vista. */
-export function contagemText(root: HTMLElement): string {
+export function countText(root: HTMLElement): string {
   return text(root.querySelector('[aria-live="polite"]'));
 }
 

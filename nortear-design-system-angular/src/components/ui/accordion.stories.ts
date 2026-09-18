@@ -139,8 +139,8 @@ export const Playground: Story = {
       // Classe estática em <svg>: `className` de SVG é SVGAnimatedString e não
       // aceita atribuição — se o Angular deixasse de usar setAttribute aqui, o
       // chevron perderia tamanho e cor sem nenhum erro.
-      const icone = trigger.querySelector('svg')!;
-      await expect(icone.getAttribute('class')).toContain('nds-accordion-icon');
+      const icon = trigger.querySelector('svg')!;
+      await expect(icon.getAttribute('class')).toContain('nds-accordion-icon');
     });
 
     await step('O painel não é landmark e o corpo tem a classe de animação', async () => {

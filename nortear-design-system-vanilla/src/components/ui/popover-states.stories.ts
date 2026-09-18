@@ -842,7 +842,7 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
-        seletorDePortal: '[data-slot="popover-content"]',
+        portalSelector: '[data-slot="popover-content"]',
       });
     });
 

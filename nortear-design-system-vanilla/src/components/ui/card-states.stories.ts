@@ -170,12 +170,12 @@ export const WithFooter: Story = {
         'aria-label': 'Cancelar edição de Cadeira Gamer Pro',
       }),
     );
-    const salvar = createButton({
+    const save = createButton({
       label: 'Salvar',
       'aria-label': 'Salvar alterações em Cadeira Gamer Pro',
     });
-    salvar.addEventListener('click', () => onSave());
-    footer.appendChild(salvar);
+    save.addEventListener('click', () => onSave());
+    footer.appendChild(save);
 
     card.appendChild(footer);
     return card;

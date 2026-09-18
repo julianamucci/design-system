@@ -110,12 +110,12 @@ export const Destructive: Story = {
       // a cor semântica pinta fundo, borda e ÍCONE (não-textual, 3:1). O título
       // é 14px semibold — pela WCAG não é texto grande, o limite dele é 4.5:1 —
       // e fica em `--foreground` junto com o texto corrido.
-      const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
+      const icon = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
       const title = alerta.querySelector<HTMLElement>('[data-slot="alert-title"]')!;
-      const descricao = alerta.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
-      await expect(getComputedStyle(descricao).color).not.toBe(getComputedStyle(icone).color);
-      await expect(getComputedStyle(title).color).not.toBe(getComputedStyle(icone).color);
-      await expect(getComputedStyle(title).color).toBe(getComputedStyle(descricao).color);
+      const description = alerta.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
+      await expect(getComputedStyle(description).color).not.toBe(getComputedStyle(icon).color);
+      await expect(getComputedStyle(title).color).not.toBe(getComputedStyle(icon).color);
+      await expect(getComputedStyle(title).color).toBe(getComputedStyle(description).color);
     });
   },
 };

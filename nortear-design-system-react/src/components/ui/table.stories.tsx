@@ -18,12 +18,12 @@ import { tableSource } from "./table.source";
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
 type TableArgs = {
-  captionVisivel: boolean;
+  captionVisible: boolean;
   withFooter: boolean;
 };
 
 // A interseção com os props da `<table>` é o que deixa `component: Table`
-// conviver com os dois args próprios da story (`captionVisivel`, `withFooter`):
+// conviver com os dois args próprios da story (`captionVisible`, `withFooter`):
 // sem ela o TS recusa o componente, porque `TableArgs` não tem propriedade
 // nenhuma em comum com os props do elemento.
 const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
@@ -38,7 +38,7 @@ const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
     },
   },
   argTypes: {
-    captionVisivel: {
+    captionVisible: {
       control: "boolean",
       description:
         "Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o nome da tabela.",
@@ -51,7 +51,7 @@ const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
       table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
   },
-  args: { captionVisivel: false, withFooter: true },
+  args: { captionVisible: false, withFooter: true },
 };
 
 export default meta;
@@ -76,7 +76,7 @@ export const Playground: Story = {
     <Table>
       {/* A legenda nunca some do DOM: é ela que dá nome à tabela para o leitor
           de tela. O que muda é ficar ou não visível. */}
-      <TableCaption className={args.captionVisivel ? undefined : "nds-sr-only"}>
+      <TableCaption className={args.captionVisible ? undefined : "nds-sr-only"}>
         Lista de faturas recentes
       </TableCaption>
       <TableHeader>
@@ -165,7 +165,7 @@ export const Playground: Story = {
       const caption = canvasElement.querySelector<HTMLElement>("caption")!;
       await expect(caption).toHaveAttribute("data-slot", "table-caption");
       await expect(caption).toHaveTextContent("Lista de faturas recentes");
-      await expect(caption.classList.contains("nds-sr-only")).toBe(!args.captionVisivel);
+      await expect(caption.classList.contains("nds-sr-only")).toBe(!args.captionVisible);
       await expect(canvas.getByRole("table", { name: /faturas recentes/ })).toBeTruthy();
     });
 

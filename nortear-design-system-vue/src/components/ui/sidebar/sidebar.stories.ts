@@ -225,10 +225,10 @@ export const Playground: Story = {
     });
 
     await step('O ícone do item não é lido pelo leitor de tela', async () => {
-      const icone = canvasElement.querySelector<SVGElement>(
+      const icon = canvasElement.querySelector<SVGElement>(
         '[data-slot="sidebar-menu-button"] svg',
       )!;
-      await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      await expect(icon.getAttribute('aria-hidden')).toBe('true');
     });
 
     await step('O gatilho tem nome acessível, e em português', async () => {

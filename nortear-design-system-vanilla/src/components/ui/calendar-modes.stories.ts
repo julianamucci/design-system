@@ -189,9 +189,9 @@ export const Range: Story = {
     await step('Intervalo sem valor inicial não marca nada', async () => {
       // É o estado de partida de qualquer seletor de período: antes do primeiro
       // clique não há intervalo, e nenhuma célula pode aparecer marcada.
-      const vazio = createCalendar({ mode: 'range', locale: 'pt-BR' });
-      await expect(vazio.querySelectorAll('.nds-calendar-day-btn[data-selected]').length).toBe(0);
-      await expect(vazio.querySelectorAll('.nds-calendar-day-btn[data-range]').length).toBe(0);
+      const empty = createCalendar({ mode: 'range', locale: 'pt-BR' });
+      await expect(empty.querySelectorAll('.nds-calendar-day-btn[data-selected]').length).toBe(0);
+      await expect(empty.querySelectorAll('.nds-calendar-day-btn[data-range]').length).toBe(0);
     });
 
     await step('Escolher o fim antes do início dá no mesmo intervalo', async () => {

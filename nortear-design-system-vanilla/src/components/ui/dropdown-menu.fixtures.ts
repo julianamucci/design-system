@@ -24,14 +24,14 @@ import { createButton } from './button';
  * do `nds` salta de 120px para 200px, e as duas medidas caem no meio. Ela entra
  * por variável, nunca cravada aqui dentro.
  */
-export function wrap(child: HTMLElement, alturaMinima = '180px'): HTMLElement {
+export function wrap(child: HTMLElement, minHeight = '180px'): HTMLElement {
   const wrapper = document.createElement('div');
   // `contain` é mecânica de layout, não valor de design: segura o reflow dentro
   // da moldura sem sair do tema nem da escala.
   wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full';
   wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = alturaMinima;
+  wrapper.style.minHeight = minHeight;
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -71,19 +71,19 @@ export function clicarQuandoMontado(trigger: HTMLElement | null | undefined): vo
  * foto do Chromatic sair com o painel na tela; as `play` que dependem de foco
  * abrem de novo pelo clique real, que é o caminho de quem usa.
  *
- * `alturaMinima` só vai adiante para a moldura: as composições montam listas
+ * `minHeight` só vai adiante para a moldura: as composições montam listas
  * mais longas (grupos com rótulo, alternadores, escolha única) e precisam de
  * mais espaço reservado que os estados e as variantes.
  */
 export function montar(
   label: string,
   items: DropdownMenuItemDef[],
-  alturaMinima?: string,
+  minHeight?: string,
 ): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: label });
   const menu = createDropdownMenu({ trigger, items });
   clicarQuandoMontado(trigger);
-  return wrap(menu, alturaMinima);
+  return wrap(menu, minHeight);
 }
 
 /**

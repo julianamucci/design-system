@@ -48,7 +48,7 @@ type Story = StoryObj;
 const LABELS = {
   trigger: () => t('demonstration.labels.trigger'),
   title: () => t('demonstration.labels.title'),
-  descricao: () => t('demonstration.labels.description'),
+  description: () => t('demonstration.labels.description'),
   cancelar: () => t('demonstration.labels.cancel'),
   aplicar: () => t('demonstration.labels.apply'),
 };
@@ -82,7 +82,7 @@ export const Closed: Story = {
     // variantes. Aqui o que se vê é o painel ausente: uma declaração deslocada,
     // que fazia o auditor contar como verificada uma foto que ninguém tira.
     docs: {
-      // Sem transform o painel Code imprimiria `{{ rotuloGatilho }}` e as
+      // Sem transform o painel Code imprimiria `{{ triggerLabel }}` e as
       // outras props que a story injeta para trazer o conteúdo trilíngue —
       // andaime, não componente.
       source: { transform: sheetClosedSource },
@@ -95,18 +95,18 @@ export const Closed: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABELS.trigger(),
-      tituloPainel: LABELS.title(),
-      descricaoPainel: LABELS.descricao(),
+      triggerLabel: LABELS.trigger(),
+      panelTitle: LABELS.title(),
+      panelDescription: LABELS.description(),
     },
     template: `
       <nds-sheet>
-        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsSheetContent>
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
         </ng-template>
       </nds-sheet>
@@ -143,20 +143,20 @@ export const Open: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABELS.trigger(),
-      tituloPainel: LABELS.title(),
-      descricaoPainel: LABELS.descricao(),
+      triggerLabel: LABELS.trigger(),
+      panelTitle: LABELS.title(),
+      panelDescription: LABELS.description(),
       rotuloCancelar: LABELS.cancelar(),
       rotuloAplicar: LABELS.aplicar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsSheetContent>
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsSheetFooter>
@@ -178,7 +178,7 @@ export const Open: Story = {
       // C6: o painel é nomeado pelo título E descrito pela descrição, os dois
       // obrigatórios. Só o nome era afirmado aqui — um painel que perdesse o
       // `aria-describedby` passava, e as outras quatro stacks já cobravam.
-      await expect(panel).toHaveAccessibleDescription(LABELS.descricao());
+      await expect(panel).toHaveAccessibleDescription(LABELS.description());
       await expect(
         document.querySelector('[data-slot="sheet-overlay"]'),
       ).not.toBeNull();
@@ -208,9 +208,9 @@ export const LongScrollBody: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: TERMOS.trigger,
-      tituloPainel: TERMOS.title,
-      descricaoPainel: TERMOS.description,
+      triggerLabel: TERMOS.trigger,
+      panelTitle: TERMOS.title,
+      panelDescription: TERMOS.description,
       rotuloCancelar: TERMOS.cancelar,
       rotuloAplicar: TERMOS.aceitar,
       bodyLabel: TERMOS.bodyLabel,
@@ -221,12 +221,12 @@ export const LongScrollBody: Story = {
     },
     template: `
       <nds-sheet [defaultOpen]="true">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsSheetContent side="right" panelClass="nds-rounded-xl">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
 
           <!-- [aria-label] liga o INPUT da peça (apelido aria-label), e não o
@@ -315,20 +315,20 @@ export const WithCloseButtonHidden: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABELS.trigger(),
-      tituloPainel: LABELS.title(),
-      descricaoPainel: LABELS.descricao(),
+      triggerLabel: LABELS.trigger(),
+      panelTitle: LABELS.title(),
+      panelDescription: LABELS.description(),
       rotuloCancelar: LABELS.cancelar(),
       rotuloAplicar: LABELS.aplicar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsSheetContent [showCloseButton]="false">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
 
           <!-- O rodapé INTEIRO, como na referência: a saída à esquerda e a
@@ -400,8 +400,8 @@ export const Controlled: Story = {
     props: {
       isOpen: false,
       rotuloExterno: 'Abrir pelo estado externo',
-      tituloPainel: LABELS.title(),
-      descricaoPainel: LABELS.descricao(),
+      panelTitle: LABELS.title(),
+      panelDescription: LABELS.description(),
       rotuloCancelar: LABELS.cancelar(),
     },
     template: `
@@ -411,8 +411,8 @@ export const Controlled: Story = {
         <nds-sheet [open]="isOpen" (openChange)="isOpen = $event">
           <ng-template ndsSheetContent>
             <div ndsSheetHeader>
-              <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-              <p ndsSheetDescription>{{ descricaoPainel }}</p>
+              <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+              <p ndsSheetDescription>{{ panelDescription }}</p>
             </div>
 
             <div ndsSheetFooter>

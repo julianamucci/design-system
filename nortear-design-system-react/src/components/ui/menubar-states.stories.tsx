@@ -156,15 +156,15 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const barra = canvas.getByRole("menubar")
-    const [arquivo, editar] = within(barra).getAllByRole("menuitem")
+    const [file, editar] = within(barra).getAllByRole("menuitem")
     const menu = await waitForPortal("menu")
 
     await step("O gatilho aberto se distingue dos vizinhos", async () => {
-      await expect(arquivo.getAttribute("aria-expanded")).toBe("true")
+      await expect(file.getAttribute("aria-expanded")).toBe("true")
       await expect(editar.getAttribute("aria-expanded")).toBe("false")
       // O realce do gatilho aberto é fundo, não só cor de texto: o CSS
       // compartilhado casa por `[data-popup-open]` nesta stack.
-      await expect(getComputedStyle(arquivo).backgroundColor).not.toBe(
+      await expect(getComputedStyle(file).backgroundColor).not.toBe(
         getComputedStyle(editar).backgroundColor
       )
     })
@@ -464,7 +464,7 @@ export const ControlledOpen: Story = {
     const externalControl = canvas.getByTestId("external-open")
     const readout = canvas.getByTestId("external-state")
     const barra = canvas.getByRole("menubar")
-    const [arquivo] = within(barra).getAllByRole("menuitem")
+    const [file] = within(barra).getAllByRole("menuitem")
 
     // O painel Interactions reexecuta a `play` no MESMO DOM, sem remontar: este
     // passo não SUPÕE o estado inicial, ele o estabelece.
@@ -482,7 +482,7 @@ export const ControlledOpen: Story = {
       await userEvent.click(externalControl)
       const menu = await waitForPortal("menu")
       await expect(readout.textContent?.trim()).toBe("aberto")
-      await expect(arquivo.getAttribute("aria-expanded")).toBe("true")
+      await expect(file.getAttribute("aria-expanded")).toBe("true")
       await expect(within(menu).getAllByRole("menuitem")).toHaveLength(
         CONTROLLED_ITEMS.length
       )
@@ -499,7 +499,7 @@ export const ControlledOpen: Story = {
       // sem ele o estado externo continuaria dizendo "aberto" — e o painel nem
       // teria saído do DOM.
       await expect(readout.textContent?.trim()).toBe("fechado")
-      await expect(arquivo.getAttribute("aria-expanded")).toBe("false")
+      await expect(file.getAttribute("aria-expanded")).toBe("false")
     })
   },
 }

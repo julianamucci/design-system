@@ -76,17 +76,17 @@ const fontes = import.meta.glob<string>('./*.ts', { query: '?raw', import: 'defa
 
 /** O que um módulo de componente exporta, lido da declaração. */
 function exportadosPor(slug: string): Set<string> | null {
-  const texto = fontes[`./${slug}.ts`];
-  if (texto === undefined) return null;
+  const text = fontes[`./${slug}.ts`];
+  if (text === undefined) return null;
 
   const nomes = new Set<string>();
-  for (const m of texto.matchAll(
+  for (const m of text.matchAll(
     /export\s+(?:declare\s+)?(?:abstract\s+)?(?:const|let|var|class|function|type|interface|enum)\s+([A-Za-z_$][\w$]*)/g,
   )) {
     nomes.add(m[1]!);
   }
   // `export { A, B as C }` — o nome que vale é o de fora.
-  for (const m of texto.matchAll(/export\s*\{([^}]*)\}/g)) {
+  for (const m of text.matchAll(/export\s*\{([^}]*)\}/g)) {
     for (const parte of m[1]!.split(',')) {
       const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
       if (nome) nomes.add(nome);
@@ -108,12 +108,12 @@ function exportadosPor(slug: string): Set<string> | null {
  * O `type` também aparece por nome (`import { type Foo }`), e ali ele é
  * prefixo do nome — não do import. Os dois são descascados.
  */
-function importesDoDesignSystem(texto: string): Array<{ slug: string; nomes: string[] }> {
-  const saida: Array<{ slug: string; nomes: string[] }> = [];
-  for (const m of texto.matchAll(
+function importesDoDesignSystem(text: string): Array<{ slug: string; nomes: string[] }> {
+  const output: Array<{ slug: string; nomes: string[] }> = [];
+  for (const m of text.matchAll(
     /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*'@\/components\/ui\/([a-z0-9-]+)'/g,
   )) {
-    saida.push({
+    output.push({
       slug: m[2]!,
       nomes: m[1]!
         .split(',')
@@ -121,7 +121,7 @@ function importesDoDesignSystem(texto: string): Array<{ slug: string; nomes: str
         .filter(Boolean),
     });
   }
-  return saida;
+  return output;
 }
 
 /**
@@ -151,14 +151,14 @@ const NAO_E_MEMBRO = new Set([
  * `usuario`, e em `contar()` é `contar`. O que vem depois do ponto é do tipo,
  * não do escopo do template.
  */
-function ligacoesSemMembro(texto: string): string[] {
-  const template = /template:\s*`([\s\S]*?)`/.exec(texto)?.[1];
+function ligacoesSemMembro(text: string): string[] {
+  const template = /template:\s*`([\s\S]*?)`/.exec(text)?.[1];
   if (!template) return [];
 
   // Os membros que a classe do próprio snippet declara: campo, método,
   // getter, e o que vier de `readonly`/`protected`/`static`.
   const membros = new Set<string>();
-  for (const m of texto.matchAll(
+  for (const m of text.matchAll(
     /^\s*(?:readonly|protected|private|public|static|get|set|async)?\s*(?:readonly\s+)?([A-Za-z_$][\w$]*)\s*[=(:]/gm,
   )) {
     membros.add(m[1]!);
@@ -280,16 +280,16 @@ function ligacoesSemMembroNoTexto(bruto: string): string[] {
   }
 
   // `${…}` sai ANTES de tudo: o que está lá dentro é do construtor.
-  const texto = bruto.replace(/\$\{[^}]*\}/g, '');
+  const text = bruto.replace(/\$\{[^}]*\}/g, '');
 
   const locais = new Set<string>();
-  for (const m of texto.matchAll(/@for\s*\(\s*([A-Za-z_$][\w$]*)\s+of\s/g)) locais.add(m[1]!);
-  for (const m of texto.matchAll(/;\s*as\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
-  for (const m of texto.matchAll(/@let\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
-  for (const m of texto.matchAll(/#([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of text.matchAll(/@for\s*\(\s*([A-Za-z_$][\w$]*)\s+of\s/g)) locais.add(m[1]!);
+  for (const m of text.matchAll(/;\s*as\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of text.matchAll(/@let\s+([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
+  for (const m of text.matchAll(/#([A-Za-z_$][\w$]*)/g)) locais.add(m[1]!);
 
   const soltos = new Set<string>();
-  for (const m of texto.matchAll(/@for\s*\(\s*[A-Za-z_$][\w$]*\s+of\s+([A-Za-z_$][\w$]*)/g)) {
+  for (const m of text.matchAll(/@for\s*\(\s*[A-Za-z_$][\w$]*\s+of\s+([A-Za-z_$][\w$]*)/g)) {
     const nome = m[1]!;
     if (!NAO_E_MEMBRO.has(nome) && !membros.has(nome) && !locais.has(nome)) soltos.add(nome);
   }
@@ -350,20 +350,20 @@ describe('transforms do painel Code', () => {
 
       for (const [name, fn] of exportadas) {
         it(`${name} devolve um snippet honesto`, () => {
-          const saida = fn();
-          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
-          const texto = saida as string;
-          expect(texto.trim().length).toBeGreaterThan(0);
+          const output = fn();
+          expect(typeof output, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = output as string;
+          expect(text.trim().length).toBeGreaterThan(0);
           // O andaime da story não é parte do design system.
-          expect(texto).not.toMatch(SCAFFOLD);
+          expect(text).not.toMatch(SCAFFOLD);
           // Docs de cada stack são consumidas isoladamente.
-          expect(texto).not.toMatch(OTHER_STACK);
+          expect(text).not.toMatch(OTHER_STACK);
           // `@radix-ng/primitives` é a lib headless por baixo; o leitor importa
           // do design system, nunca dela.
-          expect(texto).not.toContain('@radix-ng');
+          expect(text).not.toContain('@radix-ng');
           // Sobra de template literal mal fechado, ou de arg que não veio.
-          expect(texto).not.toContain('[object Object]');
-          expect(texto).not.toContain('NaN');
+          expect(text).not.toContain('[object Object]');
+          expect(text).not.toContain('NaN');
 
           // `undefined` só é vazamento DENTRO do template.
           //
@@ -374,15 +374,15 @@ describe('transforms do painel Code', () => {
           // — nas stacks onde o snippet é só marcação a regra larga funciona,
           // aqui não. No template, porém, `undefined` só chega por interpolação
           // que não veio, e ali é sempre defeito.
-          const template = /template:\s*`([\s\S]*?)`/.exec(texto)?.[1];
+          const template = /template:\s*`([\s\S]*?)`/.exec(text)?.[1];
           if (template) expect(template).not.toContain('undefined');
         });
 
         it(`${name} liga só o que a classe declara`, () => {
-          const saida = fn();
-          if (typeof saida !== 'string') return;
+          const output = fn();
+          if (typeof output !== 'string') return;
 
-          const soltos = ligacoesSemMembro(saida);
+          const soltos = ligacoesSemMembro(output);
           expect(
             soltos,
             `${name}: o template liga ${soltos.join(', ')}, que a classe não declara — ` +
@@ -392,11 +392,11 @@ describe('transforms do painel Code', () => {
         });
 
         it(`${name} importa só o que o componente exporta`, () => {
-          const saida = fn();
-          if (typeof saida !== 'string') return;
+          const output = fn();
+          if (typeof output !== 'string') return;
 
           const faltando: string[] = [];
-          for (const { slug, nomes } of importesDoDesignSystem(saida)) {
+          for (const { slug, nomes } of importesDoDesignSystem(output)) {
             const exportados = exportadosPor(slug);
             // Slug que este arquivo não alcança — subpasta, ou peça que ainda
             // não existe aqui. Acusar seria acusar a varredura, não o snippet.

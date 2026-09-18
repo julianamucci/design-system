@@ -137,7 +137,7 @@ rotulo.textContent = ${text(o.labelText ?? 'Estado')};`;
 }
 
 /** A mensagem de erro, quando a story mostra o campo inválido. */
-function mensagem(o: SelectSnippetOptions): string | undefined {
+function message(o: SelectSnippetOptions): string | undefined {
   if (!o.mensagemDeErro) return undefined;
   return `const erro = document.createElement('p');
 erro.id = ${text(`${fieldId(o)}-erro`)};
@@ -147,7 +147,7 @@ erro.textContent = ${text(o.mensagemDeErro)};`;
 
 /** A chamada real de `createSelect` com o rótulo que dá nome ao campo. */
 export function selectSnippet(o: SelectSnippetOptions = {}): string {
-  const error = mensagem(o);
+  const error = message(o);
   return snippet(
     importing('select', 'createSelect'),
     label(o),

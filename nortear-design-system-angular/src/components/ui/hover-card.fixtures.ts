@@ -9,7 +9,7 @@
 // helper de teste é como duplicata de CSS: uma das cópias envelhece sozinha.
 //
 // **A espera também é a compartilhada, desde 2026-09-17.** Este arquivo
-// redefinia `waitForOpen`/`waitForQuantidade` gateando só em `data-side` e
+// redefinia `waitForOpen`/`waitForCount` gateando só em `data-side` e
 // dispensava o `assentado` do colhedor — que checa `visibility`, `opacity` e o
 // lugar de espera da lib. O positioner do radix-ng mantém o painel em
 // `visibility: hidden` com `transform: translate(0, -200%)` até o floating-ui
@@ -28,7 +28,7 @@ import {
   SELECTOR_PANEL,
   panelEntrar,
   waitForOpen,
-  waitForQuantidade,
+  waitForCount,
   waitForClosed,
   accessibleName,
   panelsAbertos,
@@ -46,7 +46,7 @@ export {
   SELECTOR_PANEL,
   panelEntrar,
   waitForOpen,
-  waitForQuantidade,
+  waitForCount,
   waitForClosed,
   accessibleName,
   panelsAbertos,

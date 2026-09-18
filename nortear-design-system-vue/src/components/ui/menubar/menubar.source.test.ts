@@ -90,10 +90,10 @@ const menus: Menu[] = [
   });
 
   it('não escreve o padrão: barra fechada e volta da seta já são o de fábrica', () => {
-    const saida = menubarSource('', { args: { defaultValue: '', loop: true } });
-    expect(saida).toContain('<Menubar>');
-    expect(saida).not.toContain('default-value=');
-    expect(saida).not.toContain('loop');
+    const output = menubarSource('', { args: { defaultValue: '', loop: true } });
+    expect(output).toContain('<Menubar>');
+    expect(output).not.toContain('default-value=');
+    expect(output).not.toContain('loop');
   });
 
   it('desligar a volta da seta é o que precisa ser escrito', () => {
@@ -104,114 +104,114 @@ const menus: Menu[] = [
     // `onUpdate:modelValue` chega como espião do Storybook, e `defaultValue`
     // chegaria como função se alguém trocasse o control: nenhum dos dois pode
     // atravessar para o markup.
-    const saida = menubarSource('', {
+    const output = menubarSource('', {
       args: { defaultValue: (() => {}) as never, loop: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('default-value=');
-    expect(saida).not.toContain('loop');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('default-value=');
+    expect(output).not.toContain('loop');
   });
 });
 
 describe('transforms das stories de variante', () => {
   it('o item neutro não escreve a própria ênfase', () => {
-    const saida = menubarItemDefaultSource();
-    expect(saida).toContain(`const itens = ['Novo', 'Abrir', 'Salvar']`);
-    expect(saida).not.toContain('variant=');
+    const output = menubarItemDefaultSource();
+    expect(output).toContain(`const itens = ['Novo', 'Abrir', 'Salvar']`);
+    expect(output).not.toContain('variant=');
   });
 
   it('o item de perigo declara a ênfase e ganha um separador antes', () => {
-    const saida = menubarItemDestructiveSource();
-    expect(saida).toContain('<MenubarSeparator />');
-    expect(saida).toContain('<MenubarItem variant="destructive">Descartar alterações</MenubarItem>');
+    const output = menubarItemDestructiveSource();
+    expect(output).toContain('<MenubarSeparator />');
+    expect(output).toContain('<MenubarItem variant="destructive">Descartar alterações</MenubarItem>');
     // O item vizinho continua neutro: a ênfase é do item, não do menu.
-    expect(saida).toContain('<MenubarItem>Salvar</MenubarItem>');
+    expect(output).toContain('<MenubarItem>Salvar</MenubarItem>');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('fechado é ausência: nenhuma prop declara o estado', () => {
-    const saida = menubarClosedSource();
-    expect(saida).toContain('<Menubar>');
-    expect(saida).not.toContain('default-value=');
-    expect(saida).not.toContain('open');
+    const output = menubarClosedSource();
+    expect(output).toContain('<Menubar>');
+    expect(output).not.toContain('default-value=');
+    expect(output).not.toContain('open');
   });
 
   it('aberto na montagem é presença de `default-value` casando com o menu', () => {
-    const saida = menubarOpenSource();
-    expect(saida).toContain('<Menubar default-value="file">');
-    expect(saida).toContain('<MenubarMenu value="file">');
+    const output = menubarOpenSource();
+    expect(output).toContain('<Menubar default-value="file">');
+    expect(output).toContain('<MenubarMenu value="file">');
   });
 
   it('o bloqueio mora no item, e é `:disabled` — nunca no menu inteiro', () => {
-    const saida = menubarItemBloqueadoSource();
-    expect(saida).toContain(':disabled="i.disabled"');
-    expect(saida).toContain(`{ label: 'Enviar para revisão', disabled: true }`);
-    expect(saida).not.toContain('<Menubar :disabled');
+    const output = menubarItemBloqueadoSource();
+    expect(output).toContain(':disabled="i.disabled"');
+    expect(output).toContain(`{ label: 'Enviar para revisão', disabled: true }`);
+    expect(output).not.toContain('<Menubar :disabled');
   });
 
   it('a marcação usa `checked`/`@update:checked` sobre estado reativo', () => {
-    const saida = menubarCheckboxCheckedSource();
+    const output = menubarCheckboxCheckedSource();
     // A lib por baixo ignora prop desconhecida em silêncio: é `checked` que a
     // API do design system expõe, e é ele que o snippet tem que ensinar.
-    expect(saida).toContain(':checked="marcado"');
-    expect(saida).toContain('@update:checked="estado[nome] = $event"');
-    expect(saida).toContain(`import { reactive } from 'vue'`);
-    expect(saida).not.toContain('model-value');
+    expect(output).toContain(':checked="marcado"');
+    expect(output).toContain('@update:checked="estado[nome] = $event"');
+    expect(output).toContain(`import { reactive } from 'vue'`);
+    expect(output).not.toContain('model-value');
   });
 
   it('o misto é um terceiro valor, escrito como string literal', () => {
-    const saida = menubarCheckboxMistoSource();
-    expect(saida).toContain('<MenubarCheckboxItem checked="indeterminate">Colunas');
+    const output = menubarCheckboxMistoSource();
+    expect(output).toContain('<MenubarCheckboxItem checked="indeterminate">Colunas');
     // Os três estados no mesmo painel: sem os vizinhos não se vê que o misto é
     // outro valor, e não um marcado esquisito.
-    expect(saida).toContain(':checked="true"');
-    expect(saida).toContain(':checked="false"');
+    expect(output).toContain(':checked="true"');
+    expect(output).toContain(':checked="false"');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o atalho é filho do item, e não se esconde do leitor', () => {
-    const saida = menubarWithShortcutsSource();
-    expect(saida).toContain('<MenubarShortcut>{{ a.atalho }}</MenubarShortcut>');
+    const output = menubarWithShortcutsSource();
+    expect(output).toContain('<MenubarShortcut>{{ a.atalho }}</MenubarShortcut>');
     // "Desfazer Ctrl+Z" é o nome acessível inteiro; escondê-lo devolveria só o
     // rótulo e o atalho não serviria para quem não enxerga a tela.
-    expect(saida).not.toContain('aria-hidden');
+    expect(output).not.toContain('aria-hidden');
   });
 
   it('o submenu embrulha o par gatilho/painel dentro do painel do pai', () => {
-    const saida = menubarWithSubmenuSource();
-    expect(saida).toContain('<MenubarSub>');
-    expect(saida).toContain('<MenubarSubTrigger>Exportar</MenubarSubTrigger>');
-    expect(saida).toContain('<MenubarSubContent>');
-    expect(saida).toContain(`const exportacoes = ['PDF', 'CSV', 'PNG']`);
+    const output = menubarWithSubmenuSource();
+    expect(output).toContain('<MenubarSub>');
+    expect(output).toContain('<MenubarSubTrigger>Exportar</MenubarSubTrigger>');
+    expect(output).toContain('<MenubarSubContent>');
+    expect(output).toContain(`const exportacoes = ['PDF', 'CSV', 'PNG']`);
   });
 
   it('os alternadores vivem em grupo rotulado, cada um com o próprio estado', () => {
-    const saida = menubarWithCheckboxSource();
-    expect(saida).toContain('<MenubarGroup>');
-    expect(saida).toContain('<MenubarLabel>Mostrar na tela</MenubarLabel>');
-    expect(saida).toContain('@update:checked="estado[e] = $event"');
+    const output = menubarWithCheckboxSource();
+    expect(output).toContain('<MenubarGroup>');
+    expect(output).toContain('<MenubarLabel>Mostrar na tela</MenubarLabel>');
+    expect(output).toContain('@update:checked="estado[e] = $event"');
   });
 
   it('na escolha única o valor mora no GRUPO, e a opção só declara o seu', () => {
-    const saida = menubarWithRadioSource();
-    expect(saida).toContain('<MenubarRadioGroup v-model="tema">');
-    expect(saida).toContain(':value="t.valor"');
+    const output = menubarWithRadioSource();
+    expect(output).toContain('<MenubarRadioGroup v-model="tema">');
+    expect(output).toContain(':value="t.valor"');
     // Um `v-model` por item transformaria escolha única em três alternadores.
-    expect(saida).not.toContain('<MenubarRadioItem v-model');
+    expect(output).not.toContain('<MenubarRadioItem v-model');
   });
 
   it('a barra completa junta grupo, separador, atalho e alternador', () => {
-    const saida = menubarEditorCompletoSource();
+    const output = menubarEditorCompletoSource();
     for (const menu of ['file', 'edit', 'view', 'help']) {
-      expect(saida).toContain(`<MenubarMenu value="${menu}">`);
+      expect(output).toContain(`<MenubarMenu value="${menu}">`);
     }
-    expect(saida).toContain('<MenubarSeparator />');
-    expect(saida).toContain('<MenubarShortcut>Ctrl+N</MenubarShortcut>');
-    expect(saida).toContain('<MenubarCheckboxItem :checked="true">Régua</MenubarCheckboxItem>');
+    expect(output).toContain('<MenubarSeparator />');
+    expect(output).toContain('<MenubarShortcut>Ctrl+N</MenubarShortcut>');
+    expect(output).toContain('<MenubarCheckboxItem :checked="true">Régua</MenubarCheckboxItem>');
     // A barra nasce fechada: nenhum dos quatro menus abre na montagem.
-    expect(saida).toContain('<Menubar>');
+    expect(output).toContain('<Menubar>');
   });
 });
 
@@ -234,9 +234,9 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
 
   it('nenhuma traz a moldura de contenção que existe só para a foto do Chromatic', () => {
     for (const fn of all) {
-      const saida = fn();
-      expect(saida).not.toContain('contain: layout');
-      expect(saida).not.toContain('min-height');
+      const output = fn();
+      expect(output).not.toContain('contain: layout');
+      expect(output).not.toContain('min-height');
     }
   });
 
@@ -249,7 +249,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
 
 describe('menubarSnippet — a barra descrita por dados', () => {
   it('imprime os rótulos que recebe: o código diz o que a prévia diz, em qualquer idioma', () => {
-    const saida = menubarSnippet({
+    const output = menubarSnippet({
       menus: [
         {
           value: 'file',
@@ -262,17 +262,17 @@ describe('menubarSnippet — a barra descrita por dados', () => {
         },
       ],
     });
-    expect(saida).toContain('<MenubarMenu value="file">');
-    expect(saida).toContain('<MenubarTrigger>File</MenubarTrigger>');
-    expect(saida).toContain('<MenubarItem variant="destructive">Delete file</MenubarItem>');
-    expect(saida).not.toContain('Arquivo');
+    expect(output).toContain('<MenubarMenu value="file">');
+    expect(output).toContain('<MenubarTrigger>File</MenubarTrigger>');
+    expect(output).toContain('<MenubarItem variant="destructive">Delete file</MenubarItem>');
+    expect(output).not.toContain('Arquivo');
     // `loop` já nasce ligado no wrapper: o trecho não repete o padrão.
-    expect(saida).not.toContain('loop');
-    expect(saida).toContain('  <Menubar>\n');
+    expect(output).not.toContain('loop');
+    expect(output).toContain('  <Menubar>\n');
   });
 
   it('declara o ESTADO INICIAL de cada marcação e da escolha única, com o nome do id estável', () => {
-    const saida = menubarSnippet({
+    const output = menubarSnippet({
       menus: [
         {
           value: 'view',
@@ -306,19 +306,19 @@ describe('menubarSnippet — a barra descrita por dados', () => {
         },
       ],
     });
-    expect(saida).toContain(`import { ref } from 'vue'
+    expect(output).toContain(`import { ref } from 'vue'
 
 const sidebar = ref(true)
 const showRuler = ref(false)
 const theme = ref('dark')`);
     // A API desta stack: `checked` com `v-model:checked`, não `modelValue`.
-    expect(saida).toContain('<MenubarCheckboxItem v-model:checked="showRuler">');
-    expect(saida).toContain(`        <MenubarRadioGroup v-model="theme">
+    expect(output).toContain('<MenubarCheckboxItem v-model:checked="showRuler">');
+    expect(output).toContain(`        <MenubarRadioGroup v-model="theme">
           <MenubarLabel>Appearance</MenubarLabel>`);
   });
 
   it('o grupo de escolha única sem rótulo não inventa um', () => {
-    const saida = menubarSnippet({
+    const output = menubarSnippet({
       menus: [
         {
           value: 'tools',
@@ -334,12 +334,12 @@ const theme = ref('dark')`);
         },
       ],
     });
-    expect(saida).not.toContain('MenubarLabel');
-    expect(saida).toContain(`const theme = ref('system-theme')`);
+    expect(output).not.toContain('MenubarLabel');
+    expect(output).toContain(`const theme = ref('system-theme')`);
   });
 
   it('submenu dentro de submenu sai aninhado, com a tríade em cada nível', () => {
-    const saida = menubarSnippet({
+    const output = menubarSnippet({
       menus: [
         {
           value: 'file',
@@ -354,13 +354,13 @@ const theme = ref('dark')`);
         },
       ],
     });
-    expect(saida.match(/<MenubarSub>/g)).toHaveLength(2);
-    expect(saida).toContain('<MenubarSubTrigger>Format</MenubarSubTrigger>');
+    expect(output.match(/<MenubarSub>/g)).toHaveLength(2);
+    expect(output).toContain('<MenubarSubTrigger>Format</MenubarSubTrigger>');
   });
 
   it('sem args, a barra canônica, e o import só com as peças usadas', () => {
-    const saida = menubarSnippet();
-    expect(saida).toContain(`import {
+    const output = menubarSnippet();
+    expect(output).toContain(`import {
   Menubar,
   MenubarContent,
   MenubarItem,
@@ -368,6 +368,6 @@ const theme = ref('dark')`);
   MenubarShortcut,
   MenubarTrigger,
 } from '@/components/ui/menubar'`);
-    expect(saida).not.toContain(`from 'vue'`);
+    expect(output).not.toContain(`from 'vue'`);
   });
 });

@@ -73,11 +73,11 @@ describe('dataTableSource', () => {
   it('a seleção de linhas traz junto os rótulos do domínio e a chave da linha', () => {
     // As três peças andam juntas: sem `labels` os controles ficariam com o
     // texto genérico, e sem `rowKey` a identidade da linha seria a posição.
-    const saida = dataTableSource('', { args: { enableRowSelection: true } });
-    expect(saida).toContain('  enableRowSelection\n');
-    expect(saida).toContain('labels={rotulos}');
-    expect(saida).toContain('rowKey={chaveDaFatura}');
-    expect(saida).toContain('type DataTableLabels');
+    const output = dataTableSource('', { args: { enableRowSelection: true } });
+    expect(output).toContain('  enableRowSelection\n');
+    expect(output).toContain('labels={rotulos}');
+    expect(output).toContain('rowKey={chaveDaFatura}');
+    expect(output).toContain('type DataTableLabels');
     expect(dataTableSource()).not.toContain('labels={rotulos}');
   });
 
@@ -92,9 +92,9 @@ describe('dataTableSource', () => {
   });
 
   it('o campo de busca desaparece do snippet quando a busca livre é desligada', () => {
-    const saida = dataTableSource('', { args: { enableGlobalFilter: false } });
-    expect(saida).toContain('enableGlobalFilter={false}');
-    expect(saida).not.toContain('globalFilterPlaceholder');
+    const output = dataTableSource('', { args: { enableGlobalFilter: false } });
+    expect(output).toContain('enableGlobalFilter={false}');
+    expect(output).not.toContain('globalFilterPlaceholder');
   });
 
   it('só escreve pageSize quando o valor difere do padrão', () => {
@@ -103,64 +103,64 @@ describe('dataTableSource', () => {
   });
 
   it('a legenda e o texto da busca acompanham os controls', () => {
-    const saida = dataTableSource('', {
+    const output = dataTableSource('', {
       args: { caption: 'Faturas do trimestre', globalFilterPlaceholder: 'Buscar...' },
     });
-    expect(saida).toContain('caption="Faturas do trimestre"');
-    expect(saida).toContain('globalFilterPlaceholder="Buscar..."');
+    expect(output).toContain('caption="Faturas do trimestre"');
+    expect(output).toContain('globalFilterPlaceholder="Buscar..."');
   });
 });
 
 describe('transforms das stories de estado, composição e configuração', () => {
   it('o estado sem resultados mantém a grade montada e troca a mensagem', () => {
-    const saida = dataTableNoResultsSource();
-    expect(saida).toContain('const invoices: Invoice[] = [];');
-    expect(saida).toContain('emptyMessage="Nenhuma fatura encontrada."');
+    const output = dataTableNoResultsSource();
+    expect(output).toContain('const invoices: Invoice[] = [];');
+    expect(output).toContain('emptyMessage="Nenhuma fatura encontrada."');
   });
 
   it('o filtro por coluna é declarado na própria coluna, por tipo', () => {
-    const saida = columnDataTableFiltersSource();
-    expect(saida).toContain('enableColumnFilters');
-    expect(saida).toContain("filter: { type: 'text' }");
-    expect(saida).toContain("filter: { type: 'select', options: ['Pago', 'Pendente', 'Cancelado'] }");
+    const output = columnDataTableFiltersSource();
+    expect(output).toContain('enableColumnFilters');
+    expect(output).toContain("filter: { type: 'text' }");
+    expect(output).toContain("filter: { type: 'select', options: ['Pago', 'Pendente', 'Cancelado'] }");
   });
 
   it('as colunas redimensionáveis ligam só a própria chave', () => {
-    const saida = dataTableColumnsRedimensionaveisSource();
-    expect(saida).toContain('enableColumnResizing');
-    expect(saida).not.toContain('enableColumnOrdering');
+    const output = dataTableColumnsRedimensionaveisSource();
+    expect(output).toContain('enableColumnResizing');
+    expect(output).not.toContain('enableColumnOrdering');
   });
 
   it('reordenar e fixar são duas chaves, e andam juntas na story', () => {
-    const saida = dataTableReordenarEFixarSource();
-    expect(saida).toContain('enableColumnOrdering');
-    expect(saida).toContain('enableColumnPinning');
+    const output = dataTableReordenarEFixarSource();
+    expect(output).toContain('enableColumnOrdering');
+    expect(output).toContain('enableColumnPinning');
   });
 
   it('na edição inline quem guarda o dado é quem consome, pelo callback', () => {
-    const saida = dataTableEditInlineSource();
-    expect(saida).toContain('meta: { editable: true }');
-    expect(saida).toContain('let data = $state<Invoice[]>');
-    expect(saida).toContain('onCellEdit={(rowIndex, columnId, value) => {');
+    const output = dataTableEditInlineSource();
+    expect(output).toContain('meta: { editable: true }');
+    expect(output).toContain('let data = $state<Invoice[]>');
+    expect(output).toContain('onCellEdit={(rowIndex, columnId, value) => {');
   });
 
   it('a paginação declara o tamanho inicial dentro das opções do seletor', () => {
-    const saida = dataTablePaginadaSource();
-    expect(saida).toContain('pageSize={5}');
-    expect(saida).toContain('pageSizeOptions={[5, 10]}');
+    const output = dataTablePaginadaSource();
+    expect(output).toContain('pageSize={5}');
+    expect(output).toContain('pageSizeOptions={[5, 10]}');
   });
 
   it('o rótulo de linha explícito convive com a chave da linha', () => {
-    const saida = lineDataTableLabelSource();
-    expect(saida).toContain('rowLabel={rotuloDaFatura}');
-    expect(saida).toContain('rowKey={chaveDaFatura}');
+    const output = lineDataTableLabelSource();
+    expect(output).toContain('rowLabel={rotuloDaFatura}');
+    expect(output).toContain('rowKey={chaveDaFatura}');
   });
 
   it('a virtualização declara o teto de altura e dispensa a paginação', () => {
-    const saida = dataTableVirtualizadaSource();
-    expect(saida).toContain('virtualized');
-    expect(saida).toContain('maxHeight="400px"');
-    expect(saida).toContain('{ length: 1000 }');
-    expect(saida).not.toContain('enablePagination');
+    const output = dataTableVirtualizadaSource();
+    expect(output).toContain('virtualized');
+    expect(output).toContain('maxHeight="400px"');
+    expect(output).toContain('{ length: 1000 }');
+    expect(output).not.toContain('enablePagination');
   });
 });

@@ -69,10 +69,10 @@ import { Button } from "@/components/ui/button";`;
  * `aria-labelledby`/`aria-describedby` aos ids deles, e é daí que sai o nome
  * acessível do painel modal. Sem eles o diálogo abre anônimo.
  */
-function header(title: string, descricao: string): string {
+function header(title: string, description: string): string {
   return `<DrawerHeader>
   <DrawerTitle>${title}</DrawerTitle>
-  <DrawerDescription>${descricao}</DrawerDescription>
+  <DrawerDescription>${description}</DrawerDescription>
 </DrawerHeader>`;
 }
 
@@ -136,10 +136,10 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
 function directionPanel(
   direction: DrawerArgs['direction'],
   title: string,
-  descricao: string,
+  description: string,
 ): string {
   const miolo = [
-    header(title, descricao),
+    header(title, description),
     `<DrawerBody className="nds-text-body nds-text-muted-foreground">
   Conteúdo do painel.
 </DrawerBody>`,

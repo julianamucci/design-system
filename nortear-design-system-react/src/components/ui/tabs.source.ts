@@ -139,8 +139,8 @@ export function tabsWithIconsSource(): string {
   ];
   const triggers = count
     .map(
-      ([value, label, , icone]) => `    <TabsTrigger value="${value}">
-      <${icone} aria-hidden="true" />
+      ([value, label, , icon]) => `    <TabsTrigger value="${value}">
+      <${icon} aria-hidden="true" />
       ${label}
     </TabsTrigger>`,
     )

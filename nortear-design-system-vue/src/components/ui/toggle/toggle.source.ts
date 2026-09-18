@@ -53,9 +53,9 @@ function snippet(markup: string, state = '', extra = ''): string {
  * Toggle sem texto: o ícone é decorativo (`aria-hidden`) e quem nomeia o
  * controle é o `aria-label`. Sem ele o botão não tem nome acessível nenhum.
  */
-function iconOnly(icone: string, label: string, extra = '', umaLine = false): string {
+function iconOnly(icon: string, label: string, extra = '', umaLine = false): string {
   const abertura = `<Toggle${attrs(extra, `aria-label="${label}"`)}>`;
-  const miolo = `<${icone} aria-hidden="true" />`;
+  const miolo = `<${icon} aria-hidden="true" />`;
   return umaLine ? `${abertura}${miolo}</Toggle>` : `${abertura}\n  ${miolo}\n</Toggle>`;
 }
 
@@ -63,9 +63,9 @@ function iconOnly(icone: string, label: string, extra = '', umaLine = false): st
  * Toggle com texto visível: o próprio texto é o nome acessível, e por isso não
  * há `aria-label` nenhum aqui.
  */
-function withLabel(icone: string, label: string, extra = ''): string {
+function withLabel(icon: string, label: string, extra = ''): string {
   return `<Toggle${attrs(extra)}>
-  <${icone} aria-hidden="true" />
+  <${icon} aria-hidden="true" />
   ${label}
 </Toggle>`;
 }
@@ -219,7 +219,7 @@ export function formattingToggleBarSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-${buttons.map(([icone, label]) => indentar(iconOnly(icone, label, '', true))).join('\n')}
+${buttons.map(([icon, label]) => indentar(iconOnly(icon, label, '', true))).join('\n')}
 </div>`,
   );
 }

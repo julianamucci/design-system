@@ -58,31 +58,31 @@ import { Skeleton, SkeletonRegion } from '@/components/ui/skeleton'
   });
 
   it('fill não tem caixa própria — ela vem do AspectRatio, não de classe da docs page', () => {
-    const saida = skeletonPlaygroundSource('', { args: { shape: 'fill', width: '1-3' } });
-    expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
-    expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
-    expect(saida).toContain('<Skeleton data-shape="fill" />');
-    expect(saida).not.toContain('nds-docs-skeleton-media');
-    expect(saida).not.toContain('data-width');
+    const output = skeletonPlaygroundSource('', { args: { shape: 'fill', width: '1-3' } });
+    expect(output).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+    expect(output).toContain('<AspectRatio :ratio="16 / 9">');
+    expect(output).toContain('<Skeleton data-shape="fill" />');
+    expect(output).not.toContain('nds-docs-skeleton-media');
+    expect(output).not.toContain('data-width');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = skeletonPlaygroundSource('', {
+    const output = skeletonPlaygroundSource('', {
       args: { shape: (() => {}) as never, width: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
+    expect(output).not.toContain('function');
     // Cai no padrão em vez de interpolar o espião.
-    expect(saida).toContain('<Skeleton data-shape="text" data-width="3-4" />');
+    expect(output).toContain('<Skeleton data-shape="text" data-width="3-4" />');
   });
 });
 
 describe('o placeholder nunca aparece sozinho', () => {
   it('toda transform embrulha o bloco na PEÇA de região, com nome', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).toContain('import { Skeleton, SkeletonRegion }');
-      expect(saida).toMatch(/<SkeletonRegion[\s\S]*label="Carregando/);
-      expect(saida).toContain('</SkeletonRegion>');
+      const output = fn();
+      expect(output).toContain('import { Skeleton, SkeletonRegion }');
+      expect(output).toMatch(/<SkeletonRegion[\s\S]*label="Carregando/);
+      expect(output).toContain('</SkeletonRegion>');
     }
   });
 
@@ -90,10 +90,10 @@ describe('o placeholder nunca aparece sozinho', () => {
     // A região não alterna `aria-busy`: ela SAI quando o conteúdo chega. Um
     // snippet que ensina o atributo ensina a alternância.
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).not.toContain('role="status"');
-      expect(saida).not.toContain('aria-busy');
-      expect(saida).not.toContain('aria-label');
+      const output = fn();
+      expect(output).not.toContain('role="status"');
+      expect(output).not.toContain('aria-busy');
+      expect(output).not.toContain('aria-label');
     }
   });
 
@@ -106,84 +106,84 @@ describe('o placeholder nunca aparece sozinho', () => {
 
 describe('transforms das stories de forma', () => {
   it('o retângulo preenche a caixa que o container estabelece', () => {
-    const saida = skeletonRectangleSource();
-    expect(saida).toContain('label="Carregando bloco"');
-    expect(saida).toContain('class="nds-w-sm"');
-    expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
-    expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
-    expect(saida).toContain('<Skeleton data-shape="fill" />');
+    const output = skeletonRectangleSource();
+    expect(output).toContain('label="Carregando bloco"');
+    expect(output).toContain('class="nds-w-sm"');
+    expect(output).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+    expect(output).toContain('<AspectRatio :ratio="16 / 9">');
+    expect(output).toContain('<Skeleton data-shape="fill" />');
     // A classe de mídia é da docs page: no snippet ela ensinaria API que não existe.
-    expect(saida).not.toContain('nds-docs-skeleton-media');
+    expect(output).not.toContain('nds-docs-skeleton-media');
   });
 
   it('o avatar traz medida própria e dispensa largura', () => {
-    const saida = skeletonCircleSource();
-    expect(saida).toContain('<Skeleton data-shape="avatar" />');
-    expect(saida).not.toContain('data-width');
+    const output = skeletonCircleSource();
+    expect(output).toContain('<Skeleton data-shape="avatar" />');
+    expect(output).not.toContain('data-width');
   });
 
   it('as linhas variam de largura — é isso que as faz parecer parágrafo', () => {
-    const saida = skeletonLineTextSource();
-    const larguras = [...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1]);
+    const output = skeletonLineTextSource();
+    const larguras = [...output.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1]);
     expect(larguras).toEqual(['full', '3-4', '1-2']);
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o pulso não tem prop: vem da classe base do componente', () => {
-    const saida = skeletonPulsingSource();
-    expect(saida).toContain('<Skeleton data-shape="text" data-width="full" />');
+    const output = skeletonPulsingSource();
+    expect(output).toContain('<Skeleton data-shape="text" data-width="full" />');
     // Nem prop, nem atributo, nem classe de animação escritos à mão.
-    expect(saida).not.toContain('animate');
-    expect(saida).not.toContain('pulse');
+    expect(output).not.toContain('animate');
+    expect(output).not.toContain('pulse');
   });
 
   it('movimento reduzido não acrescenta nada ao markup', () => {
-    const saida = skeletonReducedMotionSource();
+    const output = skeletonReducedMotionSource();
     // A preferência é do sistema e quem responde é a folha compartilhada.
-    expect(saida).not.toContain('reduced');
-    expect(saida).not.toContain('motion');
+    expect(output).not.toContain('reduced');
+    expect(output).not.toContain('motion');
     // Mesmas duas linhas do pulso: o que muda é a preferência, não o markup.
-    expect([...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual(['full', '3-4']);
-    expect(saida).toBe(skeletonPulsingSource());
+    expect([...output.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual(['full', '3-4']);
+    expect(output).toBe(skeletonPulsingSource());
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o card de perfil põe o avatar ao lado de duas linhas desiguais', () => {
-    const saida = skeletonProfileCardSource();
-    expect(saida).toContain('<Skeleton data-shape="avatar" />');
-    expect(saida).toContain('data-align="center"');
-    expect(saida).toContain('<div class="nds-stack nds-flex-1" data-spacing="sm">');
-    expect([...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual(['2-3', '1-2']);
+    const output = skeletonProfileCardSource();
+    expect(output).toContain('<Skeleton data-shape="avatar" />');
+    expect(output).toContain('data-align="center"');
+    expect(output).toContain('<div class="nds-stack nds-flex-1" data-spacing="sm">');
+    expect([...output.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual(['2-3', '1-2']);
   });
 
   it('na lista, a ul fica DENTRO da peça e não carrega estado nem nome', () => {
-    const saida = skeletonListSource();
-    expect(saida.indexOf('<SkeletonRegion')).toBeLessThan(saida.indexOf('<ul'));
-    expect(saida).toContain('<ul role="list" class="nds-stack nds-list-none nds-p-0" data-spacing="md">');
-    expect(saida).toContain('<li v-for="i in 5" :key="i"');
+    const output = skeletonListSource();
+    expect(output.indexOf('<SkeletonRegion')).toBeLessThan(output.indexOf('<ul'));
+    expect(output).toContain('<ul role="list" class="nds-stack nds-list-none nds-p-0" data-spacing="md">');
+    expect(output).toContain('<li v-for="i in 5" :key="i"');
     // O avatar menor sai de `data-size`, não de uma medida escrita à mão.
-    expect(saida).toContain('<Skeleton data-shape="avatar" data-size="sm" />');
+    expect(output).toContain('<Skeleton data-shape="avatar" data-size="sm" />');
   });
 
   it('a imagem toma a caixa do AspectRatio', () => {
-    const saida = skeletonImageRatioSource();
-    expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
-    expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
+    const output = skeletonImageRatioSource();
+    expect(output).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+    expect(output).toContain('<AspectRatio :ratio="16 / 9">');
     // Dentro de um container que já dá a caixa, a classe de proporção sobraria.
-    expect(saida).toContain('<Skeleton data-shape="fill" />');
-    expect(saida).not.toContain('nds-docs-skeleton-media');
+    expect(output).toContain('<Skeleton data-shape="fill" />');
+    expect(output).not.toContain('nds-docs-skeleton-media');
   });
 
   it('o parágrafo é só linhas, e elas decrescem', () => {
-    const saida = skeletonParagraphSource();
-    expect([...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual([
+    const output = skeletonParagraphSource();
+    expect([...output.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual([
       'full',
       '3-4',
       '1-2',
     ]);
-    expect(saida).not.toContain('avatar');
+    expect(output).not.toContain('avatar');
   });
 });
 
@@ -321,18 +321,18 @@ const POR_STORY: Array<{
 describe('o painel ensina o que a story mostra', () => {
   for (const { story, build, label, partes, ratio } of POR_STORY) {
     it(`${story}: a região, as peças e o container batem com o render`, () => {
-      const saida = build();
-      expect(saida).toContain(`label="${label}"`);
-      for (const parte of partes) expect(saida).toContain(parte);
+      const output = build();
+      expect(output).toContain(`label="${label}"`);
+      for (const parte of partes) expect(output).toContain(parte);
       if (ratio) {
         // Quem dá a caixa ao `fill` é o container, e ele aparece no exemplo.
-        expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
-        expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
+        expect(output).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+        expect(output).toContain('<AspectRatio :ratio="16 / 9">');
       } else {
-        expect(saida).not.toContain('AspectRatio');
+        expect(output).not.toContain('AspectRatio');
       }
       // A classe de proporção é da docs page: ela daria a caixa sem ser API.
-      expect(saida).not.toContain('nds-docs-skeleton-media');
+      expect(output).not.toContain('nds-docs-skeleton-media');
     });
   }
 

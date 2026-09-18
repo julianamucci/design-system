@@ -10,27 +10,27 @@ import {
 
 describe('breadcrumbSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
-    const saida = breadcrumbSource();
-    expect(saida).toContain('from "@/components/ui/breadcrumb"');
-    expect(saida).not.toContain('@base-ui');
+    const output = breadcrumbSource();
+    expect(output).toContain('from "@/components/ui/breadcrumb"');
+    expect(output).not.toContain('@base-ui');
   });
 
   it('só os níveis anteriores são links; o último é a página atual', () => {
-    const saida = breadcrumbSource();
+    const output = breadcrumbSource();
     // Dois links e UM BreadcrumbPage: é a regra que o defeito antigo quebrava,
     // quando a página atual também era anunciada como link.
-    expect(saida.match(/<BreadcrumbLink/g)).toHaveLength(2);
-    expect(saida.match(/<BreadcrumbPage>/g)).toHaveLength(1);
-    expect(saida).toContain('<BreadcrumbPage>Breadcrumb</BreadcrumbPage>');
+    expect(output.match(/<BreadcrumbLink/g)).toHaveLength(2);
+    expect(output.match(/<BreadcrumbPage>/g)).toHaveLength(1);
+    expect(output).toContain('<BreadcrumbPage>Breadcrumb</BreadcrumbPage>');
   });
 
   it('não escreve à mão o que o componente já põe', () => {
     // `aria-current="page"` e o `aria-hidden` do separador nascem do
     // componente: repeti-los no snippet ensinaria trabalho inútil.
-    const saida = breadcrumbSource();
-    expect(saida).not.toContain('aria-current');
-    expect(saida).not.toContain('aria-hidden');
-    expect(saida.match(/<BreadcrumbSeparator \/>/g)).toHaveLength(2);
+    const output = breadcrumbSource();
+    expect(output).not.toContain('aria-current');
+    expect(output).not.toContain('aria-hidden');
+    expect(output.match(/<BreadcrumbSeparator \/>/g)).toHaveLength(2);
   });
 
   it('devolve o mesmo snippet com ou sem contexto — a trilha não vem de arg', () => {
@@ -40,50 +40,50 @@ describe('breadcrumbSource', () => {
 
 describe('formas estruturais', () => {
   it('a trilha simples tem um único ponto focável', () => {
-    const saida = breadcrumbSimpleSource();
-    expect(saida.match(/<BreadcrumbLink/g)).toHaveLength(1);
-    expect(saida).toContain('<BreadcrumbPage>Componentes</BreadcrumbPage>');
+    const output = breadcrumbSimpleSource();
+    expect(output.match(/<BreadcrumbLink/g)).toHaveLength(1);
+    expect(output).toContain('<BreadcrumbPage>Componentes</BreadcrumbPage>');
   });
 
   it('as reticências que informam sozinhas precisam de nome', () => {
-    const saida = breadcrumbWithEllipsisSource();
-    expect(saida).toContain('<BreadcrumbEllipsis label="Mais páginas" />');
-    expect(saida).toContain('BreadcrumbEllipsis,');
+    const output = breadcrumbWithEllipsisSource();
+    expect(output).toContain('<BreadcrumbEllipsis label="Mais páginas" />');
+    expect(output).toContain('BreadcrumbEllipsis,');
   });
 
   it('o separador customizado entra sem aria-hidden próprio', () => {
-    const saida = breadcrumbSeparatorCustomizadoSource();
-    expect(saida).toContain('import { Slash } from "lucide-react";');
-    expect(saida).toContain('<BreadcrumbSeparator>');
+    const output = breadcrumbSeparatorCustomizadoSource();
+    expect(output).toContain('import { Slash } from "lucide-react";');
+    expect(output).toContain('<BreadcrumbSeparator>');
     // O `role="presentation"` e o `aria-hidden` continuam vindo do componente:
     // trocar o desenho não devolve o separador à leitura.
-    expect(saida).not.toContain('aria-hidden');
-    expect(saida.match(/<Slash \/>/g)).toHaveLength(2);
+    expect(output).not.toContain('aria-hidden');
+    expect(output.match(/<Slash \/>/g)).toHaveLength(2);
   });
 
   it('o link customizado ensina a prop render, e não um elemento envolvido', () => {
-    const saida = breadcrumbLinkCustomizadoSource();
-    expect(saida).toContain('render={<a href="/" />}');
-    expect(saida).toContain('render={<a href="/componentes" />}');
+    const output = breadcrumbLinkCustomizadoSource();
+    expect(output).toContain('render={<a href="/" />}');
+    expect(output).toContain('render={<a href="/componentes" />}');
     // Se o snippet ainda tivesse `href` direto no BreadcrumbLink, a composição
     // que a story demonstra ficaria invisível.
-    expect(saida).not.toContain('<BreadcrumbLink href=');
+    expect(output).not.toContain('<BreadcrumbLink href=');
   });
 });
 
 describe('trilha responsiva', () => {
   it('as reticências viram gatilho de menu', () => {
-    const saida = breadcrumbResponsivoSource();
-    expect(saida).toContain('from "@/components/ui/dropdown-menu"');
-    expect(saida).toContain('<DropdownMenuTrigger');
-    expect(saida.match(/<DropdownMenuItem>/g)).toHaveLength(3);
+    const output = breadcrumbResponsivoSource();
+    expect(output).toContain('from "@/components/ui/dropdown-menu"');
+    expect(output).toContain('<DropdownMenuTrigger');
+    expect(output.match(/<DropdownMenuItem>/g)).toHaveLength(3);
   });
 
   it('quem se nomeia é o gatilho — dois nomes viram leitura duplicada', () => {
-    const saida = breadcrumbResponsivoSource();
-    expect(saida).toContain('aria-label="Expandir níveis ocultos"');
-    expect(saida).toContain('<BreadcrumbEllipsis />');
-    expect(saida).not.toContain('BreadcrumbEllipsis label=');
+    const output = breadcrumbResponsivoSource();
+    expect(output).toContain('aria-label="Expandir níveis ocultos"');
+    expect(output).toContain('<BreadcrumbEllipsis />');
+    expect(output).not.toContain('BreadcrumbEllipsis label=');
   });
 });
 
@@ -100,11 +100,11 @@ describe('nenhum snippet ensina o andaime da story', () => {
 
   it('sem fixtures, sem espalhamento de args e sem espião de navegação', () => {
     for (const fn of all) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
       // O `onNavigate` das stories é um espião de módulo, não API do componente.
-      expect(saida).not.toContain('onNavigate');
+      expect(output).not.toContain('onNavigate');
     }
   });
 });

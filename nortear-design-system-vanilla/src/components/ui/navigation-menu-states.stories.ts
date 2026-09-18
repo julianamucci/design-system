@@ -221,9 +221,9 @@ export const ControlledValue: Story = {
     },
   },
   render: () => {
-    const coluna = document.createElement('div');
-    coluna.className = 'nds-stack nds-w-full';
-    coluna.dataset.spacing = 'sm';
+    const column = document.createElement('div');
+    column.className = 'nds-stack nds-w-full';
+    column.dataset.spacing = 'sm';
 
     const registro = document.createElement('p');
     registro.className = 'nds-text-body nds-text-muted-foreground';
@@ -253,8 +253,8 @@ export const ControlledValue: Story = {
     );
     nav.setAttribute('aria-label', 'Navegação principal');
 
-    coluna.append(registro, nav);
-    return wrap(coluna, 320);
+    column.append(registro, nav);
+    return wrap(column, 320);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

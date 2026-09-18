@@ -76,7 +76,7 @@ describe('drawerSource', () => {
   });
 
   it('os textos do painel acompanham os controls', () => {
-    const saida = drawerSource('', {
+    const output = drawerSource('', {
       args: {
         triggerLabel: 'Abrir filtros',
         title: 'Filtros',
@@ -85,31 +85,31 @@ describe('drawerSource', () => {
         cancelLabel: 'Descartar',
       },
     });
-    expect(saida).toContain('>Abrir filtros</Button>');
-    expect(saida).toContain('<DrawerTitle>Filtros</DrawerTitle>');
-    expect(saida).toContain('<DrawerDescription>Refine sua busca.</DrawerDescription>');
-    expect(saida).toContain('<Button>Salvar</Button>');
-    expect(saida).toContain('>Descartar</Button>');
+    expect(output).toContain('>Abrir filtros</Button>');
+    expect(output).toContain('<DrawerTitle>Filtros</DrawerTitle>');
+    expect(output).toContain('<DrawerDescription>Refine sua busca.</DrawerDescription>');
+    expect(output).toContain('<Button>Salvar</Button>');
+    expect(output).toContain('>Descartar</Button>');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a composição com formulário abre à direita e rotula os dois campos', () => {
-    const saida = drawerWithFormSource();
-    expect(saida).toContain('direction="right"');
-    expect(saida).toContain('<Label for="drawer-nome">Nome</Label>');
-    expect(saida).toContain('<Label for="drawer-email">E-mail</Label>');
-    expect(saida).toContain('from "@/components/ui/input"');
+    const output = drawerWithFormSource();
+    expect(output).toContain('direction="right"');
+    expect(output).toContain('<Label for="drawer-nome">Nome</Label>');
+    expect(output).toContain('<Label for="drawer-email">E-mail</Label>');
+    expect(output).toContain('from "@/components/ui/input"');
   });
 
   it('religa a ação primária ao formulário, que é irmão do rodapé', () => {
     // `type="submit"` sem o `form` é botão INERTE: não envia pelo clique nem
     // pelo Enter num campo, e nada na tela denuncia. Com dois campos não há
     // submissão implícita para salvar o caso.
-    const saida = drawerWithFormSource();
-    expect(saida).toContain('id="drawer-form"');
-    expect(saida).toContain('<Button type="submit" form="drawer-form">Confirmar</Button>');
-    expect(saida).not.toContain('<Button>Confirmar</Button>');
+    const output = drawerWithFormSource();
+    expect(output).toContain('id="drawer-form"');
+    expect(output).toContain('<Button type="submit" form="drawer-form">Confirmar</Button>');
+    expect(output).not.toContain('<Button>Confirmar</Button>');
   });
 
   it('o elo só existe onde existe formulário — a confirmação não o herda', () => {
@@ -121,20 +121,20 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
-    const saida = drawerHeadingH3Source();
+    const output = drawerHeadingH3Source();
     // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
     // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
     // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
     // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
-    expect(saida).toContain('<DrawerTitle level={3}>');
-    expect(saida).toContain('{#snippet child({ props })}');
-    expect(saida).toContain('<h3 {...props}>Editar perfil</h3>');
+    expect(output).toContain('<DrawerTitle level={3}>');
+    expect(output).toContain('{#snippet child({ props })}');
+    expect(output).toContain('<h3 {...props}>Editar perfil</h3>');
 
     // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
     // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
     // exemplo deixaria de ensinar uma coisa só.
     expect(
-      saida.replace(
+      output.replace(
         `<DrawerTitle level={3}>
         {#snippet child({ props })}
           <h3 {...props}>Editar perfil</h3>
@@ -154,15 +154,15 @@ describe('transforms das stories de composição', () => {
       }));
   });
   it('a confirmação usa o corpo do painel para a mensagem curta', () => {
-    const saida = drawerWithConfirmSource();
-    expect(saida).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');
-    expect(saida).toContain('<Button>Remover</Button>');
+    const output = drawerWithConfirmSource();
+    expect(output).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');
+    expect(output).toContain('<Button>Remover</Button>');
   });
 
   it('o corpo rolável não leva altura cravada — quem rola é o corpo', () => {
-    const saida = drawerWithScrollSource();
-    expect(saida).toContain('<DrawerBody');
-    expect(saida).not.toContain('height');
-    expect(saida).not.toContain('style=');
+    const output = drawerWithScrollSource();
+    expect(output).toContain('<DrawerBody');
+    expect(output).not.toContain('height');
+    expect(output).not.toContain('style=');
   });
 });

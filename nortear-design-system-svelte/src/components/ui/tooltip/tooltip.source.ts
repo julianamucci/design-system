@@ -82,7 +82,7 @@ function balaoBody(variant: string, contentText: string): string {
 
 /** Monta a composição inteira: Provider, raiz, gatilho e balão. */
 function montar(options: {
-  icone: IconKey | null;
+  icon: IconKey | null;
   ariaLabel: string;
   triggerLabel?: string;
   provider: string;
@@ -91,9 +91,9 @@ function montar(options: {
   body: string;
   state?: string;
 }): string {
-  const icone = options.icone ? ICONS[options.icone] : null;
+  const icon = options.icon ? ICONS[options.icon] : null;
   const script = [
-    icone ? `${IMPORT}\nimport ${icone[0]} from "@lucide/svelte/icons/${icone[1]}";` : IMPORT,
+    icon ? `${IMPORT}\nimport ${icon[0]} from "@lucide/svelte/icons/${icon[1]}";` : IMPORT,
     options.state ?? '',
   ]
     .filter(Boolean)
@@ -101,9 +101,9 @@ function montar(options: {
 
   // Gatilho de texto não leva ícone nem `aria-label`: seria import órfão na mão
   // de quem copia, e nome acessível competindo com o rótulo visível.
-  const gatilho = icone
+  const gatilho = icon
     ? `<Button variant="outline" size="icon" aria-label="${options.ariaLabel}" {...props}>
-          <${icone[0]} aria-hidden="true" class="nds-size-4" />
+          <${icon[0]} aria-hidden="true" class="nds-size-4" />
         </Button>`
     : `<Button variant="outline" {...props}>${options.triggerLabel ?? ''}</Button>`;
 
@@ -144,7 +144,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
   } = ctx?.args ?? {};
 
   return montar({
-    icone: triggerIcon(variant, triggerLabel),
+    icon: triggerIcon(variant, triggerLabel),
     ariaLabel,
     triggerLabel,
     // A espera é decisão do Provider, que a compartilha entre os vizinhos, e o
@@ -312,7 +312,7 @@ const ACTIONS = [
 /** Open (States): o balão nasce aberto, sem interação e sem estado externo. */
 export function tooltipOpenSource(): string {
   return montar({
-    icone: 'salvar',
+    icon: 'salvar',
     ariaLabel: 'Salvar',
     provider: '',
     root: ' defaultOpen',
@@ -324,7 +324,7 @@ export function tooltipOpenSource(): string {
 /** Controlled (States): a abertura vem de fora, e o Escape devolve o valor. */
 export function tooltipControlledSource(): string {
   return montar({
-    icone: 'salvar',
+    icon: 'salvar',
     ariaLabel: 'Salvar',
     provider: '',
     root: ' bind:open={aberto}',

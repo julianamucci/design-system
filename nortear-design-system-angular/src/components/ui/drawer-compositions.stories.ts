@@ -46,13 +46,13 @@ type Story = StoryObj;
 const LABEL = {
   trigger: () => t('usage.uxWriting.table.trigger.good'),
   title: () => t('usage.uxWriting.table.title.good'),
-  descricao: () => t('usage.uxWriting.table.description.good'),
+  description: () => t('usage.uxWriting.table.description.good'),
   close: () => t('usage.uxWriting.table.close.good'),
   confirmar: () => t('demonstration.labels.confirm'),
   destruir: () => t('demonstration.labels.destroy'),
   field: () => t('demonstration.labels.fieldName'),
   fieldEmail: () => t('demonstration.labels.fieldEmail'),
-  aviso: () => t('demonstration.labels.destroyMessage'),
+  warning: () => t('demonstration.labels.destroyMessage'),
 };
 
 export const WithForm: Story = {
@@ -69,9 +69,9 @@ export const WithForm: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.trigger(),
-      tituloPainel: LABEL.title(),
-      descricaoPainel: LABEL.descricao(),
+      triggerLabel: LABEL.trigger(),
+      panelTitle: LABEL.title(),
+      panelDescription: LABEL.description(),
       rotuloCampo: LABEL.field(),
       // Nome em inglês, ao contrário dos vizinhos: código se escreve em inglês
       // (guideline 11), e os `rotulo*` daqui são dívida de linha de base que o
@@ -83,12 +83,12 @@ export const WithForm: Story = {
     },
     template: `
       <nds-drawer [defaultOpen]="true">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <!--
@@ -138,7 +138,7 @@ export const WithForm: Story = {
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
       await expect(panel).toHaveAccessibleName(LABEL.title());
-      await expect(panel).toHaveAccessibleDescription(LABEL.descricao());
+      await expect(panel).toHaveAccessibleDescription(LABEL.description());
       // Os campos são achados pelo RÓTULO: se o `for`/`id` não casassem, o
       // input ficaria sem nome acessível e esta busca falharia. São dois, como
       // nas outras quatro stacks — e é o de e-mail que prova o segundo.
@@ -194,9 +194,9 @@ export const WithConfirmation: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.trigger(),
-      tituloPainel: stripHtml(t('variants.compositions.withConfirmation.name')),
-      descricaoPainel: LABEL.aviso(),
+      triggerLabel: LABEL.trigger(),
+      panelTitle: stripHtml(t('variants.compositions.withConfirmation.name')),
+      panelDescription: LABEL.warning(),
       rotuloFechar: LABEL.close(),
       rotuloDestruir: LABEL.destruir(),
       // Aqui a decisão É a tela, e por isso o foco entra no cancelar — a mesma
@@ -220,12 +220,12 @@ export const WithConfirmation: Story = {
     },
     template: `
       <nds-drawer [defaultOpen]="true" (openAutoFocus)="focusSafeExit($event)">
-        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
-            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+            <h2 ndsDrawerTitle>{{ panelTitle }}</h2>
+            <p ndsDrawerDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsDrawerFooter>
@@ -241,7 +241,7 @@ export const WithConfirmation: Story = {
     const inside = within(panel);
 
     await step('A consequência está escrita, não subentendida', async () => {
-      await expect(panel).toHaveAccessibleDescription(LABEL.aviso());
+      await expect(panel).toHaveAccessibleDescription(LABEL.warning());
     });
 
     await step('A ação principal carrega a variante destrutiva', async () => {

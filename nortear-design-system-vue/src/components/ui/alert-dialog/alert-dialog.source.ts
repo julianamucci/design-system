@@ -61,7 +61,7 @@ type Composition = {
    */
   titleProps?: string;
   title: string;
-  descricao?: string;
+  description?: string;
   cancelar: { label: string; evento?: string };
   acao: { label: string; variant?: string; evento?: string };
 };
@@ -75,7 +75,7 @@ function destructive(extra: Partial<Composition> = {}): Composition {
   return {
     trigger: { label: L.triggerLabel, variant: 'destructive' },
     title: L.title,
-    descricao: L.description,
+    description: L.description,
     cancelar: { label: L.cancel },
     acao: { label: L.action, variant: 'destructive' },
     ...extra,
@@ -93,7 +93,7 @@ function importDialog(c: Composition): string {
     'AlertDialogHeader',
     'AlertDialogTitle',
   ];
-  if (c.descricao) names.push('AlertDialogDescription');
+  if (c.description) names.push('AlertDialogDescription');
   if (c.midia) names.push('AlertDialogMedia');
   if (c.trigger) names.push('AlertDialogTrigger');
   names.sort();
@@ -135,7 +135,7 @@ function dialogo(c: Composition): string {
   }
 
   lines.push(withText('AlertDialogTitle', attrs(c.titleProps), c.title, 6));
-  if (c.descricao) lines.push(withText('AlertDialogDescription', '', c.descricao, 6));
+  if (c.description) lines.push(withText('AlertDialogDescription', '', c.description, 6));
 
   lines.push(
     '    </AlertDialogHeader>',
@@ -179,7 +179,7 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
     trigger: { label: asCode(args.triggerLabel) ?? L.triggerLabel, variant: tom },
     midia: args.showMedia === true ? {} : undefined,
     title: asCode(args.title) ?? L.title,
-    descricao: asCode(args.description) ?? L.description,
+    description: asCode(args.description) ?? L.description,
     cancelar: { label: asCode(args.cancelLabel) ?? L.cancel },
     acao: { label: asCode(args.actionLabel) ?? L.action, variant: tom },
   });
@@ -305,7 +305,7 @@ export function alertDialogNeutralSource(): string {
   return snippet({
     trigger: { label: L.neutralTriggerLabel, variant: 'outline' },
     title: L.neutralTitle,
-    descricao: L.neutralDescription,
+    description: L.neutralDescription,
     cancelar: { label: L.cancel },
     acao: { label: L.neutralAction },
   });
@@ -318,7 +318,7 @@ export function alertDialogNeutralSource(): string {
 export function alertDialogDescriptionLongaSource(): string {
   return snippet(
     destructive({
-      descricao: `Todos os seus dados, arquivos enviados, integrações ativas e o histórico
+      description: `Todos os seus dados, arquivos enviados, integrações ativas e o histórico
 completo de faturamento serão removidos permanentemente dos nossos
 servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
 fica disponível depois da confirmação.`,

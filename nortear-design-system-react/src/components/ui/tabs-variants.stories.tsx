@@ -91,9 +91,9 @@ export const Default: Story = {
     await step("A aba ativa se destaca por fundo, não só por cor de texto", async () => {
       // Critério 1.4.1 na prática: o estado ativo não pode depender de matiz,
       // senão quem não distingue cores perde a informação.
-      const ativa = canvas.getByRole("tab", { name: "Visão geral" });
+      const active = canvas.getByRole("tab", { name: "Visão geral" });
       const inativa = canvas.getByRole("tab", { name: "Exemplos" });
-      await expect(getComputedStyle(ativa).backgroundColor).not.toBe(
+      await expect(getComputedStyle(active).backgroundColor).not.toBe(
         getComputedStyle(inativa).backgroundColor
       );
     });
@@ -155,10 +155,10 @@ export const Line: Story = {
     await step("A linha marca a aba ativa e some das inativas", async () => {
       // A linha é um pseudo-elemento com opacidade — procurar um nó no DOM não
       // acharia nada. A opacidade tem transição, daí o `waitFor`.
-      const ativa = canvas.getByRole("tab", { name: "Visão geral" });
+      const active = canvas.getByRole("tab", { name: "Visão geral" });
       const inativa = canvas.getByRole("tab", { name: "Exemplos" });
       await waitFor(() =>
-        expect(getComputedStyle(ativa, "::after").opacity).toBe("1")
+        expect(getComputedStyle(active, "::after").opacity).toBe("1")
       );
       await expect(getComputedStyle(inativa, "::after").opacity).toBe("0");
     });

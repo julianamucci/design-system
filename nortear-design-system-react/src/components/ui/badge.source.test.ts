@@ -266,10 +266,10 @@ describe('Playground: o painel nunca inventa texto que a tela não mostra', () =
   it('control esvaziado deixa a etiqueta vazia no painel, como no render', () => {
     // O `childText` compartilhado cairia em "Novo" aqui, e o render mostraria
     // uma etiqueta VAZIA — painel e tela dizendo coisas diferentes.
-    for (const vazio of ['', '   ', '\n\t']) {
-      const output = badgeSource(undefined, { args: { children: vazio } });
-      expect(output, `control ${JSON.stringify(vazio)}`).toContain('<Badge></Badge>');
-      expect(output, `control ${JSON.stringify(vazio)}`).not.toContain(LABELS.defaultLabel);
+    for (const empty of ['', '   ', '\n\t']) {
+      const output = badgeSource(undefined, { args: { children: empty } });
+      expect(output, `control ${JSON.stringify(empty)}`).toContain('<Badge></Badge>');
+      expect(output, `control ${JSON.stringify(empty)}`).not.toContain(LABELS.defaultLabel);
     }
   });
 

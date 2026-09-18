@@ -45,7 +45,7 @@ const IMPORTS = `${IMPORT_LABEL}\n${IMPORT_GROUP}`;
  * muda por exemplo porque dois grupos na mesma página com os mesmos `id`
  * fariam o rótulo de um apontar para o item do outro.
  */
-function opcao(prefixo: string, value: string, label: string, extra = ''): string {
+function option(prefixo: string, value: string, label: string, extra = ''): string {
   return `<div className="nds-cluster" data-spacing="sm">
   <RadioGroupItem value="${value}" id="${prefixo}-${value}"${extra} />
   <Label htmlFor="${prefixo}-${value}">${label}</Label>
@@ -54,9 +54,9 @@ function opcao(prefixo: string, value: string, label: string, extra = ''): strin
 
 /** As três formas de pagamento que atravessam quase todas as stories. */
 function pagamentos(prefixo: string, extra = ''): string {
-  return `${opcao(prefixo, 'cartao', 'Cartão de crédito', extra)}
-${opcao(prefixo, 'pix', 'Pix', extra)}
-${opcao(prefixo, 'boleto', 'Boleto bancário', extra)}`;
+  return `${option(prefixo, 'cartao', 'Cartão de crédito', extra)}
+${option(prefixo, 'pix', 'Pix', extra)}
+${option(prefixo, 'boleto', 'Boleto bancário', extra)}`;
 }
 
 /** O grupo inteiro: raiz com os atributos que diferem do padrão e as opções. */
@@ -99,9 +99,9 @@ export function radioGroupHorizontalSource(): string {
     IMPORTS,
     group(
       ' aria-orientation="horizontal" aria-label="Forma de entrega"',
-      `${opcao('entrega', 'padrao', 'Padrão')}
-${opcao('entrega', 'expressa', 'Expressa')}
-${opcao('entrega', 'retirar', 'Retirar')}`,
+      `${option('entrega', 'padrao', 'Padrão')}
+${option('entrega', 'expressa', 'Expressa')}
+${option('entrega', 'retirar', 'Retirar')}`,
     ),
   );
 }
@@ -113,12 +113,12 @@ ${opcao('entrega', 'retirar', 'Retirar')}`,
  * espera encontrá-lo.
  */
 export function radioGroupWithDescriptionSource(): string {
-  const item = (value: string, title: string, descricao: string) =>
+  const item = (value: string, title: string, description: string) =>
     `<div className="nds-cluster" data-align="start" data-spacing="sm">
   <RadioGroupItem value="${value}" id="descricao-${value}" className="nds-mt-0-5" />
   <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="descricao-${value}">${title}</Label>
-    <p className="nds-text-body">${descricao}</p>
+    <p className="nds-text-body">${description}</p>
   </div>
 </div>`;
 
@@ -143,8 +143,8 @@ export function radioGroupCheckedSource(): string {
     IMPORTS,
     group(
       ' defaultValue="pix" aria-label="Forma de pagamento"',
-      `${opcao('marcado', 'cartao', 'Cartão de crédito')}
-${opcao('marcado', 'pix', 'Pix')}`,
+      `${option('marcado', 'cartao', 'Cartão de crédito')}
+${option('marcado', 'pix', 'Pix')}`,
     ),
   );
 }
@@ -159,8 +159,8 @@ export function radioGroupDisabledSource(): string {
     IMPORTS,
     group(
       ' disabled aria-label="Forma de pagamento"',
-      `${opcao('bloqueado', 'cartao', 'Cartão de crédito', ' disabled')}
-${opcao('bloqueado', 'pix', 'Pix', ' disabled')}`,
+      `${option('bloqueado', 'cartao', 'Cartão de crédito', ' disabled')}
+${option('bloqueado', 'pix', 'Pix', ' disabled')}`,
     ),
   );
 }
@@ -175,9 +175,9 @@ export function radioGroupItemDisabledSource(): string {
     IMPORTS,
     group(
       ' aria-label="Forma de pagamento"',
-      `${opcao('indisponivel', 'cartao', 'Cartão de crédito')}
-${opcao('indisponivel', 'pix', 'Pix')}
-${opcao('indisponivel', 'boleto', 'Boleto bancário (indisponível)', ' disabled')}`,
+      `${option('indisponivel', 'cartao', 'Cartão de crédito')}
+${option('indisponivel', 'pix', 'Pix')}
+${option('indisponivel', 'boleto', 'Boleto bancário (indisponível)', ' disabled')}`,
     ),
   );
 }
@@ -194,8 +194,8 @@ export function radioGroupInvalidoSource(): string {
 ${indentar(
   group(
     ' aria-invalid="true" aria-label="Forma de pagamento"',
-    `${opcao('invalido', 'cartao', 'Cartão de crédito', ' aria-invalid="true"')}
-${opcao('invalido', 'pix', 'Pix', ' aria-invalid="true"')}`,
+    `${option('invalido', 'cartao', 'Cartão de crédito', ' aria-invalid="true"')}
+${option('invalido', 'pix', 'Pix', ' aria-invalid="true"')}`,
   ),
 )}
   <p className="nds-text-body nds-text-destructive">
@@ -257,8 +257,8 @@ const [forma, setForma] = useState("");`,
     aria-label="Forma de pagamento"
   >
 ${indentar(
-  `${opcao('formulario', 'cartao', 'Cartão de crédito')}
-${opcao('formulario', 'pix', 'Pix')}`,
+  `${option('formulario', 'cartao', 'Cartão de crédito')}
+${option('formulario', 'pix', 'Pix')}`,
   '    ',
 )}
   </RadioGroup>

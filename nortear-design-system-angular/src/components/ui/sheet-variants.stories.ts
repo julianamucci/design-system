@@ -50,20 +50,20 @@ function panel(side: SheetSide, tituloKey: string) {
   return () => ({
     props: {
       side,
-      tituloPainel: t(`demonstration.labels.${tituloKey}`),
-      descricaoPainel: t('demonstration.labels.description'),
-      rotuloGatilho: t('demonstration.labels.trigger'),
+      panelTitle: t(`demonstration.labels.${tituloKey}`),
+      panelDescription: t('demonstration.labels.description'),
+      triggerLabel: t('demonstration.labels.trigger'),
       rotuloCancelar: t('demonstration.labels.cancel'),
       rotuloAplicar: t('demonstration.labels.apply'),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsSheetContent [side]="side">
           <div ndsSheetHeader>
-            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h2 ndsSheetTitle>{{ panelTitle }}</h2>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsSheetFooter>
@@ -212,20 +212,20 @@ export const HeadingH3: Story = {
   },
   render: () => ({
     props: {
-      tituloPainel: t('demonstration.labels.title'),
-      descricaoPainel: t('demonstration.labels.description'),
-      rotuloGatilho: t('demonstration.labels.trigger'),
+      panelTitle: t('demonstration.labels.title'),
+      panelDescription: t('demonstration.labels.description'),
+      triggerLabel: t('demonstration.labels.trigger'),
       rotuloCancelar: t('demonstration.labels.cancel'),
       rotuloAplicar: t('demonstration.labels.apply'),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
-        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template ndsSheetContent>
           <div ndsSheetHeader>
-            <h3 ndsSheetTitle>{{ tituloPainel }}</h3>
-            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+            <h3 ndsSheetTitle>{{ panelTitle }}</h3>
+            <p ndsSheetDescription>{{ panelDescription }}</p>
           </div>
 
           <div ndsSheetFooter>

@@ -116,7 +116,7 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
 
   pintar();
 
-  function alternar(): void {
+  function toggle(): void {
     if (indeterminate) {
       indeterminate = false;
       checked = true;
@@ -135,7 +135,7 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
     // <button> nativo a barra já dispara `click` no keyup, e alternar também no
     // keydown alternaria duas vezes por tecla. Vale para o navegador e para a
     // suíte — o `userEvent` reproduz esse mesmo keyup→click.
-    wrapper.addEventListener('click', alternar);
+    wrapper.addEventListener('click', toggle);
     wrapper.addEventListener('keydown', (e) => {
       // Enter não alterna caixa de seleção (WAI-ARIA APG: só Space). Num
       // <button> nativo o Enter dispara clique, então cancelar o padrão é o que

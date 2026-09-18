@@ -57,16 +57,16 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
   it('ignora control que não é número — o espião de ação vira ruído no painel', () => {
     expect(attrRatio((() => {}) as never)).toBe('');
     expect(attrRatio(Number.NaN)).toBe('');
-    const saida = aspectRatioSource('', { args: { ratio: (() => {}) as never } });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain(':ratio=');
+    const output = aspectRatioSource('', { args: { ratio: (() => {}) as never } });
+    expect(output).not.toContain('function');
+    expect(output).not.toContain(':ratio=');
   });
 
   it('o filho não repete largura nem altura — o componente já o estica', () => {
-    const saida = aspectRatioSource();
-    expect(saida).not.toContain('nds-w-full');
-    expect(saida).not.toContain('nds-h-full');
-    expect(saida).not.toContain('height: 100%');
+    const output = aspectRatioSource();
+    expect(output).not.toContain('nds-w-full');
+    expect(output).not.toContain('nds-h-full');
+    expect(output).not.toContain('height: 100%');
   });
 
   it('a caixa vive dentro de um contêiner com largura da escala', () => {
@@ -85,10 +85,10 @@ describe('transforms das stories de proporção', () => {
   });
 
   it('a quadrada sai sem proporção, porque escrevê-la ensinaria obrigação', () => {
-    const saida = aspectRatioQuadradoSource();
-    expect(saida).toContain('<AspectRatio>');
-    expect(saida).not.toContain(':ratio=');
-    expect(saida).toContain('alt="Avatar quadrado"');
+    const output = aspectRatioQuadradoSource();
+    expect(output).toContain('<AspectRatio>');
+    expect(output).not.toContain(':ratio=');
+    expect(output).toContain('alt="Avatar quadrado"');
   });
 });
 
@@ -100,42 +100,42 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a decorativa leva alt VAZIO, e não alt ausente', () => {
-    const saida = aspectRatioDecorativaSource();
+    const output = aspectRatioDecorativaSource();
     // Sem o atributo o leitor de tela anuncia o nome do arquivo.
-    expect(saida).toContain('alt=""');
+    expect(output).toContain('alt=""');
   });
 
   it('o quadro embutido é nomeado por title', () => {
-    const saida = aspectRatioWithIframeSource();
-    expect(saida).toContain('title="Mapa do escritório em São Paulo"');
-    expect(saida).not.toContain('alt=');
+    const output = aspectRatioWithIframeSource();
+    expect(output).toContain('title="Mapa do escritório em São Paulo"');
+    expect(output).not.toContain('alt=');
   });
 
   it('o vídeo traz controle de teclado e faixa de legendas', () => {
-    const saida = aspectRatioWithVideoSource();
-    expect(saida).toContain('  controls\n');
-    expect(saida).toContain('<track kind="captions"');
-    expect(saida).toContain('label="Português" default');
-    expect(saida).toContain('Seu navegador não suporta vídeo.');
+    const output = aspectRatioWithVideoSource();
+    expect(output).toContain('  controls\n');
+    expect(output).toContain('<track kind="captions"');
+    expect(output).toContain('label="Português" default');
+    expect(output).toContain('Seu navegador não suporta vídeo.');
     // A legenda embutida em `data:` existe para a play medir; ninguém escreve
     // uma assim num produto.
-    expect(saida).not.toContain('data:text/vtt');
+    expect(output).not.toContain('data:text/vtt');
   });
 
   it('a grade dá a largura, e cada caixa deriva a própria altura', () => {
-    const saida = gridAspectRatioSource();
-    expect(saida).toContain('<div class="nds-grid nds-max-w-prose" data-spacing="md">');
-    expect(saida.match(/<AspectRatio>/g)).toHaveLength(6);
+    const output = gridAspectRatioSource();
+    expect(output).toContain('<div class="nds-grid nds-max-w-prose" data-spacing="md">');
+    expect(output.match(/<AspectRatio>/g)).toHaveLength(6);
     // Nenhuma altura cravada: é o recálculo a partir da largura que a story ensina.
-    expect(saida).not.toContain('height:');
-    const alts = [...saida.matchAll(/alt="([^"]+)"/g)].map((m) => m[1]);
+    expect(output).not.toContain('height:');
+    const alts = [...output.matchAll(/alt="([^"]+)"/g)].map((m) => m[1]);
     expect(new Set(alts).size).toBe(alts.length);
   });
 
   it('o espaço reservado tem papel e rótulo, porque não há mídia a descrever', () => {
-    const saida = aspectRatioPlaceholderSource();
-    expect(saida).toContain('role="img"');
-    expect(saida).toContain('aria-label="Conteúdo carregando"');
-    expect(saida).not.toContain('<img');
+    const output = aspectRatioPlaceholderSource();
+    expect(output).toContain('role="img"');
+    expect(output).toContain('aria-label="Conteúdo carregando"');
+    expect(output).not.toContain('<img');
   });
 });

@@ -170,9 +170,9 @@ export const Loading: Story = {
       const withIcon = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      const icone = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
+      const icon = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
       const text = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
-      await expect(icone.getBoundingClientRect().left).toBeLessThan(
+      await expect(icon.getBoundingClientRect().left).toBeLessThan(
         text.getBoundingClientRect().left,
       );
     });

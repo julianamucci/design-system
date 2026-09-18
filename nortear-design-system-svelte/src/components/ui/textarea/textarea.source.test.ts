@@ -32,15 +32,15 @@ describe('textareaSource', () => {
   });
 
   it('o rótulo aponta para o id do campo — é o que faz o clique focar', () => {
-    const saida = textareaSource();
-    expect(saida).toContain('<Label for="descricao">');
-    expect(saida).toContain('id="descricao"');
+    const output = textareaSource();
+    expect(output).toContain('<Label for="descricao">');
+    expect(output).toContain('id="descricao"');
   });
 
   it('não repete o que a folha já entrega: resize e altura mínima ficam de fora', () => {
-    const saida = textareaSource();
-    expect(saida).not.toContain('nds-resize');
-    expect(saida).not.toContain('nds-min-h');
+    const output = textareaSource();
+    expect(output).not.toContain('nds-resize');
+    expect(output).not.toContain('nds-min-h');
   });
 
   it('o placeholder do control chega ao snippet', () => {
@@ -51,10 +51,10 @@ describe('textareaSource', () => {
   });
 
   it('maxLength escreve o atributo e traz o contador junto', () => {
-    const saida = textareaSource('', { args: { maxLength: 500 } });
-    expect(saida).toContain('maxlength={500}');
-    expect(saida).toContain('aria-live="polite"');
-    expect(saida).toContain('{value.length}/500');
+    const output = textareaSource('', { args: { maxLength: 500 } });
+    expect(output).toContain('maxlength={500}');
+    expect(output).toContain('aria-live="polite"');
+    expect(output).toContain('{value.length}/500');
     // Sem limite não há o que contar.
     expect(textareaSource()).not.toContain('aria-live');
   });
@@ -71,11 +71,11 @@ describe('textareaSource', () => {
   });
 
   it('a fila longa de atributos quebra uma linha por atributo', () => {
-    const saida = textareaSource('', {
+    const output = textareaSource('', {
       args: { placeholder: 'ex: Descreva o produto em até 500 caracteres...', maxLength: 500 },
     });
-    expect(saida).toContain('  <Textarea\n    id="descricao"\n    bind:value\n');
-    expect(saida).toContain('\n  />');
+    expect(output).toContain('  <Textarea\n    id="descricao"\n    bind:value\n');
+    expect(output).toContain('\n  />');
   });
 });
 
@@ -86,9 +86,9 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a variante com contador liga o limite à contagem anunciada', () => {
-    const saida = textareaWithCounterSource();
-    expect(saida).toContain('maxlength={500}');
-    expect(saida).toContain('aria-label="{value.length} de 500 caracteres usados"');
+    const output = textareaWithCounterSource();
+    expect(output).toContain('maxlength={500}');
+    expect(output).toContain('aria-label="{value.length} de 500 caracteres usados"');
   });
 
   it('a variante sem redimensionamento é a única que traz a classe', () => {
@@ -96,9 +96,9 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado preenchido nasce do $state, não de um atributo value', () => {
-    const saida = textareaPreenchidoSource();
-    expect(saida).toContain('let value = $state("Camiseta de algodão pima');
-    expect(saida).not.toContain('value="');
+    const output = textareaPreenchidoSource();
+    expect(output).toContain('let value = $state("Camiseta de algodão pima');
+    expect(output).not.toContain('value="');
   });
 
   it('o estado desabilitado escreve a prop nua', () => {
@@ -106,16 +106,16 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado inválido aponta para uma mensagem que existe no snippet', () => {
-    const saida = textareaInvalidoSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="descricao-erro"');
-    expect(saida).toContain('<p id="descricao-erro"');
+    const output = textareaInvalidoSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="descricao-erro"');
+    expect(output).toContain('<p id="descricao-erro"');
   });
 
   it('o estado somente leitura mantém o valor e trava a edição', () => {
-    const saida = textareaSomenteLeituraSource();
-    expect(saida).toContain('readonly />');
-    expect(saida).toContain('Pedido confirmado');
+    const output = textareaSomenteLeituraSource();
+    expect(output).toContain('readonly />');
+    expect(output).toContain('Pedido confirmado');
   });
 
   it('a composição com apoio traz o parágrafo em tom apagado', () => {
@@ -123,15 +123,15 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição do contador acessível usa o limite de 200', () => {
-    const saida = textareaCounterAccessibleSource();
-    expect(saida).toContain('maxlength={200}');
-    expect(saida).toContain('{value.length}/200');
+    const output = textareaCounterAccessibleSource();
+    expect(output).toContain('maxlength={200}');
+    expect(output).toContain('{value.length}/200');
   });
 
   it('a composição com erro cruza describedby e id da mensagem', () => {
-    const saida = textareaWithErrorSource();
-    expect(saida).toContain('aria-describedby="feedback-erro"');
-    expect(saida).toContain('<p id="feedback-erro"');
+    const output = textareaWithErrorSource();
+    expect(output).toContain('aria-describedby="feedback-erro"');
+    expect(output).toContain('<p id="feedback-erro"');
   });
 
   it('a composição em modal trava o redimensionamento', () => {
