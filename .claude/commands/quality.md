@@ -211,6 +211,15 @@ Após coletar, **não releia** nada nos passos seguintes.
   - `expect(algo.length).toBeGreaterThanOrEqual(0)` — comprimento nunca é negativo, passa com a tela vazia
   - `expect(canvasElement).toBeTruthy()` / `expect(canvasElement.firstElementChild).toBeTruthy()` — só prova que algo renderizou
   - `play` sem nenhum `expect(`
+  - **a asserção compara uma CONSTANTE do próprio arquivo com ela mesma** — `render` escreve `href={GLOSSARY_HREF}` e a play afirma `toHaveAttribute("href", GLOSSARY_HREF)`. Os dois lados andam juntos: trocar a constante troca o esperado, e o portão fecha verde com o destino errado. Medido em 2026-09-18 em DUAS stacks de uma vez, em asserções recém-nascidas de um portão criado justamente para dar dentes a um item de contrato. Vale para todo valor de contrato — `href`, rótulo acessível, `data-*`, id de evento.
+
+    O agravante, e é o que torna isto sistêmico: em uma das duas a constante tinha sido introduzida **na mesma passagem para fugir do `legacy_class_in_story`**, que casa prosa e acusava a URL literal. Ou seja, **uma regra de portão empurrou a asserção para a forma sem dentes**. Quando um portão obrigar a nomear um literal, o nome vai para o `render`; o `expect` continua com o literal.
+
+    Medido nos dois sentidos, no mesmo arquivo: com as DUAS URLs trocadas para um destino errado, a forma tautológica fechou **6/6 verde**; a forma literal reprovou 2 de 6, nomeando a URL certa e a errada.
+
+    **O critério não é "a asserção lê uma constante" — é se trocar UM valor troca os DOIS lados do `expect`.** Constante num módulo que só a asserção enxerga é inofensiva; constante que o `render` daquela mesma story usa é tautologia. Medido nas cinco: duas stacks tinham o vazio e três não, e as três estavam a salvo por ACIDENTE de organização de arquivo — a tabela de destinos morava num andaime que a story não importa.
+
+    Corolário para quem planta defeito: plantar na constante NÃO prova nada quando os dois lados a leem. Plante no lado do `render`, ou compare com literal — e desconfie de um plantio que reprova sem que você consiga dizer qual dos dois lados mudou.
   - Substitua por verificação do comportamento que a story demonstra: atributo ARIA após interação, texto do conteúdo, foco, estado do irmão.
 - Playground: presença, clique, disabled, focus, Enter/Space. Disabled verifica `toBeDisabled()` (ou `aria-disabled` em base-ui)
 - Sub-stories (estados, modos, composições): no mínimo um teste de "renderiza e responde a interação básica"
