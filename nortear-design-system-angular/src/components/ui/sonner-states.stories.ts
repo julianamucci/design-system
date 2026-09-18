@@ -154,7 +154,7 @@ export const Stacked: Story = {
 
     await step('As três ficam na tela ao mesmo tempo', async () => {
       toast.success(TEXTS.success, PERSISTENT);
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 
       await waitFor(() => {
@@ -279,10 +279,10 @@ export const DarkTheme: Story = {
       // contagem, é o que separa as duas formas possíveis de limitar: enfileirar
       // a quarta deixaria default/success/error na tela; a forma certa tira de
       // vista as MAIS ANTIGAS e mostra error/warning/info.
-      toast(TEXTS.padrao, PERSISTENT);
+      toast(TEXTS.default, PERSISTENT);
       toast.success(TEXTS.success, PERSISTENT);
       toast.error(TEXTS.error, PERSISTENT);
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 
       await waitForToast({ type: 'info' });

@@ -72,12 +72,12 @@ describe('calendarSnippet', () => {
 
 describe('calendarSource', () => {
   it('parte do uso canônico, e acompanha os args', () => {
-    const padrao = calendarSource('<div data-slot="calendar">', {});
-    expect(padrao).toContain("locale: 'pt-BR'");
-    expect(padrao).toContain('value: new Date(2026, 3, 12)');
+    const defaultCode = calendarSource('<div data-slot="calendar">', {});
+    expect(defaultCode).toContain("locale: 'pt-BR'");
+    expect(defaultCode).toContain('value: new Date(2026, 3, 12)');
 
     const withArgs = calendarSource('', { args: { numberOfMonths: 2 } });
-    expect(padrao).not.toBe(withArgs);
+    expect(defaultCode).not.toBe(withArgs);
     expect(withArgs).toContain('numberOfMonths: 2');
   });
 

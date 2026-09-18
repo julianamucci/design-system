@@ -37,8 +37,8 @@ import { Label } from '@/components/ui/label'
   it('o id do campo e o for do rótulo são o MESMO valor', () => {
     // Um `for` apontando para id inexistente passa em checagem de atributo e
     // não associa nada: o clique não leva o foco e o leitor não anuncia.
-    const saida = inputSource();
-    const ids = [...saida.matchAll(/(?:for|id)="([^"]+)"/g)].map((m) => m[1]);
+    const output = inputSource();
+    const ids = [...output.matchAll(/(?:for|id)="([^"]+)"/g)].map((m) => m[1]);
     expect(ids).toHaveLength(2);
     expect(new Set(ids).size).toBe(1);
   });
@@ -57,12 +57,12 @@ import { Label } from '@/components/ui/label'
   });
 
   it('ignora control que não é string — o espião vira ruído no painel', () => {
-    const saida = inputSource('', {
+    const output = inputSource('', {
       args: { placeholder: (() => {}) as never, type: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('type=');
-    expect(saida).toContain('placeholder="ex: João da Silva"');
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('type=');
+    expect(output).toContain('placeholder="ex: João da Silva"');
   });
 });
 
@@ -89,9 +89,9 @@ describe('transforms das stories de tipo', () => {
       inputTypeSearchSource,
       inputTypeFileSource,
     ]) {
-      const saida = fn();
-      expect(saida).toContain('<Label for=');
-      const ids = [...saida.matchAll(/(?:for|id)="([^"]+)"/g)].map((m) => m[1]);
+      const output = fn();
+      expect(output).toContain('<Label for=');
+      const ids = [...output.matchAll(/(?:for|id)="([^"]+)"/g)].map((m) => m[1]);
       expect(new Set(ids).size).toBe(1);
     }
   });
@@ -111,63 +111,63 @@ describe('transforms das stories de tipo', () => {
 
 describe('transforms das stories de estado', () => {
   it('o estado de repouso não escreve foco nem valor', () => {
-    const saida = inputWithLabelSource();
+    const output = inputWithLabelSource();
     // Focar é interação: não há atributo a escrever, e inventar um ensinaria
     // uma prop que não existe.
-    expect(saida).not.toContain('autofocus');
-    expect(saida).not.toContain('aria-invalid');
+    expect(output).not.toContain('autofocus');
+    expect(output).not.toContain('aria-invalid');
   });
 
   it('o desabilitado mantém o rótulo visível e associado', () => {
-    const saida = inputDisabledSource();
-    expect(saida).toContain('<Label for="campo-indisponivel">Campo desabilitado</Label>');
-    expect(saida).toContain(' disabled />');
+    const output = inputDisabledSource();
+    expect(output).toContain('<Label for="campo-indisponivel">Campo desabilitado</Label>');
+    expect(output).toContain(' disabled />');
   });
 
   it('o erro liga o campo à mensagem, e a mensagem existe no snippet', () => {
-    const saida = inputWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    const target = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
+    const output = inputWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    const target = /aria-describedby="([^"]+)"/.exec(output)?.[1];
     expect(target).toBeTruthy();
     // O alvo do describedby precisa EXISTIR: um id que não aponta para nada
     // passa em asserção de atributo e não é lido por ninguém.
-    expect(saida).toContain(`<p id="${target}"`);
+    expect(output).toContain(`<p id="${target}"`);
   });
 
   it('a paleta escura mostra os três estados e não escreve tema na marcação', () => {
-    const saida = inputPaletteDarkSource();
-    expect([...saida.matchAll(/<Input /g)]).toHaveLength(3);
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain(' disabled />');
+    const output = inputPaletteDarkSource();
+    expect([...output.matchAll(/<Input /g)]).toHaveLength(3);
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain(' disabled />');
     // Escrever `.dark` no snippet ensinaria a prender a paleta ao componente.
-    expect(saida).not.toContain('dark');
+    expect(output).not.toContain('dark');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o texto de apoio é apontado pelo campo, não só exibido', () => {
-    const saida = inputWithHelperSource();
-    expect(saida).toContain('aria-describedby="email-apoio"');
-    expect(saida).toContain('<p id="email-apoio"');
+    const output = inputWithHelperSource();
+    expect(output).toContain('aria-describedby="email-apoio"');
+    expect(output).toContain('<p id="email-apoio"');
     // Apoio não é erro: nada de aria-invalid nesta composição.
-    expect(saida).not.toContain('aria-invalid');
+    expect(output).not.toContain('aria-invalid');
   });
 
   it('o obrigatório anuncia por ARIA e tira o asterisco da leitura', () => {
-    const saida = inputObrigatorioSource();
-    expect(saida).toContain('aria-required="true"');
-    expect(saida).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
+    const output = inputObrigatorioSource();
+    expect(output).toContain('aria-required="true"');
+    expect(output).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
   });
 
   it('nos alinhamentos, a moldura é do GRUPO e o campo interno vai nu', () => {
-    const saida = inputAlinhamentosSource();
-    expect(saida).toContain('align="inline-start"');
-    expect(saida).toContain('align="inline-end"');
-    expect(saida).toContain('align="block-start"');
+    const output = inputAlinhamentosSource();
+    expect(output).toContain('align="inline-start"');
+    expect(output).toContain('align="inline-end"');
+    expect(output).toContain('align="block-start"');
     // Nenhum `<Input>` solto: dentro do grupo quem entra é o campo do grupo,
     // senão apareceria uma borda dupla no meio.
-    expect(saida).not.toContain('<Input ');
-    expect([...saida.matchAll(/<InputGroupInput /g)]).toHaveLength(3);
+    expect(output).not.toContain('<Input ');
+    expect([...output.matchAll(/<InputGroupInput /g)]).toHaveLength(3);
   });
 
   it('os data-testid da story não vazam para o snippet', () => {
@@ -177,10 +177,10 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o botão do acessório tem nome próprio e o ícone sai da leitura', () => {
-    const saida = inputAddonWithButtonSource();
-    expect(saida).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
-    expect(saida).toContain('<XIcon aria-hidden="true" />');
+    const output = inputAddonWithButtonSource();
+    expect(output).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
+    expect(output).toContain('<XIcon aria-hidden="true" />');
     // Sem `type="button"` o mesmo gatilho dentro de um formulário o enviaria.
-    expect(saida).toContain('type="button"');
+    expect(output).toContain('type="button"');
   });
 });

@@ -102,17 +102,17 @@ export async function clearToasts(): Promise<void> {
 // conteúdo.
 
 export const TEXTS = {
-  padrao: 'Código copiado.',
+  default: 'Código copiado.',
   success: 'Alterações salvas.',
   error: 'Não foi possível salvar. Tente novamente.',
-  aviso: 'Sua sessão expira em 5 minutos.',
+  warning: 'Sua sessão expira em 5 minutos.',
   info: 'Nova versão disponível.',
   loading: 'Enviando arquivo...',
   comDescricao: 'Preferências atualizadas.',
   comDescricaoDetalhe:
     'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',
   withAction: 'Item excluído.',
-  comAcaoRotulo: 'Desfazer',
+  withActionLabel: 'Desfazer',
   promessaCarregando: 'Enviando arquivo...',
   promessaSucesso: 'Arquivo enviado com sucesso.',
   promessaErro: 'Erro ao enviar. Tente novamente.',

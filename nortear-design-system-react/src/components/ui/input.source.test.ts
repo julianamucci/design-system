@@ -50,14 +50,14 @@ const ALL = [...SIMPLE_FIELD, ...GROUP];
 
 describe('inputSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
-    const saida = inputSource();
-    expect(saida).toContain('import { Input } from "@/components/ui/input";');
-    expect(saida).toContain('import { Label } from "@/components/ui/label";');
+    const output = inputSource();
+    expect(output).toContain('import { Input } from "@/components/ui/input";');
+    expect(output).toContain('import { Label } from "@/components/ui/label";');
   });
 
   it('omite o type quando é o padrão do HTML', () => {
-    const saida = inputSource(undefined, { args: { type: 'text' } });
-    expect(saida).not.toContain('type=');
+    const output = inputSource(undefined, { args: { type: 'text' } });
+    expect(output).not.toContain('type=');
   });
 
   it('escreve o type quando difere do padrão', () => {
@@ -76,9 +76,9 @@ describe('inputSource', () => {
 
   it('cai no placeholder padrão quando o control entrega um espião', () => {
     const spy = () => 'CORPO_DO_MOCK';
-    const saida = inputSource(undefined, { args: { placeholder: spy as never } });
-    expect(saida).toContain('placeholder="ex: João da Silva"');
-    expect(saida).not.toContain('CORPO_DO_MOCK');
+    const output = inputSource(undefined, { args: { placeholder: spy as never } });
+    expect(output).toContain('placeholder="ex: João da Silva"');
+    expect(output).not.toContain('CORPO_DO_MOCK');
   });
 
   it('escreve o disabled só quando ligado', () => {
@@ -89,11 +89,11 @@ describe('inputSource', () => {
   it('ligar o erro traz a mensagem junto, e não um describedby órfão', () => {
     // `aria-describedby` apontando para um id que o snippet não contém é um
     // exemplo que ninguém lê — é o defeito que o estado de erro deveria evitar.
-    const saida = inputSource(undefined, { args: { 'aria-invalid': true } });
-    expect(saida).toContain('aria-invalid="true"');
-    const target = saida.match(/aria-describedby="([a-z-]+)"/)?.[1];
+    const output = inputSource(undefined, { args: { 'aria-invalid': true } });
+    expect(output).toContain('aria-invalid="true"');
+    const target = output.match(/aria-describedby="([a-z-]+)"/)?.[1];
     expect(target).toBeDefined();
-    expect(saida).toContain(`<p id="${target}"`);
+    expect(output).toContain(`<p id="${target}"`);
   });
 });
 
@@ -121,19 +121,19 @@ describe('estados', () => {
   });
 
   it('o erro liga a mensagem ao campo pelas duas pontas', () => {
-    const saida = inputWithErrorSource();
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toContain('aria-describedby="email-erro-msg"');
-    expect(saida).toContain('<p id="email-erro-msg"');
+    const output = inputWithErrorSource();
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toContain('aria-describedby="email-erro-msg"');
+    expect(output).toContain('<p id="email-erro-msg"');
   });
 
   it('a paleta escura mostra os três estados sob o mesmo ancestral', () => {
-    const saida = inputPaletteDarkSource();
-    expect(saida).toContain('className="dark');
-    expect(saida).toContain('aria-invalid="true"');
-    expect(saida).toMatch(/<Input[^>]*disabled/);
+    const output = inputPaletteDarkSource();
+    expect(output).toContain('className="dark');
+    expect(output).toContain('aria-invalid="true"');
+    expect(output).toMatch(/<Input[^>]*disabled/);
     // Três campos: o assunto é a comparação entre eles.
-    expect(saida.match(/<Input\s/g)).toHaveLength(3);
+    expect(output.match(/<Input\s/g)).toHaveLength(3);
   });
 });
 
@@ -142,10 +142,10 @@ describe('InputGroup', () => {
     // Quem desenha a moldura é o grupo; um `Input` dentro traria a borda
     // própria e apareceria uma linha dupla no meio.
     for (const fn of GROUP) {
-      const saida = fn();
-      expect(saida, `${fn.name} usa Input nu`).not.toMatch(/<Input\s/);
-      expect(saida).toContain('<InputGroupInput');
-      expect(saida).toContain('from "@/components/ui/input-group"');
+      const output = fn();
+      expect(output, `${fn.name} usa Input nu`).not.toMatch(/<Input\s/);
+      expect(output).toContain('<InputGroupInput');
+      expect(output).toContain('from "@/components/ui/input-group"');
     }
   });
 
@@ -153,8 +153,8 @@ describe('InputGroup', () => {
     // O nome acessível vem do rótulo (ou do `aria-label` do botão); um ícone
     // anunciado duplicaria a leitura.
     for (const fn of GROUP) {
-      const saida = fn();
-      for (const [, tag, attrs] of saida.matchAll(/<(Search|Mail|EyeOff|Eye|X)\b([^>]*)>/g)) {
+      const output = fn();
+      for (const [, tag, attrs] of output.matchAll(/<(Search|Mail|EyeOff|Eye|X)\b([^>]*)>/g)) {
         expect(attrs, `${fn.name}: <${tag}> sem aria-hidden`).toContain('aria-hidden="true"');
       }
     }
@@ -185,18 +185,18 @@ describe('InputGroup', () => {
   it('a senha troca o tipo E o nome do botão no mesmo estado', () => {
     // Trocar só o ícone deixaria quem usa leitor de tela sem saber o que o
     // botão passou a fazer.
-    const saida = inputGroupSenhaSource();
-    expect(saida).toContain('import { useState } from "react";');
-    expect(saida).toContain('type={visivel ? "text" : "password"}');
-    expect(saida).toContain('aria-label={visivel ? "Ocultar senha" : "Exibir senha"}');
+    const output = inputGroupSenhaSource();
+    expect(output).toContain('import { useState } from "react";');
+    expect(output).toContain('type={visivel ? "text" : "password"}');
+    expect(output).toContain('aria-label={visivel ? "Ocultar senha" : "Exibir senha"}');
   });
 
   it('o erro do grupo marca o CONTROLE, não o contêiner', () => {
-    const saida = inputGroupWithErrorSource();
-    expect(saida).toMatch(/<InputGroupInput[\s\S]*?aria-invalid="true"/);
+    const output = inputGroupWithErrorSource();
+    expect(output).toMatch(/<InputGroupInput[\s\S]*?aria-invalid="true"/);
     // O contêiner não carrega ARIA de validação: quem é inválido é o campo.
-    expect(saida).not.toMatch(/<InputGroup\s+[^>]*aria-invalid/);
-    expect(saida).toContain('<p id="email-grupo-msg"');
+    expect(output).not.toMatch(/<InputGroup\s+[^>]*aria-invalid/);
+    expect(output).toContain('<p id="email-grupo-msg"');
   });
 
   it('o disabled do grupo também mora no controle', () => {
@@ -207,11 +207,11 @@ describe('InputGroup', () => {
 describe('regras que valem para todo snippet', () => {
   it('todo campo tem rótulo programático, e o for aponta para um id que existe', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      const targets = [...saida.matchAll(/<Label htmlFor="([a-z0-9-]+)"/g)].map(([, id]) => id);
+      const output = fn();
+      const targets = [...output.matchAll(/<Label htmlFor="([a-z0-9-]+)"/g)].map(([, id]) => id);
       expect(targets.length, `${fn.name} não tem rótulo`).toBeGreaterThan(0);
       for (const target of targets) {
-        expect(saida, `${fn.name}: for="${target}" sem campo`).toContain(`id="${target}"`);
+        expect(output, `${fn.name}: for="${target}" sem campo`).toContain(`id="${target}"`);
       }
     }
   });
@@ -227,10 +227,10 @@ describe('regras que valem para todo snippet', () => {
 
   it('nenhum snippet ensina o andaime da story', () => {
     for (const fn of ALL) {
-      const saida = fn();
-      expect(saida).not.toContain('fixtures');
-      expect(saida).not.toContain('{...args}');
-      expect(saida).not.toContain('@base-ui');
+      const output = fn();
+      expect(output).not.toContain('fixtures');
+      expect(output).not.toContain('{...args}');
+      expect(output).not.toContain('@base-ui');
     }
   });
 });

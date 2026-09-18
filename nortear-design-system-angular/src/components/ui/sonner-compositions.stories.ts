@@ -132,13 +132,13 @@ export const WithAction: Story = {
       // até ela antes de o prazo vencer (WCAG 2.1.1).
       toast(TEXTS.withAction, {
         ...PERSISTENT,
-        action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
+        action: { label: TEXTS.withActionLabel, onClick: () => undoSpy() },
       });
       const toastEl = await waitForToast({ type: 'default' });
       const action = toastEl.querySelector<HTMLButtonElement>('.nds-sonner-action')!;
 
       await expect(action.tagName).toBe('BUTTON');
-      await expect(action).toHaveTextContent(TEXTS.comAcaoRotulo);
+      await expect(action).toHaveTextContent(TEXTS.withActionLabel);
 
       // Zera o foco antes de tabular: no replay do painel Interactions ele parte
       // de onde a rodada anterior o deixou, e o primeiro Tab cairia noutro lugar.
@@ -160,7 +160,7 @@ export const WithAction: Story = {
       // ela sai na hora em vez de continuar ocupando a pilha.
       toast(TEXTS.withAction, {
         ...PERSISTENT,
-        action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
+        action: { label: TEXTS.withActionLabel, onClick: () => undoSpy() },
       });
       await waitForToast({ type: 'default' });
 
@@ -182,7 +182,7 @@ export const WithAction: Story = {
       await clearToasts();
       toast(TEXTS.withAction, {
         ...PERSISTENT,
-        action: { label: TEXTS.comAcaoRotulo, onClick: () => undefined },
+        action: { label: TEXTS.withActionLabel, onClick: () => undefined },
       });
       const toastEl = await waitForToast({ type: 'default' });
       const action = toastEl.querySelector<HTMLButtonElement>('.nds-sonner-action')!;

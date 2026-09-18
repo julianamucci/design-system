@@ -66,9 +66,9 @@ describe('popoverSource', () => {
   it('nunca importa do arquivo interno nem da lib headless', () => {
     // O leitor importa do design system; o caminho do `.svelte` interno é
     // detalhe de implementação e não sobrevive a uma reorganização de pasta.
-    const saida = popoverSource();
-    expect(saida).toContain('from "@/components/ui/popover"');
-    expect(saida).not.toContain('.svelte');
+    const output = popoverSource();
+    expect(output).toContain('from "@/components/ui/popover"');
+    expect(output).not.toContain('.svelte');
   });
 
   it('só escreve side, align e sideOffset quando diferem do padrão', () => {
@@ -94,24 +94,24 @@ describe('popoverSource', () => {
     // que fecha — sem o estado, o snippet ensinaria um botão inerte, que é o
     // defeito medido em três stacks.
     for (const variant of ['withTitle', 'form', 'tableFilter'] as const) {
-      const saida = popoverSource('', { args: { variant } });
-      expect(saida).toContain('let open = $state(false);');
-      expect(saida).toContain('<Popover bind:open={open}>');
-      expect(saida).toContain('open = false;');
+      const output = popoverSource('', { args: { variant } });
+      expect(output).toContain('let open = $state(false);');
+      expect(output).toContain('<Popover bind:open={open}>');
+      expect(output).toContain('open = false;');
     }
   });
 
   it('só o Cancelar é PopoverClose — o confirmar fecha por código', () => {
     // Envolver o confirmar na peça de fechar reportaria `close-button`, e
     // "concluiu" chegaria ao relatório como "apertou o botão de fechar".
-    const saida = popoverSource();
-    const dentroDoClose = saida.slice(
-      saida.indexOf('<PopoverClose>'),
-      saida.indexOf('</PopoverClose>'),
+    const output = popoverSource();
+    const dentroDoClose = output.slice(
+      output.indexOf('<PopoverClose>'),
+      output.indexOf('</PopoverClose>'),
     );
     expect(dentroDoClose).toContain('Cancelar');
     expect(dentroDoClose).not.toContain('Salvar');
-    expect(saida).toContain('<Button size="sm" onclick={salvar}>Salvar</Button>');
+    expect(output).toContain('<Button size="sm" onclick={salvar}>Salvar</Button>');
   });
 
   it('`alignOffset` só sai quando difere de 0 (D14)', () => {
@@ -123,9 +123,9 @@ describe('popoverSource', () => {
   });
 
   it('o painel da Focused não tem descrição, nem a importa', () => {
-    const saida = popoverFocusedSource();
-    expect(saida).toContain('<PopoverTitle>Confirmar alteração</PopoverTitle>');
-    expect(saida).not.toContain('PopoverDescription');
+    const output = popoverFocusedSource();
+    expect(output).toContain('<PopoverTitle>Confirmar alteração</PopoverTitle>');
+    expect(output).not.toContain('PopoverDescription');
   });
 
   it('o rótulo do gatilho acompanha o control', () => {
@@ -135,36 +135,36 @@ describe('popoverSource', () => {
   });
 
   it('a composição sem título traz só o texto, e importa só as três peças', () => {
-    const saida = popoverSource('', {
+    const output = popoverSource('', {
       args: { variant: 'default', description: 'Use Ctrl+K para abrir a busca.' },
     });
-    expect(saida).toContain('<p>Use Ctrl+K para abrir a busca.</p>');
-    expect(saida).not.toContain('PopoverTitle');
+    expect(output).toContain('<p>Use Ctrl+K para abrir a busca.</p>');
+    expect(output).not.toContain('PopoverTitle');
   });
 
   it('a composição de formulário traz estado, campos rotulados e submit', () => {
-    const saida = popoverSource('', { args: { variant: 'form' } });
-    expect(saida).toContain('import { Input } from "@/components/ui/input";');
-    expect(saida).toContain('import { Label } from "@/components/ui/label";');
-    expect(saida).toContain('let nome = $state("Ana Ribeiro");');
-    expect(saida).toContain('<Label for="perfil-nome">Nome</Label>');
-    expect(saida).toContain('<Button type="submit" size="sm">Atualizar</Button>');
+    const output = popoverSource('', { args: { variant: 'form' } });
+    expect(output).toContain('import { Input } from "@/components/ui/input";');
+    expect(output).toContain('import { Label } from "@/components/ui/label";');
+    expect(output).toContain('let nome = $state("Ana Ribeiro");');
+    expect(output).toContain('<Label for="perfil-nome">Nome</Label>');
+    expect(output).toContain('<Button type="submit" size="sm">Atualizar</Button>');
     // O fechamento vai no `submit`, depois do `preventDefault` — no `click` do
     // botão ele cancelaria o próprio submit.
-    expect(saida).toContain(`function salvar(evento: SubmitEvent) {`);
-    expect(saida).toMatch(/evento\.preventDefault\(\);\n\s*open = false;/);
+    expect(output).toContain(`function salvar(evento: SubmitEvent) {`);
+    expect(output).toMatch(/evento\.preventDefault\(\);\n\s*open = false;/);
   });
 
   it('a composição de filtro combina status e oferece Limpar / Aplicar', () => {
-    const saida = popoverSource('', { args: { variant: 'tableFilter' } });
-    expect(saida.match(/type="checkbox"/g)).toHaveLength(3);
-    expect(saida).toContain('<Button size="sm" onclick={aplicar}>Aplicar</Button>');
+    const output = popoverSource('', { args: { variant: 'tableFilter' } });
+    expect(output.match(/type="checkbox"/g)).toHaveLength(3);
+    expect(output).toContain('<Button size="sm" onclick={aplicar}>Aplicar</Button>');
   });
 
   it('cada amostra da paleta carrega nome acessível próprio', () => {
     // A cor não é o nome: sem `aria-label` o botão fica sem nome nenhum.
-    const saida = popoverSource('', { args: { variant: 'colorPicker' } });
-    expect(saida.match(/aria-label="/g)).toHaveLength(6);
+    const output = popoverSource('', { args: { variant: 'colorPicker' } });
+    expect(output.match(/aria-label="/g)).toHaveLength(6);
   });
 
   it('o painel de opções traz duas caixas rotuladas e nenhum botão de ação', () => {
@@ -172,22 +172,22 @@ describe('popoverSource', () => {
     // tabulação precisa são CAIXAS, e não um rodapé de Cancelar/Salvar que não
     // executaria ação nenhuma. Cada caixa vem ligada por `bind:checked` —
     // caixa sem estado ensinaria um controle inerte.
-    const saida = popoverSource('', { args: { variant: 'options' } });
-    expect(saida).toContain('import { Checkbox } from "@/components/ui/checkbox";');
-    expect(saida).toContain('import { Label } from "@/components/ui/label";');
-    expect(saida).toContain('<Label for="popover-option-remember">Lembrar minha escolha</Label>');
-    expect(saida).toContain('<Label for="popover-option-email">Receber aviso por e-mail</Label>');
-    expect(saida).toContain('<Checkbox id="popover-option-remember" bind:checked={remember} />');
-    expect(saida).toContain('let emailNotice = $state(false);');
+    const output = popoverSource('', { args: { variant: 'options' } });
+    expect(output).toContain('import { Checkbox } from "@/components/ui/checkbox";');
+    expect(output).toContain('import { Label } from "@/components/ui/label";');
+    expect(output).toContain('<Label for="popover-option-remember">Lembrar minha escolha</Label>');
+    expect(output).toContain('<Label for="popover-option-email">Receber aviso por e-mail</Label>');
+    expect(output).toContain('<Checkbox id="popover-option-remember" bind:checked={remember} />');
+    expect(output).toContain('let emailNotice = $state(false);');
     // Sem peça de fechar: com um `PopoverClose` registrado no painel, quem
     // prende o foco passa a ser o gerenciador da lib.
-    expect(saida).not.toContain('PopoverClose');
+    expect(output).not.toContain('PopoverClose');
   });
 
   it('as preferências rápidas são independentes entre si', () => {
-    const saida = popoverSource('', { args: { variant: 'quickSettings' } });
-    expect(saida).toContain('<span>Notificações</span>');
-    expect(saida.match(/type="checkbox"/g)).toHaveLength(3);
+    const output = popoverSource('', { args: { variant: 'quickSettings' } });
+    expect(output).toContain('<span>Notificações</span>');
+    expect(output.match(/type="checkbox"/g)).toHaveLength(3);
   });
 });
 

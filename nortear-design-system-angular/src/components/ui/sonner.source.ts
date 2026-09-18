@@ -94,10 +94,10 @@ function text(value: string): string {
  * justamente que `toast()` vive sem quem o desenhe.
  */
 function example(o: { region?: string | null; body: string[]; nota?: string[] }): string {
-  const body = o.body.map((linha) => (linha ? `  ${linha}` : '')).join('\n');
+  const body = o.body.map((line) => (line ? `  ${line}` : '')).join('\n');
 
   if (!o.region) {
-    const nota = (o.nota ?? []).map((linha) => `// ${linha}`).join('\n');
+    const nota = (o.nota ?? []).map((line) => `// ${line}`).join('\n');
     return `import { toast } from '@/components/ui/sonner';
 
 ${nota ? `${nota}\n` : ''}export class Exemplo {
@@ -109,7 +109,7 @@ ${body}
     'O Toaster entra UMA VEZ, no root da aplicação. `toast()` é chamado de',
     'qualquer lugar — não precisa de referência ao Toaster nem de injeção.',
   ])
-    .map((linha) => `  // ${linha}`)
+    .map((line) => `  // ${line}`)
     .join('\n');
 
   return `import { NdsToaster, toast } from '@/components/ui/sonner';
@@ -127,10 +127,10 @@ ${body}
 }
 
 /** `toast('…')` / `toast.success('…')` — o tipo neutro é a própria função. */
-function queueCall(type: ToastType, mensagem: string, options: string[] = []): string {
+function queueCall(type: ToastType, message: string, options: string[] = []): string {
   const queue = type === 'default' ? 'toast' : `toast.${type}`;
-  if (options.length === 0) return `${queue}(${text(mensagem)});`;
-  return `${queue}(${text(mensagem)}, {\n${options.map((l) => `      ${l}`).join('\n')}\n    });`;
+  if (options.length === 0) return `${queue}(${text(message)});`;
+  return `${queue}(${text(message)}, {\n${options.map((l) => `      ${l}`).join('\n')}\n    });`;
 }
 
 // ─── Playground ───────────────────────────────────────────────────────────────
@@ -187,16 +187,16 @@ export function sonnerPlaygroundSource(
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-function typeSource(type: ToastType, mensagem: string, nota?: string[]) {
+function typeSource(type: ToastType, message: string, nota?: string[]) {
   return (): string =>
     example({
       region: regionTag({ richColors: true }),
       nota,
-      body: ['notificar(): void {', `    ${queueCall(type, mensagem)}`, '}'],
+      body: ['notificar(): void {', `    ${queueCall(type, message)}`, '}'],
     });
 }
 
-export const sonnerNeutralSource = typeSource('default', TEXTS.padrao, [
+export const sonnerNeutralSource = typeSource('default', TEXTS.default, [
   'Sem tipo semântico a fila é a própria função `toast()` — não existe',
   '`toast.default()`. A notificação sai sem ícone e com as cores base do tema.',
 ]);
@@ -208,7 +208,7 @@ export const sonnerErrorSource = typeSource('error', TEXTS.error, [
   'verde precisa da frase, e não só da cor (WCAG 1.4.1).',
 ]);
 
-export const sonnerWarningSource = typeSource('warning', TEXTS.aviso, [
+export const sonnerWarningSource = typeSource('warning', TEXTS.warning, [
   'Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa',
   'age, o componente certo é o Alert.',
 ]);
@@ -257,7 +257,7 @@ export function sonnerStackSource(): string {
     body: [
       'notificarTudo(): void {',
       `    ${queueCall('success', TEXTS.success)}`,
-      `    ${queueCall('warning', TEXTS.aviso)}`,
+      `    ${queueCall('warning', TEXTS.warning)}`,
       `    ${queueCall('info', TEXTS.info)}`,
       '}',
     ],
@@ -296,10 +296,10 @@ export function sonnerDarkThemeSource(): string {
     ],
     body: [
       'demonstrarTipos(): void {',
-      `    ${queueCall('default', TEXTS.padrao)}`,
+      `    ${queueCall('default', TEXTS.default)}`,
       `    ${queueCall('success', TEXTS.success)}`,
       `    ${queueCall('error', TEXTS.error)}`,
-      `    ${queueCall('warning', TEXTS.aviso)}`,
+      `    ${queueCall('warning', TEXTS.warning)}`,
       `    ${queueCall('info', TEXTS.info)}`,
       '}',
     ],
@@ -337,7 +337,7 @@ export function sonnerWithActionSource(): string {
     body: [
       'excluir(): void {',
       `    ${queueCall('default', TEXTS.withAction, [
-        `action: { label: ${text(TEXTS.comAcaoRotulo)}, onClick: () => this.desfazer() },`,
+        `action: { label: ${text(TEXTS.withActionLabel)}, onClick: () => this.desfazer() },`,
       ])}`,
       '}',
       '',

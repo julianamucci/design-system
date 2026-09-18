@@ -57,9 +57,9 @@ import { Label } from '@/components/ui/label'
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
-    const saida = switchSource('', { args: { name: (() => {}) as never } });
-    expect(saida).not.toContain('function');
-    expect(saida).not.toContain('name=');
+    const output = switchSource('', { args: { name: (() => {}) as never } });
+    expect(output).not.toContain('function');
+    expect(output).not.toContain('name=');
   });
 });
 
@@ -70,28 +70,28 @@ describe('transforms das stories de variante', () => {
   });
 
   it('com descrição, o parágrafo fica FORA do rótulo', () => {
-    const saida = switchWithDescriptionSource();
+    const output = switchWithDescriptionSource();
     // Dentro do Label, o parágrafo viraria parte do nome acessível do controle.
-    expect(saida).toContain('<Label for="marketing">Emails de marketing</Label>');
-    expect(saida).toContain(
+    expect(output).toContain('<Label for="marketing">Emails de marketing</Label>');
+    expect(output).toContain(
       '<p class="nds-text-body">Receba novidades e promoções da plataforma.</p>',
     );
-    expect(saida).toContain('data-justify="between"');
+    expect(output).toContain('data-justify="between"');
   });
 
   it('o compacto mostra os DOIS degraus — a comparação é o assunto', () => {
-    const saida = switchCompactoSource();
-    expect(saida).toContain('<Switch id="tamanho-padrao" />');
-    expect(saida).toContain('<Switch id="tamanho-compacto" size="sm" />');
-    expect([...saida.matchAll(/<Switch /g)]).toHaveLength(2);
+    const output = switchCompactoSource();
+    expect(output).toContain('<Switch id="tamanho-padrao" />');
+    expect(output).toContain('<Switch id="tamanho-compacto" size="sm" />');
+    expect([...output.matchAll(/<Switch /g)]).toHaveLength(2);
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o repouso não escreve prop nenhuma — o switch nasce desligado', () => {
-    const saida = switchDesligadoSource();
-    expect(saida).toContain('<Switch id="notificacoes" />');
-    expect(saida).not.toContain('default-value');
+    const output = switchDesligadoSource();
+    expect(output).toContain('<Switch id="notificacoes" />');
+    expect(output).not.toContain('default-value');
   });
 
   it('o ligado parte de `default-value`, que é prop de montagem', () => {
@@ -106,52 +106,52 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o inválido aponta para a mensagem, e a mensagem tem o id apontado', () => {
-    const saida = switchInvalidoSource();
-    expect(saida).toContain('aria-invalid="true" aria-describedby="aceitar-termos-erro"');
-    expect(saida).toContain('<p id="aceitar-termos-erro"');
-    expect(saida).toContain('nds-border-destructive');
+    const output = switchInvalidoSource();
+    expect(output).toContain('aria-invalid="true" aria-describedby="aceitar-termos-erro"');
+    expect(output).toContain('<p id="aceitar-termos-erro"');
+    expect(output).toContain('nds-border-destructive');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a lista dá a cada painel um id próprio — ids repetidos quebram o vínculo', () => {
-    const saida = configSwitchPanelSource();
-    const ids = [...saida.matchAll(/<Switch id="([^"]+)"/g)].map((m) => m[1]);
+    const output = configSwitchPanelSource();
+    const ids = [...output.matchAll(/<Switch id="([^"]+)"/g)].map((m) => m[1]);
     expect(ids).toHaveLength(3);
     expect(new Set(ids).size).toBe(ids.length);
     // Uma preferência nasce ligada e duas desligadas, como a lista demonstra.
-    expect([...saida.matchAll(/default-value/g)]).toHaveLength(1);
-    expect(saida).toContain('Preferências de notificação');
+    expect([...output.matchAll(/default-value/g)]).toHaveLength(1);
+    expect(output).toContain('Preferências de notificação');
   });
 
   it('a descrição de cada painel fica FORA do rótulo', () => {
     // Dentro do `Label` ela entraria no nome acessível, e quem usa leitor de
     // tela ouviria a frase inteira a cada passagem pelo controle.
-    const saida = configSwitchPanelSource();
-    expect(saida).not.toMatch(/<Label[^>]*>[^<]*Resumo semanal/);
-    expect(saida).toContain('<p class="nds-text-body">Resumo semanal sobre o produto.</p>');
+    const output = configSwitchPanelSource();
+    expect(output).not.toMatch(/<Label[^>]*>[^<]*Resumo semanal/);
+    expect(output).toContain('<p class="nds-text-body">Resumo semanal sobre o produto.</p>');
   });
 
   it('no formulário é o `name` que faz o campo ser enviado', () => {
-    const saida = formSwitchSource();
-    expect(saida).toContain('name="newsletter"');
-    expect(saida).toContain(`import { Button } from '@/components/ui/button'`);
-    expect(saida).toContain('<Button type="submit">Salvar preferências</Button>');
+    const output = formSwitchSource();
+    expect(output).toContain('name="newsletter"');
+    expect(output).toContain(`import { Button } from '@/components/ui/button'`);
+    expect(output).toContain('<Button type="submit">Salvar preferências</Button>');
   });
 
   it('sem rótulo visível, o nome vive em aria-label — e existe', () => {
-    const saida = switchSemRotuloSource();
-    expect(saida).toContain('aria-label="Ativar modo escuro"');
+    const output = switchSemRotuloSource();
+    expect(output).toContain('aria-label="Ativar modo escuro"');
     // É a única composição em que o par rótulo ↔ controle não aparece; se um
     // `<Label>` voltasse aqui, o exemplo deixaria de ensinar o que se propõe.
-    expect(saida).not.toContain('<Label');
+    expect(output).not.toContain('<Label');
   });
 
   it('o controlado escreve a ligação de volta, não só o valor', () => {
     // Ligar só o valor deixa o interruptor inerte: ele deixa de ser dono do
     // próprio estado e ninguém assume o lugar.
-    const saida = switchControlledSource();
-    expect(saida).toContain('v-model="ativo"');
-    expect(saida).toContain('const ativo = ref(false)');
+    const output = switchControlledSource();
+    expect(output).toContain('v-model="ativo"');
+    expect(output).toContain('const ativo = ref(false)');
   });
 });

@@ -68,13 +68,13 @@ export const Default: Story = {
     await clearToasts();
 
     await step('A notificação neutra não carrega ícone nenhum', async () => {
-      toast(TEXTS.padrao, PERSISTENT);
+      toast(TEXTS.default, PERSISTENT);
       const toastEl = await waitForToast({ type: 'default' });
 
       // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
       // a coluna e sugeriria uma severidade que a mensagem não tem.
       await expect(toastEl.querySelector('.nds-sonner-icon')).toBeNull();
-      await expect(toastEl.querySelector('.nds-sonner-title')).toHaveTextContent(TEXTS.padrao);
+      await expect(toastEl.querySelector('.nds-sonner-title')).toHaveTextContent(TEXTS.default);
       await expect(toastEl).toHaveAttribute('data-type', 'default');
     });
 
@@ -168,11 +168,11 @@ export const Warning: Story = {
     await clearToasts();
 
     await step('O aviso usa o tipo próprio, e não a falha', async () => {
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       const toastEl = await waitForToast({ type: 'warning' });
       await expect(toastEl).toHaveAttribute('data-type', 'warning');
       await expect(toastEl).not.toHaveAttribute('data-type', 'error');
-      await expect(toastEl).toHaveTextContent(TEXTS.aviso);
+      await expect(toastEl).toHaveTextContent(TEXTS.warning);
     });
   },
 };

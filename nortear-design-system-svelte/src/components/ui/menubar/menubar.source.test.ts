@@ -51,9 +51,9 @@ describe('menubarSource', () => {
   });
 
   it('o menu aberto ao montar declara o estado de fora, por bind:value', () => {
-    const saida = menubarSource('', { args: { defaultValue: 'file' } });
-    expect(saida).toContain('let menuAberto = $state("file");');
-    expect(saida).toContain('<Menubar bind:value={menuAberto}>');
+    const output = menubarSource('', { args: { defaultValue: 'file' } });
+    expect(output).toContain('let menuAberto = $state("file");');
+    expect(output).toContain('<Menubar bind:value={menuAberto}>');
   });
 
   it('só escreve loop quando o valor difere do padrão', () => {
@@ -63,73 +63,73 @@ describe('menubarSource', () => {
 
   it('a ênfase de perigo chega a cada item da demonstração padrão', () => {
     expect(menubarSource()).not.toContain('variant=');
-    const saida = menubarSource('', { args: { variant: 'destructive' } });
-    expect(saida.match(/<MenubarItem variant="destructive">/g)).toHaveLength(11);
+    const output = menubarSource('', { args: { variant: 'destructive' } });
+    expect(output.match(/<MenubarItem variant="destructive">/g)).toHaveLength(11);
   });
 
   it('a ficha de perigo separa a ação irreversível das demais', () => {
-    const saida = menubarSource('', { args: { demonstration: 'destructive' } });
-    expect(saida).toContain('<MenubarSeparator />');
-    expect(saida).toContain('<MenubarItem variant="destructive">Descartar alterações</MenubarItem>');
+    const output = menubarSource('', { args: { demonstration: 'destructive' } });
+    expect(output).toContain('<MenubarSeparator />');
+    expect(output).toContain('<MenubarItem variant="destructive">Descartar alterações</MenubarItem>');
   });
 
   it('os atalhos aparecem dentro do item, e não em coluna separada', () => {
-    const saida = menubarSource('', { args: { demonstration: 'shortcuts' } });
-    expect(saida).toContain('<MenubarShortcut>Ctrl+Z</MenubarShortcut>');
-    expect(saida.match(/<MenubarShortcut>/g)).toHaveLength(3);
+    const output = menubarSource('', { args: { demonstration: 'shortcuts' } });
+    expect(output).toContain('<MenubarShortcut>Ctrl+Z</MenubarShortcut>');
+    expect(output.match(/<MenubarShortcut>/g)).toHaveLength(3);
   });
 
   it('o submenu aninha o próprio painel dentro do item', () => {
-    const saida = menubarSource('', { args: { demonstration: 'submenu' } });
-    expect(saida).toContain('<MenubarSubTrigger>Exportar</MenubarSubTrigger>');
-    expect(saida).toContain('<MenubarSubContent>');
+    const output = menubarSource('', { args: { demonstration: 'submenu' } });
+    expect(output).toContain('<MenubarSubTrigger>Exportar</MenubarSubTrigger>');
+    expect(output).toContain('<MenubarSubContent>');
   });
 
   it('os alternadores vinculam um estado por linha, sob um cabeçalho que nomeia o grupo', () => {
-    const saida = menubarSource('', { args: { demonstration: 'checkbox' } });
-    expect(saida).toContain('let regua = $state(true);');
-    expect(saida).toContain('<MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>');
-    expect(saida).toContain('<MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>');
+    const output = menubarSource('', { args: { demonstration: 'checkbox' } });
+    expect(output).toContain('let regua = $state(true);');
+    expect(output).toContain('<MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>');
+    expect(output).toContain('<MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>');
   });
 
   it('o estado misto é escrito por prop própria, ao lado do marcado e do vazio', () => {
-    const saida = menubarSource('', { args: { demonstration: 'indeterminate' } });
-    expect(saida).toContain('<MenubarCheckboxItem indeterminate>Colunas</MenubarCheckboxItem>');
-    expect(saida).toContain('<MenubarCheckboxItem checked>Régua</MenubarCheckboxItem>');
-    expect(saida).toContain('<MenubarCheckboxItem>Grade</MenubarCheckboxItem>');
+    const output = menubarSource('', { args: { demonstration: 'indeterminate' } });
+    expect(output).toContain('<MenubarCheckboxItem indeterminate>Colunas</MenubarCheckboxItem>');
+    expect(output).toContain('<MenubarCheckboxItem checked>Régua</MenubarCheckboxItem>');
+    expect(output).toContain('<MenubarCheckboxItem>Grade</MenubarCheckboxItem>');
   });
 
   it('a escolha única guarda o valor no grupo, e não em cada opção', () => {
-    const saida = menubarSource('', { args: { demonstration: 'radio' } });
-    expect(saida).toContain('let tema = $state("light");');
-    expect(saida).toContain('<MenubarRadioGroup bind:value={tema}>');
-    expect(saida.match(/<MenubarRadioItem value="/g)).toHaveLength(3);
+    const output = menubarSource('', { args: { demonstration: 'radio' } });
+    expect(output).toContain('let tema = $state("light");');
+    expect(output).toContain('<MenubarRadioGroup bind:value={tema}>');
+    expect(output.match(/<MenubarRadioItem value="/g)).toHaveLength(3);
   });
 
   it('o item bloqueado usa a prop, sem sumir da lista', () => {
-    const saida = menubarSource('', { args: { demonstration: 'itemDisabled' } });
-    expect(saida).toContain('<MenubarItem disabled>Enviar para revisão</MenubarItem>');
+    const output = menubarSource('', { args: { demonstration: 'itemDisabled' } });
+    expect(output).toContain('<MenubarItem disabled>Enviar para revisão</MenubarItem>');
   });
 
   it('a barra de editor junta as quatro categorias com grupos, atalhos e alternadores', () => {
-    const saida = menubarSource('', { args: { demonstration: 'editor' } });
-    expect(saida.match(/<MenubarMenu value="/g)).toHaveLength(4);
-    expect(saida).toContain('<MenubarGroupHeading>Documento</MenubarGroupHeading>');
-    expect(saida).toContain('let grade = $state(false);');
+    const output = menubarSource('', { args: { demonstration: 'editor' } });
+    expect(output.match(/<MenubarMenu value="/g)).toHaveLength(4);
+    expect(output).toContain('<MenubarGroupHeading>Documento</MenubarGroupHeading>');
+    expect(output).toContain('let grade = $state(false);');
   });
 
   it('nenhuma composição importa peça que não usa', () => {
     // O bloco de import é copiado inteiro: um nome a mais quebra a compilação de
     // quem cola o snippet só depois, no primeiro build.
-    const saida = menubarSource('', { args: { demonstration: 'itemDisabled' } });
-    expect(saida).not.toContain('MenubarShortcut');
-    expect(saida).not.toContain('MenubarSeparator');
+    const output = menubarSource('', { args: { demonstration: 'itemDisabled' } });
+    expect(output).not.toContain('MenubarShortcut');
+    expect(output).not.toContain('MenubarSeparator');
   });
 });
 
 describe('menubarEntriesSource — o código dos cards de Variantes', () => {
   it('um MenubarMenu por gatilho, com os rótulos que recebeu', () => {
-    const saida = menubarEntriesSource({
+    const output = menubarEntriesSource({
       menus: [
         {
           value: 'file',
@@ -146,18 +146,18 @@ describe('menubarEntriesSource — o código dos cards de Variantes', () => {
         },
       ],
     });
-    expect(saida.match(/<MenubarMenu value="/g)).toHaveLength(2);
-    expect(saida).toContain('<MenubarTrigger>File</MenubarTrigger>');
-    expect(saida).toContain('<MenubarShortcut>Ctrl+S</MenubarShortcut>');
-    expect(saida).toContain('<MenubarItem>About</MenubarItem>');
-    expect(saida).not.toMatch(/Arquivo|Novo|Salvar/);
+    expect(output.match(/<MenubarMenu value="/g)).toHaveLength(2);
+    expect(output).toContain('<MenubarTrigger>File</MenubarTrigger>');
+    expect(output).toContain('<MenubarShortcut>Ctrl+S</MenubarShortcut>');
+    expect(output).toContain('<MenubarItem>About</MenubarItem>');
+    expect(output).not.toMatch(/Arquivo|Novo|Salvar/);
     // Nada liga estado: nem declaração, nem peça de marcação no import.
-    expect(saida).not.toContain('$state');
-    expect(saida).not.toContain('MenubarCheckboxItem');
+    expect(output).not.toContain('$state');
+    expect(output).not.toContain('MenubarCheckboxItem');
   });
 
   it('a variante destrutiva e a divisória saem da lista, não de um literal ao lado', () => {
-    const saida = menubarEntriesSource({
+    const output = menubarEntriesSource({
       menus: [
         {
           value: 'file',
@@ -170,12 +170,12 @@ describe('menubarEntriesSource — o código dos cards de Variantes', () => {
         },
       ],
     });
-    expect(saida).toContain('<MenubarSeparator />');
-    expect(saida).toContain('<MenubarItem variant="destructive">Delete file</MenubarItem>');
+    expect(output).toContain('<MenubarSeparator />');
+    expect(output).toContain('<MenubarItem variant="destructive">Delete file</MenubarItem>');
   });
 
   it('a marcação declara a variável que liga, com o estado da lista', () => {
-    const saida = menubarEntriesSource({
+    const output = menubarEntriesSource({
       menus: [
         {
           value: 'view',
@@ -193,9 +193,9 @@ describe('menubarEntriesSource — o código dos cards de Variantes', () => {
         },
       ],
     });
-    expect(saida).toContain('let sidebar = $state(true);');
-    expect(saida).toContain('let grid = $state(false);');
-    expect(saida).toContain('<MenubarGroupHeading>Panels</MenubarGroupHeading>');
-    expect(saida).toContain('<MenubarCheckboxItem bind:checked={grid}>');
+    expect(output).toContain('let sidebar = $state(true);');
+    expect(output).toContain('let grid = $state(false);');
+    expect(output).toContain('<MenubarGroupHeading>Panels</MenubarGroupHeading>');
+    expect(output).toContain('<MenubarCheckboxItem bind:checked={grid}>');
   });
 });
