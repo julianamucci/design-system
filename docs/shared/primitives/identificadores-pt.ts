@@ -19,6 +19,38 @@
  * vale a mesma regra do vocabulário da sidebar — decisão declarada vale mais
  * que decisão inferida, e o auditor não distingue "ainda não decidi" de "decidi
  * que fica" se ninguém escrever qual dos dois é.
+ *
+ * ---
+ *
+ * **A base de contagem (`identificadores-pt-baseline.json`) foi REGENERADA em
+ * 2026-09-18, e a regeneração não concedeu anistia nenhuma.** Ela tinha sido
+ * gerada com o contador de identificadores defeituoso — ele atravessava a
+ * fronteira de literal e contava prosa como código —, e por isso errava em 246
+ * dos 673 arquivos. Medido antes de regenerar, entre os arquivos que a regra de
+ * fato audita:
+ *
+ *     sobem sob o contador corrigido   0   ← seria anistia, e não há
+ *     descem (a base dava folga)      41
+ *     iguais                         506
+ *
+ * Ou seja, a regeneração só APERTOU. A decisão da dona foi pagar antes de
+ * regenerar; a medição mostrou que não havia o que pagar aqui, e o caminho mudou
+ * com ela.
+ *
+ * **PENDÊNCIA · 2026-09-18 — a base cobre mais arquivos do que a regra audita.**
+ * O gerador percorre **673** arquivos e a regra `identificador_pt_novo` audita
+ * **547**: ela itera por SLUG, e slug sai de `docs/shared/content/<slug>/`. Os
+ * 126 de diferença estão em `src/components/docs/shared/` (56), na raiz de
+ * `src/components/` (22) e em `src/lib/` (19) — e carregam **226 identificadores
+ * em português que portão nenhum vê**. É a forma exata do `source-snippets.test.ts`
+ * de 2026-09-10: quem não entra na lista não reprova, e a contagem encolhe sem
+ * deixar rastro.
+ *
+ * **Fecha quando**: ou a regra alcança os arquivos fora de slug — como o
+ * `inline_style_design_value` já faz com as páginas de fundamento, por uma regra
+ * irmã sob `_infra` —, ou está escrito aqui por que esses 126 ficam de fora, com
+ * a premissa verificada. Enquanto os dois números diferirem sem motivo escrito,
+ * a base afirma cobrir o que a regra não cobra.
  */
 
 /** Nome em português → por que a varredura não pôde traduzir sozinha. */
