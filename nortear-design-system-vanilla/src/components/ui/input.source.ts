@@ -34,7 +34,7 @@ export type InputSnippetOptions = {
   /** Texto de apoio, ligado ao campo por `aria-describedby`. */
   ajuda?: string;
   /** Mensagem de erro, ligada ao campo por `aria-describedby`. */
-  mensagem?: string;
+  message?: string;
   /** Mostra a linha que liga a paleta escura no documento. */
   temaEscuro?: boolean;
 };
@@ -56,7 +56,7 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
 
   const descritores = [
     o.ajuda ? `${id}-ajuda` : undefined,
-    o.mensagem ? `${id}-erro` : undefined,
+    o.message ? `${id}-erro` : undefined,
   ].filter((d): d is string => d !== undefined);
 
   const lines = options([
@@ -76,7 +76,7 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
       : undefined,
   ].filter((l): l is string => l !== undefined);
 
-  const montados = ['rotulo', 'campo', o.ajuda && 'apoio', o.mensagem && 'erro'].filter(
+  const montados = ['rotulo', 'campo', o.ajuda && 'apoio', o.message && 'erro'].filter(
     (n): n is string => typeof n === 'string',
   );
 
@@ -93,11 +93,11 @@ apoio.id = ${text(`${id}-ajuda`)};
 apoio.className = 'nds-text-caption nds-text-muted-foreground';
 apoio.textContent = ${text(o.ajuda)};`
       : undefined,
-    o.mensagem
+    o.message
       ? `const erro = document.createElement('p');
 erro.id = ${text(`${id}-erro`)};
 erro.className = 'nds-text-caption nds-text-destructive';
-erro.textContent = ${text(o.mensagem)};`
+erro.textContent = ${text(o.message)};`
       : undefined,
     appendLine(montados.join(', ')),
   );

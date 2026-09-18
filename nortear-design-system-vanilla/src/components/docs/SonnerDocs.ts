@@ -439,11 +439,11 @@ export function createSonnerDocs(): HTMLElement {
         // repetia o rótulo da primeira coluna — duas colunas idênticas, e o
         // cabeçalho vinha de `common.state`/`common.trigger`, que não existem em
         // `ui.json`: a página imprimia o nome da chave como título de coluna.
-        const compositionItems: Array<{ key: string; chamada: string }> = [
-          { key: 'withDescription', chamada: `toast.success(msg, { description })` },
-          { key: 'withAction',      chamada: `toast(msg, { action: { label, onClick } })` },
-          { key: 'promise',         chamada: `toast.promise(p, { loading, success, error })` },
-          { key: 'persistent',      chamada: `toast.error(msg, { duration: Infinity })` },
+        const compositionItems: Array<{ key: string; call: string }> = [
+          { key: 'withDescription', call: `toast.success(msg, { description })` },
+          { key: 'withAction',      call: `toast(msg, { action: { label, onClick } })` },
+          { key: 'promise',         call: `toast.promise(p, { loading, success, error })` },
+          { key: 'persistent',      call: `toast.error(msg, { duration: Infinity })` },
         ];
 
         return createDocsStates({
@@ -452,9 +452,9 @@ export function createSonnerDocs(): HTMLElement {
             trigger:  t('states.cols.trigger'),
             behavior: t('states.cols.behavior'),
           },
-          items: compositionItems.map(({ key, chamada }) => ({
+          items: compositionItems.map(({ key, call }) => ({
             label:    t(`states.items.${key}.label`),
-            trigger:  chamada,
+            trigger:  call,
             behavior: toPlainText(t(`states.items.${key}.description`)),
           })),
         });

@@ -701,7 +701,7 @@ const LINHAS_DEMO: {
                   [attr.aria-label]="rotuloSelecionarTudo()"
                   [checked]="todasSelecionadas()"
                   [indeterminate]="algumasSelecionadas()"
-                  (checkedChange)="alternarTodas($event)"
+                  (checkedChange)="toggleAll($event)"
                 ></button>
               </th>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
@@ -973,7 +973,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     this.selecionadas.set(next);
   }
 
-  protected alternarTodas(checked: boolean): void {
+  protected toggleAll(checked: boolean): void {
     this.selecionadas.set(
       checked ? new Set(this.linhasCurtas().map((l) => l.key)) : new Set(),
     );

@@ -341,7 +341,7 @@ export const SubNavigationLine: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const list = canvas.getByRole('tablist');
-    const [ativa, inativa] = canvas.getAllByRole('tab');
+    const [active, inativa] = canvas.getAllByRole('tab');
 
     await step('Sem trilho: a lista não pinta fundo', async () => {
       await expect(list).toHaveAttribute('data-variant', 'line');
@@ -349,7 +349,7 @@ export const SubNavigationLine: Story = {
     });
 
     await step('O ativo é marcado por um traço, desenhado em ::after', async () => {
-      await waitFor(() => expect(getComputedStyle(ativa, '::after').opacity).toBe('1'));
+      await waitFor(() => expect(getComputedStyle(active, '::after').opacity).toBe('1'));
       await expect(getComputedStyle(inativa, '::after').opacity).toBe('0');
     });
   },

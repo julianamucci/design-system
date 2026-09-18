@@ -1052,10 +1052,10 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
     const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
-    const line = (name: string, key: string, type: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, defaultValue: string) => ({
       name,
       type: type,
-      defaultValue: padrao,
+      defaultValue,
       required: not,
       description: toPlainText(t(`props.table.${key}`)),
     });

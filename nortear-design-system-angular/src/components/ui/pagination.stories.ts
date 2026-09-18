@@ -99,7 +99,7 @@ export const Playground: Story = {
       pages: Array.from({ length: args.total }, (_, i) => i + 1),
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
-      rotuloPagina: LABEL_PAGE,
+      pageLabel: LABEL_PAGE,
       irTo: (evento: Event, page: number) => {
         evento.preventDefault();
         onPageChange(page);
@@ -124,7 +124,7 @@ export const Playground: Story = {
                 ndsPaginationLink
                 href="#"
                 [isActive]="n === current"
-                [attr.aria-label]="rotuloPagina + ' ' + n"
+                [attr.aria-label]="pageLabel + ' ' + n"
                 (click)="irTo($event, n)"
               >{{ n }}</a>
             </li>

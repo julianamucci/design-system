@@ -24,13 +24,13 @@ export type TooltipDescription = {
   readonly id: string;
   readonly isOpen: boolean;
   readonly montado: boolean;
-  marcarMontado(value: boolean): void;
+  markMounted(value: boolean): void;
 };
 
 const KEY = Symbol('nds-tooltip-descricao');
 
-export function fornecerDescription(descricao: TooltipDescription): void {
-  setContext(KEY, descricao);
+export function fornecerDescription(description: TooltipDescription): void {
+  setContext(KEY, description);
 }
 
 export function usarDescription(): TooltipDescription | undefined {

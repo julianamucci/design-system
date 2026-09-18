@@ -111,8 +111,8 @@ function cssToken(name: string): string {
  */
 export function rootFontSize(): number {
   if (typeof document === 'undefined') return 16;
-  const medida = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
-  return Number.isFinite(medida) && medida > 0 ? medida : 16;
+  const measure = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+  return Number.isFinite(measure) && measure > 0 ? measure : 16;
 }
 
 /**

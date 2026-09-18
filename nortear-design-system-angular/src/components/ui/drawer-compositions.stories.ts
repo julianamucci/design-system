@@ -78,7 +78,7 @@ export const WithForm: Story = {
       // `identificador_pt_novo` tolera mas não deixa CRESCER — um `rotulo`
       // novo reprovaria o portão.
       emailFieldLabel: LABEL.fieldEmail(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
       rotuloConfirmar: LABEL.confirmar(),
     },
     template: `
@@ -125,7 +125,7 @@ export const WithForm: Story = {
             sem ele a ação primária não envia nada, e o Enter no campo tampouco.
           -->
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
             <button ndsButton type="submit" form="drawer-comp-form">{{ rotuloConfirmar }}</button>
           </div>
         </ng-template>
@@ -197,7 +197,7 @@ export const WithConfirmation: Story = {
       triggerLabel: LABEL.trigger(),
       panelTitle: stripHtml(t('variants.compositions.withConfirmation.name')),
       panelDescription: LABEL.warning(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
       rotuloDestruir: LABEL.destruir(),
       // Aqui a decisão É a tela, e por isso o foco entra no cancelar — a mesma
       // escolha do AlertDialog: o Enter por reflexo tem de cair na saída segura,
@@ -229,7 +229,7 @@ export const WithConfirmation: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
             <button ndsButton variant="destructive">{{ rotuloDestruir }}</button>
           </div>
         </ng-template>

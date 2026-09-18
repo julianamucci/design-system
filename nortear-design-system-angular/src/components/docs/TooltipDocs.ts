@@ -381,7 +381,7 @@ function buildCompositionCode(): Record<
          lição vive no CONTEÚDO do balão. -->
     <ng-template #tplDoDont1Do>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
-        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair1-do', $event)">
+        <span ndsTooltip (openChange)="onToggle('docs_do_dont', 'pair1-do', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
             <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
@@ -395,7 +395,7 @@ function buildCompositionCode(): Record<
              para o axe — sem ele o botão icon-only não tem nome acessível e a
              docs page reprova —, e a lição continua no CONTEUDO do balão, que
              só repete o rótulo em vez de acrescentar. -->
-        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair1-dont', $event)">
+        <span ndsTooltip (openChange)="onToggle('docs_do_dont', 'pair1-dont', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
             <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
@@ -406,7 +406,7 @@ function buildCompositionCode(): Record<
 
     <ng-template #tplDoDont2Do>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
-        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair2-do', $event)">
+        <span ndsTooltip (openChange)="onToggle('docs_do_dont', 'pair2-do', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
             <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
@@ -418,7 +418,7 @@ function buildCompositionCode(): Record<
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center">
         <!-- Vivo de propósito: a lição é o TAMANHO do balão, e só renderizado
              ele mostra o que o texto longo faz. -->
-        <span ndsTooltip (openChange)="aoAlternar('docs_do_dont', 'pair2-dont', $event)">
+        <span ndsTooltip (openChange)="onToggle('docs_do_dont', 'pair2-dont', $event)">
           <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="t('demonstration.labels.saveButton')">
             <ng-container [ngTemplateOutlet]="tplIconeSalvar" />
           </button>
@@ -429,7 +429,7 @@ function buildCompositionCode(): Record<
 
     <!-- Variantes -->
     <ng-template #tplVarDefault>
-      <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'default', $event)">
+      <span ndsTooltip (openChange)="onToggle('docs_variantes', 'default', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
@@ -444,7 +444,7 @@ function buildCompositionCode(): Record<
     </ng-template>
 
     <ng-template #tplVarComAtalho>
-      <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'withShortcut', $event)">
+      <span ndsTooltip (openChange)="onToggle('docs_variantes', 'withShortcut', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
@@ -463,7 +463,7 @@ function buildCompositionCode(): Record<
     </ng-template>
 
     <ng-template #tplVarTextoLongo>
-      <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'longText', $event)">
+      <span ndsTooltip (openChange)="onToggle('docs_variantes', 'longText', $event)">
         <button ndsTooltipTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.shareButton') }}
         </button>
@@ -474,7 +474,7 @@ function buildCompositionCode(): Record<
     <ng-template #tplVarLados>
       <div class="nds-grid nds-w-full nds-min-h-40" data-cols="4" data-spacing="xl">
         @for (lado of lados(); track lado.side) {
-          <span ndsTooltip (openChange)="aoAlternar('docs_variantes', 'positioningSides-' + lado.side, $event)">
+          <span ndsTooltip (openChange)="onToggle('docs_variantes', 'positioningSides-' + lado.side, $event)">
             <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado.label">
               {{ lado.label }}
             </button>
@@ -487,7 +487,7 @@ function buildCompositionCode(): Record<
     <!-- Composições -->
     <ng-template #tplCompBarraAcoes>
       <div class="nds-cluster" data-spacing="lg" data-justify="center" data-align="center">
-              <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'actionBar-save', $event)">
+              <span ndsTooltip (openChange)="onToggle('docs_composicoes', 'actionBar-save', $event)">
                 <button
                   ndsTooltipTrigger
                   ndsButton
@@ -500,7 +500,7 @@ function buildCompositionCode(): Record<
                 <ng-template ndsTooltipContent>{{ t('demonstration.labels.save') }}</ng-template>
               </span>
   
-              <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'actionBar-delete', $event)">
+              <span ndsTooltip (openChange)="onToggle('docs_composicoes', 'actionBar-delete', $event)">
                 <button
                   ndsTooltipTrigger
                   ndsButton
@@ -513,7 +513,7 @@ function buildCompositionCode(): Record<
                 <ng-template ndsTooltipContent>{{ t('demonstration.labels.delete') }}</ng-template>
               </span>
   
-              <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'actionBar-share', $event)">
+              <span ndsTooltip (openChange)="onToggle('docs_composicoes', 'actionBar-share', $event)">
                 <button
                   ndsTooltipTrigger
                   ndsButton
@@ -528,7 +528,7 @@ function buildCompositionCode(): Record<
       </div>
     </ng-template>
     <ng-template #tplCompAtalho>
-      <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'iconButtonWithShortcut', $event)">
+      <span ndsTooltip (openChange)="onToggle('docs_composicoes', 'iconButtonWithShortcut', $event)">
         <button
           ndsTooltipTrigger
           ndsButton
@@ -550,7 +550,7 @@ function buildCompositionCode(): Record<
       <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <label ndsLabel for="tooltip-token-api">{{ t('demonstration.labels.apiTokenLabel') }}</label>
-          <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'formFieldHelp', $event)">
+          <span ndsTooltip (openChange)="onToggle('docs_composicoes', 'formFieldHelp', $event)">
             <!-- Glifo de texto, e não ícone: é o que as outras quatro mostram
                  neste cartão, e um "?" desenhado dispensa entrada nova no mapa
                  de ícones de botão. Quem nomeia o botão é o aria-label. -->
@@ -579,7 +579,7 @@ function buildCompositionCode(): Record<
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             {{ t('demonstration.labels.lcpLabel') }}
           </p>
-          <span ndsTooltip (openChange)="aoAlternar('docs_composicoes', 'metricDescription', $event)">
+          <span ndsTooltip (openChange)="onToggle('docs_composicoes', 'metricDescription', $event)">
             <button
               ndsTooltipTrigger
               ndsButton
@@ -640,7 +640,7 @@ function buildCompositionCode(): Record<
             data-align="center"
             data-spacing="lg"
           >
-            <span ndsTooltip (openChange)="aoAlternar('docs_demo', 'save', $event)">
+            <span ndsTooltip (openChange)="onToggle('docs_demo', 'save', $event)">
               <button
                 ndsTooltipTrigger
                 ndsButton
@@ -817,7 +817,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
    * quanto na demo — os quatro quadros do Do & Dont (dois pares, todos com
    * tooltip VIVO no template acima) disparam com `location: 'docs_do_dont'`.
    */
-  protected aoAlternar(location: string, trigger: string, isOpen: boolean): void {
+  protected onToggle(location: string, trigger: string, isOpen: boolean): void {
     if (!isOpen) return;
     track('tooltip_view', { component: 'tooltip', trigger_id: trigger, location });
   }

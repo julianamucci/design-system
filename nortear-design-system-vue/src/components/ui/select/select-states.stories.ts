@@ -359,11 +359,11 @@ export const Sm: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const padrao = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+    const defaultElement = canvas.getByRole('combobox', { name: /Selecionar estado/i });
     const compacto = canvas.getByRole('combobox', { name: /Selecionar cidade/i });
 
     await step('O campo compacto se declara pelo atributo de densidade', async () => {
-      await expect(padrao).toHaveAttribute('data-size', 'default');
+      await expect(defaultElement).toHaveAttribute('data-size', 'default');
       await expect(compacto).toHaveAttribute('data-size', 'sm');
     });
 
@@ -371,13 +371,13 @@ export const Sm: Story = {
       // Altura cravada não cresce quando a pessoa aumenta a fonte do navegador
       // (WCAG 1.4.4). Comparar os dois tamanhos prova de onde a altura vem: o
       // padding encolhe, e a altura acompanha.
-      const a = getComputedStyle(padrao);
+      const a = getComputedStyle(defaultElement);
       const b = getComputedStyle(compacto);
       await expect(Number.parseFloat(b.paddingBlockStart)).toBeLessThan(
         Number.parseFloat(a.paddingBlockStart),
       );
       await expect(compacto.getBoundingClientRect().height).toBeLessThan(
-        padrao.getBoundingClientRect().height,
+        defaultElement.getBoundingClientRect().height,
       );
     });
   },

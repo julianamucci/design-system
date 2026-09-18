@@ -137,7 +137,7 @@ export const Always: Story = {
       // o padding, outra reserva o canto no pé da barra, e todas aplicam um
       // tamanho mínimo de pegador. O que se afirma é a ORDEM DE GRANDEZA — com o
       // pegador ocupando a trilha inteira a diferença passa de 0.6.
-      await expect(Math.abs(p.fracaoDoPegador - p.fracaoVisivel)).toBeLessThan(0.2);
+      await expect(Math.abs(p.fracaoDoPegador - p.visibleFraction)).toBeLessThan(0.2);
     });
 
     await step('O pegador acompanha a posição da rolagem', async () => {
@@ -355,7 +355,7 @@ export const NoLimit: Story = {
     props: {
       variant: 'vertical',
       type: 'always',
-      semAltura: true,
+      withoutHeight: true,
       width: '320px',
       itemCount: 20,
     },

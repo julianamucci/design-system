@@ -165,8 +165,8 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
     // ── GA4 page_view ─────────────────────────────────────────────────────
     // Um `page_view` por página VISTA, não por efeito executado — ver o
     // porquê medido em `docs/shared/primitives/page-view-guard.ts`.
-    const chavePageView = [targetWin.location.href, fullTitle, componentSlug, locale].join('|');
-    if (pageViewInedito(chavePageView)) {
+    const pageViewKey = [targetWin.location.href, fullTitle, componentSlug, locale].join('|');
+    if (pageViewInedito(pageViewKey)) {
       track('page_view', {
         page_location: targetWin.location.href,
         page_title: fullTitle,

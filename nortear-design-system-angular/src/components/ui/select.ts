@@ -342,7 +342,7 @@ export class NdsSelectOutlet implements OnInit {
             data-align-trigger="false"
             [finalFocus]="trigger()"
             [attr.data-state]="state()"
-            [attr.aria-label]="rotuloDaLista()"
+            [attr.aria-label]="listLabel()"
           >
             <div
               rdxSelectScrollUpButton
@@ -412,7 +412,7 @@ export class NdsSelect {
    * Lê `open()` de propósito: o gatilho só é registrado no contexto depois do
    * primeiro render, e é a abertura que precisa reavaliar isto.
    */
-  protected readonly rotuloDaLista = computed<string | null>(() => {
+  protected readonly listLabel = computed<string | null>(() => {
     this.root.open();
     const trigger = this.root.triggerElement();
     if (!trigger) return null;

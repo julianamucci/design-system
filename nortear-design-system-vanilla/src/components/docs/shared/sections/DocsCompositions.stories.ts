@@ -55,14 +55,14 @@ const meta: Meta<DocsCompositionsProps> = {
         useWhen: 'Sempre que houver uma escolha com volta. A ordem segue a leitura, e a primária fica por último.',
         code: '<Button variant="outline">Cancelar</Button>\n<Button>Confirmar</Button>',
         previewFactory: () => {
-          const linha = document.createElement('span');
-          linha.className = 'nds-cluster';
-          linha.dataset.spacing = 'md';
-          linha.append(
+          const line = document.createElement('span');
+          line.className = 'nds-cluster';
+          line.dataset.spacing = 'md';
+          line.append(
             createButton({ variant: 'outline', children: 'Cancelar' }),
             createButton({ children: 'Confirmar' }),
           );
-          return linha;
+          return line;
         },
       },
       {

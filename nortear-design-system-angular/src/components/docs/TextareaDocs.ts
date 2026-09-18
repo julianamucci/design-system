@@ -354,7 +354,7 @@ const CODE_COMP_FORM = `<form
           aria-describedby="comp-error-msg"
         ></textarea>
         <p id="comp-error-msg" class="nds-text-caption nds-text-destructive">
-          {{ mensagemDeErro() }}
+          {{ errorMessage() }}
         </p>
       </div>
     </ng-template>
@@ -581,7 +581,7 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
     return locale === 'en' ? 'Send' : locale === 'es' ? 'Enviar' : 'Enviar';
   });
 
-  protected readonly mensagemDeErro = computed(() => {
+  protected readonly errorMessage = computed(() => {
     dict();
     const locale = getLocale();
     if (locale === 'en') return 'The description is required and must be at least 20 characters.';

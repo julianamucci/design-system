@@ -71,7 +71,7 @@ export const Simple: Story = {
       current: 1,
       // Derivado, não literal: a faixa e as asserções leem a mesma fonte.
       pages: [1, 2, 3, 4, 5],
-      rotuloPagina: LABEL_PAGE,
+      pageLabel: LABEL_PAGE,
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
@@ -88,7 +88,7 @@ export const Simple: Story = {
                 ndsPaginationLink
                 href="#"
                 [isActive]="n === current"
-                [attr.aria-label]="rotuloPagina + ' ' + n"
+                [attr.aria-label]="pageLabel + ' ' + n"
                 (click)="semNavegar($event)"
               >{{ n }}</a>
             </li>
@@ -142,7 +142,7 @@ export const WithEllipsis: Story = {
       // A faixa recortada de um total de 12: 1 … 5 6 7 … 12.
       trechos: [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12] as (number | string)[],
       current: 6,
-      rotuloPagina: LABEL_PAGE,
+      pageLabel: LABEL_PAGE,
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
@@ -162,7 +162,7 @@ export const WithEllipsis: Story = {
                   ndsPaginationLink
                   href="#"
                   [isActive]="trecho === current"
-                  [attr.aria-label]="rotuloPagina + ' ' + trecho"
+                  [attr.aria-label]="pageLabel + ' ' + trecho"
                   (click)="semNavegar($event)"
                 >{{ trecho }}</a>
               }
@@ -281,7 +281,7 @@ export const Interactive: Story = {
         current,
         total,
         pages: Array.from({ length: total }, (_, i) => i + 1),
-        rotuloPagina: LABEL_PAGE,
+        pageLabel: LABEL_PAGE,
         labelPrevious: LABEL_PREVIOUS,
         labelNext: LABEL_NEXT,
         irTo: (evento: Event, page: number) => {
@@ -309,7 +309,7 @@ export const Interactive: Story = {
                     ndsPaginationLink
                     href="#"
                     [isActive]="n === current()"
-                    [attr.aria-label]="rotuloPagina + ' ' + n"
+                    [attr.aria-label]="pageLabel + ' ' + n"
                     (click)="irTo($event, n)"
                   >{{ n }}</a>
                 </li>

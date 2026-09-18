@@ -967,13 +967,13 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       name: string,
       key: string,
       type: string,
-      padrao: string,
-      obrigatorio = not,
+      defaultValue: string,
+      required = not,
     ) => ({
       name,
       type: type,
-      defaultValue: padrao,
-      required: obrigatorio,
+      defaultValue,
+      required,
       description: toPlainText(t(`props.table.${key}`)),
     });
 

@@ -54,7 +54,7 @@ const yearRange = computed(() => {
   // `props.placeholder ?? defaultPlaceholder ?? today()`: o ref acima nasce com
   // valor garantido, então a cadeia era um caminho que nunca corria — e repetir
   // a resolução em dois lugares é o tipo de duplicação que diverge depois.
-  const ancora = placeholder.value
+  const anchor = placeholder.value
   /* v8 ignore next 4 -- minValue/maxValue delimitam a navegação e são
      repassados ao CalendarRoot; aqui só apertariam a lista de anos. Nenhuma
      story os passa, e nenhum conteúdo compartilhado os documenta. */
@@ -62,8 +62,8 @@ const yearRange = computed(() => {
   // para frente): a lista precisa correr para os dois lados, e não é para uma
   // data no ano que vem ficar fora do alcance.
   return props.yearRange ?? createYearRange({
-    start: props?.minValue ?? ancora.cycle('year', -EACH_SIDE_YEARS),
-    end: props?.maxValue ?? ancora.cycle('year', EACH_SIDE_YEARS),
+    start: props?.minValue ?? anchor.cycle('year', -EACH_SIDE_YEARS),
+    end: props?.maxValue ?? anchor.cycle('year', EACH_SIDE_YEARS),
   })
 })
 
@@ -169,10 +169,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
            <nav> sem rótulo repetia um landmark por calendário (landmark-unique);
            a referência cross-stack (vanilla) também usa div. -->
       <div class="nds-calendar-nav-overlay">
-        <CalendarPrevButton :aria-label="rotulos.mesAnterior">
+        <CalendarPrevButton :aria-label="rotulos.previousMonth">
           <slot name="calendar-prev-icon" />
         </CalendarPrevButton>
-        <CalendarNextButton :aria-label="rotulos.proximoMes">
+        <CalendarNextButton :aria-label="rotulos.nextMonth">
           <slot name="calendar-next-icon" />
         </CalendarNextButton>
       </div>

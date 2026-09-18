@@ -33,7 +33,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function montar(total: number, label: string): HTMLElement {
+function mount(total: number, label: string): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-md';
   wrap.appendChild(createCarousel({ items: slidesDeExemplo(total), label }));
@@ -45,7 +45,7 @@ export const FirstSlide: Story = {
     covers: ['visual.item4'],
     docs: { source: { transform: carouselSourceWith({ slides: 4, ariaLabel: 'Slides no primeiro item' }) } },
   },
-  render: () => montar(4, 'Slides no primeiro item'),
+  render: () => mount(4, 'Slides no primeiro item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const previous = canvas.getByRole('button', { name: 'Item anterior' });
@@ -81,7 +81,7 @@ export const LastSlide: Story = {
     covers: ['functional.item4', 'visual.item4'],
     docs: { source: { transform: carouselSourceWith({ slides: 3, ariaLabel: 'Slides no último item' }) } },
   },
-  render: () => montar(3, 'Slides no último item'),
+  render: () => mount(3, 'Slides no último item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;

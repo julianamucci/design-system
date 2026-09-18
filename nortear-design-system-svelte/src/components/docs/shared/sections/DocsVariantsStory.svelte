@@ -18,7 +18,7 @@
   } = $props();
 </script>
 
-{#snippet salvar()}<Button>Salvar</Button>{/snippet}
+{#snippet save()}<Button>Salvar</Button>{/snippet}
 {#snippet cancelar()}<Button variant="outline">Cancelar</Button>{/snippet}
 {#snippet excluir()}<Button variant="destructive">Excluir</Button>{/snippet}
 {#snippet editar()}<Button variant="ghost">Editar</Button>{/snippet}
@@ -40,7 +40,7 @@
           name: 'default',
           description: 'A ação primária do bloco. Uma por tela — duas competem, e a pessoa para para escolher.',
           code: '<Button>Salvar</Button>',
-          preview: salvar,
+          preview: save,
         },
         {
           name: 'outline',

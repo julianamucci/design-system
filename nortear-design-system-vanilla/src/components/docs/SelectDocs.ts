@@ -69,7 +69,7 @@ const ICONS = {
     'm22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7',
     'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
   ],
-  telefone:
+  phone:
     'M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384',
   chat: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z',
 };
@@ -84,10 +84,10 @@ const ICONS = {
  */
 function canaisDeContato(): SelectItem[] {
   const locale = getLocale();
-  const telefone = locale === 'en' ? 'Phone' : locale === 'es' ? 'Teléfono' : 'Telefone';
+  const phone = locale === 'en' ? 'Phone' : locale === 'es' ? 'Teléfono' : 'Telefone';
   return [
     { value: 'email', label: 'E-mail', icon: ICONS.email },
-    { value: 'phone', label: telefone, icon: ICONS.telefone },
+    { value: 'phone', label: phone, icon: ICONS.phone },
     { value: 'chat', label: 'Chat', icon: ICONS.chat },
   ];
 }

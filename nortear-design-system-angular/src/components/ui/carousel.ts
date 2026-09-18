@@ -101,7 +101,7 @@ const ASSENTAMENTO_MS_WAIT = 120;
 // involuntário que a WCAG 2.3.3 pede para desligar.
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
-function documentOrdenar(elementos: HTMLElement[]): HTMLElement[] {
+function documentSort(elementos: HTMLElement[]): HTMLElement[] {
   return [...elementos].sort((a, b) =>
     a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
   );
@@ -142,7 +142,7 @@ export class NdsCarouselStore {
   }
 
   registrarSlide(el: HTMLElement): void {
-    this._slides.update((list) => documentOrdenar([...list, el]));
+    this._slides.update((list) => documentSort([...list, el]));
   }
 
   removerSlide(el: HTMLElement): void {
@@ -445,7 +445,7 @@ export class NdsCarousel implements OnInit {
   protected readonly store = inject(NdsCarouselStore);
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly rotuloEscrito = this.hostRef.nativeElement.getAttribute('aria-label');
+  private readonly writtenLabel = this.hostRef.nativeElement.getAttribute('aria-label');
 
   private readonly _autoplayLigado = signal(false);
   private readonly _suspenso = signal(false);
@@ -458,7 +458,7 @@ export class NdsCarousel implements OnInit {
   readonly autoplayAtivo = computed(() => this._autoplayLigado());
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.rotuloEscrito ?? undefined,
+    () => this.label() ?? this.writtenLabel ?? undefined,
   );
 
   constructor() {
@@ -626,7 +626,7 @@ export class NdsCarouselContent implements OnDestroy {
 
   private soltarOuvintes(): void {
     const doc = this.host.ownerDocument;
-    doc.removeEventListener('pointermove', this.aoMover);
+    doc.removeEventListener('pointermove', this.onMove);
     doc.removeEventListener('pointerup', this.aoSoltar);
     doc.removeEventListener('pointercancel', this.aoSoltar);
   }
@@ -659,12 +659,12 @@ export class NdsCarouselContent implements OnDestroy {
     // ativo de verdade e lança quando o id não é de um — que é exatamente o
     // caso de um gesto conduzido por teste.
     const doc = this.host.ownerDocument;
-    doc.addEventListener('pointermove', this.aoMover);
+    doc.addEventListener('pointermove', this.onMove);
     doc.addEventListener('pointerup', this.aoSoltar);
     doc.addEventListener('pointercancel', this.aoSoltar);
   }
 
-  private readonly aoMover = (evento: PointerEvent): void => {
+  private readonly onMove = (evento: PointerEvent): void => {
     if (evento.pointerId !== this.pointer) return;
     const current = this.vertical() ? evento.clientY : evento.clientX;
     this.store.rolarPara(this.origemDaRolagem - (current - this.origemDoPonteiro));
@@ -714,10 +714,10 @@ export class NdsCarouselItem {
   protected readonly store = inject(NdsCarouselStore);
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-  private readonly rotuloEscrito = this.host.getAttribute('aria-label');
+  private readonly writtenLabel = this.host.getAttribute('aria-label');
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.rotuloEscrito ?? this.store.rotuloDoSlide(this.host),
+    () => this.label() ?? this.writtenLabel ?? this.store.rotuloDoSlide(this.host),
   );
 
   /**
@@ -774,12 +774,12 @@ export class NdsCarouselPrevious {
 
   protected readonly store = inject(NdsCarouselStore);
 
-  private readonly rotuloEscrito = inject<ElementRef<HTMLElement>>(
+  private readonly writtenLabel = inject<ElementRef<HTMLElement>>(
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.rotuloEscrito ?? 'Previous slide',
+    () => this.label() ?? this.writtenLabel ?? 'Previous slide',
   );
 
   protected readonly hostClass = computed(() =>
@@ -818,12 +818,12 @@ export class NdsCarouselNext {
 
   protected readonly store = inject(NdsCarouselStore);
 
-  private readonly rotuloEscrito = inject<ElementRef<HTMLElement>>(
+  private readonly writtenLabel = inject<ElementRef<HTMLElement>>(
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.rotuloEscrito ?? 'Next slide',
+    () => this.label() ?? this.writtenLabel ?? 'Next slide',
   );
 
   protected readonly hostClass = computed(() =>

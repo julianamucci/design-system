@@ -171,7 +171,7 @@ export const Stacked: Story = {
       },
     },
   },
-  args: { position: 'top-right', richColors: true, expand: true, alturaClasse: 'nds-min-h-100' },
+  args: { position: 'top-right', richColors: true, expand: true, heightClass: 'nds-min-h-100' },
   play: async ({ step }) => {
     await clearToasts();
 
@@ -217,7 +217,7 @@ export const PositionBottomCenter: Story = {
       },
     },
   },
-  args: { position: 'bottom-center', richColors: true, alturaClasse: 'nds-min-h-50' },
+  args: { position: 'bottom-center', richColors: true, heightClass: 'nds-min-h-50' },
   play: async ({ step }) => {
     await clearToasts();
 
@@ -290,7 +290,7 @@ export const DarkTheme: Story = {
     },
   },
   globals: { theme: 'dark' },
-  args: { position: 'top-right', richColors: true, expand: true, theme: 'dark', alturaClasse: 'nds-min-h-100' },
+  args: { position: 'top-right', richColors: true, expand: true, theme: 'dark', heightClass: 'nds-min-h-100' },
   play: async ({ step }) => {
     await clearToasts();
 

@@ -520,7 +520,7 @@ export const ListenerCleanup: Story = {
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => {
+        mount: () => {
           instancia = createSidebar({ defaultOpen: true });
           return instancia.element;
         },

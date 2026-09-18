@@ -1352,19 +1352,19 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const ofContent = (name: string, key: string, type?: string, padrao?: string) => ({
+    const ofContent = (name: string, key: string, type?: string, defaultValue?: string) => ({
       name: name,
       type: type ?? toPlainText(t(`props.table.${key}.type`)),
-      defaultValue: padrao ?? toPlainText(t(`props.table.${key}.default`)),
+      defaultValue: defaultValue ?? toPlainText(t(`props.table.${key}.default`)),
       required: toPlainText(t(`props.table.${key}.required`)),
       description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     /** Linha que só existe neste stack — descrição vem do override. */
-    const local = (name: string, type: string, padrao: string, key: string) => ({
+    const local = (name: string, type: string, defaultValue: string, key: string) => ({
       name: name,
       type: type,
-      defaultValue: padrao,
+      defaultValue,
       required: not,
       description: toPlainText(t(`props.${key}.description`)),
     });

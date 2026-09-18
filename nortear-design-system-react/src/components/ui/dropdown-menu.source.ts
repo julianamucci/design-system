@@ -64,10 +64,10 @@ function trigger(label: string): string {
 </DropdownMenuTrigger>`;
 }
 
-function menu(propsRaiz: string, triggerLabel: string, propsConteudo: string, items: string): string {
-  return `<DropdownMenu${propsRaiz}>
+function menu(rootProps: string, triggerLabel: string, contentProps: string, items: string): string {
+  return `<DropdownMenu${rootProps}>
 ${indentar(trigger(triggerLabel))}
-  <DropdownMenuContent${propsConteudo}>
+  <DropdownMenuContent${contentProps}>
 ${indentar(items, '    ')}
   </DropdownMenuContent>
 </DropdownMenu>`;

@@ -66,11 +66,11 @@ ${lines}
 function targetsGrid(items: Array<[string, string, string]>): string {
   const lines = items
     .map(
-      ([href, label, descricao]) => `          <li>
+      ([href, label, description]) => `          <li>
             <NavigationMenuChild href="${href}">
               <div class="nds-navigation-menu-child-label">${label}</div>
               <p class="nds-navigation-menu-child-description">
-                ${descricao}
+                ${description}
               </p>
             </NavigationMenuChild>
           </li>`,

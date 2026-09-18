@@ -128,12 +128,12 @@ export class NdsBreadcrumb {
   /** Nome acessível do landmark. Padrão: `breadcrumb`. */
   readonly label = input<string | undefined>(undefined);
 
-  private readonly rotuloEscrito = inject<ElementRef<HTMLElement>>(
+  private readonly writtenLabel = inject<ElementRef<HTMLElement>>(
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.rotuloEscrito ?? 'breadcrumb',
+    () => this.label() ?? this.writtenLabel ?? 'breadcrumb',
   );
 }
 

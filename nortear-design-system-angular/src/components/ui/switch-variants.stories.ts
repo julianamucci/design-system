@@ -134,13 +134,13 @@ export const Sm: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const padrao = canvasElement.querySelector<HTMLElement>('#var-sm-reference')!;
+    const defaultElement = canvasElement.querySelector<HTMLElement>('#var-sm-reference')!;
     const compacto = canvasElement.querySelector<HTMLElement>('#var-sm')!;
 
     await step('O degrau de tamanho vira data-size', async () => {
       // Sem esta asserção uma story que só renderiza passaria mesmo com o
       // input `size` perdido no fallback JIT — os dois cairiam em "default".
-      await expect(padrao).toHaveAttribute('data-size', 'default');
+      await expect(defaultElement).toHaveAttribute('data-size', 'default');
       await expect(compacto).toHaveAttribute('data-size', 'sm');
     });
 
@@ -149,12 +149,12 @@ export const Sm: Story = {
       // e uma regra ausente deixaria os dois do mesmo tamanho com o data-size
       // certo em ambos.
       await expect(compacto.getBoundingClientRect().width).toBeLessThan(
-        padrao.getBoundingClientRect().width,
+        defaultElement.getBoundingClientRect().width,
       );
     });
 
     await step('O polegar acompanha o degrau do trilho', async () => {
-      const knobDefault = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const knobDefault = defaultElement.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       const knobCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       await expect(knobCompacto.getBoundingClientRect().width).toBeLessThan(
         knobDefault.getBoundingClientRect().width,
@@ -162,7 +162,7 @@ export const Sm: Story = {
     });
 
     await step('Cada degrau tem rótulo associado ao controle', async () => {
-      await expect(canvas.getByLabelText('Tamanho padrão')).toBe(padrao);
+      await expect(canvas.getByLabelText('Tamanho padrão')).toBe(defaultElement);
       await expect(canvas.getByLabelText('Tamanho compacto')).toBe(compacto);
     });
   },

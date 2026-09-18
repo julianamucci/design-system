@@ -35,10 +35,10 @@ describe('sliderSource', () => {
   });
 
   it('só escreve min, max e step quando o valor difere do padrão do componente', () => {
-    const padrao = sliderSource('', { args: { min: 0, max: 100, step: 1 } });
-    expect(padrao).not.toContain('min={');
-    expect(padrao).not.toContain('max={');
-    expect(padrao).not.toContain('step={');
+    const defaultCode = sliderSource('', { args: { min: 0, max: 100, step: 1 } });
+    expect(defaultCode).not.toContain('min={');
+    expect(defaultCode).not.toContain('max={');
+    expect(defaultCode).not.toContain('step={');
 
     const curto = sliderSource('', { args: { min: 1, max: 5, step: 2 } });
     expect(curto).toContain('min={1}');

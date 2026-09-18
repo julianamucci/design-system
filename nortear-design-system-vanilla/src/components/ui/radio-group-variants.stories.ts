@@ -239,8 +239,8 @@ export const WithDescription: Story = {
       await expect(canvas.getByText(/Entrega em 5 dias úteis/)).toBeVisible();
     });
     await step('A descrição chega ao controle por aria-describedby', async () => {
-      const padrao = canvas.getByRole('radio', { name: 'Padrão' });
-      const target = padrao.getAttribute('aria-describedby');
+      const defaultElement = canvas.getByRole('radio', { name: 'Padrão' });
+      const target = defaultElement.getAttribute('aria-describedby');
       await expect(target).toBe('rg-with-desc-standard-desc');
       await expect(
         canvasElement.ownerDocument.getElementById(target!)?.textContent ?? '',

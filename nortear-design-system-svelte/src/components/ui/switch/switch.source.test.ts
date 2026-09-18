@@ -26,10 +26,10 @@ describe('switchSource', () => {
   });
 
   it('só escreve disabled, size e aria-invalid quando diferem do padrão', () => {
-    const padrao = switchSource();
-    expect(padrao).not.toContain('disabled');
-    expect(padrao).not.toContain('size=');
-    expect(padrao).not.toContain('aria-invalid');
+    const defaultCode = switchSource();
+    expect(defaultCode).not.toContain('disabled');
+    expect(defaultCode).not.toContain('size=');
+    expect(defaultCode).not.toContain('aria-invalid');
 
     expect(switchSource('', { args: { disabled: true } })).toContain('disabled');
     expect(switchSource('', { args: { size: 'sm' } })).toContain('size="sm"');

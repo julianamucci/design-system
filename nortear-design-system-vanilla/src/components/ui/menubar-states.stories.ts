@@ -114,7 +114,7 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const [arquivo, editar] = triggersOf(barra);
+    const [file, editar] = triggersOf(barra);
 
     const panel = await waitFor(() => {
       const p = panelOpen(canvasElement);
@@ -123,12 +123,12 @@ export const Open: Story = {
     });
 
     await step('O gatilho aberto se distingue dos vizinhos', async () => {
-      await expect(arquivo.getAttribute('data-state')).toBe('open');
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+      await expect(file.getAttribute('data-state')).toBe('open');
+      await expect(file.getAttribute('aria-expanded')).toBe('true');
       await expect(editar.getAttribute('data-state')).toBe('closed');
       // O realce do gatilho aberto é fundo, não só cor de texto: o CSS
       // compartilhado casa por `[data-state="open"]`.
-      await expect(getComputedStyle(arquivo).backgroundColor).not.toBe(
+      await expect(getComputedStyle(file).backgroundColor).not.toBe(
         getComputedStyle(editar).backgroundColor,
       );
     });
@@ -142,7 +142,7 @@ export const Open: Story = {
       // um e outro. Medir contra a barra acusaria 1,5px de "acima" que ninguém
       // vê — e esconderia um painel realmente nascido para cima.
       await expect(panel.getBoundingClientRect().top).toBeGreaterThanOrEqual(
-        arquivo.getBoundingClientRect().bottom,
+        file.getBoundingClientRect().bottom,
       );
     });
   },
@@ -443,7 +443,7 @@ export const ListenerCleanup: Story = {
       avisos.length = 0;
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => createMenubar([
+        mount: () => createMenubar([
           {
             label: 'Arquivo',
             items: [{ label: 'Novo' }, { label: 'Salvar' }],

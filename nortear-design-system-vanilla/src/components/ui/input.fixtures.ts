@@ -23,7 +23,7 @@ export interface FieldLabelledOptions {
   /** Estado de erro. Não é opção da fábrica: é atributo posto no elemento. */
   invalido?: boolean;
   /** Mensagem de erro, ligada ao campo por `aria-describedby`. */
-  mensagem?: string;
+  message?: string;
 }
 
 /** Rótulo e campo, ligados por `for`/`id`, com a mensagem de erro quando há. */
@@ -47,11 +47,11 @@ export function fieldLabelled(opts: FieldLabelledOptions): HTMLElement {
 
   wrapper.append(label, input);
 
-  if (opts.mensagem) {
+  if (opts.message) {
     const msg = document.createElement('p');
     msg.id = `${opts.id}-msg`;
     msg.className = 'nds-text-body nds-text-destructive';
-    msg.textContent = opts.mensagem;
+    msg.textContent = opts.message;
     input.setAttribute('aria-describedby', msg.id);
     wrapper.append(msg);
   }

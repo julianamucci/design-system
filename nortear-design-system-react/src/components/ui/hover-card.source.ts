@@ -73,8 +73,8 @@ const GLOSSARY_HREF = '/glossario/wcag-2-2-aa';
 const METRIC_HREF = '/metricas/conversao';
 
 /** Espera só entra no snippet quando difere do padrão do componente. */
-function propWait(name: string, value: unknown, padrao: number): string | undefined {
-  if (typeof value !== 'number' || !Number.isFinite(value) || value === padrao) return undefined;
+function propWait(name: string, value: unknown, defaultValue: number): string | undefined {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value === defaultValue) return undefined;
   return propNumber(name, value);
 }
 
@@ -113,14 +113,14 @@ function triggerExplainerLink(label: string, href: string): string {
 }
 
 function cartao(
-  propsRaiz: string,
+  rootProps: string,
   trigger: string,
-  propsConteudo: string,
+  contentProps: string,
   body: string,
 ): string {
-  return `<HoverCard${propsRaiz}>
+  return `<HoverCard${rootProps}>
 ${indentar(trigger)}
-  <HoverCardContent${propsConteudo}>
+  <HoverCardContent${contentProps}>
 ${indentar(body, '    ')}
   </HoverCardContent>
 </HoverCard>`;

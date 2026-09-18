@@ -64,23 +64,23 @@ const SONDA = 'data-sonda-flutuante';
  * design (guideline 12). A largura nasce do texto, para não cravar medida.
  */
 function gatilhoComPainel(): HTMLElement {
-  const ancora = document.createElement('div');
-  ancora.style.position = 'relative';
+  const anchor = document.createElement('div');
+  anchor.style.position = 'relative';
 
-  ancora.appendChild(createButton({ label: 'Abrir', variant: 'outline' }));
+  anchor.appendChild(createButton({ label: 'Abrir', variant: 'outline' }));
 
-  const painel = document.createElement('div');
-  painel.setAttribute(SONDA, 'true');
-  painel.className = 'nds-card';
-  painel.textContent = 'Camada que escapa da moldura para cima';
-  painel.style.position = 'absolute';
+  const panel = document.createElement('div');
+  panel.setAttribute(SONDA, 'true');
+  panel.className = 'nds-card';
+  panel.textContent = 'Camada que escapa da moldura para cima';
+  panel.style.position = 'absolute';
   // Acima do gatilho: é a direção que apareceu cortada em produção.
-  painel.style.insetBlockEnd = '100%';
-  painel.style.insetInlineStart = '0';
-  painel.style.zIndex = '1';
-  ancora.appendChild(painel);
+  panel.style.insetBlockEnd = '100%';
+  panel.style.insetInlineStart = '0';
+  panel.style.zIndex = '1';
+  anchor.appendChild(panel);
 
-  return ancora;
+  return anchor;
 }
 
 /** Recorta? Devolve o nome de quem recorta, ou null. */

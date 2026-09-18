@@ -15,7 +15,7 @@
  *
  * O que é ANDAIME e por isso não entra em snippet nenhum: as props de rótulo que
  * a story injeta para trazer o conteúdo trilíngue (`panelTitle`, `panelBody`,
- * `rotuloCancelar`) e o `(openChange)` do Playground, que está ligado ao espião
+ * `cancelLabel`) e o `(openChange)` do Playground, que está ligado ao espião
  * da `play`. No snippet o texto entra RESOLVIDO, que é o que a pessoa escreve.
  *
  * O que o snippet ensina, e é a lição do componente:

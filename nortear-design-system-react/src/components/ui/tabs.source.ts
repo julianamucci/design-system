@@ -51,7 +51,7 @@ function abas(
   root: string,
   list: string,
   items: Aba[],
-  rotuloDaLista = 'Seções do componente',
+  listLabel = 'Seções do componente',
 ): string {
   const triggers = items
     .map(([value, label, , extra]) => {
@@ -66,7 +66,7 @@ function abas(
     .join('\n');
 
   return `<Tabs${root}>
-  <TabsList aria-label="${rotuloDaLista}"${list}>
+  <TabsList aria-label="${listLabel}"${list}>
 ${triggers}
   </TabsList>
 ${panels}

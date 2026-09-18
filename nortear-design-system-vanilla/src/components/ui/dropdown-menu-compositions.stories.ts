@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
-import { endClose, montar } from './dropdown-menu.fixtures';
+import { endClose, mount } from './dropdown-menu.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
@@ -57,7 +57,7 @@ export const WithLabel: Story = {
     },
   },
   render: () =>
-    montar(
+    mount(
       'Conta',
       [
         { type: 'label', label: 'Conta' },
@@ -137,7 +137,7 @@ export const WithCheckboxItems: Story = {
     },
   },
   render: () =>
-    montar(
+    mount(
       'Colunas',
       [
         { type: 'label', label: 'Colunas visíveis' },
@@ -226,7 +226,7 @@ export const WithRadioGroup: Story = {
     },
   },
   render: () =>
-    montar(
+    mount(
       'Tema',
       [
         { type: 'label', label: 'Aparência' },
@@ -307,7 +307,7 @@ export const WithSubmenu: Story = {
     },
   },
   render: () =>
-    montar(
+    mount(
       'Arquivo',
       [
         { type: 'item', label: 'Renomear', value: 'rename' },
@@ -432,7 +432,7 @@ export const WithShortcuts: Story = {
     },
   },
   render: () =>
-    montar(
+    mount(
       'Editar',
       [
         { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl+Z' },

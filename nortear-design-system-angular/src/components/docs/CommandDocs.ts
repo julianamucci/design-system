@@ -699,10 +699,10 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, key: string, type: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, defaultValue: string) => ({
       name,
       type: type,
-      defaultValue: padrao,
+      defaultValue,
       required: not,
       description: toPlainText(t(`props.table.${key}`)),
     });

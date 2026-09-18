@@ -277,7 +277,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
     <ng-template #tplDoDont1Dont>
       <div ndsAccordion class="nds-max-w-xs nds-text-body">
         <div ndsAccordionItem value="dd1-dont">
-          <button ndsAccordionTrigger>{{ rotuloAmbiguo() }}</button>
+          <button ndsAccordionTrigger>{{ ambiguousLabel() }}</button>
           <div ndsAccordionContent>{{ t('demonstration.labels.a1') }}</div>
         </div>
       </div>
@@ -453,7 +453,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
           @for (p of perguntas(); track p.value) {
             <div ndsAccordionItem [value]="'faq-' + p.value">
               <button ndsAccordionTrigger>{{ p.pergunta }}</button>
-              <div ndsAccordionContent>{{ p.resposta }}</div>
+              <div ndsAccordionContent>{{ p.response }}</div>
             </div>
           }
         </div>
@@ -484,7 +484,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
                 (onOpenChange)="aoMudarItemDaDemo($event, p.pergunta)"
               >
                 <button ndsAccordionTrigger>{{ p.pergunta }}</button>
-                <div ndsAccordionContent>{{ p.resposta }}</div>
+                <div ndsAccordionContent>{{ p.response }}</div>
               </div>
             }
           </div>
@@ -695,7 +695,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
   });
 
   /** O "não faça": frase nominal ambígua no lugar da pergunta completa. */
-  protected readonly rotuloAmbiguo = computed(() => {
+  protected readonly ambiguousLabel = computed(() => {
     dict();
     // O próprio conteúdo compartilhado traz o exemplo do que evitar.
     return toPlainText(t('usage.uxWriting.table.trigger.bad')).split(',')[0].replace(/"/g, '');
@@ -706,7 +706,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
     return [1, 2, 3, 4].map((i) => ({
       value: String(i),
       pergunta: t(`demonstration.labels.q${i}`),
-      resposta: t(`demonstration.labels.a${i}`),
+      response: t(`demonstration.labels.a${i}`),
     }));
   });
 

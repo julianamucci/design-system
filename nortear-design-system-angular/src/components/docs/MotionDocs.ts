@@ -182,7 +182,7 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
               [style.--nds-drag-y]="deslocamentoYcss()"
               [style.--nds-drag-scale]="escalaCss()"
               (pointerdown)="aoPressionar($event)"
-              (pointermove)="aoMover($event)"
+              (pointermove)="onMove($event)"
               (pointerup)="aoSoltar()"
               (pointercancel)="aoSoltar()"
             >
@@ -350,7 +350,7 @@ export class NdsMotionDocs implements OnDestroy {
     this.instanteAnterior = performance.now();
   }
 
-  protected aoMover(evento: PointerEvent): void {
+  protected onMove(evento: PointerEvent): void {
     if (!this.arrastando) return;
     this.offsetX.update((x) => x + evento.movementX);
     this.offsetY.update((y) => y + evento.movementY);

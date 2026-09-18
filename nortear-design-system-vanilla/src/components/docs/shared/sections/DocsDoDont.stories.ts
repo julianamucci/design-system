@@ -53,21 +53,21 @@ const meta: Meta<DocsDoDontProps> = {
         doCaption: 'Uma primária por bloco, com a secundária em outline à esquerda.',
         dontCaption: 'Duas primárias competem, e a pessoa para para escolher.',
         doPreviewFactory: () => {
-          const linha = document.createElement('span');
-          linha.className = 'nds-cluster';
-          linha.dataset.spacing = 'md';
-          linha.append(
+          const line = document.createElement('span');
+          line.className = 'nds-cluster';
+          line.dataset.spacing = 'md';
+          line.append(
             createButton({ variant: 'outline', children: 'Cancelar' }),
             createButton({ children: 'Confirmar' }),
           );
-          return linha;
+          return line;
         },
         dontPreviewFactory: () => {
-          const linha = document.createElement('span');
-          linha.className = 'nds-cluster';
-          linha.dataset.spacing = 'md';
-          linha.append(createButton({ children: 'Salvar' }), createButton({ children: 'Enviar' }));
-          return linha;
+          const line = document.createElement('span');
+          line.className = 'nds-cluster';
+          line.dataset.spacing = 'md';
+          line.append(createButton({ children: 'Salvar' }), createButton({ children: 'Enviar' }));
+          return line;
         },
       },
     ],

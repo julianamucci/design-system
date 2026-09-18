@@ -87,10 +87,10 @@ export const Focus: Story = {
       // Medido DEPOIS da transição: lido no primeiro quadro, o computado
       // devolve `rgba(0,0,0,0) 0px 0px 0px 0px` e um anel pintado passa por
       // inexistente.
-      const { boxShadow, corDaBorda } = focusAssentadoRing(ta);
+      const { boxShadow, borderColor } = focusAssentadoRing(ta);
       await expect(boxShadow).not.toBe('none');
       await expect(boxShadow).toMatch(/2px/);
-      await expect(corDaBorda).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(borderColor).not.toBe('rgba(0, 0, 0, 0)');
     });
   },
 };

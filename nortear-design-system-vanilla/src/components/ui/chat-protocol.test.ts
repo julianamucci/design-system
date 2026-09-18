@@ -74,8 +74,8 @@ describe('as listas cobrem a união inteira', () => {
   });
 
   it('as listas não repetem estado', () => {
-    for (const lista of [TOOL_CALL_STATES, RUN_STATUSES, ATTACHMENT_STATES, CONNECTION_STATES]) {
-      expect(new Set(lista).size).toBe(lista.length);
+    for (const list of [TOOL_CALL_STATES, RUN_STATUSES, ATTACHMENT_STATES, CONNECTION_STATES]) {
+      expect(new Set(list).size).toBe(list.length);
     }
   });
 });
@@ -102,8 +102,8 @@ describe('waitsForPerson — o que separa pending de running', () => {
   });
 
   it('esperar por gente e ter acabado são coisas exclusivas', () => {
-    for (const estado of TOOL_CALL_STATES) {
-      expect(waitsForPerson(estado) && isTerminal(estado)).toBe(false);
+    for (const state of TOOL_CALL_STATES) {
+      expect(waitsForPerson(state) && isTerminal(state)).toBe(false);
     }
   });
 });
@@ -342,8 +342,8 @@ describe('jobProgressValue — o que a barra mostra', () => {
     // Estado novo em `RunStatus` não pode cair num buraco silencioso: ou a
     // fração, ou o indeterminado.
     for (const status of RUN_STATUSES) {
-      const valor = jobProgressValue(status, { done: 1240, total: 5000 });
-      expect(typeof valor === 'number').toBe(true);
+      const value = jobProgressValue(status, { done: 1240, total: 5000 });
+      expect(typeof value === 'number').toBe(true);
     }
   });
 });

@@ -11,12 +11,18 @@ import {
 /**
  * A chamada da fábrica, em uma linha enquanto couber.
  *
- * Mesmo desenho do auxiliar do `story-source`, escrito aqui porque os dois nomes
- * de lá (`chamada`, `montar`) são a dívida de idioma que a catraca
- * `identificador_pt_novo` cobra de todo arquivo NOVO que os importa. A correção
- * é no módulo, e o módulo é consumido por 50 arquivos em quatro stacks — troca
- * de contrato, não trabalho de um componente. Enquanto ela não vem, este
- * arquivo não soma dívida.
+ * Mesmo desenho do `callLine` do `story-source`, escrito aqui — e o MOTIVO que
+ * este comentário dava para a duplicação MORREU. Ele dizia que importar de lá
+ * somaria dívida de idioma, porque o módulo exportava `chamada` e `montar`; os
+ * dois viraram `callLine` e `appendLine` no commit `b914db8b0`, e o docblock do
+ * `audit.mjs` que os citava como exemplo foi corrigido em 2026-09-19.
+ *
+ * A duplicação ficou, e agora com outra razão, menor e medida: o `callLine`
+ * quebra em várias linhas quando o conteúdo já tem `
+`, e este não. Trocar um
+ * pelo outro muda o snippet que o painel Code publica, o que é mudança de
+ * comportamento com teste próprio — não cabe numa campanha de identificador.
+ * Quem for unificar precisa decidir qual das duas quebras é a certa.
  */
 function factoryCall(factory: string, lines: string[]): string {
   // Sem guarda de lista vazia: `labels` é obrigatório na fábrica e entra em

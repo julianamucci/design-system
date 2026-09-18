@@ -466,10 +466,10 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
     // componente no conteúdo compartilhado, e `t()` devolve a própria chave
     // quando erra o caminho. Era assim que "props.table.mode.description"
     // aparecia escrito dentro da tabela, sem erro nenhum.
-    const line = (name: string, key: string, type: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, defaultValue: string) => ({
       name,
       type: type,
-      defaultValue: padrao,
+      defaultValue,
       required: not,
       description: toPlainText(valueOuField(`props.table.${key}`, 'description')),
     });

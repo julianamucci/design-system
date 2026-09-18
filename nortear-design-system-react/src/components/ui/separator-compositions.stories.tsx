@@ -132,12 +132,12 @@ export const EmphasisStrong: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const padrao = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;
+    const defaultElement = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;
     const forte = canvasElement.querySelector<HTMLElement>('[data-testid="forte"]')!;
 
     await step("A ênfase forte dobra a espessura", async () => {
       await expect(forte).toHaveAttribute("data-emphasis", "strong");
-      await expect(padrao.getBoundingClientRect().height).toBeCloseTo(1, 1);
+      await expect(defaultElement.getBoundingClientRect().height).toBeCloseTo(1, 1);
       await expect(forte.getBoundingClientRect().height).toBeCloseTo(2, 1);
     });
 
@@ -145,7 +145,7 @@ export const EmphasisStrong: Story = {
       // Comparar com o separador padrão renderizado ao lado, e não com um valor
       // literal: o token muda por tema, a diferença entre os dois não.
       await expect(getComputedStyle(forte).backgroundColor).not.toBe(
-        getComputedStyle(padrao).backgroundColor,
+        getComputedStyle(defaultElement).backgroundColor,
       );
     });
 

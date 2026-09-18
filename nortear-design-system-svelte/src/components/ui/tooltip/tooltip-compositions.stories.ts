@@ -145,8 +145,8 @@ export const HelpInFormField: Story = {
     await step('O rótulo do campo continua ligado ao campo, e não ao balão', async () => {
       // A ajuda entra ao LADO do rótulo; quem nomeia o input continua sendo o
       // <label>, e trocar isso pelo balão deixaria o campo sem nome em touch.
-      const campo = canvas.getByLabelText('Token de API');
-      await expect(campo.tagName).toBe('INPUT');
+      const field = canvas.getByLabelText('Token de API');
+      await expect(field.tagName).toBe('INPUT');
     });
 
     await step('E o balão descreve onde gerar o valor', async () => {

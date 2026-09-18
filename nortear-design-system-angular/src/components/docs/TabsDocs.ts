@@ -693,10 +693,10 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, key: string, type?: string, padrao?: string) => ({
+    const line = (name: string, key: string, type?: string, defaultValue?: string) => ({
       name: name,
       type: type ?? toPlainText(t(`props.table.${key}.type`)),
-      defaultValue: padrao ?? toPlainText(t(`props.table.${key}.default`)),
+      defaultValue: defaultValue ?? toPlainText(t(`props.table.${key}.default`)),
       required: toPlainText(t(`props.table.${key}.required`)),
       description: toPlainText(t(`props.table.${key}.description`)),
     });

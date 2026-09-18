@@ -146,8 +146,8 @@ export const Open: Story = {
       triggerLabel: LABELS.trigger(),
       panelTitle: LABELS.title(),
       panelDescription: LABELS.description(),
-      rotuloCancelar: LABELS.cancelar(),
-      rotuloAplicar: LABELS.aplicar(),
+      cancelLabel: LABELS.cancelar(),
+      applyLabel: LABELS.aplicar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -160,8 +160,8 @@ export const Open: Story = {
           </div>
 
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
-            <button ndsButton>{{ rotuloAplicar }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
+            <button ndsButton>{{ applyLabel }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -211,8 +211,8 @@ export const LongScrollBody: Story = {
       triggerLabel: TERMOS.trigger,
       panelTitle: TERMOS.title,
       panelDescription: TERMOS.description,
-      rotuloCancelar: TERMOS.cancelar,
-      rotuloAplicar: TERMOS.aceitar,
+      cancelLabel: TERMOS.cancelar,
+      applyLabel: TERMOS.aceitar,
       bodyLabel: TERMOS.bodyLabel,
       paragrafos: Array.from({ length: 24 }, (_, i) => ({
         id: `p-${i}`,
@@ -240,8 +240,8 @@ export const LongScrollBody: Story = {
           </div>
 
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
-            <button ndsButton>{{ rotuloAplicar }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
+            <button ndsButton>{{ applyLabel }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -318,8 +318,8 @@ export const WithCloseButtonHidden: Story = {
       triggerLabel: LABELS.trigger(),
       panelTitle: LABELS.title(),
       panelDescription: LABELS.description(),
-      rotuloCancelar: LABELS.cancelar(),
-      rotuloAplicar: LABELS.aplicar(),
+      cancelLabel: LABELS.cancelar(),
+      applyLabel: LABELS.aplicar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -337,8 +337,8 @@ export const WithCloseButtonHidden: Story = {
                daqui é justamente o par — dispensar o X só se sustenta porque a
                saída explícita continua ali, ao lado da ação primária. -->
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
-            <button ndsButton>{{ rotuloAplicar }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
+            <button ndsButton>{{ applyLabel }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -399,14 +399,14 @@ export const Controlled: Story = {
   render: () => ({
     props: {
       isOpen: false,
-      rotuloExterno: 'Abrir pelo estado externo',
+      externalLabel: 'Abrir pelo estado externo',
       panelTitle: LABELS.title(),
       panelDescription: LABELS.description(),
-      rotuloCancelar: LABELS.cancelar(),
+      cancelLabel: LABELS.cancelar(),
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <button ndsButton variant="outline" (click)="isOpen = true">{{ rotuloExterno }}</button>
+        <button ndsButton variant="outline" (click)="isOpen = true">{{ externalLabel }}</button>
 
         <nds-sheet [open]="isOpen" (openChange)="isOpen = $event">
           <ng-template ndsSheetContent>
@@ -416,7 +416,7 @@ export const Controlled: Story = {
             </div>
 
             <div ndsSheetFooter>
-              <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
+              <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
             </div>
           </ng-template>
         </nds-sheet>

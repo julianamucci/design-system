@@ -41,7 +41,7 @@ export type SelectSnippetOptions = {
   'aria-labelledby'?: boolean;
   'aria-invalid'?: boolean;
   /** Mensagem de erro ligada ao campo por `aria-describedby`. */
-  mensagemDeErro?: string;
+  errorMessage?: string;
   items?: SelectEntrySnippet[];
   /** Presença liga a linha do callback; string troca a expressão mostrada. */
   onValueChange?: unknown;
@@ -114,7 +114,7 @@ function fieldLines(o: SelectSnippetOptions, recuo = '  '): string[] {
     ['disabled', o.disabled ? 'true' : undefined],
     ['required', o.required ? 'true' : undefined],
     ['aria-invalid', o['aria-invalid'] ? 'true' : undefined],
-    ['aria-describedby', o.mensagemDeErro ? text(`${id}-erro`) : undefined],
+    ['aria-describedby', o.errorMessage ? text(`${id}-erro`) : undefined],
     ['items', itemsLiteral(o.items ?? ITEMS_DEFAULT, recuo)],
     [
       'onValueChange',
@@ -138,11 +138,11 @@ rotulo.textContent = ${text(o.labelText ?? 'Estado')};`;
 
 /** A mensagem de erro, quando a story mostra o campo inválido. */
 function message(o: SelectSnippetOptions): string | undefined {
-  if (!o.mensagemDeErro) return undefined;
+  if (!o.errorMessage) return undefined;
   return `const erro = document.createElement('p');
 erro.id = ${text(`${fieldId(o)}-erro`)};
 erro.className = 'nds-text-body nds-text-destructive';
-erro.textContent = ${text(o.mensagemDeErro)};`;
+erro.textContent = ${text(o.errorMessage)};`;
 }
 
 /** A chamada real de `createSelect` com o rótulo que dá nome ao campo. */

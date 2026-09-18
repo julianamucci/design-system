@@ -37,7 +37,7 @@ export interface BarRatio {
   /** Fração da trilha ocupada pelo pegador. */
   fracaoDoPegador: number;
   /** Fração do conteúdo visível no viewport. */
-  fracaoVisivel: number;
+  visibleFraction: number;
   /** Deslocamento do pegador dentro da trilha, em px. */
   deslocamento: number;
   /** Deslocamento máximo possível do pegador, em px. */
@@ -71,7 +71,7 @@ export function measureRatio(
 
   return {
     fracaoDoPegador: sizeTrack > 0 ? sizeGrabber / sizeTrack : 0,
-    fracaoVisivel: total > 0 ? visible / total : 0,
+    visibleFraction: total > 0 ? visible / total : 0,
     deslocamento: startGrabber - startTrack,
     deslocamentoMaximo: Math.max(0, sizeTrack - sizeGrabber),
   };

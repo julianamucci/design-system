@@ -105,7 +105,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
       : {};
 
   /** A data que ancora o mês exibido, seja qual for o modo. */
-  const ancora = selected ?? selecionadas[0] ?? intervalo.from ?? null;
+  const anchor = selected ?? selecionadas[0] ?? intervalo.from ?? null;
 
   /** No modo múltiplo, escolher de novo tira da lista — é o que o diferencia. */
   function listToggle(date: Date): void {
@@ -121,8 +121,8 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
   };
 
   const today = new Date();
-  let viewYear = ancora ? ancora.getFullYear() : today.getFullYear();
-  let viewMonth = ancora ? ancora.getMonth() : today.getMonth();
+  let viewYear = anchor ? anchor.getFullYear() : today.getFullYear();
+  let viewMonth = anchor ? anchor.getMonth() : today.getMonth();
 
   // Um `role="grid"` promete navegação por setas, e o grid inteiro entra na
   // tabulação como UM parada só: quem chega por Tab pousa no dia corrente e
@@ -131,9 +131,9 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
   const hojeEstaNaVisao = today.getFullYear() === viewYear && today.getMonth() === viewMonth;
   /* v8 ignore next -- o lado falso do ternário é inalcançável: sem data inicial
      a visão abre no mês de hoje (linhas acima), então `hojeEstaNaVisao` é
-     verdadeiro sempre que `ancora` é nula. Fica como rede se a origem da visão
+     verdadeiro sempre que `anchor` é nula. Fica como rede se a origem da visão
      deixar de ser o relógio. */
-  let focado: Date = ancora ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
+  let focado: Date = anchor ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
   let devolverFocus = false;
 
   const isoDe = (d: Date): string =>
@@ -415,7 +415,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const prevBtn = document.createElement('button');
     prevBtn.type = 'button';
     prevBtn.className = 'nds-calendar-nav-btn';
-    prevBtn.setAttribute('aria-label', rotulos.mesAnterior);
+    prevBtn.setAttribute('aria-label', rotulos.previousMonth);
     prevBtn.appendChild(buildChevron('left'));
     prevBtn.addEventListener('click', () => {
       viewMonth -= 1;
@@ -426,7 +426,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const nextBtn = document.createElement('button');
     nextBtn.type = 'button';
     nextBtn.className = 'nds-calendar-nav-btn';
-    nextBtn.setAttribute('aria-label', rotulos.proximoMes);
+    nextBtn.setAttribute('aria-label', rotulos.nextMonth);
     nextBtn.appendChild(buildChevron('right'));
     nextBtn.addEventListener('click', () => {
       viewMonth += 1;

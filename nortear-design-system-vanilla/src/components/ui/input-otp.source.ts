@@ -95,7 +95,7 @@ export type InputOtpCompositionOptions = InputOtpSnippetOptions & {
    * controle só. `aria-labelledby` tem precedência sobre o `aria-label` padrão
    * da fábrica — o texto que a pessoa vê passa a ser o que o leitor anuncia.
    */
-  ligarRotulo?: boolean;
+  bindLabel?: boolean;
   /** Texto de apoio, apontado por `describedBy`. */
   ajuda?: string;
   /** Mensagem de erro, apontada por `describedBy`. */
@@ -115,7 +115,7 @@ export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): 
   const label = o.label ?? NAME_DEFAULT;
   const idAjuda = o.ajuda ? 'otp-ajuda' : undefined;
   const idError = o.error ? 'otp-erro' : undefined;
-  const idLabel = o.ligarRotulo ? 'otp-rotulo' : undefined;
+  const idLabel = o.bindLabel ? 'otp-rotulo' : undefined;
 
   const lines = otpLines({
     ...o,

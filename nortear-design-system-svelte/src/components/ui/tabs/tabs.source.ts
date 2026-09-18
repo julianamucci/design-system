@@ -26,8 +26,8 @@ type Aba = {
 type Composition = {
   abas: Aba[];
   /** Aba ativa na montagem — é o valor inicial do `$state`. */
-  ativa: string;
-  rotuloLista: string;
+  active: string;
+  listLabel: string;
   variant?: 'line';
   orientacao?: 'vertical';
   ativacao?: 'manual';
@@ -51,10 +51,10 @@ const ABAS_DEFAULT: Aba[] = [
  * painel por aba. Só o que difere do padrão vira atributo — `variant="default"`,
  * `orientation="horizontal"` e `activationMode="automatic"` ficam de fora.
  */
-function montar({
+function mount({
   abas,
-  ativa,
-  rotuloLista,
+  active,
+  listLabel,
   variant,
   orientacao,
   ativacao,
@@ -67,7 +67,7 @@ function montar({
   );
   const list = attrs(
     variant ? `variant="${variant}"` : '',
-    `aria-label="${rotuloLista}"`,
+    `aria-label="${listLabel}"`,
   );
 
   const triggers = abas
@@ -84,7 +84,7 @@ function montar({
   return svelteSnippet(
     `${IMPORT}
 
-let value = $state("${ativa}");`,
+let value = $state("${active}");`,
     `<Tabs${root}>
   <TabsList${list}>
 ${triggers}
@@ -105,10 +105,10 @@ ${panels}
 export function tabsSource(_gerado?: string, ctx?: { args?: Partial<TabsArgs> }): string {
   const { orientation = 'horizontal', activationMode = 'automatic' } = ctx?.args ?? {};
 
-  return montar({
+  return mount({
     abas: ABAS_DEFAULT,
-    ativa: 'overview',
-    rotuloLista: 'Seções do componente',
+    active: 'overview',
+    listLabel: 'Seções do componente',
     orientacao: orientation === 'vertical' ? 'vertical' : undefined,
     ativacao: activationMode === 'manual' ? 'manual' : undefined,
   });
@@ -116,48 +116,48 @@ export function tabsSource(_gerado?: string, ctx?: { args?: Partial<TabsArgs> })
 
 /** Variante line: fileira sem trilho, com a linha sob a aba ativa. */
 export function tabsLineSource(): string {
-  return montar({
+  return mount({
     abas: [
       { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
       { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
       { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
-    ativa: 'overview',
-    rotuloLista: 'Seções do componente',
+    active: 'overview',
+    listLabel: 'Seções do componente',
     variant: 'line',
   });
 }
 
 /** Orientação vertical: lista à esquerda, painel à direita, setas de cima e baixo. */
 export function tabsVerticalSource(): string {
-  return montar({
+  return mount({
     abas: [
       { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
       { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
       { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
-    ativa: 'overview',
-    rotuloLista: 'Seções do componente',
+    active: 'overview',
+    listLabel: 'Seções do componente',
     orientacao: 'vertical',
   });
 }
 
 /** Estado inativo: quem decide a aba ativa na montagem é o valor inicial. */
 export function tabsAbaInitialSource(): string {
-  return montar({
+  return mount({
     abas: [
       { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
       { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
       { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
-    ativa: 'properties',
-    rotuloLista: 'Seções do componente',
+    active: 'properties',
+    listLabel: 'Seções do componente',
   });
 }
 
 /** Estado desabilitado: a aba continua alcançável pela seta e não ativa. */
 export function tabsDesabilitadaSource(): string {
-  return montar({
+  return mount({
     abas: [
       { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
       {
@@ -168,14 +168,14 @@ export function tabsDesabilitadaSource(): string {
       },
       { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
-    ativa: 'overview',
-    rotuloLista: 'Seções do componente',
+    active: 'overview',
+    listLabel: 'Seções do componente',
   });
 }
 
 /** Composição de configurações: seções paralelas com nome próprio na fileira. */
 export function tabsConfigSource(): string {
-  return montar({
+  return mount({
     abas: [
       {
         value: 'profile',
@@ -193,14 +193,14 @@ export function tabsConfigSource(): string {
         content: 'Autenticação de dois fatores e sessões ativas.',
       },
     ],
-    ativa: 'profile',
-    rotuloLista: 'Configurações',
+    active: 'profile',
+    listLabel: 'Configurações',
   });
 }
 
 /** Composição preview/código: duas abas na variante sem trilho. */
 export function tabsPreviewCodeSource(): string {
-  return montar({
+  return mount({
     abas: [
       {
         value: 'preview',
@@ -211,15 +211,15 @@ export function tabsPreviewCodeSource(): string {
       // exemplo — escrito como tag ele viraria um componente de verdade.
       { value: 'code', label: 'Código', content: '{"<Button>Click me</Button>"}' },
     ],
-    ativa: 'preview',
-    rotuloLista: 'Modos de visualização',
+    active: 'preview',
+    listLabel: 'Modos de visualização',
     variant: 'line',
   });
 }
 
 /** Composição de navegação lateral: quatro seções no eixo vertical. */
 export function tabsNavigationVerticalSource(): string {
-  return montar({
+  return mount({
     abas: [
       { value: 'overview', label: 'Visão geral', content: 'Resumo executivo do projeto.' },
       {
@@ -230,22 +230,22 @@ export function tabsNavigationVerticalSource(): string {
       { value: 'examples', label: 'Exemplos', content: 'Exemplos práticos de uso.' },
       { value: 'api', label: 'API', content: 'Referência completa da API.' },
     ],
-    ativa: 'overview',
-    rotuloLista: 'Documentação',
+    active: 'overview',
+    listLabel: 'Documentação',
     orientacao: 'vertical',
   });
 }
 
 /** Composição de ativação manual: a seta move o foco e Enter ou Espaço confirma. */
 export function tabsAtivacaoManualSource(): string {
-  return montar({
+  return mount({
     abas: [
       { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
       { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
       { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
-    ativa: 'overview',
-    rotuloLista: 'Seções do componente',
+    active: 'overview',
+    listLabel: 'Seções do componente',
     ativacao: 'manual',
   });
 }

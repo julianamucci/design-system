@@ -9187,6 +9187,105 @@ const RADICAIS_PT = [
  * O miolo de `${…}` é apagado junto com o template, como já era: identificador
  * dentro de interpolação não é contado, e mudar isso é outra decisão.
  */
+/**
+ * Índice logo após a barra de fechamento de um literal de regex, ou -1.
+ *
+ * Extraída para que a varredura de FORA e a de dentro de `${…}` usem a MESMA
+ * regra. Enquanto a de dentro não reconhecia regex, `${value.replace(/'/g, …)}`
+ * fazia a aspa da regex abrir um literal que atravessava o `}` da interpolação —
+ * e o template inteiro deixava de fechar. Duas cópias da mesma heurística
+ * divergem; uma função, não.
+ *
+ * Classe de caractere consumida inteira (uma `/` dentro de `[…]` não fecha) e
+ * regex não atravessa quebra de linha — se não fechar na mesma linha, não era
+ * regex, era o operador de divisão.
+ */
+function fimDaRegex(fonte, i) {
+  let j = i + 1;
+  let emClasse = false;
+  while (j < fonte.length) {
+    const c = fonte[j];
+    if (c === '\\') { j += 2; continue; }
+    if (c === '\n') return -1;
+    if (emClasse) { if (c === ']') emClasse = false; j += 1; continue; }
+    if (c === '[') { emClasse = true; j += 1; continue; }
+    if (c === '/') {
+      j += 1;
+      while (j < fonte.length && /[gimsuy]/.test(fonte[j])) j += 1;
+      return j;
+    }
+    j += 1;
+  }
+  return -1;
+}
+
+/** A barra abre regex, e não divisão, se o que veio antes é delimitador. */
+const ABRE_REGEX = /(?:=>|[(,=:[!?&|+{;]|\breturn|\bcase)\s*$/;
+
+/** Índice logo após a aspa de fechamento, ou -1 se ela não vier. */
+function fimDaAspa(fonte, i, aspa) {
+  let j = i + 1;
+  while (j < fonte.length) {
+    if (fonte[j] === '\\') { j += 2; continue; }
+    if (fonte[j] === aspa) return j + 1;
+    j += 1;
+  }
+  return -1;
+}
+
+/**
+ * Índice logo após a crase de fechamento de um template, ou -1.
+ *
+ * Mantém uma PILHA em vez de procurar a próxima crase, porque dentro de `${…}`
+ * cabe outro template, e dentro dele outra interpolação. A pilha também guarda
+ * bloco (`{`) e literal de aspa, senão um `}` dentro de string fecharia a
+ * interpolação por engano — que é a mesma família de erro, um degrau abaixo.
+ */
+function fimDoTemplate(fonte, i) {
+  const pilha = ['tpl'];
+  let j = i + 1;
+  // O que veio antes, em contexto de CÓDIGO, para separar regex de divisão.
+  // RASTRO e não um caractere: `=>` e `return` não cabem em um só, e arrow
+  // function dentro de `${…}` é idioma comum.
+  let anterior = '(';
+  while (j < fonte.length && pilha.length) {
+    const c = fonte[j];
+    const topo = pilha[pilha.length - 1];
+    if (c === '\\') { j += 2; continue; }
+
+    if (topo === 'tpl') {
+      if (c === '`') { pilha.pop(); j += 1; continue; }
+      if (c === '$' && fonte[j + 1] === '{') { pilha.push('interp'); anterior = '('; j += 2; continue; }
+      j += 1;
+      continue;
+    }
+
+    // dentro de `${…}` ou de um bloco aninhado: aqui é CÓDIGO
+    const rastro = (ch2) => { anterior = (anterior + ch2).slice(-8); };
+    if (c === '`') { pilha.push('tpl'); j += 1; continue; }
+    if (c === '{') { pilha.push('bloco'); j += 1; rastro('{'); continue; }
+    if (c === '}') { pilha.pop(); j += 1; rastro('}'); continue; }
+    if (c === "'" || c === '"') {
+      const fim = fimDaAspa(fonte, j, c);
+      if (fim < 0) return -1;
+      j = fim;
+      rastro('x');
+      continue;
+    }
+    // REGEX dentro da interpolação. Sem isto, a aspa de `/'/g` abria um literal
+    // que atravessava o `}` e o template inteiro deixava de fechar — medido em
+    // quatro `*.source.ts` que escapam aspas assim.
+    if (c === '/' && fonte[j + 1] !== '/' && fonte[j + 1] !== '*'
+        && ABRE_REGEX.test(anterior)) {
+      const fim = fimDaRegex(fonte, j);
+      if (fim > 0) { j = fim; rastro('x'); continue; }
+    }
+    if (!/\s/.test(c)) rastro(c);
+    j += 1;
+  }
+  return pilha.length ? -1 : j;
+}
+
 function apagaLiterais(fonte) {
   let saida = '';
   let i = 0;
@@ -9222,7 +9321,7 @@ function apagaLiterais(fonte) {
     // `=>` não precede divisão válida, então não há o risco que `>` sozinho
     // traria.
     if (ch === '/' && fonte[i + 1] !== '/' && fonte[i + 1] !== '*'
-        && /(?:=>|[(,=:[!?&|+{;]|\breturn|\bcase)\s*$/.test(saida.slice(-24))) {
+        && ABRE_REGEX.test(saida.slice(-24))) {
       let j = i + 1;
       let emClasse = false;
       let fechou = false;
@@ -9249,13 +9348,22 @@ function apagaLiterais(fonte) {
       i += 1;
       continue;
     }
-    let j = i + 1;
-    while (j < fonte.length) {
-      if (fonte[j] === '\\') { j += 2; continue; }
-      if (fonte[j] === ch) break;
-      j += 1;
-    }
-    if (j >= fonte.length) {
+
+    // CRASE conta a profundidade de `${…}`; aspa simples e dupla, não.
+    //
+    // Procurar "a próxima crase" fecha o template cedo demais quando há outro
+    // DENTRO de uma interpolação — e daí em diante a paridade inverte, que é o
+    // mesmo defeito de fronteira dos três caminhos já consertados, um nível
+    // acima. Medido em 2026-09-19 num `*.source.ts` real:
+    //
+    //     `a ${x ? `b ${f(`${id}-rotulo`)}` : ''}c.htmlFor`
+    //
+    // saía com `c.htmlFor` de pé, como se fosse código. O efeito é sempre
+    // sobre-contar: conteúdo de snippet publicado passa a ser lido como
+    // identificador, e o portão pede para renomear o exemplo que o leitor copia.
+    // Cinco dos 78 nomes que duas stacks ainda reportavam eram disto.
+    const fim = ch === '`' ? fimDoTemplate(fonte, i) : fimDaAspa(fonte, i, ch);
+    if (fim < 0) {
       // Literal que não fecha: emite a aspa e segue. A forma antiga engolia daqui
       // até o fim do arquivo, que é como um apóstrofo de prosa virava 30 falsos.
       saida += ch;
@@ -9263,7 +9371,7 @@ function apagaLiterais(fonte) {
       continue;
     }
     saida += ch + ch;
-    i = j + 1;
+    i = fim;
   }
   return saida;
 }
@@ -9381,9 +9489,17 @@ function gerarBaselinePt() {
  * O que ela NÃO alcança, declarado para não virar cobertura fantasma:
  *   - nome igual nas duas línguas (`total`, `item`, `label`) — fora da lista de
  *     radicais de propósito, porque incluí-lo geraria ruído garantido;
- *   - nome importado de módulo compartilhado que ainda carrega a dívida
- *     (`chamada`, `montar` do `story-source`): o consumidor é acusado pelo
- *     import, e a correção é no módulo, não nele;
+ *   - nome importado de módulo compartilhado que ainda carrega a dívida: o
+ *     consumidor é acusado pelo import, e a correção é no módulo, não nele.
+ *
+ *     Esta linha citava `chamada` e `montar` "do `story-source`", e o exemplo
+ *     estava MORTO nas duas pontas — medido em 2026-09-19. Os dois já tinham
+ *     virado `callLine` e `appendLine` no commit `b914db8b0`, e o `montar` que
+ *     restava era campo de opções do `leak-probe.ts`, não do `story-source`.
+ *     Pior: dois comentários de `*.source.ts` ainda justificavam DUPLICAR código
+ *     citando essa dívida como viva. Exemplo em docblock envelhece calado, e
+ *     envelhecendo passa a ensinar a coisa errada — por isso a forma da regra
+ *     fica, e o exemplo sai;
  *   - CONTAGEM, não identidade: trocar um nome português por outro mantém o
  *     total e passa. A catraca impede crescimento, não substituição.
  */

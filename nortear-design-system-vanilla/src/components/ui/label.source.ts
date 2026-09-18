@@ -168,7 +168,7 @@ export function labelSourceWith(fixas: LabelSnippetOptions): SourceTransform<Lab
 }
 
 /** Transform de story para o campo obrigatório. */
-export function labelSourceObrigatorio(
+export function labelSourceRequired(
   fixas: LabelSnippetOptions = {},
 ): SourceTransform<LabelSnippetOptions> {
   return () => labelObrigatorioSnippet(fixas);

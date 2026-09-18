@@ -25,12 +25,12 @@ function text(label: string, ...partes: Array<string | ''>): string {
  * genérica de ícone: é a única que acompanha o tamanho do botão pelos
  * modificadores. Sem o rótulo, a ação fica sem nome acessível.
  */
-function soIcon(icone: string, modulo: string, size: string, label: string): string {
+function soIcon(icon: string, modulo: string, size: string, label: string): string {
   return svelteSnippet(
     `${IMPORT}
-import ${icone} from "@lucide/svelte/icons/${modulo}";`,
+import ${icon} from "@lucide/svelte/icons/${modulo}";`,
     `<Button size="${size}" aria-label="${label}">
-  <${icone} class="nds-button-icon-svg" aria-hidden="true" />
+  <${icon} class="nds-button-icon-svg" aria-hidden="true" />
 </Button>`,
   );
 }

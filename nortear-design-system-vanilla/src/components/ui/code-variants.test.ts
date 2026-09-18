@@ -61,7 +61,7 @@ describe('isCodeVariantNode — quem de fato recusa é a FORMA', () => {
   it('mistura de stack com chave estranha é recusada por inteiro', () => {
     // Recusar só a chave estranha deixaria o nó meio achatado, que é pior:
     // metade vira snippet e metade some.
-    expect(isCodeVariantNode('code', { react: '<A />', descricao: 'texto' })).toBe(false);
+    expect(isCodeVariantNode('code', { react: '<A />', description: 'texto' })).toBe(false);
   });
 
   it('valor que não é objeto de strings é recusado', () => {

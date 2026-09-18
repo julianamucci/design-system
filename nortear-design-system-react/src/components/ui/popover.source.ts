@@ -83,9 +83,9 @@ function header(title: string, description?: string): string {
 }
 
 /** A composição inteira: raiz, gatilho e painel. */
-function popover(root: string, gatilhoRotulo: string, panel: string, content: string): string {
+function popover(root: string, triggerLabel: string, panel: string, content: string): string {
   return `<Popover${root}>
-${trigger(gatilhoRotulo)}
+${trigger(triggerLabel)}
   <PopoverContent${panel}>
 ${content}
   </PopoverContent>

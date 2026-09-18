@@ -32,7 +32,7 @@ type Story = StoryObj;
 function buildVariant(
   direction: DrawerDirection,
   title: string,
-  descricao: string,
+  description: string,
   /** Sem valor, a fábrica assume `2` — que é o que as quatro direções usam. */
   titleLevel?: 1 | 2 | 3 | 4 | 5 | 6,
 ): HTMLElement {
@@ -51,7 +51,7 @@ function buildVariant(
     direction,
     title: title,
     titleLevel,
-    description: descricao,
+    description,
     content,
     footer,
   });

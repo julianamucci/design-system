@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils';
 import { btnClass } from '@/components/ui/button';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { prefersReducedMotion } from '@/lib/motion';
-import { marcarSlideCurrent } from '@shared/primitives/carousel-active-slide';
+import { markCurrentSlide } from '@shared/primitives/carousel-active-slide';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -236,7 +236,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     // O estado do slide atual anda junto com o das setas: os dois saem da mesma
     // pergunta ao motor, e separá-los abriria a janela em que a seta já sabe
     // que andou e a escala ainda não.
-    if (embla) marcarSlideCurrent(embla.slideNodes(), embla.selectedScrollSnap());
+    if (embla) markCurrentSlide(embla.slideNodes(), embla.selectedScrollSnap());
   }
 
   // A origem é declarada por quem MANDA o motor andar, e lida quando ele avisa
@@ -252,7 +252,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     origemPendente = 'button';
   }
 
-  function mover(target: 'prev' | 'next', source: CarouselNavSource): void {
+  function move(target: 'prev' | 'next', source: CarouselNavSource): void {
     origemPendente = source;
     // O motor é montado quando a raiz entra no documento, e isso acontece um
     // quadro depois de a fábrica devolver o nó. Quem clica ANTES desse quadro
@@ -334,7 +334,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
 
   function startAutoplay(): void {
     if (!autoplayLigado || autoplayTimer) return;
-    autoplayTimer = setInterval(() => mover('next', 'autoplay'), autoplayInterval);
+    autoplayTimer = setInterval(() => move('next', 'autoplay'), autoplayInterval);
   }
 
   function stopAutoplay(): void {
@@ -343,12 +343,12 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   }
 
   prevBtn.addEventListener('click', () => {
-    mover('prev', 'button');
+    move('prev', 'button');
     stopAutoplay();
   });
 
   nextBtn.addEventListener('click', () => {
-    mover('next', 'button');
+    move('next', 'button');
     stopAutoplay();
   });
 
@@ -360,7 +360,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   root.addEventListener('keydown', (e) => {
     if (e.key !== teclaVoltar && e.key !== teclaAvancar) return;
     e.preventDefault();
-    mover(e.key === teclaAvancar ? 'next' : 'prev', 'keyboard');
+    move(e.key === teclaAvancar ? 'next' : 'prev', 'keyboard');
     stopAutoplay();
   });
 

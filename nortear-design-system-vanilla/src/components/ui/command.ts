@@ -416,7 +416,7 @@ export function createCommand(options: CommandOptions): CommandElement {
     let first = true;
     let groupIndex = 0;
 
-    groups.forEach(({ title: nomeDoGrupo, items: itensDoGrupo }) => {
+    groups.forEach(({ title: groupName, items: itensDoGrupo }) => {
       if (!first) list.appendChild(createSeparator());
       first = false;
 
@@ -424,11 +424,11 @@ export function createCommand(options: CommandOptions): CommandElement {
       groupEl.className = 'nds-command-group';
       groupEl.dataset.slot = 'command-group';
 
-      if (nomeDoGrupo) {
+      if (groupName) {
         const heading = document.createElement('div');
         heading.className = 'nds-command-group-heading';
         heading.id = `${_cmdId}-group-${groupIndex}`;
-        heading.textContent = nomeDoGrupo;
+        heading.textContent = groupName;
         groupEl.appendChild(heading);
         // O grupo é nomeado pelo próprio cabeçalho — e o cabeçalho não vira
         // uma opção da lista, que é o erro clássico deste componente.

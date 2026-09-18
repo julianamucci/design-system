@@ -520,7 +520,7 @@ const COMPOSITION_CODE = {
             <!-- Não-controlado -->
             <div ndsCollapsible
               class="nds-w-full nds-max-w-sm"
-              (openChange)="aoAlternar('nao_controlado', $event)"
+              (openChange)="onToggle('nao_controlado', $event)"
             >
               <button
                 ndsCollapsibleTrigger
@@ -747,7 +747,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
     ];
   });
 
-  protected aoAlternar(qual: string, isOpen: boolean): void {
+  protected onToggle(qual: string, isOpen: boolean): void {
     track('collapsible_toggle', {
       // Valor estável, nunca o texto traduzido: o mesmo evento viraria três
       // valores no GA4, um por idioma.
@@ -759,7 +759,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
 
   protected aoAlternarControlado(isOpen: boolean): void {
     this.demoControlado.set(isOpen);
-    this.aoAlternar('controlado', isOpen);
+    this.onToggle('controlado', isOpen);
   }
 
   protected readonly navGroups = computed(() => {

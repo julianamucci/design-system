@@ -364,7 +364,7 @@ export const ListenerCleanup: Story = {
       avisos.length = 0;
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => {
+        mount: () => {
           const trigger = document.createElement('div');
           trigger.textContent = 'Área com menu de contexto';
           return createContextMenu({

@@ -34,8 +34,8 @@ const ALIGNMENT_DEFAULT = 'center';
  * vêm importados de fora do arquivo —, o que chega é a string vazia, que é
  * FALSA. O popover nasceria fechado num snippet que diz o contrário.
  */
-function bool(name: string, value: unknown, padrao: boolean): string {
-  if (typeof value !== 'boolean' || value === padrao) return '';
+function bool(name: string, value: unknown, defaultValue: boolean): string {
+  if (typeof value !== 'boolean' || value === defaultValue) return '';
   return `:${name}="${value}"`;
 }
 

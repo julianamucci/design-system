@@ -127,12 +127,12 @@ export class NdsPagination {
   /** Nome acessível do landmark. Padrão: `Paginação`. */
   readonly label = input<string | undefined>(undefined);
 
-  private readonly rotuloEscrito = inject<ElementRef<HTMLElement>>(
+  private readonly writtenLabel = inject<ElementRef<HTMLElement>>(
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.rotuloEscrito ?? 'Paginação',
+    () => this.label() ?? this.writtenLabel ?? 'Paginação',
   );
 }
 

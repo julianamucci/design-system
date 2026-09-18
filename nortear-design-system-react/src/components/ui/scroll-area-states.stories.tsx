@@ -149,7 +149,7 @@ export const AlwaysVisible: Story = {
       // o padding, outra reserva o canto no pé da barra, e todas aplicam um
       // tamanho mínimo de pegador. O que se afirma é a ORDEM DE GRANDEZA — com o
       // pegador ocupando a trilha inteira a diferença passa de 0.6.
-      await expect(Math.abs(p.fracaoDoPegador - p.fracaoVisivel)).toBeLessThan(0.2);
+      await expect(Math.abs(p.fracaoDoPegador - p.visibleFraction)).toBeLessThan(0.2);
     });
 
     await step("O pegador acompanha a posição da rolagem", async () => {
@@ -395,26 +395,26 @@ export const NoLimit: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const [semAltura, comAltura] = Array.from(
+    const [withoutHeight, withHeight] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area-viewport"]'),
     );
 
     await step("Sem altura no pai o conteúdo expande e não há rolagem", async () => {
       // functional.item4.
-      await expect(transbordo(semAltura).y).toBe(false);
-      await expect(semAltura.scrollHeight).toBe(semAltura.clientHeight);
-      await expect(semAltura.getBoundingClientRect().height).toBeGreaterThan(300);
+      await expect(transbordo(withoutHeight).y).toBe(false);
+      await expect(withoutHeight.scrollHeight).toBe(withoutHeight.clientHeight);
+      await expect(withoutHeight.getBoundingClientRect().height).toBeGreaterThan(300);
     });
 
     await step("Viewport que não rola sai da ordem de tabulação", async () => {
       // A lib tira do Tab o que não tem para onde rolar — parada de teclado que
       // não faz nada é ruído para quem navega assim.
-      await expect(semAltura).toHaveAttribute("tabindex", "-1");
+      await expect(withoutHeight).toHaveAttribute("tabindex", "-1");
     });
 
     await step("Com altura no pai o mesmo conteúdo rola", async () => {
-      await expect(transbordo(comAltura).y).toBe(true);
-      await expect(comAltura).toHaveAttribute("tabindex", "0");
+      await expect(transbordo(withHeight).y).toBe(true);
+      await expect(withHeight).toHaveAttribute("tabindex", "0");
     });
   },
 };

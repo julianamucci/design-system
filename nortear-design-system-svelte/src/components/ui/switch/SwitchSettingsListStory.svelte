@@ -10,13 +10,13 @@
   }
 
   interface Props {
-    titulo?: string;
+    title?: string;
     preferencias?: Preferencia[];
   }
 
   /** Mesmas três preferências que a docs page e o snippet mostram. */
   let {
-    titulo = 'Preferências de notificação',
+    title = 'Preferências de notificação',
     preferencias = [
       { id: 'pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.', checked: true },
       { id: 'pref-push', label: 'Receber notificações push', desc: 'Alertas no dispositivo em tempo real.' },
@@ -30,7 +30,7 @@
      legend passa a nomear o grupo e é anunciada junto de cada controle
      (WCAG 1.3.1). Um <p> é só texto ao lado, e deixa os três soltos. -->
 <fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
-  <legend class="nds-text-body nds-font-semibold nds-mb-2">{titulo}</legend>
+  <legend class="nds-text-body nds-font-semibold nds-mb-2">{title}</legend>
   <!-- O nds-stack mora num div INTERNO: fieldset com display flex/grid tem
        histórico de bug de layout em navegador. -->
   <div class="nds-stack" data-spacing="sm">

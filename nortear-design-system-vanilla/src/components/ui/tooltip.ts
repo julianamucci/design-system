@@ -237,7 +237,7 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     );
   }
 
-  function aoMover(event: MouseEvent): void {
+  function onMove(event: MouseEvent): void {
     if (!panelEl) return;
     if (toleranciaInside(event.clientX, event.clientY)) cancelarFechamento();
     else scheduleFechamento();
@@ -315,7 +315,7 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
     // procura e não acha.
     trigger.setAttribute('aria-describedby', tooltipId);
 
-    document.addEventListener('mousemove', aoMover);
+    document.addEventListener('mousemove', onMove);
     document.addEventListener('keydown', onKeyDown);
 
     // PATCH: api — callback de exibição real para analytics (ver PATCHES.md#vanilla-tooltip-onshow)
@@ -325,7 +325,7 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
   function hide(): void {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-    document.removeEventListener('mousemove', aoMover);
+    document.removeEventListener('mousemove', onMove);
     document.removeEventListener('keydown', onKeyDown);
     // Antes de remover o balão: um quadro já agendado não pode medir um nó que
     // saiu do documento.

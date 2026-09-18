@@ -418,7 +418,7 @@ export const Invalid: Story = {
         transform: selectSourceWith({
           id: 'estado-invalido',
           'aria-invalid': true,
-          mensagemDeErro: 'Selecione um estado para continuar.',
+          errorMessage: 'Selecione um estado para continuar.',
         }),
       },
       description: {

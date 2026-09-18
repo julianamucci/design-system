@@ -107,8 +107,8 @@ describe('normalização e recorte de termos', () => {
     // seria partido no meio.
     ['InputOTP', ['input', 'otp']],
     ['InputOTPField', ['input', 'otp', 'field']],
-  ])('maiúscula no meio separa: %s', (entrada, esperado) => {
-    expect(tokenize(entrada)).toEqual(esperado);
+  ])('maiúscula no meio separa: %s', (input, esperado) => {
+    expect(tokenize(input)).toEqual(esperado);
   });
 
   it('descarta termo de uma letra, que não distingue documento nenhum', () => {
@@ -327,7 +327,7 @@ describe('entryFromTranslations — o que entra no corpus', () => {
       category: 'Feedback',
       description: 'descricao curta',
       seo: { aiEntities: 'Exemplo, WCAG', aiSummary: 'resumo para modelo', description: 'seo' },
-      anatomy: { texto: 'corpo do documento' },
+      anatomy: { text: 'corpo do documento' },
     });
     expect(entry.entities).toBe('Exemplo, WCAG');
     expect(entry.summary).toContain('resumo para modelo');
@@ -338,7 +338,7 @@ describe('entryFromTranslations — o que entra no corpus', () => {
   it('ignora os snippets por stack — código não é sinal de assunto', () => {
     const entry = entryFromTranslations('exemplo', {
       title: 'Exemplo',
-      anatomy: { structureCode: { react: 'ZZZUNICO', vue: 'ZZZUNICO' }, texto: 'prosa' },
+      anatomy: { structureCode: { react: 'ZZZUNICO', vue: 'ZZZUNICO' }, text: 'prosa' },
     });
     expect(entry.body).toContain('prosa');
     expect(entry.body).not.toContain('ZZZUNICO');

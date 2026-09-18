@@ -126,7 +126,7 @@ export async function sondarOuvintes(opts: {
   /** Onde a instância é montada. Esvaziado antes de medir. */
   host: HTMLElement;
   /** Cria a instância. Roda DENTRO da janela de espionagem. */
-  montar: () => HTMLElement;
+  mount: () => HTMLElement;
   /** Leva a instância ao estado que vaza — quase sempre "aberto". */
   exercitar?: (no: HTMLElement) => void | Promise<void>;
   /**
@@ -137,7 +137,7 @@ export async function sondarOuvintes(opts: {
   /** Nós que a fábrica pendura no `body`, para contar órfãos. */
   portalSelector?: string;
 }): Promise<ProbeResult> {
-  const { host, montar, exercitar, destruirAlvo, portalSelector } = opts;
+  const { host, mount, exercitar, destruirAlvo, portalSelector } = opts;
 
   // Precondição do REPLAY: o que estiver aqui é resíduo da execução anterior.
   host.replaceChildren();
@@ -149,7 +149,7 @@ export async function sondarOuvintes(opts: {
 
   const spy = espiarOuvintes();
   try {
-    const no = montar();
+    const no = mount();
     host.appendChild(no);
     await sleep(20);
     await exercitar?.(no);

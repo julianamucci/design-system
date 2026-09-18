@@ -148,7 +148,7 @@ describe('dropdownMenuSnippet', () => {
     const code = dropdownMenuSnippet();
     expect(code).not.toContain('buildMenuEl');
     expect(code).not.toContain('buildBase');
-    expect(code).not.toContain('montar(');
+    expect(code).not.toContain('mount(');
     expect(code).not.toContain('wrap(');
   });
 

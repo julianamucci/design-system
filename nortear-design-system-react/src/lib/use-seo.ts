@@ -236,8 +236,8 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
     // Sem isso, o GA4 só vê a URL inicial do manager e nada das stories.
     // Um `page_view` por página VISTA, não por efeito executado — ver o
     // porquê medido em `docs/shared/primitives/page-view-guard.ts`.
-    const chavePageView = [targetWin.location.href, fullTitle, componentSlug, locale].join('|');
-    if (pageViewInedito(chavePageView)) {
+    const pageViewKey = [targetWin.location.href, fullTitle, componentSlug, locale].join('|');
+    if (pageViewInedito(pageViewKey)) {
       track('page_view', {
         page_location: targetWin.location.href,
         page_title: fullTitle,

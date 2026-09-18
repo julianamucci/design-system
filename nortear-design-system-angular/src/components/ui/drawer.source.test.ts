@@ -78,12 +78,12 @@ const DESTROY_MESSAGE = 'Você pode desfazer esta ação nos próximos 30 dias.'
 const STORY_PROPS = [
   'panelTitle',
   'panelDescription',
-  'rotuloFechar',
+  'closeLabel',
   'rotuloCampo',
   'emailFieldLabel',
   'rotuloConfirmar',
   'rotuloDestruir',
-  'rotuloExterno',
+  'externalLabel',
   'triggerLabel',
   'paragrafos',
 ];

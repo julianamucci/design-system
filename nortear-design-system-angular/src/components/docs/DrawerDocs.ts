@@ -613,7 +613,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
 
                 <nds-drawer
                   [direction]="d.key"
-                  (onOpenChange)="aoMudarPainel(d.key, $event)"
+                  (onOpenChange)="onPanelChange(d.key, $event)"
                 >
                   <button ndsDrawerTrigger ndsButton variant="outline">
                     {{ d.name }}
@@ -807,7 +807,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
    * `trigger_id`, e o motivo —, nunca o texto traduzido, que viraria três
    * valores distintos no GA4.
    */
-  protected aoMudarPainel(direction: DrawerDirection, evento: RdxDialogOpenChange): void {
+  protected onPanelChange(direction: DrawerDirection, evento: RdxDialogOpenChange): void {
     if (evento.open) {
       track('drawer_open', { component: 'drawer', trigger_id: direction, location: 'docs_demo' });
       return;

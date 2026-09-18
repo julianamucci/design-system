@@ -291,7 +291,7 @@ export const RowSelection: Story = {
           else next.delete(id);
           selecionadas.set(next);
         },
-        alternarTodas: (checked: boolean) =>
+        toggleAll: (checked: boolean) =>
           selecionadas.set(checked ? new Set(INVOICES.map((f) => f.id)) : new Set()),
       },
       template: `
@@ -306,7 +306,7 @@ export const RowSelection: Story = {
                     aria-label="Selecionar todas as faturas"
                     [checked]="all()"
                     [indeterminate]="algumas()"
-                    (checkedChange)="alternarTodas($event)"
+                    (checkedChange)="toggleAll($event)"
                   ></button>
                 </th>
                 <th ndsTableHead>Fatura</th>

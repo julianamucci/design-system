@@ -152,8 +152,8 @@ export const EmphasisStrong: Story = {
     wrap.className = 'nds-stack nds-w-md';
     wrap.dataset.spacing = 'md';
 
-    const padrao = createSeparator({ orientation: 'horizontal' });
-    padrao.dataset.testid = 'padrao';
+    const defaultElement = createSeparator({ orientation: 'horizontal' });
+    defaultElement.dataset.testid = 'padrao';
 
     // A classe extra entra junto com a ênfase: é o mesmo par que a docs page
     // documenta em Extensibilidade, e prova que ela convive com a base.
@@ -166,7 +166,7 @@ export const EmphasisStrong: Story = {
 
     wrap.append(
       text('Fim da seção', 'nds-text-body nds-text-muted-foreground'),
-      padrao,
+      defaultElement,
       text('Continuação do mesmo assunto', 'nds-text-body nds-text-muted-foreground'),
       forte,
       text('Troca de assunto', 'nds-text-body nds-font-medium'),
@@ -174,19 +174,19 @@ export const EmphasisStrong: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const padrao = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;
+    const defaultElement = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;
     const forte = canvasElement.querySelector<HTMLElement>('[data-testid="forte"]')!;
 
     await step('A ênfase forte dobra a espessura', async () => {
       await expect(forte).toHaveAttribute('data-emphasis', 'strong');
-      await expect(padrao.getBoundingClientRect().height).toBeCloseTo(1, 1);
+      await expect(defaultElement.getBoundingClientRect().height).toBeCloseTo(1, 1);
       await expect(forte.getBoundingClientRect().height).toBeCloseTo(2, 1);
     });
 
     await step('A ênfase forte troca o token de cor da linha', async () => {
       // Comparar com o separador padrão renderizado ao lado, e não com um valor
       // literal: o token muda por tema, a diferença entre os dois não.
-      const colorDefault = getComputedStyle(padrao).backgroundColor;
+      const colorDefault = getComputedStyle(defaultElement).backgroundColor;
       const colorForte = getComputedStyle(forte).backgroundColor;
       await expect(colorForte).not.toBe(colorDefault);
     });

@@ -172,7 +172,7 @@ export const ErrorMessage: Story = {
           label: 'Email',
           placeholder: 'ex: joao@empresa.com',
           ariaInvalid: true,
-          mensagem: 'Email inválido. Use o formato nome@dominio.com',
+          message: 'Email inválido. Use o formato nome@dominio.com',
         }),
       },
     },

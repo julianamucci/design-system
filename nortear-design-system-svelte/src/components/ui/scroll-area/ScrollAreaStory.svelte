@@ -16,7 +16,7 @@
     size?: Size;
     width?: string;
     /** Sem teto no pai: o conteúdo expande e não há rolagem (erro de uso). */
-    semAltura?: boolean;
+    withoutHeight?: boolean;
     itemCount?: number;
     rowCount?: number;
     colCount?: number;
@@ -32,7 +32,7 @@
     scrollHideDelay = 600,
     size = 'xl',
     width = '100%',
-    semAltura = false,
+    withoutHeight = false,
     itemCount = 30,
     rowCount = 12,
     colCount = 12,
@@ -62,7 +62,7 @@
   // para poder ser testado. O invólucro só carrega largura agora: a altura
   // desceu para o próprio componente, onde a folha a governa.
   const wrapperStyle = $derived(`width: ${width};`);
-  const areaSize = $derived(semAltura ? undefined : size);
+  const areaSize = $derived(withoutHeight ? undefined : size);
 </script>
 
 {#if variant === 'vertical'}

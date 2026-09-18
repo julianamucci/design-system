@@ -210,7 +210,7 @@ export const Error: Story = {
           label: 'Email',
           placeholder: 'ex: joao@empresa.com',
           ariaInvalid: true,
-          mensagem: 'Email inválido. Use o formato nome@dominio.com',
+          message: 'Email inválido. Use o formato nome@dominio.com',
         }),
       },
     },
@@ -222,7 +222,7 @@ export const Error: Story = {
       type: 'email',
       placeholder: 'ex: joao@empresa.com',
       invalido: true,
-      mensagem: 'Email inválido. Use o formato nome@dominio.com',
+      message: 'Email inválido. Use o formato nome@dominio.com',
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -279,7 +279,7 @@ export const DarkPalette: Story = {
     root.dataset.spacing = 'md';
     root.append(
       fieldLabelled({ id: 'dk-padrao', label: 'Padrão', placeholder: 'ex: João da Silva' }),
-      fieldLabelled({ id: 'dk-erro', label: 'Com erro', type: 'email', invalido: true, mensagem: 'Email inválido' }),
+      fieldLabelled({ id: 'dk-erro', label: 'Com erro', type: 'email', invalido: true, message: 'Email inválido' }),
       fieldLabelled({ id: 'dk-off', label: 'Desabilitado', placeholder: 'Não disponível', disabled: true }),
     );
     return root;
@@ -302,10 +302,10 @@ export const DarkPalette: Story = {
 
     await step('Os três estados continuam distinguíveis no escuro', async () => {
       const error = canvasElement.querySelector<HTMLInputElement>('#dk-erro')!;
-      const padrao = canvasElement.querySelector<HTMLInputElement>('#dk-padrao')!;
+      const defaultElement = canvasElement.querySelector<HTMLInputElement>('#dk-padrao')!;
       const off = canvasElement.querySelector<HTMLInputElement>('#dk-off')!;
       await expect(getComputedStyle(error).borderTopColor).not.toBe(
-        getComputedStyle(padrao).borderTopColor,
+        getComputedStyle(defaultElement).borderTopColor,
       );
       await expect(Number(getComputedStyle(off).opacity)).toBeLessThan(1);
     });

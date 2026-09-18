@@ -54,10 +54,10 @@ describe('acerto de recuperação', () => {
   });
 
   it('a ordem só é cobrada quando o caso a exige', () => {
-    expect(avaliarRecuperacao(['popover', 'hover-card'], ['hover-card']).primeiroOk).toBeNull();
+    expect(avaliarRecuperacao(['popover', 'hover-card'], ['hover-card']).firstOk).toBeNull();
     expect(
-      avaliarRecuperacao(['popover', 'hover-card'], ['hover-card'], { primeiro: 'hover-card' })
-        .primeiroOk,
+      avaliarRecuperacao(['popover', 'hover-card'], ['hover-card'], { first: 'hover-card' })
+        .firstOk,
     ).toBe(false);
   });
 
@@ -169,16 +169,16 @@ describe('respondeu de fato, medido pela citação obrigatória do slug', () => 
   it('aceita VÁRIAS fontes numa parênteses só, separadas por vírgula', () => {
     // Texto real do Gemma. Citar todas as fontes de uma afirmação é
     // comportamento melhor que citar uma; o guarda antigo reprovava por isso.
-    const resposta =
+    const response =
       'A mensagem de erro deve estar associada ao controle via aria-describedby (Form, FormField, Input, Textarea).';
-    expect(citaSlugEsperado(resposta, ['form'])).toBe(true);
-    expect(citaSlugEsperado(resposta, ['textarea'])).toBe(true);
-    expect(citaSlugEsperado(resposta, ['input'])).toBe(true);
+    expect(citaSlugEsperado(response, ['form'])).toBe(true);
+    expect(citaSlugEsperado(response, ['textarea'])).toBe(true);
+    expect(citaSlugEsperado(response, ['input'])).toBe(true);
   });
 
   it('e continua NÃO aceitando componente que a resposta não citou', () => {
-    const resposta = 'A regra vale para o campo (Form, FormField).';
-    expect(citaSlugEsperado(resposta, ['media-player'])).toBe(false);
+    const response = 'A regra vale para o campo (Form, FormField).';
+    expect(citaSlugEsperado(response, ['media-player'])).toBe(false);
   });
 
   it('não confunde o slug citado com o slug esperado', () => {
@@ -196,20 +196,20 @@ describe('nome de componente traduzido', () => {
     { slug: 'table', title: 'Tabela' },
     { slug: 'alert', title: 'Alert' },
   ];
-  const nomeDeMenu = (slug: string) =>
+  const menuName = (slug: string) =>
     slug.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
-  const titulos = titulosTraduzidos(corpus, nomeDeMenu);
+  const titulos = titulosTraduzidos(corpus, menuName);
 
   it('junta só os títulos que de fato divergem do nome do menu', () => {
-    expect(titulos.map((t) => t.titulo)).toEqual(['Ditado por voz', 'Tela do computador']);
+    expect(titulos.map((t) => t.title)).toEqual(['Ditado por voz', 'Tela do computador']);
   });
 
   it('não junta título de uma palavra só — "Tabela" é prosa, não nome errado', () => {
-    expect(titulos.map((t) => t.titulo)).not.toContain('Tabela');
+    expect(titulos.map((t) => t.title)).not.toContain('Tabela');
   });
 
   it('não junta "Context Menu": é o mesmo nome com espaço, não tradução', () => {
-    expect(titulos.map((t) => t.titulo)).not.toContain('Context Menu');
+    expect(titulos.map((t) => t.title)).not.toContain('Context Menu');
   });
 
   it('acusa a resposta que troca o nome pelo título traduzido', () => {
@@ -317,7 +317,7 @@ describe('o banco em si', () => {
 
   it('os negativos não esperam slug nenhum, e os positivos esperam', () => {
     for (const caso of BANCO) {
-      if (caso.grupo === 'recusa') expect(caso.esperados).toEqual([]);
+      if (caso.group === 'recusa') expect(caso.esperados).toEqual([]);
       else expect(caso.esperados.length).toBeGreaterThan(0);
     }
   });

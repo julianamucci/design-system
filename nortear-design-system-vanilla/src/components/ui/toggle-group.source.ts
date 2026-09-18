@@ -66,7 +66,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
     return `  { ${fields.map((c) => c.replace(/,$/, '')).join(', ')} },`;
   });
 
-  const padrao =
+  const defaultValue =
     o.defaultValue === null ? undefined : (o.defaultValue ?? (type === 'single' ? 'left' : ['left']));
   // A apresentação canônica do grupo é a contornada — é a que todas as stories
   // usam, e o que emenda os cantos internos num bloco só.
@@ -85,7 +85,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
       ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
       ['orientation', o.orientation && o.orientation !== 'horizontal' ? text(o.orientation) : undefined],
       ['disabled', o.disabled ? 'true' : undefined],
-      ['defaultValue', padrao === undefined ? undefined : valueLiteral(padrao)],
+      ['defaultValue', defaultValue === undefined ? undefined : valueLiteral(defaultValue)],
       ['onValueChange', o.onValueChange],
     ]),
   ];

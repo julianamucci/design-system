@@ -311,8 +311,8 @@ function loopsSemDeclaracaoNoTexto(bruto: string): string[] {
 /** O que o `<script>` publicado — em crase ou em aspas — traz para o escopo. */
 function declaradosNoTexto(text: string): Set<string> {
   const declarados = new Set<string>();
-  for (const [inicio, fim] of templateRegions(text)) {
-    collectDeclarations(text.slice(inicio, fim), declarados);
+  for (const [start, fim] of templateRegions(text)) {
+    collectDeclarations(text.slice(start, fim), declarados);
   }
   for (const m of text.matchAll(/['"][^'"]*/g)) collectDeclarations(m[0]!, declarados);
   return declarados;
@@ -331,8 +331,8 @@ function declaradosNoTexto(text: string): Set<string> {
  */
 function nomesLocaisDaMarcacao(text: string): Set<string> {
   const locais = new Set<string>();
-  const nomeando = (lista: string) => {
-    for (const parte of lista.replace(/[[\]{}]/g, ' ').split(',')) {
+  const nomeando = (list: string) => {
+    for (const parte of list.replace(/[[\]{}]/g, ' ').split(',')) {
       const name = parte.trim().split(':').pop()?.trim();
       if (name && /^[A-Za-z_$][\w$]*$/.test(name)) locais.add(name);
     }
@@ -492,13 +492,13 @@ function ligacoesSemDeclaracao(snippet: string): string[] {
       /`(?:[^`\\]|\\[\s\S])*`/g,
       (trecho) => (trecho.match(/\$\{[^}]*\}/g) ?? []).join(' '),
     );
-    const semTexto = semCrase
+    const withoutText = semCrase
       .replace(/'(?:[^'\\]|\\[\s\S])*'/g, "''")
       .replace(/"(?:[^"\\]|\\[\s\S])*"/g, '""');
-    const semTipo = semTexto.replace(/\bas\s+[A-Za-z_$][\w$.]*(\s*\[\s*\])?/g, '');
-    const semChave = semTipo.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
+    const semTipo = withoutText.replace(/\bas\s+[A-Za-z_$][\w$.]*(\s*\[\s*\])?/g, '');
+    const withoutKey = semTipo.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
 
-    for (const ident of semChave.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
+    for (const ident of withoutKey.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
       const name = ident[1]!;
       if (NAO_E_REFERENCIA.has(name)) continue;
       if (declarados.has(name) || locais.has(name) || daExpressao.has(name)) continue;
@@ -511,10 +511,10 @@ function ligacoesSemDeclaracao(snippet: string): string[] {
   // fecha com duas, e parar na primeira cortaria a expressão no meio.
   const abertura = /(?:^|[^\w$.:-])[A-Za-z_$][\w$.:-]*=\{/g;
   for (const m of marcacao.matchAll(abertura)) {
-    const inicio = m.index + m[0].length - 1;
+    const start = m.index + m[0].length - 1;
     let profundidade = 0;
     let fim = -1;
-    for (let i = inicio; i < marcacao.length; i += 1) {
+    for (let i = start; i < marcacao.length; i += 1) {
       if (marcacao[i] === '{') profundidade += 1;
       else if (marcacao[i] === '}') {
         profundidade -= 1;
@@ -525,7 +525,7 @@ function ligacoesSemDeclaracao(snippet: string): string[] {
       }
     }
     if (fim === -1) continue;
-    registra(marcacao.slice(inicio + 1, fim));
+    registra(marcacao.slice(start + 1, fim));
   }
 
   // E os blocos, que são o outro lugar em que uma expressão é avaliada.
@@ -546,13 +546,13 @@ describe('transforms do painel Code', () => {
     expect(caminhos.length).toBeGreaterThan(0);
   });
 
-  for (const caminho of caminhos) {
-    const modulo = modulos[caminho];
+  for (const path of caminhos) {
+    const modulo = modulos[path];
     const exportadas = Object.entries(modulo).filter(
       ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
-    describe(caminho, () => {
+    describe(path, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
       });
@@ -564,15 +564,15 @@ describe('transforms do painel Code', () => {
         // sozinho: no dia em que os dois globs divergirem, o módulo que só um
         // deles alcança sai da varredura SEM UMA PALAVRA, com a suíte verde
         // medindo menos. Esta casa já pagou isso duas vezes.
-        const bruto = fontes[caminho];
+        const bruto = fontes[path];
         expect(
           bruto,
-          `${caminho}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob de \`fontes\`, e sem esta falha ele sumiria da medição em silêncio`,
+          `${path}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob de \`fontes\`, e sem esta falha ele sumiria da medição em silêncio`,
         ).toBeTypeOf('string');
         const soltos = loopsSemDeclaracaoNoTexto(bruto!);
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhum <script> do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
+          `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhum <script> do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
         ).toEqual([]);
       });
 
@@ -590,7 +590,7 @@ describe('transforms do painel Code', () => {
         );
         expect(
           outside,
-          `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
+          `${path}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
         ).toEqual([]);
       });
 
@@ -642,8 +642,8 @@ describe('transforms do painel Code', () => {
               faltando.push(`o módulo ${modulo} (nenhum index.ts nem arquivo com esse nome)`);
               continue;
             }
-            for (const nome of nomes) {
-              if (!exportados.has(nome)) faltando.push(`${nome} (de ${modulo})`);
+            for (const name of nomes) {
+              if (!exportados.has(name)) faltando.push(`${name} (de ${modulo})`);
             }
           }
           expect(

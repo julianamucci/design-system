@@ -168,8 +168,8 @@ export const ExplicitRowLabel: Story = {
       colunas: COLUMNS_INVOICES,
       faturas: INVOICES_DT,
       rotulos: LABELS_DT,
-      chaveDaFatura: (f: InvoiceDT) => f.id,
-      rotuloDaFatura: (f: InvoiceDT) => f.cliente,
+      invoiceKey: (f: InvoiceDT) => f.id,
+      invoiceLabel: (f: InvoiceDT) => f.cliente,
     },
     template: `
       <div
@@ -178,8 +178,8 @@ export const ExplicitRowLabel: Story = {
         [columns]="colunas"
         [data]="faturas"
         [labels]="rotulos"
-        [rowKey]="chaveDaFatura"
-        [rowLabel]="rotuloDaFatura"
+        [rowKey]="invoiceKey"
+        [rowLabel]="invoiceLabel"
         [enableRowSelection]="true"
         [enableGlobalFilter]="false"
         [enablePagination]="false"

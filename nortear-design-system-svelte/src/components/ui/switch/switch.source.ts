@@ -122,14 +122,14 @@ ${tagDoSwitch(props, '  ')}
  * FORMA de cada linha, e um `#each` esconderia justamente ela.
  */
 export function switchSettingsListSource(): string {
-  const painel = (id: string, label: string, descricao: string, ligado = false) => `    <div
+  const panel = (id: string, label: string, description: string, ligado = false) => `    <div
       class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
       data-align="center"
       data-justify="between"
     >
       <div class="nds-stack nds-pr-4" data-spacing="xs">
         <Label id="${id}-label" for="${id}" class="nds-text-body nds-font-medium">${label}</Label>
-        <p class="nds-text-body">${descricao}</p>
+        <p class="nds-text-body">${description}</p>
       </div>
       <Switch id="${id}"${ligado ? ' checked' : ''} aria-labelledby="${id}-label" />
     </div>`;
@@ -144,9 +144,9 @@ import { Label } from "@/components/ui/label";`,
     `<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
   <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
   <div class="nds-stack" data-spacing="sm">
-${painel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
-${painel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
-${painel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
+${panel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
+${panel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
+${panel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
   </div>
 </fieldset>`,
   );

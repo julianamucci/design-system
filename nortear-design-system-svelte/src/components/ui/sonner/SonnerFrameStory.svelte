@@ -14,9 +14,9 @@
    * escala tipográfica. O `contain`/`position` continuam inline porque não são
    * valores de design — são o mecanismo que prende o portal ao quadro.
    */
-  let { alturaClasse = 'nds-min-h-30', ...args }: ToasterProps & { alturaClasse?: string } = $props();
+  let { heightClass = 'nds-min-h-30', ...args }: ToasterProps & { heightClass?: string } = $props();
 </script>
 
-<div style="contain: layout; position: relative;" class={alturaClasse}>
+<div style="contain: layout; position: relative;" class={heightClass}>
   <Toaster {...args} />
 </div>

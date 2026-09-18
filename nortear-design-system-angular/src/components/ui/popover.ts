@@ -494,10 +494,10 @@ export class NdsPopover {
    * que um painel que nunca aparece (fechado no mesmo quadro, por exemplo) não
    * deixe um laço rodando.
    */
-  private focarQuandoVisivel(panel: HTMLElement, tentativa: number): void {
-    if (!panel.isConnected || tentativa > 10) return;
+  private focarQuandoVisivel(panel: HTMLElement, attempt: number): void {
+    if (!panel.isConnected || attempt > 10) return;
     if (getComputedStyle(panel).visibility === 'hidden') {
-      requestAnimationFrame(() => this.focarQuandoVisivel(panel, tentativa + 1));
+      requestAnimationFrame(() => this.focarQuandoVisivel(panel, attempt + 1));
       return;
     }
     // Se o conteúdo já levou o foco para dentro, não mexer: a intenção dele é

@@ -93,13 +93,13 @@ describe('a regressão do parâmetro que sombreava o global', () => {
     //
     // Montar o global aqui é o que torna o teste capaz de reprovar. Verificado
     // replantando o defeito: sem isto, ele passava.
-    const anterior = (globalThis as { window?: unknown }).window;
+    const previous = (globalThis as { window?: unknown }).window;
     (globalThis as { window?: unknown }).window = janela('?lang=es');
     try {
       expect(negociarLocale()).toBe('es');
     } finally {
-      if (anterior === undefined) delete (globalThis as { window?: unknown }).window;
-      else (globalThis as { window?: unknown }).window = anterior;
+      if (previous === undefined) delete (globalThis as { window?: unknown }).window;
+      else (globalThis as { window?: unknown }).window = previous;
     }
   });
 
@@ -126,8 +126,8 @@ describe('a regressão do parâmetro que sombreava o global', () => {
     const w = {
       location: { search: '' },
       localStorage: {
-        getItem: (chave: string) => {
-          lida.push(chave);
+        getItem: (key: string) => {
+          lida.push(key);
           return null;
         },
       },

@@ -86,32 +86,32 @@ export const Widget: Story = {
       expect(root, 'o widget montou').toBeTruthy();
 
       const lancador = root!.querySelector<HTMLButtonElement>('.chat-docs-launcher')!;
-      const painel = root!.querySelector<HTMLElement>('.chat-docs-panel')!;
+      const panel = root!.querySelector<HTMLElement>('.chat-docs-panel')!;
 
       /* ── Fechado, o painel não existe para ninguém ──────────────────────── */
 
       expect(lancador.getAttribute('aria-expanded')).toBe('false');
-      expect(painel.hidden).toBe(true);
+      expect(panel.hidden).toBe(true);
       // O `aria-controls` só vale se apontar para o elemento que de fato abre.
-      expect(lancador.getAttribute('aria-controls')).toBe(painel.id);
+      expect(lancador.getAttribute('aria-controls')).toBe(panel.id);
       expect(lancador.textContent?.trim().length ?? 0).toBeGreaterThan(0);
 
       /* ── Aberto ─────────────────────────────────────────────────────────── */
 
       await userEvent.click(lancador);
-      await ate(() => !painel.hidden);
+      await ate(() => !panel.hidden);
       await proximoQuadro();
 
       expect(lancador.getAttribute('aria-expanded')).toBe('true');
-      expect(painel.getAttribute('role')).toBe('dialog');
+      expect(panel.getAttribute('role')).toBe('dialog');
       // `aria-modal="true"` seria mentira: o Storybook atrás continua operável,
       // e a promessa falsa esconderia o resto da aplicação de quem lê a tela.
-      expect(painel.getAttribute('aria-modal')).toBe('false');
-      expect(painel.getAttribute('aria-label')?.length ?? 0).toBeGreaterThan(0);
+      expect(panel.getAttribute('aria-modal')).toBe('false');
+      expect(panel.getAttribute('aria-label')?.length ?? 0).toBeGreaterThan(0);
 
       /* ── O aviso de demonstração ────────────────────────────────────────── */
 
-      const demo = painel.querySelector<HTMLElement>('.chat-docs-demo')!;
+      const demo = panel.querySelector<HTMLElement>('.chat-docs-demo')!;
       expect(demo, 'o aviso de demonstração está na tela').toBeTruthy();
       // NÃO é `role="alert"`, e isto é decisão: o aviso já está na tela quando o
       // painel abre. Região viva anuncia por INTERRUPÇÃO, e interromper para ler
@@ -123,15 +123,15 @@ export const Widget: Story = {
       // O `.nds-alert` é `width: 100%`. Somando margem lateral, a caixa ficava
       // 24px MAIS LARGA que o painel e vazava na horizontal. `width: auto`
       // devolve o item ao esticamento do flex, que já desconta a margem.
-      const cxPainel = painel.getBoundingClientRect();
+      const cxPainel = panel.getBoundingClientRect();
       const cxDemo = demo.getBoundingClientRect();
       expect(cxDemo.right, 'o aviso não vaza à direita').toBeLessThanOrEqual(cxPainel.right);
       expect(cxDemo.left, 'o aviso não vaza à esquerda').toBeGreaterThanOrEqual(cxPainel.left);
       // Mede o PAINEL, e não o documento: quem recorta é ele. O guarda anterior
       // de rolagem horizontal media a raiz, que não transborda — e ficou verde
       // com a barra visível na tela.
-      expect(painel.scrollWidth, 'o painel não rola na horizontal').toBeLessThanOrEqual(
-        painel.clientWidth + 1,
+      expect(panel.scrollWidth, 'o painel não rola na horizontal').toBeLessThanOrEqual(
+        panel.clientWidth + 1,
       );
 
       /* ── Falha de configuração vira aviso, não mensagem na conversa ─────── */
@@ -139,23 +139,23 @@ export const Widget: Story = {
       // O servidor não existe nesta página. Em vez de esperar o 404 do preview,
       // o `fetch` é trocado por uma resposta determinística — o que se está
       // provando é o CAMINHO do erro, não a rede.
-      window.fetch = (async (entrada: RequestInfo | URL, init?: RequestInit) => {
-        const url = typeof entrada === 'string' ? entrada : entrada.toString();
-        if (!url.includes('/api/perguntar')) return fetchOriginal(entrada, init);
+      window.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = typeof input === 'string' ? input : input.toString();
+        if (!url.includes('/api/perguntar')) return fetchOriginal(input, init);
         return new Response(JSON.stringify({ code: 'sem_chave' }), {
           status: 500,
           headers: { 'content-type': 'application/json' },
         });
       }) as typeof window.fetch;
 
-      const campo = painel.querySelector<HTMLTextAreaElement>('textarea')!;
-      await userEvent.click(campo);
-      await userEvent.type(campo, 'o que é o Button?');
+      const field = panel.querySelector<HTMLTextAreaElement>('textarea')!;
+      await userEvent.click(field);
+      await userEvent.type(field, 'o que é o Button?');
       await userEvent.keyboard('{Enter}');
 
       // `querySelector` é leitura pura — não muta e não força layout.
-      await ate(() => painel.querySelector('.chat-docs-notice') !== null);
-      const warning = painel.querySelector<HTMLElement>('.chat-docs-notice')!;
+      await ate(() => panel.querySelector('.chat-docs-notice') !== null);
+      const warning = panel.querySelector<HTMLElement>('.chat-docs-notice')!;
       // Este SIM é `role="alert"`: apareceu por causa de uma falha, depois de um
       // pedido da pessoa, e ela precisa saber sem ir procurar.
       expect(warning.getAttribute('role')).toBe('alert');
@@ -164,15 +164,15 @@ export const Widget: Story = {
       // O aviso de falha carregava o MESMO defeito de largura do de demonstração.
       await proximoQuadro();
       const cxAviso = warning.getBoundingClientRect();
-      expect(cxAviso.right).toBeLessThanOrEqual(painel.getBoundingClientRect().right);
-      expect(cxAviso.left).toBeGreaterThanOrEqual(painel.getBoundingClientRect().left);
+      expect(cxAviso.right).toBeLessThanOrEqual(panel.getBoundingClientRect().right);
+      expect(cxAviso.left).toBeGreaterThanOrEqual(panel.getBoundingClientRect().left);
 
       /* ── Escape fecha e DEVOLVE o foco ──────────────────────────────────── */
 
       // Sem devolver, o foco cai no `<body>` e a tabulação recomeça no topo do
       // Storybook — é a metade que costuma faltar em painel que fecha.
       await userEvent.keyboard('{Escape}');
-      await ate(() => painel.hidden === true);
+      await ate(() => panel.hidden === true);
 
       expect(lancador.getAttribute('aria-expanded')).toBe('false');
       expect(document.activeElement, 'o foco voltou para o botão').toBe(lancador);

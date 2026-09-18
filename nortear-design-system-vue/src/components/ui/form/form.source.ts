@@ -46,8 +46,8 @@ const WIDTH = 'class="nds-max-w-sm"';
  * qualquer outra coisa — o espião de ação, um control de objeto — também cai no
  * padrão, porque interpolada apareceria como código no painel.
  */
-function withDefault(value: unknown, padrao: string): string {
-  if (typeof value !== 'string') return padrao;
+function withDefault(value: unknown, defaultValue: string): string {
+  if (typeof value !== 'string') return defaultValue;
   return value.trim() === '' ? '' : value;
 }
 

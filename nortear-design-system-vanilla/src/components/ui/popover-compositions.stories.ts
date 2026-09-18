@@ -142,11 +142,11 @@ export const EditProfile: Story = {
 
     await step('O Atualizar fecha por CÓDIGO e informa api', async () => {
       const p = await open(trigger);
-      const atualizar = within(p).getByRole('button', { name: /atualizar/i });
+      const update = within(p).getByRole('button', { name: /atualizar/i });
       // Sem a marca de fechar de propósito: quem fecha é o `close()` do ouvinte
       // de `submit`, e o motivo é `api` — "salvou e fechou", não "desistiu".
-      await expect(atualizar).not.toHaveAttribute('data-slot', 'popover-close');
-      await userEvent.click(atualizar);
+      await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(update);
       await waitFor(() => {
         if (panel()) throw new Error('o Atualizar não fechou o painel');
       });

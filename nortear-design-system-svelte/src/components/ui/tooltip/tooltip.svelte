@@ -76,7 +76,7 @@
 		get montado() {
 			return montado;
 		},
-		marcarMontado(value: boolean) {
+		markMounted(value: boolean) {
 			montado = value;
 		},
 	});

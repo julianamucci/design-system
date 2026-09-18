@@ -80,7 +80,7 @@ describe('selectSnippet', () => {
     const code = selectSnippet({
       id: 'estado-invalido',
       'aria-invalid': true,
-      mensagemDeErro: 'Selecione um estado para continuar.',
+      errorMessage: 'Selecione um estado para continuar.',
     });
     expect(code).toContain("'aria-invalid': true");
     expect(code).toContain("'aria-describedby': 'estado-invalido-erro'");

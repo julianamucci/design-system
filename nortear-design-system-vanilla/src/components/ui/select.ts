@@ -514,7 +514,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   }
 
   /** Anda `step` opções, pulando as desabilitadas, sem dar a volta. */
-  function mover(step: number): void {
+  function move(step: number): void {
     const list = habilitadas();
     if (list.length === 0) return;
     const current = list.indexOf(active);
@@ -758,11 +758,11 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         return;
       case 'ArrowDown':
         e.preventDefault();
-        mover(1);
+        move(1);
         return;
       case 'ArrowUp':
         e.preventDefault();
-        mover(-1);
+        move(-1);
         return;
       case 'Home': {
         e.preventDefault();

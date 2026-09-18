@@ -77,7 +77,7 @@ function irPara(n: number) {
 
   it('não escreve o rótulo padrão dos direcionais', () => {
     const output = paginationSource('', {
-      args: { textoAnterior: 'Anterior', textoProxima: 'Próxima' },
+      args: { previousText: 'Anterior', nextText: 'Próxima' },
     });
     expect(output).toContain('<PaginationPrevious @click="irPara(atual - 1)" />');
     expect(output).toContain('<PaginationNext @click="irPara(atual + 1)" />');
@@ -86,7 +86,7 @@ function irPara(n: number) {
 
   it('o rótulo traduzido é o que precisa ser escrito', () => {
     const output = paginationSource('', {
-      args: { textoAnterior: 'Voltar', textoProxima: 'Avançar' },
+      args: { previousText: 'Voltar', nextText: 'Avançar' },
     });
     expect(output).toContain('<PaginationPrevious text="Voltar"');
     expect(output).toContain('<PaginationNext text="Avançar"');
@@ -100,7 +100,7 @@ function irPara(n: number) {
         total: (() => {}) as never,
         itemsPerPage: (() => {}) as never,
         defaultPage: (() => {}) as never,
-        textoAnterior: (() => {}) as never,
+        previousText: (() => {}) as never,
       },
     });
     expect(output).not.toContain('() => {}');

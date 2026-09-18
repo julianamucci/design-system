@@ -263,7 +263,7 @@ export class NdsDropdownMenuContent {
             são o mesmo componente.
           -->
           <ng-container
-            [ngTemplateOutlet]="templateDoConteudo()"
+            [ngTemplateOutlet]="contentTemplate()"
             [ngTemplateOutletInjector]="scope.injector"
           />
         </div>
@@ -291,7 +291,7 @@ export class NdsDropdownMenu implements NdsSubmenuPanel {
     this.root.isSubmenu() ? this.panelId : null,
   );
 
-  protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
+  protected readonly contentTemplate = computed<TemplateRef<unknown> | null>(
     () => this.content()?.tpl ?? null,
   );
 

@@ -45,7 +45,7 @@ export type ResizableDirection = 'horizontal' | 'vertical';
 const STEP_KEYBOARD = 2;
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
-function documentOrdenar<T extends { readonly el: HTMLElement }>(items: T[]): T[] {
+function documentSort<T extends { readonly el: HTMLElement }>(items: T[]): T[] {
   return [...items].sort((a, b) =>
     a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
   );
@@ -151,8 +151,8 @@ export class NdsResizableStore {
    * devolveria o default declarado.
    */
   start(restaurado?: number[]): void {
-    this.panels = documentOrdenar(this.panels);
-    this.punhos = documentOrdenar(this.punhos);
+    this.panels = documentSort(this.panels);
+    this.punhos = documentSort(this.punhos);
     const n = this.panels.length;
     if (!n) return;
 
@@ -428,7 +428,7 @@ export class NdsResizablePanel {
     '[attr.data-dragging]': 'arrastando() ? "" : null',
     '(keydown)': 'onKeyDown($event)',
     '(pointerdown)': 'aoPressionar($event)',
-    '(pointermove)': 'aoMover($event)',
+    '(pointermove)': 'onMove($event)',
     '(pointerup)': 'aoSoltar($event)',
     '(pointercancel)': 'aoSoltar($event)',
   },
@@ -483,7 +483,7 @@ export class NdsResizableHandle {
     this.arrastando.set(true);
   }
 
-  protected aoMover(e: PointerEvent): void {
+  protected onMove(e: PointerEvent): void {
     if (!this.arrastando()) return;
     const pos = this.store.horizontal() ? e.clientX : e.clientY;
     this.store.arrastar(this, pos - this.origem);

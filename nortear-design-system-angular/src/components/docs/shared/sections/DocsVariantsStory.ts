@@ -36,7 +36,7 @@ import { NdsDocsVariants, type DocsVariantItem } from './DocsVariants';
       [note]="note()"
       [id]="id()"
       [componentSlug]="componentSlug()"
-      [items]="itens()"
+      [items]="items()"
     />
   `,
 })
@@ -52,7 +52,7 @@ export class NdsDocsVariantsStory {
   private readonly tplExcluir = viewChild.required<TemplateRef<unknown>>('tplExcluir');
   private readonly tplEditar = viewChild.required<TemplateRef<unknown>>('tplEditar');
 
-  protected readonly itens = computed<DocsVariantItem[]>(() =>
+  protected readonly items = computed<DocsVariantItem[]>(() =>
     this.apenasUm()
       ? [
           {

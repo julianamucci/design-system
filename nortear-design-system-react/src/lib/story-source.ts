@@ -95,8 +95,8 @@ export function propNumber(name: string, value: unknown): string | undefined {
  * Prop booleana: `name` na forma abreviada quando `true`, `nome={false}` quando
  * o padrão do componente é `true` e a story desliga. Igual ao padrão, nada.
  */
-export function propBool(name: string, value: unknown, padrao = false): string | undefined {
-  if (typeof value !== 'boolean' || value === padrao) return undefined;
+export function propBool(name: string, value: unknown, defaultValue = false): string | undefined {
+  if (typeof value !== 'boolean' || value === defaultValue) return undefined;
   return value ? name : `${name}={false}`;
 }
 
@@ -109,11 +109,11 @@ export function propOption<T extends string>(
   name: string,
   value: unknown,
   aceitos: readonly T[],
-  padrao?: T,
+  defaultValue?: T,
 ): string | undefined {
   if (typeof value !== 'string') return undefined;
   if (!(aceitos as readonly string[]).includes(value)) return undefined;
-  if (padrao !== undefined && value === padrao) return undefined;
+  if (defaultValue !== undefined && value === defaultValue) return undefined;
   return `${name}="${value}"`;
 }
 
@@ -129,6 +129,6 @@ export function indentar(content: string, prefixo = '  '): string {
  * Filho de texto do componente, quando o control o alimenta. Mesmo cuidado de
  * `text`: espião de action vira `undefined`, e o chamador cai no seu padrão.
  */
-export function childText(value: unknown, padrao: string): string {
-  return text(value) ?? padrao;
+export function childText(value: unknown, defaultValue: string): string {
+  return text(value) ?? defaultValue;
 }

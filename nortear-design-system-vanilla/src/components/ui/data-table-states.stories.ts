@@ -115,7 +115,7 @@ export const ListenerCleanup: Story = {
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => createDataTable<Invoice>({
+        mount: () => createDataTable<Invoice>({
           columns: baseColumns,
           data: invoices.slice(0, 3),
           enableColumnVisibility: true,

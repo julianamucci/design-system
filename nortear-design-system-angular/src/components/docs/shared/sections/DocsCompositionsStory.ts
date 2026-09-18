@@ -41,7 +41,7 @@ import { NdsDocsCompositions, type DocsCompositionItem } from './DocsComposition
       [useWhenLabel]="useWhenLabel()"
       [id]="id()"
       [componentSlug]="componentSlug()"
-      [items]="itens()"
+      [items]="items()"
     />
   `,
 })
@@ -57,7 +57,7 @@ export class NdsDocsCompositionsStory {
   private readonly tplDestrutiva = viewChild.required<TemplateRef<unknown>>('tplDestrutiva');
   private readonly tplComIcone = viewChild.required<TemplateRef<unknown>>('tplComIcone');
 
-  protected readonly itens = computed<DocsCompositionItem[]>(() =>
+  protected readonly items = computed<DocsCompositionItem[]>(() =>
     this.semUseWhen()
       ? [
           {

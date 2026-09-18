@@ -138,8 +138,8 @@ export const Playground: Story = {
       panelTitle: t('demonstration.labels.title'),
       panelDescription: t('demonstration.labels.description'),
       panelBody: t('demonstration.labels.body'),
-      rotuloCancelar: t('demonstration.labels.cancel'),
-      rotuloAplicar: t('demonstration.labels.apply'),
+      cancelLabel: t('demonstration.labels.cancel'),
+      applyLabel: t('demonstration.labels.apply'),
     },
     template: `
       <nds-sheet
@@ -162,14 +162,14 @@ export const Playground: Story = {
           </div>
 
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
             <!-- A primária CONFIRMA e sai, e sai pelo verbo público: close()
                  relata api, o motivo que separa no relatório o painel aplicado
                  do dispensado. Com ndsSheetClose ela fecharia pelo mesmo
                  caminho do X, e "aplicou" chegaria como "apertou fechar".
                  Sem crase aqui dentro: uma crase FECHA o template literal da
                  story, e o arquivo inteiro deixa de compilar. -->
-            <button ndsButton (click)="panel.close()">{{ rotuloAplicar }}</button>
+            <button ndsButton (click)="panel.close()">{{ applyLabel }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -284,9 +284,9 @@ export const Playground: Story = {
     });
 
     await step('O X do canto fecha o painel e reporta close-button', async () => {
-      const painel = await open(trigger);
+      const panel = await open(trigger);
       const antes = closeReasons.length;
-      const closeBtn = within(painel).getByRole('button', { name: /^Fechar$/i });
+      const closeBtn = within(panel).getByRole('button', { name: /^Fechar$/i });
       await userEvent.click(closeBtn);
       await waitForPortalVanish('dialog');
       await expect(closeReasons.length).toBe(antes + 1);
@@ -294,9 +294,9 @@ export const Playground: Story = {
     });
 
     await step('Cancelar no rodapé fecha e reporta close-button', async () => {
-      const painel = await open(trigger);
+      const panel = await open(trigger);
       const antes = closeReasons.length;
-      const cancelar = within(painel).getByRole('button', {
+      const cancelar = within(panel).getByRole('button', {
         name: t('demonstration.labels.cancel'),
       });
       await userEvent.click(cancelar);
@@ -308,10 +308,10 @@ export const Playground: Story = {
     });
 
     await step('A ação primária fecha por decisão de dentro e reporta api', async () => {
-      const painel = await open(trigger);
+      const panel = await open(trigger);
       const antes = closeReasons.length;
       await userEvent.click(
-        within(painel).getByRole('button', { name: t('demonstration.labels.apply') }),
+        within(panel).getByRole('button', { name: t('demonstration.labels.apply') }),
       );
       await waitForPortalVanish('dialog');
       await expect(closeReasons.length).toBe(antes + 1);

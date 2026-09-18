@@ -46,75 +46,75 @@ const de = (stack: string, ...p: string[]) =>
  * stack porque a SINTAXE diverge (atributo, binding, `setAttribute`) —
  * divergência de API de framework, que a §5.3 manda registrar e não "alinhar".
  */
-type Caso = { slug: string; stack: string; arquivo: string; ancora: string; nome: RegExp };
+type Caso = { slug: string; stack: string; file: string; anchor: string; name: RegExp };
 
 const CASOS: Caso[] = [
   // ── scroll-area: as cinco expõem nome, e as cinco dizem `group` ───────────
-  { slug: 'scroll-area', stack: 'vanilla', arquivo: join(VAN, 'scroll-area.ts'),
-    ancora: "viewport.className = 'nds-scroll-area-viewport'", nome: /setAttribute\('aria-label', label\)/ },
-  { slug: 'scroll-area', stack: 'react', arquivo: de('react', 'scroll-area.tsx'),
-    ancora: 'nds-scroll-area-viewport', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'scroll-area', stack: 'vue', arquivo: de('vue', 'scroll-area', 'ScrollArea.vue'),
-    ancora: 'nds-scroll-area-viewport', nome: /:aria-label="props\.ariaLabel"/ },
-  { slug: 'scroll-area', stack: 'svelte', arquivo: de('svelte', 'scroll-area', 'scroll-area.svelte'),
-    ancora: 'nds-scroll-area-viewport', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'scroll-area', stack: 'angular', arquivo: de('angular', 'scroll-area.ts'),
-    ancora: 'class="nds-scroll-area-viewport"', nome: /\[attr\.aria-label\]="label\(\) \|\| null"/ },
+  { slug: 'scroll-area', stack: 'vanilla', file: join(VAN, 'scroll-area.ts'),
+    anchor: "viewport.className = 'nds-scroll-area-viewport'", name: /setAttribute\('aria-label', label\)/ },
+  { slug: 'scroll-area', stack: 'react', file: de('react', 'scroll-area.tsx'),
+    anchor: 'nds-scroll-area-viewport', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'scroll-area', stack: 'vue', file: de('vue', 'scroll-area', 'ScrollArea.vue'),
+    anchor: 'nds-scroll-area-viewport', name: /:aria-label="props\.ariaLabel"/ },
+  { slug: 'scroll-area', stack: 'svelte', file: de('svelte', 'scroll-area', 'scroll-area.svelte'),
+    anchor: 'nds-scroll-area-viewport', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'scroll-area', stack: 'angular', file: de('angular', 'scroll-area.ts'),
+    anchor: 'class="nds-scroll-area-viewport"', name: /\[attr\.aria-label\]="label\(\) \|\| null"/ },
 
   // ── table: o nome é do WRAPPER, e por isso tem entrada própria ────────────
-  { slug: 'table', stack: 'vanilla', arquivo: join(VAN, 'table.ts'),
-    ancora: "wrapper.className = 'nds-table-wrapper'", nome: /setAttribute\('aria-label', regionLabel\)/ },
-  { slug: 'table', stack: 'react', arquivo: de('react', 'table.tsx'),
-    ancora: 'nds-table-wrapper', nome: /aria-label=\{regionLabel\}/ },
-  { slug: 'table', stack: 'vue', arquivo: de('vue', 'table', 'Table.vue'),
-    ancora: 'nds-table-wrapper', nome: /:aria-label="props\.regionLabel"/ },
-  { slug: 'table', stack: 'svelte', arquivo: de('svelte', 'table', 'table.svelte'),
-    ancora: 'nds-table-wrapper', nome: /aria-label=\{regionLabel\}/ },
-  { slug: 'table', stack: 'angular', arquivo: de('angular', 'table.ts'),
-    ancora: "class: 'nds-table-wrapper'", nome: /'\[attr\.aria-label\]': 'regionLabel\(\) \|\| null'/ },
+  { slug: 'table', stack: 'vanilla', file: join(VAN, 'table.ts'),
+    anchor: "wrapper.className = 'nds-table-wrapper'", name: /setAttribute\('aria-label', regionLabel\)/ },
+  { slug: 'table', stack: 'react', file: de('react', 'table.tsx'),
+    anchor: 'nds-table-wrapper', name: /aria-label=\{regionLabel\}/ },
+  { slug: 'table', stack: 'vue', file: de('vue', 'table', 'Table.vue'),
+    anchor: 'nds-table-wrapper', name: /:aria-label="props\.regionLabel"/ },
+  { slug: 'table', stack: 'svelte', file: de('svelte', 'table', 'table.svelte'),
+    anchor: 'nds-table-wrapper', name: /aria-label=\{regionLabel\}/ },
+  { slug: 'table', stack: 'angular', file: de('angular', 'table.ts'),
+    anchor: "class: 'nds-table-wrapper'", name: /'\[attr\.aria-label\]': 'regionLabel\(\) \|\| null'/ },
 
   // ── chart: aqui o nome JÁ existe — é a descrição do gráfico ───────────────
-  { slug: 'chart', stack: 'vanilla', arquivo: join(VAN, 'chart.ts'),
-    ancora: "wrapper.dataset.slot = 'chart-data'", nome: /setAttribute\('aria-label', describes\)/ },
-  { slug: 'chart', stack: 'react', arquivo: de('react', 'chart.tsx'),
-    ancora: 'data-slot="chart-data"', nome: /aria-label=\{showData \? ariaLabel : undefined\}/ },
-  { slug: 'chart', stack: 'vue', arquivo: de('vue', 'chart', 'ChartContainer.vue'),
-    ancora: ':class="dataClass"', nome: /:aria-label="showData \? accessibleLabel : undefined"/ },
-  { slug: 'chart', stack: 'svelte', arquivo: de('svelte', 'chart', 'chart-container.svelte'),
-    ancora: 'class={dataClass}', nome: /aria-label=\{showData \? ariaLabel : undefined\}/ },
-  { slug: 'chart', stack: 'angular', arquivo: de('angular', 'chart.ts'),
-    ancora: '[class.nds-table-wrapper]="showData()"', nome: /\[attr\.aria-label\]="showData\(\) \? label\(\) : null"/ },
+  { slug: 'chart', stack: 'vanilla', file: join(VAN, 'chart.ts'),
+    anchor: "wrapper.dataset.slot = 'chart-data'", name: /setAttribute\('aria-label', describes\)/ },
+  { slug: 'chart', stack: 'react', file: de('react', 'chart.tsx'),
+    anchor: 'data-slot="chart-data"', name: /aria-label=\{showData \? ariaLabel : undefined\}/ },
+  { slug: 'chart', stack: 'vue', file: de('vue', 'chart', 'ChartContainer.vue'),
+    anchor: ':class="dataClass"', name: /:aria-label="showData \? accessibleLabel : undefined"/ },
+  { slug: 'chart', stack: 'svelte', file: de('svelte', 'chart', 'chart-container.svelte'),
+    anchor: 'class={dataClass}', name: /aria-label=\{showData \? ariaLabel : undefined\}/ },
+  { slug: 'chart', stack: 'angular', file: de('angular', 'chart.ts'),
+    anchor: '[class.nds-table-wrapper]="showData()"', name: /\[attr\.aria-label\]="showData\(\) \? label\(\) : null"/ },
 
   // ── drawer e sheet: o corpo é o próprio elemento que quem monta nomeia ────
-  { slug: 'drawer', stack: 'vanilla', arquivo: join(VAN, 'drawer.ts'),
-    ancora: "bodyEl.className = 'nds-drawer-body'", nome: /setAttribute\('aria-label', bodyLabel\)/ },
-  { slug: 'drawer', stack: 'react', arquivo: de('react', 'drawer.tsx'),
-    ancora: 'data-slot="drawer-body"', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'drawer', stack: 'vue', arquivo: de('vue', 'drawer', 'DrawerBody.vue'),
-    ancora: 'data-slot="drawer-body"', nome: /:aria-label="props\.ariaLabel"/ },
-  { slug: 'drawer', stack: 'svelte', arquivo: de('svelte', 'drawer', 'drawer-body.svelte'),
-    ancora: 'data-slot="drawer-body"', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'drawer', stack: 'angular', arquivo: de('angular', 'drawer.ts'),
-    ancora: '"drawer-body"', nome: /'\[attr\.aria-label\]': 'ariaLabel\(\) \|\| null'/ },
+  { slug: 'drawer', stack: 'vanilla', file: join(VAN, 'drawer.ts'),
+    anchor: "bodyEl.className = 'nds-drawer-body'", name: /setAttribute\('aria-label', bodyLabel\)/ },
+  { slug: 'drawer', stack: 'react', file: de('react', 'drawer.tsx'),
+    anchor: 'data-slot="drawer-body"', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'drawer', stack: 'vue', file: de('vue', 'drawer', 'DrawerBody.vue'),
+    anchor: 'data-slot="drawer-body"', name: /:aria-label="props\.ariaLabel"/ },
+  { slug: 'drawer', stack: 'svelte', file: de('svelte', 'drawer', 'drawer-body.svelte'),
+    anchor: 'data-slot="drawer-body"', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'drawer', stack: 'angular', file: de('angular', 'drawer.ts'),
+    anchor: '"drawer-body"', name: /'\[attr\.aria-label\]': 'ariaLabel\(\) \|\| null'/ },
 
-  { slug: 'sheet', stack: 'vanilla', arquivo: join(VAN, 'sheet.ts'),
-    ancora: "bodyEl.className = 'nds-sheet-body'", nome: /setAttribute\('aria-label', bodyLabel\)/ },
-  { slug: 'sheet', stack: 'react', arquivo: de('react', 'sheet.tsx'),
-    ancora: 'data-slot="sheet-body"', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'sheet', stack: 'vue', arquivo: de('vue', 'sheet', 'SheetBody.vue'),
-    ancora: 'data-slot="sheet-body"', nome: /:aria-label="props\.ariaLabel"/ },
-  { slug: 'sheet', stack: 'svelte', arquivo: de('svelte', 'sheet', 'sheet-body.svelte'),
-    ancora: 'data-slot="sheet-body"', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'sheet', stack: 'angular', arquivo: de('angular', 'sheet.ts'),
-    ancora: '"sheet-body"', nome: /'\[attr\.aria-label\]': 'ariaLabel\(\) \|\| null'/ },
+  { slug: 'sheet', stack: 'vanilla', file: join(VAN, 'sheet.ts'),
+    anchor: "bodyEl.className = 'nds-sheet-body'", name: /setAttribute\('aria-label', bodyLabel\)/ },
+  { slug: 'sheet', stack: 'react', file: de('react', 'sheet.tsx'),
+    anchor: 'data-slot="sheet-body"', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'sheet', stack: 'vue', file: de('vue', 'sheet', 'SheetBody.vue'),
+    anchor: 'data-slot="sheet-body"', name: /:aria-label="props\.ariaLabel"/ },
+  { slug: 'sheet', stack: 'svelte', file: de('svelte', 'sheet', 'sheet-body.svelte'),
+    anchor: 'data-slot="sheet-body"', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'sheet', stack: 'angular', file: de('angular', 'sheet.ts'),
+    anchor: '"sheet-body"', name: /'\[attr\.aria-label\]': 'ariaLabel\(\) \|\| null'/ },
 
   // ── resizable: só as três em que o painel entra na ordem de tabulação ─────
-  { slug: 'resizable', stack: 'vanilla', arquivo: join(VAN, 'resizable.ts'),
-    ancora: "panelEl.className = 'nds-resizable-panel'", nome: /setAttribute\('aria-label', panelLabel\)/ },
-  { slug: 'resizable', stack: 'react', arquivo: de('react', 'resizable.tsx'),
-    ancora: 'data-slot="resizable-panel"', nome: /aria-label=\{ariaLabel\}/ },
-  { slug: 'resizable', stack: 'angular', arquivo: de('angular', 'resizable.ts'),
-    ancora: "class: 'nds-resizable-panel'", nome: /'\[attr\.aria-label\]': 'ariaLabel\(\) \|\| null'/ },
+  { slug: 'resizable', stack: 'vanilla', file: join(VAN, 'resizable.ts'),
+    anchor: "panelEl.className = 'nds-resizable-panel'", name: /setAttribute\('aria-label', panelLabel\)/ },
+  { slug: 'resizable', stack: 'react', file: de('react', 'resizable.tsx'),
+    anchor: 'data-slot="resizable-panel"', name: /aria-label=\{ariaLabel\}/ },
+  { slug: 'resizable', stack: 'angular', file: de('angular', 'resizable.ts'),
+    anchor: "class: 'nds-resizable-panel'", name: /'\[attr\.aria-label\]': 'ariaLabel\(\) \|\| null'/ },
 ];
 
 /**
@@ -152,8 +152,8 @@ describe('a cobertura do portão é declarada, não implícita', () => {
     const faltando: string[] = [];
     for (const slug of SLUGS) {
       for (const stack of STACKS) {
-        const chave = `${slug}/${stack}`;
-        if (!medidos.has(chave) && !isentos.has(chave)) faltando.push(chave);
+        const key = `${slug}/${stack}`;
+        if (!medidos.has(key) && !isentos.has(key)) faltando.push(key);
       }
     }
     expect(faltando, 'combinação sem caso e sem exceção nomeada').toEqual([]);
@@ -172,8 +172,8 @@ describe('a cobertura do portão é declarada, não implícita', () => {
 const JANELA = 900;
 
 function regiao(c: Caso): string {
-  const fonte = readFileSync(c.arquivo, 'utf8');
-  const i = fonte.indexOf(c.ancora);
+  const fonte = readFileSync(c.file, 'utf8');
+  const i = fonte.indexOf(c.anchor);
   if (i === -1) return '';
   // Recua um pouco: em algumas stacks o papel é declarado ANTES da âncora
   // (bloco `host` do Angular, atributos acima da classe).
@@ -182,7 +182,7 @@ function regiao(c: Caso): string {
 
 describe('região que rola tem papel e nome, na classe inteira', () => {
   it.each(CASOS)('$slug/$stack declara a região', (c) => {
-    expect(regiao(c), `${c.slug}/${c.stack}: âncora "${c.ancora}" sumiu`).not.toBe('');
+    expect(regiao(c), `${c.slug}/${c.stack}: âncora "${c.anchor}" sumiu`).not.toBe('');
   });
 
   // O papel tem de estar ATRIBUÍDO, e não só mencionado. A primeira versão
@@ -191,7 +191,7 @@ describe('região que rola tem papel e nome, na classe inteira', () => {
   // expressões abaixo exigem a palavra `role` na mesma linha do valor, que é o
   // que todas as cinco sintaxes têm em comum (`setAttribute('role', …)`,
   // `role={…}`, `:role="…"`, `'[attr.role]': '…'`, `[attr.role]="…"`).
-  const papel = (valor: string) => new RegExp(`role[^\n]{0,80}["']${valor}["']`);
+  const papel = (value: string) => new RegExp(`role[^\n]{0,80}["']${value}["']`);
 
   it.each(CASOS)('$slug/$stack dá papel de GRUPO à região', (c) => {
     expect(regiao(c), `${c.slug}/${c.stack}`).toMatch(papel('group'));
@@ -203,7 +203,7 @@ describe('região que rola tem papel e nome, na classe inteira', () => {
   });
 
   it.each(CASOS)('$slug/$stack nomeia a região por variável', (c) => {
-    expect(regiao(c), `${c.slug}/${c.stack}`).toMatch(c.nome);
+    expect(regiao(c), `${c.slug}/${c.stack}`).toMatch(c.name);
   });
 
   it.each(CASOS)('$slug/$stack não cravou nome genérico', (c) => {

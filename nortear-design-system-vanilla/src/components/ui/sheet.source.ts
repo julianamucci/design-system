@@ -62,9 +62,9 @@ export type SheetSnippetOptions = {
 const CALLBACK_ABERTURA = '(aberto) => registrarPainel(aberto)';
 const CALLBACK_FECHAMENTO = '(motivo) => registrarSaida(motivo)';
 
-function expressao(value: unknown, padrao: string): string | undefined {
+function expressao(value: unknown, defaultValue: string): string | undefined {
   if (!value) return undefined;
-  return typeof value === 'string' ? value : padrao;
+  return typeof value === 'string' ? value : defaultValue;
 }
 
 // ─── Corpos de demonstração ──────────────────────────────────────────────────

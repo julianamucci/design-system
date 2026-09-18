@@ -30,7 +30,7 @@ export function slideState(index: number, current: number): 'true' | 'false' {
  * Percorre a lista inteira de propósito: marcar só o novo atual deixaria o
  * anterior marcado também, e a folha veria dois slides em tamanho cheio.
  */
-export function marcarSlideCurrent(slides: readonly HTMLElement[], current: number): void {
+export function markCurrentSlide(slides: readonly HTMLElement[], current: number): void {
   slides.forEach((slide, index) => {
     slide.setAttribute(ATTR_SLIDE_ACTIVE, slideState(index, current));
   });

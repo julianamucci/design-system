@@ -20,8 +20,8 @@ export type PaginationArgs = {
   total: number;
   itemsPerPage: number;
   defaultPage: number;
-  textoAnterior: string;
-  textoProxima: string;
+  previousText: string;
+  nextText: string;
 };
 
 /** Rótulos que os controles direcionais já trazem de fábrica. */
@@ -35,8 +35,8 @@ function importa(...parts: string[]): string {
 }
 
 /** Número de control, com o padrão de volta quando o control não trouxe um. */
-function numero(value: unknown, padrao: number): number {
-  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : padrao;
+function numero(value: unknown, defaultValue: number): number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : defaultValue;
 }
 
 /**
@@ -73,8 +73,8 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
   const total = numero(ctx?.args?.total, 50);
   const byPage = numero(ctx?.args?.itemsPerPage, 10);
   const inicial = numero(ctx?.args?.defaultPage, 1);
-  const previous = attrs(attr('text', ctx?.args?.textoAnterior, TEXT_PREVIOUS));
-  const next = attrs(attr('text', ctx?.args?.textoProxima, TEXT_NEXT));
+  const previous = attrs(attr('text', ctx?.args?.previousText, TEXT_PREVIOUS));
+  const next = attrs(attr('text', ctx?.args?.nextText, TEXT_NEXT));
 
   return vueSnippet(
     `${importa(

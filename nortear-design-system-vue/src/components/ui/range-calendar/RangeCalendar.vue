@@ -73,8 +73,8 @@ function onGridKeyDown(evento: KeyboardEvent) {
            que é a família de classes antiga do Vanilla, o cabeçalho do intervalo
            montava de um jeito e o da data única de outro. -->
       <div class="nds-calendar-nav-overlay">
-        <RangeCalendarPrevButton :aria-label="rotulos.mesAnterior" />
-        <RangeCalendarNextButton :aria-label="rotulos.proximoMes" />
+        <RangeCalendarPrevButton :aria-label="rotulos.previousMonth" />
+        <RangeCalendarNextButton :aria-label="rotulos.nextMonth" />
       </div>
 
       <div

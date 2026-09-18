@@ -387,12 +387,12 @@ function arrowParams(expr: string): string[] {
  *    ANTES: chave é precedida de `{` ou `,`, e o ramo, de `?` ou `:`.
  */
 function bindingRoots(expr: string): string[] {
-  const semTexto = expr.replace(/'[^']*'/g, "''").replace(/`[^`]*`/g, '``');
-  const semChave = semTexto.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
-  const locais = new Set(arrowParams(semChave));
+  const withoutText = expr.replace(/'[^']*'/g, "''").replace(/`[^`]*`/g, '``');
+  const withoutKey = withoutText.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
+  const locais = new Set(arrowParams(withoutKey));
 
   const out: string[] = [];
-  for (const m of semChave.matchAll(/(?:^|[^.\w$'"`?])([A-Za-z_$][\w$]*)/g)) {
+  for (const m of withoutKey.matchAll(/(?:^|[^.\w$'"`?])([A-Za-z_$][\w$]*)/g)) {
     const name = m[1]!;
     if (NOT_A_REFERENCE.has(name) || locais.has(name)) continue;
     out.push(name);
@@ -580,28 +580,28 @@ describe('transforms do painel Code', () => {
     expect(caminhos.length).toBeGreaterThan(0);
   });
 
-  for (const caminho of caminhos) {
-    const modulo = modulos[caminho];
+  for (const path of caminhos) {
+    const modulo = modulos[path];
     const exportadas = Object.entries(modulo).filter(
       ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
-    describe(caminho, () => {
+    describe(path, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
       });
 
       // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
       it('nenhum ramo itera lista que o snippet não declara', () => {
-        const bruto = fontes[caminho];
+        const bruto = fontes[path];
         // O glob de texto tem de alcançar o mesmo módulo que o de execução.
         // Pular quieto o que ele não achasse seria encolher a varredura sem
         // ninguém ver — que é exatamente como esta suíte já perdeu 28 testes.
-        expect(bruto, `${caminho}: o glob de texto não alcançou o módulo`).toBeTypeOf('string');
+        expect(bruto, `${path}: o glob de texto não alcançou o módulo`).toBeTypeOf('string');
         const soltos = loopsWithoutSource(bruto!);
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que o próprio snippet não declara — quem copiar aquele ramo recebe um laço sobre um nome que não existe`,
+          `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que o próprio snippet não declara — quem copiar aquele ramo recebe um laço sobre um nome que não existe`,
         ).toEqual([]);
       });
 
@@ -609,22 +609,22 @@ describe('transforms do painel Code', () => {
       // construtor uma vez, com os args padrão, e ligação que só existe noutro
       // ramo passaria por ela sem ser vista.
       it('nenhum ramo liga nome que o snippet não declara', () => {
-        const bruto = fontes[caminho];
-        expect(bruto, `${caminho}: o glob de texto não alcançou o módulo`).toBeTypeOf('string');
+        const bruto = fontes[path];
+        expect(bruto, `${path}: o glob de texto não alcançou o módulo`).toBeTypeOf('string');
         const soltos = bindingsWithoutDeclaration(bruto!);
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet liga ${soltos.join(', ')}, que o próprio snippet não declara — quem copiar aquele ramo recebe uma prop ou um ouvinte sobre um nome que não existe`,
+          `${path}: algum ramo do snippet liga ${soltos.join(', ')}, que o próprio snippet não declara — quem copiar aquele ramo recebe uma prop ou um ouvinte sobre um nome que não existe`,
         ).toEqual([]);
       });
 
       it('nenhum ramo importa nome que a peça não exporta', () => {
-        const bruto = fontes[caminho];
-        expect(bruto, `${caminho}: o glob de texto não alcançou o módulo`).toBeTypeOf('string');
+        const bruto = fontes[path];
+        expect(bruto, `${path}: o glob de texto não alcançou o módulo`).toBeTypeOf('string');
         const faltando = importsWithoutExport(bruto!);
         expect(
           faltando,
-          `${caminho}: o snippet ensina a importar ${faltando.join(', ')} — quem copiar recebe um import que não resolve`,
+          `${path}: o snippet ensina a importar ${faltando.join(', ')} — quem copiar recebe um import que não resolve`,
         ).toEqual([]);
       });
 
@@ -650,7 +650,7 @@ describe('transforms do painel Code', () => {
         );
         expect(
           outside,
-          `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
+          `${path}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
         ).toEqual([]);
       });
 

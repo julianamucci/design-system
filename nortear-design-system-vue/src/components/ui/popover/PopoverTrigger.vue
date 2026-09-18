@@ -34,15 +34,15 @@ let observer: MutationObserver | null = null
 // observar. Por isso a correção reexecuta por quadro enquanto o painel não
 // aparece, com teto para não deixar laço rodando num popover que fechou no meio
 // do caminho.
-function corrigir(trigger: HTMLElement, tentativa = 0): void {
-  if (!trigger.isConnected || tentativa > 10) return
+function corrigir(trigger: HTMLElement, attempt = 0): void {
+  if (!trigger.isConnected || attempt > 10) return
   if (trigger.getAttribute('aria-expanded') !== 'true') {
     if (trigger.hasAttribute('aria-controls')) trigger.removeAttribute('aria-controls')
     return
   }
   const panel = trigger.ownerDocument.querySelector<HTMLElement>('[data-slot="popover-content"]')
   if (!panel?.id) {
-    requestAnimationFrame(() => corrigir(trigger, tentativa + 1))
+    requestAnimationFrame(() => corrigir(trigger, attempt + 1))
     return
   }
   if (trigger.getAttribute('aria-controls') !== panel.id) {

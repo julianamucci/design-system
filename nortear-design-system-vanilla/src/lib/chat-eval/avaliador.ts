@@ -32,13 +32,13 @@ export interface AcertoDeRecuperacao {
   /** Os esperados que não vieram. Vazio quando `ok`. */
   faltando: string[];
   /** O primeiro colocado bate com o exigido? `null` quando o caso não exige ordem. */
-  primeiroOk: boolean | null;
+  firstOk: boolean | null;
 }
 
 export function avaliarRecuperacao(
   slugsRecuperados: readonly string[],
   esperados: readonly string[],
-  opcoes: { exigeTodos?: boolean; primeiro?: string } = {},
+  opcoes: { exigeTodos?: boolean; first?: string } = {},
 ): AcertoDeRecuperacao {
   const faltando = esperados.filter((slug) => !slugsRecuperados.includes(slug));
   const ok =
@@ -50,7 +50,7 @@ export function avaliarRecuperacao(
   return {
     ok,
     faltando,
-    primeiroOk: opcoes.primeiro ? slugsRecuperados[0] === opcoes.primeiro : null,
+    firstOk: opcoes.first ? slugsRecuperados[0] === opcoes.first : null,
   };
 }
 
@@ -108,8 +108,8 @@ export interface VeredictoDeRecusa {
   marca: string | null;
 }
 
-export function detectarRecusa(resposta: string): VeredictoDeRecusa {
-  const text = normalize(resposta);
+export function detectarRecusa(response: string): VeredictoDeRecusa {
+  const text = normalize(response);
   for (const marca of MARCAS_DE_RECUSA) {
     const casa = marca.exec(text);
     if (casa) return { recusou: true, marca: casa[0] };
@@ -144,7 +144,7 @@ export function detectarRecusa(resposta: string): VeredictoDeRecusa {
  * julga continua sendo a marca de recusa.
  */
 export function citaSlugEsperado(
-  resposta: string,
+  response: string,
   esperados: readonly string[],
 ): boolean {
   // MEDIDO na rodada B: o modelo escreveu "(`composer-voice`)" — a citação
@@ -153,7 +153,7 @@ export function citaSlugEsperado(
   // idêntica à da rodada A. A marcação do markdown é decoração; tirá-la antes
   // de comparar é o que impede o critério de medir formatação em vez de
   // conteúdo.
-  const text = normalize(resposta).replace(/[`*_]/g, '');
+  const text = normalize(response).replace(/[`*_]/g, '');
   // Duas formas valem: o slug (`(hover-card)`) e o nome do menu
   // (`(HoverCard)`). MEDIDO ao incluir `doDont`: o modelo citou pelo NOME e o
   // guarda reprovou uma comparação inteiramente correta entre ComputerUse e
@@ -174,8 +174,8 @@ export function citaSlugEsperado(
   // critério penalizava justamente quem fazia mais direito. Um viés desses não
   // aparece no total — aparece como um modelo "pior" que os outros.
   const citados = new Set<string>();
-  for (const grupo of text.match(/\(([^()]*)\)/g) ?? []) {
-    for (const item of grupo.slice(1, -1).split(',')) {
+  for (const group of text.match(/\(([^()]*)\)/g) ?? []) {
+    for (const item of group.slice(1, -1).split(',')) {
       const limpo = item.trim();
       if (limpo) citados.add(limpo);
     }
@@ -239,9 +239,9 @@ export interface VeredictoDeNegacao {
   frase: string | null;
 }
 
-export function negaExistencia(resposta: string, termo: string): VeredictoDeNegacao {
+export function negaExistencia(response: string, termo: string): VeredictoDeNegacao {
   const alvo = normalize(termo);
-  for (const frase of normalize(resposta).split(/[.!?\n]+/)) {
+  for (const frase of normalize(response).split(/[.!?\n]+/)) {
     if (!frase.includes(alvo)) continue;
     if (NEGACOES.some((padrao) => padrao.test(frase))) return { negou: true, frase: frase.trim() };
   }
@@ -279,37 +279,37 @@ export function negaExistencia(resposta: string, termo: string): VeredictoDeNega
  */
 export interface TituloTraduzido {
   /** O título como está no conteúdo daquela língua. */
-  titulo: string;
+  title: string;
   /** O nome do menu, em inglês — a isenção da exclusão 3. */
   name: string;
 }
 
 export function titulosTraduzidos(
   corpus: readonly { slug: string; title: string }[],
-  nomeDeMenu: (slug: string) => string,
+  menuName: (slug: string) => string,
 ): TituloTraduzido[] {
   const output: TituloTraduzido[] = [];
   for (const { slug, title } of corpus) {
     if (!title) continue;
-    const menu = nomeDeMenu(slug);
+    const menu = menuName(slug);
     if (normalize(title) === normalize(menu)) continue;
     // "Context Menu" === "ContextMenu" sem os espaços: mesmo nome, não tradução.
     if (normalize(title).replace(/\s+/g, '') === normalize(menu)) continue;
     if (title.trim().split(/\s+/).length < 2) continue;
-    output.push({ titulo: title, name: menu });
+    output.push({ title: title, name: menu });
   }
   return output;
 }
 
 /** Os títulos traduzidos que a resposta usou NO LUGAR do nome. Vazio é o esperado. */
 export function nomesTraduzidosCitados(
-  resposta: string,
+  response: string,
   titulos: readonly TituloTraduzido[],
 ): string[] {
-  const text = normalize(resposta);
+  const text = normalize(response);
   return titulos
-    .filter(({ titulo, name }) => text.includes(normalize(titulo)) && !resposta.includes(name))
-    .map(({ titulo }) => titulo);
+    .filter(({ title, name }) => text.includes(normalize(title)) && !response.includes(name))
+    .map(({ title }) => title);
 }
 
 /* ── 4. Nome de componente inventado ──────────────────────────────────────── */
@@ -362,7 +362,7 @@ const NAO_SAO_COMPONENTES = new Set(
 );
 
 export function nomesInventados(
-  resposta: string,
+  response: string,
   catalogo: readonly string[],
   contextoDoPrompt = '',
 ): string[] {
@@ -372,7 +372,7 @@ export function nomesInventados(
   );
   const achados = new Set<string>();
 
-  for (const bruto of resposta.match(PASCAL_CASE) ?? []) {
+  for (const bruto of response.match(PASCAL_CASE) ?? []) {
     const name = bruto.toLowerCase();
     if (conhecidos.includes(name)) continue;
     if (NAO_SAO_COMPONENTES.has(name)) continue;
@@ -388,10 +388,10 @@ export function nomesInventados(
 
 /** Os obrigatórios que a resposta NÃO citou. Vazio é o esperado. */
 export function nomesObrigatoriosFaltando(
-  resposta: string,
+  response: string,
   obrigatorios: readonly string[] = [],
 ): string[] {
-  return obrigatorios.filter((name) => !resposta.includes(name));
+  return obrigatorios.filter((name) => !response.includes(name));
 }
 
 /**
@@ -409,10 +409,10 @@ export function nomesObrigatoriosFaltando(
  * é justamente a resposta que se quer.
  */
 export function nomesProibidosCitados(
-  resposta: string,
+  response: string,
   proibidos: readonly string[] = [],
 ): string[] {
-  const text = normalize(resposta);
+  const text = normalize(response);
   return proibidos.filter((name) => {
     const alvo = normalize(name);
     const em = text.indexOf(alvo);
@@ -426,9 +426,9 @@ export function nomesProibidosCitados(
     // Cento e vinte caracteres cobrem a oração seguinte sem alcançar o próximo
     // item de uma lista, que é onde a negação deixaria de se referir a este
     // termo.
-    const janela = text.slice(Math.max(0, em - 60), em + alvo.length + 120);
+    const window = text.slice(Math.max(0, em - 60), em + alvo.length + 120);
     const negado = /nao ha componente|nao existe|nenhum componente|no component|nao e um componente/.test(
-      janela,
+      window,
     );
     return !negado;
   });

@@ -138,8 +138,8 @@ export class NdsSlider {
    */
   protected readonly rotulosDasAlcas = computed<(string | undefined)[]>(() => {
     const proprios = this.thumbLabels();
-    const padrao = this.ariaLabel();
-    return this.root.values().map((_, i) => proprios[i] ?? padrao);
+    const defaultLabel = this.ariaLabel();
+    return this.root.values().map((_, i) => proprios[i] ?? defaultLabel);
   });
 
   /**

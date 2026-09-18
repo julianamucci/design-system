@@ -33,8 +33,8 @@ const UI = join(process.cwd(), 'src', 'components', 'ui');
  */
 const files = readdirSync(UI).filter((f) => f.endsWith('.stories.ts'));
 
-const ehGate = (arquivo: string) =>
-  readFileSync(join(UI, arquivo), 'utf8').includes("title: 'QA/");
+const ehGate = (file: string) =>
+  readFileSync(join(UI, file), 'utf8').includes("title: 'QA/");
 
 describe('fiação do painel Code', () => {
   it('encontra os arquivos de story da stack', () => {
@@ -43,8 +43,8 @@ describe('fiação do painel Code', () => {
 
   it.each(files.filter((f) => !ehGate(f)))(
     '%s declara docs.source.transform no meta',
-    (arquivo) => {
-      const content = readFileSync(join(UI, arquivo), 'utf8');
+    (file) => {
+      const content = readFileSync(join(UI, file), 'utf8');
       // O `meta` é tudo que vem antes do primeiro export de story.
       const corte = content.search(/^export const /m);
       const meta = corte === -1 ? content : content.slice(0, corte);
@@ -52,9 +52,9 @@ describe('fiação do painel Code', () => {
     },
   );
 
-  it.each(files)('%s importa a transform de um módulo `.source`', (arquivo) => {
-    if (ehGate(arquivo)) return;
-    const content = readFileSync(join(UI, arquivo), 'utf8');
+  it.each(files)('%s importa a transform de um módulo `.source`', (file) => {
+    if (ehGate(file)) return;
+    const content = readFileSync(join(UI, file), 'utf8');
     // Função exportada de `<slug>.source.ts`, nunca lambda inline: a saída do
     // painel não aparece no DOM durante a `play`, então só a função exportada
     // tem como ser testada.

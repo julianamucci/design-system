@@ -34,25 +34,25 @@ export type ToggleGroupArgs = {
 type Item = {
   value: string;
   label: string;
-  icone: IconKey;
+  icon: IconKey;
   disabled?: boolean;
 };
 
 const ALIGNMENT: readonly Item[] = [
-  { value: 'left', label: 'Alinhar à esquerda', icone: 'alignLeft' },
-  { value: 'center', label: 'Centralizar', icone: 'alignCenter' },
-  { value: 'right', label: 'Alinhar à direita', icone: 'alignRight' },
+  { value: 'left', label: 'Alinhar à esquerda', icon: 'alignLeft' },
+  { value: 'center', label: 'Centralizar', icon: 'alignCenter' },
+  { value: 'right', label: 'Alinhar à direita', icon: 'alignRight' },
 ];
 
 const FORMATTING: readonly Item[] = [
-  { value: 'bold', label: 'Negrito', icone: 'bold' },
-  { value: 'italic', label: 'Itálico', icone: 'italic' },
-  { value: 'underline', label: 'Sublinhado', icone: 'underline' },
+  { value: 'bold', label: 'Negrito', icon: 'bold' },
+  { value: 'italic', label: 'Itálico', icon: 'italic' },
+  { value: 'underline', label: 'Sublinhado', icon: 'underline' },
 ];
 
 const VISUALIZACAO: readonly Item[] = [
-  { value: 'grid', label: 'Grade', icone: 'grid' },
-  { value: 'list', label: 'Lista', icone: 'list' },
+  { value: 'grid', label: 'Grade', icon: 'grid' },
+  { value: 'list', label: 'Lista', icon: 'list' },
 ];
 
 const IMPORT = `import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";`;
@@ -62,8 +62,8 @@ function importing(items: readonly Item[]): string {
   return [
     IMPORT,
     ...items.map((item) => {
-      const [name, caminho] = ICONS[item.icone];
-      return `import ${name} from "@lucide/svelte/icons/${caminho}";`;
+      const [name, path] = ICONS[item.icon];
+      return `import ${name} from "@lucide/svelte/icons/${path}";`;
     }),
   ].join('\n');
 }
@@ -78,7 +78,7 @@ function marcarItems(items: readonly Item[]): string {
         // Item só de ícone: sem isto ele fica anônimo para quem lê a tela.
         `aria-label="${item.label}"`,
       );
-      return `  <ToggleGroupItem${props}>\n    <${ICONS[item.icone][0]} aria-hidden="true" />\n  </ToggleGroupItem>`;
+      return `  <ToggleGroupItem${props}>\n    <${ICONS[item.icon][0]} aria-hidden="true" />\n  </ToggleGroupItem>`;
     })
     .join('\n');
 }
@@ -193,7 +193,7 @@ export function toggleGroupVisualizacaoVerticalSource(): string {
 /** AlignmentBar (Compositions): a barra clássica, com a quarta opção. */
 export function alignmentToggleGroupBarSource(): string {
   return mountGroup({
-    items: [...ALIGNMENT, { value: 'justify', label: 'Justificar', icone: 'alignJustify' }],
+    items: [...ALIGNMENT, { value: 'justify', label: 'Justificar', icon: 'alignJustify' }],
     label: 'Alinhamento do texto',
     state: 'alinhamento',
     declaration: 'let alinhamento = $state("");',

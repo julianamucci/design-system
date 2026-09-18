@@ -15,7 +15,7 @@ import { attrs, svelteSnippet } from '@/lib/story-source';
  * ficou inalcançável no mesmo passo, sem que nada reprovasse.
  */
 const ICONS = {
-  salvar: ['Save', 'save'],
+  save: ['Save', 'save'],
   excluir: ['Trash2', 'trash-2'],
 } as const;
 
@@ -59,7 +59,7 @@ import { Button } from "@/components/ui/button";`;
  */
 function triggerIcon(variant: string, triggerLabel: string): IconKey | null {
   if (variant === 'longText') return null;
-  return /excluir|delete|eliminar/i.test(triggerLabel) ? 'excluir' : 'salvar';
+  return /excluir|delete|eliminar/i.test(triggerLabel) ? 'excluir' : 'save';
 }
 
 /**
@@ -81,7 +81,7 @@ function balaoBody(variant: string, contentText: string): string {
 }
 
 /** Monta a composição inteira: Provider, raiz, gatilho e balão. */
-function montar(options: {
+function mount(options: {
   icon: IconKey | null;
   ariaLabel: string;
   triggerLabel?: string;
@@ -143,7 +143,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
     variant = 'default',
   } = ctx?.args ?? {};
 
-  return montar({
+  return mount({
     icon: triggerIcon(variant, triggerLabel),
     ariaLabel,
     triggerLabel,
@@ -311,8 +311,8 @@ const ACTIONS = [
 
 /** Open (States): o balão nasce aberto, sem interação e sem estado externo. */
 export function tooltipOpenSource(): string {
-  return montar({
-    icon: 'salvar',
+  return mount({
+    icon: 'save',
     ariaLabel: 'Salvar',
     provider: '',
     root: ' defaultOpen',
@@ -323,8 +323,8 @@ export function tooltipOpenSource(): string {
 
 /** Controlled (States): a abertura vem de fora, e o Escape devolve o valor. */
 export function tooltipControlledSource(): string {
-  return montar({
-    icon: 'salvar',
+  return mount({
+    icon: 'save',
     ariaLabel: 'Salvar',
     provider: '',
     root: ' bind:open={aberto}',

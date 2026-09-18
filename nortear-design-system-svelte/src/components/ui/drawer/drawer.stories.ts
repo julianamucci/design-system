@@ -11,7 +11,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 const LABEL = {
   trigger: 'Abrir drawer',
   title: 'Editar perfil',
-  descricao: 'Atualize seus dados pessoais e foto.',
+  description: 'Atualize seus dados pessoais e foto.',
   confirmar: 'Confirmar',
   cancelar: 'Cancelar',
 };
@@ -95,7 +95,7 @@ const meta: Meta = {
     dismissible: true,
     triggerLabel: LABEL.trigger,
     title: LABEL.title,
-    description: LABEL.descricao,
+    description: LABEL.description,
     actionLabel: LABEL.confirmar,
     cancelLabel: LABEL.cancelar,
     onAction: fn(),
@@ -147,7 +147,7 @@ export const Playground: Story = {
       await expect(panel).toHaveAttribute('role', 'dialog');
       await expect(panel).toHaveAttribute('aria-modal', 'true');
       await expect(panel).toHaveAccessibleName(LABEL.title);
-      await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
+      await expect(panel).toHaveAccessibleDescription(LABEL.description);
       await expect(panel).toHaveAttribute('data-direction', args.direction as string);
       await expect(panel).toHaveClass(/nds-drawer-content/);
     });

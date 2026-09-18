@@ -484,7 +484,7 @@ export const ListenerCleanup: Story = {
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => {
+        mount: () => {
           const content = document.createElement('p');
           content.textContent = 'Prévia do perfil.';
           const trigger = createButton({ variant: 'outline', label: 'Perfil' });

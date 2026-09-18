@@ -387,7 +387,7 @@ ${actionButtonsSnippet(labels.actions)}
       <!-- O preview é componente VIVO, então o clique aqui é tão real quanto o
            da demonstração: dispara o evento do produto com o location DESTA
            seção. O trigger_id leva o lado (valor estável), nunca o texto traduzido. -->
-      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('right', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -410,7 +410,7 @@ ${actionButtonsSnippet(labels.actions)}
            continuam no DOM, os dois em nds-sr-only: um diálogo modal anônimo
            não é exemplo ruim, é armadilha — quem usa leitor de tela ficaria sem
            saber onde entrou. O que o exemplo mostra é a perda de quem enxerga. -->
-      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('right', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('doDont.pair1.dontTrigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -429,7 +429,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('right', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -450,7 +450,7 @@ ${actionButtonsSnippet(labels.actions)}
     <ng-template #tplDoDont2Dont>
       <!-- Mesmo painel forçado ao topo: cabe, mas contraria o fluxo de quem
            esperava o filtro do lado dos resultados. -->
-      <nds-sheet (onOpenChange)="aoMudarPainel('top', 'docs_do_dont', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('top', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="top">
           <div ndsSheetHeader>
@@ -471,7 +471,7 @@ ${actionButtonsSnippet(labels.actions)}
     <!-- ─── Variantes: os quatro lados ─────────────────────────────────── -->
 
     <ng-template #tplVarRight>
-      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_variantes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('right', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -487,7 +487,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplVarLeft>
-      <nds-sheet (onOpenChange)="aoMudarPainel('left', 'docs_variantes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('left', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="left">
           <div ndsSheetHeader>
@@ -503,7 +503,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplVarTop>
-      <nds-sheet (onOpenChange)="aoMudarPainel('top', 'docs_variantes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('top', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="top">
           <div ndsSheetHeader>
@@ -519,7 +519,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplVarBottom>
-      <nds-sheet (onOpenChange)="aoMudarPainel('bottom', 'docs_variantes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('bottom', 'docs_variantes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="bottom">
           <div ndsSheetHeader>
@@ -537,7 +537,7 @@ ${actionButtonsSnippet(labels.actions)}
     <!-- ─── Composições ────────────────────────────────────────────────── -->
 
     <ng-template #tplCompFiltros>
-      <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('right', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -586,7 +586,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplCompNavegacao>
-      <nds-sheet (onOpenChange)="aoMudarPainel('left', 'docs_composicoes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('left', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.secondaryNavigation.trigger') }}</button>
         <ng-template ndsSheetContent side="left">
           <div ndsSheetHeader>
@@ -614,7 +614,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplCompPerfil>
-      <nds-sheet #perfilPanel (onOpenChange)="aoMudarPainel('right', 'docs_composicoes', $event)">
+      <nds-sheet #perfilPanel (onOpenChange)="onPanelChange('right', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.profileEdit.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
           <div ndsSheetHeader>
@@ -682,7 +682,7 @@ ${actionButtonsSnippet(labels.actions)}
     </ng-template>
 
     <ng-template #tplCompPainelInferior>
-      <nds-sheet (onOpenChange)="aoMudarPainel('bottom', 'docs_composicoes', $event)">
+      <nds-sheet (onOpenChange)="onPanelChange('bottom', 'docs_composicoes', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('variants.compositions.bottomPanel.trigger') }}</button>
         <ng-template ndsSheetContent side="bottom">
           <div ndsSheetHeader>
@@ -732,7 +732,7 @@ ${actionButtonsSnippet(labels.actions)}
             <!-- UM painel, o canônico: lado direito, nasce fechado, corpo com o
                  texto que descreve a área rolável, rodapé com Cancelar + ação
                  primária. É o mesmo exemplo do Playground da story. -->
-            <nds-sheet #demoPanel (onOpenChange)="aoMudarPainel('right', 'docs_demo', $event)">
+            <nds-sheet #demoPanel (onOpenChange)="onPanelChange('right', 'docs_demo', $event)">
               <button ndsSheetTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
@@ -911,7 +911,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
    * no topo do arquivo é exatamente como toda chamada passou a dizer
    * `docs_demo`, inclusive nas de Variantes, Composições e Do & Don't.
    */
-  protected aoMudarPainel(qual: string, location: string, evento: RdxDialogOpenChange): void {
+  protected onPanelChange(qual: string, location: string, evento: RdxDialogOpenChange): void {
     if (evento.open) {
       track('dialog_open', { component: 'sheet', trigger_id: qual, location });
       return;

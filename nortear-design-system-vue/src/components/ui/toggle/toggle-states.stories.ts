@@ -135,7 +135,7 @@ export const FocusVisible: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const padrao = canvas.getByRole('button', { name: 'Negrito' });
+    const defaultElement = canvas.getByRole('button', { name: 'Negrito' });
     const contorno = canvas.getByRole('button', { name: 'Itálico' });
 
     await step('Tab leva o foco ao toggle, na ordem natural do DOM', async () => {
@@ -143,14 +143,14 @@ export const FocusVisible: Story = {
       // natural". Forçar o foco passaria até com tabindex="-1".
       (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
       await userEvent.tab();
-      await expect(padrao).toHaveFocus();
+      await expect(defaultElement).toHaveFocus();
     });
 
     await step('O anel de foco aparece nas DUAS variantes', async () => {
       // Medir `boxShadow !== 'none'` era o que escondia o defeito: a variante
       // outline tem sombra de elevação o tempo todo, e a asserção passava com
       // zero anel. O que prova o anel é a sombra MUDAR ao focar.
-      for (const btn of [padrao, contorno]) {
+      for (const btn of [defaultElement, contorno]) {
         await expect(focusMeasureRing(btn).mudou).toBe(true);
       }
     });

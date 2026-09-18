@@ -193,7 +193,7 @@ const COMPOSITION_CODE = {
     <ng-template #tplDoDont1Dont>
       <div class="nds-cluster nds-w-full" data-spacing="sm">
         <button ndsSwitch id="dd1-dont" [checked]="true"></button>
-        <label ndsLabel for="dd1-dont">{{ rotuloAmbiguo() }}</label>
+        <label ndsLabel for="dd1-dont">{{ ambiguousLabel() }}</label>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
@@ -308,7 +308,7 @@ const COMPOSITION_CODE = {
                 ndsSwitch
                 id="demo-notifications"
                 [checked]="demoNotifications()"
-                (checkedChange)="aoAlternar('notifications', demoNotifications, $event)"
+                (checkedChange)="onToggle('notifications', demoNotifications, $event)"
               ></button>
               <label ndsLabel for="demo-notifications">
                 {{ t('demonstration.labels.notifications') }}
@@ -328,7 +328,7 @@ const COMPOSITION_CODE = {
                 ndsSwitch
                 id="demo-marketing"
                 [checked]="demoMarketing()"
-                (checkedChange)="aoAlternar('marketing_emails', demoMarketing, $event)"
+                (checkedChange)="onToggle('marketing_emails', demoMarketing, $event)"
               ></button>
             </div>
 
@@ -345,7 +345,7 @@ const COMPOSITION_CODE = {
                 ndsSwitch
                 id="demo-darkmode"
                 [checked]="demoDarkMode()"
-                (checkedChange)="aoAlternar('dark_mode', demoDarkMode, $event)"
+                (checkedChange)="onToggle('dark_mode', demoDarkMode, $event)"
               ></button>
             </div>
 
@@ -355,7 +355,7 @@ const COMPOSITION_CODE = {
                 id="demo-sm"
                 size="sm"
                 [checked]="demoSm()"
-                (checkedChange)="aoAlternar('compact_switch', demoSm, $event)"
+                (checkedChange)="onToggle('compact_switch', demoSm, $event)"
               ></button>
               <label ndsLabel for="demo-sm">{{ t('demonstration.labels.sm') }}</label>
             </div>
@@ -476,7 +476,7 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompSettingsList = viewChild.required<TemplateRef<unknown>>('tplCompSettingsList');
   private readonly tplCompInForm = viewChild.required<TemplateRef<unknown>>('tplCompInForm');
 
-  protected aoAlternar(field: string, target: WritableSignal<boolean>, value: boolean): void {
+  protected onToggle(field: string, target: WritableSignal<boolean>, value: boolean): void {
     target.set(value);
     track('field_change', {
       component: 'switch',
@@ -499,7 +499,7 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
    * "Notificações" contra "Receber notificações". Derivar do conteúdo
    * traduzido evita literal em português numa página trilíngue.
    */
-  protected readonly rotuloAmbiguo = computed(() => {
+  protected readonly ambiguousLabel = computed(() => {
     dict();
     const completo = t('demonstration.labels.notifications');
     const palavras = completo.split(' ');

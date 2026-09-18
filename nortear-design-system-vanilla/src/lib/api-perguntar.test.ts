@@ -56,11 +56,11 @@ afterAll(() => {
  * O limite de taxa é estado de MÓDULO: um teste que gastasse a cota do IP
  * derrubaria o seguinte com 429, e a falha apareceria no teste errado.
  */
-function perguntar(ip: string, corpo: unknown, metodo = 'POST') {
+function perguntar(ip: string, body: unknown, metodo = 'POST') {
   return fetch(base, {
     method: metodo,
     headers: { 'content-type': 'application/json', 'x-forwarded-for': ip },
-    body: metodo === 'GET' ? undefined : JSON.stringify(corpo),
+    body: metodo === 'GET' ? undefined : JSON.stringify(body),
   });
 }
 
@@ -68,41 +68,41 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
   it('não estoura ao ler cabeçalho — o defeito que motivou este arquivo', async () => {
     // Qualquer resposta serve: o que se afirma é que a requisição ATRAVESSOU a
     // função. Com o defeito original, isto derrubava o processo.
-    const resposta = await perguntar('10.0.0.1', { pergunta: 'oi', locale: 'pt-BR' }, 'GET');
-    expect(resposta.status).toBeTypeOf('number');
+    const response = await perguntar('10.0.0.1', { pergunta: 'oi', locale: 'pt-BR' }, 'GET');
+    expect(response.status).toBeTypeOf('number');
   });
 
   it('recusa método que não seja POST', async () => {
-    const resposta = await perguntar('10.0.0.2', undefined, 'GET');
-    expect(resposta.status).toBe(405);
-    await expect(resposta.json()).resolves.toMatchObject({ code: 'metodo' });
+    const response = await perguntar('10.0.0.2', undefined, 'GET');
+    expect(response.status).toBe(405);
+    await expect(response.json()).resolves.toMatchObject({ code: 'metodo' });
   });
 
   it('recusa pergunta vazia', async () => {
-    const resposta = await perguntar('10.0.0.3', { pergunta: '   ', locale: 'pt-BR' });
-    expect(resposta.status).toBe(400);
-    await expect(resposta.json()).resolves.toMatchObject({ code: 'pergunta_vazia' });
+    const response = await perguntar('10.0.0.3', { pergunta: '   ', locale: 'pt-BR' });
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({ code: 'pergunta_vazia' });
   });
 
   it('recusa corpo que não é JSON', async () => {
-    const resposta = await fetch(base, {
+    const response = await fetch(base, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-forwarded-for': '10.0.0.4' },
       body: 'isto não é json',
     });
-    expect(resposta.status).toBe(400);
-    await expect(resposta.json()).resolves.toMatchObject({ code: 'json_invalido' });
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({ code: 'json_invalido' });
   });
 
   // São DOIS cortes, e a diferença importa: o do corpo protege o servidor de
   // ler megabytes antes de julgar, e o da pergunta protege o prompt. Escrevi
   // este teste esperando um só, e foi ele que me corrigiu.
   it('recusa pergunta acima do teto, mas com corpo pequeno', async () => {
-    const resposta = await perguntar('10.0.0.5', {
+    const response = await perguntar('10.0.0.5', {
       pergunta: 'a'.repeat(MAX_QUESTION_LENGTH + 1),
       locale: 'pt-BR',
     });
-    await expect(resposta.json()).resolves.toMatchObject({ code: 'pergunta_longa' });
+    await expect(response.json()).resolves.toMatchObject({ code: 'pergunta_longa' });
   });
 
   it('recusa corpo grande antes mesmo de olhar a pergunta', async () => {
@@ -110,12 +110,12 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
     // teto do corpo cresceu para acomodar o histórico, a versão com o número
     // fixo passou a mandar um corpo que já cabia — e o teste reprovou por estar
     // desatualizado, não por defeito.
-    const resposta = await perguntar('10.0.0.8', {
+    const response = await perguntar('10.0.0.8', {
       pergunta: 'a'.repeat(MAX_QUESTION_LENGTH * 4 + MAX_HISTORY_CHARS + 10),
       locale: 'pt-BR',
     });
-    expect(resposta.status).toBe(413);
-    await expect(resposta.json()).resolves.toMatchObject({ code: 'corpo_grande' });
+    expect(response.status).toBe(413);
+    await expect(response.json()).resolves.toMatchObject({ code: 'corpo_grande' });
   });
 
   it('sem chave configurada, diz isso — e NOMEIA a variável do provedor ativo', async () => {
@@ -133,20 +133,20 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
     // teste passa a depender de quem roda ter — ou não ter — a chave no disco.
     process.env.NORTEAR_IGNORAR_ENV_LOCAL = '1';
     try {
-      const resposta = await perguntar('10.0.0.6', {
+      const response = await perguntar('10.0.0.6', {
         pergunta: 'o que é o slider?',
         locale: 'pt-BR',
       });
-      expect(resposta.status).toBe(503);
-      const corpo = (await resposta.json()) as { code?: string; detail?: string };
-      expect(corpo.code).toBe('sem_chave');
+      expect(response.status).toBe(503);
+      const body = (await response.json()) as { code?: string; detail?: string };
+      expect(body.code).toBe('sem_chave');
       // Este `expect` é o que PINA o provedor padrão. Trocá-lo sem trocar a
       // decisão faz este teste reprovar, que é exatamente o que se quer: a
       // escolha de provedor é decisão de projeto, e mudá-la por acidente é o
       // defeito que já aconteceu — um ambiente sem variáveis caía no outro
       // provedor e respondia, sem nada na tela dizendo isso.
-      expect(JSON.stringify(corpo)).toContain('CHAT_DOCS_API_KEY');
-      expect(JSON.stringify(corpo)).not.toContain('GEMINI_API_KEY');
+      expect(JSON.stringify(body)).toContain('CHAT_DOCS_API_KEY');
+      expect(JSON.stringify(body)).not.toContain('GEMINI_API_KEY');
     } finally {
       delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
       if (antesGemini !== undefined) process.env.GEMINI_API_KEY = antesGemini;
@@ -176,9 +176,9 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
         papel: 'user',
         texto: 'a'.repeat(MAX_HISTORY_CHARS),
       }));
-      const resposta = await comHistorico('10.0.1.1', gigante);
-      expect(resposta.status).toBe(413);
-      await expect(resposta.json()).resolves.toMatchObject({ code: 'corpo_grande' });
+      const response = await comHistorico('10.0.1.1', gigante);
+      expect(response.status).toBe(413);
+      await expect(response.json()).resolves.toMatchObject({ code: 'corpo_grande' });
     });
 
     // Os casos abaixo passam do saneamento e chegam à leitura da chave, que
@@ -194,8 +194,8 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
       delete process.env.GEMINI_API_KEY;
       process.env.NORTEAR_IGNORAR_ENV_LOCAL = '1';
       try {
-        const resposta = await comHistorico('10.0.1.2', historico);
-        expect(resposta.status).toBe(503);
+        const response = await comHistorico('10.0.1.2', historico);
+        expect(response.status).toBe(503);
       } finally {
         delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
         if (antes !== undefined) process.env.GEMINI_API_KEY = antes;
@@ -215,9 +215,9 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
     try {
       let bateu = 0;
       for (let i = 0; i < 15; i++) {
-        const resposta = await perguntar('10.0.0.7', { pergunta: 'badge', locale: 'pt-BR' });
-        await resposta.text();
-        if (resposta.status === 429) {
+        const response = await perguntar('10.0.0.7', { pergunta: 'badge', locale: 'pt-BR' });
+        await response.text();
+        if (response.status === 429) {
           bateu = i + 1;
           break;
         }

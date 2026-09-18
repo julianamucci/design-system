@@ -115,15 +115,15 @@ export const Line: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const list = canvas.getByRole('tablist');
-    const [ativa, inativa] = canvas.getAllByRole('tab');
+    const [active, inativa] = canvas.getAllByRole('tab');
 
     await expect(list).toHaveAttribute('data-variant', 'line');
     // O trilho some — é o que separa "line" de "default".
     await expect(getComputedStyle(list).backgroundColor).toBe(TRANSPARENTE);
-    await expect(getComputedStyle(ativa).backgroundColor).toBe(TRANSPARENTE);
+    await expect(getComputedStyle(active).backgroundColor).toBe(TRANSPARENTE);
     // O indicador é pseudo-elemento: procurar nó no DOM não acha nada. O que
     // distingue ativo de inativo é a opacidade do ::after.
-    await waitFor(() => expect(getComputedStyle(ativa, '::after').opacity).toBe('1'));
+    await waitFor(() => expect(getComputedStyle(active, '::after').opacity).toBe('1'));
     await expect(getComputedStyle(inativa, '::after').opacity).toBe('0');
   },
 };

@@ -148,10 +148,10 @@ describe('patches de node_modules continuam aplicados', () => {
             true,
           );
 
-          const conteudo = normalize(readFileSync(alvo, 'utf8'));
+          const content = normalize(readFileSync(alvo, 'utf8'));
           const primeira = hunk.after.split('\n').find((l) => l.trim() !== '') ?? '';
           expect(
-            conteudo.includes(hunk.after),
+            content.includes(hunk.after),
             `${name} NÃO está aplicado em ${hunk.file} — o trecho que começa em ` +
               `"${primeira.trim().slice(0, 80)}" não está lá. Rode \`npx patch-package\` ` +
               'e confira a linha `pacote@versão ✔`.',

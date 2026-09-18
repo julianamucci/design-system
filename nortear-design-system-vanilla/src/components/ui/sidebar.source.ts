@@ -61,9 +61,9 @@ const GROUPS_DEFAULT: SidebarGroupSnippet[] = [
   },
 ];
 
-function expressao(value: unknown, padrao: string): string | undefined {
+function expressao(value: unknown, defaultValue: string): string | undefined {
   if (!value) return undefined;
-  return typeof value === 'string' ? value : padrao;
+  return typeof value === 'string' ? value : defaultValue;
 }
 
 function iconsOf(groups: SidebarGroupSnippet[], extras: string[] = []): string[] {

@@ -77,7 +77,7 @@ const COLUNAS: DataTableColumn<Fatura>[] = [
       caption="${caption}"
       [columns]="colunas"
       [data]="faturas()"
-      [rowKey]="chaveDaFatura"
+      [rowKey]="invoiceKey"
       [labels]="rotulos"
       ${flags}
     ></div>
@@ -88,7 +88,7 @@ export class Exemplo {
   readonly faturas = signal(carregarFaturas());
   // A marcação pertence à fatura, não à posição: sem chave estável, ordenar
   // moveria de linha o que estava marcado.
-  readonly chaveDaFatura = (f: Fatura) => f.id;
+  readonly invoiceKey = (f: Fatura) => f.id;
   // Sem rowLabel: o nome do checkbox de cada linha sai da primeira coluna, que
   // é a mesma que identifica a linha para quem enxerga. Passe rowLabel quando
   // o identificador estiver em OUTRA coluna.

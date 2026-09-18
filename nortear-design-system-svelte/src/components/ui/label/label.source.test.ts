@@ -34,14 +34,14 @@ describe('labelSource', () => {
   });
 
   it('o control de obrigatório acrescenta o marcador decorativo e o aria-required', () => {
-    const padrao = labelSource('', { args: { required: false } });
-    expect(padrao).not.toContain('aria-required');
-    expect(padrao).not.toContain('aria-hidden');
+    const defaultCode = labelSource('', { args: { required: false } });
+    expect(defaultCode).not.toContain('aria-required');
+    expect(defaultCode).not.toContain('aria-hidden');
 
-    const obrigatorio = labelSource('', { args: { required: true } });
-    expect(obrigatorio).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
+    const required = labelSource('', { args: { required: true } });
+    expect(required).toContain('<span class="nds-text-destructive" aria-hidden="true">*</span>');
     // A obrigatoriedade é anunciada pelo CONTROLE, não pelo rótulo.
-    expect(obrigatorio).toContain('aria-required="true"');
+    expect(required).toContain('aria-required="true"');
   });
 });
 

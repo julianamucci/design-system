@@ -7,7 +7,7 @@ import {
   dropdownMenuSourceWith,
 } from './dropdown-menu.source';
 import { createButton } from './button';
-import { clicarQuandoMontado, montar, wrap } from './dropdown-menu.fixtures';
+import { clicarQuandoMontado, mount, wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { checkPanelFollowsTrigger } from './floating-follow-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -395,7 +395,7 @@ export const ItemInset: Story = {
       },
     },
   },
-  render: () => montar('Tabela', INSET_ITEMS),
+  render: () => mount('Tabela', INSET_ITEMS),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const reset = within(menu).getByRole('menuitem', { name: 'Redefinir' });
@@ -531,7 +531,7 @@ export const ListenerCleanup: Story = {
       avisos.length = 0;
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => createDropdownMenu({
+        mount: () => createDropdownMenu({
           trigger: createButton({ variant: 'outline', label: 'Ações' }),
           items: [
             { type: 'item', label: 'Editar', value: 'edit' },

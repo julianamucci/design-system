@@ -275,7 +275,7 @@ export class NdsCalendarDay {
           type="button"
           rdxCalendarPrev
           class="nds-calendar-nav-btn"
-          [attr.aria-label]="rotulos().mesAnterior"
+          [attr.aria-label]="rotulos().previousMonth"
         >
           <svg
             class="nds-calendar-chevron"
@@ -295,7 +295,7 @@ export class NdsCalendarDay {
           type="button"
           rdxCalendarNext
           class="nds-calendar-nav-btn"
-          [attr.aria-label]="rotulos().proximoMes"
+          [attr.aria-label]="rotulos().nextMonth"
         >
           <svg
             class="nds-calendar-chevron"

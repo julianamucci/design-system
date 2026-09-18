@@ -322,10 +322,10 @@ export const DarkPalette: Story = {
 
     await step("Os três estados continuam distinguíveis no escuro", async () => {
       const error = canvasElement.querySelector<HTMLInputElement>("#dk-erro")!;
-      const padrao = canvasElement.querySelector<HTMLInputElement>("#dk-padrao")!;
+      const defaultElement = canvasElement.querySelector<HTMLInputElement>("#dk-padrao")!;
       const off = canvasElement.querySelector<HTMLInputElement>("#dk-off")!;
       await expect(getComputedStyle(error).borderTopColor).not.toBe(
-        getComputedStyle(padrao).borderTopColor,
+        getComputedStyle(defaultElement).borderTopColor,
       );
       await expect(Number(getComputedStyle(off).opacity)).toBeLessThan(1);
     });

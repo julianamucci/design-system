@@ -97,8 +97,8 @@ export function asCode(value: unknown): string | undefined {
  * não trouxer string. Fecha a mesma porta que `asCode`, do lado do texto
  * que o leitor vê renderizado.
  */
-export function text(value: unknown, padrao = ''): string {
-  const raw = typeof value === 'string' ? value : padrao;
+export function text(value: unknown, defaultValue = ''): string {
+  const raw = typeof value === 'string' ? value : defaultValue;
   return raw.replace(/"/g, '&quot;');
 }
 
@@ -106,10 +106,10 @@ export function text(value: unknown, padrao = ''): string {
  * Atributo `nome="valor"` — omitido quando o valor não é string útil ou é
  * igual ao padrão do componente.
  */
-export function attr(name: string, value: unknown, padrao?: string): string {
+export function attr(name: string, value: unknown, defaultValue?: string): string {
   const raw = asCode(value);
   if (raw === undefined) return '';
-  if (padrao !== undefined && raw === padrao) return '';
+  if (defaultValue !== undefined && raw === defaultValue) return '';
   return `${name}="${text(raw)}"`;
 }
 
@@ -117,8 +117,8 @@ export function attr(name: string, value: unknown, padrao?: string): string {
  * Atributo booleano de Vue: `:nome="false"` quando o control desliga algo que
  * nasce ligado, e `name` puro quando liga algo que nasce desligado.
  */
-export function attrBool(name: string, value: unknown, padrao: boolean): string {
-  if (typeof value !== 'boolean' || value === padrao) return '';
+export function attrBool(name: string, value: unknown, defaultValue: boolean): string {
+  if (typeof value !== 'boolean' || value === defaultValue) return '';
   return value ? name : `:${name}="false"`;
 }
 
@@ -126,9 +126,9 @@ export function attrBool(name: string, value: unknown, padrao: boolean): string 
  * Atributo numérico: `:nome="8"`, omitido quando bate com o padrão do
  * componente ou quando o control não trouxe número.
  */
-export function attrNum(name: string, value: unknown, padrao?: number): string {
+export function attrNum(name: string, value: unknown, defaultValue?: number): string {
   if (typeof value !== 'number' || Number.isNaN(value)) return '';
-  if (padrao !== undefined && value === padrao) return '';
+  if (defaultValue !== undefined && value === defaultValue) return '';
   return `:${name}="${value}"`;
 }
 

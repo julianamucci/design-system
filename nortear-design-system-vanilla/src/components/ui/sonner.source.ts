@@ -83,16 +83,16 @@ function regionBlock(o: SonnerSnippetOptions): string {
 }
 
 /** `toast('…')` / `toast.success('…', { … })`, quebrando quando não couber. */
-function queueCall(type: ToastType, mensagem: string, lines: string[]): string {
+function queueCall(type: ToastType, message: string, lines: string[]): string {
   const queue = type === 'default' ? 'toast' : `toast.${type}`;
-  if (lines.length === 0) return `${queue}(${text(mensagem)});`;
+  if (lines.length === 0) return `${queue}(${text(message)});`;
 
-  const singleLine = `${queue}(${text(mensagem)}, { ${lines
+  const singleLine = `${queue}(${text(message)}, { ${lines
     .map((l) => l.replace(/,$/, ''))
     .join(', ')} });`;
   if (singleLine.length <= 78 && !singleLine.includes('\n')) return singleLine;
 
-  return `${queue}(${text(mensagem)}, {\n${lines.map((l) => `  ${l}`).join('\n')}\n});`;
+  return `${queue}(${text(message)}, {\n${lines.map((l) => `  ${l}`).join('\n')}\n});`;
 }
 
 function notificationOptions(o: SonnerSnippetOptions): string[] {

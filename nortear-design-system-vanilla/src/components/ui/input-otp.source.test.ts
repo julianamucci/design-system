@@ -80,7 +80,7 @@ describe('inputOtpSnippet', () => {
 
 describe('inputOtpComposicaoSnippet', () => {
   it('liga o rótulo visível ao CONJUNTO, que label[for] não alcança', () => {
-    const code = inputOtpCompositionSnippet({ label: 'Código de verificação', ligarRotulo: true });
+    const code = inputOtpCompositionSnippet({ label: 'Código de verificação', bindLabel: true });
     expect(code).toContain("titulo.id = 'otp-rotulo';");
     expect(code).toContain("codigo.removeAttribute('aria-label');");
     expect(code).toContain("codigo.setAttribute('aria-labelledby', 'otp-rotulo');");

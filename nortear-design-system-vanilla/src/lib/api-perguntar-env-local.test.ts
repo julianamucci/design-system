@@ -68,14 +68,14 @@ it('lê as CHAT_DOCS_* do .env.local, e não só as do Google', async () => {
   delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
   vi.spyOn(process, 'cwd').mockReturnValue(pasta);
 
-  const resposta = await responder(pergunta());
+  const response = await responder(pergunta());
 
   // O TIPO da resposta é a prova, e é mais forte que ler o corpo: falha ANTES
   // do fluxo — `sem_chave` inclusive — sai como JSON com código HTTP; quem
   // passou do portão da chave sai como `text/event-stream`. Escrevi este caso
   // esperando JSON e foi o SSE que me corrigiu: o arquivo tinha sido lido.
-  expect(resposta.headers.get('content-type')).toContain('text/event-stream');
-  expect(resposta.status).toBe(200);
+  expect(response.headers.get('content-type')).toContain('text/event-stream');
+  expect(response.status).toBe(200);
 
   // E o arquivo alimentou `process.env` para as variáveis reconhecidas...
   expect(process.env.CHAT_DOCS_MODELO).toBe('modelo-que-so-existe-neste-teste');

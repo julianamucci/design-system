@@ -73,7 +73,7 @@ function range(label: string, current: number): Record<string, unknown> {
       // Derivado do total: uma lista literal deixaria de acompanhar a faixa.
       pages: Array.from({ length: 5 }, (_, i) => i + 1),
       label,
-      rotuloPagina: LABEL_PAGE,
+      pageLabel: LABEL_PAGE,
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
       aoNavegar,
@@ -97,7 +97,7 @@ function range(label: string, current: number): Record<string, unknown> {
                 ndsPaginationLink
                 href="#"
                 [isActive]="n === current"
-                [attr.aria-label]="rotuloPagina + ' ' + n"
+                [attr.aria-label]="pageLabel + ' ' + n"
                 (click)="aoNavegar($event, n)"
               >{{ n }}</a>
             </li>

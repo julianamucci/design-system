@@ -81,7 +81,7 @@ describe('calendarSource', () => {
   });
 
   it('só escreve a prop que difere do padrão do componente', () => {
-    const padrao = calendarSource(undefined, {
+    const defaultCode = calendarSource(undefined, {
       args: {
         captionLayout: 'label',
         showOutsideDays: true,
@@ -89,10 +89,10 @@ describe('calendarSource', () => {
         numberOfMonths: 1,
       },
     });
-    expect(padrao).not.toContain('captionLayout');
-    expect(padrao).not.toContain('showOutsideDays');
-    expect(padrao).not.toContain('showWeekNumber');
-    expect(padrao).not.toContain('numberOfMonths');
+    expect(defaultCode).not.toContain('captionLayout');
+    expect(defaultCode).not.toContain('showOutsideDays');
+    expect(defaultCode).not.toContain('showWeekNumber');
+    expect(defaultCode).not.toContain('numberOfMonths');
 
     const alterado = calendarSource(undefined, {
       args: {

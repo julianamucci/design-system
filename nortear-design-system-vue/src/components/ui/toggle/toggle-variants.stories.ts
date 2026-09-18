@@ -87,18 +87,18 @@ export const Outline: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const padrao = canvas.getByRole('button', { name: 'Negrito' });
+    const defaultElement = canvas.getByRole('button', { name: 'Negrito' });
     const contorno = canvas.getByRole('button', { name: 'Itálico' });
 
     await step('"outline" vira data-variant; a padrão fica sem atributo', async () => {
       await expect(contorno).toHaveAttribute('data-variant', 'outline');
-      await expect(padrao.getAttribute('data-variant')).toBe(null);
+      await expect(defaultElement.getAttribute('data-variant')).toBe(null);
     });
 
     await step('A borda só aparece na variante outline', async () => {
       // O que separa as duas variantes é uma regra do CSS compartilhado; sem
       // esta medida, um `data-variant` correto com CSS ausente passaria.
-      await expect(parseFloat(getComputedStyle(padrao).borderTopWidth)).toBe(0);
+      await expect(parseFloat(getComputedStyle(defaultElement).borderTopWidth)).toBe(0);
       await expect(parseFloat(getComputedStyle(contorno).borderTopWidth)).toBeGreaterThan(0);
     });
   },

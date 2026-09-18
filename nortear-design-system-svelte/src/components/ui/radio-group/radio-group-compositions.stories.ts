@@ -129,8 +129,8 @@ export const WithDescription: Story = {
       await expect(canvas.getByText('Disponível em 2 horas.')).toBeVisible();
     });
     await step('Radio Padrão tem aria-describedby', async () => {
-      const padrao = canvas.getByRole('radio', { name: 'Padrão' });
-      await expect(padrao).toHaveAttribute('aria-describedby', 'comp-desc-standard-desc');
+      const defaultElement = canvas.getByRole('radio', { name: 'Padrão' });
+      await expect(defaultElement).toHaveAttribute('aria-describedby', 'comp-desc-standard-desc');
     });
   },
 };

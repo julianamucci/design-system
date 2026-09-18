@@ -129,8 +129,8 @@ export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.
       [columns]="colunas"
       [data]="faturas()"
       [labels]="rotulos"
-      [rowKey]="chaveDaFatura"
-      [rowLabel]="rotuloDaFatura"
+      [rowKey]="invoiceKey"
+      [rowLabel]="invoiceLabel"
       [enableRowSelection]="enableRowSelection()"
       [enablePagination]="enablePagination()"
       [enableGlobalFilter]="enableGlobalFilter()"
@@ -147,8 +147,8 @@ export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.
 export class NdsDataTableDemo {
   readonly colunas = COLUMNS_EDITAVEIS;
   readonly rotulos = LABELS_DT;
-  readonly chaveDaFatura = (invoice: InvoiceDT) => invoice.id;
-  readonly rotuloDaFatura = (invoice: InvoiceDT) => invoice.id;
+  readonly invoiceKey = (invoice: InvoiceDT) => invoice.id;
+  readonly invoiceLabel = (invoice: InvoiceDT) => invoice.id;
 
   readonly enableRowSelection = input(false, { transform: booleanAttribute });
   readonly enablePagination = input(true, { transform: booleanAttribute });

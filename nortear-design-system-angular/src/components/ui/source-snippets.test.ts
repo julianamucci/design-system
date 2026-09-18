@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
 
 const modulos = import.meta.glob<Record<string, unknown>>('./**/*.source.ts', { eager: true });
 
-const caminhos = Object.keys(modulos).sort();
+const paths = Object.keys(modulos).sort();
 
 /** Nome do componente-invólucro que existe só dentro do arquivo de story. */
 const SCAFFOLD = /\b[A-Z][A-Za-z0-9]*Story\b|\bwrapper\b|\bcaso\b/;
@@ -186,7 +186,7 @@ function ligacoesSemMembro(text: string): string[] {
     // protege o PRIMEIRO caractere depois da abertura — e `á` não é `\w`, então
     // a varredura recomeçava no meio da palavra e inventava dois nomes.
     // Esvaziar cada literal antes de varrer fecha o caso inteiro.
-    const semTexto = expressaoBruta.replace(/'[^']*'/g, "''").replace(/`[^`]*`/g, '``');
+    const withoutText = expressaoBruta.replace(/'[^']*'/g, "''").replace(/`[^`]*`/g, '``');
 
     // CHAVE DE OBJETO LITERAL NÃO É REFERÊNCIA, e foi o segundo falso positivo
     // deste check: `[usage]="{ input: 18000, output: 7000 }"` acusava `input` e
@@ -194,7 +194,7 @@ function ligacoesSemMembro(text: string): string[] {
     // é o que vem ANTES — chave é precedida de `{` ou `,`, e o ramo de um
     // ternário, de `?` ou `:`. Apagar a chave antes de varrer resolve sem
     // precisar entender a expressão.
-    const expressao = semTexto.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
+    const expressao = withoutText.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
 
     for (const ident of expressao.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
       const nome = ident[1]!;
@@ -298,16 +298,16 @@ function ligacoesSemMembroNoTexto(bruto: string): string[] {
 
 describe('transforms do painel Code', () => {
   it('existe pelo menos um módulo de source por varredura', () => {
-    expect(caminhos.length).toBeGreaterThan(0);
+    expect(paths.length).toBeGreaterThan(0);
   });
 
-  for (const caminho of caminhos) {
-    const modulo = modulos[caminho];
+  for (const path of paths) {
+    const modulo = modulos[path];
     const exportadas = Object.entries(modulo).filter(
       ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
-    describe(caminho, () => {
+    describe(path, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
       });
@@ -320,15 +320,15 @@ describe('transforms do painel Code', () => {
         // varredura SEM UMA PALAVRA, com a suíte verde medindo menos. É a mesma
         // forma do portão que encolhe sozinho, e não vale a pena arriscá-la
         // para poupar uma linha.
-        const bruto = fontes[caminho];
+        const bruto = fontes[path];
         expect(
           bruto,
-          `${caminho}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob (\`./*.ts\`, sem subpasta), e sem esta falha ele sumiria da medição em silêncio`,
+          `${path}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob (\`./*.ts\`, sem subpasta), e sem esta falha ele sumiria da medição em silêncio`,
         ).toBeTypeOf('string');
         const soltos = ligacoesSemMembroNoTexto(bruto!);
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhuma classe do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
+          `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhuma classe do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
         ).toEqual([]);
       });
 
@@ -344,7 +344,7 @@ describe('transforms do painel Code', () => {
         );
         expect(
           fora,
-          `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
+          `${path}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
         ).toEqual([]);
       });
 

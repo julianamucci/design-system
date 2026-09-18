@@ -96,7 +96,7 @@ export const Playground: Story = {
       ...args,
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <nds-drawer
@@ -114,7 +114,7 @@ export const Playground: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>

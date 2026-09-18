@@ -465,7 +465,7 @@ const METADADO_KEYS = new Set([
       -->
       <main
         tabindex="-1"
-        [attr.aria-labelledby]="idDoTitulo"
+        [attr.aria-labelledby]="titleId"
         class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
         data-spacing="xl"
       >
@@ -485,7 +485,7 @@ const METADADO_KEYS = new Set([
             </div>
           </div>
 
-          <h1 [id]="idDoTitulo" class="nds-text-h1 nds-text-foreground">{{ title() }}</h1>
+          <h1 [id]="titleId" class="nds-text-h1 nds-text-foreground">{{ title() }}</h1>
 
           <p
             class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
@@ -576,13 +576,13 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
   /** `translations.json` do fundamento, trilíngue. */
   readonly translations = input.required<Registro>();
 
-  protected readonly idDoTitulo = DOCS_PAGE_TITLE_ID;
+  protected readonly titleId = DOCS_PAGE_TITLE_ID;
   // O módulo exposto ao template: `DOMPurify.sanitize()` precisa aparecer no
   // próprio binding [innerHTML] para o SAST reconhecer o sanitizador de taint.
   protected readonly DOMPurify = DOMPurify;
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private limparTracking: (() => void) | undefined;
+  private clearTracking: (() => void) | undefined;
 
   /**
    * Dicionário do locale corrente, com as variantes de código já resolvidas.
@@ -644,12 +644,12 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
     // O listener é delegado ao host, então não precisa esperar as seções.
-    this.limparTracking = mountDocsTracking(this.hostRef.nativeElement, {
+    this.clearTracking = mountDocsTracking(this.hostRef.nativeElement, {
       componentSlug: this.slug(),
     });
   }
 
   ngOnDestroy(): void {
-    this.limparTracking?.();
+    this.clearTracking?.();
   }
 }

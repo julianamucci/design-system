@@ -25,8 +25,8 @@ type PlaygroundArgs = {
   total: number;
   itemsPerPage: number;
   defaultPage: number;
-  textoAnterior: string;
-  textoProxima: string;
+  previousText: string;
+  nextText: string;
   onPageChange: (page: number) => void;
 };
 
@@ -57,11 +57,11 @@ const meta = {
       control: { type: 'number', min: 1, step: 1 },
       description: 'Página exibida ao montar.',
     },
-    textoAnterior: {
+    previousText: {
       control: 'text',
       description: 'Rótulo visível do controle de página anterior.',
     },
-    textoProxima: {
+    nextText: {
       control: 'text',
       description: 'Rótulo visível do controle de próxima página.',
     },
@@ -74,8 +74,8 @@ const meta = {
     total: 50,
     itemsPerPage: 10,
     defaultPage: 1,
-    textoAnterior: 'Anterior',
-    textoProxima: 'Próxima',
+    previousText: 'Anterior',
+    nextText: 'Próxima',
     onPageChange: fn(),
   },
 } satisfies Meta<PlaygroundArgs>;
@@ -129,7 +129,7 @@ export const Playground: Story = {
         <PaginationContent>
           <PaginationItem>
             <!-- O primitivo já desabilita nos extremos a partir de :page. -->
-            <PaginationPrevious :text="args.textoAnterior" @click="irTo(current - 1)" />
+            <PaginationPrevious :text="args.previousText" @click="irTo(current - 1)" />
           </PaginationItem>
           <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink
@@ -142,7 +142,7 @@ export const Playground: Story = {
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext :text="args.textoProxima" @click="irTo(current + 1)" />
+            <PaginationNext :text="args.nextText" @click="irTo(current + 1)" />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

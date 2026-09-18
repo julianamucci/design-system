@@ -335,7 +335,7 @@ export const ListenerCleanup: Story = {
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => {
+        mount: () => {
           const panel = (text: string) => {
             const el = document.createElement('div');
             el.textContent = text;

@@ -298,9 +298,9 @@ describe('ALLOW_PRESETS — as listas que a documentação nomeia', () => {
     expect(root.children.some((n) => n.type === 'heading')).toBe(false);
     expect(root.children.some((n) => n.type === 'table')).toBe(false);
     // E nada some: o título continua legível como parágrafo.
-    const primeiro = root.children[0];
-    if (primeiro.type !== 'paragraph') throw new Error('esperava parágrafo');
-    expect(primeiro.children.map((c) => (c.type === 'text' ? c.value : '')).join('')).toBe('título');
+    const first = root.children[0];
+    if (first.type !== 'paragraph') throw new Error('esperava parágrafo');
+    expect(first.children.map((c) => (c.type === 'text' ? c.value : '')).join('')).toBe('título');
   });
 
   it('`comment` deixa passar só texto corrido', () => {

@@ -8,7 +8,7 @@ import {
   labelSource,
   labelSourceBox,
   labelSourceWith,
-  labelSourceObrigatorio,
+  labelSourceRequired,
 } from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -137,7 +137,7 @@ export const RequiredField: Story = {
   parameters: {
     docs: {
       source: {
-        transform: labelSourceObrigatorio({
+        transform: labelSourceRequired({
           text: 'Email profissional',
           htmlFor: 'email',
           type: 'email',

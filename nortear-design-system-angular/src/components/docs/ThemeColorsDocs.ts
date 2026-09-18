@@ -197,7 +197,7 @@ interface DensityTable {
       -->
       <main
         tabindex="-1"
-        [attr.aria-labelledby]="idDoTitulo"
+        [attr.aria-labelledby]="titleId"
         class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
         data-spacing="xl"
       >
@@ -219,7 +219,7 @@ interface DensityTable {
           </div>
 
           <h1
-            [id]="idDoTitulo"
+            [id]="titleId"
             class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground"
           >
             {{ t('title') }}
@@ -377,7 +377,7 @@ interface DensityTable {
 })
 export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly t = t;
-  protected readonly idDoTitulo = DOCS_PAGE_TITLE_ID;
+  protected readonly titleId = DOCS_PAGE_TITLE_ID;
 
   protected readonly gruposDaPaleta = PALETTE_GROUPS;
   protected readonly tokensDaAmostra = TOKENS_DA_AMOSTRA;
@@ -387,7 +387,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly fontes = FONTES;
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private limparTracking: (() => void) | undefined;
+  private clearTracking: (() => void) | undefined;
   private observadorDeTema: MutationObserver | undefined;
 
   // ─── Estado de tema/modo lido do <html> ───────────────────────────────────
@@ -487,7 +487,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
-    this.limparTracking = mountDocsTracking(this.hostRef.nativeElement, {
+    this.clearTracking = mountDocsTracking(this.hostRef.nativeElement, {
       componentSlug: 'theme-colors',
     });
 
@@ -501,7 +501,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.observadorDeTema?.disconnect();
-    this.limparTracking?.();
+    this.clearTracking?.();
   }
 
   /** Lê marca, modo e valores HSL resolvidos no `<html>`. */

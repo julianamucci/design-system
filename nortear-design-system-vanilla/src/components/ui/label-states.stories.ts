@@ -8,7 +8,7 @@ import {
 import { createLabel } from './label';
 import { createInput } from './input';
 import { block } from './label.fixtures';
-import { labelSource, labelSourceBlock, labelSourceWith, labelSourceObrigatorio } from './label.source';
+import { labelSource, labelSourceBlock, labelSourceWith, labelSourceRequired } from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -158,7 +158,7 @@ export const Required: Story = {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
     docs: {
       source: {
-        transform: labelSourceObrigatorio({
+        transform: labelSourceRequired({
           text: 'Email profissional',
           htmlFor: 'email',
           type: 'email',

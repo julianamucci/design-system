@@ -173,12 +173,12 @@ export const Sm: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const [padrao, compacto] = Array.from(
+    const [defaultElement, compacto] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="switch"]'),
     );
 
     await step('O degrau de tamanho vira data-size', async () => {
-      await expect(padrao).toHaveAttribute('data-size', 'default');
+      await expect(defaultElement).toHaveAttribute('data-size', 'default');
       await expect(compacto).toHaveAttribute('data-size', 'sm');
     });
 
@@ -188,12 +188,12 @@ export const Sm: Story = {
       // certo em ambos. Foi exatamente o que a versão anterior desta story
       // escondia, replicando o degrau com classes mortas (`h-4 w-7`).
       await expect(compacto.getBoundingClientRect().width).toBeLessThan(
-        padrao.getBoundingClientRect().width,
+        defaultElement.getBoundingClientRect().width,
       );
     });
 
     await step('O thumb acompanha o degrau do trilho', async () => {
-      const thumbDefault = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const thumbDefault = defaultElement.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       const thumbCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       await expect(thumbCompacto.getBoundingClientRect().width).toBeLessThan(
         thumbDefault.getBoundingClientRect().width,

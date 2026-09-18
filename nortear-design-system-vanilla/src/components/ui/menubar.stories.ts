@@ -171,7 +171,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
     const triggers = triggersOf(barra);
-    const [arquivo, editar] = triggers;
+    const [file, editar] = triggers;
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
       await expect(triggers).toHaveLength(MENUS.length);
@@ -188,19 +188,19 @@ export const Playground: Story = {
       (document.activeElement as HTMLElement | null)?.blur();
       await userEvent.tab();
 
-      await expect(document.activeElement).toBe(arquivo);
+      await expect(document.activeElement).toBe(file);
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
     await step('Enter no gatilho abre o menu com foco no primeiro item', async () => {
       // Idempotente: só digita com o menu fechado, então o replay parte do
       // mesmo estado da primeira rodada.
-      if (arquivo.getAttribute('aria-expanded') !== 'true') {
-        arquivo.focus();
+      if (file.getAttribute('aria-expanded') !== 'true') {
+        file.focus();
         await userEvent.keyboard('{Enter}');
       }
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
       });
 
       const panel = panelOpen(canvasElement)!;
@@ -225,7 +225,7 @@ export const Playground: Story = {
       // invólucro tem o que medir.
       const panel = panelOpen(canvasElement)!;
       await waitForAncorado(panel);
-      expectOndeDiz(arquivo, panel, 8);
+      expectOndeDiz(file, panel, 8);
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
@@ -265,13 +265,13 @@ export const Playground: Story = {
       // fecharia.
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
       });
 
-      arquivo.focus();
+      file.focus();
       await userEvent.keyboard(' ');
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
       });
     });
 
@@ -298,14 +298,14 @@ export const Playground: Story = {
         await expect(editar.getAttribute('aria-expanded')).toBe('true');
         await expect(document.activeElement).toBe(editar);
       });
-      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(file.getAttribute('aria-expanded')).toBe('false');
       // Passar ao vizinho é sair do menu anterior sem decidir.
       await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
 
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
-        await expect(document.activeElement).toBe(arquivo);
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
+        await expect(document.activeElement).toBe(file);
       });
       await expect(editar.getAttribute('aria-expanded')).toBe('false');
     });
@@ -315,36 +315,36 @@ export const Playground: Story = {
       // o que o passo das setas deixou. Qual gatilho fica com o realce depois
       // de uma troca de menu é decisão de cada lib — herdar isso faria este
       // passo medir a lib, e não a devolução do foco que o contrato promete.
-      if (arquivo.getAttribute('aria-expanded') !== 'true') {
-        await userEvent.click(arquivo);
+      if (file.getAttribute('aria-expanded') !== 'true') {
+        await userEvent.click(file);
       }
-      arquivo.focus();
+      file.focus();
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
       });
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
-      await expect(document.activeElement).toBe(arquivo);
+      await expect(document.activeElement).toBe(file);
       await expect(args.onClose).toHaveBeenLastCalledWith('escape');
     });
 
     await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
-      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      if (file.getAttribute('aria-expanded') !== 'true') await userEvent.click(file);
       await waitFor(async () => {
         await expect(panelOpen(canvasElement)).not.toBeNull();
       });
 
-      await userEvent.click(arquivo);
+      await userEvent.click(file);
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
         await expect(panelOpen(canvasElement)).toBeNull();
       });
       await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
     });
 
     await step('Clicar fora da barra fecha o menu sem executar item nenhum', async () => {
-      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      if (file.getAttribute('aria-expanded') !== 'true') await userEvent.click(file);
       await waitFor(async () => {
         await expect(panelOpen(canvasElement)).not.toBeNull();
       });
@@ -354,7 +354,7 @@ export const Playground: Story = {
       // do documento que fecha, e ele não depende de onde o ponteiro está.
       document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
       await waitFor(async () => {
-        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
         await expect(panelOpen(canvasElement)).toBeNull();
       });
       // Nenhum item rodou: o clique fora é sair sem decidir.

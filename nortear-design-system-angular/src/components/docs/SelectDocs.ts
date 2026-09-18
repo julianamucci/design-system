@@ -919,10 +919,10 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
     });
 
     /** Linha que só existe neste stack — descrição vem do override. */
-    const local = (name: string, type: string, padrao: string, key: string) => ({
+    const local = (name: string, type: string, defaultValue: string, key: string) => ({
       name: name,
       type: type,
-      defaultValue: padrao,
+      defaultValue,
       required: not,
       description: toPlainText(t(`props.${key}.description`)),
     });

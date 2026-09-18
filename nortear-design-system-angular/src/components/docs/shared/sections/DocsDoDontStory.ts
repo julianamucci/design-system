@@ -51,7 +51,7 @@ export class NdsDocsDoDontStory {
   private readonly tplParRuim = viewChild.required<TemplateRef<unknown>>('tplParRuim');
 
   protected readonly pares = computed<DocsDoDontPair[]>(() => {
-    const rotulo: DocsDoDontPair = {
+    const label: DocsDoDontPair = {
       doLabel: 'Faça',
       dontLabel: 'Evite',
       doCaption: 'O rótulo nomeia a ação, e é legível fora de contexto.',
@@ -61,9 +61,9 @@ export class NdsDocsDoDontStory {
       doPreview: this.tplRotuloBom(),
       dontPreview: this.tplRotuloRuim(),
     };
-    if (this.umParSo()) return [rotulo];
+    if (this.umParSo()) return [label];
     return [
-      rotulo,
+      label,
       {
         doLabel: 'Faça',
         dontLabel: 'Evite',

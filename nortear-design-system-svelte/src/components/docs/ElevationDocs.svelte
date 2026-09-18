@@ -24,11 +24,11 @@
     const raiz = ((translations as Record<string, unknown>)[$locale]
       ?? (translations as Record<string, unknown>)['pt-BR']) as
       { elevation?: { rows?: Record<string, LinhaDeElevacao> } } | undefined;
-    return Object.values(raiz?.elevation?.rows ?? {}).map((linha) => ({
-      label: linha.level,
-      token: linha.token,
-      classe: linha.token.startsWith(PREFIXO)
-        ? `nds-shadow-${linha.token.slice(PREFIXO.length)}`
+    return Object.values(raiz?.elevation?.rows ?? {}).map((row) => ({
+      label: row.level,
+      token: row.token,
+      classe: row.token.startsWith(PREFIXO)
+        ? `nds-shadow-${row.token.slice(PREFIXO.length)}`
         : 'nds-shadow-none',
     }));
   });

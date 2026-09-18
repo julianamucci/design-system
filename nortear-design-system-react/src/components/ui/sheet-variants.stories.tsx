@@ -75,11 +75,11 @@ type Side = "top" | "right" | "bottom" | "left";
  */
 function Panel({
   side,
-  tituloKey,
+  titleKey,
   titleRender,
 }: {
   side: Side;
-  tituloKey: string;
+  titleKey: string;
   titleRender?: React.ReactElement;
 }) {
   const { t } = useTranslation(sheetTranslations);
@@ -91,7 +91,7 @@ function Panel({
       <SheetContent side={side}>
         <SheetHeader>
           <SheetTitle render={titleRender}>
-            {t(`demonstration.labels.${tituloKey}`)}
+            {t(`demonstration.labels.${titleKey}`)}
           </SheetTitle>
           <SheetDescription>
             {t("demonstration.labels.description")}
@@ -127,7 +127,7 @@ export const Right: Story = {
       },
     },
   },
-  render: () => <Panel side="right" tituloKey="rightLabel" />,
+  render: () => <Panel side="right" titleKey="rightLabel" />,
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "right");
@@ -155,7 +155,7 @@ export const Left: Story = {
       },
     },
   },
-  render: () => <Panel side="left" tituloKey="leftLabel" />,
+  render: () => <Panel side="left" titleKey="leftLabel" />,
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "left");
@@ -178,7 +178,7 @@ export const Top: Story = {
       },
     },
   },
-  render: () => <Panel side="top" tituloKey="topLabel" />,
+  render: () => <Panel side="top" titleKey="topLabel" />,
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "top");
@@ -202,7 +202,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: () => <Panel side="bottom" tituloKey="bottomLabel" />,
+  render: () => <Panel side="bottom" titleKey="bottomLabel" />,
   play: async () => {
     const panel = await waitForPortal("dialog");
     await expect(panel).toHaveAttribute("data-side", "bottom");
@@ -230,7 +230,7 @@ export const HeadingH3: Story = {
       },
     },
   },
-  render: () => <Panel side="right" tituloKey="title" titleRender={<h3 />} />,
+  render: () => <Panel side="right" titleKey="title" titleRender={<h3 />} />,
   play: async ({ step }) => {
     const p = await waitForPortal("dialog");
 

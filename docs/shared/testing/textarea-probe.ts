@@ -121,7 +121,7 @@ function aoFocar(ta: HTMLTextAreaElement) {
     const cs = getComputedStyle(ta);
     const measurement = {
       boxShadow: cs.boxShadow,
-      corDaBorda: cs.borderTopColor,
+      borderColor: cs.borderTopColor,
       outlineWidth: cs.outlineWidth,
       outlineStyle: cs.outlineStyle,
       casaFocusVisible: ta.matches(':focus-visible'),
@@ -155,11 +155,11 @@ export function heightMinimaPx(el: Element): number {
  * `rgba(0, 0, 0, 0) 0px 0px 0px 0px`, que faz um anel perfeitamente pintado
  * parecer inexistente. Ver `noTransicao`.
  */
-export function focusAssentadoRing(el: HTMLElement): { boxShadow: string; corDaBorda: string } {
+export function focusAssentadoRing(el: HTMLElement): { boxShadow: string; borderColor: string } {
   return noTransicao(el, () => {
     el.focus();
     const cs = getComputedStyle(el);
-    return { boxShadow: cs.boxShadow, corDaBorda: cs.borderTopColor };
+    return { boxShadow: cs.boxShadow, borderColor: cs.borderTopColor };
   });
 }
 
@@ -286,7 +286,7 @@ export function measureTextarea(root: HTMLElement) {
       background: cs.backgroundColor,
       backgroundEffective: background,
       cor: cs.color,
-      corDaBorda: cs.borderTopColor,
+      borderColor: cs.borderTopColor,
       corDoPlaceholder: csPlaceholder.color || null,
       opacity: cs.opacity,
       cursor: cs.cursor,

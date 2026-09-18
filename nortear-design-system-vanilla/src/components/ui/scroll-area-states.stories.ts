@@ -289,27 +289,27 @@ export const NoLimit: Story = {
     return outer;
   },
   play: async ({ canvasElement, step }) => {
-    const [semAltura, comAltura] = Array.from(
+    const [withoutHeight, withHeight] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area-viewport"]'),
     );
 
     await step('Sem degrau de altura no root o conteúdo expande e não há rolagem', async () => {
       // functional.item4.
-      await expect(transbordo(semAltura).y).toBe(false);
-      await expect(semAltura.scrollHeight).toBe(semAltura.clientHeight);
-      await expect(semAltura.getBoundingClientRect().height).toBeGreaterThan(300);
+      await expect(transbordo(withoutHeight).y).toBe(false);
+      await expect(withoutHeight.scrollHeight).toBe(withoutHeight.clientHeight);
+      await expect(withoutHeight.getBoundingClientRect().height).toBeGreaterThan(300);
     });
 
     await step('Sem nome, nenhum papel é emitido', async () => {
       // Região anônima não vira landmark, e `aria-label` em elemento sem papel
       // é atributo proibido — por isso o papel só aparece junto com o nome.
-      await expect(semAltura.getAttribute('role')).toBeNull();
-      await expect(semAltura.getAttribute('aria-label')).toBeNull();
+      await expect(withoutHeight.getAttribute('role')).toBeNull();
+      await expect(withoutHeight.getAttribute('aria-label')).toBeNull();
     });
 
     await step('Com o degrau de altura no root o mesmo conteúdo rola', async () => {
-      await expect(transbordo(comAltura).y).toBe(true);
-      await expect(comAltura.getBoundingClientRect().height).toBeLessThan(200);
+      await expect(transbordo(withHeight).y).toBe(true);
+      await expect(withHeight.getBoundingClientRect().height).toBeLessThan(200);
     });
   },
 };

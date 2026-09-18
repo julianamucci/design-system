@@ -40,7 +40,7 @@
  * log, nem para o JSON de saída, nem para uma mensagem de erro.
  */
 
-import { nomeDeMenu, recortarDocumento, responder } from '../../../../docs/shared/chat-docs/servidor';
+import { menuName, recortarDocumento, responder } from '../../../../docs/shared/chat-docs/servidor';
 import { loadCorpus, isLocale, type Locale } from '../../../../docs/shared/chat-docs/corpus';
 import { BANCO, type CasoDeAvaliacao, type TurnoDoBanco } from './banco';
 import {
@@ -57,8 +57,8 @@ import {
 
 /* ── Argumentos ───────────────────────────────────────────────────────────── */
 
-function bandeira(nome: string): string | undefined {
-  const prefixo = `--${nome}=`;
+function bandeira(name: string): string | undefined {
+  const prefixo = `--${name}=`;
   const achado = process.argv.find((arg) => arg.startsWith(prefixo));
   return achado?.slice(prefixo.length);
 }
@@ -95,13 +95,13 @@ interface Resposta {
   /** Os slugs que a recuperação escolheu, em ordem de nota. */
   fontes: { slug: string; score: number }[];
   fraca: boolean;
-  texto: string;
+  text: string;
   tokensEntrada: number | null;
   tokensSaida: number | null;
   /** Milissegundos até o PRIMEIRO pedaço de texto — a latência que se sente. */
   ateOPrimeiro: number | null;
   totalMs: number;
-  erro: string | null;
+  error: string | null;
 }
 
 /**
@@ -123,16 +123,16 @@ async function perguntar(
   pergunta: string,
   historico: TurnoDoBanco[],
 ): Promise<Resposta> {
-  const inicio = Date.now();
-  const resposta: Resposta = {
+  const start = Date.now();
+  const response: Resposta = {
     fontes: [],
     fraca: false,
-    texto: '',
+    text: '',
     tokensEntrada: null,
     tokensSaida: null,
     ateOPrimeiro: null,
     totalMs: 0,
-    erro: null,
+    error: null,
   };
 
   const http = await responder(
@@ -144,10 +144,10 @@ async function perguntar(
   );
 
   if (!http.ok || !http.body) {
-    const corpo = (await http.json()) as { code?: string };
-    resposta.erro = corpo.code ?? `http_${http.status}`;
-    resposta.totalMs = Date.now() - inicio;
-    return resposta;
+    const body = (await http.json()) as { code?: string };
+    response.error = body.code ?? `http_${http.status}`;
+    response.totalMs = Date.now() - start;
+    return response;
   }
 
   // Lê o SSE aos poucos: é a única forma de medir o tempo até o primeiro
@@ -172,36 +172,36 @@ async function perguntar(
           weak: boolean;
           hits: { slug: string; score: number }[];
         };
-        resposta.fontes = fonte.hits;
-        resposta.fraca = fonte.weak;
+        response.fontes = fonte.hits;
+        response.fraca = fonte.weak;
       } else if (evento === 'delta') {
-        resposta.ateOPrimeiro ??= Date.now() - inicio;
-        resposta.texto += (carga as unknown as { text: string }).text;
+        response.ateOPrimeiro ??= Date.now() - start;
+        response.text += (carga as unknown as { text: string }).text;
       } else if (evento === 'done') {
         const fim = carga as unknown as {
           usage: { input: number | null; output: number | null };
         };
-        resposta.tokensEntrada = fim.usage.input;
-        resposta.tokensSaida = fim.usage.output;
+        response.tokensEntrada = fim.usage.input;
+        response.tokensSaida = fim.usage.output;
       } else if (evento === 'error') {
-        resposta.erro = (carga as unknown as { code: string }).code;
+        response.error = (carga as unknown as { code: string }).code;
       }
     }
   }
 
-  resposta.totalMs = Date.now() - inicio;
-  return resposta;
+  response.totalMs = Date.now() - start;
+  return response;
 }
 
 /* ── O laço ───────────────────────────────────────────────────────────────── */
 
 interface Linha {
   id: string;
-  grupo: string;
+  group: string;
   pergunta: string;
   fontes: string[];
   recuperacaoOk: boolean;
-  primeiroOk: boolean | null;
+  firstOk: boolean | null;
   faltando: string[];
   /** A resposta trouxe marca de recusa? Informativo: nao decide sozinho. */
   recusou: boolean;
@@ -220,10 +220,10 @@ interface Linha {
   tokensSaida: number | null;
   ateOPrimeiro: number | null;
   totalMs: number;
-  erro: string | null;
+  error: string | null;
   /** Todos os critérios que se aplicam a este caso passaram. */
   ok: boolean;
-  resposta: string;
+  response: string;
 }
 
 const corpusOuNada = loadCorpus(LOCALE);
@@ -235,8 +235,8 @@ if (!corpusOuNada) {
 // tipo dentro das funções abaixo: para o `tsc`, elas rodam depois do `if`.
 const corpus = corpusOuNada;
 
-const catalogo = corpus.entries.map((entrada) => nomeDeMenu(entrada.slug)).sort();
-const traduzidos = titulosTraduzidos(corpus.entries, nomeDeMenu);
+const catalogo = corpus.entries.map((input) => menuName(input.slug)).sort();
+const traduzidos = titulosTraduzidos(corpus.entries, menuName);
 
 function dormir(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -260,27 +260,27 @@ async function rodarCaso(caso: CasoDeAvaliacao): Promise<Linha> {
     if (ultima) await dormir(PAUSA);
     ultima = await perguntar(pergunta, historico);
     historico.push({ papel: 'user', texto: pergunta });
-    if (ultima.texto.trim()) historico.push({ papel: 'model', texto: ultima.texto });
+    if (ultima.text.trim()) historico.push({ papel: 'model', texto: ultima.text });
   }
   if (!ultima) throw new Error(`caso sem pergunta: ${caso.id}`);
 
   const slugs = ultima.fontes.map((f) => f.slug);
   const recuperacao = avaliarRecuperacao(slugs, caso.esperados, {
     exigeTodos: caso.exigeTodos,
-    primeiro: caso.primeiro,
+    first: caso.first,
   });
-  const recusa = detectarRecusa(ultima.texto);
-  const respondeu = citaSlugEsperado(ultima.texto, caso.esperados);
+  const recusa = detectarRecusa(ultima.text);
+  const respondeu = citaSlugEsperado(ultima.text, caso.esperados);
   const negacao = caso.termoInexistente
-    ? negaExistencia(ultima.texto, caso.termoInexistente)
+    ? negaExistencia(ultima.text, caso.termoInexistente)
     : null;
-  const linha: Linha = {
+  const row: Linha = {
     id: caso.id,
-    grupo: caso.grupo,
+    group: caso.group,
     pergunta: caso.perguntas[caso.perguntas.length - 1],
     fontes: slugs,
     recuperacaoOk: recuperacao.ok,
-    primeiroOk: recuperacao.primeiroOk,
+    firstOk: recuperacao.firstOk,
     faltando: recuperacao.faltando,
     recusou: recusa.recusou,
     respondeu,
@@ -298,31 +298,31 @@ async function rodarCaso(caso: CasoDeAvaliacao): Promise<Linha> {
     marcaDeRecusa: recusa.marca,
     negouOk: negacao ? negacao.negou : null,
     fraseDaNegacao: negacao?.frase ?? null,
-    traduzidos: nomesTraduzidosCitados(ultima.texto, traduzidos),
-    inventados: nomesInventados(ultima.texto, catalogo, contextoDoPrompt(slugs)),
-    obrigatoriosFaltando: nomesObrigatoriosFaltando(ultima.texto, caso.nomesObrigatorios),
-    proibidosCitados: nomesProibidosCitados(ultima.texto, caso.nomesProibidos),
+    traduzidos: nomesTraduzidosCitados(ultima.text, traduzidos),
+    inventados: nomesInventados(ultima.text, catalogo, contextoDoPrompt(slugs)),
+    obrigatoriosFaltando: nomesObrigatoriosFaltando(ultima.text, caso.nomesObrigatorios),
+    proibidosCitados: nomesProibidosCitados(ultima.text, caso.nomesProibidos),
     tokensEntrada: ultima.tokensEntrada,
     tokensSaida: ultima.tokensSaida,
     ateOPrimeiro: ultima.ateOPrimeiro,
     totalMs: ultima.totalMs,
-    erro: ultima.erro,
+    error: ultima.error,
     ok: false,
-    resposta: ultima.texto,
+    response: ultima.text,
   };
 
-  linha.ok =
-    linha.erro === null &&
-    linha.recuperacaoOk &&
-    linha.primeiroOk !== false &&
-    linha.recusaOk &&
-    linha.negouOk !== false &&
-    linha.traduzidos.length === 0 &&
-    linha.inventados.length === 0 &&
-    linha.obrigatoriosFaltando.length === 0 &&
-    linha.proibidosCitados.length === 0;
+  row.ok =
+    row.error === null &&
+    row.recuperacaoOk &&
+    row.firstOk !== false &&
+    row.recusaOk &&
+    row.negouOk !== false &&
+    row.traduzidos.length === 0 &&
+    row.inventados.length === 0 &&
+    row.obrigatoriosFaltando.length === 0 &&
+    row.proibidosCitados.length === 0;
 
-  return linha;
+  return row;
 }
 
 /**
@@ -340,22 +340,22 @@ async function rodarCaso(caso: CasoDeAvaliacao): Promise<Linha> {
  */
 async function rodarCasoSeco(caso: CasoDeAvaliacao): Promise<Linha> {
   const { searchDocs } = await import('../../../../docs/shared/primitives/docs-index');
-  const anterior = caso.perguntas.length > 1 ? caso.perguntas[caso.perguntas.length - 2] : null;
+  const previous = caso.perguntas.length > 1 ? caso.perguntas[caso.perguntas.length - 2] : null;
   const atual = caso.perguntas[caso.perguntas.length - 1];
-  const consulta = anterior ? `${anterior} ${atual}` : atual;
+  const consulta = previous ? `${previous} ${atual}` : atual;
   const hits = searchDocs(corpus.entries, consulta, { limit: 5 });
   const slugs = hits.map((h) => h.slug);
   const recuperacao = avaliarRecuperacao(slugs, caso.esperados, {
     exigeTodos: caso.exigeTodos,
-    primeiro: caso.primeiro,
+    first: caso.first,
   });
   return {
     id: caso.id,
-    grupo: caso.grupo,
+    group: caso.group,
     pergunta: atual,
     fontes: hits.map((h) => `${h.slug}:${h.score.toFixed(2)}`),
     recuperacaoOk: recuperacao.ok,
-    primeiroOk: recuperacao.primeiroOk,
+    firstOk: recuperacao.firstOk,
     faltando: recuperacao.faltando,
     recusou: false,
     respondeu: false,
@@ -371,16 +371,16 @@ async function rodarCasoSeco(caso: CasoDeAvaliacao): Promise<Linha> {
     tokensSaida: null,
     ateOPrimeiro: null,
     totalMs: 0,
-    erro: null,
-    ok: recuperacao.ok && recuperacao.primeiroOk !== false,
-    resposta: '',
+    error: null,
+    ok: recuperacao.ok && recuperacao.firstOk !== false,
+    response: '',
   };
 }
 
 /* ── Saída ────────────────────────────────────────────────────────────────── */
 
-function pad(texto: string, largura: number): string {
-  return texto.length >= largura ? texto.slice(0, largura) : texto.padEnd(largura);
+function pad(text: string, largura: number): string {
+  return text.length >= largura ? text.slice(0, largura) : text.padEnd(largura);
 }
 
 function marca(ok: boolean | null): string {
@@ -422,7 +422,7 @@ function imprimir(linhas: Linha[]): void {
       [
         pad((l.ok ? '  ' : '! ') + l.id, 26),
         pad(marca(l.recuperacaoOk), 6),
-        pad(marca(l.primeiroOk), 5),
+        pad(marca(l.firstOk), 5),
         pad(marca(l.recusaOk), 7),
         pad(marca(l.negouOk), 5),
         pad(marca(nomesOk), 6),
@@ -433,9 +433,9 @@ function imprimir(linhas: Linha[]): void {
       ].join(' '),
     );
     // O detalhe só aparece quando reprova: tabela que sempre explica não se lê.
-    if (l.erro) console.log(`     erro: ${l.erro}`);
+    if (l.error) console.log(`     erro: ${l.error}`);
     if (!l.recuperacaoOk) console.log(`     faltou recuperar: ${l.faltando.join(', ')}`);
-    if (l.primeiroOk === false) console.log(`     primeiro veio: ${l.fontes[0] ?? '—'}`);
+    if (l.firstOk === false) console.log(`     primeiro veio: ${l.fontes[0] ?? '—'}`);
     if (!l.recusaOk) {
       console.log(
         l.respondeu
@@ -474,7 +474,7 @@ function resumir(linhas: Linha[]): void {
   console.log(`casos totalmente verdes      ${conta((l) => l.ok)}/${total}`);
   console.log(`acerto de recuperação        ${conta((l) => l.recuperacaoOk)}/${total}`);
   console.log(
-    `primeiro colocado certo      ${conta((l) => l.primeiroOk === true)}/${conta((l) => l.primeiroOk !== null)}`,
+    `primeiro colocado certo      ${conta((l) => l.firstOk === true)}/${conta((l) => l.firstOk !== null)}`,
   );
   console.log(`recusa no lugar certo        ${conta((l) => l.recusaOk)}/${total}`);
   const comNegacao = conta((l) => l.negouOk !== null);
@@ -486,7 +486,7 @@ function resumir(linhas: Linha[]): void {
   console.log(
     `nomes obrigatórios citados   ${conta((l) => l.obrigatoriosFaltando.length === 0)}/${total}`,
   );
-  console.log(`erros de provedor            ${conta((l) => l.erro !== null)}/${total}`);
+  console.log(`erros de provedor            ${conta((l) => l.error !== null)}/${total}`);
   if (entradas.length) {
     console.log('');
     console.log(
@@ -506,8 +506,8 @@ const casos = BANCO.filter((caso) => !SO || SO.includes(caso.id));
 
 const linhas: Linha[] = [];
 for (const caso of casos) {
-  const linha = SECO ? await rodarCasoSeco(caso) : await rodarCaso(caso);
-  linhas.push(linha);
+  const row = SECO ? await rodarCasoSeco(caso) : await rodarCaso(caso);
+  linhas.push(row);
   if (!SECO) await dormir(PAUSA);
 }
 

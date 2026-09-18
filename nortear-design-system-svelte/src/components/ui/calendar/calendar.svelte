@@ -127,8 +127,8 @@ get along, so we shut typescript up by casting `value` to `never`.
 	{#snippet children({ months, weekdays })}
 		<Calendar.Months>
 			<Calendar.Nav>
-				<Calendar.PrevButton variant={buttonVariant} aria-label={rotulos.mesAnterior} />
-				<Calendar.NextButton variant={buttonVariant} aria-label={rotulos.proximoMes} />
+				<Calendar.PrevButton variant={buttonVariant} aria-label={rotulos.previousMonth} />
+				<Calendar.NextButton variant={buttonVariant} aria-label={rotulos.nextMonth} />
 			</Calendar.Nav>
 			{#each months as month, monthIndex (month)}
 				<Calendar.Month>

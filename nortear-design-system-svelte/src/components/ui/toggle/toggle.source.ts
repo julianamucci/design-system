@@ -38,8 +38,8 @@ function importing(...icons: IconKey[]): string {
   return [
     IMPORT,
     ...icons.map((key) => {
-      const [name, caminho] = ICONS[key];
-      return `import ${name} from "@lucide/svelte/icons/${caminho}";`;
+      const [name, path] = ICONS[key];
+      return `import ${name} from "@lucide/svelte/icons/${path}";`;
     }),
   ].join('\n');
 }

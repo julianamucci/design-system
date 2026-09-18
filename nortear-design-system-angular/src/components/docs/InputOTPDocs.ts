@@ -132,14 +132,14 @@ export class NdsInputOtp {
 }`;
 
 /** Propriedade do conteúdo compartilhado → input real deste stack. */
-const PROPS_MAP: { key: string; name: string; type: string; padrao: string }[] = [
-  { key: 'maxLength',  name: 'maxLength',   type: 'number',                          padrao: '6'                  },
-  { key: 'value',      name: 'value',       type: 'string (model)',                  padrao: `''`                 },
-  { key: 'onChange',   name: 'valueChange', type: 'output<string>',                  padrao: '—'                  },
-  { key: 'onComplete', name: 'complete',    type: 'output<string>',                  padrao: '—'                  },
-  { key: 'pattern',    name: 'mode',        type: `'numeric' | 'alphanumeric'`,      padrao: `'numeric'`          },
-  { key: 'disabled',   name: 'disabled',    type: 'boolean',                         padrao: 'false'              },
-  { key: 'autoFocus',  name: 'autoFocus',   type: 'boolean',                         padrao: 'false'              },
+const PROPS_MAP: { key: string; name: string; type: string; defaultValue: string }[] = [
+  { key: 'maxLength',  name: 'maxLength',   type: 'number',                          defaultValue: '6'                  },
+  { key: 'value',      name: 'value',       type: 'string (model)',                  defaultValue: `''`                 },
+  { key: 'onChange',   name: 'valueChange', type: 'output<string>',                  defaultValue: '—'                  },
+  { key: 'onComplete', name: 'complete',    type: 'output<string>',                  defaultValue: '—'                  },
+  { key: 'pattern',    name: 'mode',        type: `'numeric' | 'alphanumeric'`,      defaultValue: `'numeric'`          },
+  { key: 'disabled',   name: 'disabled',    type: 'boolean',                         defaultValue: 'false'              },
+  { key: 'autoFocus',  name: 'autoFocus',   type: 'boolean',                         defaultValue: 'false'              },
 ];
 
 /** Chave de token do conteúdo → custom property e seletor reais do CSS. */
@@ -576,10 +576,10 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
           required: t('props.table.required'),
           description: t('props.table.description'),
         },
-        items: PROPS_MAP.map(({ key, name, type, padrao }) => ({
+        items: PROPS_MAP.map(({ key, name, type, defaultValue }) => ({
           name: name,
           type: type,
-          defaultValue: padrao,
+          defaultValue,
           required: t(`props.table.${key}.required`),
           description: toPlainText(t(`props.table.${key}.description`)),
         })),

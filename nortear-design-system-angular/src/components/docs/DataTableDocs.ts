@@ -248,8 +248,8 @@ const ANATOMY_CODE = `<div
   caption="Faturas recentes"
   [columns]="colunas"
   [data]="faturas()"
-  [rowKey]="chaveDaFatura"
-  [rowLabel]="rotuloDaFatura"
+  [rowKey]="invoiceKey"
+  [rowLabel]="invoiceLabel"
   [enableRowSelection]="true"
   [enableColumnFilters]="true"
   [pageSize]="5"
@@ -280,8 +280,8 @@ const CODE_SELECTION = `<div
   [columns]="colunas"
   [data]="faturas"
   [enableRowSelection]="true"
-  [rowKey]="chaveDaFatura"
-  [rowLabel]="rotuloDaFatura"
+  [rowKey]="invoiceKey"
+  [rowLabel]="invoiceLabel"
   (selectionChange)="selecionadas.set($event)"
 ></div>`;
 
@@ -495,8 +495,8 @@ function formatarBRL(value: unknown): string {
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
-        [rowKey]="chaveDaFatura"
-        [rowLabel]="rotuloDaFatura"
+        [rowKey]="invoiceKey"
+        [rowLabel]="invoiceLabel"
         [enableGlobalFilter]="false"
         [enableColumnVisibility]="false"
         [enableRowSelection]="true"
@@ -559,8 +559,8 @@ function formatarBRL(value: unknown): string {
           [columns]="colunas()"
           [data]="faturas()"
           [labels]="rotulos()"
-          [rowKey]="chaveDaFatura"
-          [rowLabel]="rotuloDaFatura"
+          [rowKey]="invoiceKey"
+          [rowLabel]="invoiceLabel"
           [enableGlobalFilter]="false"
           [enableColumnVisibility]="false"
           [enableRowSelection]="true"
@@ -598,8 +598,8 @@ function formatarBRL(value: unknown): string {
             [columns]="colunasEditaveis()"
             [data]="faturas()"
             [labels]="rotulos()"
-            [rowKey]="chaveDaFatura"
-            [rowLabel]="rotuloDaFatura"
+            [rowKey]="invoiceKey"
+            [rowLabel]="invoiceLabel"
             [globalFilterPlaceholder]="t('demonstration.labels.search')"
             [enableRowSelection]="true"
             [enableColumnFilters]="true"
@@ -724,8 +724,8 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly faturasCurtas = INVOICES_DT.slice(0, 4).map((f) => ({ ...f }));
   protected readonly selecionadas = signal<readonly InvoiceDT[]>([]);
 
-  protected readonly chaveDaFatura = (invoice: InvoiceDT): string => invoice.id;
-  protected readonly rotuloDaFatura = (invoice: InvoiceDT): string => invoice.id;
+  protected readonly invoiceKey = (invoice: InvoiceDT): string => invoice.id;
+  protected readonly invoiceLabel = (invoice: InvoiceDT): string => invoice.id;
 
   /** Status do dado (em português) → texto na língua da página. */
   private readonly statusTraduzido = computed<Record<string, string>>(() => {
@@ -1015,13 +1015,13 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
       name: string,
       key: string,
       type: string,
-      padrao: string,
-      obrigatorio = not,
+      defaultValue: string,
+      required = not,
     ) => ({
       name,
       type: type,
-      defaultValue: padrao,
-      required: obrigatorio,
+      defaultValue,
+      required,
       description: toPlainText(t(`props.table.${key}`)),
     });
 

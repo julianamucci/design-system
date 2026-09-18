@@ -50,11 +50,11 @@ function block(tag: string, attrs: string, content: string, recuo: number): stri
 function tabs(options: {
   root?: string;
   list?: string;
-  rotuloLista: string;
+  listLabel: string;
   abas: Aba[];
   classePainel?: string;
 }): string {
-  const { root = '', list = '', rotuloLista, abas, classePainel = CLASSNAME_PANEL } = options;
+  const { root = '', list = '', listLabel, abas, classePainel = CLASSNAME_PANEL } = options;
   const triggers = abas
     .map((aba) =>
       block(
@@ -74,7 +74,7 @@ function tabs(options: {
     )
     .join('\n');
   return `<Tabs${attrs(root)}>
-  <TabsList${attrs(list, `aria-label="${rotuloLista}"`)}>
+  <TabsList${attrs(list, `aria-label="${listLabel}"`)}>
 ${triggers}
   </TabsList>
 ${panels}
@@ -107,7 +107,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
         attr('activation-mode', args.activationMode, 'automatic'),
         `class="nds-w-${vertical ? 'lg' : 'md'}"`,
       ).trim(),
-      rotuloLista: 'Seções do componente',
+      listLabel: 'Seções do componente',
       abas: SECTIONS,
       classePainel: vertical ? VERTICAL_CLASSNAME_PANEL : CLASSNAME_PANEL,
     }),
@@ -123,7 +123,7 @@ export function tabsDefaultSource(): string {
     IMPORT,
     tabs({
       root: 'default-value="overview" class="nds-w-md"',
-      rotuloLista: 'Seções do componente',
+      listLabel: 'Seções do componente',
       abas: SECTIONS,
     }),
   );
@@ -136,7 +136,7 @@ export function tabsLineSource(): string {
     tabs({
       root: 'default-value="overview" class="nds-w-md"',
       list: 'variant="line"',
-      rotuloLista: 'Seções do componente',
+      listLabel: 'Seções do componente',
       abas: SECTIONS,
     }),
   );
@@ -151,7 +151,7 @@ export function tabsVerticalSource(): string {
     IMPORT,
     tabs({
       root: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
-      rotuloLista: 'Configurações da conta',
+      listLabel: 'Configurações da conta',
       classePainel: VERTICAL_CLASSNAME_PANEL,
       abas: [
         {
@@ -183,7 +183,7 @@ export function tabsAbaAtivaSource(): string {
     IMPORT,
     tabs({
       root: 'default-value="properties" class="nds-w-md"',
-      rotuloLista: 'Seções do componente',
+      listLabel: 'Seções do componente',
       abas: SECTIONS,
     }),
   );
@@ -199,7 +199,7 @@ export function tabsAbaDesabilitadaSource(): string {
     IMPORT,
     tabs({
       root: 'default-value="overview" class="nds-w-md"',
-      rotuloLista: 'Seções do componente',
+      listLabel: 'Seções do componente',
       abas: [
         SECTIONS[0],
         { ...SECTIONS[1], desabilitada: true },
@@ -219,7 +219,7 @@ export function tabsAbaDesabilitadaSource(): string {
 export function tabsControlledSource(): string {
   const conjunto = tabs({
     root: ':model-value="aba" class="nds-w-full" @update:model-value="aba = String($event)"',
-    rotuloLista: 'Seções do componente',
+    listLabel: 'Seções do componente',
     abas: [
       {
         value: 'overview',
@@ -265,7 +265,7 @@ import { Code2, Eye, Settings2 } from 'lucide-vue-next'`,
     tabs({
       root: 'default-value="preview" class="nds-w-md"',
       list: 'variant="line"',
-      rotuloLista: 'Modos de visualização',
+      listLabel: 'Modos de visualização',
       abas: [
         {
           value: 'preview',
@@ -298,7 +298,7 @@ export function tabsWithCounterSource(): string {
 import { Badge } from '@/components/ui/badge'`,
     tabs({
       root: 'default-value="inbox" class="nds-w-md"',
-      rotuloLista: 'Caixas de mensagem',
+      listLabel: 'Caixas de mensagem',
       abas: [
         {
           value: 'inbox',
@@ -330,7 +330,7 @@ export function tabsConfigVerticaisSource(): string {
 import { Settings2, Shield, User } from 'lucide-vue-next'`,
     tabs({
       root: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
-      rotuloLista: 'Configurações da conta',
+      listLabel: 'Configurações da conta',
       classePainel: 'nds-text-body nds-pl-4',
       abas: [
         {
@@ -363,7 +363,7 @@ export function tabsModeManualSource(): string {
     IMPORT,
     tabs({
       root: 'default-value="overview" activation-mode="manual" class="nds-w-md"',
-      rotuloLista: 'Seções do componente',
+      listLabel: 'Seções do componente',
       abas: [
         {
           value: 'overview',

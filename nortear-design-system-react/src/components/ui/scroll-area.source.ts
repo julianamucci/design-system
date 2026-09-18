@@ -32,10 +32,10 @@ const IMPORT_WITH_BAR =
   'import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";';
 
 /** Quantidade de itens do exemplo, e só quando o control entrega um número. */
-function quantidade(value: unknown, padrao: number): number {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return padrao;
+function quantidade(value: unknown, defaultValue: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return defaultValue;
   const inteiro = Math.round(value);
-  return inteiro > 0 ? inteiro : padrao;
+  return inteiro > 0 ? inteiro : defaultValue;
 }
 
 /**

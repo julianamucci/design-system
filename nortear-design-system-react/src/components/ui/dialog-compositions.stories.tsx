@@ -127,9 +127,9 @@ export const ProfileEdit: Story = {
       await expect(name).toHaveAccessibleName(label("demonstration.labels.fieldFullName"));
       await expect(name.value).toBe(label("demonstration.labels.samplePersonName"));
 
-      const usuario = p.querySelector<HTMLInputElement>("#profile-username")!;
-      await expect(usuario).toHaveAccessibleName(label("demonstration.labels.fieldUsername"));
-      await expect(usuario.value).toBe("@mariasilva");
+      const user = p.querySelector<HTMLInputElement>("#profile-username")!;
+      await expect(user).toHaveAccessibleName(label("demonstration.labels.fieldUsername"));
+      await expect(user.value).toBe("@mariasilva");
     });
 
     await step("O rodapé fica dentro do formulário, e o envio não é o Cancelar", async () => {

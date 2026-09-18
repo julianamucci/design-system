@@ -147,7 +147,7 @@ export class NdsContextMenuContent {
           [attr.data-slot]="slotDoPopup()"
         >
           <ng-container
-            [ngTemplateOutlet]="templateDoConteudo()!"
+            [ngTemplateOutlet]="contentTemplate()!"
             [ngTemplateOutletInjector]="scope.injector"
           />
         </div>
@@ -178,7 +178,7 @@ export class NdsContextMenu implements NdsMenuTabAnchor {
     return area ?? null;
   }
 
-  protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
+  protected readonly contentTemplate = computed<TemplateRef<unknown> | null>(
     () => this.content()?.tpl ?? null,
   );
 

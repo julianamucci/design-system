@@ -118,7 +118,7 @@ export const Open: Story = {
       triggerLabel: LABEL.trigger(),
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
@@ -131,7 +131,7 @@ export const Open: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -174,14 +174,14 @@ export const Controlled: Story = {
   render: () => ({
     props: {
       isOpen: false,
-      rotuloExterno: TRIGGER_EXTERNO,
+      externalLabel: TRIGGER_EXTERNO,
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <button ndsButton variant="outline" (click)="isOpen = true">{{ rotuloExterno }}</button>
+        <button ndsButton variant="outline" (click)="isOpen = true">{{ externalLabel }}</button>
 
         <nds-drawer [open]="isOpen" (openChange)="isOpen = $event">
           <ng-template ndsDrawerContent>
@@ -191,7 +191,7 @@ export const Controlled: Story = {
             </div>
 
             <div ndsDrawerFooter>
-              <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+              <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
             </div>
           </ng-template>
         </nds-drawer>
@@ -245,7 +245,7 @@ export const NotDismissible: Story = {
       triggerLabel: LABEL.trigger(),
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true" [disablePointerDismissal]="true">
@@ -258,7 +258,7 @@ export const NotDismissible: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -382,7 +382,7 @@ export const DragToDismiss: Story = {
       triggerLabel: LABEL.trigger(),
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <nds-drawer>
@@ -395,7 +395,7 @@ export const DragToDismiss: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>

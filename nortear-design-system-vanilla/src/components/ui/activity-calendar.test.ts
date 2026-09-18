@@ -59,28 +59,28 @@ describe('activityLevel', () => {
 });
 
 describe('resolveActivityCalendar', () => {
-  const janela = { start: '2026-01-01', end: '2026-03-31', thresholds: SCALE };
+  const window = { start: '2026-01-01', end: '2026-03-31', thresholds: SCALE };
 
   it('sem janela não devolve grade', () => {
     // Fim antes do começo não é janela.
-    expect(resolveActivityCalendar([], { ...janela, start: '2026-03-31', end: '2026-01-01' }))
+    expect(resolveActivityCalendar([], { ...window, start: '2026-03-31', end: '2026-01-01' }))
       .toBeNull();
     // Data ilegível também não.
-    expect(resolveActivityCalendar([], { ...janela, start: 'ontem' })).toBeNull();
+    expect(resolveActivityCalendar([], { ...window, start: 'ontem' })).toBeNull();
     // 31 de fevereiro não existe, e transbordar para março em silêncio seria
     // desenhar uma casa num dia que ninguém mediu.
-    expect(resolveActivityCalendar([], { ...janela, start: '2026-02-31' })).toBeNull();
+    expect(resolveActivityCalendar([], { ...window, start: '2026-02-31' })).toBeNull();
   });
 
   it('sem escala não devolve grade', () => {
     // Sem degrau todo dia pintaria igual, e a peça deixaria de dizer algo.
-    expect(resolveActivityCalendar([], { ...janela, thresholds: [] })).toBeNull();
+    expect(resolveActivityCalendar([], { ...window, thresholds: [] })).toBeNull();
   });
 
   it('GRADE VAZIA É GRADE: janela sem atividade nenhuma desenha', () => {
     // É a diferença desta peça em relação às duas irmãs da família: um trimestre
     // em que nada aconteceu É a resposta, e devolver nada a esconderia.
-    const grade = resolveActivityCalendar([], janela)!;
+    const grade = resolveActivityCalendar([], window)!;
 
     expect(grade).not.toBeNull();
     expect(grade.total).toBe(0);
@@ -89,7 +89,7 @@ describe('resolveActivityCalendar', () => {
   });
 
   it('há uma casa por dia da janela, e nenhuma fora dela', () => {
-    const grade = resolveActivityCalendar([], { ...janela, end: '2026-01-31' })!;
+    const grade = resolveActivityCalendar([], { ...window, end: '2026-01-31' })!;
 
     expect(grade.cells).toHaveLength(31);
     expect(grade.cells[0].date).toBe('2026-01-01');
@@ -100,7 +100,7 @@ describe('resolveActivityCalendar', () => {
     // 2026-01-01 é uma quinta-feira. Numa semana que começa no domingo, quinta é
     // a quinta linha. `getDay()` local devolveria quarta a oeste de Greenwich, e
     // a grade inteira andaria uma casa sem reprovar em teste nenhum.
-    const grade = resolveActivityCalendar([], { ...janela, end: '2026-01-07' })!;
+    const grade = resolveActivityCalendar([], { ...window, end: '2026-01-07' })!;
 
     expect(grade.cells[0].row).toBe(5);
     expect(grade.cells[1].row).toBe(6);
@@ -113,7 +113,7 @@ describe('resolveActivityCalendar', () => {
   it('a semana pode começar na segunda, e as linhas giram junto', () => {
     const grade = resolveActivityCalendar(
       [],
-      { ...janela, end: '2026-01-07', weekStart: 1 },
+      { ...window, end: '2026-01-07', weekStart: 1 },
     )!;
 
     // Com a semana começando na segunda, quinta é a quarta linha.
@@ -126,7 +126,7 @@ describe('resolveActivityCalendar', () => {
   it('a grade começa na semana que CONTÉM o começo, e não no começo', () => {
     // Sem isso as linhas deixariam de ser dias da semana, que é a leitura
     // inteira de um mapa de calendário.
-    const grade = resolveActivityCalendar([], { ...janela, end: '2026-01-31' })!;
+    const grade = resolveActivityCalendar([], { ...window, end: '2026-01-31' })!;
 
     expect(grade.cells[0].column).toBe(1);
     expect(grade.cells[0].row).toBe(5);
@@ -138,7 +138,7 @@ describe('resolveActivityCalendar', () => {
     // uma perderia dado em silêncio.
     const grade = resolveActivityCalendar(
       [day('2026-01-02', 3), day('2026-01-02', 4)],
-      { ...janela, end: '2026-01-31' },
+      { ...window, end: '2026-01-31' },
     )!;
 
     const casa = grade.cells.find((c) => c.date === '2026-01-02')!;
@@ -150,7 +150,7 @@ describe('resolveActivityCalendar', () => {
   it('o dia fora da janela sai, e não quebra', () => {
     const grade = resolveActivityCalendar(
       [day('2025-12-31', 99), day('2026-01-02', 5), day('2026-04-01', 99), day('ontem', 99)],
-      janela,
+      window,
     )!;
 
     expect(grade.total).toBe(5);
@@ -160,7 +160,7 @@ describe('resolveActivityCalendar', () => {
   it('o total é a soma do que caiu dentro da janela', () => {
     const grade = resolveActivityCalendar(
       [day('2026-01-02', 2), day('2026-02-10', 3), day('2026-03-05', 4)],
-      janela,
+      window,
     )!;
 
     expect(grade.total).toBe(9);
@@ -168,7 +168,7 @@ describe('resolveActivityCalendar', () => {
 
   it('cada mês da janela ganha um rótulo, e nenhum se sobrepõe ao vizinho', () => {
     // Dois rótulos na mesma casa se sobrepõem, e o que se lê ali vira nada.
-    const grade = resolveActivityCalendar([], janela)!;
+    const grade = resolveActivityCalendar([], window)!;
 
     expect(grade.months.map((m) => m.month)).toEqual([0, 1, 2]);
     const colunas = grade.months.map((m) => m.column);
@@ -176,7 +176,7 @@ describe('resolveActivityCalendar', () => {
   });
 
   it('o rótulo de mês cobre até onde o próximo começa', () => {
-    const grade = resolveActivityCalendar([], janela)!;
+    const grade = resolveActivityCalendar([], window)!;
 
     for (const [index, mes] of grade.months.entries()) {
       const proximo = grade.months[index + 1];
@@ -187,7 +187,7 @@ describe('resolveActivityCalendar', () => {
 
   it('o rótulo de dia da semana é alternado, a partir da segunda linha', () => {
     // Sete rótulos na altura de sete casas não cabem em fonte nenhuma.
-    const grade = resolveActivityCalendar([], janela)!;
+    const grade = resolveActivityCalendar([], window)!;
 
     expect(grade.weekdays.map((w) => w.row)).toEqual([2, 4, 6]);
     // Com a semana começando no domingo, a segunda linha é segunda-feira.
@@ -195,14 +195,14 @@ describe('resolveActivityCalendar', () => {
   });
 
   it('o teto do nível é o número de degraus da escala', () => {
-    const grade = resolveActivityCalendar([day('2026-01-02', 9999)], janela)!;
+    const grade = resolveActivityCalendar([day('2026-01-02', 9999)], window)!;
 
     expect(grade.levels).toBe(SCALE.length);
     expect(Math.max(...grade.cells.map((c) => c.level))).toBe(SCALE.length);
   });
 
   it('devolve o primeiro e o último dia, para a frase do total', () => {
-    const grade = resolveActivityCalendar([], janela)!;
+    const grade = resolveActivityCalendar([], window)!;
 
     expect(grade.from.date).toBe('2026-01-01');
     expect(grade.to.date).toBe('2026-03-31');

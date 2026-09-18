@@ -46,15 +46,15 @@ export default meta;
 type Story = StoryObj;
 
 /** Mesmo painel nas quatro direções — o que muda é `side` e o rótulo do título. */
-function panel(side: SheetSide, tituloKey: string) {
+function panel(side: SheetSide, titleKey: string) {
   return () => ({
     props: {
       side,
-      panelTitle: t(`demonstration.labels.${tituloKey}`),
+      panelTitle: t(`demonstration.labels.${titleKey}`),
       panelDescription: t('demonstration.labels.description'),
       triggerLabel: t('demonstration.labels.trigger'),
-      rotuloCancelar: t('demonstration.labels.cancel'),
-      rotuloAplicar: t('demonstration.labels.apply'),
+      cancelLabel: t('demonstration.labels.cancel'),
+      applyLabel: t('demonstration.labels.apply'),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -67,8 +67,8 @@ function panel(side: SheetSide, tituloKey: string) {
           </div>
 
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
-            <button ndsButton>{{ rotuloAplicar }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
+            <button ndsButton>{{ applyLabel }}</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -215,8 +215,8 @@ export const HeadingH3: Story = {
       panelTitle: t('demonstration.labels.title'),
       panelDescription: t('demonstration.labels.description'),
       triggerLabel: t('demonstration.labels.trigger'),
-      rotuloCancelar: t('demonstration.labels.cancel'),
-      rotuloAplicar: t('demonstration.labels.apply'),
+      cancelLabel: t('demonstration.labels.cancel'),
+      applyLabel: t('demonstration.labels.apply'),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -229,8 +229,8 @@ export const HeadingH3: Story = {
           </div>
 
           <div ndsSheetFooter>
-            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
-            <button ndsButton>{{ rotuloAplicar }}</button>
+            <button ndsSheetClose ndsButton variant="outline">{{ cancelLabel }}</button>
+            <button ndsButton>{{ applyLabel }}</button>
           </div>
         </ng-template>
       </nds-sheet>

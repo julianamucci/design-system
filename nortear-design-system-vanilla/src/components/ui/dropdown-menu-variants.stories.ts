@@ -3,7 +3,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
-import { clicarQuandoMontado, endClose, montar } from './dropdown-menu.fixtures';
+import { clicarQuandoMontado, endClose, mount } from './dropdown-menu.fixtures';
 import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -35,7 +35,7 @@ type Story = StoryObj;
 export const Default: Story = {
   parameters: { covers: ['accessibility.item4', 'accessibility.item6'] },
   render: () =>
-    montar('Ações', [
+    mount('Ações', [
       { type: 'item', label: 'Editar', value: 'edit' },
       { type: 'item', label: 'Duplicar', value: 'duplicate' },
       { type: 'item', label: 'Compartilhar', value: 'share' },
@@ -99,7 +99,7 @@ export const Destructive: Story = {
     },
   },
   render: () =>
-    montar('Mais ações', [
+    mount('Mais ações', [
       { type: 'item', label: 'Editar', value: 'edit' },
       { type: 'separator' },
       { type: 'item', label: 'Excluir conta', value: 'delete', variant: 'destructive' },

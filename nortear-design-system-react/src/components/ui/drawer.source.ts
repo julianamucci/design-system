@@ -87,7 +87,7 @@ function trigger(label: string): string {
 }
 
 function panel(
-  propsRaiz: string,
+  rootProps: string,
   miolo: string,
   withTrigger: string,
   propsContent = '',
@@ -95,7 +95,7 @@ function panel(
   const partes = [withTrigger, `<DrawerContent${propsContent}>\n${indentar(miolo)}\n</DrawerContent>`]
     .filter(Boolean)
     .join('\n');
-  return `<Drawer${propsRaiz}>
+  return `<Drawer${rootProps}>
 ${indentar(partes)}
 </Drawer>`;
 }

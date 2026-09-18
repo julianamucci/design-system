@@ -33,25 +33,25 @@ const IMPORT = `import {
   AccordionTrigger,
 } from "@/components/ui/accordion";`;
 
-type Pergunta = { value: string; pergunta: string; resposta: string };
+type Pergunta = { value: string; pergunta: string; response: string };
 
 const FAQ: Pergunta[] = [
   {
     value: 'item-1',
     pergunta: 'Como faço para redefinir minha senha?',
-    resposta:
+    response:
       'Acesse a tela de login e clique em “Esqueci minha senha”. Você receberá um link de redefinição no email cadastrado, válido por 24 horas.',
   },
   {
     value: 'item-2',
     pergunta: 'Quais formas de pagamento são aceitas?',
-    resposta:
+    response:
       'Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.',
   },
   {
     value: 'item-3',
     pergunta: 'Como cancelo minha assinatura?',
-    resposta:
+    response:
       'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.',
   },
 ];
@@ -61,11 +61,11 @@ const FAQ: Pergunta[] = [
  * sem ele o disclosure não sabe qual painel abrir, e é por isso que ele aparece
  * em todos os snippets, mesmo nos que não configuram mais nada.
  */
-function item({ value, pergunta, resposta }: Pergunta, indentacao = '  '): string {
+function item({ value, pergunta, response }: Pergunta, indentacao = '  '): string {
   return [
     `${indentacao}<AccordionItem value="${value}">`,
     `${indentacao}  <AccordionTrigger>${pergunta}</AccordionTrigger>`,
-    `${indentacao}  <AccordionContent>${resposta}</AccordionContent>`,
+    `${indentacao}  <AccordionContent>${response}</AccordionContent>`,
     `${indentacao}</AccordionItem>`,
   ].join('\n');
 }
@@ -113,17 +113,17 @@ export function accordionMultiploSource(): string {
     {
       value: 'especificacoes',
       pergunta: 'Especificações técnicas',
-      resposta: 'CPU: Intel Core i7-12700, RAM: 16GB DDR5, SSD: 512GB NVMe',
+      response: 'CPU: Intel Core i7-12700, RAM: 16GB DDR5, SSD: 512GB NVMe',
     },
     {
       value: 'compatibilidade',
       pergunta: 'Compatibilidade',
-      resposta: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS',
+      response: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS',
     },
     {
       value: 'garantia',
       pergunta: 'Garantia e suporte',
-      resposta: '24 meses de garantia de fábrica. Suporte técnico 24/7.',
+      response: '24 meses de garantia de fábrica. Suporte técnico 24/7.',
     },
   ];
   return jsxSnippet(
@@ -155,12 +155,12 @@ const [abertos, setAbertos] = useState<string[]>(["item-1"]);`,
         item({
           value: 'item-1',
           pergunta: 'Item 1 — controlado',
-          resposta: 'Estado gerenciado externamente por value e onValueChange.',
+          response: 'Estado gerenciado externamente por value e onValueChange.',
         }),
         item({
           value: 'item-2',
           pergunta: 'Item 2 — controlado',
-          resposta: 'Útil para sincronizar com a URL ou outro estado da aplicação.',
+          response: 'Útil para sincronizar com a URL ou outro estado da aplicação.',
         }),
       ].join('\n'),
     ),
@@ -180,7 +180,7 @@ export function accordionClosedSource(): string {
       item({
         value: 'item-1',
         pergunta: 'Item fechado (estado padrão)',
-        resposta: 'Conteúdo oculto.',
+        response: 'Conteúdo oculto.',
       }),
     ),
   );
@@ -197,7 +197,7 @@ export function accordionItemDisabledSource(): string {
   const enabled = item({
     value: 'item-1',
     pergunta: 'Item habilitado',
-    resposta: 'Este item funciona normalmente.',
+    response: 'Este item funciona normalmente.',
   });
   const disabled = [
     '  <AccordionItem value="item-2" disabled>',
@@ -221,14 +221,14 @@ export function accordionItemDisabledSource(): string {
 export function accordionWithIconSource(): string {
   const lines = [
     { value: 'info', icon: 'Info', cor: 'nds-text-info', label: 'Informação',
-      resposta: 'Ícones facilitam a identificação rápida do tipo de conteúdo.' },
+      response: 'Ícones facilitam a identificação rápida do tipo de conteúdo.' },
     { value: 'warning', icon: 'AlertTriangle', cor: 'nds-text-warning', label: 'Aviso',
-      resposta: 'Sinalize categorias distintas com ícones semânticos.' },
+      response: 'Sinalize categorias distintas com ícones semânticos.' },
     { value: 'success', icon: 'CheckCircle', cor: 'nds-text-success', label: 'Confirmação',
-      resposta: 'Use ícones consistentes entre itens do mesmo accordion.' },
+      response: 'Use ícones consistentes entre itens do mesmo accordion.' },
   ];
   const body = lines
-    .map(({ value, icon, cor, label, resposta }) =>
+    .map(({ value, icon, cor, label, response }) =>
       [
         `  <AccordionItem value="${value}">`,
         '    <AccordionTrigger>',
@@ -237,7 +237,7 @@ export function accordionWithIconSource(): string {
         `        ${label}`,
         '      </span>',
         '    </AccordionTrigger>',
-        `    <AccordionContent>${resposta}</AccordionContent>`,
+        `    <AccordionContent>${response}</AccordionContent>`,
         '  </AccordionItem>',
       ].join('\n'),
     )
@@ -257,11 +257,11 @@ ${IMPORT}`,
 export function accordionWithBadgeSource(): string {
   const body = [
     { value: 'novo', label: 'Novidades da versão 3.0', variant: 'default', badge: 'Novo',
-      resposta: 'Use badges para sinalizar status sem alterar o gatilho textual.' },
+      response: 'Use badges para sinalizar status sem alterar o gatilho textual.' },
     { value: 'beta', label: 'Funcionalidades em beta', variant: 'info', badge: 'Beta',
-      resposta: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
+      response: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
   ]
-    .map(({ value, label, variant, badge, resposta }) =>
+    .map(({ value, label, variant, badge, response }) =>
       [
         `  <AccordionItem value="${value}">`,
         '    <AccordionTrigger>',
@@ -270,7 +270,7 @@ export function accordionWithBadgeSource(): string {
         `        <Badge variant="${variant}">${badge}</Badge>`,
         '      </span>',
         '    </AccordionTrigger>',
-        `    <AccordionContent>${resposta}</AccordionContent>`,
+        `    <AccordionContent>${response}</AccordionContent>`,
         '  </AccordionItem>',
       ].join('\n'),
     )
@@ -332,8 +332,8 @@ export function accordionContentRichSource(): string {
  */
 export function accordionFaqSource(): string {
   const data = FAQ.map(
-    ({ value, pergunta, resposta }) =>
-      `  { value: "${value}", pergunta: "${pergunta}", resposta: "${resposta}" },`,
+    ({ value, pergunta, response }) =>
+      `  { value: "${value}", pergunta: "${pergunta}", resposta: "${response}" },`,
   ).join('\n');
   return jsxSnippet(
     `${IMPORT}

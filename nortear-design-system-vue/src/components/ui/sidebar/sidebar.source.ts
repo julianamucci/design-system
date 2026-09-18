@@ -75,7 +75,7 @@ function usada(name: string, template: string): boolean {
  * composição: import que sobra é ruído no exemplo que alguém copia, e a lista
  * escrita à parte desencontra da composição no primeiro ajuste.
  */
-function montar(template: string): string {
+function mount(template: string): string {
   const parts = PARTS.filter((part) => usada(part, template));
   const icons = ICONS.filter((icon) => usada(icon, template));
   const blocks = [
@@ -220,7 +220,7 @@ const APLICACAO: Item[] = [
  */
 export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  return montar(
+  return mount(
     frame({
       provider: attrs(attr('mobile-query', args.mobileQuery, QUERY_DEFAULT)),
       barra: attrs(
@@ -251,7 +251,7 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
  * grupo de navegação, rodapé com o perfil e a faixa de alternância.
  */
 function variant(variant: 'sidebar' | 'floating' | 'inset'): string {
-  return montar(
+  return mount(
     frame({
       barra: attrs(attr('variant', variant, 'sidebar')),
       header: MARCA,
@@ -290,7 +290,7 @@ export function sidebarVariantInsetSource(): string {
  * leitura e de tabulação continua começando por ela.
  */
 export function sidebarSideDireitoSource(): string {
-  return montar(
+  return mount(
     `<SidebarProvider>
   <SidebarInset>
     <main id="main-content" class="nds-p-4">
@@ -324,7 +324,7 @@ ${indentar(
  * solto na `<div>`, sem erro nenhum e sem efeito nenhum.
  */
 export function sidebarExpandidaSource(): string {
-  return montar(
+  return mount(
     frame({
       provider: ' default-open',
       header: MARCA,
@@ -341,7 +341,7 @@ export function sidebarExpandidaSource(): string {
  * item passa a ser o único nome que quem usa ponteiro recebe.
  */
 export function sidebarRecolhidaIconSource(): string {
-  return montar(
+  return mount(
     frame({
       provider: ' :default-open="false"',
       barra: ' collapsible="icon"',
@@ -363,7 +363,7 @@ export function sidebarRecolhidaIconSource(): string {
  * nada. Sem recolhimento também não há balão a mostrar, então o `tooltip` sai.
  */
 export function sidebarFixaSource(): string {
-  return montar(
+  return mount(
     frame({
       barra: ' collapsible="none"',
       header: MARCA,
@@ -384,7 +384,7 @@ export function sidebarFixaSource(): string {
  * chegarem.
  */
 export function sidebarLoadingSource(): string {
-  return montar(
+  return mount(
     frame({
       header: MARCA,
       content: group({
@@ -412,7 +412,7 @@ export function sidebarLoadingSource(): string {
  * padrão já é português; a prop existe para quando o produto tem nome próprio.
  */
 export function sidebarGavetaMovelSource(): string {
-  return montar(
+  return mount(
     frame({
       provider: ' mobile-query="(min-width: 0px)"',
       header: MARCA,
@@ -436,7 +436,7 @@ export function sidebarGavetaMovelSource(): string {
  * dentro, o contador entraria no nome acessível do item.
  */
 export function sidebarGroupsSource(): string {
-  return montar(
+  return mount(
     frame({
       header: MARCA,
       content: [
@@ -474,7 +474,7 @@ ${indentar(menu([{ icon: 'User', label: 'Perfil do Usuário' }]), 2)}
  * vê, e quem ouve não recebe aviso de que existe um nível abaixo.
  */
 export function sidebarSubmenuSource(): string {
-  return montar(
+  return mount(
     frame({
       header: MARCA,
       content: group({
@@ -512,7 +512,7 @@ export function sidebarSubmenuSource(): string {
  * some assim que a pessoa digita — e com ele iria embora o único nome do campo.
  */
 export function sidebarSearchSource(): string {
-  return montar(
+  return mount(
     frame({
       header: `<SidebarHeader class="nds-p-2" data-spacing="sm">
   <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground nds-sidebar-hide-collapsed">Design System</span>

@@ -624,13 +624,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly stateItems = computed(() => {
     dict();
     return [
-      { key: 'withDescription', chamada: `toast.success(msg, { description })` },
-      { key: 'withAction', chamada: `toast(msg, { action: { label, onClick } })` },
-      { key: 'promise', chamada: `toast.promise(p, { loading, success, error })` },
-      { key: 'persistent', chamada: `toast.error(msg, { duration: Infinity })` },
-    ].map(({ key, chamada }) => ({
+      { key: 'withDescription', call: `toast.success(msg, { description })` },
+      { key: 'withAction', call: `toast(msg, { action: { label, onClick } })` },
+      { key: 'promise', call: `toast.promise(p, { loading, success, error })` },
+      { key: 'persistent', call: `toast.error(msg, { duration: Infinity })` },
+    ].map(({ key, call }) => ({
       label: t(`states.items.${key}.label`),
-      trigger: chamada,
+      trigger: call,
       behavior: toPlainText(t(`states.items.${key}.description`)),
     }));
   });
@@ -645,10 +645,10 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, key: string, type: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, defaultValue: string) => ({
       name,
       type: type,
-      defaultValue: padrao,
+      defaultValue,
       required: not,
       description: toPlainText(t(`props.table.${key}`)),
     });

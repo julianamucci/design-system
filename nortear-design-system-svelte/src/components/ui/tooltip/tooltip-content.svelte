@@ -35,8 +35,8 @@
 		if (target.id !== identificador) target.id = identificador;
 		// Avisar a raiz é o que devolve a vez ao gatilho — sem isto ele escreve
 		// o `aria-describedby` antes de a lib escrever o dela, e perde.
-		description?.marcarMontado(true);
-		return () => description?.marcarMontado(false);
+		description?.markMounted(true);
+		return () => description?.markMounted(false);
 	});
 </script>
 

@@ -57,7 +57,7 @@ async function openedAfter(
 }
 
 /** Põe o ponteiro no centro de um elemento e devolve a coordenada usada. */
-function mover(target: HTMLElement): { x: number; y: number } {
+function move(target: HTMLElement): { x: number; y: number } {
   const r = target.getBoundingClientRect();
   const x = r.left + r.width / 2;
   const y = r.top + r.height / 2;
@@ -347,7 +347,7 @@ export const PersistenceInBubble: Story = {
       // sobre um nó assim chega com clientX/clientY em 0,0 — mediria o ponteiro
       // no canto da tela, não sobre o balão. A área de tolerância da factory lê
       // COORDENADA, então é coordenada que o teste precisa fornecer.
-      const center = mover(balaoDe(trigger)!);
+      const center = move(balaoDe(trigger)!);
       await expect(center).toBeTruthy();
       await wait(400);
       await expect(balaoDe(trigger)).not.toBeNull();
@@ -405,7 +405,7 @@ export const ListenerCleanup: Story = {
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
-        montar: () => createTooltip({
+        mount: () => createTooltip({
           trigger: createButton({ variant: 'outline', label: 'Ajuda' }),
           content: 'Texto de ajuda.',
         }),

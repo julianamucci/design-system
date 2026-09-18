@@ -61,14 +61,14 @@ const fontes = import.meta.glob<string>('./**/*.tsx', {
 
 /** Fonte crua dos arquivos de story, para cobrar a fiação do `meta`. */
 const storiesRaw = Object.fromEntries(
-  Object.entries(fontes).filter(([caminho]) => caminho.endsWith('.stories.tsx')),
+  Object.entries(fontes).filter(([path]) => path.endsWith('.stories.tsx')),
 );
 
 /** Nomes exportados por `src/components/ui/<slug>.tsx`, por slug. */
 const slugExportados = new Map<string, Set<string>>();
-for (const [caminho, fonte] of Object.entries(fontes)) {
-  if (caminho.endsWith('.stories.tsx') || caminho.endsWith('.fixtures.tsx')) continue;
-  const slug = caminho.replace(/^\.\//, '').replace(/\.tsx$/, '');
+for (const [path, fonte] of Object.entries(fontes)) {
+  if (path.endsWith('.stories.tsx') || path.endsWith('.fixtures.tsx')) continue;
+  const slug = path.replace(/^\.\//, '').replace(/\.tsx$/, '');
   const names = new Set<string>();
   for (const [, name] of fonte.matchAll(/export\s+(?:async\s+)?(?:const|function|class|let)\s+([A-Za-z0-9_$]+)/g)) {
     names.add(name);
@@ -108,8 +108,8 @@ const HELPERS = new Set([
 ]);
 
 /** `./combobox.source.ts` -> `combobox`, a chave de `slugExportados`. */
-const slugDoCaminho = (caminho: string) =>
-  caminho.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
+const slugDoCaminho = (path: string) =>
+  path.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
 
 /** Andaime de story por forma do nome — pega o que ainda não foi escrito. */
 const FORMA_SCAFFOLD =
@@ -225,12 +225,12 @@ function publishedText(bruto: string): string {
   const n = bruto.length;
   // Último caractere significativo, que é o que distingue `/` de divisão do
   // `/` que abre expressão regular.
-  let anterior = '\n';
+  let previous = '\n';
 
   while (i < n) {
     const c = bruto[i]!;
 
-    if (c === '/' && bruto[i + 1] !== '/' && bruto[i + 1] !== '*' && /[(,=:[!&|?{};+\n]/.test(anterior)) {
+    if (c === '/' && bruto[i + 1] !== '/' && bruto[i + 1] !== '*' && /[(,=:[!&|?{};+\n]/.test(previous)) {
       i++;
       let classe = false;
       while (i < n) {
@@ -242,11 +242,11 @@ function publishedText(bruto: string): string {
         i++;
       }
       i++;
-      anterior = '/';
+      previous = '/';
       continue;
     }
 
-    if (!/\s/.test(c)) anterior = c;
+    if (!/\s/.test(c)) previous = c;
 
     if (c === '/' && bruto[i + 1] === '/') {
       while (i < n && bruto[i] !== '\n') i++;
@@ -342,14 +342,14 @@ function declaredIn(text: string): Set<string> {
     nomes.add(name);
   }
   // Parâmetro de arrow e de função declarada: `(item) => …` liga `item`.
-  for (const [, lista] of text.matchAll(/\(([^()]*)\)\s*=>/g)) {
-    for (const parte of lista.split(',')) {
+  for (const [, list] of text.matchAll(/\(([^()]*)\)\s*=>/g)) {
+    for (const parte of list.split(',')) {
       const name = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
       if (name && /^[A-Za-z_$][\w$]*$/.test(name)) nomes.add(name);
     }
   }
-  for (const [, lista] of text.matchAll(/function\s+[A-Za-z_$][\w$]*\s*\(([^()]*)\)/g)) {
-    for (const parte of lista.split(',')) {
+  for (const [, list] of text.matchAll(/function\s+[A-Za-z_$][\w$]*\s*\(([^()]*)\)/g)) {
+    for (const parte of list.split(',')) {
       const name = parte.trim().split(/[:=]/)[0]!.trim().replace(/^\.\.\./, '');
       if (name && /^[A-Za-z_$][\w$]*$/.test(name)) nomes.add(name);
     }
@@ -421,14 +421,14 @@ function tsBindings(text: string): Set<string> {
  * produzem, ao custo de aceitar nome declarado num ramo e usado noutro.
  */
 const ligadosPorCaminho = new Map<string, Set<string>>();
-function boundNames(caminho: string): Set<string> {
-  const memo = ligadosPorCaminho.get(caminho);
+function boundNames(path: string): Set<string> {
+  const memo = ligadosPorCaminho.get(path);
   if (memo) return memo;
-  const textos: string[] = [publishedText(sourcesRaw[caminho] ?? '')];
-  for (const valor of Object.values(modulos[caminho] ?? {})) {
-    if (typeof valor !== 'function') continue;
+  const textos: string[] = [publishedText(sourcesRaw[path] ?? '')];
+  for (const value of Object.values(modulos[path] ?? {})) {
+    if (typeof value !== 'function') continue;
     try {
-      const output = (valor as () => unknown)();
+      const output = (value as () => unknown)();
       if (typeof output === 'string') textos.push(output);
     } catch {
       // Construtor que quebra sem args já reprova em `devolve um snippet
@@ -440,7 +440,7 @@ function boundNames(caminho: string): Set<string> {
     for (const name of declaredIn(text)) nomes.add(name);
     for (const name of tsBindings(text)) nomes.add(name);
   }
-  ligadosPorCaminho.set(caminho, nomes);
+  ligadosPorCaminho.set(path, nomes);
   return nomes;
 }
 
@@ -476,9 +476,9 @@ function attributeExpressions(text: string): Array<{ attr: string; expr: string 
   const re = /(?<![\w$.])([A-Za-z_$][\w$]*(?:-[\w$]+)*)=\{/g;
   let achado: RegExpExecArray | null;
   while ((achado = re.exec(text))) {
-    const inicio = achado.index + achado[0].length;
+    const start = achado.index + achado[0].length;
     let prof = 1;
-    let i = inicio;
+    let i = start;
     while (i < text.length && prof > 0) {
       const c = text[i];
       if (c === '{') prof++;
@@ -497,7 +497,7 @@ function attributeExpressions(text: string): Array<{ attr: string; expr: string 
       achados.push({ attr: achado[1]!, expr: null });
       continue;
     }
-    achados.push({ attr: achado[1]!, expr: text.slice(inicio, i - 1) });
+    achados.push({ attr: achado[1]!, expr: text.slice(start, i - 1) });
     re.lastIndex = i;
   }
   return achados;
@@ -683,7 +683,7 @@ describe('transforms do painel Code', () => {
   it('todo arquivo de story importa a transform do seu componente', () => {
     const noFiacao = Object.entries(storiesRaw)
       .filter(([, fonte]) => !/from\s+["']\.\/[a-z0-9-]+\.source["']/.test(fonte))
-      .map(([caminho]) => caminho)
+      .map(([path]) => path)
       .sort();
     expect(noFiacao, 'story sem transform declarada no meta').toEqual([]);
   });
@@ -691,43 +691,43 @@ describe('transforms do painel Code', () => {
   it('todo arquivo de story declara a transform em source.transform', () => {
     const noTransform = Object.entries(storiesRaw)
       .filter(([, fonte]) => !/source:\s*\{[\s\S]{0,200}?transform:/.test(fonte))
-      .map(([caminho]) => caminho)
+      .map(([path]) => path)
       .sort();
     expect(noTransform, 'meta sem parameters.docs.source.transform').toEqual([]);
   });
 
-  for (const caminho of caminhos) {
-    const modulo = modulos[caminho];
+  for (const path of caminhos) {
+    const modulo = modulos[path];
     const exportadas = Object.entries(modulo).filter(
       ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
-    describe(caminho, () => {
+    describe(path, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
       });
 
       // Vale para TODOS os ramos, e não só para o que os args padrão produzem.
       it('nenhum ramo itera lista que o snippet não declara', () => {
-        const bruto = sourcesRaw[caminho];
+        const bruto = sourcesRaw[path];
         // Cobrado, e não pulado: varredura que exclui em silêncio encolhe
         // sozinha, e foi assim que 28 testes sumiram no Vue com a suíte verde.
-        expect(bruto, `${caminho}: a varredura crua não alcançou o módulo`).toBeDefined();
-        const soltos = loopsWithoutOrigin(bruto!, boundNames(caminho));
+        expect(bruto, `${path}: a varredura crua não alcançou o módulo`).toBeDefined();
+        const soltos = loopsWithoutOrigin(bruto!, boundNames(path));
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara nem importa — quem copiar aquele ramo recebe um laço sobre símbolo indefinido`,
+          `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara nem importa — quem copiar aquele ramo recebe um laço sobre símbolo indefinido`,
         ).toEqual([]);
       });
 
       // A mesma exigência do compilador do Angular sobre expressão de template.
       it('nenhum ramo referencia nome que o snippet não declara', () => {
-        const bruto = sourcesRaw[caminho];
-        expect(bruto, `${caminho}: a varredura crua não alcançou o módulo`).toBeDefined();
-        const soltos = referencesWithoutOrigin(bruto!, boundNames(caminho));
+        const bruto = sourcesRaw[path];
+        expect(bruto, `${path}: a varredura crua não alcançou o módulo`).toBeDefined();
+        const soltos = referencesWithoutOrigin(bruto!, boundNames(path));
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet passa ${soltos.join(', ')} numa prop sem declarar nem importar o nome — quem copiar aquele ramo recebe um símbolo indefinido`,
+          `${path}: algum ramo do snippet passa ${soltos.join(', ')} numa prop sem declarar nem importar o nome — quem copiar aquele ramo recebe um símbolo indefinido`,
         ).toEqual([]);
       });
 
@@ -744,7 +744,7 @@ describe('transforms do painel Code', () => {
         );
         expect(
           outside,
-          `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
+          `${path}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
         ).toEqual([]);
       });
 
@@ -766,7 +766,7 @@ describe('transforms do painel Code', () => {
           // dela, não porque vazou andaime. Sem este filtro a regra reprovava
           // os SETE snippets do combobox por causa de uma peça legítima — e o
           // conserto errado seria renomear o componente nas cinco stacks.
-          const publicados = slugExportados.get(slugDoCaminho(caminho)) ?? new Set<string>();
+          const publicados = slugExportados.get(slugDoCaminho(path)) ?? new Set<string>();
           const andaimes = [...text.matchAll(new RegExp(FORMA_SCAFFOLD.source, 'g'))]
             .map((achado) => achado[0])
             .filter((name) => !publicados.has(name));

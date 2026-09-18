@@ -175,7 +175,7 @@ export function switchInvalidoSource(): string {
  * importa é a FORMA de cada linha, e um `map` esconderia justamente ela.
  */
 export function switchPreferenciasSource(): string {
-  const painel = (id: string, label: string, description: string, ligado = false) => `    <div
+  const panel = (id: string, label: string, description: string, ligado = false) => `    <div
       className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
       data-align="center"
       data-justify="between"
@@ -198,9 +198,9 @@ export function switchPreferenciasSource(): string {
     `<fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-md">
   <legend className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
   <div className="nds-stack" data-spacing="sm">
-${painel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
-${painel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
-${painel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
+${panel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
+${panel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
+${panel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
   </div>
 </fieldset>`,
   );

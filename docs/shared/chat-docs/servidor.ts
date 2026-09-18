@@ -309,7 +309,7 @@ const SIGLAS: Record<string, string> = { otp: 'OTP' };
  * voz alta" aparecem no texto do `composer-voice` como alternativas descritas,
  * e voltaram na resposta como se fossem peças do sistema.
  */
-export function nomeDeMenu(slug: string): string {
+export function menuName(slug: string): string {
   return slug
     .split('-')
     .map((parte) => SIGLAS[parte] ?? parte.charAt(0).toUpperCase() + parte.slice(1))
@@ -328,7 +328,7 @@ function buildContext(
       return [
         // O nome do menu entra no cabeçalho do documento: é o que o modelo tem
         // de usar para se referir ao componente, e precisa estar à vista.
-        `<documento nome="${nomeDeMenu(hit.slug)}" slug="${hit.slug}" nota="${hit.score.toFixed(2)}">`,
+        `<documento nome="${menuName(hit.slug)}" slug="${hit.slug}" nota="${hit.score.toFixed(2)}">`,
         JSON.stringify(document, null, 1),
         '</documento>',
       ].join('\n');
@@ -814,7 +814,7 @@ export async function responder(request: Request): Promise<Response> {
   // permite ao modelo distinguir COMPONENTE de conceito citado na prosa. Sem
   // ele, a resposta mandava "use o Button" onde o texto dizia "botão
   // alternador" — que é o Toggle, e o Button nem tinha documento na conversa.
-  const catalogo = corpus.entries.map((entrada) => nomeDeMenu(entrada.slug)).sort();
+  const catalogo = corpus.entries.map((entrada) => menuName(entrada.slug)).sort();
 
   const historico = sanearHistorico(body.historico);
   const hits = searchDocs(corpus.entries, consultaDeRecuperacao(question, historico), {

@@ -348,7 +348,7 @@ const META_A11Y = [
             <a
               ndsPaginationLink
               href="#"
-              [attr.aria-label]="rotuloPagina(2)"
+              [attr.aria-label]="pageLabel(2)"
               (click)="irTo($event, 2, totalSimples)"
             >2</a>
           </li>
@@ -399,7 +399,7 @@ const META_A11Y = [
                 ndsPaginationLink
                 href="#"
                 [isActive]="n === 1"
-                [attr.aria-label]="rotuloPagina(n)"
+                [attr.aria-label]="pageLabel(n)"
                 (click)="irTo($event, n, totalSimples)"
               >{{ n }}</a>
             </li>
@@ -438,7 +438,7 @@ const META_A11Y = [
                   ndsPaginationLink
                   href="#"
                   [isActive]="trecho === 6"
-                  [attr.aria-label]="rotuloPagina(trecho)"
+                  [attr.aria-label]="pageLabel(trecho)"
                   (click)="irTo($event, trecho, totalLongo)"
                 >{{ trecho }}</a>
               }
@@ -477,7 +477,7 @@ const META_A11Y = [
                   ndsPaginationLink
                   href="#"
                   [isActive]="n === paginaInterativa()"
-                  [attr.aria-label]="rotuloPagina(n)"
+                  [attr.aria-label]="pageLabel(n)"
                   (click)="irTo($event, n, totalInterativo)"
                 >{{ n }}</a>
               </li>
@@ -512,7 +512,7 @@ const META_A11Y = [
                   ndsPaginationLink
                   href="#"
                   [isActive]="trecho === 6"
-                  [attr.aria-label]="rotuloPagina(trecho)"
+                  [attr.aria-label]="pageLabel(trecho)"
                   (click)="irTo($event, trecho, totalLongo)"
                 >{{ trecho }}</a>
               }
@@ -532,7 +532,7 @@ const META_A11Y = [
                 ndsPaginationLink
                 href="#"
                 [isActive]="n === 6"
-                [attr.aria-label]="rotuloPagina(n)"
+                [attr.aria-label]="pageLabel(n)"
                 (click)="irTo($event, n, totalLongo)"
               >{{ n }}</a>
             </li>
@@ -612,7 +612,7 @@ const META_A11Y = [
                         ndsPaginationLink
                         href="#"
                         [isActive]="n === paginaDemo()"
-                        [attr.aria-label]="rotuloPagina(n)"
+                        [attr.aria-label]="pageLabel(n)"
                         (click)="irParaDemo($event, n)"
                       >{{ n }}</a>
                     </li>
@@ -658,7 +658,7 @@ const META_A11Y = [
                           ndsPaginationLink
                           href="#"
                           [isActive]="trecho === 6"
-                          [attr.aria-label]="rotuloPagina(trecho)"
+                          [attr.aria-label]="pageLabel(trecho)"
                           (click)="irTo($event, trecho, totalLongo)"
                         >{{ trecho }}</a>
                       }
@@ -698,7 +698,7 @@ const META_A11Y = [
                         ndsPaginationLink
                         href="#"
                         [isActive]="n === totalSimples"
-                        [attr.aria-label]="rotuloPagina(n)"
+                        [attr.aria-label]="pageLabel(n)"
                         (click)="irTo($event, n, totalSimples)"
                       >{{ n }}</a>
                     </li>
@@ -838,7 +838,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   }
 
   /** Nome acessível de um link numerado: o número sozinho não diz nada em voz alta. */
-  protected rotuloPagina(page: number | string): string {
+  protected pageLabel(page: number | string): string {
     return `${t('demonstration.labels.page')} ${page}`;
   }
 

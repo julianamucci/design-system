@@ -32,9 +32,9 @@ const STORY_PROPS = [
   'panelTitle',
   'panelDescription',
   'panelBody',
-  'rotuloCancelar',
-  'rotuloAplicar',
-  'rotuloExterno',
+  'cancelLabel',
+  'applyLabel',
+  'externalLabel',
   'triggerLabel',
 ];
 

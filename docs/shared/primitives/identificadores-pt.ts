@@ -37,34 +37,48 @@
  * regenerar; a medição mostrou que não havia o que pagar aqui, e o caminho mudou
  * com ela.
  *
- * **PENDÊNCIA · 2026-09-18 — a base cobre mais arquivos do que a regra audita.**
- * O gerador percorre **673** arquivos e a regra `identificador_pt_novo` audita
- * **547**: ela itera por SLUG, e slug sai de `docs/shared/content/<slug>/`. Os
- * 126 de diferença estão em `src/components/docs/shared/` (56), na raiz de
- * `src/components/` (22) e em `src/lib/` (19) — e carregam **226 identificadores
- * em português que portão nenhum vê**. É a forma exata do `source-snippets.test.ts`
- * de 2026-09-10: quem não entra na lista não reprova, e a contagem encolhe sem
- * deixar rastro.
+ * **FECHADA · 2026-09-18 — a base cobria mais arquivos do que a regra auditava.**
+ * O gerador percorria **673** arquivos e `identificador_pt_novo` auditava **547**,
+ * porque ela itera por SLUG e slug sai de `docs/shared/content/<slug>/`. Os 126 de
+ * diferença — `src/components/docs/shared/`, a raiz de `src/components/` e
+ * `src/lib/` — carregavam 226 identificadores que portão nenhum via. Era a forma
+ * exata do `source-snippets.test.ts` de 2026-09-10: quem não entra na lista não
+ * reprova, e a contagem encolhe sem deixar rastro.
  *
- * **Fecha quando**: ou a regra alcança os arquivos fora de slug — como o
- * `inline_style_design_value` já faz com as páginas de fundamento, por uma regra
- * irmã sob `_infra` —, ou está escrito aqui por que esses 126 ficam de fora, com
- * a premissa verificada. Enquanto os dois números diferirem sem motivo escrito,
- * a base afirma cobrir o que a regra não cobra.
+ * Fechou com `identificador_pt_novo_sem_slug`, a irmã sob `_infra`, que usa o
+ * MESMO contador e a MESMA base e pula o que a regra por componente já abre.
+ *
+ * ---
+ *
+ * **A CAMPANHA, e o que ela custou até aqui.** A base saiu de 1186 nomes e está
+ * em 263, em três levas:
+ *
+ *     1186 → 1052   o contador deixa de atravessar a fronteira de literal
+ *     1052 →  611   leva 1, os 29 nomes mais frequentes, 441 pagos
+ *      611 →  263   leva 2, os 88 nomes em 2+ arquivos, 348 pagos
+ *
+ * Nenhuma regeneração concedeu anistia: em toda elas o número de caminhos NOVOS
+ * na base foi zero.
+ *
+ * **E três motivos desta lista estavam DESATUALIZADOS quando fomos pagá-los** —
+ * o que vale mais que os números. O `padrao` não era ambíguo do jeito que a
+ * entrada dizia; o `montar` não vinha do `story-source` (o docblock do
+ * `audit.mjs` que o citava foi corrigido); e as entradas `densidade` e
+ * `seletores` já não tinham ocorrência nenhuma. Motivo escrito envelhece calado,
+ * e envelhecendo passa a ensinar a coisa errada: dois comentários de
+ * `*.source.ts` justificavam DUPLICAR código citando uma dívida que já tinha
+ * sido paga em outro commit.
  */
 
 /** Nome em português → por que a varredura não pôde traduzir sozinha. */
 export const PENDENTES: Record<string, string> = {
-  padrao:
-    'ambíguo: ora é o elemento padrão numa story, ora o rótulo de fallback no slider — e `default` é palavra reservada',
-  padrão: 'mesma decisão de `padrao`, com acento',
+  padrão:
+    'com acento, e por isso fora da campanha por varredura. O `padrao` sem acento SAIU desta lista em 2026-09-19, pago em 60 arquivos: o motivo que ele carregava — "ambíguo" — estava desatualizado, e a ambiguidade real cabia num conjunto fechado de cinco alvos (`defaultValue` para valor de prop, `defaultElement` para o nó de uma story, `defaultLabel`, `defaultCode`, `defaultOption`). Restam 8 declarações com acento; o mesmo conjunto serve, e `default` continua sendo palavra reservada para variável — como CHAVE de objeto é válido',
   novo: 'polissêmico: elemento recém-montado nas stories, e no AccordionDocs a chave de rótulo que significa *Novo* — `new` é palavra reservada',
   teclar: 'a recomposição fundia com `tipo` num só `type`; o alvo certo é `onKey`, mas o nome aparece em contextos que pedem leitura',
   com: 'a varredura não podia distinguir o identificador do `com` de prosa nem do sufixo de `figma.com`, e trocar por regex corromperia os dois. Restam duas declarações — `alert.source.test.ts` e `avatar.source.test.ts` do Vanilla; as do alert-dialog viraram `withMedia`. A razão anterior dizia "não é identificador", e isso era falso: eram quatro declarações',
   estilo: 'colide com o prop `style` do Svelte no aspect-ratio',
-  densidade: 'colide com uma variável `density` já existente no preview.ts',
   canal: 'colide com `channel` no preview.ts',
-  seletores: 'colide com `selectors` no preview.ts',
   meses: 'colide com `months` no calendar.svelte',
   anos: 'colide com `years` no calendar.svelte',
 };

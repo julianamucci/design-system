@@ -66,7 +66,7 @@ function panel(direction: DrawerDirection) {
       panelTitle: stripHtml(t(`demonstration.labels.${direction}`)),
       panelDescription: LABEL.description(),
       triggerLabel: LABEL.trigger(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <nds-drawer [direction]="direction" [defaultOpen]="true">
@@ -79,7 +79,7 @@ function panel(direction: DrawerDirection) {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -215,7 +215,7 @@ export const WithScroll: Story = {
       panelTitle: t('variants.items.withScroll.name'),
       panelDescription: LABEL.description(),
       triggerLabel: LABEL.trigger(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
       paragrafos: Array.from({ length: 30 }, (_, i) => ({
         id: `p-${i}`,
         text: `${i + 1}. ${stripHtml(t('variants.items.withScroll.use'))}`,
@@ -238,7 +238,7 @@ export const WithScroll: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -303,7 +303,7 @@ export const HeadingH3: Story = {
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
       triggerLabel: LABEL.trigger(),
-      rotuloFechar: LABEL.close(),
+      closeLabel: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
@@ -316,7 +316,7 @@ export const HeadingH3: Story = {
           </div>
 
           <div ndsDrawerFooter>
-            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>

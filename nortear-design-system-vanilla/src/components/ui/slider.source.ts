@@ -53,9 +53,9 @@ function valueLiteral(value: number | number[] | undefined): string | undefined 
   return Array.isArray(value) ? `[${value.join(', ')}]` : String(value);
 }
 
-function expressao(value: unknown, padrao: string): string | undefined {
+function expressao(value: unknown, defaultValue: string): string | undefined {
   if (!value) return undefined;
-  return typeof value === 'string' ? value : padrao;
+  return typeof value === 'string' ? value : defaultValue;
 }
 
 /** A chamada real de `createSlider` com as opções da story. */

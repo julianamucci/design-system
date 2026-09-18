@@ -120,7 +120,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
       -->
       <main
         tabindex="-1"
-        [attr.aria-labelledby]="idDoTitulo"
+        [attr.aria-labelledby]="titleId"
         class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
         data-spacing="xl"
       >
@@ -142,7 +142,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
           </div>
 
           <h1
-            [id]="idDoTitulo"
+            [id]="titleId"
             class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground"
           >
             {{ t('title') }}
@@ -285,7 +285,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   // Rótulo de seção vem do `ui.json`, e o template só alcança MEMBRO da classe:
   // como const de módulo, `tNav` compilava no arquivo e reprovava no template.
   protected readonly tNav = tNav;
-  protected readonly idDoTitulo = DOCS_PAGE_TITLE_ID;
+  protected readonly titleId = DOCS_PAGE_TITLE_ID;
   // Módulo exposto ao template: a chamada precisa aparecer no próprio binding
   // [innerHTML] para o SAST reconhecer o sanitizador de taint (guideline 09).
   protected readonly DOMPurify = DOMPurify;
@@ -300,7 +300,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   protected readonly exemploFuncional = EXEMPLO_FUNCIONAL;
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private limparTracking: (() => void) | undefined;
+  private clearTracking: (() => void) | undefined;
   private relogioDeCopia: ReturnType<typeof setTimeout> | undefined;
 
   // ─── Busca ────────────────────────────────────────────────────────────────
@@ -382,13 +382,13 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
-    this.limparTracking = mountDocsTracking(this.hostRef.nativeElement, {
+    this.clearTracking = mountDocsTracking(this.hostRef.nativeElement, {
       componentSlug: 'icons',
     });
   }
 
   ngOnDestroy(): void {
     clearTimeout(this.relogioDeCopia);
-    this.limparTracking?.();
+    this.clearTracking?.();
   }
 }

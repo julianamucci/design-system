@@ -55,7 +55,7 @@ const caminhos = Object.keys(modulos).sort();
 const fontes = import.meta.glob<string>('./*.ts', { query: '?raw', import: 'default', eager: true });
 
 /** `./combobox.source.ts` -> `combobox`. */
-const slugDoCaminho = (caminho: string) => caminho.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
+const slugDoCaminho = (path: string) => path.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
 
 /** O que um módulo desta pasta exporta, lido da declaração. */
 function exportadosPor(slug: string): Set<string> | null {
@@ -87,9 +87,9 @@ function exportadosPor(slug: string): Set<string> | null {
  * guarda.
  */
 const publicadosPeloDesignSystem = new Set<string>();
-for (const caminho of Object.keys(fontes)) {
-  if (/\.(source|test|stories|fixtures|play-helpers)\.ts$/.test(caminho)) continue;
-  for (const name of exportadosPor(caminho.replace(/^\.\//, '').replace(/\.ts$/, '')) ?? []) {
+for (const path of Object.keys(fontes)) {
+  if (/\.(source|test|stories|fixtures|play-helpers)\.ts$/.test(path)) continue;
+  for (const name of exportadosPor(path.replace(/^\.\//, '').replace(/\.ts$/, '')) ?? []) {
     publicadosPeloDesignSystem.add(name);
   }
 }
@@ -284,8 +284,8 @@ const GLOBAIS = new Set([
  */
 function escopoDo(text: string): Set<string> {
   const nomes = new Set<string>();
-  const cru = (lista: string) => {
-    for (const parte of lista.split(',')) {
+  const cru = (list: string) => {
+    for (const parte of list.split(',')) {
       // Valor padrão (`a = 1`) fica à direita do `=`; renomeação (`a: b`) liga
       // o da direita do `:`. Os dois se resolvem antes de ler o identificador.
       const limpo = parte.split('=')[0].split(':').pop()!.trim().replace(/^[([{\s.]+/, '');
@@ -336,7 +336,7 @@ function semComentarios(bruto: string): string {
   return bruto
     .replace(/\/\*[\s\S]*?\*\//g, ' ')
     .split('\n')
-    .map((linha) => linha.replace(/(^|[^:])\/\/.*$/, '$1'))
+    .map((line) => line.replace(/(^|[^:])\/\/.*$/, '$1'))
     .join('\n');
 }
 
@@ -359,8 +359,8 @@ function semComentarios(bruto: string): string {
  */
 function ligadosNoTexto(text: string): Set<string> {
   const nomes = new Set<string>();
-  const cru = (lista: string) => {
-    for (const parte of lista.split(',')) {
+  const cru = (list: string) => {
+    for (const parte of list.split(',')) {
       for (const pedaco of parte.split('=')[0].split(':')) {
         const id = /^([A-Za-z_$][\w$]*)/.exec(pedaco.trim().replace(/^[([{\s.]+/, ''))?.[1];
         if (id) nomes.add(id);
@@ -484,18 +484,18 @@ const CONSTANTE = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/;
  *     folha), e ali as palavras do token não são identificador de JavaScript.
  */
 function semTextoNemFolha(text: string): string {
-  let corpo = semComentarios(text);
-  corpo = corpo.replace(/`(?:[^`\\]|\\.)*`/g, "''");
-  corpo = corpo.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
-  corpo = corpo.replace(/\/(?![/*])(?:\[[^\]\n]*\]|\\.|[^/\\\n[])+\/[dgimsuvy]*/g, '0');
-  corpo = corpo.replace(/^[ \t]*[.#][\w-]+[^\n{]*\{[^{}]*\}/gm, ' ');
+  let body = semComentarios(text);
+  body = body.replace(/`(?:[^`\\]|\\.)*`/g, "''");
+  body = body.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
+  body = body.replace(/\/(?![/*])(?:\[[^\]\n]*\]|\\.|[^/\\\n[])+\/[dgimsuvy]*/g, '0');
+  body = body.replace(/^[ \t]*[.#][\w-]+[^\n{]*\{[^{}]*\}/gm, ' ');
   // Chave de objeto literal e membro de interface não são referência: em
   // `{ input: 18000 }` quem existe é o valor. O separador vem antes do nome —
   // `{`, `,`, `;` ou a quebra de linha —, e é ele que distingue chave de ramo
   // de ternário, que vem depois de `?` ou de `:`.
-  corpo = corpo.replace(/([{,;]\s*)[A-Za-z_$][\w$]*(\s*\??\s*:)/g, '$1$2');
-  corpo = corpo.replace(/(\n\s*)[A-Za-z_$][\w$]*(\s*\??\s*:)/g, '$1$2');
-  return corpo;
+  body = body.replace(/([{,;]\s*)[A-Za-z_$][\w$]*(\s*\??\s*:)/g, '$1$2');
+  body = body.replace(/(\n\s*)[A-Za-z_$][\w$]*(\s*\??\s*:)/g, '$1$2');
+  return body;
 }
 
 /**
@@ -646,15 +646,15 @@ describe('transforms do painel Code', () => {
     expect(caminhos.length).toBeGreaterThan(0);
   });
 
-  for (const caminho of caminhos) {
-    const modulo = modulos[caminho];
-    const slug = slugDoCaminho(caminho);
+  for (const path of caminhos) {
+    const modulo = modulos[path];
+    const slug = slugDoCaminho(path);
     const fonteDoComponente = fontes[`./${slug}.ts`] ?? '';
     const exportadas = Object.entries(modulo).filter(
       ([name, value]) => typeof value === 'function' && !HELPERS.has(name),
     ) as Array<[string, Chamavel]>;
 
-    describe(caminho, () => {
+    describe(path, () => {
       it('exporta ao menos uma transform', () => {
         expect(exportadas.length).toBeGreaterThan(0);
       });
@@ -664,15 +664,15 @@ describe('transforms do painel Code', () => {
         // O texto TEM de existir: `fontes` varre `./*.ts` e `caminhos` varre
         // `./**/*.source.ts`. Módulo em subpasta sairia da varredura sem uma
         // palavra, que é como um portão encolhe em silêncio — aqui ele reprova.
-        const bruto = fontes[caminho];
+        const bruto = fontes[path];
         expect(
           typeof bruto,
-          `${caminho}: o texto do módulo não foi alcançado pela varredura — mova-o para esta pasta ou amplie o glob de \`fontes\``,
+          `${path}: o texto do módulo não foi alcançado pela varredura — mova-o para esta pasta ou amplie o glob de \`fontes\``,
         ).toBe('string');
         const soltos = lacosSemOrigemNoTexto(bruto);
         expect(
           soltos,
-          `${caminho}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara, ` +
+          `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara, ` +
             `importa nem recebe — quem copiar aquele ramo recebe um ReferenceError. ` +
             `A lista de exemplo é curta: declare-a no próprio snippet, à vista de quem lê.`,
         ).toEqual([]);
@@ -690,7 +690,7 @@ describe('transforms do painel Code', () => {
         );
         expect(
           fora,
-          `${caminho}: export fora da convenção — o nome tem de trazer Source/Snippet, ou ser declarado em HELPERS se não constrói snippet`,
+          `${path}: export fora da convenção — o nome tem de trazer Source/Snippet, ou ser declarado em HELPERS se não constrói snippet`,
         ).toEqual([]);
       });
 
@@ -699,12 +699,12 @@ describe('transforms do painel Code', () => {
           let output: unknown;
           try {
             output = snippetDe(name, fn);
-          } catch (erro) {
+          } catch (error) {
             throw new Error(
-              `${name} não pôde ser chamado: ${(erro as Error).message}. ` +
+              `${name} não pôde ser chamado: ${(error as Error).message}. ` +
                 `Construtor que exige dado declara o argumento canônico em ARGUMENTOS — ` +
                 `sem isso a guarda o excluiria em silêncio.`,
-              { cause: erro },
+              { cause: error },
             );
           }
           expect(typeof output, `${name} deve devolver string`).toBe('string');

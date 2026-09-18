@@ -7,9 +7,9 @@ import { createButton } from './button';
 // Arquivo à parte porque num `*.stories.ts` TODO export nomeado vira uma story:
 // um helper exportado apareceria na sidebar como se fosse um exemplo.
 //
-// `wrap` estava copiada em três arquivos e `montar` em dois. O que variava era
+// `wrap` estava copiada em três arquivos e `mount` em dois. O que variava era
 // só a ALTURA da moldura — 220px nas composições, 180px nos estados e nas
-// variantes —, e ela passa a entrar por parâmetro. `montar` repassa a medida
+// variantes —, e ela passa a entrar por parâmetro. `mount` repassa a medida
 // porque cada cópia chamava o `wrap` local do próprio arquivo: sem o repasse, a
 // moldura das composições encolheria.
 
@@ -75,7 +75,7 @@ export function clicarQuandoMontado(trigger: HTMLElement | null | undefined): vo
  * mais longas (grupos com rótulo, alternadores, escolha única) e precisam de
  * mais espaço reservado que os estados e as variantes.
  */
-export function montar(
+export function mount(
   label: string,
   items: DropdownMenuItemDef[],
   minHeight?: string,

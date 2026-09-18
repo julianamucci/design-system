@@ -156,7 +156,7 @@ export const Always: Story = {
       // o padding, outra reserva o canto no pé da barra, e todas aplicam um
       // tamanho mínimo de pegador. O que se afirma é a ORDEM DE GRANDEZA — com o
       // pegador ocupando a trilha inteira a diferença passa de 0.6.
-      await expect(Math.abs(p.fracaoDoPegador - p.fracaoVisivel)).toBeLessThan(0.2);
+      await expect(Math.abs(p.fracaoDoPegador - p.visibleFraction)).toBeLessThan(0.2);
     });
 
     await step('O pegador acompanha a posição da rolagem', async () => {
@@ -422,20 +422,20 @@ export const NoLimit: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const [semAltura, comAltura] = Array.from(
+    const [withoutHeight, withHeight] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area-viewport"]'),
     );
 
     await step('Sem altura no pai o conteúdo expande e não há rolagem', async () => {
       // functional.item4.
-      await expect(transbordo(semAltura).y).toBe(false);
-      await expect(semAltura.scrollHeight).toBe(semAltura.clientHeight);
-      await expect(semAltura.getBoundingClientRect().height).toBeGreaterThan(300);
+      await expect(transbordo(withoutHeight).y).toBe(false);
+      await expect(withoutHeight.scrollHeight).toBe(withoutHeight.clientHeight);
+      await expect(withoutHeight.getBoundingClientRect().height).toBeGreaterThan(300);
     });
 
     await step('Com altura no pai o mesmo conteúdo rola', async () => {
-      await expect(transbordo(comAltura).y).toBe(true);
-      await expect(comAltura.getBoundingClientRect().height).toBeLessThan(200);
+      await expect(transbordo(withHeight).y).toBe(true);
+      await expect(withHeight.getBoundingClientRect().height).toBeLessThan(200);
     });
   },
 };

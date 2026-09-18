@@ -117,7 +117,7 @@ export function toggleSourceRow(variacoes: ToggleSnippetOptions[]): SourceTransf
  * Barra de formatação: toggles independentes dentro de um `role="group"` com
  * nome próprio. Sem o nome, o leitor anuncia "grupo" e mais nada.
  */
-export function toggleBarSnippet(items: ToggleSnippetOptions[], nomeDoGrupo: string): string {
+export function toggleBarSnippet(items: ToggleSnippetOptions[], groupName: string): string {
   const icons = items.map((i) => i.icon ?? 'Bold');
   const calls = items.map((i) =>
     `  ${callLine(
@@ -140,7 +140,7 @@ barra.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-1';
 barra.dataset.spacing = 'xs';
 barra.dataset.align = 'center';
 barra.setAttribute('role', 'group');
-barra.setAttribute('aria-label', ${text(nomeDoGrupo)});
+barra.setAttribute('aria-label', ${text(groupName)});
 barra.append(
 ${calls.join('\n')}
 );`,
@@ -151,9 +151,9 @@ ${calls.join('\n')}
 /** Transform de story para a barra de formatação. */
 export function toggleSourceBar(
   items: ToggleSnippetOptions[],
-  nomeDoGrupo: string,
+  groupName: string,
 ): SourceTransform<ToggleSnippetOptions> {
-  return () => toggleBarSnippet(items, nomeDoGrupo);
+  return () => toggleBarSnippet(items, groupName);
 }
 
 /**

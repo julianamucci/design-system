@@ -38,20 +38,20 @@ export const Invalid: Story = {
   },
   render: () => {
     const form = new FormGroup({
-      senha: new FormControl('123', [Validators.required, Validators.minLength(8)]),
+      password: new FormControl('123', [Validators.required, Validators.minLength(8)]),
     });
     // Inválido E tocado: um campo obrigatório nasce inválido, e o campo só
     // acusa depois que a pessoa passou por ele.
-    form.controls.senha.markAsTouched();
+    form.controls.password.markAsTouched();
     return {
       props: { form },
       template: `
         <form ndsForm class="nds-max-w-sm" [formGroup]="form">
           <div ndsFormField>
             <label ndsFormLabel>Senha</label>
-            <input ndsInput type="password" formControlName="senha" autocomplete="new-password" />
+            <input ndsInput type="password" formControlName="password" autocomplete="new-password" />
             <p ndsFormDescription>Use pelo menos 8 caracteres, com letras e números.</p>
-            @if (form.controls.senha.invalid) {
+            @if (form.controls.password.invalid) {
               <p ndsFormMessage>A senha precisa ter pelo menos 8 caracteres.</p>
             }
           </div>

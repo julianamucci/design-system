@@ -64,7 +64,7 @@ export const WithLabel: Story = {
       source: {
         transform: inputOtpSourceComposition({
           label: 'Código de verificação',
-          ligarRotulo: true,
+          bindLabel: true,
         }),
       },
     },

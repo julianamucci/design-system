@@ -45,7 +45,7 @@ describe('inputSnippet', () => {
   it('liga a mensagem de erro ao campo pelos dois atributos', () => {
     // Borda vermelha sem `aria-invalid` não é anunciada; mensagem sem
     // `aria-describedby` não é lida junto com o campo.
-    const code = inputSnippet({ id: 'email', ariaInvalid: true, mensagem: 'Email inválido.' });
+    const code = inputSnippet({ id: 'email', ariaInvalid: true, message: 'Email inválido.' });
     expect(code).toContain("campo.setAttribute('aria-invalid', 'true');");
     expect(code).toContain("campo.setAttribute('aria-describedby', 'email-erro');");
     expect(code).toContain("erro.id = 'email-erro';");
@@ -53,7 +53,7 @@ describe('inputSnippet', () => {
   });
 
   it('aponta o texto de apoio e o erro no mesmo describedby', () => {
-    const code = inputSnippet({ id: 'email', ajuda: 'Usaremos para notificações.', mensagem: 'Inválido.' });
+    const code = inputSnippet({ id: 'email', ajuda: 'Usaremos para notificações.', message: 'Inválido.' });
     expect(code).toContain("campo.setAttribute('aria-describedby', 'email-ajuda email-erro');");
     expect(code).toContain('append(rotulo, campo, apoio, erro)');
   });
@@ -87,12 +87,12 @@ describe('inputComPrefixoSnippet', () => {
 describe('inputSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const padrão = inputSource('<input data-slot="input">', {});
-    const senha = inputSource('<input data-slot="input">', {
+    const password = inputSource('<input data-slot="input">', {
       args: { type: 'password', disabled: true },
     });
-    expect(padrão).not.toBe(senha);
-    expect(senha).toContain("type: 'password'");
-    expect(senha).toContain('disabled: true');
+    expect(padrão).not.toBe(password);
+    expect(password).toContain("type: 'password'");
+    expect(password).toContain('disabled: true');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

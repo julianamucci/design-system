@@ -47,7 +47,7 @@ export type GrupoDoCaso =
 export interface CasoDeAvaliacao {
   /** Curto e estável: é a coluna esquerda da tabela e a chave do diff A × B. */
   id: string;
-  grupo: GrupoDoCaso;
+  group: GrupoDoCaso;
   /**
    * As perguntas, em ordem. Só a ÚLTIMA é avaliada; as anteriores existem para
    * montar o histórico, porque é ele que dá sentido a "desse".
@@ -67,7 +67,7 @@ export interface CasoDeAvaliacao {
    */
   exigeTodos?: boolean;
   /** Quando a ORDEM importa: o slug que tem de vir em primeiro lugar. */
-  primeiro?: string;
+  first?: string;
   /**
    * A resposta tem de trazer marca de recusa (`true`) ou não pode trazer
    * (`false`). `null` desliga o critério — usado no caso da prop inventada,
@@ -103,37 +103,37 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   /* ── Acham o componente certo ──────────────────────────────────────────── */
   {
     id: 'cu-serve',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['pra que serve o componente ComputerUse?'],
     esperados: ['computer-use'],
-    primeiro: 'computer-use',
+    first: 'computer-use',
     deveRecusar: false,
     porque:
       'O caso que quebrou a busca antes da quebra por maiúscula: `ComputerUse` virava um termo só e a resposta dizia que o componente não existe.',
   },
   {
     id: 'cu-casos',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['quais os casos de uso para o componente computeruse?'],
     esperados: ['computer-use'],
-    primeiro: 'computer-use',
+    first: 'computer-use',
     deveRecusar: false,
     porque:
       'Tudo junto e minúsculo — como se digita de memória. Depende do mapa de formas compactas do corpus.',
   },
   {
     id: 'cu-typo',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['quais os casos de uso do compute user?'],
     esperados: ['computer-use'],
-    primeiro: 'computer-use',
+    first: 'computer-use',
     deveRecusar: false,
     porque:
       'Erro de digitação de uma letra. Antes da correção por distância de edição, recuperava media-player com 0,25 e o chat dizia que não sabia.',
   },
   {
     id: 'popover-x-hover',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['qual a diferença entre popover e hover card?'],
     esperados: ['hover-card', 'popover'],
     exigeTodos: true,
@@ -142,45 +142,45 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   },
   {
     id: 'input-otp',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['como uso o InputOTP?'],
     esperados: ['input-otp'],
-    primeiro: 'input-otp',
+    first: 'input-otp',
     deveRecusar: false,
     porque: 'Sigla no meio do nome — o caso que a lista `SIGLAS` existe para não errar.',
   },
   {
     id: 'datatable-selecao',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['o datatable tem seleção de linha?'],
     esperados: ['data-table'],
-    primeiro: 'data-table',
+    first: 'data-table',
     deveRecusar: false,
     porque:
       'Pergunta de SIM/NÃO sobre um recurso concreto. Se o recorte do contexto tirar a seção certa, é aqui que aparece.',
   },
   {
     id: 'acordion-typo',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['como funciona o acordion?'],
     esperados: ['accordion'],
-    primeiro: 'accordion',
+    first: 'accordion',
     deveRecusar: false,
     porque: 'Erro de digitação num nome de uma palavra só.',
   },
   {
     id: 'alert-variantes',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['Quais variantes o Alert tem?'],
     esperados: ['alert'],
-    primeiro: 'alert',
+    first: 'alert',
     deveRecusar: false,
     porque:
       'A resposta está em `variants`, que o recorte MANTÉM. É o par do caso de baixo: prova que o recorte não é o que decide.',
   },
   {
     id: 'erro-de-formulario',
-    grupo: 'componente',
+    group: 'componente',
     perguntas: ['como anuncio erro de formulário?'],
     esperados: ['form', 'label', 'input'],
     deveRecusar: false,
@@ -191,7 +191,7 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   /* ── Devem RECUSAR ─────────────────────────────────────────────────────── */
   {
     id: 'kubernetes',
-    grupo: 'recusa',
+    group: 'recusa',
     perguntas: ['como configuro um cluster de kubernetes?'],
     esperados: [],
     deveRecusar: true,
@@ -199,7 +199,7 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   },
   {
     id: 'oleo-do-motor',
-    grupo: 'recusa',
+    group: 'recusa',
     perguntas: ['preciso trocar o óleo do motor do carro'],
     esperados: [],
     deveRecusar: true,
@@ -208,7 +208,7 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   },
   {
     id: 'previsao-do-tempo',
-    grupo: 'recusa',
+    group: 'recusa',
     perguntas: ['qual a previsão do tempo em Curitiba?'],
     esperados: [],
     deveRecusar: true,
@@ -219,20 +219,20 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   /* ── Continuação: o segundo turno depende do primeiro ──────────────────── */
   {
     id: 'continuacao-mesmo-assunto',
-    grupo: 'continuacao',
+    group: 'continuacao',
     perguntas: ['pra que serve o componente ComputerUse?', 'quais as situações de uso desse'],
     esperados: ['computer-use'],
-    primeiro: 'computer-use',
+    first: 'computer-use',
     deveRecusar: false,
     porque:
       'MEDIDO: "quais as situações de uso desse" SOZINHA recupera `progress` com 0,23. O que segura o assunto é a pergunta anterior concatenada na consulta.',
   },
   {
     id: 'continuacao-troca-assunto',
-    grupo: 'continuacao',
+    group: 'continuacao',
     perguntas: ['pra que serve o componente ComputerUse?', 'e o HoverCard, qual a diferença?'],
     esperados: ['hover-card'],
-    primeiro: 'hover-card',
+    first: 'hover-card',
     deveRecusar: false,
     porque:
       'O outro lado da mesma moeda: herdar o assunto não pode impedir a TROCA de assunto. O novo componente tem de vir na frente, com o antigo em segundo.',
@@ -241,10 +241,10 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   /* ── Nome de componente ────────────────────────────────────────────────── */
   {
     id: 'compose-vouce',
-    grupo: 'nome',
+    group: 'nome',
     perguntas: ['qual o caso de uso do compose vouce?'],
     esperados: ['composer-voice'],
-    primeiro: 'composer-voice',
+    first: 'composer-voice',
     deveRecusar: false,
     nomesObrigatorios: ['ComposerVoice'],
     nomesProibidos: ['Conversa por voz', 'Leitura em voz alta'],
@@ -255,12 +255,12 @@ export const BANCO: readonly CasoDeAvaliacao[] = [
   /* ── Prop inventada ────────────────────────────────────────────────────── */
   {
     id: 'alert-autoclose',
-    grupo: 'prop-inventada',
+    group: 'prop-inventada',
     perguntas: [
       'o Alert tem uma prop autoClose para ele sumir sozinho depois de alguns segundos?',
     ],
     esperados: ['alert'],
-    primeiro: 'alert',
+    first: 'alert',
     deveRecusar: null,
     termoInexistente: 'autoClose',
     porque:
