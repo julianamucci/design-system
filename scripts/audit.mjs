@@ -9427,6 +9427,78 @@ function auditIdentificadorPtNovo(slug) {
   return violations;
 }
 
+/**
+ * A MESMA catraca, nos arquivos que a regra por SLUG não alcança.
+ *
+ * `auditIdentificadorPtNovo` itera por slug, e slug sai de
+ * `docs/shared/content/<slug>/`. O gerador da linha de base, não: ele varre
+ * `src/` inteiro de cada stack. Os dois números nunca tinham sido comparados.
+ *
+ * Medido em 2026-09-18, depois de consertar o contador: a base cobria **673**
+ * arquivos e a regra auditava **547**. Os 126 de diferença estavam em
+ * `src/components/docs/shared/` (56), na raiz de `src/components/` (22) e em
+ * `src/lib/` (19), e carregavam **226 identificadores em português que portão
+ * nenhum via**. Eles não apareceram porque o contador melhorou — nunca tinham
+ * sido alcançáveis.
+ *
+ * É a forma exata do `source-snippets.test.ts` de 2026-09-10: quem não entra na
+ * lista não reprova, e a contagem encolhe sem deixar rastro. A diferença é que
+ * lá a lista era um filtro por nome, e aqui é a própria ideia de "auditar por
+ * componente" — que é certa para quem revisa um componente, e cega para tudo que
+ * não é de componente nenhum.
+ *
+ * Sai sob `_infra` porque o alvo não tem slug: é a infraestrutura que as docs
+ * pages compartilham (`DocsAnatomy`, `DocsAnalytics`…), o `src/lib/` de cada
+ * stack e o que mora na raiz de `components/`. Mesma linha de base, mesmo
+ * contador, mesma regra de fechamento — renomeie e regenere, nunca só regenere.
+ */
+function auditIdentificadorPtInfra() {
+  const violations = [];
+  const basePath = join(ROOT, 'docs', 'shared', 'primitives', 'identificadores-pt-baseline.json');
+  let base = {};
+  try {
+    base = JSON.parse(readFile(basePath) || '{}');
+  } catch {
+    return violations;
+  }
+
+  // Tudo que a regra por slug já abre, para não acusar duas vezes o mesmo arquivo.
+  const cobertosPorSlug = new Set();
+  for (const s of slugsDoConteudo()) {
+    for (const stack of STACKS) {
+      for (const f of filesForSlug(s, stack).all) {
+        cobertosPorSlug.add(relative(ROOT, f).split('\\').join('/'));
+      }
+    }
+  }
+
+  for (const stack of STACKS) {
+    const raiz = join(ROOT, stackDir(stack), 'src');
+    if (!existsSync(raiz)) continue;
+    for (const file of walkDir(raiz, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const rel = relative(ROOT, file).split('\\').join('/');
+      if (cobertosPorSlug.has(rel)) continue;
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const vistos = identsPtNoCodigo(bruto, file);
+      const permitido = base[rel] ?? 0;
+      if (vistos.size <= permitido) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack,
+        file: rel, rule: 'identificador_pt_novo_sem_slug',
+        message:
+          vistos.size + ' identificadores em português, contra ' + permitido +
+          ' na linha de base — ' + [...vistos].slice(0, 6).join(', ') +
+          '. Este arquivo não pertence a slug nenhum, então a catraca por componente' +
+          ' não o alcança; esta é a irmã dela sob `_infra`. Código é escrito em inglês' +
+          ' — ver "Idioma do código" em docs/shared/guidelines/11-consistencia-cross-stack.md.',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditIdentificadorPt(slug) {
   const violations = [];
   const { pendentes, mantidos } = identsPt();
@@ -12418,7 +12490,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado(), ...auditIdentificadorPtInfra()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
