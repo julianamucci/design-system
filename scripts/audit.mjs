@@ -9193,6 +9193,56 @@ function apagaLiterais(fonte) {
   while (i < fonte.length) {
     const ch = fonte[i];
     const anterior = i > 0 ? fonte[i - 1] : '';
+
+    // LITERAL DE REGEX, reconhecido DENTRO da varredura e não num passo depois.
+    //
+    // Ele já era apagado — mas por um `replace` aplicado ao resultado desta
+    // função, e a ordem era o defeito: uma regex com número ÍMPAR de aspas
+    // (`/aria-label="/g`, `/<Switch id="([^"]+)"/g`) chegava INTEIRA aqui, a aspa
+    // solta abria um literal que atravessava dezenas de linhas, e o fechamento
+    // dele invertia o pareamento dali em diante. Prosa de descrição de teste
+    // passava a ser lida como código: medido em 2026-09-18 em três arquivos, onde
+    // quatro dos sete "identificadores em português" acusados eram palavras
+    // dentro de `it('…')` e de rótulo de interface.
+    //
+    // A guarda é a mesma de antes — exige um delimitador de EXPRESSÃO antes da
+    // barra, que é o que separa regex de divisão: `a / b` tem operando à esquerda
+    // e não casa. Some a ela duas que o `replace` não tinha: a classe de
+    // caractere é consumida inteira (uma `/` dentro de `[…]` não fecha), e regex
+    // não atravessa QUEBRA DE LINHA — se a barra não fechar na mesma linha, não
+    // era regex, e a varredura segue tratando a barra como o operador que ela é.
+    // `=>` entra como token INTEIRO, e não pelo `=` que já está na classe: a
+    // seta termina em `>`, que não é delimitador, e sem ela uma regex depois de
+    // arrow function não era reconhecida. Medido em 2026-09-18:
+    // `].map((fn) => /<Label for="[^"]+">([^<]+)<\/Label>/.exec(fn()))` tem TRÊS
+    // aspas duplas, número ímpar, e o pareamento invertia dali em diante —
+    // rótulo de interface e descrição de teste passavam a contar como código.
+    // Regex depois de seta é idioma de `.map`/`.filter`, então este caminho
+    // escondia e acusava em muito mais lugar que o arquivo onde apareceu.
+    // `=>` não precede divisão válida, então não há o risco que `>` sozinho
+    // traria.
+    if (ch === '/' && fonte[i + 1] !== '/' && fonte[i + 1] !== '*'
+        && /(?:=>|[(,=:[!?&|+{;]|\breturn|\bcase)\s*$/.test(saida.slice(-24))) {
+      let j = i + 1;
+      let emClasse = false;
+      let fechou = false;
+      while (j < fonte.length) {
+        const c = fonte[j];
+        if (c === '\\') { j += 2; continue; }
+        if (c === '\n') break;
+        if (emClasse) { if (c === ']') emClasse = false; j += 1; continue; }
+        if (c === '[') { emClasse = true; j += 1; continue; }
+        if (c === '/') { fechou = true; break; }
+        j += 1;
+      }
+      if (fechou) {
+        saida += '/x/';
+        i = j + 1;
+        while (i < fonte.length && /[gimsuy]/.test(fonte[i])) i += 1;
+        continue;
+      }
+    }
+
     const abreAspa = (ch === "'" || ch === '"') && !/[\w'"]/.test(anterior);
     if (!abreAspa && ch !== '`') {
       saida += ch;
@@ -9229,18 +9279,17 @@ function identsPtNoCodigo(bruto, caminho = '') {
   // em sequência — ver `apagaLiterais`, logo abaixo. A forma antiga pareava
   // cada tipo de aspa num passo próprio, e passo que pareia sem saber o que já
   // está aberto atravessa a fronteira do literal vizinho.
-  let codigo = apagaLiterais(stripComments(semMarcacao))
-    // LITERAL DE REGEX também é texto, e faltava. Medido em 2026-09-13: a play
-    // do vanilla consultava o botão por `{ name: /salvar/i }` — nome ACESSÍVEL,
-    // que é interface e está em português por obrigação —, e a palavra dentro
-    // das barras contava como identificador declarado. O portão pedia para
-    // renomear o que a tela mostra.
-    //
-    // O padrão exige um delimitador de EXPRESSÃO antes da barra (`(`, `,`, `=`,
-    // `:`, `[`, `&&`, `!`, `return`…), que é o que separa regex de divisão:
-    // `a / b` tem operando à esquerda e não casa. Barra dentro de classe de
-    // caractere (`[/]`) fica coberta porque a classe é consumida inteira.
-    .replace(/([(,=:[!?&|+{;]|\breturn|\bcase)(\s*)\/(?![/*])(?:[^/\\\n[]|\\.|\[(?:[^\]\\]|\\.)*\])+\/[gimsuy]*/g, '$1$2/x/');
+  // LITERAL DE REGEX era apagado AQUI, por um `replace` sobre o RESULTADO da
+  // varredura — e a ordem era o defeito: a regex chegava inteira à varredura, e
+  // uma aspa solta dentro dela (`/aria-label="/g`) abria um literal que
+  // atravessava dezenas de linhas, invertendo o pareamento dali em diante.
+  // Passou a ser reconhecido DENTRO de `apagaLiterais`.
+  //
+  // O motivo de ele existir continua o mesmo, medido em 2026-09-13: a play do
+  // vanilla consultava o botão por `{ name: /salvar/i }` — nome ACESSÍVEL, em
+  // português por obrigação — e a palavra dentro das barras contava como
+  // identificador declarado. O portão pedia para renomear o que a tela mostra.
+  let codigo = apagaLiterais(stripComments(semMarcacao));
 
   // TEXTO ENTRE TAGS é interface, não código: `<Trigger>Item fechado</Trigger>`
   // não declara nada. O contador lia isso, e não reprovava só por acidente —
