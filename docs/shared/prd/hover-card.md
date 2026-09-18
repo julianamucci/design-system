@@ -218,8 +218,20 @@ e a conta numa só — mas o vão é `sideOffset`, o eixo PRINCIPAL. `alignOffse
 cruzado, e ficou de fora sem uma linha dizendo isso. Quem leu a D9 depois tinha
 todo motivo para achar o assunto encerrado.
 
-**Portão**: `hover-card-probe.ts` passa a declarar `ALIGN_OFFSET_PADRAO = 0` ao
-lado do `SIDE_OFFSET_PADRAO`, e o Playground das cinco afirma o valor.
+**Portão**: `expectCentradoNoEixoCruzado`, em `hover-card-probe.ts`, no Playground
+das cinco. Ele afirma a **coordenada** — o centro do painel coincidindo com o
+centro do gatilho no eixo perpendicular ao lado —, e não o valor da opção:
+afirmar `alignOffset === 0` seria repetir a constante para ela mesma, que é a
+forma de asserção que deixou a D8 passar meses. `ALIGN_OFFSET_PADRAO = 0` fica
+declarado ao lado do `SIDE_OFFSET_PADRAO`, e é ele que a mensagem de erro cita.
+
+**E a asserção não passa sem afastar a cena da borda**, o que não é detalhe de
+implementação: o executor de teste **não aplica o `layout: 'centered'`** — isso é
+do canvas do Storybook. No vitest a story renderiza encostada à esquerda, e o
+painel de 320px trava em `left 0`. Medido em 2026-09-17: gatilho em `left 116.2`,
+centro 15,2px fora. O painel não está descentrado por defeito; está batendo na
+borda da janela. `comACenaLongeDaBorda`, na mesma sonda, é quem resolve isso nas
+cinco — e mora lá para que não existam cinco formas de afastar a cena.
 
 ### D12 · Só foco VISÍVEL abre o cartão
 
@@ -239,8 +251,18 @@ design system. Aqui ele não mede uma decisão — herdou "qualquer foco abre" d
 ter filtro nenhum.
 
 **Portão**: passo `'Foco programático não abre o cartão'` na `States/Closed` das
-cinco: `.focus()` no gatilho, espera de RELÓGIO maior que o atraso de abertura, e
-o painel ausente. Espera de relógio e não `waitFor`, porque a prova é de ausência.
+cinco: `focarSemGesto(trigger)`, espera de RELÓGIO maior que o atraso de abertura,
+e o painel ausente. Espera de relógio e não `waitFor`, porque a prova é de
+ausência.
+
+**`trigger.focus()` pelado NÃO serve, e isto custou uma medição.** O Chromium só
+trata foco de script como invisível quando o foco ANTERIOR veio do mouse —
+estado que os eventos do executor não produzem. Com `.focus()` cru,
+`matches(':focus-visible')` dá **true** e o cartão abre até nas stacks cujas libs
+já filtram exatamente como esta decisão manda: o passo reprovaria o comportamento
+certo. `focarSemGesto` embrulha `focus({ focusVisible: false })`, que é a forma
+que a plataforma tem de dizer "este foco não é gesto de usuário" — a frase desta
+decisão, quase palavra por palavra.
 
 ### D13 · Clique fora fecha o cartão nas cinco
 

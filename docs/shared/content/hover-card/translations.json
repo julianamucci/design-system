@@ -150,10 +150,11 @@
         },
         "metricExplainer": {
           "name": "Métrica explicada",
-          "description": "Valor numérico (ex.: <code>LCP 1.8s</code>) dispara cartão com nome completo da métrica, valor com cor semântica e descrição dos limiares (bom/ruim).",
+          "description": "Valor numérico (ex.: <code>3,42%</code>) dispara cartão com o nome completo da métrica, o período medido e a fórmula que a produz.",
           "use": "Dashboards e relatórios com KPIs, indicadores de performance e métricas técnicas que precisam de contexto sem poluir a visualização principal.",
           "cardMetric": "Conversão (últimos 30d)",
-          "cardFormula": "Cliques no CTA / usuários únicos"
+          "cardFormula": "Cliques no CTA / usuários únicos",
+          "cardValue": "3,42%"
         }
       },
       "styles": {
@@ -571,10 +572,11 @@
         },
         "metricExplainer": {
           "name": "Metric explainer",
-          "description": "Numeric value (e.g. <code>LCP 1.8s</code>) triggers a card with the full metric name, the value with semantic color, and the threshold description (good/poor).",
+          "description": "Numeric value (e.g. <code>3.42%</code>) triggers a card with the full metric name, the period measured, and the formula behind it.",
           "use": "Dashboards and reports with KPIs, performance indicators and technical metrics that need context without cluttering the main visualization.",
           "cardMetric": "Conversion (last 30d)",
-          "cardFormula": "CTA clicks / unique users"
+          "cardFormula": "CTA clicks / unique users",
+          "cardValue": "3.42%"
         }
       },
       "styles": {
@@ -992,10 +994,11 @@
         },
         "metricExplainer": {
           "name": "Métrica explicada",
-          "description": "Valor numérico (ej.: <code>LCP 1.8s</code>) dispara una tarjeta con el nombre completo de la métrica, el valor con color semántico y la descripción de los umbrales (bueno/malo).",
+          "description": "Valor numérico (ej.: <code>3,42%</code>) dispara una tarjeta con el nombre completo de la métrica, el período medido y la fórmula que lo produce.",
           "use": "Dashboards y reportes con KPIs, indicadores de rendimiento y métricas técnicas que necesitan contexto sin saturar la visualización principal.",
           "cardMetric": "Conversión (últimos 30d)",
-          "cardFormula": "Clics en el CTA / usuarios únicos"
+          "cardFormula": "Clics en el CTA / usuarios únicos",
+          "cardValue": "3,42%"
         }
       },
       "styles": {

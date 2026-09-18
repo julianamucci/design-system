@@ -250,6 +250,60 @@ export function expectCentradoNoEixoCruzado(
   ).toBeLessThanOrEqual(1.5);
 }
 
+/**
+ * Afasta a cena da borda, mede, e devolve tudo ao lugar.
+ *
+ * O executor de teste NÃO aplica o `layout: 'centered'` do Storybook — isso é do
+ * canvas, e no vitest a story renderiza encostada à ESQUERDA. Medido em
+ * 2026-09-17: gatilho em `left 116.2`, painel de 320px travado em `left 0`,
+ * centro 15,2px fora do lugar. Ou seja, `expectCentradoNoEixoCruzado` não pode
+ * passar no Playground sem afastar a cena primeiro — o painel não está
+ * descentrado por defeito, está batendo na borda da janela.
+ *
+ * Mora aqui, e não em cada story, porque cinco stacks inventariam cinco formas
+ * de afastar a cena e a comparação entre elas deixaria de responder alguma
+ * coisa. É a mesma razão de `expectOndeDiz` ser compartilhado.
+ *
+ * `transform` e não `margin`: é propriedade mecânica, então não cai no portão de
+ * estilo inline, e não reflui o layout que se quer medir. O `resize` é o que
+ * cutuca o reposicionamento das libs sem tocar em ROLAGEM — em pelo menos uma
+ * delas rolar DISPENSA o cartão em vez de reposicioná-lo. Restaura num `finally`
+ * porque o painel Interactions reexecuta a play no mesmo DOM.
+ */
+export async function comACenaLongeDaBorda(
+  canvasElement: HTMLElement,
+  medir: () => void,
+): Promise<void> {
+  const anterior = canvasElement.style.transform;
+  try {
+    canvasElement.style.transform = 'translateX(240px)';
+    window.dispatchEvent(new Event('resize'));
+    await new Promise((resolve) => { setTimeout(resolve, 150); });
+    medir();
+  } finally {
+    canvasElement.style.transform = anterior;
+    window.dispatchEvent(new Event('resize'));
+    await new Promise((resolve) => { setTimeout(resolve, 150); });
+  }
+}
+
+/**
+ * Foco que a plataforma trata como NÃO sendo gesto do usuário.
+ *
+ * `trigger.focus()` pelado NÃO serve para provar a D12, e isto custou uma
+ * medição: o Chromium só considera um foco de script invisível quando o foco
+ * ANTERIOR veio do mouse — estado que os eventos do executor não produzem. Com
+ * `.focus()` cru, `matches(':focus-visible')` dá **true** e o cartão abre até nas
+ * stacks cujas libs já filtram corretamente. O passo reprovaria o comportamento
+ * certo.
+ *
+ * `focusVisible: false` é a forma que a plataforma tem de dizer "este foco não é
+ * gesto de usuário", que é a frase da D12 quase palavra por palavra.
+ */
+export function focarSemGesto(trigger: HTMLElement): void {
+  trigger.focus({ focusVisible: false } as FocusOptions);
+}
+
 /** Contraste WCAG entre duas cores computadas (`rgb(...)` / `rgba(...)`). */
 export function contrastRatio(corA: string, corB: string): number {
   const luminancia = (cor: string): number => {
