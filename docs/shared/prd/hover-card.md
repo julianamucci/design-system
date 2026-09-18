@@ -32,7 +32,7 @@ submit — em touch não há caminho acessível até eles.
 | C5 | O gatilho é DESCRITO pelo cartão via `aria-describedby`, e só enquanto o cartão existe | plays `States/Open` (aponta para `panel.id`) e `States/Closed` + fim do `Playground` (atributo ausente), nas cinco; `accessibility.items.item5` |
 | C6 | Renderiza em portal, fora da raiz da página | `notes.item2`; a sonda `panelOpen()` consulta `document.body`, não o canvas |
 | C7 | Sem espaço no `side` pedido, vira para o lado oposto, e o painel fica ONDE o `data-side` diz | play `Compositions/Sides` com `expectOndeDiz`, nas cinco (D8) |
-| C8 | O conteúdo do cartão NÃO é o único caminho para a informação | `accessibility.items.item4` — julgamento, sem portão automático |
+| C8 | O conteúdo do cartão NÃO é o único caminho para a informação | `accessibility.items.item4`; desde a **D15** as composições `TermDefinition` e `ExplainedMetric` das cinco afirmam o link e o `href` do gatilho — era o único item desta tabela sem portão, e o que faltava não era instrumento: era o exemplo canônico cumprir a própria regra |
 
 ## 3. Decisões fixadas
 
@@ -304,6 +304,39 @@ guardar. A §5 passa de QUINZE declarações para DOZE.
 
 **Portão**: nenhum novo. A ausência de movimento é o estado da folha, e
 `guarda_de_movimento_inerte` cobra a forma certa se ele voltar.
+
+### D15 · As composições publicadas MODELAM o caminho alternativo, e o C8 ganha portão
+
+**Decidido em 2026-09-17**, pela dona. Em `TermDefinition` e `ExplainedMetric` o
+gatilho deixa de ser `<button>` e passa a ser um LINK com destino: o verbete no
+glossário e a página da métrica. Nas cinco stacks, na story, na docs page e no
+snippet do painel Code.
+
+**O que isto conserta é a página ensinando o que ela própria não faz.** O C8 diz
+que o conteúdo do cartão não pode ser o único caminho para a informação, e o
+conteúdo compartilhado manda, com todas as letras, "sempre tenha um glossário ou
+página dedicada como alternativa de acesso". As duas composições publicadas eram
+justamente os dois casos em que esse julgamento MORDE — gatilho sem destino, num
+componente que em touch não tem caminho acessível nenhum — e nenhuma das cinco
+declarava a alternativa. O leitor via a regra escrita ao lado do exemplo que a
+violava.
+
+**E o C8 deixa de ser julgamento sem portão.** Era o único item do contrato com
+essa marca na §2. O caminho alternativo, sendo o destino do próprio gatilho, é
+verificável: a story afirma que o gatilho é um link e que o `href` aponta para
+onde deve. Julgamento continua necessário para o conteúdo NOVO que alguém
+escrever; o que muda é que o exemplo canônico passa a demonstrar a saída, em vez
+de deixá-la implícita.
+
+**Gatilho `<button>` continua demonstrado**, e vale dizer para ninguém "consertar"
+de volta: a `Sides` usa botões, e a anatomia segue registrando que o gatilho pode
+ser link, botão ou texto. O que a D15 diz não é "gatilho é link" — é "onde o
+cartão carrega informação que só existe ali, o gatilho leva a ela".
+
+**Portão**: nas cinco, `TermDefinition` e `ExplainedMetric` afirmam
+`getByRole('link', …)` e o `href` do gatilho. Destinos fixos, iguais nas cinco e
+nos três idiomas (URL não se traduz, como o `/users/joana` da `UserProfile` já
+faz): `/glossario/wcag-2-2-aa` e `/metricas/conversao`.
 
 ## 4. Anatomia
 

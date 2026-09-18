@@ -145,7 +145,7 @@
           "name": "Definição de termo",
           "description": "Texto disparador com sublinhado pontilhado abre cartão com o termo em destaque e a definição em 1-2 frases. Complementa o glossário sem tirar o usuário do contexto.",
           "use": "Termos técnicos, siglas (ex.: <code>WCAG 2.2 AA</code>) e jargões em prosa longa. Sempre tenha um glossário ou página dedicada como alternativa de acesso.",
-          "cardTerm": "WCAG 2.2",
+          "cardTerm": "WCAG 2.2 AA",
           "cardMeaning": "Web Content Accessibility Guidelines: padrão internacional de acessibilidade para conteúdo web."
         },
         "metricExplainer": {
@@ -225,25 +225,25 @@
           "type": "'top' | 'bottom' | 'left' | 'right'",
           "default": "'bottom'",
           "required": "Não",
-          "description": "Lado de abertura do Content (em HoverCardContent)."
+          "description": "Lado em que o cartão abre."
         },
         "align": {
           "type": "'start' | 'center' | 'end'",
           "default": "'center'",
           "required": "Não",
-          "description": "Alinhamento horizontal do Content (em HoverCardContent)."
+          "description": "Alinhamento do cartão no eixo perpendicular ao lado."
         },
         "sideOffset": {
           "type": "number",
           "default": "4",
           "required": "Não",
-          "description": "Distância em px entre o gatilho e o cartão, no eixo do lado escolhido (em HoverCardContent)."
+          "description": "Distância em px entre o gatilho e o cartão, no eixo do lado escolhido."
         },
         "alignOffset": {
           "type": "number",
           "default": "0",
           "required": "Não",
-          "description": "Deslocamento em px no eixo perpendicular ao lado escolhido (em HoverCardContent). Zero deixa o cartão centrado no gatilho."
+          "description": "Deslocamento em px no eixo perpendicular ao lado escolhido. Zero deixa o cartão centrado no gatilho."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -252,7 +252,7 @@
         "vue": "<!-- HoverCard com delay customizado e posicionamento -->\n<HoverCard :open-delay=\"500\" :close-delay=\"200\">\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<!-- HoverCard com delay customizado e posicionamento -->\n<HoverCard openDelay={500} closeDelay={200} bind:open>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </HoverCardContent>\n</HoverCard>",
         "vanilla": "// HoverCard com delay customizado e posicionamento\nconst card = createHoverCard({\n  trigger: gatilho,\n  content: perfil,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// abrir/fechar por código, para tour guiado ou foco vindo do teclado\ncard.open();",
-        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </ng-template>\n</span>"
+        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" contentClass=\"nds-max-w-xs\">\n    <!-- conteúdo -->\n  </ng-template>\n</span>"
       }
     },
     "tokens": {
@@ -567,7 +567,7 @@
           "name": "Term definition",
           "description": "Trigger text with dotted underline opens a card with the highlighted term and the definition in 1-2 sentences. Complements the glossary without pulling the user out of context.",
           "use": "Technical terms, acronyms (e.g. <code>WCAG 2.2 AA</code>) and jargon in long prose. Always have a glossary or dedicated page as an alternative access path.",
-          "cardTerm": "WCAG 2.2",
+          "cardTerm": "WCAG 2.2 AA",
           "cardMeaning": "Web Content Accessibility Guidelines: the international standard for web content accessibility."
         },
         "metricExplainer": {
@@ -647,25 +647,25 @@
           "type": "'top' | 'bottom' | 'left' | 'right'",
           "default": "'bottom'",
           "required": "No",
-          "description": "Content opening side (on HoverCardContent)."
+          "description": "Side the card opens on."
         },
         "align": {
           "type": "'start' | 'center' | 'end'",
           "default": "'center'",
           "required": "No",
-          "description": "Horizontal alignment of Content (on HoverCardContent)."
+          "description": "Card alignment on the axis perpendicular to the side."
         },
         "sideOffset": {
           "type": "number",
           "default": "4",
           "required": "No",
-          "description": "Distance in px between trigger and card, along the axis of the chosen side (on HoverCardContent)."
+          "description": "Distance in px between trigger and card, along the axis of the chosen side."
         },
         "alignOffset": {
           "type": "number",
           "default": "0",
           "required": "No",
-          "description": "Offset in px on the axis perpendicular to the chosen side (on HoverCardContent). Zero keeps the card centred on the trigger."
+          "description": "Offset in px on the axis perpendicular to the chosen side. Zero keeps the card centred on the trigger."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -674,7 +674,7 @@
         "vue": "<!-- HoverCard with custom delay and positioning -->\n<HoverCard :open-delay=\"500\" :close-delay=\"200\">\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<!-- HoverCard with custom delay and positioning -->\n<HoverCard openDelay={500} closeDelay={200} bind:open>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </HoverCardContent>\n</HoverCard>",
         "vanilla": "// HoverCard with custom delay and positioning\nconst card = createHoverCard({\n  trigger,\n  content: profile,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// open/close from code, for a guided tour or focus arriving from the keyboard\ncard.open();",
-        "angular": "<!-- HoverCard with custom delay and positioning -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- content -->\n  </ng-template>\n</span>"
+        "angular": "<!-- HoverCard with custom delay and positioning -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" contentClass=\"nds-max-w-xs\">\n    <!-- content -->\n  </ng-template>\n</span>"
       }
     },
     "tokens": {
@@ -989,7 +989,7 @@
           "name": "Definición de término",
           "description": "Texto disparador con subrayado punteado abre una tarjeta con el término destacado y la definición en 1-2 frases. Complementa el glosario sin sacar al usuario del contexto.",
           "use": "Términos técnicos, siglas (ej.: <code>WCAG 2.2 AA</code>) y jerga en prosa larga. Ten siempre un glosario o página dedicada como ruta alternativa de acceso.",
-          "cardTerm": "WCAG 2.2",
+          "cardTerm": "WCAG 2.2 AA",
           "cardMeaning": "Web Content Accessibility Guidelines: estándar internacional de accesibilidad para contenido web."
         },
         "metricExplainer": {
@@ -1069,25 +1069,25 @@
           "type": "'top' | 'bottom' | 'left' | 'right'",
           "default": "'bottom'",
           "required": "No",
-          "description": "Lado de apertura del Content (en HoverCardContent)."
+          "description": "Lado en que se abre la tarjeta."
         },
         "align": {
           "type": "'start' | 'center' | 'end'",
           "default": "'center'",
           "required": "No",
-          "description": "Alineación horizontal del Content (en HoverCardContent)."
+          "description": "Alineación de la tarjeta en el eje perpendicular al lado."
         },
         "sideOffset": {
           "type": "number",
           "default": "4",
           "required": "No",
-          "description": "Distancia en px entre el gatillo y la tarjeta, en el eje del lado elegido (en HoverCardContent)."
+          "description": "Distancia en px entre el gatillo y la tarjeta, en el eje del lado elegido."
         },
         "alignOffset": {
           "type": "number",
           "default": "0",
           "required": "No",
-          "description": "Desplazamiento en px en el eje perpendicular al lado elegido (en HoverCardContent). Cero deja la tarjeta centrada en el gatillo."
+          "description": "Desplazamiento en px en el eje perpendicular al lado elegido. Cero deja la tarjeta centrada en el gatillo."
         }
       },
       "extensibilityTitle": "Extensibilidad",
@@ -1096,7 +1096,7 @@
         "vue": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<HoverCard :open-delay=\"500\" :close-delay=\"200\">\n  <HoverCardTrigger as-child>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </HoverCardContent>\n</HoverCard>",
         "svelte": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<HoverCard openDelay={500} closeDelay={200} bind:open>\n  <HoverCardTrigger>\n    {#snippet child({ props })}\n      <a href=\"/users/joana\" {...props}>@joana</a>\n    {/snippet}\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </HoverCardContent>\n</HoverCard>",
         "vanilla": "// HoverCard con delay personalizado y posicionamiento\nconst card = createHoverCard({\n  trigger: gatillo,\n  content: perfil,\n  side: 'right',\n  align: 'start',\n  openDelay: 500,\n  closeDelay: 200,\n  class: 'nds-max-w-xs',\n});\n\n// abrir/cerrar por código, para tour guiado o foco que llega del teclado\ncard.open();",
-        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </ng-template>\n</span>"
+        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<span ndsHoverCard>\n  <a ndsHoverCardTrigger href=\"/users/joana\" [openDelay]=\"500\" [closeDelay]=\"200\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" contentClass=\"nds-max-w-xs\">\n    <!-- contenido -->\n  </ng-template>\n</span>"
       }
     },
     "tokens": {

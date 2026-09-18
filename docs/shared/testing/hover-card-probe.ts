@@ -90,8 +90,10 @@ export async function waitForQuantidade(quantos: number, timeout = 3000): Promis
 }
 
 export async function waitForClosed(contexto = '', timeout = 3000): Promise<void> {
-  // `waitFor` e não asserção seca: fechado, o painel continua no DOM enquanto a
-  // transição de saída roda (`[data-ending-style]`); só depois o portal desmonta.
+  // `waitFor` e não asserção seca. A RAZÃO mudou em 2026-09-17, com a D14: não
+  // existe mais transição de saída para esperar em stack nenhuma. O que sobra é o
+  // desmonte do portal, assíncrono em parte das libs — asserção seca logo depois
+  // do gesto leria o painel ainda montado.
   await waitFor(
     () => {
       if (panelOpen()) throw new Error(`o cartão ainda está aberto ${contexto}`);
@@ -194,8 +196,10 @@ export function painelDoGatilho(trigger: HTMLElement): HTMLElement | null {
  * Todo gatilho ABERTO com o painel dele, pareados.
  *
  * Pelo `data-slot`, e não pelo nome acessível: as cinco stacks rotulam os
- * gatilhos da story dos lados de jeitos diferentes — duas acrescentam
- * `aria-label` — e parear por nome faria a asserção divergir stack a stack, que
+ * gatilhos da story dos lados de jeitos diferentes — UMA acrescenta `aria-label`,
+ * o vanilla, em três pontos das composições; a linha aqui dizia "duas" e a
+ * medição de 2026-09-17 achou uma — e parear por nome faria a asserção divergir
+ * stack a stack, que
  * é exatamente o que uma asserção compartilhada existe para evitar.
  */
 export function paresAbertos(canvasElement: HTMLElement): Array<[HTMLElement, HTMLElement]> {
@@ -264,13 +268,18 @@ export function expectCentradoNoEixoCruzado(
  * de afastar a cena e a comparação entre elas deixaria de responder alguma
  * coisa. É a mesma razão de `expectOndeDiz` ser compartilhado.
  *
+ * O NOME é em inglês porque a catraca `identificador_pt_novo` reprovou a primeira
+ * versão dele em TRÊS stacks de uma vez: o nome de um export compartilhado vira
+ * identificador em todo arquivo que o importa, então ele multiplica dívida em vez
+ * de criar uma.
+ *
  * `transform` e não `margin`: é propriedade mecânica, então não cai no portão de
  * estilo inline, e não reflui o layout que se quer medir. O `resize` é o que
  * cutuca o reposicionamento das libs sem tocar em ROLAGEM — em pelo menos uma
  * delas rolar DISPENSA o cartão em vez de reposicioná-lo. Restaura num `finally`
  * porque o painel Interactions reexecuta a play no mesmo DOM.
  */
-export async function comACenaLongeDaBorda(
+export async function withSceneAwayFromEdge(
   canvasElement: HTMLElement,
   medir: () => void,
 ): Promise<void> {
@@ -278,12 +287,51 @@ export async function comACenaLongeDaBorda(
   try {
     canvasElement.style.transform = 'translateX(240px)';
     window.dispatchEvent(new Event('resize'));
-    await new Promise((resolve) => { setTimeout(resolve, 150); });
+    await waitUntilSettled();
     medir();
   } finally {
     canvasElement.style.transform = anterior;
     window.dispatchEvent(new Event('resize'));
-    await new Promise((resolve) => { setTimeout(resolve, 150); });
+    await waitUntilSettled();
+  }
+}
+
+/**
+ * Espera a coordenada do painel PARAR de mudar, em vez de esperar um prazo.
+ *
+ * Aqui havia `setTimeout(150)`, e 150ms é chute — não é o tempo que a lib leva
+ * para recolocar o painel, é o tempo que pareceu bastar na máquina de quem
+ * escreveu. Medido em 2026-09-18, com uma suíte irmã carregando a máquina: o
+ * passo do eixo cruzado reprovou por **219,8px** onde o defeito plantado causa
+ * 3,9px, e a reconstrução mostrou o painel ainda na posição de ANTES do
+ * deslocamento. A asserção estava certa; a leitura é que era velha.
+ *
+ * Esta é a forma que o CLAUDE.md prescreve para esperar coisa que a lib repinta:
+ * laço de RELÓGIO com prazo. `waitFor` não serve, e por dois motivos — ele
+ * reagenda por observador de mutação, e reposicionar não muta o DOM; e ler
+ * geometria dentro dele força layout a cada tentativa, que é a armadilha que
+ * pendura o arquivo inteiro sem reportar.
+ *
+ * Dois ciclos iguais e não um: a primeira igualdade pode ser o intervalo entre
+ * dois passos da lib.
+ */
+async function waitUntilSettled(deadline = 1200): Promise<void> {
+  const inicio = Date.now();
+  let anterior: number | null = null;
+  let iguais = 0;
+  while (Date.now() - inicio < deadline) {
+    await new Promise((resolve) => { setTimeout(resolve, 30); });
+    const painel = panelOpen();
+    // Arredonda ao décimo: subpixel de três motores de posicionamento oscila na
+    // última casa sem que nada esteja se movendo, e sem isto o laço nunca fecha.
+    const atual = painel ? Math.round(painel.getBoundingClientRect().left * 10) / 10 : null;
+    if (atual !== null && atual === anterior) {
+      iguais += 1;
+      if (iguais >= 2) return;
+    } else {
+      iguais = 0;
+    }
+    anterior = atual;
   }
 }
 
@@ -300,7 +348,7 @@ export async function comACenaLongeDaBorda(
  * `focusVisible: false` é a forma que a plataforma tem de dizer "este foco não é
  * gesto de usuário", que é a frase da D12 quase palavra por palavra.
  */
-export function focarSemGesto(trigger: HTMLElement): void {
+export function focusWithoutGesture(trigger: HTMLElement): void {
   trigger.focus({ focusVisible: false } as FocusOptions);
 }
 
