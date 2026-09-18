@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { managerHref } from '@shared/primitives/manager-href';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsRelatedItem { name: string; description: string; path: string }
 
@@ -16,7 +16,7 @@ const props = defineProps<{
   componentSlug?: string;
 }>();
 
-const title = useTituloDeSecao('relacionados');
+const title = useSectionTitle('relacionados');
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/\s+/g, '-');

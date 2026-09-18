@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsAnalyticsEventItem { event: string; trigger: string; payload: string }
 
@@ -10,7 +10,7 @@
     items: DocsAnalyticsEventItem[];
   } = $props();
 
-  const title = $derived(tituloDeSecao('analytics', $rotulosDeSecao));
+  const title = $derived(sectionTitle('analytics', $sectionLabels));
 </script>
 
 <section id="analytics">

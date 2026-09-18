@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { managerHref } from '@shared/primitives/manager-href';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
 
@@ -41,7 +41,7 @@ function slugify(s: string): string {
   `,
 })
 export class NdsDocsRelated {
-  protected readonly title = tituloDeSecao('relacionados');
+  protected readonly title = sectionTitle('relacionados');
   readonly items = input.required<DocsRelatedItem[]>();
   readonly componentSlug = input<string | undefined>(undefined);
 

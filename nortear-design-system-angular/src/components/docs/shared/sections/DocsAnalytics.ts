@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { NdsCard } from '@/components/ui/card';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsAnalyticsEventItem { event: string; trigger: string; payload: string }
 
@@ -43,7 +43,7 @@ export interface DocsAnalyticsEventItem { event: string; trigger: string; payloa
   `,
 })
 export class NdsDocsAnalytics {
-  protected readonly title = tituloDeSecao('analytics');
+  protected readonly title = sectionTitle('analytics');
   readonly cols = input.required<{ event: string; trigger: string; payload: string }>();
   readonly items = input.required<DocsAnalyticsEventItem[]>();
 }

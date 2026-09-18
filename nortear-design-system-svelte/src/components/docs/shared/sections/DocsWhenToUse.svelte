@@ -2,7 +2,7 @@
   import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface Scenario { s: string; u: string; a: string }
   interface UXRow { element: string; do: string; dont: string; rules?: string }
@@ -31,7 +31,7 @@
     dont: { title: string; items: string[] };
   } = $props();
 
-  const title = $derived(tituloDeSecao('quando-usar', $rotulosDeSecao));
+  const title = $derived(sectionTitle('quando-usar', $sectionLabels));
 </script>
 
 <section id="quando-usar">

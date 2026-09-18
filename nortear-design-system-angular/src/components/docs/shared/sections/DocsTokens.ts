@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@a
 import { NdsCard } from '@/components/ui/card';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsTokenItem { token: string; value: string; description: string }
 
@@ -60,7 +60,7 @@ export interface DocsTokenItem { token: string; value: string; description: stri
   `,
 })
 export class NdsDocsTokens {
-  protected readonly title = tituloDeSecao('tokens');
+  protected readonly title = sectionTitle('tokens');
   readonly cols = input.required<{ token: string; value: string; description: string }>();
   readonly items = input.required<DocsTokenItem[]>();
   readonly customizationTitle = input<string>('');

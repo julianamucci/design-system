@@ -48,7 +48,7 @@ export const DOCS_PAGE_TITLE_ID = 'docs-page-title';
  * `exemplos` está no mapa sem uso hoje: o `ui.json` declara `nav.examples`, e
  * seção que nasça com esse id já encontra o rótulo pronto.
  */
-export const CHAVE_DE_ROTULO_POR_SECAO: Readonly<Record<string, string>> = Object.freeze({
+export const SECTION_LABEL_KEY_BY_ID: Readonly<Record<string, string>> = Object.freeze({
   demonstracao: 'nav.demonstration',
   anatomia: 'nav.anatomy',
   'quando-usar': 'nav.usage',
@@ -75,6 +75,6 @@ export const CHAVE_DE_ROTULO_POR_SECAO: Readonly<Record<string, string>> = Objec
  * tela e cobra correção, em vez de cair num rótulo genérico que esconderia a
  * seção nova atrás de uma palavra errada.
  */
-export function chaveDeRotuloDaSecao(id: string): string | undefined {
-  return CHAVE_DE_ROTULO_POR_SECAO[id];
+export function sectionLabelKey(id: string): string | undefined {
+  return SECTION_LABEL_KEY_BY_ID[id];
 }

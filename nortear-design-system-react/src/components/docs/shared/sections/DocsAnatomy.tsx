@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { ComponentDemo } from '@/components/ComponentDemo';
 import { CodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
@@ -20,7 +20,7 @@ export function DocsAnatomy({ items,
   copyLabel,
   copiedLabel,
 }: DocsAnatomyProps) {
-  const title = useTituloDeSecao('anatomia');
+  const title = useSectionTitle('anatomia');
   return (
     <section id="anatomia">
       <h2 className="nds-section-title">{title}</h2>

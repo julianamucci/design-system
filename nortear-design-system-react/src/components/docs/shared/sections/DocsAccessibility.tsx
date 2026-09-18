@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { Card } from '@/components/ui/card';
 import DOMPurify from 'dompurify';
 
@@ -31,7 +31,7 @@ export function DocsAccessibility({ summary,
   screenReaderItems,
   contrast,
 }: DocsAccessibilityProps) {
-  const title = useTituloDeSecao('acessibilidade');
+  const title = useSectionTitle('acessibilidade');
   return (
     <section id="acessibilidade">
       <h2 className="nds-section-title">{title}</h2>

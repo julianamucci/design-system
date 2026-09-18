@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ComponentDemo from '@/components/ComponentDemo.vue';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 /**
  * DocsDemonstration — wrapper da seção "Demonstração".
@@ -20,7 +20,7 @@ import { useTituloDeSecao } from './useTituloDeSecao';
  */
 defineProps<{ componentSlug?: string }>();
 
-const title = useTituloDeSecao('demonstracao');
+const title = useSectionTitle('demonstracao');
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import ComponentDemo from '@/components/ComponentDemo.svelte';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   /**
    * DocsDemonstration — wrapper da seção "Demonstração".
@@ -24,7 +24,7 @@
     componentSlug?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao('demonstracao', $rotulosDeSecao));
+  const title = $derived(sectionTitle('demonstracao', $sectionLabels));
 </script>
 
 <section id="demonstracao" data-track="demo" data-track-container="true" data-track-id="page:demonstracao:demo">

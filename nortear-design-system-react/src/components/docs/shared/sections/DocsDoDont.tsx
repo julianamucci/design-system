@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import React from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -16,7 +16,7 @@ export interface DocsDoDontProps {
 }
 
 export function DocsDoDont({ pairs }: DocsDoDontProps) {
-  const title = useTituloDeSecao('do-dont');
+  const title = useSectionTitle('do-dont');
   return (
     <section id="do-dont">
       <h2 className="nds-section-title">{title}</h2>

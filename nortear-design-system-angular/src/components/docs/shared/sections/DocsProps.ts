@@ -8,7 +8,7 @@ import { NdsCard } from '@/components/ui/card';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsPropItem {
   name: string;
@@ -105,7 +105,7 @@ export interface DocsPropsTableDef {
   `,
 })
 export class NdsDocsProps {
-  protected readonly title = tituloDeSecao('propriedades');
+  protected readonly title = sectionTitle('propriedades');
   readonly tables = input.required<DocsPropsTableDef[]>();
   readonly interfaceCode = input<string>('');
   readonly extensibilityTitle = input<string>('');

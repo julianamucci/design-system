@@ -1,4 +1,4 @@
-import { tituloDeSecao } from './tituloDeSecao';
+import { sectionTitle } from './sectionTitle';
 /*
  * audit-ignore: card-nested — os três cartões desta seção são IRMÃOS, não
  * aninhados: quem os agrupa é um `div` de layout, sem raio e sem padding. Não
@@ -41,7 +41,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = tituloDeSecao('testes');
+  h2.textContent = sectionTitle('testes');
   section.appendChild(h2);
 
   const container = document.createElement('div');

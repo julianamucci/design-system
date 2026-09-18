@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsVariantItem {
   name: string;
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<{
 
 // Getter e não `props.id`: o container serve Variantes, Tamanhos e Composições,
 // e o título tem de acompanhar o id que o call site escolheu.
-const title = useTituloDeSecao(() => props.id);
+const title = useSectionTitle(() => props.id);
 
 const openStates = ref<Record<number, boolean>>({});
 function toggleCode(i: number) {

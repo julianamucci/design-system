@@ -1,4 +1,4 @@
-import { tituloDeSecao } from './tituloDeSecao';
+import { sectionTitle } from './sectionTitle';
 import { managerHref } from '@shared/primitives/manager-href';
 
 import DOMPurify from 'dompurify';
@@ -25,7 +25,7 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = tituloDeSecao('relacionados');
+  h2.textContent = sectionTitle('relacionados');
   section.appendChild(h2);
 
   const grid = document.createElement('div');

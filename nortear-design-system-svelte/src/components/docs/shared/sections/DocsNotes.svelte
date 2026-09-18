@@ -1,7 +1,7 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
   import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsNoteItem { title: string; content: string }
 
@@ -19,7 +19,7 @@
     componentSlug?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao('notas', $rotulosDeSecao));
+  const title = $derived(sectionTitle('notas', $sectionLabels));
 
   function trackId(i: number): string | undefined {
     return componentSlug ? `${componentSlug}:link:notes-${i + 1}` : undefined;

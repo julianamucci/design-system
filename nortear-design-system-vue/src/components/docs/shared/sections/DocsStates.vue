@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsStateItem { label: string; trigger: string; behavior: string }
 
@@ -23,7 +23,7 @@ defineProps<{
   items: DocsStateItem[];
 }>();
 
-const title = useTituloDeSecao('estados');
+const title = useSectionTitle('estados');
 </script>
 
 <template>

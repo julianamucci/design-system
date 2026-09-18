@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { NdsCard } from '@/components/ui/card';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsStateItem { label: string; trigger: string; behavior: string }
 
@@ -41,7 +41,7 @@ export interface DocsStateItem { label: string; trigger: string; behavior: strin
   `,
 })
 export class NdsDocsStates {
-  protected readonly title = tituloDeSecao('estados');
+  protected readonly title = sectionTitle('estados');
   readonly cols = input.required<{ state: string; trigger: string; behavior: string }>();
   readonly items = input.required<DocsStateItem[]>();
 }

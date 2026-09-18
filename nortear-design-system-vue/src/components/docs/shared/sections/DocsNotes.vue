@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DOMPurify from 'dompurify';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsNoteItem { title: string; content: string }
 
@@ -19,7 +19,7 @@ const props = defineProps<{
   componentSlug?: string;
 }>();
 
-const title = useTituloDeSecao('notas');
+const title = useSectionTitle('notas');
 
 function trackId(i: number): string | undefined {
   return props.componentSlug ? `${props.componentSlug}:link:notes-${i + 1}` : undefined;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsKeyboardItem { key: string; description: string }
 
@@ -26,7 +26,7 @@
     contrast?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao('acessibilidade', $rotulosDeSecao));
+  const title = $derived(sectionTitle('acessibilidade', $sectionLabels));
 </script>
 
 <section id="acessibilidade">

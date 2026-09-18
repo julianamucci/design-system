@@ -2,7 +2,7 @@
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsTokenItem { token: string; value: string; description: string }
 
@@ -30,7 +30,7 @@ withDefaults(defineProps<{
   language: 'css',
 });
 
-const title = useTituloDeSecao('tokens');
+const title = useSectionTitle('tokens');
 </script>
 
 <template>

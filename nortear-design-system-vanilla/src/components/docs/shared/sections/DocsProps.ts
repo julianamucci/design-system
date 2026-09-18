@@ -1,4 +1,4 @@
-import { tituloDeSecao } from './tituloDeSecao';
+import { sectionTitle } from './sectionTitle';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createCodeBlock } from '@/components/ui/code-block';
@@ -74,7 +74,7 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = tituloDeSecao('propriedades');
+  h2.textContent = sectionTitle('propriedades');
   section.appendChild(h2);
 
   const container = document.createElement('div');

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsKeyboardItem { key: string; description: string }
 
@@ -24,7 +24,7 @@ withDefaults(defineProps<{
   contrast: '',
 });
 
-const title = useTituloDeSecao('acessibilidade');
+const title = useSectionTitle('acessibilidade');
 </script>
 
 <template>

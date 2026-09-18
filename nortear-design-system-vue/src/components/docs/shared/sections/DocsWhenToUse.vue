@@ -2,7 +2,7 @@
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsWhenToUseScenario { s?: string; u?: string; a?: string; scenario?: string; use?: string; alternative?: string }
 interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
@@ -38,7 +38,7 @@ const props = defineProps<{
   dont: { title: string; items: string[] };
 }>();
 
-const title = useTituloDeSecao('quando-usar');
+const title = useSectionTitle('quando-usar');
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsStateItem { label: string; trigger: string; behavior: string }
 
@@ -21,7 +21,7 @@
     items: DocsStateItem[];
   } = $props();
 
-  const title = $derived(tituloDeSecao('estados', $rotulosDeSecao));
+  const title = $derived(sectionTitle('estados', $sectionLabels));
 </script>
 
 <section id="estados">

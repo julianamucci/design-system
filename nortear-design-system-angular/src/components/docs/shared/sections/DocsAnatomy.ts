@@ -8,7 +8,7 @@ import { NdsComponentDemo } from '@/components/ComponentDemo';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 @Component({
   selector: 'nds-docs-anatomy',
@@ -48,7 +48,7 @@ import { tituloDeSecao } from './titulo-de-secao';
   `,
 })
 export class NdsDocsAnatomy {
-  protected readonly title = tituloDeSecao('anatomia');
+  protected readonly title = sectionTitle('anatomia');
   readonly items = input.required<string[]>();
   readonly structureCode = input.required<string>();
   readonly structureLabel = input<string>('');

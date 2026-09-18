@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import {
@@ -73,7 +73,7 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
 }
 
 export function DocsProps({ tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'tsx', copyLabel, copiedLabel }: DocsPropsProps) {
-  const title = useTituloDeSecao('propriedades');
+  const title = useSectionTitle('propriedades');
   return (
     <section id="propriedades">
       <h2 className="nds-section-title">{title}</h2>

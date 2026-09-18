@@ -4,7 +4,7 @@
   import { CodeBlock } from '@/components/ui/code-block';
   import { Button } from '@/components/ui/button';
   import DOMPurify from 'dompurify';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsVariantItem {
     name: string;
@@ -38,7 +38,7 @@
     copiedLabel?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao(id, $rotulosDeSecao));
+  const title = $derived(sectionTitle(id, $sectionLabels));
 
   let openStates = $state<Record<number, boolean>>({});
   function toggleCode(i: number) {

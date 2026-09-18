@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { CodeBlock } from '@/components/ui/code-block';
 
 export interface DocsImportProps {
@@ -33,7 +33,7 @@ export function DocsImport({ description,
   copyLabel,
   copiedLabel,
 }: DocsImportProps) {
-  const title = useTituloDeSecao('importacao');
+  const title = useSectionTitle('importacao');
   const track = (id: string) =>
     componentSlug
       ? {

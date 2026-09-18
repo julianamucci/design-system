@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -34,7 +34,7 @@ export interface DocsStatesProps {
 }
 
 export function DocsStates({ cols, items }: DocsStatesProps) {
-  const title = useTituloDeSecao('estados');
+  const title = useSectionTitle('estados');
   return (
     <section id="estados">
       <h2 className="nds-section-title">{title}</h2>

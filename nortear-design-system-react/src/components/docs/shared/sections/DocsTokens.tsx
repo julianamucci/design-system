@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import {
@@ -28,7 +28,7 @@ export interface DocsTokensProps {
 }
 
 export function DocsTokens({ cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: DocsTokensProps) {
-  const title = useTituloDeSecao('tokens');
+  const title = useSectionTitle('tokens');
   return (
     <section id="tokens">
       <h2 className="nds-section-title">{title}</h2>

@@ -3,7 +3,7 @@
   import { Card } from '@/components/ui/card';
   import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsPropItem {
     name: string; type: string; defaultValue: string; required: string; description: string;
@@ -26,7 +26,7 @@
     copiedLabel?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao('propriedades', $rotulosDeSecao));
+  const title = $derived(sectionTitle('propriedades', $sectionLabels));
 </script>
 
 <section id="propriedades">

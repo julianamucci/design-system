@@ -1,6 +1,6 @@
 import uiTranslations from '@/i18n/ui.json';
 import { createTranslation } from '@/lib/i18n';
-import { chaveDeRotuloDaSecao } from '@shared/primitives/docs-page-landmarks';
+import { sectionLabelKey } from '@shared/primitives/docs-page-landmarks';
 
 const { t } = createTranslation(uiTranslations as Record<string, unknown>);
 
@@ -21,7 +21,7 @@ const { t } = createTranslation(uiTranslations as Record<string, unknown>);
  * Id desconhecido devolve o próprio id: ele aparece na tela e cobra o mapa, o
  * que é preferível a um rótulo genérico escondendo a seção nova.
  */
-export function tituloDeSecao(id: string): string {
-  const chave = chaveDeRotuloDaSecao(id);
-  return chave ? t(chave) : id;
+export function sectionTitle(id: string): string {
+  const key = sectionLabelKey(id);
+  return key ? t(key) : id;
 }

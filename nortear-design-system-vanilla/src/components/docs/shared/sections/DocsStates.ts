@@ -1,4 +1,4 @@
-import { tituloDeSecao } from './tituloDeSecao';
+import { sectionTitle } from './sectionTitle';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
@@ -26,7 +26,7 @@ export function createDocsStates(props: DocsStatesProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = tituloDeSecao('estados');
+  h2.textContent = sectionTitle('estados');
 
   const wrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
 

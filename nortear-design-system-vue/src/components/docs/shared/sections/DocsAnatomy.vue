@@ -2,7 +2,7 @@
 import DOMPurify from 'dompurify';
 import ComponentDemo from '@/components/ComponentDemo.vue';
 import { CodeBlock } from '@/components/ui/code-block';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 withDefaults(defineProps<{
   items: string[];
@@ -16,7 +16,7 @@ withDefaults(defineProps<{
   language: 'vue',
 });
 
-const title = useTituloDeSecao('anatomia');
+const title = useSectionTitle('anatomia');
 </script>
 
 <template>

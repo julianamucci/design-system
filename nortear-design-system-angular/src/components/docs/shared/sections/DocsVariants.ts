@@ -12,7 +12,7 @@ import { NdsButton } from '@/components/ui/button';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsVariantItem {
   name: string;
@@ -92,7 +92,7 @@ export class NdsDocsVariants {
   /** Nota introdutória (HTML inline permitido) — chave `variants.note`. */
   readonly note = input<string>('');
   readonly id = input<string>('variantes');
-  protected readonly title = tituloDeSecao(this.id);
+  protected readonly title = sectionTitle(this.id);
   /** Slug do componente para o `data-track-id` dos toggles. */
   readonly componentSlug = input<string | undefined>(undefined);
   readonly language = input<string>('ts');

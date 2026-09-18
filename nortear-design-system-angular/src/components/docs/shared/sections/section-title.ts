@@ -1,7 +1,7 @@
 import { computed, isSignal, type Signal } from '@angular/core';
 import { useTranslation } from '@/lib/i18n';
 import uiTranslations from '@/i18n/ui.json';
-import { chaveDeRotuloDaSecao } from '@shared/primitives/docs-page-landmarks';
+import { sectionLabelKey } from '@shared/primitives/docs-page-landmarks';
 
 const { t: tUi } = useTranslation(uiTranslations as Record<string, unknown>);
 
@@ -26,10 +26,10 @@ const { t: tUi } = useTranslation(uiTranslations as Record<string, unknown>);
  * Id desconhecido devolve o próprio id: ele aparece na tela e cobra o mapa, o
  * que é preferível a um rótulo genérico escondendo a seção nova.
  */
-export function tituloDeSecao(id: string | Signal<string>): Signal<string> {
+export function sectionTitle(id: string | Signal<string>): Signal<string> {
   return computed(() => {
-    const atual = isSignal(id) ? id() : id;
-    const chave = chaveDeRotuloDaSecao(atual);
-    return chave ? tUi(chave) : atual;
+    const current = isSignal(id) ? id() : id;
+    const key = sectionLabelKey(current);
+    return key ? tUi(key) : current;
   });
 }

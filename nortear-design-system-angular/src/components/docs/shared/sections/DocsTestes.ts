@@ -9,7 +9,7 @@ import { NdsCard } from '@/components/ui/card';
 import { NdsBadge, type BadgeVariant } from '@/components/ui/badge';
 import { prioridadeVariant } from '@shared/primitives/badge-priority';
 
-import { tituloDeSecao } from './titulo-de-secao';
+import { sectionTitle } from './section-title';
 
 export interface DocsTestItem { action: string; result: string; priority: string }
 export interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -141,7 +141,7 @@ export interface DocsTestesVisual {
   `,
 })
 export class NdsDocsTestes {
-  protected readonly title = tituloDeSecao('testes');
+  protected readonly title = sectionTitle('testes');
   readonly functional = input.required<DocsTestesFunctional>();
   readonly accessibility = input.required<DocsTestesAccessibility>();
   readonly visual = input.required<DocsTestesVisual>();

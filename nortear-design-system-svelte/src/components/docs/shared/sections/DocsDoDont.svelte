@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { Card } from '@/components/ui/card';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsDoDontPair {
     doLabel: string;
@@ -14,7 +14,7 @@
 
   const { pairs }: { pairs: DocsDoDontPair[] } = $props();
 
-  const title = $derived(tituloDeSecao('do-dont', $rotulosDeSecao));
+  const title = $derived(sectionTitle('do-dont', $sectionLabels));
 </script>
 
 <section id="do-dont">

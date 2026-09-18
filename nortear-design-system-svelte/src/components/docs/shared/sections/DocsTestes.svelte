@@ -9,7 +9,7 @@
   import { Card } from '@/components/ui/card';
   import { Badge } from '@/components/ui/badge';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsTestItem { action: string; result: string; priority: string }
   interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -21,7 +21,7 @@
     visual: { title: string; description?: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
   } = $props();
 
-  const title = $derived(tituloDeSecao('testes', $rotulosDeSecao));
+  const title = $derived(sectionTitle('testes', $sectionLabels));
 
   // A prioridade escolhe uma VARIANTE do badge — alta é destructive, média é
   // warning, baixa é info. O mapa antigo listava só português e inglês, então em

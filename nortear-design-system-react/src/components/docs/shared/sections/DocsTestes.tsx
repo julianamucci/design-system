@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 /*
  * audit-ignore: card-nested — os três cartões desta seção são IRMÃOS, não
  * aninhados: quem os agrupa é um `div` de layout, sem raio e sem padding. Não
@@ -67,7 +67,7 @@ function PriorityBadge({ priority }: { priority: string }) {
 }
 
 export function DocsTestes({ functional, accessibility, visual }: DocsTestesProps) {
-  const title = useTituloDeSecao('testes');
+  const title = useSectionTitle('testes');
   return (
     <section id="testes">
       <h2 className="nds-section-title">{title}</h2>

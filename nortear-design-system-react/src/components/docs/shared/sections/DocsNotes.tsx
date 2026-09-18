@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import DOMPurify from 'dompurify';
 
@@ -21,7 +21,7 @@ export interface DocsNotesProps {
 }
 
 export function DocsNotes({ items, componentSlug }: DocsNotesProps) {
-  const title = useTituloDeSecao('notas');
+  const title = useSectionTitle('notas');
   return (
     <section id="notas">
       <h2 className="nds-section-title">{title}</h2>

@@ -1,4 +1,4 @@
-import { tituloDeSecao } from './tituloDeSecao';
+import { sectionTitle } from './sectionTitle';
 import DOMPurify from 'dompurify';
 import { createAlert, createAlertTitle, createAlertDescription } from '@/components/ui/alert';
 
@@ -22,7 +22,7 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = tituloDeSecao('notas');
+  h2.textContent = sectionTitle('notas');
   section.appendChild(h2);
 
   const container = document.createElement('div');

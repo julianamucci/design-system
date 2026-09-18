@@ -1,6 +1,6 @@
 <script lang="ts">
   import { managerHref } from '@shared/primitives/manager-href';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsRelatedItem { name: string; description: string; path: string }
 
@@ -16,7 +16,7 @@
     componentSlug?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao('relacionados', $rotulosDeSecao));
+  const title = $derived(sectionTitle('relacionados', $sectionLabels));
 
   function slugify(s: string) {
     return s.toLowerCase().replace(/\s+/g, '-');

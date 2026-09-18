@@ -1,4 +1,4 @@
-import { tituloDeSecao } from './tituloDeSecao';
+import { sectionTitle } from './sectionTitle';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
@@ -34,7 +34,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = tituloDeSecao('quando-usar');
+  h2.textContent = sectionTitle('quando-usar');
 
   const card = createCard({ className: 'nds-p-4 nds-stack' });
   card.dataset.spacing = 'lg';

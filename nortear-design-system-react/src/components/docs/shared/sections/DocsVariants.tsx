@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import React, { useState } from 'react';
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
@@ -88,7 +88,7 @@ function VariantCard({ item, componentSlug, language, copyLabel, copiedLabel }: 
 }
 
 export function DocsVariants({ items, id = "variantes", note, componentSlug, language = 'tsx', copyLabel, copiedLabel }: DocsVariantsProps) {
-  const title = useTituloDeSecao(id);
+  const title = useSectionTitle(id);
   return (
     <section id={id}>
       <h2 className="nds-section-title">{title}</h2>

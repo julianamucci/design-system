@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { managerHref } from '@shared/primitives/manager-href';
 
 export interface DocsRelatedItem {
@@ -23,7 +23,7 @@ function slugify(s: string) {
 }
 
 export function DocsRelated({ items, componentSlug }: DocsRelatedProps) {
-  const title = useTituloDeSecao('relacionados');
+  const title = useSectionTitle('relacionados');
   return (
     <section id="relacionados">
       <h2 className="nds-section-title">{title}</h2>

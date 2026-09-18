@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 
 interface DocsPropItem {
   name: string;
@@ -33,7 +33,7 @@ withDefaults(defineProps<{
   language: 'vue',
 });
 
-const title = useTituloDeSecao('propriedades');
+const title = useSectionTitle('propriedades');
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -59,7 +59,7 @@ export interface DocsWhenToUseProps {
 }
 
 export function DocsWhenToUse({ guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: DocsWhenToUseProps) {
-  const title = useTituloDeSecao('quando-usar');
+  const title = useSectionTitle('quando-usar');
   return (
     <section id="quando-usar">
       <h2 className="nds-section-title">{title}</h2>

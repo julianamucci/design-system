@@ -2,7 +2,7 @@
   import { Card } from '@/components/ui/card';
   import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
+  import { sectionLabels, sectionTitle } from './sectionTitle';
 
   interface DocsTokenItem { token: string; value: string; description: string }
 
@@ -27,7 +27,7 @@
     copiedLabel?: string;
   } = $props();
 
-  const title = $derived(tituloDeSecao('tokens', $rotulosDeSecao));
+  const title = $derived(sectionTitle('tokens', $sectionLabels));
 </script>
 
 <section id="tokens">

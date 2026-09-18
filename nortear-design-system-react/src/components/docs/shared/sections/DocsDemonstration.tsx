@@ -1,4 +1,4 @@
-import { useTituloDeSecao } from './useTituloDeSecao';
+import { useSectionTitle } from './useSectionTitle';
 import React from 'react';
 import { ComponentDemo } from '@/components/ComponentDemo';
 
@@ -24,7 +24,7 @@ export interface DocsDemonstrationProps {
 }
 
 export function DocsDemonstration({ children }: DocsDemonstrationProps) {
-  const title = useTituloDeSecao('demonstracao');
+  const title = useSectionTitle('demonstracao');
   return (
     <section
       id="demonstracao"
