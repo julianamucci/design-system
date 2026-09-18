@@ -175,9 +175,40 @@ Drawer no mesmo dia, por decisão da dona (`18-overlay.md` §Analytics).
 nos seis consumidores do `positionFloating` agora").
 **Medição**: o vanilla calculava a posição UMA vez, ao abrir. Com o cartão
 aberto, rolar a página — inclusive dentro de um contêiner — ou redimensionar a
-janela deixava o cartão parado enquanto o gatilho se movia. As outras quatro
-stacks nunca tiveram o defeito: as quatro libs reposicionam sozinhas
-(`autoUpdate` do floating-ui).
+janela deixava o cartão parado enquanto o gatilho se movia.
+
+**A frase que estava aqui — "as outras quatro stacks nunca tiveram o defeito: as
+quatro libs reposicionam sozinhas" — era GENERALIZAÇÃO, e caiu em 2026-09-18.**
+Ela foi escrita medindo o vanilla e presumindo as outras quatro, porque todas
+usam `autoUpdate` do floating-ui em algum degrau. Medidas uma a uma, são
+**quatro contra uma**:
+
+| stack | ancestral rolável rola | ponto medido |
+|---|---|---|
+| vanilla | **reposiciona** | `lib/floating.ts` — `scrollAncestors` + `autoUpdateFloating` |
+| react · base-ui | **reposiciona** | não há ouvinte de rolagem que dispense |
+| svelte · bits-ui | **reposiciona** | `use-floating-layer.svelte.js:191-201` → `autoUpdate` com `ancestorScroll` no default |
+| angular · radix-ng | **reposiciona** | `radix-ng-primitives-popper.mjs:596` → `autoUpdate`, `updatePositionStrategy` `'optimized'` |
+| vue · reka-ui | **DISPENSA o cartão** | `HoverCardContentImpl.js:150-153` — escuta `scroll` na captura e chama `onDismiss()` |
+
+**A exceção do vue é da LIB e fica declarada, não alinhada.** Rolar um ancestral
+do gatilho fecha o cartão naquela stack, e o usuário vê o cartão sumir onde as
+outras quatro o veem acompanhar. Não é divergência de API — é comportamento —,
+mas alinhar exigiria interceptar o ouvinte de rolagem da reka antes que ele
+dispense, e a decisão de pagar esse preço não é desta passagem.
+
+**O que isto ensina sobre o documento, e é a parte que vale guardar**: a frase
+generalizava a partir de UMA medição e de uma semelhança de implementação
+("todas usam floating-ui"), e sobreviveu porque **nenhuma story afirmava o
+comportamento nas outras quatro** — a D10 nasceu com portão só no vanilla. O
+portão que falta é sempre o que deixa a frase envelhecer.
+
+**Nenhuma das cinco afirma que rolar NÃO fecha o cartão**, e essa é a asserção
+que separaria reposicionar de dispensar. As cinco sondas cutucam o
+reposicionamento (quatro por `resize`, uma por `scroll`), e em todas as libs que
+reposicionam os dois eventos passam pelo MESMO `update` do mesmo `autoUpdate` —
+então o cutucão atual prova reposicionamento, e não prova sobrevivência à
+rolagem. Fica registrado como o próximo degrau possível deste portão.
 **Mecanismo**: `autoUpdateFloating` (`nortear-design-system-vanilla/src/lib/floating.ts`)
 escuta rolagem em cada ancestral rolável do gatilho e na janela, redimensionamento
 da janela, e mudança de tamanho do gatilho e do cartão, agrupando por quadro. É
