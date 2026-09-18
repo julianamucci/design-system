@@ -787,9 +787,17 @@ ação do rodapé; ao fechar, o foco volta ao gatilho.
 DUAS portas fazendo isso. A camada de token: a folha declara duração só por
 `var(--duration-*)`, e `docs/shared/tokens/motion.css:102` zera a escada inteira
 sob a preferência (mecanismo por extenso em `hover-card.md` §8). E a própria
-folha: `dialog.css:293-298` declara `animation: none` no véu e no painel sob
-`prefers-reduced-motion`. Nenhuma story das cinco stacks afirma o movimento
-reduzido.
+folha, sob `prefers-reduced-motion`. Nenhuma story das cinco stacks afirma o
+movimento reduzido.
+
+**A segunda porta esteve FECHADA até 2026-09-17, e este parágrafo afirmava o
+contrário.** Ele dizia que `dialog.css:293-298` desligava a animação do véu e do
+painel; o bloco existia e não desligava nada. As quatro animações são declaradas
+em `.nds-dialog-overlay[data-open]` e irmãs, (0,2,0), e a guarda mirava a classe
+nua, (0,1,0) — `@media` não acrescenta especificidade, então a declaração vencia.
+Quem parava o diálogo era só a camada de token, e era ela sozinha o tempo todo.
+A guarda agora repete os atributos da declaração. Portão:
+`guarda_de_movimento_inerte`.
 
 ## 9. Analytics
 

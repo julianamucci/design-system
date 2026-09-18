@@ -353,11 +353,25 @@
 }
 
 /* Reduced motion do Sheet. O véu é compartilhado com o Drawer, e a folha dele
- * repete a regra para o painel próprio — cada arquivo desliga o que anima. */
+ * repete a regra para o painel próprio — cada arquivo desliga o que anima.
+ *
+ * O segundo bloco existe porque as quatro entradas por lado são declaradas em
+ * `.nds-sheet-content[data-side="…"]` (0,2,0), e a guarda da classe nua (0,1,0)
+ * perdia para elas na cascata — `@media` não acrescenta especificidade. O
+ * painel deslizava pela lateral inteira para quem pediu menos movimento, que é
+ * exatamente o movimento grande que a preferência existe para evitar. Medido em
+ * 2026-09-17; portão `guarda_de_movimento_inerte`. */
 @media (prefers-reduced-motion: reduce) {
   .nds-sheet-overlay,
   .nds-sheet-content {
     animation: none;
     transition: none;
+  }
+
+  .nds-sheet-content[data-side="right"],
+  .nds-sheet-content[data-side="left"],
+  .nds-sheet-content[data-side="top"],
+  .nds-sheet-content[data-side="bottom"] {
+    animation: none;
   }
 }

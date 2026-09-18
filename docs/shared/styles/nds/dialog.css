@@ -290,9 +290,25 @@
   right: var(--spacing-2);
 }
 
+/* A guarda repete os ATRIBUTOS da declaração, e isso não é verbosidade.
+ *
+ * `@media` não acrescenta especificidade: uma guarda em `.nds-dialog-overlay`
+ * (0,1,0) perde na cascata para `.nds-dialog-overlay[data-open]` (0,2,0), que é
+ * onde a animação mora. O bloco ficava lá, anunciando proteção, e o diálogo
+ * continuava aparecendo com zoom para quem pediu menos movimento — medido em
+ * 2026-09-17. Quem de fato parava o movimento era a camada de token, que zera a
+ * escada de `--duration-*` sob a preferência; a guarda por folha é a segunda
+ * linha, e segunda linha que não segura é pior que ausente.
+ *
+ * Portão: `guarda_de_movimento_inerte`, em `scripts/audit.mjs`. Estado novo que
+ * ganhe animação aqui em cima precisa entrar nesta lista, e o portão cobra. */
 @media (prefers-reduced-motion: reduce) {
-  .nds-dialog-overlay,
-  .nds-dialog-content {
+  .nds-dialog-overlay[data-open],
+  .nds-dialog-overlay[data-state="open"],
+  .nds-dialog-overlay[data-closed],
+  .nds-dialog-content[data-open],
+  .nds-dialog-content[data-state="open"],
+  .nds-dialog-content[data-closed] {
     animation: none;
   }
 }

@@ -4366,13 +4366,28 @@ function auditInvariantesOverlayCss() {
     for (const r of regrasCss(resto)) {
       if (r.sel.startsWith('@') || /^\s*(?:from|to|\d+%)\s*$/.test(r.sel)) continue;
       for (const prop of ['transition', 'animation']) {
-        const decl = new RegExp(`(?:^|[\\s;])${prop}(?:-[a-z]+)?\\s*:\\s*([^;]*)`).exec(r.corpo);
-        if (!decl || /^\s*none\s*$/.test(decl[1])) continue;
-        const valor = decl[1];
-        if (/var\(--duration/.test(valor)) continue; // a camada de token alcança
+        // Só o atalho e os longhands que CRIAM movimento contam. `animation-delay`
+        // sozinho não anima coisa alguma: sem `animation-name` não há o que
+        // atrasar, e a guarda que zera o atalho já resolveu. Contá-lo fazia a
+        // regra cobrar o escalonamento dos três pontos de espera do
+        // `agent-run.css` — onde `.nds-thinking-dots > span` recebe
+        // `animation: none` e os `:nth-child` só deslocam o início.
+        const decls = [...r.corpo.matchAll(new RegExp(`(?:^|[\\s;])${prop}(-[a-z-]+)?\\s*:\\s*([^;]*)`, 'g'))]
+          .filter(([, longhand, v]) => (!longhand || /^-(name|duration|property)$/.test(longhand))
+            && !/^\s*none\s*$/.test(v));
+        if (!decls.length) continue;
+        const valor = decls[0][2];
+        // A camada de token (`docs/shared/tokens/motion.css`) zera a escada de
+        // `--duration-*` sob a preferência, então movimento medido por token
+        // PARA mesmo sem guarda por folha. O que ela não conserta é guarda que
+        // EXISTE, mira a classe e perde na cascata: essa anuncia proteção que
+        // não dá, e sobrevive a toda leitura de quem procura por ela. Por isso o
+        // token deixa de ser motivo para desistir aqui e passa a ser só o que
+        // decide QUAL das duas regras cobra — ver o desfecho do laço abaixo.
+        const porToken = /var\(--duration/.test(valor);
         const temTempo = [...valor.matchAll(/(?:^|[\s,(])(\d+(?:\.\d+)?)(m?s)(?=$|[\s,)])/g)]
           .some((x) => parseFloat(x[1]) > 0);
-        if (!temTempo) continue;
+        if (!porToken && !temTempo) continue;
 
         for (const alvo of r.sel.split(',').map((x) => x.trim()).filter(Boolean)) {
           if (MOVIMENTO_SEM_GUARDA_OK[`${arquivo}|${alvo}`]) continue;
@@ -4384,14 +4399,36 @@ function auditInvariantesOverlayCss() {
               && (especificidadeCss(z.sel).join() !== especificidadeCss(alvo).join() || z.fim > r.index),
           );
           if (eficaz) continue;
+
+          // Guarda presente que PERDE na cascata. Cobra com token ou sem ele: o
+          // defeito aqui não é o movimento seguir (com token, não segue) — é a
+          // folha declarar uma proteção inerte. Medido em 2026-09-17 em
+          // `dialog.css`, `dropdown-menu.css` e `sheet.css`, onde a guarda mirava
+          // a classe nua (0,1,0) contra a animação declarada em `[data-open]` /
+          // `[data-side]` (0,2,0): doze declarações de movimento, nenhuma
+          // desligada pelo bloco que dizia desligá-las. `@media` não acrescenta
+          // especificidade, e por isso nada nesta casa via o defeito.
+          if (candidatas.length) {
+            violations.push({
+              category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+              file: rel, line: linhaDe(r.index), rule: 'guarda_de_movimento_inerte',
+              message: `\`${alvo}\` declara ${prop} e o bloco de prefers-reduced-motion desta folha mira `
+                + `\`${candidatas[0].sel}\`, que NÃO vence na cascata (especificidade menor, ou igual e `
+                + 'antes no arquivo). A guarda não desliga o que diz desligar'
+                + (porToken
+                  ? ' — hoje quem para o movimento é a camada de token, e a guarda por folha é decorativa'
+                  : ''),
+            });
+            continue;
+          }
+
+          if (porToken) continue; // sem guarda, mas a escada de token alcança
+
           violations.push({
             category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
             file: rel, line: linhaDe(r.index), rule: 'movimento_sem_guarda_eficaz',
-            message: candidatas.length
-              ? `\`${alvo}\` declara ${prop} com duração literal e a guarda de prefers-reduced-motion `
-                + 'NÃO vence (especificidade menor, ou vem antes no arquivo com especificidade igual)'
-              : `\`${alvo}\` declara ${prop} com duração literal e não tem guarda de `
-                + 'prefers-reduced-motion — a camada de token só alcança `var(--duration-*)`',
+            message: `\`${alvo}\` declara ${prop} com duração literal e não tem guarda de `
+              + 'prefers-reduced-motion — a camada de token só alcança `var(--duration-*)`',
           });
         }
       }

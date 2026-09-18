@@ -99,12 +99,11 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nds-calendar-nav-btn,
-  .nds-calendar-day-btn {
-    transition: none;
-  }
-}
+/* A guarda de `.nds-calendar-nav-btn` e `.nds-calendar-day-btn` NÃO mora aqui —
+ * ela está no fim do arquivo, depois das duas classes. Estava neste ponto até
+ * 2026-09-17, e era inerte: as duas são declaradas mais abaixo (`:200` e `:476`)
+ * com a MESMA especificidade, e em empate quem vence é quem vem depois. O bloco
+ * ficava anunciando uma proteção que a cascata já tinha descartado. */
 
 /*
  * ─── nds-calendar composite ─────────────────────────────────────────────────
@@ -771,5 +770,18 @@
   .nds-calendar-select option:checked {
     background-color: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
+  }
+}
+
+/* Movimento reduzido do calendário composto.
+ *
+ * Fica no FIM de propósito: as duas classes abaixo guardadas são declaradas mais
+ * acima com a mesma especificidade, e `@media` não acrescenta nenhuma — em
+ * empate, quem vence é a ordem no arquivo. Guarda antes da declaração é guarda
+ * que não desliga nada. Portão: `guarda_de_movimento_inerte`. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-calendar-nav-btn,
+  .nds-calendar-day-btn {
+    transition: none;
   }
 }

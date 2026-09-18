@@ -628,6 +628,14 @@ para é a camada de TOKEN — a folha declara duração só por `var(--duration-
 mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
 segura, está por extenso em `hover-card.md` §8.
 
+**E o bloco da própria folha passou a segurar em 2026-09-17.** As quatro entradas
+por lado são declaradas em `.nds-sheet-content[data-side="…"]`, (0,2,0), e a
+guarda mirava a classe nua, (0,1,0): perdia na cascata, e o painel deslizava pela
+lateral inteira para quem pediu menos movimento — que é exatamente o movimento
+grande que a preferência existe para evitar. A metade que já servia (o véu e as
+duas transições, declarados na classe nua) continua onde estava. Portão:
+`guarda_de_movimento_inerte`.
+
 ## 9. Analytics
 
 | evento | quando | payload |

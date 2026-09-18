@@ -274,12 +274,14 @@ este painel para, junto com os outros 21 alvos de overlay sondados.
 Das nove folhas da categoria, sete têm bloco; `hover-card.css` e `popover.css` não
 (o popover não anima desde 2026-09-12). Recontado em 2026-09-15.
 
-Os blocos por folha das vizinhas são redundância, e vários deles não seguram
-nada: a guarda mira a classe nua, (0,1,0), contra uma declaração em
-`[data-ending-style]` ou `[data-open]`, (0,2,0), e perde na cascata — `@media`
-não acrescenta especificidade. Ninguém tinha notado porque a camada de token já
-fazia o trabalho. Quem está nessa situação hoje está listado na pendência da §8;
-o exemplo que morava aqui era o do popover, e ele saiu do mundo em 2026-09-12. O
+Os blocos por folha das vizinhas são redundância, e vários deles **não seguravam
+nada até 2026-09-17**: a guarda mirava a classe nua, (0,1,0), contra uma
+declaração em `[data-ending-style]` ou `[data-open]`, (0,2,0), e perdia na
+cascata — `@media` não acrescenta especificidade. Ninguém tinha notado porque a
+camada de token já fazia o trabalho. Hoje as quatro folhas que estavam assim
+foram corrigidas e `guarda_de_movimento_inerte` reprova a volta; o histórico
+está na §8. O exemplo que morava aqui era o do popover, e ele saiu do mundo em
+2026-09-12. O
 único caso que o token não alcança é duração LITERAL, fora de
 `var(--duration-*)`; aqui não é o caso, e as duas utilitárias que estavam nessa
 situação foram corrigidas no fim de `utilities.css`.
@@ -541,28 +543,35 @@ emulada — 28 declarações lidas por `getComputedStyle`, 22 alvos de overlay. 
 2026-09-12 o `popover` não declara movimento NENHUM, o que o tira da conta pelo
 lado de cima: são oito folhas com movimento, todas por token.
 
-**O bloco `@media` por folha é cinto e suspensório, e alguns não seguram nada.**
-A guarda mira a classe nua, (0,1,0), contra uma declaração em
-`[data-ending-style]`, `[data-open]` ou `[data-state]`, (0,2,0), e perde na
-cascata — `@media` não acrescenta especificidade. Quais folhas estão assim hoje
-está na pendência abaixo; o exemplo que este parágrafo dava era o do `popover.css`,
-e ele saiu do mundo em 2026-09-12 junto com a animação. Esta folha não tem bloco
-próprio, e isso **não é defeito**: já foi relatado como tal duas vezes, e é o
-motivo de esta seção existir.
+**O bloco `@media` por folha é cinto e suspensório, e alguns não seguravam
+nada.** A guarda mirava a classe nua, (0,1,0), contra uma declaração em
+`[data-ending-style]`, `[data-open]` ou `[data-state]`, (0,2,0), e perdia na
+cascata — `@media` não acrescenta especificidade. Quatro folhas estavam assim e
+foram corrigidas em 2026-09-17, com o relato na §8; o exemplo que este parágrafo
+dava era o do `popover.css`, e ele saiu do mundo em 2026-09-12 junto com a
+animação. Esta folha não tem bloco próprio, e isso **não é defeito**: já foi
+relatado como tal duas vezes, e é o motivo de esta seção existir.
 
 **O caso que a guarda de token NÃO cobre é duração literal**, fora de
 `var(--duration-*)` — nenhum overlay tem, e o tratamento dos que têm vive no fim
 de `utilities.css`. Ao acrescentar movimento a qualquer folha desta categoria, a
 regra é uma só: declare a duração por token, e ela para de graça.
 
-**E isso tem portão desde 2026-09-10**: `movimento_sem_guarda_eficaz` reprova
-duração literal em qualquer folha compartilhada que não tenha guarda de
-`prefers-reduced-motion` — e reprova também a guarda que existe mas PERDE, por
-especificidade menor ou por vir antes com especificidade igual. Movimento por
-`var(--duration-*)` fica de fora de propósito, porque a camada de token já o
-alcança.
+**E isso tem portão desde 2026-09-10, hoje em duas regras.**
+`movimento_sem_guarda_eficaz` reprova duração literal em folha compartilhada sem
+guarda de `prefers-reduced-motion`. `guarda_de_movimento_inerte` — acrescentada
+em 2026-09-17 — reprova a guarda que EXISTE, mira a classe e perde na cascata,
+por especificidade menor ou por vir antes com especificidade igual.
 
-> **PENDÊNCIA · 2026-09-09** — guardas de overlay que não seguram nada, por
+A separação nasceu de uma falha do portão único, e ela vale registrar: a regra
+original desistia quando a duração vinha de `var(--duration-*)`, com o argumento
+de que a camada de token já alcança. O argumento está certo sobre o MOVIMENTO e
+errado sobre a FOLHA — o movimento para, e o bloco continua ali anunciando uma
+proteção que a cascata descartou. Era exatamente por essa porta que as três
+guardas desta pendência passavam sem serem vistas. Agora o token decide qual das
+duas regras cobra, não se alguma cobra.
+
+> **FECHADA · 2026-09-17** — guardas de overlay que não seguram nada, por
 > especificidade: miram a classe nua (0,1,0) contra declarações em `[data-state]`,
 > `[data-closed]`, `[data-open]` ou `[data-ending-style]` (0,2,0), e perdem.
 > **Estreitada em 2026-09-10, porque metade fechou.** O que esta linha temia —
@@ -593,10 +602,37 @@ alcança.
 > `command.css` (declaração e guarda na mesma classe nua, `:129` × `:298-302`).
 > `hover-card.css` e `popover.css` não têm guarda, de propósito. Quem fechar isto
 > varre as nove folhas de novo, e não relê esta lista.
-> **Fecha quando**: as guardas que sobram (`dialog.css`,
-> `dropdown-menu.css` e `sheet.css`) forem removidas com o motivo escrito na
-> folha, ou passarem a mirar seletor que vença a declaração — e quando a varredura
-> que decide isso for a das nove folhas da categoria, não a leitura desta lista.
+>
+> **COMO FECHOU, em 2026-09-17.** A varredura foi feita por INSTRUMENTO, sobre as
+> **52** folhas de `docs/shared/styles/nds/` e não sobre as nove — a lista já
+> tinha errado a conta duas vezes, e comparar especificidade a olho é como ela
+> errou. As três se confirmaram, e a varredura larga trouxe o que a estreita não
+> tinha:
+>
+> - `dialog.css`, `dropdown-menu.css` e `sheet.css` — a guarda passou a repetir os
+>   ATRIBUTOS da declaração, que é a forma que `alert-dialog.css` já usava certo.
+>   Doze declarações de movimento que o bloco dizia desligar e não desligava.
+> - `calendar.css` — **quarta folha, e fora da categoria**: a guarda estava na
+>   linha 102 e as duas classes que ela mira são declaradas em `:200` e `:476`.
+>   Especificidade IGUAL e guarda antes: quem vem depois vence. Foi para o fim do
+>   arquivo. Nenhuma varredura "das nove" a encontraria, porque calendário não é
+>   overlay — e o defeito nunca foi da categoria, era da cascata.
+> - `utilities.css` — `.nds-chevron` media `var(--duration, 200ms)`, e
+>   **`--duration` sem sufixo não existe na escada**: esta linha era o único
+>   consumo dele no repositório, então o que sempre valia era o fallback. O
+>   chevron ficava fora da camada de token e girava sob a preferência em **106
+>   pontos de 40 arquivos** — o disclosure do sistema inteiro. Aqui não havia
+>   guarda a consertar: o defeito era estar fora da escada. `--duration-base` vale
+>   200ms, então a troca é idêntica na tela.
+>
+> Sobraram treze classes com movimento que a guarda da própria folha não menciona
+> — e nenhuma é defeito: todas medem por `var(--duration-*)`, e a camada de token
+> as para. Cinto sem suspensório não é o mesmo que suspensório arrebentado, e foi
+> confundir os dois que fez esta lista oscilar entre três e quatro.
+>
+> **O que impede a volta**: `guarda_de_movimento_inerte`, provado plantando o
+> defeito no `dialog.css` (4 → 10 → 4 achados, plantio e restauro na mesma
+> chamada).
 
 > **PENDÊNCIA · 2026-09-15** — docs pages e conteúdo compartilhado ensinam ou medem
 > o que o código não faz: `reason` na tabela de analytics do angular e

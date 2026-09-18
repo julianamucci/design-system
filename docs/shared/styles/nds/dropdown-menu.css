@@ -411,10 +411,18 @@
   animation: nds-menu-in var(--duration-fast) var(--ease-entrance);
 }
 
+/* O `animation: none` na classe nua NÃO alcançava a entrada acima: ela é
+ * declarada em `[data-open]` (0,2,0) e a guarda mirava (0,1,0), que perde na
+ * cascata — `@media` não acrescenta especificidade. A transição do item, essa
+ * sim, é declarada na classe nua, e por isso continua onde estava. Medido em
+ * 2026-09-17; portão `guarda_de_movimento_inerte`. */
 @media (prefers-reduced-motion: reduce) {
-  .nds-dropdown-menu-item,
-  .nds-dropdown-menu-content {
+  .nds-dropdown-menu-item {
     transition: none;
+  }
+
+  .nds-dropdown-menu-content[data-open],
+  .nds-dropdown-menu-content[data-state="open"] {
     animation: none;
   }
 }

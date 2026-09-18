@@ -386,8 +386,20 @@
 .nds-transition-colors    { transition: color var(--duration-fast, 150ms), background-color var(--duration-fast, 150ms), border-color var(--duration-fast, 150ms); }
 .nds-transition-opacity   { transition: opacity var(--duration-fast, 150ms) ease; }
 
-/* ── chevron rotativo (disclosure): transição + rotação no estado aberto ──── */
-.nds-chevron { transition: transform var(--duration, 200ms) ease; }
+/* ── chevron rotativo (disclosure): transição + rotação no estado aberto ────
+ *
+ * `--duration-base`, e não `var(--duration, 200ms)`, que era o que estava aqui.
+ * `--duration` sem sufixo NÃO EXISTE na escada — esta linha era o único consumo
+ * dele no repositório inteiro —, então o fallback de 200ms era o valor que
+ * sempre valia. Duas consequências, e a segunda é a cara: o token documentado
+ * era inerte, e o chevron ficava FORA da camada que zera `--duration-*` sob
+ * `prefers-reduced-motion`. Ele girava em 106 pontos de 40 arquivos para quem
+ * pediu menos movimento, e nenhuma guarda por folha alcançava, porque o defeito
+ * não era de especificidade: era de estar fora da escada.
+ *
+ * `--duration-base` vale 200ms — a troca é idêntica na tela. Medido em
+ * 2026-09-17. */
+.nds-chevron { transition: transform var(--duration-base) ease; }
 [data-state="open"] > .nds-chevron,
 [data-state="open"] .nds-chevron,
 [aria-expanded="true"] .nds-chevron,

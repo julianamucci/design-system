@@ -1051,6 +1051,12 @@ para é a camada de TOKEN — a folha declara duração só por `var(--duration-
 mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
 segura, está por extenso em `hover-card.md` §8.
 
+**E o bloco da própria folha passou a segurar em 2026-09-17.** A animação de
+entrada é declarada em `.nds-dropdown-menu-content[data-open]`, (0,2,0), e a
+guarda mirava a classe nua, (0,1,0). A transição do ITEM, essa sim, é declarada
+na classe nua e já estava desligada — era metade de guarda, e a metade que faltava
+era justamente a do painel. Portão: `guarda_de_movimento_inerte`.
+
 ## 9. Analytics
 
 Nove eventos, três por membro da família, **no mesmo formato** — e é o tipo das
