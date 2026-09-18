@@ -84,10 +84,10 @@ diferentes, ele clicava em "Estados" e chegava em "Configurações", com o ânco
 funcionando e a página renderizando certo.
 
 Por isso **o título não é prop**: o container da seção o deriva do `id` que ele
-já declara, pelo mapa `CHAVE_DE_ROTULO_POR_SECAO` de
-`docs/shared/primitives/docs-page-landmarks.ts`. A divergência deixa de ser
-possível em vez de passar a ser proibida, e nas cinco stacks o type-checker
-cobra a prop que sumiu.
+já declara, pelo mapa `SECTION_LABEL_KEY_BY_ID` de
+`docs/shared/primitives/docs-page-landmarks.ts`, lido pela função
+`sectionLabelKey`. A divergência deixa de ser possível em vez de passar a ser
+proibida, e nas cinco stacks o type-checker cobra a prop que sumiu.
 
 **Medido em 2026-09-12**: 900 dos 3375 títulos diziam palavra diferente da do
 menu. A maior parte era deriva de escrita — "Design Tokens" contra "Tokens",
