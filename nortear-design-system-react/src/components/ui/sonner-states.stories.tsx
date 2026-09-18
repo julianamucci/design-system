@@ -168,8 +168,8 @@ export const Stacked: Story = {
     await clearToasts();
 
     await step("As três ficam na tela ao mesmo tempo, a mais nova à frente", async () => {
-      toast.success(TEXTS.sucesso, PERSISTENT);
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 
       await waitFor(() => {
@@ -219,7 +219,7 @@ export const PositionBottomCenter: Story = {
     await clearToasts();
 
     await step("A região declara o canto escolhido", async () => {
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       await waitForToast({ type: "success" });
 
       const list = document.querySelector<HTMLElement>("[data-sonner-toaster]")!;
@@ -265,7 +265,7 @@ export const WithoutToaster: Story = {
     await step("Nada é desenhado e nada estoura no console", async () => {
       // functional.item7 — a garantia é dupla: nenhum nó e nenhum erro. Só a
       // primeira metade passaria com uma exceção engolida em algum lugar.
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       await sleep(120);
 
       await expect(toastsOnScreen().length).toBe(0);
@@ -304,10 +304,10 @@ export const DarkTheme: Story = {
     await step("Os cinco tipos são desenhados com o tema escuro em vigor", async () => {
       // visual.item4 fala em "todos os tipos com richColors": com uma só na
       // tela, a foto do Chromatic cobriria um quinto do que o item promete.
-      toast(TEXTS.padrao, PERSISTENT);
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast(TEXTS.default, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       toast.error(TEXTS.error, PERSISTENT);
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 
       await waitForToast({ type: "info" });

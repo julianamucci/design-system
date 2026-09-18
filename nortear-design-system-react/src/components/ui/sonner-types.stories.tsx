@@ -76,13 +76,13 @@ export const Default: Story = {
     await clearToasts();
 
     await step("A notificação neutra não carrega ícone nenhum", async () => {
-      toast(TEXTS.padrao, PERSISTENT);
+      toast(TEXTS.default, PERSISTENT);
       const toastEl = await waitForToast({ type: "default" });
 
       // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
       // a coluna e sugeriria uma severidade que a mensagem não tem.
       await expect(toastEl.querySelector("[data-icon]")).toBeNull();
-      await expect(toastEl.querySelector("[data-title]")).toHaveTextContent(TEXTS.padrao);
+      await expect(toastEl.querySelector("[data-title]")).toHaveTextContent(TEXTS.default);
       // Cada lib escreve a ausência de tipo à sua maneira: uma omite `data-type`,
       // outra escreve `default`. O FATO é o mesmo — não há tipo semântico — e é
       // ele que o helper normaliza, em vez de a story afirmar o detalhe de uma.
@@ -119,7 +119,7 @@ export const Success: Story = {
       // descreve é exercido pela story AutoDismiss (functional.item2): aqui a
       // notificação é persistente de propósito, para o axe e o Chromatic medirem
       // sempre o mesmo estado.
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       const toastEl = await waitForToast({ type: "success" });
       await expect(toastEl).toHaveAttribute("data-type", "success");
       await expect(toastEl).toHaveAttribute("data-rich-colors", "true");
@@ -189,11 +189,11 @@ export const Warning: Story = {
     await clearToasts();
 
     await step("O aviso usa o tipo próprio, e não a falha", async () => {
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       const toastEl = await waitForToast({ type: "warning" });
       await expect(toastEl).toHaveAttribute("data-type", "warning");
       await expect(toastEl).not.toHaveAttribute("data-type", "error");
-      await expect(toastEl).toHaveTextContent(TEXTS.aviso);
+      await expect(toastEl).toHaveTextContent(TEXTS.warning);
     });
   },
 };

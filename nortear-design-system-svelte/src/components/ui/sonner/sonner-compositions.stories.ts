@@ -144,13 +144,13 @@ export const WithAction: Story = {
       // até ela antes de o prazo vencer (WCAG 2.1.1).
       toast(TEXTS.withAction, {
         ...PERSISTENT,
-        action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
+        action: { label: TEXTS.withActionLabel, onClick: () => undoSpy() },
       });
       const toastEl = await waitForToast({ type: 'default' });
       const action = toastEl.querySelector<HTMLButtonElement>('[data-button]')!;
 
       await expect(action.tagName).toBe('BUTTON');
-      await expect(action).toHaveTextContent(TEXTS.comAcaoRotulo);
+      await expect(action).toHaveTextContent(TEXTS.withActionLabel);
 
       action.focus();
       await expect(action).toHaveFocus();
@@ -175,7 +175,7 @@ export const WithAction: Story = {
       await clearToasts();
       toast(TEXTS.withAction, {
         ...PERSISTENT,
-        action: { label: TEXTS.comAcaoRotulo, onClick: () => undefined },
+        action: { label: TEXTS.withActionLabel, onClick: () => undefined },
       });
       const toastEl = await waitForToast({ type: 'default' });
       const action = toastEl.querySelector<HTMLButtonElement>('[data-button]')!;

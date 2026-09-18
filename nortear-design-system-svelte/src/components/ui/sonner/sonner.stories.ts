@@ -61,7 +61,7 @@ const meta: Meta = {
   },
   args: {
     type: 'success',
-    title: TEXTS.sucesso,
+    title: TEXTS.success,
     description: '',
     actionLabel: '',
     position: 'top-right',
@@ -91,7 +91,7 @@ export const Playground: Story = {
 
     await step('O disparo desenha a notificação na região do Toaster', async () => {
       await userEvent.click(canvas.getByRole('button', { name: 'Disparar notificação' }));
-      const toastEl = await waitForToast({ type: 'success', text: TEXTS.sucesso });
+      const toastEl = await waitForToast({ type: 'success', text: TEXTS.success });
       const list = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
       await expect(list.contains(toastEl)).toBe(true);
       await expect(list).toHaveAttribute('data-y-position', 'top');

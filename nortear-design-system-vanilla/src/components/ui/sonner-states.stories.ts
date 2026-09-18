@@ -141,8 +141,8 @@ export const Stacked: Story = {
       source: {
         transform: sonnerSourceStack(
           [
-            { type: 'success', title: TEXTS.sucesso },
-            { type: 'warning', title: TEXTS.aviso },
+            { type: 'success', title: TEXTS.success },
+            { type: 'warning', title: TEXTS.warning },
             { type: 'info', title: TEXTS.info },
           ],
           REGION,
@@ -159,8 +159,8 @@ export const Stacked: Story = {
     await clearToasts();
 
     await step('As três ficam na tela ao mesmo tempo', async () => {
-      toast.success(TEXTS.sucesso, PERSISTENT);
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 
       await waitFor(() => {
@@ -193,7 +193,7 @@ export const PositionBottomCenter: Story = {
           position: 'bottom-center',
           richColors: true,
           type: 'success',
-          title: TEXTS.sucesso,
+          title: TEXTS.success,
         }),
       },
       description: {
@@ -207,7 +207,7 @@ export const PositionBottomCenter: Story = {
     await clearToasts();
 
     await step('A região declara o canto escolhido', async () => {
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       await waitForToast({ type: 'success' });
 
       const region = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
@@ -236,7 +236,7 @@ export const WithoutToaster: Story = {
     docs: {
       // O assunto é a AUSÊNCIA da região: o snippet do meta a mostraria montada.
       source: {
-        transform: sonnerSourceNoRegion({ type: 'success', title: TEXTS.sucesso }),
+        transform: sonnerSourceNoRegion({ type: 'success', title: TEXTS.success }),
       },
       description: {
         story:
@@ -261,7 +261,7 @@ export const WithoutToaster: Story = {
     await step('A fila monta a própria região e nada estoura no console', async () => {
       // A garantia é dupla: a notificação chega E nenhum erro aparece. Só a
       // primeira metade passaria com uma exceção engolida em algum lugar.
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       const toastEl = await waitForToast({ type: 'success' });
 
       const region = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
@@ -281,10 +281,10 @@ export const DarkTheme: Story = {
       source: {
         transform: sonnerSourceStack(
           [
-            { type: 'default', title: TEXTS.padrao },
-            { type: 'success', title: TEXTS.sucesso },
+            { type: 'default', title: TEXTS.default },
+            { type: 'success', title: TEXTS.success },
             { type: 'error', title: TEXTS.error },
-            { type: 'warning', title: TEXTS.aviso },
+            { type: 'warning', title: TEXTS.warning },
             { type: 'info', title: TEXTS.info },
           ],
           REGION,
@@ -303,10 +303,10 @@ export const DarkTheme: Story = {
     let infoId = 0;
 
     await step('Cinco disparos, e só as três mais recentes na tela', async () => {
-      toast(TEXTS.padrao, PERSISTENT);
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast(TEXTS.default, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       toast.error(TEXTS.error, PERSISTENT);
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       infoId = toast.info(TEXTS.info, PERSISTENT);
 
       await waitForToast({ type: 'info' });

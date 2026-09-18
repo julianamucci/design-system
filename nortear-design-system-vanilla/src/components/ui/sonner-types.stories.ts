@@ -53,7 +53,7 @@ export const Default: Story = {
   parameters: {
     covers: ['accessibility.item4', 'visual.item1'],
     docs: {
-      source: { transform: sonnerSourceWith({ ...REGION, type: 'default', title: TEXTS.padrao }) },
+      source: { transform: sonnerSourceWith({ ...REGION, type: 'default', title: TEXTS.default }) },
       description: {
         story:
           'Notificação neutra, sem tipo semântico: nenhum ícone e as cores base do tema. Serve a confirmações que não são nem êxito nem falha.',
@@ -64,13 +64,13 @@ export const Default: Story = {
     await clearToasts();
 
     await step('A notificação neutra não carrega ícone nenhum', async () => {
-      toast(TEXTS.padrao, PERSISTENT);
+      toast(TEXTS.default, PERSISTENT);
       const toastEl = await waitForToast({ type: 'default' });
 
       // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
       // a coluna e sugeriria uma severidade que a mensagem não tem.
       await expect(toastEl.querySelector('.nds-sonner-icon')).toBeNull();
-      await expect(toastEl.querySelector('.nds-sonner-title')).toHaveTextContent(TEXTS.padrao);
+      await expect(toastEl.querySelector('.nds-sonner-title')).toHaveTextContent(TEXTS.default);
       await expect(toastEl).toHaveAttribute('data-type', 'default');
     });
 
@@ -86,7 +86,7 @@ export const Success: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item1'],
     docs: {
-      source: { transform: sonnerSourceWith({ ...REGION, type: 'success', title: TEXTS.sucesso }) },
+      source: { transform: sonnerSourceWith({ ...REGION, type: 'success', title: TEXTS.success }) },
       description: {
         story: 'Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.',
       },
@@ -102,7 +102,7 @@ export const Success: Story = {
       // também descreve é exercido pela story AutoDismiss (functional.item2):
       // aqui a notificação é persistente de propósito, para o axe e o Chromatic
       // medirem sempre o mesmo estado.
-      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.success(TEXTS.success, PERSISTENT);
       const toastEl = await waitForToast({ type: 'success' });
       await expect(toastEl).toHaveAttribute('data-type', 'success');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
@@ -153,7 +153,7 @@ export const Warning: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
-      source: { transform: sonnerSourceWith({ ...REGION, type: 'warning', title: TEXTS.aviso }) },
+      source: { transform: sonnerSourceWith({ ...REGION, type: 'warning', title: TEXTS.warning }) },
       description: {
         story:
           'Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.',
@@ -164,11 +164,11 @@ export const Warning: Story = {
     await clearToasts();
 
     await step('O aviso usa o tipo próprio, e não a falha', async () => {
-      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.warning(TEXTS.warning, PERSISTENT);
       const toastEl = await waitForToast({ type: 'warning' });
       await expect(toastEl).toHaveAttribute('data-type', 'warning');
       await expect(toastEl).not.toHaveAttribute('data-type', 'error');
-      await expect(toastEl).toHaveTextContent(TEXTS.aviso);
+      await expect(toastEl).toHaveTextContent(TEXTS.warning);
     });
   },
 };
