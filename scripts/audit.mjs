@@ -9141,6 +9141,83 @@ const RADICAIS_PT = [
  * Usado PELOS DOIS: pela regra e pelo gerador da linha de base. Ter dois
  * contadores é ter duas verdades, e o portão passa a comparar uma com a outra.
  */
+/**
+ * Apaga o CONTEÚDO de todo literal — aspa simples, aspa dupla e crase —, numa
+ * varredura só, da esquerda para a direita.
+ *
+ * Isto substitui três `replace` em sequência, e a troca não é estética: passo
+ * que pareia um tipo de aspa sem saber o que já está aberto ATRAVESSA a
+ * fronteira do literal vizinho. Medido em 2026-09-18, num `*.source.ts`:
+ *
+ *     gatilho.href = `${o.h ?? '/glossario'}`;
+ *     …
+ *     if (o.tipo === 'botao') {}
+ *
+ * O passo de aspa simples casava da aspa dentro da crase até a aspa de `'botao'`
+ * — engolindo no caminho a crase de FECHAMENTO do template. O passo da crase,
+ * que vinha depois, pareava um número ÍMPAR de crases, o pareamento deslocava em
+ * um, e o miolo do template SEGUINTE sobrevivia como se fosse código. O portão
+ * acusou três identificadores em português que ninguém tinha escrito.
+ *
+ * A condição era estreita — um match que engula número ímpar de crases —, e por
+ * isso o defeito aparecia e sumia conforme o arquivo era editado em qualquer
+ * outro lugar. Pior: ele também ESCONDE. Um vazamento de paridade par deixa
+ * passar nome que deveria ser contado, e a linha de base de um arquivo podia
+ * estar zerada por sorte, não por limpeza.
+ *
+ * Os dois consertos óbvios foram medidos e DESCARTADOS. Inverter a ordem (crase
+ * primeiro) conserta este caso e não a causa: uma aspa dentro de um template
+ * continua desbalanceando o passo seguinte. Excluir a crase da classe negada faz
+ * o passo deixar de casar strings que CONTÊM crase — e elas existem às centenas
+ * aqui, porque mensagem de erro cita código entre crases —, trocando um
+ * vazamento por outro.
+ *
+ * O que a varredura garante e nenhum regex garantia: quem abre primeiro fecha
+ * primeiro, e literal não terminado não engole o resto do arquivo — ele é
+ * emitido e a varredura segue, em vez de inverter a paridade dali para a frente.
+ *
+ * A guarda de apóstrofo de PROSA continua, e é a mesma de antes: aspa grudada em
+ * letra, dígito ou outra aspa não abre literal. Sem ela, o "Don't" de um texto de
+ * interface abriria uma aspa — foi o que derrubou 30 docs pages de uma vez
+ * quando o descascamento de `<!-- -->` entrou. Quebra de linha continua
+ * PERMITIDA dentro do literal, também de propósito: atributo de marcação
+ * atravessa linha por rotina (`:items="[…]"` em três linhas), e proibir isso
+ * expôs 12 nomes antigos de uma vez, medido.
+ *
+ * O miolo de `${…}` é apagado junto com o template, como já era: identificador
+ * dentro de interpolação não é contado, e mudar isso é outra decisão.
+ */
+function apagaLiterais(fonte) {
+  let saida = '';
+  let i = 0;
+  while (i < fonte.length) {
+    const ch = fonte[i];
+    const anterior = i > 0 ? fonte[i - 1] : '';
+    const abreAspa = (ch === "'" || ch === '"') && !/[\w'"]/.test(anterior);
+    if (!abreAspa && ch !== '`') {
+      saida += ch;
+      i += 1;
+      continue;
+    }
+    let j = i + 1;
+    while (j < fonte.length) {
+      if (fonte[j] === '\\') { j += 2; continue; }
+      if (fonte[j] === ch) break;
+      j += 1;
+    }
+    if (j >= fonte.length) {
+      // Literal que não fecha: emite a aspa e segue. A forma antiga engolia daqui
+      // até o fim do arquivo, que é como um apóstrofo de prosa virava 30 falsos.
+      saida += ch;
+      i += 1;
+      continue;
+    }
+    saida += ch + ch;
+    i = j + 1;
+  }
+  return saida;
+}
+
 function identsPtNoCodigo(bruto, caminho = '') {
   // Comentário de MARCAÇÃO também é comentário. O `stripComments` cobre `//` e
   // `/* */`, que é o bastante para .ts, mas .svelte e .vue escrevem nota em
@@ -9148,19 +9225,11 @@ function identsPtNoCodigo(bruto, caminho = '') {
   // linha o portão empurrava a nota para dentro do `<script>` só para escapar
   // dele, que é o portão mandando piorar o código.
   const semMarcacao = bruto.replace(/<!--[\s\S]*?-->/g, ' ');
-  // O blank de literais é heurística de PAREAMENTO, e apóstrofo de prosa
-  // ("Don't", "d'água") abre uma aspa que nunca fecha: dali para a frente o
-  // pareamento inverte e texto de template passa a contar como código. Foi o
-  // que aconteceu ao descascar `<!-- -->`: um "Don't" saiu de dentro de um
-  // comentário, a paridade do arquivo virou, e 30 páginas de docs reprovaram
-  // por palavra de interface. A guarda é só esta — aspa de abertura não vem
-  // grudada em letra ou dígito. Não guardei contra quebra de linha: atributo
-  // de marcação atravessa linha por rotina (`:items="[…]"` em três linhas), e
-  // proibir isso expôs 12 nomes antigos de uma vez, medido.
-  let codigo = stripComments(semMarcacao)
-    .replace(/(^|[^\w'])'(?:[^'\\]|\\.)*'/g, "$1''")
-    .replace(/(^|[^\w"])"(?:[^"\\]|\\.)*"/g, '$1""')
-    .replace(/`(?:[^`\\]|\\.)*`/g, '``')
+  // O apagamento de literais é feito por VARREDURA, e não por três `replace`
+  // em sequência — ver `apagaLiterais`, logo abaixo. A forma antiga pareava
+  // cada tipo de aspa num passo próprio, e passo que pareia sem saber o que já
+  // está aberto atravessa a fronteira do literal vizinho.
+  let codigo = apagaLiterais(stripComments(semMarcacao))
     // LITERAL DE REGEX também é texto, e faltava. Medido em 2026-09-13: a play
     // do vanilla consultava o botão por `{ name: /salvar/i }` — nome ACESSÍVEL,
     // que é interface e está em português por obrigação —, e a palavra dentro
