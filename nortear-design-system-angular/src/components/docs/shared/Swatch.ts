@@ -70,7 +70,7 @@ export class NdsMiniSwatch {
       <span class="nds-swatch-value">{{ value() || '—' }}</span>
     </div>
     <span class="nds-icon-tile-tooltip" [class.is-visible]="copiado()" aria-hidden="true">{{
-      copiado() ? rotuloCopiado() : rotuloDeCopia()
+      copiado() ? copiedLabel() : copyLabel()
     }}</span>
   `,
 })
@@ -80,14 +80,14 @@ export class NdsSwatch implements OnDestroy {
   /** Valor HSL já resolvido — quem lê o `<html>` é a página, não o swatch. */
   readonly value = input('');
   /** Rótulo do tooltip de cópia. */
-  readonly rotuloDeCopia = input('');
+  readonly copyLabel = input('');
   /** Rótulo do tooltip depois de copiar. */
-  readonly rotuloCopiado = input('');
+  readonly copiedLabel = input('');
 
   protected readonly copiado = signal(false);
   protected readonly tokenColor = computed(() => colorReferencia(this.token()));
   protected readonly accessibleLabel = computed(
-    () => `${this.rotuloDeCopia()} --${this.token()}`,
+    () => `${this.copyLabel()} --${this.token()}`,
   );
 
   private relogio: ReturnType<typeof setTimeout> | undefined;

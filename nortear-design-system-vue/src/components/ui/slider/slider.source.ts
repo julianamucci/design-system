@@ -34,10 +34,10 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'`;
 
 /** Só array de números vira estado inicial; qualquer outra coisa cai no padrão. */
-function values(raw: unknown, padrao: number[]): number[] {
+function values(raw: unknown, defaultValue: number[]): number[] {
   return Array.isArray(raw) && raw.length > 0 && raw.every((n) => typeof n === 'number')
     ? raw
-    : padrao;
+    : defaultValue;
 }
 
 /**

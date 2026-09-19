@@ -55,7 +55,7 @@ const caminhos = Object.keys(modulos).sort();
 const fontes = import.meta.glob<string>('./*.ts', { query: '?raw', import: 'default', eager: true });
 
 /** `./combobox.source.ts` -> `combobox`. */
-const slugDoCaminho = (path: string) => path.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
+const pathSlug = (path: string) => path.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
 
 /** O que um módulo desta pasta exporta, lido da declaração. */
 function exportadosPor(slug: string): Set<string> | null {
@@ -324,9 +324,9 @@ function interpolacoesSemOrigem(text: string): string[] {
   const escopo = escopoDo(text);
   const soltas = new Set<string>();
   for (const m of text.matchAll(/\$\{([^}]*)\}/g)) {
-    const raiz = /^\s*([A-Za-z_$][\w$]*)/.exec(m[1])?.[1];
-    if (!raiz || escopo.has(raiz) || GLOBAIS.has(raiz)) continue;
-    soltas.add(raiz);
+    const root = /^\s*([A-Za-z_$][\w$]*)/.exec(m[1])?.[1];
+    if (!root || escopo.has(root) || GLOBAIS.has(root)) continue;
+    soltas.add(root);
   }
   return [...soltas].sort();
 }
@@ -357,7 +357,7 @@ function semComentarios(bruto: string): string {
  * `(item: ComboboxItem, query: string) =>`. Com `escopoDo`, esses parâmetros
  * ficavam de fora e viravam acusação.
  */
-function ligadosNoTexto(text: string): Set<string> {
+function boundInText(text: string): Set<string> {
   const nomes = new Set<string>();
   const cru = (list: string) => {
     for (const parte of list.split(',')) {
@@ -437,9 +437,9 @@ const METODOS_DE_LACO = /^(?:map|forEach|flatMap)$/;
  *    virou "texto publicado" numa versão anterior, e um nome que só existia na
  *    explicação virou achado.
  */
-function lacosSemOrigemNoTexto(bruto: string): string[] {
+function loopsWithoutOriginInText(bruto: string): string[] {
   const semCom = semComentarios(bruto);
-  const ligados = ligadosNoTexto(semCom);
+  const ligados = boundInText(semCom);
   // `${…}` sai DEPOIS de colher o escopo e antes de procurar laço: o que está
   // lá dentro é do construtor, e contá-lo inventaria nome faltando em todo
   // módulo que interpola.
@@ -483,7 +483,7 @@ const CONSTANTE = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/;
  *     snippet pode trazer CSS (o `activity-graph` ensina o vão da casa numa
  *     folha), e ali as palavras do token não são identificador de JavaScript.
  */
-function semTextoNemFolha(text: string): string {
+function withoutTextOrStyleSheet(text: string): string {
   let body = semComentarios(text);
   body = body.replace(/`(?:[^`\\]|\\.)*`/g, "''");
   body = body.replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"/g, "''");
@@ -533,7 +533,7 @@ function semTextoNemFolha(text: string): string {
  * O QUE ELA NÃO VÊ:
  *
  *  · ramo não-padrão. Cada construtor é chamado UMA vez, com os args padrão, e
- *    para esta pergunta não existe a segunda passagem que `lacosSemOrigemNoTexto`
+ *    para esta pergunta não existe a segunda passagem que `loopsWithoutOriginInText`
  *    faz sobre o texto — ali a fonte do laço aparece crua no módulo, aqui a
  *    constante aparece DENTRO de um literal citado, ao lado da linha de import
  *    que outro ramo emite. Uma passagem de texto veria as duas e passaria
@@ -547,9 +547,9 @@ function referenciasSemOrigem(text: string): string[] {
   // tipos — `(text: string, href: string) =>` no breadcrumb, `(item:
   // ComboboxItem, query: string) =>` no filtro do combobox. Medido: com
   // `escopoDo`, esses parâmetros ficavam de fora e viravam acusação.
-  const ligados = ligadosNoTexto(text);
+  const ligados = boundInText(text);
   const soltas = new Set<string>();
-  for (const m of semTextoNemFolha(text).matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
+  for (const m of withoutTextOrStyleSheet(text).matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
     const name = m[1];
     if (!CONSTANTE.test(name) && !publicadosPeloDesignSystem.has(name)) continue;
     if (ligados.has(name) || GLOBAIS.has(name)) continue;
@@ -648,7 +648,7 @@ describe('transforms do painel Code', () => {
 
   for (const path of caminhos) {
     const modulo = modulos[path];
-    const slug = slugDoCaminho(path);
+    const slug = pathSlug(path);
     const fonteDoComponente = fontes[`./${slug}.ts`] ?? '';
     const exportadas = Object.entries(modulo).filter(
       ([name, value]) => typeof value === 'function' && !HELPERS.has(name),
@@ -669,7 +669,7 @@ describe('transforms do painel Code', () => {
           typeof bruto,
           `${path}: o texto do módulo não foi alcançado pela varredura — mova-o para esta pasta ou amplie o glob de \`fontes\``,
         ).toBe('string');
-        const soltos = lacosSemOrigemNoTexto(bruto);
+        const soltos = loopsWithoutOriginInText(bruto);
         expect(
           soltos,
           `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que ele não declara, ` +
@@ -714,7 +714,7 @@ describe('transforms do painel Code', () => {
           // O andaime da story não é parte do design system — menos a palavra
           // que o próprio componente usa, que ali é API.
           const andaimes = [...text.matchAll(SCAFFOLD)]
-            .map((achado) => achado[0])
+            .map((finding) => finding[0])
             .filter((palavra) => !new RegExp(`\\b${palavra}\\b`).test(fonteDoComponente));
           expect(andaimes, `${name}: nome de andaime de story no snippet publicado`).toEqual([]);
 

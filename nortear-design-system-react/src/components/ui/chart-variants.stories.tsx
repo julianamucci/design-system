@@ -120,11 +120,11 @@ function tracadosDeSerie(root: HTMLElement): SVGPathElement[] {
 }
 
 /** Caminhos preenchidos e largos — a região sob a linha, não o símbolo do ponto. */
-function areasPreenchidas(root: HTMLElement, larguraMinima: number): SVGPathElement[] {
+function areasPreenchidas(root: HTMLElement, minWidth: number): SVGPathElement[] {
   return [...root.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
     const fill = getComputedStyle(p).fill;
     if (fill === 'none' || /,\s*0\)\s*$/.test(fill)) return false;
-    return p.getBBox().width >= larguraMinima;
+    return p.getBBox().width >= minWidth;
   });
 }
 

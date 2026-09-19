@@ -304,7 +304,7 @@ const COMPOSITION_CODE = {
           <span>{{ t('demonstration.labels.triggerClosed') }}</span>
           <ng-container [ngTemplateOutlet]="tplChevron" />
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
         </div>
       </div>
@@ -319,12 +319,12 @@ const COMPOSITION_CODE = {
           variant="ghost"
           class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
-          [attr.aria-label]="rotuloGenerico()"
+          [attr.aria-label]="genericLabel()"
         >
-          <span>{{ rotuloGenerico() }}</span>
+          <span>{{ genericLabel() }}</span>
           <ng-container [ngTemplateOutlet]="tplChevron" />
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
         </div>
       </div>
@@ -342,7 +342,7 @@ const COMPOSITION_CODE = {
           <span>{{ t('demonstration.labels.headerLabel') }}</span>
           <ng-container [ngTemplateOutlet]="tplChevron" />
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
         </div>
       </div>
@@ -361,7 +361,7 @@ const COMPOSITION_CODE = {
               <span>{{ section.label }}</span>
               <ng-container [ngTemplateOutlet]="tplChevron" />
             </button>
-            <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+            <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
               <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
             </div>
           </div>
@@ -381,7 +381,7 @@ const COMPOSITION_CODE = {
           <span>{{ t('demonstration.labels.triggerClosed') }}</span>
           <ng-container [ngTemplateOutlet]="tplChevron" />
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
           <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
         </div>
@@ -401,12 +401,12 @@ const COMPOSITION_CODE = {
             variant="ghost"
             class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
             data-justify="between"
-            [attr.aria-label]="rotuloAlternado(varControlado())"
+            [attr.aria-label]="toggleLabel(varControlado())"
           >
-            <span>{{ rotuloAlternado(varControlado()) }}</span>
+            <span>{{ toggleLabel(varControlado()) }}</span>
             <ng-container [ngTemplateOutlet]="tplChevron" />
           </button>
-          <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+          <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
             <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
             <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
           </div>
@@ -419,7 +419,7 @@ const COMPOSITION_CODE = {
         <button ndsCollapsibleTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.triggerClosed') }}
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
           <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
         </div>
@@ -444,7 +444,7 @@ const COMPOSITION_CODE = {
           </svg>
           {{ t('demonstration.labels.headerLabel') }}
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
           <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
         </div>
@@ -463,7 +463,7 @@ const COMPOSITION_CODE = {
           <span>{{ t('demonstration.labels.headerLabel') }}</span>
           <ng-container [ngTemplateOutlet]="tplChevron" />
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
           <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
           <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
         </div>
@@ -489,8 +489,8 @@ const COMPOSITION_CODE = {
           </svg>
           {{ t('demonstration.labels.headerLabel') }}
         </button>
-        <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
-          @for (option of opcoesRicas(); track option.id) {
+        <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
+          @for (option of richOptions(); track option.id) {
             <div class="nds-cluster" data-spacing="sm">
               <button ndsCheckbox [id]="option.id"></button>
               <label ndsLabel [attr.for]="option.id">{{ option.label }}</label>
@@ -532,7 +532,7 @@ const COMPOSITION_CODE = {
                 <span>{{ t('demonstration.labels.headerLabel') }}</span>
                 <ng-container [ngTemplateOutlet]="tplChevron" />
               </button>
-              <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+              <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
                 <p>{{ t('demonstration.labels.basicFilter') }}</p>
                 <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
                 <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
@@ -551,12 +551,12 @@ const COMPOSITION_CODE = {
                 variant="ghost"
                 class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
                 data-justify="between"
-                [attr.aria-label]="rotuloAlternado(demoControlado())"
+                [attr.aria-label]="toggleLabel(demoControlado())"
               >
-                <span>{{ rotuloAlternado(demoControlado()) }}</span>
+                <span>{{ toggleLabel(demoControlado()) }}</span>
                 <ng-container [ngTemplateOutlet]="tplChevron" />
               </button>
-              <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+              <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
                 <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
                 <p>{{ t('demonstration.labels.advancedFilter2') }}</p>
               </div>
@@ -575,7 +575,7 @@ const COMPOSITION_CODE = {
                 <span>{{ t('demonstration.labels.headerLabel') }}</span>
                 <ng-container [ngTemplateOutlet]="tplChevron" />
               </button>
-              <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
+              <div ndsCollapsiblePanel [class]="panelClasses" data-spacing="sm">
                 <p>{{ t('demonstration.labels.advancedFilter1') }}</p>
               </div>
             </div>
@@ -682,7 +682,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeButton = IMPORT_CODE_BUTTON;
   protected readonly tokensCode = TOKENS_CODE;
-  protected readonly painelClasses = PANEL_CLASSES;
+  protected readonly panelClasses = PANEL_CLASSES;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -713,7 +713,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
    * `String(...)` e afins não existem numa expressão de template Angular, então
    * a escolha mora aqui e o template só chama o método.
    */
-  protected rotuloAlternado(isOpen: boolean): string {
+  protected toggleLabel(isOpen: boolean): string {
     return isOpen
       ? t('demonstration.labels.triggerOpen')
       : t('demonstration.labels.triggerClosed');
@@ -724,7 +724,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
    * objeto. Derivar do conteúdo traduzido evita literal em português numa
    * página trilíngue.
    */
-  protected readonly rotuloGenerico = computed(() => {
+  protected readonly genericLabel = computed(() => {
     dict();
     const completo = t('demonstration.labels.triggerClosed');
     return completo.split(' ')[0];
@@ -738,7 +738,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   });
 
   /** Os três controles do exemplo de conteúdo rico. */
-  protected readonly opcoesRicas = computed(() => {
+  protected readonly richOptions = computed(() => {
     dict();
     return [
       { id: 'comp-rico-1', label: t('demonstration.labels.basicFilter') },

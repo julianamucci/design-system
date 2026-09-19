@@ -141,7 +141,7 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
           data-spacing="sm"
         >
           <div>
-            <button ndsButton variant="outline" size="sm" (click)="alternarEscada()">
+            <button ndsButton variant="outline" size="sm" (click)="toggleLadder()">
               {{ t('specimens.advanced.labels.replay') }}
             </button>
           </div>
@@ -183,8 +183,8 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
               [style.--nds-drag-scale]="escalaCss()"
               (pointerdown)="aoPressionar($event)"
               (pointermove)="onMove($event)"
-              (pointerup)="aoSoltar()"
-              (pointercancel)="aoSoltar()"
+              (pointerup)="onRelease()"
+              (pointercancel)="onRelease()"
             >
               {{ t('specimens.advanced.labels.drag') }}
             </div>
@@ -208,7 +208,7 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
             <ul class="nds-cluster nds-list-none" data-spacing="sm">
               <!-- A chave de track carrega a execução: mudá-la recria os <li>,
                    e é a recriação que reinicia a animação CSS. -->
-              @for (item of itensDaCascata; track execucaoDaCascata() + item.label) {
+              @for (item of cascadeItems; track execucaoDaCascata() + item.label) {
                 <li
                   [class]="classeDoItemDaCascata()"
                   [style.--nds-stagger-delay]="item.delay"
@@ -232,10 +232,10 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
             data-spacing="sm"
             data-align="center"
           >
-            <button ndsButton variant="outline" size="sm" (click)="alternarPresenca()">
-              {{ rotuloDaPresenca() }}
+            <button ndsButton variant="outline" size="sm" (click)="togglePresence()">
+              {{ presenceLabel() }}
             </button>
-            @if (presencaVisivel()) {
+            @if (presenceVisible()) {
               <div
                 class="nds-bg-primary-soft nds-border-primary-soft nds-rounded-lg nds-p-4 nds-text-caption"
                 [animate.enter]="classeDeEntradaDaPresenca()"
@@ -269,7 +269,7 @@ export class NdsMotionDocs implements OnDestroy {
   protected readonly translations = translations as Record<string, unknown>;
   protected readonly t = t;
   protected readonly escada = ESCADA;
-  protected readonly itensDaCascata = CASCATA_ITEMS;
+  protected readonly cascadeItems = CASCATA_ITEMS;
   protected readonly codigoDaMola = CODE_MOLA;
   protected readonly codigoDaCascata = CODIGO_CASCATA;
   protected readonly codigoDaPresenca = CODIGO_PRESENCE;
@@ -278,7 +278,7 @@ export class NdsMotionDocs implements OnDestroy {
 
   protected readonly reproduzido = signal(false);
 
-  protected alternarEscada(): void {
+  protected toggleLadder(): void {
     this.reproduzido.update((v) => !v);
   }
 
@@ -302,11 +302,11 @@ export class NdsMotionDocs implements OnDestroy {
 
   // ─── Presence ─────────────────────────────────────────────────────────────
 
-  protected readonly presencaVisivel = signal(true);
+  protected readonly presenceVisible = signal(true);
   private readonly presencaAlternada = signal(false);
 
-  protected readonly rotuloDaPresenca = computed(() =>
-    this.presencaVisivel()
+  protected readonly presenceLabel = computed(() =>
+    this.presenceVisible()
       ? t('specimens.advanced.labels.hide')
       : t('specimens.advanced.labels.show'),
   );
@@ -316,9 +316,9 @@ export class NdsMotionDocs implements OnDestroy {
     this.presencaAlternada() ? 'nds-motion-presence-enter' : '',
   );
 
-  protected alternarPresenca(): void {
+  protected togglePresence(): void {
     this.presencaAlternada.set(true);
-    this.presencaVisivel.update((v) => !v);
+    this.presenceVisible.update((v) => !v);
   }
 
   // ─── Mola física com gesto de arrastar ────────────────────────────────────
@@ -336,7 +336,7 @@ export class NdsMotionDocs implements OnDestroy {
   private arrastando = false;
   private velocidadeX = 0;
   private velocidadeY = 0;
-  private instanteAnterior = 0;
+  private previousTimestamp = 0;
   private nextFrame: number | undefined;
 
   protected aoPressionar(evento: PointerEvent): void {
@@ -347,7 +347,7 @@ export class NdsMotionDocs implements OnDestroy {
     this.escala.set(1.05);
     this.velocidadeX = 0;
     this.velocidadeY = 0;
-    this.instanteAnterior = performance.now();
+    this.previousTimestamp = performance.now();
   }
 
   protected onMove(evento: PointerEvent): void {
@@ -356,21 +356,21 @@ export class NdsMotionDocs implements OnDestroy {
     this.offsetY.update((y) => y + evento.movementY);
 
     const agora = performance.now();
-    const dt = Math.max(agora - this.instanteAnterior, 1);
+    const dt = Math.max(agora - this.previousTimestamp, 1);
     // Média móvel simples — o `pointermove` cru é ruidoso demais para virar
     // velocidade inicial da mola.
     this.velocidadeX = 0.6 * this.velocidadeX + 0.4 * (evento.movementX / dt) * 1000;
     this.velocidadeY = 0.6 * this.velocidadeY + 0.4 * (evento.movementY / dt) * 1000;
-    this.instanteAnterior = agora;
+    this.previousTimestamp = agora;
   }
 
-  protected aoSoltar(): void {
+  protected onRelease(): void {
     if (!this.arrastando) return;
     this.arrastando = false;
     this.escala.set(1);
 
     // Gesto parado antes de soltar → sem velocidade residual.
-    if (performance.now() - this.instanteAnterior > 100) {
+    if (performance.now() - this.previousTimestamp > 100) {
       this.velocidadeX = 0;
       this.velocidadeY = 0;
     }
@@ -379,8 +379,8 @@ export class NdsMotionDocs implements OnDestroy {
       this.repousar();
       return;
     }
-    this.instanteAnterior = performance.now();
-    this.nextFrame = requestAnimationFrame(this.passoDaMola);
+    this.previousTimestamp = performance.now();
+    this.nextFrame = requestAnimationFrame(this.springStep);
   }
 
   /**
@@ -388,9 +388,9 @@ export class NdsMotionDocs implements OnDestroy {
    *
    * Arrow function porque o `requestAnimationFrame` chama sem `this`.
    */
-  private readonly passoDaMola = (agora: number): void => {
-    const dt = Math.min((agora - this.instanteAnterior) / 1000, STEP_MAXIMO);
-    this.instanteAnterior = agora;
+  private readonly springStep = (agora: number): void => {
+    const dt = Math.min((agora - this.previousTimestamp) / 1000, STEP_MAXIMO);
+    this.previousTimestamp = agora;
 
     const x = this.offsetX();
     const y = this.offsetY();
@@ -413,7 +413,7 @@ export class NdsMotionDocs implements OnDestroy {
 
     this.offsetX.set(nextX);
     this.offsetY.set(nextY);
-    this.nextFrame = requestAnimationFrame(this.passoDaMola);
+    this.nextFrame = requestAnimationFrame(this.springStep);
   };
 
   /** Zera posição e velocidade — o elemento volta exatamente ao centro. */

@@ -241,17 +241,17 @@ export const Controlled: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() {
-      const ativo = ref(false);
-      return { ativo };
+      const active = ref(false);
+      return { active };
     },
     template: `
       <div class="nds-stack nds-w-sm" data-align="start" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
-          <Switch id="comp-controlled" v-model="ativo" />
+          <Switch id="comp-controlled" v-model="active" />
           <Label :for="'comp-controlled'">Receber notificações</Label>
         </div>
         <p class="nds-text-caption nds-text-muted-foreground">
-          Estado atual: <code class="nds-font-mono">{{ ativo }}</code>
+          Estado atual: <code class="nds-font-mono">{{ active }}</code>
         </p>
       </div>
     `,

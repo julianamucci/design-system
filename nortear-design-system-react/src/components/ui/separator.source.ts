@@ -40,10 +40,10 @@ function attrsOf(args: Partial<SeparatorArgs>): string {
  * entre dois blocos empilhados. Sem contêiner nenhum a linha continua existindo,
  * mas com a largura do que estiver em volta.
  */
-function empilhado(attrsDaLinha: string): string {
+function empilhado(lineAttrs: string): string {
   return `<div className="nds-stack nds-w-md" data-spacing="md">
   <p className="nds-text-body">Seção superior</p>
-  <Separator${attrsDaLinha} />
+  <Separator${lineAttrs} />
   <p className="nds-text-body">Seção inferior</p>
 </div>`;
 }
@@ -54,10 +54,10 @@ function empilhado(attrsDaLinha: string): string {
  * vertical colapsa para zero e some da tela sem sumir do DOM, que é o defeito
  * que o snippet precisa evitar ensinar.
  */
-function inLine(attrsDaLinha: string): string {
+function inLine(lineAttrs: string): string {
   return `<div className="nds-cluster nds-w-md" data-spacing="md">
   <span className="nds-text-body">Item A</span>
-  <Separator${attrsDaLinha} />
+  <Separator${lineAttrs} />
   <span className="nds-text-body nds-text-muted-foreground">Item B</span>
 </div>`;
 }

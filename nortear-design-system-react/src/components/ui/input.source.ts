@@ -241,10 +241,10 @@ function groupLabelled(
   label: string,
   miolo: string,
   ofGroup: string,
-  deIcone = '',
+  ofIcon = '',
 ): string {
   return jsxSnippet(
-    [ofGroup, IMPORT_LABEL, deIcone].filter(Boolean).join('\n'),
+    [ofGroup, IMPORT_LABEL, ofIcon].filter(Boolean).join('\n'),
     `${COLUMN}
   <Label htmlFor="${id}">${label}</Label>
   <InputGroup>

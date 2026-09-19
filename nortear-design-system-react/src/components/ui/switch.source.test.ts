@@ -153,8 +153,8 @@ describe('todos os construtores', () => {
     // ele liga. É a regra que faz todo snippet daqui montar o PAR.
     for (const construir of TODOS) {
       const output = construir();
-      const temRotulo = output.includes('<Label') || output.includes('aria-label');
-      expect(temRotulo, `${construir.name} entrega Switch sem rótulo`).toBe(true);
+      const hasLabel = output.includes('<Label') || output.includes('aria-label');
+      expect(hasLabel, `${construir.name} entrega Switch sem rótulo`).toBe(true);
     }
   });
 });

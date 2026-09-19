@@ -282,20 +282,20 @@ export const Playground: Story = {
       // functional.item3 — três estados. Sem o terceiro, quem ordenou por
       // engano não tem como voltar à ordem original dos dados.
       await zerarOrdenacao();
-      const ordenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      const header = () => ordenar().closest('th')!;
+      const sortButton = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      const header = () => sortButton().closest('th')!;
 
-      await userEvent.click(ordenar());
+      await userEvent.click(sortButton());
       await waitFor(() => expect(header()).toHaveAttribute('aria-sort', 'ascending'));
       // O menor valor é 60 (INV-009). Se a ordenação comparasse o TEXTO
       // formatado, "R$ 1.200,00" viria antes de "R$ 60,00".
       await expect(firstCell()).toHaveTextContent('INV-009');
 
-      await userEvent.click(ordenar());
+      await userEvent.click(sortButton());
       await waitFor(() => expect(header()).toHaveAttribute('aria-sort', 'descending'));
       await expect(firstCell()).toHaveTextContent('INV-008');
 
-      await userEvent.click(ordenar());
+      await userEvent.click(sortButton());
       await waitFor(() => expect(header()).toHaveAttribute('aria-sort', 'none'));
       await expect(firstCell()).toHaveTextContent('INV-001');
     });
@@ -387,10 +387,10 @@ export const Playground: Story = {
       await check(invoiceBox('INV-007'), 'true');
       const contagemBefore = regiaoViva().textContent;
 
-      const ordenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await userEvent.click(ordenar());
+      const sortButton = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await userEvent.click(sortButton());
       await waitFor(() =>
-        expect(ordenar().closest('th')).toHaveAttribute('aria-sort', 'ascending'),
+        expect(sortButton().closest('th')).toHaveAttribute('aria-sort', 'ascending'),
       );
       // A ordem mudou DE VERDADE: sem esta linha o passo passaria numa tabela
       // que engoliu o clique e não mexeu em nada.

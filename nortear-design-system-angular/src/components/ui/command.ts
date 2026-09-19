@@ -241,7 +241,7 @@ export class NdsCommand {
    * o campo publica o valor resolvido e a lista o herda — assim ninguém
    * precisa escrever o mesmo texto duas vezes, e a lista nunca fica anônima.
    */
-  readonly rotuloDeBusca = signal<string | undefined>(undefined);
+  readonly searchLabel = signal<string | undefined>(undefined);
 
   private readonly root = inject(RdxAutocompleteRoot, { self: true });
 
@@ -285,7 +285,7 @@ export class NdsCommand {
       if (!mudanca.open) mudanca.eventDetails.cancel();
     });
 
-    this.root.onValueChange.subscribe((detalhes) => this.aoMudarValor(detalhes));
+    this.root.onValueChange.subscribe((detalhes) => this.handleValueChange(detalhes));
 
     // Depois das assinaturas: abrir emite `onOpenChange`, e um listener
     // registrado tarde demais não veria a primeira mudança.
@@ -334,12 +334,12 @@ export class NdsCommand {
   }
 
   /** @internal Anuncia o item sob o clique, antes de o primitivo reagir a ele. */
-  marcarAlvoDoClique(ref: ComboboxItemRef): void {
+  markClickTarget(ref: ComboboxItemRef): void {
     this.alvoDoClique = ref;
   }
 
   /** @internal Solta a marca depois que o clique já correu inteiro. */
-  limparAlvoDoClique(ref: ComboboxItemRef): void {
+  clearClickTarget(ref: ComboboxItemRef): void {
     if (this.alvoDoClique === ref) this.alvoDoClique = null;
   }
 
@@ -420,7 +420,7 @@ export class NdsCommand {
    * em fase de captura, antes de o primitivo reagir, e Enter e arrasto usam o
    * item em destaque — que só é limpo DEPOIS desta emissão.
    */
-  private aoMudarValor(detalhes: AutocompleteValueChangeDetails): void {
+  private handleValueChange(detalhes: AutocompleteValueChangeDetails): void {
     if (detalhes.reason !== 'item-press') return;
 
     detalhes.eventDetails.cancel();
@@ -492,7 +492,7 @@ export class NdsCommandInput implements OnInit {
   constructor() {
     // Publica para a lista herdar o mesmo nome. Efeito, e não uma escrita
     // única, porque o rótulo muda junto com o idioma.
-    effect(() => this.comando.rotuloDeBusca.set(this.resolvedLabel()));
+    effect(() => this.comando.searchLabel.set(this.resolvedLabel()));
 
     // Em captura, e registrado aqui, pelo mesmo motivo do clique no item: o
     // handler de teclado do primitivo mora no `host` dele, no mesmo elemento,
@@ -570,7 +570,7 @@ export class NdsCommandList {
 
   private readonly comando = inject(NdsCommand);
 
-  protected readonly resolvedLabel = computed(() => this.label() ?? this.comando.rotuloDeBusca());
+  protected readonly resolvedLabel = computed(() => this.label() ?? this.comando.searchLabel());
 }
 
 // ─── NdsCommandEmpty ──────────────────────────────────────────────────────────
@@ -701,7 +701,7 @@ export class NdsCommandGroup {
   host: {
     class: 'nds-command-item',
     '[attr.data-slot]': '"command-item"',
-    '[attr.data-value]': 'valorTexto()',
+    '[attr.data-value]': 'valueText()',
     '[attr.aria-selected]': 'destacado()',
     '[attr.data-checked]': 'marcaAttr()',
   },
@@ -746,7 +746,7 @@ export class NdsCommandItem implements OnDestroy {
 
   protected readonly destacado = computed(() => (this.ref.isHighlighted() ? 'true' : 'false'));
 
-  protected readonly valorTexto = computed(() => {
+  protected readonly valueText = computed(() => {
     const raw = this.ref.value();
     return raw === null || raw === undefined ? null : String(raw);
   });
@@ -769,8 +769,8 @@ export class NdsCommandItem implements OnDestroy {
     // desabilitado (que não chega a selecionar nada) não deixa resíduo.
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
     const onClick = (): void => {
-      this.comando.marcarAlvoDoClique(this.ref);
-      queueMicrotask(() => this.comando.limparAlvoDoClique(this.ref));
+      this.comando.markClickTarget(this.ref);
+      queueMicrotask(() => this.comando.clearClickTarget(this.ref));
     };
     host.addEventListener('click', onClick, { capture: true });
     inject(DestroyRef).onDestroy(() =>

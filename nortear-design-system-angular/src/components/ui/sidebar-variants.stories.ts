@@ -24,10 +24,10 @@ type Story = StoryObj;
  * `landmark-unique` no axe — e, antes de ser regra, é a lista de marcos do
  * leitor de tela dizendo "navegação" três vezes sem distinguir uma da outra.
  */
-const MIOLO = (rotuloNav: string) => `
+const MIOLO = (navLabel: string) => `
   <div ndsSidebarHeader>Acme</div>
   <div ndsSidebarContent>
-    <nav [attr.aria-label]="${rotuloNav}">
+    <nav [attr.aria-label]="${navLabel}">
       <div ndsSidebarGroup>
         <div ndsSidebarGroupLabel>Plataforma</div>
         <ul ndsSidebarMenu>

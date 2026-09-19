@@ -152,8 +152,8 @@ export const Playground: Story = {
     const invoiceBox = (id: string) =>
       canvas.getByRole('checkbox', { name: `Selecionar fatura ${id}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-    const ordenarButton = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
-    const valueHeader = () => ordenarButton().closest('th')!;
+    const sortButton = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
+    const valueHeader = () => sortButton().closest('th')!;
 
     // Precondição em vez de clique cego: o painel Interactions reexecuta a play
     // no MESMO DOM, e um clique que inverte estado dá resultado oposto na
@@ -174,7 +174,7 @@ export const Playground: Story = {
     /** Mesma ideia para a ordenação, que é um ciclo de três estados. */
     const moveOrdenacao = async (state: 'none' | 'ascending' | 'descending') => {
       for (let i = 0; i < 3 && valueHeader().getAttribute('aria-sort') !== state; i += 1) {
-        await userEvent.click(ordenarButton());
+        await userEvent.click(sortButton());
       }
       await expect(valueHeader()).toHaveAttribute('aria-sort', state);
     };
@@ -248,15 +248,15 @@ export const Playground: Story = {
       // engano não tem como voltar à ordem original dos dados.
       await moveOrdenacao('none');
 
-      await userEvent.click(ordenarButton());
+      await userEvent.click(sortButton());
       await expect(valueHeader()).toHaveAttribute('aria-sort', 'ascending');
       await expect(firstCell()).toHaveTextContent('#INV-010');
 
-      await userEvent.click(ordenarButton());
+      await userEvent.click(sortButton());
       await expect(valueHeader()).toHaveAttribute('aria-sort', 'descending');
       await expect(firstCell()).toHaveTextContent('#INV-011');
 
-      await userEvent.click(ordenarButton());
+      await userEvent.click(sortButton());
       await expect(valueHeader()).toHaveAttribute('aria-sort', 'none');
       await expect(firstCell()).toHaveTextContent('#INV-001');
     });

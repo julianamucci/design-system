@@ -561,7 +561,7 @@ export function createDataTable<TData extends RowData>(
   //
   // Só a GEOMETRIA sai daqui. O fundo opaco — que é o que impede o conteúdo de
   // vazar por baixo da coluna fixada — vem da classe `nds-data-table-*-pinned`,
-  // aplicada por `marcarFixada`. Escrito inline, o fundo saía do tema.
+  // aplicada por `markPinned`. Escrito inline, o fundo saía do tema.
   function pinStyle(col: ReturnType<typeof table.getColumn>): Partial<CSSStyleDeclaration> {
     if (!col) return {};
     const pinned = col.getIsPinned();
@@ -598,7 +598,7 @@ export function createDataTable<TData extends RowData>(
   }
 
   /** Classe de coluna fixada — o mesmo nome que as outras stacks emitem. */
-  function marcarFixada(
+  function markPinned(
     celula: HTMLElement,
     col: ReturnType<typeof table.getColumn>,
     type: 'th' | 'td',
@@ -763,7 +763,7 @@ export function createDataTable<TData extends RowData>(
 
         if (enableColumnResizing) th.style.width = `${header.getSize()}px`;
         Object.assign(th.style, pinStyle(col));
-        marcarFixada(th, col, 'th');
+        markPinned(th, col, 'th');
 
         const isDraggable = enableColumnOrdering && col.id !== '__select__';
         if (isDraggable) {
@@ -873,7 +873,7 @@ export function createDataTable<TData extends RowData>(
         const col = header.column;
         const th = document.createElement('th');
         Object.assign(th.style, pinStyle(col));
-        marcarFixada(th, col, 'th');
+        markPinned(th, col, 'th');
         const meta = col.columnDef.meta?.filter;
         if (!col.getCanFilter() || !meta) {
           // axe empty-table-header — colunas sem filtro recebem texto sr-only.
@@ -970,7 +970,7 @@ export function createDataTable<TData extends RowData>(
       td.className = 'nds-data-table-td';
       if (enableColumnResizing) td.style.width = `${col.getSize()}px`;
       Object.assign(td.style, pinStyle(col));
-      marcarFixada(td, col, 'td');
+      markPinned(td, col, 'td');
 
       if (col.id === '__select__') {
         const cb = createCheckbox({

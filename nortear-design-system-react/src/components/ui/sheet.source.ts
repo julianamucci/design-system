@@ -123,10 +123,10 @@ function footer(acao = 'Aplicar filtros', output = 'Cancelar', comFormulario?: s
 }
 
 /** A composição inteira: raiz, gatilho e painel. */
-function sheet(root: string, panel: string, body: string, gatilhoRotulo: string): string {
+function sheet(root: string, panel: string, body: string, triggerLabel: string): string {
   return `<Sheet${root}>
   <SheetTrigger render={<Button variant="outline" />}>
-    ${gatilhoRotulo}
+    ${triggerLabel}
   </SheetTrigger>
   <SheetContent${panel}>
 ${body}

@@ -397,19 +397,19 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
    * fora, tela trocada por um clique) deixava o ouvinte esperando um evento que
    * podia nunca chegar.
    */
-  let soltarPointer: (() => void) | null = null;
+  let releasePointer: (() => void) | null = null;
 
   trigger.addEventListener('pointerdown', () => {
     pointerPressionado = true;
-    const aoSoltar = () => {
+    const onPointerUp = () => {
       pointerPressionado = false;
-      soltarPointer = null;
+      releasePointer = null;
     };
-    soltarPointer = () => {
-      document.removeEventListener('pointerup', aoSoltar);
-      soltarPointer = null;
+    releasePointer = () => {
+      document.removeEventListener('pointerup', onPointerUp);
+      releasePointer = null;
     };
-    document.addEventListener('pointerup', aoSoltar, { once: true });
+    document.addEventListener('pointerup', onPointerUp, { once: true });
   });
   trigger.addEventListener('focus', aoFocar);
   trigger.addEventListener('blur', hide);
@@ -423,6 +423,6 @@ function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableEl
    */
   return tornarDestruivel(wrapper, wrapper, () => {
     hide();
-    soltarPointer?.();
+    releasePointer?.();
   });
 }

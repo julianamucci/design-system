@@ -154,7 +154,7 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
 }
 
 /** As opções comuns às duas formas de snippet. `content` é o nome da variável. */
-function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolean): string[] {
+function linesComuns(o: DrawerSnippetOptions, content: string, hasFooter: boolean): string[] {
   return options([
     ['trigger', button({ label: o.triggerLabel ?? 'Abrir drawer', variant: 'outline' })],
     ['title', text(o.title ?? 'Editar perfil')],
@@ -166,8 +166,8 @@ function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolea
     ],
     ['content', content],
     ['bodyLabel', o.bodyLabel ? text(o.bodyLabel) : undefined],
-    ['footer', temRodape ? 'rodape' : undefined],
-    ['initialFocus', temRodape && o.initialFocusOnCloser ? 'rodape[0]' : undefined],
+    ['footer', hasFooter ? 'rodape' : undefined],
+    ['initialFocus', hasFooter && o.initialFocusOnCloser ? 'rodape[0]' : undefined],
     ['direction', o.direction && o.direction !== 'bottom' ? text(o.direction) : undefined],
     ['dismissible', o.dismissible === false ? 'false' : undefined],
     ['modal', o.modal === false ? 'false' : undefined],

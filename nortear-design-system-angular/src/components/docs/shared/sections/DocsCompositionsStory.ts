@@ -32,7 +32,7 @@ import { NdsDocsCompositions, type DocsCompositionItem } from './DocsComposition
     <ng-template #tplDestrutiva>
       <button ndsButton variant="destructive">Excluir projeto</button>
     </ng-template>
-    <ng-template #tplComIcone>
+    <ng-template #tplWithIcon>
       <button ndsButton variant="default">Salvar</button>
     </ng-template>
 
@@ -55,7 +55,7 @@ export class NdsDocsCompositionsStory {
 
   private readonly tplPar = viewChild.required<TemplateRef<unknown>>('tplPar');
   private readonly tplDestrutiva = viewChild.required<TemplateRef<unknown>>('tplDestrutiva');
-  private readonly tplComIcone = viewChild.required<TemplateRef<unknown>>('tplComIcone');
+  private readonly tplWithIcon = viewChild.required<TemplateRef<unknown>>('tplWithIcon');
 
   protected readonly items = computed<DocsCompositionItem[]>(() =>
     this.semUseWhen()
@@ -63,7 +63,7 @@ export class NdsDocsCompositionsStory {
           {
             name: 'Botão com ícone',
             description: 'Ícone à esquerda do rótulo, decorativo e fora da árvore de acessibilidade.',
-            preview: this.tplComIcone(),
+            preview: this.tplWithIcon(),
           },
         ]
       : [

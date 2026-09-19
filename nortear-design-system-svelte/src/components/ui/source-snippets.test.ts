@@ -199,7 +199,7 @@ function importesDoDesignSystem(text: string): Array<{ modulo: string; nomes: st
  *     CONSTRUTOR, não do exemplo, e contá-lo inventaria declaração em todo
  *     módulo.
  */
-function textoPublicado(bruto: string): string {
+function publishedText(bruto: string): string {
   let text = bruto.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
   text = text.replace(/\\[\s\S]/g, '');
   let antes: string;
@@ -294,9 +294,9 @@ function collectDeclarations(trecho: string, into: Set<string>): void {
  *    cells })}` e a variável de `{#each}` são colhidas como locais — sem isso,
  *    `input-otp` e `pagination` eram acusados por `cells` e `pages`.
  */
-function loopsSemDeclaracaoNoTexto(bruto: string): string[] {
-  const text = textoPublicado(bruto);
-  const declarados = declaradosNoTexto(text);
+function loopsWithoutDeclarationInText(bruto: string): string[] {
+  const text = publishedText(bruto);
+  const declarados = declaredInText(text);
   const locais = nomesLocaisDaMarcacao(text);
 
   const soltos = new Set<string>();
@@ -309,7 +309,7 @@ function loopsSemDeclaracaoNoTexto(bruto: string): string[] {
 }
 
 /** O que o `<script>` publicado — em crase ou em aspas — traz para o escopo. */
-function declaradosNoTexto(text: string): Set<string> {
+function declaredInText(text: string): Set<string> {
   const declarados = new Set<string>();
   for (const [start, fim] of templateRegions(text)) {
     collectDeclarations(text.slice(start, fim), declarados);
@@ -569,7 +569,7 @@ describe('transforms do painel Code', () => {
           bruto,
           `${path}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob de \`fontes\`, e sem esta falha ele sumiria da medição em silêncio`,
         ).toBeTypeOf('string');
-        const soltos = loopsSemDeclaracaoNoTexto(bruto!);
+        const soltos = loopsWithoutDeclarationInText(bruto!);
         expect(
           soltos,
           `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhum <script> do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,

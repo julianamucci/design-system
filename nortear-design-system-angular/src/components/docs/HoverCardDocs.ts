@@ -347,7 +347,7 @@ const VARIANT_CODE = {
           <a
             ndsHoverCardTrigger
             href="#joana"
-            [class]="classesGatilho"
+            [class]="triggerClasses"
           >{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
@@ -363,7 +363,7 @@ const VARIANT_CODE = {
                recebe foco. O defeito é justamente esse. -->
           <a
             ndsHoverCardTrigger
-            [class]="classesGatilho"
+            [class]="triggerClasses"
           >{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
@@ -378,7 +378,7 @@ const VARIANT_CODE = {
           <a
             ndsHoverCardTrigger
             href="#joana"
-            [class]="classesGatilho"
+            [class]="triggerClasses"
             [openDelay]="500"
             [closeDelay]="200"
           >{{ mencao() }}</a>
@@ -394,7 +394,7 @@ const VARIANT_CODE = {
           <a
             ndsHoverCardTrigger
             href="#joana"
-            [class]="classesGatilho"
+            [class]="triggerClasses"
             [openDelay]="0"
             [closeDelay]="200"
           >{{ mencao() }}</a>
@@ -412,7 +412,7 @@ const VARIANT_CODE = {
     <ng-template #tplVarDefault>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('default', 'docs_variantes', $event)">
-          <a ndsHoverCardTrigger href="#joana" [class]="classesGatilho">{{ mencao() }}</a>
+          <a ndsHoverCardTrigger href="#joana" [class]="triggerClasses">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -426,7 +426,7 @@ const VARIANT_CODE = {
           <a
             ndsHoverCardTrigger
             href="#joana"
-            [class]="classesGatilho"
+            [class]="triggerClasses"
             [openDelay]="500"
             [closeDelay]="200"
           >{{ mencao() }}</a>
@@ -440,7 +440,7 @@ const VARIANT_CODE = {
     <ng-template #tplVarUserProfile>
       <div class="nds-min-h-40" style="contain: layout; position: relative">
         <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_variantes', $event)">
-          <a ndsHoverCardTrigger href="#joana" [class]="classesGatilho">{{ mencao() }}</a>
+          <a ndsHoverCardTrigger href="#joana" [class]="triggerClasses">{{ mencao() }}</a>
           <ng-template ndsHoverCardContent>
             <ng-container [ngTemplateOutlet]="cartaoPerfil" />
           </ng-template>
@@ -454,7 +454,7 @@ const VARIANT_CODE = {
           <a
             ndsHoverCardTrigger
             href="?path=/docs/components-layout-card--docs"
-            [class]="classesGatilho"
+            [class]="triggerClasses"
             [openDelay]="500"
           >{{ t('variants.items.linkPreview.cardDomain') }}</a>
           <ng-template ndsHoverCardContent>
@@ -570,7 +570,7 @@ const VARIANT_CODE = {
           >
             {{ t('demonstration.sentenceBefore') }}
             <span ndsHoverCard (onOpenChange)="onChange('user-profile', 'docs_demo', $event)">
-              <a ndsHoverCardTrigger href="#joana" [class]="classesGatilho">{{ mencao() }}</a>
+              <a ndsHoverCardTrigger href="#joana" [class]="triggerClasses">{{ mencao() }}</a>
               <ng-template ndsHoverCardContent>
                 <ng-container [ngTemplateOutlet]="cartaoPerfil" />
               </ng-template>
@@ -671,7 +671,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeAvatar = IMPORT_CODE_AVATAR;
-  protected readonly classesGatilho = CLASSES_TRIGGER;
+  protected readonly triggerClasses = CLASSES_TRIGGER;
   protected readonly triggerExplainerClasses = CLASSES_TRIGGER_EXPLAINER;
 
   /**

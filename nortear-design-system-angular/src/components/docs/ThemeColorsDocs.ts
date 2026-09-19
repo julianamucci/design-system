@@ -237,7 +237,7 @@ interface DensityTable {
             <p class="nds-text-body">{{ t('palette.subtitle') }}</p>
           </div>
 
-          @for (group of gruposDaPaleta; track group.key) {
+          @for (group of paletteGroups; track group.key) {
             <div class="nds-swatch-group">
               <h3 class="nds-swatch-group-title">{{ t(group.label) }}</h3>
               <ul class="nds-swatch-grid">
@@ -246,9 +246,9 @@ interface DensityTable {
                     <button
                       ndsSwatch
                       [token]="token"
-                      [value]="valoresDosTokens()[token] ?? ''"
-                      [rotuloDeCopia]="t('copy.tooltip')"
-                      [rotuloCopiado]="t('copy.copied')"
+                      [value]="tokenValues()[token] ?? ''"
+                      [copyLabel]="t('copy.tooltip')"
+                      [copiedLabel]="t('copy.copied')"
                     ></button>
                   </li>
                 }
@@ -329,13 +329,13 @@ interface DensityTable {
                       <table ndsTable class="nds-axis-density-table">
                         <thead ndsTableHeader>
                           <tr ndsTableRow>
-                            @for (column of tabelaDeDensidade().tableCols; track $index) {
+                            @for (column of densityTable().tableCols; track $index) {
                               <th ndsTableHead>{{ column }}</th>
                             }
                           </tr>
                         </thead>
                         <tbody ndsTableBody>
-                          @for (line of tabelaDeDensidade().tableRows; track $index) {
+                          @for (line of densityTable().tableRows; track $index) {
                             <tr ndsTableRow>
                               @for (celula of line; track $index) {
                                 <td ndsTableCell>{{ celula }}</td>
@@ -379,7 +379,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly t = t;
   protected readonly titleId = DOCS_PAGE_TITLE_ID;
 
-  protected readonly gruposDaPaleta = PALETTE_GROUPS;
+  protected readonly paletteGroups = PALETTE_GROUPS;
   protected readonly tokensDaAmostra = TOKENS_DA_AMOSTRA;
   protected readonly temasDeMarca = MARCA_THEMES;
   protected readonly modos = MODOS;
@@ -392,8 +392,8 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
 
   // ─── Estado de tema/modo lido do <html> ───────────────────────────────────
 
-  protected readonly marcaAtiva = signal('tema-default');
-  protected readonly paginaEscura = signal(false);
+  protected readonly activeBrand = signal('tema-default');
+  protected readonly darkPage = signal(false);
   /**
    * Valores HSL resolvidos, relidos a cada troca de classe do `<html>`.
    *
@@ -407,7 +407,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
    * `noUncheckedIndexedAccess` resolveria a mesma coisa e nenhuma das cinco
    * stacks o liga — a mudança fica local, sem mexer no tipo do repositório.
    */
-  protected readonly valoresDosTokens = signal<Record<string, string | undefined>>({});
+  protected readonly tokenValues = signal<Record<string, string | undefined>>({});
 
   /**
    * Classe de cada cartão de MARCA: o tema do cartão + o modo atual da página.
@@ -417,7 +417,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
    * multiplicaria o mesmo cálculo (armadilha 4 do CLAUDE.md).
    */
   protected readonly escopoDaMarca = computed<Record<string, string>>(() => {
-    const sufixo = this.paginaEscura() ? ' dark' : '';
+    const sufixo = this.darkPage() ? ' dark' : '';
     return Object.fromEntries(
       MARCA_THEMES.map((theme) => [
         theme.key,
@@ -428,7 +428,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
 
   /** Classe de cada cartão de MODO: o tema ativo + o modo fixo do cartão. */
   protected readonly escopoDoModo = computed<Record<string, string>>(() => {
-    const marca = this.marcaAtiva();
+    const marca = this.activeBrand();
     return Object.fromEntries(
       MODOS.map((mode) => [
         mode.key,
@@ -450,7 +450,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
    * Lida do JSON cru, e não por `t()`: `tableCols` e `tableRows` são arrays, e
    * o `t()` devolve a PRÓPRIA CHAVE quando ela não aponta para uma string.
    */
-  protected readonly tabelaDeDensidade = computed<DensityTable>(() => {
+  protected readonly densityTable = computed<DensityTable>(() => {
     const all = themeColorsTranslations as Record<string, unknown>;
     const dicionario = (all[localeSignal()] ?? all['pt-BR']) as {
       axes: { density: DensityTable };
@@ -508,14 +508,14 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   private lerTema(): void {
     const classes = document.documentElement.classList;
     const marca = MARCA_THEMES.find((theme) => classes.contains(theme.className));
-    this.marcaAtiva.set(marca ? marca.className : 'tema-default');
-    this.paginaEscura.set(classes.contains('dark'));
+    this.activeBrand.set(marca ? marca.className : 'tema-default');
+    this.darkPage.set(classes.contains('dark'));
 
     const estilo = getComputedStyle(document.documentElement);
     const values: Record<string, string> = {};
     for (const token of ALL_OS_TOKENS) {
       values[token] = estilo.getPropertyValue(`--${token}`).trim();
     }
-    this.valoresDosTokens.set(values);
+    this.tokenValues.set(values);
   }
 }

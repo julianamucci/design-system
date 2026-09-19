@@ -43,9 +43,9 @@ function pergunta() {
 }
 
 it('lê as CHAT_DOCS_* do .env.local, e não só as do Google', async () => {
-  const pasta = mkdtempSync(join(tmpdir(), 'nds-envlocal-'));
+  const folder = mkdtempSync(join(tmpdir(), 'nds-envlocal-'));
   writeFileSync(
-    join(pasta, '.env.local'),
+    join(folder, '.env.local'),
     [
       // Com aspas de propósito: é convenção comum de arquivo `.env`, e sem
       // tirá-las a chave viaja com aspas e a API recusa — sintoma que aponta
@@ -66,7 +66,7 @@ it('lê as CHAT_DOCS_* do .env.local, e não só as do Google', async () => {
   delete process.env.CHAT_DOCS_BASE_URL;
   delete process.env.CHAT_DOCS_MODELO;
   delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
-  vi.spyOn(process, 'cwd').mockReturnValue(pasta);
+  vi.spyOn(process, 'cwd').mockReturnValue(folder);
 
   const response = await responder(pergunta());
 

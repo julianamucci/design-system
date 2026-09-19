@@ -286,7 +286,7 @@ export class NdsBreadcrumbEllipsis {
       landmarks de navegação e sem nomes distintos o axe acusa landmark-unique —
       e o leitor de tela anuncia "navegação" dez vezes sem dizer qual é qual.
     -->
-    <ng-template #tplVarPadrao>
+    <ng-template #tplVarDefault>
       <nav ndsBreadcrumb [label]="label('variante-padrao')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
@@ -597,7 +597,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
-  private readonly tplVarPadrao = viewChild.required<TemplateRef<unknown>>('tplVarPadrao');
+  private readonly tplVarDefault = viewChild.required<TemplateRef<unknown>>('tplVarDefault');
   private readonly tplVarReticencias = viewChild.required<TemplateRef<unknown>>('tplVarReticencias');
   private readonly tplVarSeparador = viewChild.required<TemplateRef<unknown>>('tplVarSeparador');
   private readonly tplDoDont1Do = viewChild.required<TemplateRef<unknown>>('tplDoDont1Do');
@@ -728,7 +728,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
         description: stripHtml(t('variants.items.default')),
         code: CODE_DEFAULT,
         trackId: 'default',
-        preview: this.tplVarPadrao(),
+        preview: this.tplVarDefault(),
       },
       {
         name: 'withEllipsis',

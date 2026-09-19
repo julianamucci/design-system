@@ -68,7 +68,7 @@ function PaginaQueReRenderiza() {
   return <p data-renders={n}>renders: {n + 1}</p>;
 }
 
-export const UmEventoPorPagina: Story = {
+export const OneEventPerPage: Story = {
   render: () => <PaginaQueReRenderiza />,
   play: async ({ canvasElement }) => {
     // Espera de RELÓGIO: os re-renders são encadeados por efeito, e a contagem

@@ -279,7 +279,7 @@ export class NdsPopoverContent {
             class="nds-popover-content"
             data-slot="popover-content"
             [attr.data-state]="state()"
-            [attr.aria-label]="rotuloDeReserva()"
+            [attr.aria-label]="fallbackLabel()"
             [attr.aria-modal]="ariaModal()"
             (openAutoFocus)="aoAutoFocar($event)"
             (keydown)="aoTeclar($event)"
@@ -454,7 +454,7 @@ export class NdsPopover {
    * segurança. Devolve `null` quando há título para não deixar os dois
    * contratos no mesmo elemento.
    */
-  protected readonly rotuloDeReserva = computed(() => {
+  protected readonly fallbackLabel = computed(() => {
     if (this.root.titleId()) return null;
     const declarado = this.content()?.ariaLabel()?.trim();
     if (declarado) return declarado;
@@ -483,7 +483,7 @@ export class NdsPopover {
   protected aoAutoFocar(evento: Event): void {
     evento.preventDefault();
     const panel = evento.target as HTMLElement | null;
-    if (panel) this.focarQuandoVisivel(panel, 0);
+    if (panel) this.focusWhenVisible(panel, 0);
   }
 
   /**
@@ -494,10 +494,10 @@ export class NdsPopover {
    * que um painel que nunca aparece (fechado no mesmo quadro, por exemplo) não
    * deixe um laço rodando.
    */
-  private focarQuandoVisivel(panel: HTMLElement, attempt: number): void {
+  private focusWhenVisible(panel: HTMLElement, attempt: number): void {
     if (!panel.isConnected || attempt > 10) return;
     if (getComputedStyle(panel).visibility === 'hidden') {
-      requestAnimationFrame(() => this.focarQuandoVisivel(panel, attempt + 1));
+      requestAnimationFrame(() => this.focusWhenVisible(panel, attempt + 1));
       return;
     }
     // Se o conteúdo já levou o foco para dentro, não mexer: a intenção dele é

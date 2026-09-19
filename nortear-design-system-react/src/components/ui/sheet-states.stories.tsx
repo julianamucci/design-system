@@ -554,14 +554,14 @@ export const SecondPanelClosesFirst: Story = {
     });
 
     await step("Abrir o segundo recolhe o primeiro, e ele diz por quê", async () => {
-      const aberto = await waitForPortal("dialog");
+      const openPanel = await waitForPortal("dialog");
       await userEvent.click(
-        within(aberto).getByRole("button", { name: "Abrir o segundo" }),
+        within(openPanel).getByRole("button", { name: "Abrir o segundo" }),
       );
       await waitFor(() => {
-        const abertos = document.querySelectorAll('[data-slot="sheet-content"]');
-        if (abertos.length !== 1) {
-          throw new Error(`esperava um painel na tela, achei ${abertos.length}`);
+        const openPanels = document.querySelectorAll('[data-slot="sheet-content"]');
+        if (openPanels.length !== 1) {
+          throw new Error(`esperava um painel na tela, achei ${openPanels.length}`);
         }
       });
       const panel = document.querySelector<HTMLElement>('[data-slot="sheet-content"]')!;

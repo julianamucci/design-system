@@ -290,7 +290,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
    * declarados. O auxiliar só precisa do primeiro item para entrar no painel
    * quando o teclado o abre, e é daqui que ele o tira.
    */
-  const focaveisPorPainel = new WeakMap<HTMLElement, HTMLElement[]>();
+  const focusablesByPanel = new WeakMap<HTMLElement, HTMLElement[]>();
 
   /**
    * Um controlador por BARRA, e um painel por nível — o submenu de um submenu
@@ -305,7 +305,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   const submenu = createSubmenuController({
     triggerSlot: 'menubar-sub-trigger',
     panelIdPrefix: `menubar-panel-${id}-sub`,
-    getItems: (panel) => focaveisPorPainel.get(panel) ?? [],
+    getItems: (panel) => focusablesByPanel.get(panel) ?? [],
     toggleOnClick: true,
     focusOnClickOpen: true,
     writeStateAttr: true,
@@ -318,7 +318,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
    * navega por teclado — e o conteúdo compartilhado promete o contrário, no
    * item de acessibilidade que diz que o Tab não para em cada gatilho.
    */
-  function moverTabulacao(target: HTMLButtonElement): void {
+  function moveTabStop(target: HTMLButtonElement): void {
     for (const g of triggers) g.tabIndex = g === target ? 0 : -1;
   }
 
@@ -375,7 +375,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     tabExitTarget(e, root, openTrigger).focus();
     // `overlay`: a pessoa saiu sem decidir, como no clique fora.
     closeAll('overlay');
-    moverTabulacao(openTrigger);
+    moveTabStop(openTrigger);
   }
 
   function openMenu(index: number, focus: 'item' | 'gatilho' | 'nenhum'): void {
@@ -388,7 +388,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     target.trigger.dataset.state = 'open';
     target.trigger.setAttribute('aria-expanded', 'true');
     isOpen = target;
-    moverTabulacao(target.trigger);
+    moveTabStop(target.trigger);
     if (focus === 'item') target.items[0]?.focus();
     else if (focus === 'gatilho') target.trigger.focus();
     target.menu.onOpenChange?.(true);
@@ -653,7 +653,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
             // vale zero, e é a medida que decide onde o painel cabe.
             buildPanel: () => {
               const montado = createPanel(item.items ?? [], { submenu: true });
-              focaveisPorPainel.set(montado.panel, montado.focaveis);
+              focusablesByPanel.set(montado.panel, montado.focaveis);
               return montado.panel;
             },
           }),
@@ -792,7 +792,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
       // do menu que estava na tela sem decidir.
       closeAll('overlay');
       if (!estavaOpen) openMenu(index, 'item');
-      else moverTabulacao(trigger);
+      else moveTabStop(trigger);
     });
 
     trigger.addEventListener('keydown', (e) => {
@@ -801,7 +801,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         openMenu(index, 'item');
       } else if (e.key === 'Escape') {
         closeAll('escape');
-        moverTabulacao(trigger);
+        moveTabStop(trigger);
       }
     });
 
@@ -839,7 +839,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
       const openTrigger = isOpen?.trigger ?? null;
       closeAll('escape');
       if (openTrigger) {
-        moverTabulacao(openTrigger);
+        moveTabStop(openTrigger);
         openTrigger.focus();
       }
       return;
@@ -860,7 +860,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     if (isOpen) {
       openMenu(next, 'gatilho');
     } else {
-      moverTabulacao(triggers[next]);
+      moveTabStop(triggers[next]);
       triggers[next].focus();
     }
   });

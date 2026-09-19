@@ -331,14 +331,14 @@ const LINHAS_DEMO: {
   idKey: string;
   statusKey: string;
   metodoKey: string;
-  valorKey: string;
+  amountKey: string;
   variant: BadgeVariant;
 }[] = [
-  { key: '001', idKey: 'inv001', statusKey: 'paid',     metodoKey: 'creditCard',   valorKey: 'amount001', variant: 'success'     },
-  { key: '002', idKey: 'inv002', statusKey: 'pending',  metodoKey: 'bankTransfer', valorKey: 'amount002', variant: 'warning'     },
-  { key: '003', idKey: 'inv003', statusKey: 'canceled', metodoKey: 'pix',          valorKey: 'amount003', variant: 'destructive' },
-  { key: '004', idKey: 'inv004', statusKey: 'paid',     metodoKey: 'creditCard',   valorKey: 'amount004', variant: 'success'     },
-  { key: '005', idKey: 'inv005', statusKey: 'pending',  metodoKey: 'pix',          valorKey: 'amount005', variant: 'warning'     },
+  { key: '001', idKey: 'inv001', statusKey: 'paid',     metodoKey: 'creditCard',   amountKey: 'amount001', variant: 'success'     },
+  { key: '002', idKey: 'inv002', statusKey: 'pending',  metodoKey: 'bankTransfer', amountKey: 'amount002', variant: 'warning'     },
+  { key: '003', idKey: 'inv003', statusKey: 'canceled', metodoKey: 'pix',          amountKey: 'amount003', variant: 'destructive' },
+  { key: '004', idKey: 'inv004', statusKey: 'paid',     metodoKey: 'creditCard',   amountKey: 'amount004', variant: 'success'     },
+  { key: '005', idKey: 'inv005', statusKey: 'pending',  metodoKey: 'pix',          amountKey: 'amount005', variant: 'warning'     },
 ];
 
 @Component({
@@ -463,7 +463,7 @@ const LINHAS_DEMO: {
       </div>
     </ng-template>
 
-    <ng-template #tplVarRodape>
+    <ng-template #tplVarFooter>
       <div ndsTableWrapper>
         <table ndsTable>
           <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
@@ -547,7 +547,7 @@ const LINHAS_DEMO: {
       </div>
     </ng-template>
 
-    <ng-template #tplVarVazio>
+    <ng-template #tplVarEmpty>
       <div ndsTableWrapper>
         <table ndsTable>
           <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
@@ -585,7 +585,7 @@ const LINHAS_DEMO: {
             id="docs-table-filtro"
             type="search"
             [value]="termo()"
-            (input)="filtrar($event)"
+            (input)="filter($event)"
           />
         </div>
         <div ndsTableWrapper>
@@ -624,7 +624,7 @@ const LINHAS_DEMO: {
             <tr ndsTableRow>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
               <th ndsTableHead [sort]="direction()">
-                <button ndsButton variant="ghost" size="sm" (click)="alternarOrdem()">
+                <button ndsButton variant="ghost" size="sm" (click)="toggleSort()">
                   {{ t('demonstration.labels.amount') }}
                   <svg ndsButtonIcon kind="chevron-right" class="nds-icon"></svg>
                 </button>
@@ -698,7 +698,7 @@ const LINHAS_DEMO: {
               <th ndsTableHead>
                 <button
                   ndsCheckbox
-                  [attr.aria-label]="rotuloSelecionarTudo()"
+                  [attr.aria-label]="selectAllLabel()"
                   [checked]="todasSelecionadas()"
                   [indeterminate]="algumasSelecionadas()"
                   (checkedChange)="toggleAll($event)"
@@ -716,7 +716,7 @@ const LINHAS_DEMO: {
                     ndsCheckbox
                     [attr.aria-label]="line.selecaoLabel"
                     [checked]="selecionadas().has(line.key)"
-                    (checkedChange)="alternarSelecao(line.key, $event)"
+                    (checkedChange)="toggleSelection(line.key, $event)"
                   ></button>
                 </td>
                 <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
@@ -886,10 +886,10 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   private readonly tplDoDont2Do = viewChild.required<TemplateRef<unknown>>('tplDoDont2Do');
   private readonly tplDoDont2Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont2Dont');
   private readonly tplVarBasica = viewChild.required<TemplateRef<unknown>>('tplVarBasica');
-  private readonly tplVarRodape = viewChild.required<TemplateRef<unknown>>('tplVarRodape');
+  private readonly tplVarFooter = viewChild.required<TemplateRef<unknown>>('tplVarFooter');
   private readonly tplVarCaptionSrOnly = viewChild.required<TemplateRef<unknown>>('tplVarCaptionSrOnly');
   private readonly tplVarAcoes = viewChild.required<TemplateRef<unknown>>('tplVarAcoes');
-  private readonly tplVarVazio = viewChild.required<TemplateRef<unknown>>('tplVarVazio');
+  private readonly tplVarEmpty = viewChild.required<TemplateRef<unknown>>('tplVarEmpty');
   private readonly tplCompToolbar = viewChild.required<TemplateRef<unknown>>('tplCompToolbar');
   private readonly tplCompOrdenacao = viewChild.required<TemplateRef<unknown>>('tplCompOrdenacao');
   private readonly tplCompPaginacao = viewChild.required<TemplateRef<unknown>>('tplCompPaginacao');
@@ -906,7 +906,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       id: t(`demonstration.labels.${line.idKey}`),
       status: t(`demonstration.labels.${line.statusKey}`),
       metodo: t(`demonstration.labels.${line.metodoKey}`),
-      value: t(`demonstration.labels.${line.valorKey}`),
+      value: t(`demonstration.labels.${line.amountKey}`),
       // O rótulo da ação carrega o identificador da linha: "Ações" sozinho, cinco
       // vezes, é indistinguível na lista de controles do leitor de tela.
       acaoLabel: `${t('demonstration.labels.actionsLabel')} ${t(`demonstration.labels.${line.idKey}`)}`,
@@ -936,7 +936,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     return lines.filter((l) => `${l.id} ${l.metodo}`.toLowerCase().includes(search));
   });
 
-  protected filtrar(evento: Event): void {
+  protected filter(evento: Event): void {
     this.termo.set((evento.target as HTMLInputElement).value);
   }
 
@@ -949,7 +949,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     );
   });
 
-  protected alternarOrdem(): void {
+  protected toggleSort(): void {
     this.direction.update((d) => (d === 'ascending' ? 'descending' : 'ascending'));
   }
 
@@ -961,12 +961,12 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   protected readonly algumasSelecionadas = computed(
     () => this.selecionadas().size > 0 && !this.todasSelecionadas(),
   );
-  protected readonly rotuloSelecionarTudo = computed(() => {
+  protected readonly selectAllLabel = computed(() => {
     dict();
     return t('demonstration.labels.selectAll');
   });
 
-  protected alternarSelecao(key: string, checked: boolean): void {
+  protected toggleSelection(key: string, checked: boolean): void {
     const next = new Set(this.selecionadas());
     if (checked) next.add(key);
     else next.delete(key);
@@ -1067,10 +1067,10 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'basic',              code: CODE_BASICA,          tpl: this.tplVarBasica()          },
-      { key: 'withFooter',         code: CODE_WITH_FOOTER,      tpl: this.tplVarRodape()          },
+      { key: 'withFooter',         code: CODE_WITH_FOOTER,      tpl: this.tplVarFooter()          },
       { key: 'withSrOnlyCaption',  code: CODE_CAPTION_SR_ONLY, tpl: this.tplVarCaptionSrOnly()   },
       { key: 'withInlineActions',  code: CODE_ACTIONS,           tpl: this.tplVarAcoes()           },
-      { key: 'withEmptyState',     code: EMPTY_CODE,           tpl: this.tplVarVazio()           },
+      { key: 'withEmptyState',     code: EMPTY_CODE,           tpl: this.tplVarEmpty()           },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.items.${key}.label`),
       description: t(`variants.items.${key}.description`),

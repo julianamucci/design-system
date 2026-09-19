@@ -63,10 +63,10 @@ export type ToggleGroupValue = string | string[];
     provideToggleGroupContext(() => {
       const group = inject(NdsToggleGroup);
       return {
-        value: group.valoresSelecionados,
+        value: group.selectedValues,
         disabled: group.disabled,
         orientation: group.orientation,
-        isValueInitialized: group.valorInicializado,
+        isValueInitialized: group.valueInitialized,
         toggle: (value: string, next: boolean) => group.toggle(value, next),
       };
     }),
@@ -117,7 +117,7 @@ export class NdsToggleGroup {
    * decidir se está pressionado. A forma pública (`value`) continua sendo a
    * documentada; a conversão mora aqui, num lugar só.
    */
-  readonly valoresSelecionados = computed<string[]>(() => {
+  readonly selectedValues = computed<string[]>(() => {
     const raw = this.value() ?? this.defaultValue();
     if (raw === undefined) return [];
     if (Array.isArray(raw)) return [...raw];
@@ -128,7 +128,7 @@ export class NdsToggleGroup {
    * O primitivo avisa em dev quando um item entra num grupo sem `value`; o
    * aviso só faz sentido depois que o grupo tem seleção definida por alguém.
    */
-  readonly valorInicializado = computed(
+  readonly valueInitialized = computed(
     () => this.value() !== undefined || this.defaultValue() !== undefined,
   );
 
@@ -143,8 +143,8 @@ export class NdsToggleGroup {
       .map((meta) => meta.index),
   );
 
-  private readonly indiceAtivo = computed(() => {
-    const selecionados = this.valoresSelecionados();
+  private readonly activeIndex = computed(() => {
+    const selecionados = this.selectedValues();
     if (selecionados.length === 0) return -1;
     const items = Array.from(this.composite.itemMap().values());
     return items.find((meta) => selecionados.includes(meta['value'] as string))?.index ?? -1;
@@ -168,7 +168,7 @@ export class NdsToggleGroup {
     // enquanto o foco está FORA do grupo: com o foco dentro, quem manda é a
     // navegação por setas, e reposicionar aqui roubaria o foco dela.
     effect(() => {
-      const active = this.indiceAtivo();
+      const active = this.activeIndex();
       if (active === -1 || this.indicesDesabilitados().includes(active)) return;
       const focado = this.hostRef.nativeElement.ownerDocument.activeElement;
       if (focado && this.hostRef.nativeElement.contains(focado)) return;
@@ -184,7 +184,7 @@ export class NdsToggleGroup {
   toggle(value: string, next: boolean): void {
     if (this.disabled()) return;
 
-    const current = this.valoresSelecionados();
+    const current = this.selectedValues();
 
     if (this.type() === 'multiple') {
       const list = next

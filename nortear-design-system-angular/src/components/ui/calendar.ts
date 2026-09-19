@@ -319,7 +319,7 @@ export class NdsCalendarDay {
               <div class="nds-calendar-caption-dropdown">
                 <select
                   class="nds-calendar-select"
-                  [attr.aria-label]="rotulos().selecionarMes"
+                  [attr.aria-label]="rotulos().selectMonth"
                   (change)="aoTrocarMes($event)"
                 >
                   @for (name of nomesDosMeses(); track $index) {
@@ -329,7 +329,7 @@ export class NdsCalendarDay {
 
                 <select
                   class="nds-calendar-select"
-                  [attr.aria-label]="rotulos().selecionarAno"
+                  [attr.aria-label]="rotulos().selectYear"
                   (change)="aoTrocarAno($event)"
                 >
                   @for (year of anosOferecidos(); track year) {

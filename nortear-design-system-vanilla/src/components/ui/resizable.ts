@@ -84,7 +84,7 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   const count = panels.length;
 
   /** Encerra o arraste em curso, se houver. `null` fora de arraste. */
-  let soltarArrasto: (() => void) | null = null;
+  let releaseDrag: (() => void) | null = null;
 
   const root = document.createElement('div');
   root.dataset.slot = 'resizable';
@@ -248,7 +248,7 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
           arrastando = false;
           document.removeEventListener('mousemove', onMove);
           document.removeEventListener('mouseup', onUp);
-          soltarArrasto = null;
+          releaseDrag = null;
           finalizar();
         };
 
@@ -258,7 +258,7 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
         // botão ainda pressionado — arrastar e a tela trocar debaixo do
         // ponteiro — deixava `mousemove` e `mouseup` vivos no `document`,
         // recalculando larguras de painéis que já não existiam.
-        soltarArrasto = onUp;
+        releaseDrag = onUp;
       });
 
       /**
@@ -296,6 +296,6 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   handleEls.forEach((_, i) => anunciar(i));
 
   return tornarDestruivel(root, root, () => {
-    soltarArrasto?.();
+    releaseDrag?.();
   });
 }

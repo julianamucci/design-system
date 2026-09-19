@@ -328,7 +328,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         </div>
       }
     </ng-template>
-    <ng-template #tplVarSemTitulo>
+    <ng-template #tplVarWithoutTitle>
       <div ndsAlert role="note" class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
@@ -336,7 +336,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     </ng-template>
 
     <!-- ── Previews das composições ─────────────────────────────────────── -->
-    <ng-template #tplCompIcone>
+    <ng-template #tplCompIcon>
       <div ndsAlert role="note" class="nds-w-full">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
@@ -451,7 +451,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
           [description]="t('import.basic')"
           [code]="importBasico"
           [secondaryDescription]="t('import.withIcon')"
-          [secondaryCode]="importComIcone"
+          [secondaryCode]="importWithIcon"
           componentSlug="alert"
           language="ts"
         />
@@ -525,7 +525,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly importBasico = IMPORT_BASICO;
-  protected readonly importComIcone = IMPORT_WITH_ICON;
+  protected readonly importWithIcon = IMPORT_WITH_ICON;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -539,8 +539,8 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarWarning = viewChild.required<TemplateRef<unknown>>('tplVarWarning');
   private readonly tplVarInfo = viewChild.required<TemplateRef<unknown>>('tplVarInfo');
   private readonly tplVarDismissible = viewChild.required<TemplateRef<unknown>>('tplVarDismissible');
-  private readonly tplVarSemTitulo = viewChild.required<TemplateRef<unknown>>('tplVarSemTitulo');
-  private readonly tplCompIcone = viewChild.required<TemplateRef<unknown>>('tplCompIcone');
+  private readonly tplVarWithoutTitle = viewChild.required<TemplateRef<unknown>>('tplVarWithoutTitle');
+  private readonly tplCompIcon = viewChild.required<TemplateRef<unknown>>('tplCompIcon');
   private readonly tplCompAcao = viewChild.required<TemplateRef<unknown>>('tplCompAcao');
   private readonly tplCompActionDismiss = viewChild.required<TemplateRef<unknown>>('tplCompActionDismiss');
 
@@ -677,7 +677,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
         description: stripHtml(t('states.withoutTitle.behavior')),
         code: CODE_NO_TITLE,
         trackId: 'withoutTitle',
-        preview: this.tplVarSemTitulo(),
+        preview: this.tplVarWithoutTitle(),
       },
     ];
   });
@@ -685,7 +685,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     return [
-      { key: 'withIcon',   code: infoCardCode('default'), tpl: this.tplCompIcone() },
+      { key: 'withIcon',   code: infoCardCode('default'), tpl: this.tplCompIcon() },
       { key: 'withAction', code: CODE_WITH_ACTION,  tpl: this.tplCompAcao()  },
       { key: 'withActionAndDismiss', code: CODE_WITH_ACTION_AND_DISMISS, tpl: this.tplCompActionDismiss() },
     ].map(({ key, code, tpl }) => ({

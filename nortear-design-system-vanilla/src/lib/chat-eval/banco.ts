@@ -33,8 +33,8 @@
 
 /** Um turno já no formato que a função de servidor aceita no histórico. */
 export interface TurnoDoBanco {
-  papel: 'user' | 'model';
-  texto: string;
+  role: 'user' | 'model';
+  text: string;
 }
 
 export type GrupoDoCaso =

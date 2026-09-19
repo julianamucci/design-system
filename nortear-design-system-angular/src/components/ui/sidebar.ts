@@ -200,7 +200,7 @@ export class NdsSidebarProvider implements OnInit {
     '[attr.data-state]': 'store.state()',
     '[attr.data-side]': 'side()',
     '[attr.data-variant]': 'variant()',
-    '[attr.data-collapsible]': 'colapsavelAtivo()',
+    '[attr.data-collapsible]': 'activeCollapsible()',
     '[attr.data-mobile]': 'store.isMobile() ? "true" : null',
   },
   template: `
@@ -310,7 +310,7 @@ export class NdsSidebar {
    * `[data-collapsible="icon"]` encolhem o painel e escondem rótulos — se o
    * atributo ficasse fixo, a sidebar nasceria encolhida.
    */
-  protected readonly colapsavelAtivo = computed(() =>
+  protected readonly activeCollapsible = computed(() =>
     this.store.state() === 'collapsed' && this.collapsible() !== 'none' ? this.collapsible() : null,
   );
 }

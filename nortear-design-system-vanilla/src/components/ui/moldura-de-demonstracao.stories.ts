@@ -63,7 +63,7 @@ const SONDA = 'data-sonda-flutuante';
  * Só propriedades mecânicas no `style`: posição e deslocamento não são valor de
  * design (guideline 12). A largura nasce do texto, para não cravar medida.
  */
-function gatilhoComPainel(): HTMLElement {
+function triggerWithPanel(): HTMLElement {
   const anchor = document.createElement('div');
   anchor.style.position = 'relative';
 
@@ -124,7 +124,7 @@ function medir(canvasElement: HTMLElement): string | null {
  * resolveu.
  */
 export const Demonstracao: Story = {
-  render: () => createComponentDemo(gatilhoComPainel()),
+  render: () => createComponentDemo(triggerWithPanel()),
   play: async ({ canvasElement }) => {
     await expect(medir(canvasElement)).toBe(null);
   },
@@ -147,7 +147,7 @@ export const DoEDont: Story = {
           dontLabel: 'Não faça isso',
           doCaption: 'A camada aparece inteira.',
           dontCaption: 'A camada é decepada pelo cartão da seção.',
-          doPreviewFactory: gatilhoComPainel,
+          doPreviewFactory: triggerWithPanel,
           dontPreviewFactory: () => createButton({ label: 'Sem camada', variant: 'outline' }),
         },
       ],

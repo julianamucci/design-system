@@ -32,7 +32,7 @@ const IMPORT_WITH_BAR =
   'import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";';
 
 /** Quantidade de itens do exemplo, e só quando o control entrega um número. */
-function quantidade(value: unknown, defaultValue: number): number {
+function count(value: unknown, defaultValue: number): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return defaultValue;
   const inteiro = Math.round(value);
   return inteiro > 0 ? inteiro : defaultValue;
@@ -124,12 +124,12 @@ const colunas = Array.from({ length: 12 }, (_, i) => i + 1);
 export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   if (args.orientation === 'horizontal') {
-    return jsxSnippet(IMPORT_WITH_BAR, horizontalRange(quantidade(args.itemCount, 12)));
+    return jsxSnippet(IMPORT_WITH_BAR, horizontalRange(count(args.itemCount, 12)));
   }
   if (args.orientation === 'both') {
-    return jsxSnippet(IMPORT_WITH_BAR, tableAmpla(quantidade(args.itemCount, 12)));
+    return jsxSnippet(IMPORT_WITH_BAR, tableAmpla(count(args.itemCount, 12)));
   }
-  return jsxSnippet(SIMPLE_IMPORT, verticalList(quantidade(args.itemCount, 24)));
+  return jsxSnippet(SIMPLE_IMPORT, verticalList(count(args.itemCount, 24)));
 };
 
 /** Horizontal: a direção é o assunto, e nenhum control a descreve neste arquivo. */

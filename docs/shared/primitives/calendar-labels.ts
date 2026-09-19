@@ -18,28 +18,28 @@
 export interface CalendarLabels {
   previousMonth: string;
   nextMonth: string;
-  selecionarMes: string;
-  selecionarAno: string;
+  selectMonth: string;
+  selectYear: string;
 }
 
 const LABELS: Record<string, CalendarLabels> = {
   'pt-BR': {
     previousMonth: 'Ir para o mês anterior',
     nextMonth: 'Ir para o próximo mês',
-    selecionarMes: 'Selecionar mês',
-    selecionarAno: 'Selecionar ano',
+    selectMonth: 'Selecionar mês',
+    selectYear: 'Selecionar ano',
   },
   en: {
     previousMonth: 'Go to the Previous Month',
     nextMonth: 'Go to the Next Month',
-    selecionarMes: 'Choose the Month',
-    selecionarAno: 'Choose the Year',
+    selectMonth: 'Choose the Month',
+    selectYear: 'Choose the Year',
   },
   es: {
     previousMonth: 'Ir al mes anterior',
     nextMonth: 'Ir al mes siguiente',
-    selecionarMes: 'Seleccionar mes',
-    selecionarAno: 'Seleccionar año',
+    selectMonth: 'Seleccionar mes',
+    selectYear: 'Seleccionar año',
   },
 };
 

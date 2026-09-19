@@ -334,7 +334,7 @@ const ABAS_DEMO = ['overview', 'properties', 'examples'] as const;
       </div>
     </ng-template>
 
-    <ng-template #tplCompIcones>
+    <ng-template #tplCompIcons>
       <div ndsTabs class="nds-max-w-md" defaultValue="profile">
         <div ndsTabsList [attr.aria-label]="t('demonstration.labels.settings')">
           <button ndsTabsTrigger value="profile">
@@ -533,7 +533,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarDefault = viewChild.required<TemplateRef<unknown>>('tplVarDefault');
   private readonly tplVarLine = viewChild.required<TemplateRef<unknown>>('tplVarLine');
   private readonly tplVarVertical = viewChild.required<TemplateRef<unknown>>('tplVarVertical');
-  private readonly tplCompIcones = viewChild.required<TemplateRef<unknown>>('tplCompIcones');
+  private readonly tplCompIcons = viewChild.required<TemplateRef<unknown>>('tplCompIcons');
   private readonly tplCompBadge = viewChild.required<TemplateRef<unknown>>('tplCompBadge');
 
   /**
@@ -654,7 +654,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     return [
-      { key: 'iconTrigger',  trackId: 'icon-trigger',  tpl: this.tplCompIcones() },
+      { key: 'iconTrigger',  trackId: 'icon-trigger',  tpl: this.tplCompIcons() },
       { key: 'badgeTrigger', trackId: 'badge-trigger', tpl: this.tplCompBadge()  },
     ].map(({ key, trackId, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),

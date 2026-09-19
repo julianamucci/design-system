@@ -144,14 +144,14 @@ export const NoLimit: Story = {
     const [semTeto, comTeto] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area-viewport"]'),
     );
-    const [raizSemTeto, raizComTeto] = Array.from(
+    const [rootWithoutSize, rootWithSize] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area"]'),
     );
 
     await step('Sem degrau de altura o conteúdo expande e não há rolagem', async () => {
       // functional.item4. É o erro de uso mais comum: o componente aparenta
       // estar quebrado quando, na verdade, ninguém disse até onde ele pode ir.
-      await expect(raizSemTeto.getAttribute('data-size')).toBeNull();
+      await expect(rootWithoutSize.getAttribute('data-size')).toBeNull();
       await expect(semTeto.scrollHeight).toBe(semTeto.clientHeight);
       await expect(semTeto.getBoundingClientRect().height).toBeGreaterThan(400);
     });
@@ -159,7 +159,7 @@ export const NoLimit: Story = {
     await step('Com o degrau o mesmo conteúdo rola', async () => {
       // O par é a mesma lista nas duas caixas: o que muda entre não rolar e
       // rolar é só o degrau na raiz.
-      await expect(raizComTeto.dataset.size).toBe('sm');
+      await expect(rootWithSize.dataset.size).toBe('sm');
       await expect(comTeto.scrollHeight).toBeGreaterThan(comTeto.clientHeight);
       await expect(comTeto.getBoundingClientRect().height).toBeLessThan(200);
     });

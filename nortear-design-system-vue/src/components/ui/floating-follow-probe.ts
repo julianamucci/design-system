@@ -111,7 +111,7 @@ export async function nextFrames(count = 2): Promise<void> {
 }
 
 /** Coordenada que a cena observa: a borda esquerda da caixa do painel. */
-function bordaEsquerda(panel: HTMLElement): number {
+function leftEdge(panel: HTMLElement): number {
   return panel.getBoundingClientRect().left;
 }
 
@@ -123,16 +123,16 @@ function bordaEsquerda(panel: HTMLElement): number {
  * pendura sem reportar em vez de reprovar. O laço desiste no prazo e devolve o
  * que leu, para a asserção falar em pixels.
  */
-async function moverEMedir(panel: HTMLElement, antes: number, timeout = 1200): Promise<number> {
+async function moveAndMeasure(panel: HTMLElement, antes: number, timeout = 1200): Promise<number> {
   window.dispatchEvent(new Event('resize'));
   await nextFrames(2);
   const fim = performance.now() + timeout;
   // 1. espera a coordenada MUDAR — antes disso não há o que medir, e um
   //    critério só de estabilidade aprovaria o painel PARADO.
-  let atual = bordaEsquerda(panel);
+  let atual = leftEdge(panel);
   while (atual === antes && performance.now() < fim) {
     await new Promise<void>((resolve) => setTimeout(resolve, 32));
-    atual = bordaEsquerda(panel);
+    atual = leftEdge(panel);
   }
   // 2. e então espera ela PARAR de mudar (ver `STABLE_READS`). Se o painel não
   //    se moveu, este degrau devolve o mesmo valor em ~190ms e a asserção
@@ -196,16 +196,16 @@ export async function checkPanelFollowsTrigger(
   try {
     if (startAt !== 0) {
       shifted.style.transform = `translateX(${startAt}px)`;
-      await moverEMedir(panel, bordaEsquerda(panel));
+      await moveAndMeasure(panel, leftEdge(panel));
     }
-    before = bordaEsquerda(panel);
+    before = leftEdge(panel);
     shifted.style.transform = `translateX(${startAt + SHIFT}px)`;
-    after = await moverEMedir(panel, before);
+    after = await moveAndMeasure(panel, before);
   } finally {
     // Prazo curto na restauração: se a asserção já vai reprovar, o painel não
     // acompanha nada e esperar o prazo inteiro só encareceria a reprovação.
     shifted.style.transform = previous;
-    await moverEMedir(panel, bordaEsquerda(panel), 300);
+    await moveAndMeasure(panel, leftEdge(panel), 300);
   }
 
   await expect(Number.isFinite(before)).toBe(true);

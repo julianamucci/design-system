@@ -598,7 +598,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
               role="group"
               [attr.aria-label]="t('demonstration.labels.termsTitle')"
             >
-              @for (line of conteudoLongo(); track line) {
+              @for (line of longContent(); track line) {
                 <p>{{ line }}</p>
               }
             </div>
@@ -989,7 +989,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   });
 
   /** Conteúdo longo do exemplo de rolagem — derivado, nunca contado à mão. */
-  protected readonly conteudoLongo = computed(() => {
+  protected readonly longContent = computed(() => {
     dict();
     const base = t('demonstration.labels.description');
     return Array.from({ length: 10 }, (_, i) => `${i + 1}. ${base}`);

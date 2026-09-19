@@ -56,7 +56,7 @@ type Story = StoryObj;
 // O rodapé fecha por DOIS caminhos, e a diferença é o que separa "desistiu" de
 // "concluiu" no relatório: o "Cancelar" é a peça de fechar (`close-press`, que
 // o design system lê como `close-button`) e o "Salvar" escreve no estado
-// (`api`). Por isso toda story que usa este painel liga `[(open)]="aberto"` —
+// (`api`). Por isso toda story que usa este painel liga `[(open)]="isOpen"` —
 // sem estado externo não há como fechar por código.
 const SIMPLE_PANEL = `
         <ng-template ndsPopoverContent>
@@ -67,7 +67,7 @@ const SIMPLE_PANEL = `
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
             <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-            <button ndsButton size="sm" (click)="aberto = false">Salvar</button>
+            <button ndsButton size="sm" (click)="isOpen = false">Salvar</button>
           </div>
         </ng-template>`;
 
@@ -79,10 +79,10 @@ export const Closed: Story = {
     docs: { source: { transform: popoverBasicSource } },
   },
   render: () => ({
-    props: { aberto: false },
+    props: { isOpen: false },
     template: `
       <div class="nds-min-h-70" style="contain: layout">
-        <div ndsPopover [(open)]="aberto">
+        <div ndsPopover [(open)]="isOpen">
           <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
           ${SIMPLE_PANEL}
         </div>
@@ -126,10 +126,10 @@ export const Open: Story = {
     // por código no "Salvar", e isso exige o par `[open]`/`(openChange)`. O
     // `defaultOpen` continua provado pela story `Modal` logo abaixo, que abre
     // por ele e reprovaria se o input não chegasse.
-    props: { aberto: true },
+    props: { isOpen: true },
     template: `
       <div class="nds-min-h-70" style="contain: layout">
-        <div ndsPopover [(open)]="aberto">
+        <div ndsPopover [(open)]="isOpen">
           <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
           ${SIMPLE_PANEL}
         </div>
@@ -192,23 +192,23 @@ export const Controlled: Story = {
     docs: { source: { transform: popoverControlledSource } },
   },
   render: () => ({
-    props: { aberto: false, recordControlledOpenChange },
+    props: { isOpen: false, recordControlledOpenChange },
     // O par `[open]`/`(openChange)` escrito por extenso, que é o assunto desta
-    // story — `[(open)]="aberto"` das outras é o mesmo par açucarado.
+    // story — `[(open)]="isOpen"` das outras é o mesmo par açucarado.
     template: `
       <div class="nds-min-h-80" style="contain: layout">
         <div class="nds-cluster" data-spacing="md">
           <div
             ndsPopover
-            [open]="aberto"
-            (openChange)="aberto = $event"
+            [open]="isOpen"
+            (openChange)="isOpen = $event"
             (onOpenChange)="recordControlledOpenChange($event)"
           >
             <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
             ${SIMPLE_PANEL}
           </div>
 
-          <button ndsButton variant="ghost" (click)="aberto = !aberto">
+          <button ndsButton variant="ghost" (click)="isOpen = !isOpen">
             Alternar por fora
           </button>
 
@@ -319,7 +319,7 @@ export const Focused: Story = {
     docs: { source: { transform: popoverFocusedSource } },
   },
   render: () => ({
-    props: { aberto: false, recordFocusedOpenChange },
+    props: { isOpen: false, recordFocusedOpenChange },
     // ─── Os vizinhos do gatilho: o que dá dentes à asserção de DESTINO ─────
     //
     // Sem outro focável ao lado do gatilho, "o foco voltou ao gatilho" passava
@@ -334,7 +334,7 @@ export const Focused: Story = {
       <div class="nds-min-h-70" style="contain: layout">
         <div class="nds-cluster" data-spacing="md">
           <button ndsButton variant="ghost">Antes</button>
-          <div ndsPopover [(open)]="aberto" (onOpenChange)="recordFocusedOpenChange($event)">
+          <div ndsPopover [(open)]="isOpen" (onOpenChange)="recordFocusedOpenChange($event)">
             <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
 
             <ng-template ndsPopoverContent>
@@ -345,7 +345,7 @@ export const Focused: Story = {
                   <!-- Desistiu: a peça de fechar, que reporta close-button -->
                   <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
                   <!-- Concluiu: confirma e fecha por código, que reporta api -->
-                  <button ndsButton size="sm" (click)="aberto = false">Confirmar</button>
+                  <button ndsButton size="sm" (click)="isOpen = false">Confirmar</button>
                 </div>
               </div>
             </ng-template>

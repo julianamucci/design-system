@@ -206,11 +206,11 @@ export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
 const CELL_VAZIA = '—';
 
 function preencher(modelo: string, values: Record<string, string | number>): string {
-  let saida = modelo;
+  let result = modelo;
   for (const [key, value] of Object.entries(values)) {
-    saida = saida.split(`{${key}}`).join(String(value));
+    result = result.split(`{${key}}`).join(String(value));
   }
-  return saida;
+  return result;
 }
 
 // ─── Ícone ────────────────────────────────────────────────────────────────────
@@ -291,14 +291,14 @@ export class NdsDataTableIcon {
 // ─── Linha renderizada ────────────────────────────────────────────────────────
 
 interface CellRenderizada {
-  colunaId: string;
+  columnId: string;
   header: string;
   text: string;
   /** Valor sem formatação — é ele que entra no campo de edição. */
   raw: string;
   numeric: boolean;
   editable: boolean;
-  rotuloEdicao: string;
+  editLabel: string;
   /** `linha:coluna` — identifica a célula que está em edição. */
   key: string;
 }
@@ -307,7 +307,7 @@ interface LineRenderizada {
   key: string;
   index: number;
   label: string;
-  rotuloSelecao: string;
+  selectLabel: string;
   search: string;
   celulas: CellRenderizada[];
 }
@@ -339,7 +339,7 @@ interface LineRenderizada {
     '[attr.data-slot]': '"data-table"',
   },
   template: `
-    @if (mostrarToolbar()) {
+    @if (showToolbar()) {
       <div class="nds-data-table-toolbar" data-slot="data-table-toolbar">
         @if (enableGlobalFilter()) {
           <div class="nds-data-table-search">
@@ -384,7 +384,7 @@ interface LineRenderizada {
                         ndsDropdownMenuCheckboxItem
                         class="nds-data-table-columns-menu-check"
                         [checked]="!ocultas().has(column.id)"
-                        (checkedChange)="alternarVisibilidade(column.id, $event)"
+                        (checkedChange)="toggleVisibility(column.id, $event)"
                       >
                         {{ column.header }}
                       </div>
@@ -420,25 +420,25 @@ interface LineRenderizada {
                       [attr.aria-label]="rotulos().selectAll"
                       [checked]="todasDaPaginaSelecionadas()"
                       [indeterminate]="algumasDaPaginaSelecionadas()"
-                      (checkedChange)="alternarTodasDaPagina($event)"
+                      (checkedChange)="toggleAllOnPage($event)"
                     ></button>
                   </div>
                 </th>
               }
-              @for (column of colunasVisiveis(); track column.id) {
+              @for (column of visibleColumns(); track column.id) {
                 <th ndsTableHead class="nds-data-table-th" [sort]="direcaoAria(column)">
                   <div class="nds-data-table-th-inner">
                     @if (column.sortable) {
                       <button
                         type="button"
                         class="nds-data-table-sort-btn"
-                        [attr.aria-label]="rotuloOrdenar(column)"
-                        (click)="alternarOrdenacao(column.id)"
+                        [attr.aria-label]="sortLabel(column)"
+                        (click)="toggleSort(column.id)"
                       >
                         <span>{{ column.header }}</span>
                         <svg
                           ndsDataTableIcon
-                          [kind]="iconeDaOrdem(column.id)"
+                          [kind]="sortIcon(column.id)"
                           [tone]="ordenacao()?.id === column.id ? 'default' : 'muted'"
                         ></svg>
                       </button>
@@ -450,30 +450,30 @@ interface LineRenderizada {
               }
             </tr>
 
-            @if (mostrarLinhaDeFiltros()) {
+            @if (showFilterRow()) {
               <tr ndsTableRow class="nds-data-table-filter-row">
                 @if (enableRowSelection()) {
                   <th ndsTableHead>
-                    <span class="nds-sr-only">{{ rotuloSemFiltro(rotulos().selectAll) }}</span>
+                    <span class="nds-sr-only">{{ noFilterLabel(rotulos().selectAll) }}</span>
                   </th>
                 }
-                @for (column of colunasVisiveis(); track column.id) {
+                @for (column of visibleColumns(); track column.id) {
                   <th ndsTableHead>
                     <!-- Todo th da linha de filtros carrega texto para leitor de
                          tela. O valor de um input NÃO entra no nome acessível da
                          célula, então uma célula que só tem o campo chega ao axe
                          como cabeçalho vazio (empty-table-header). -->
                     @if (column.filter) {
-                      <span class="nds-sr-only">{{ rotuloFiltrar(column) }}</span>
+                      <span class="nds-sr-only">{{ filterLabel(column) }}</span>
                       @if (column.filter.type === 'select') {
                         <select
                           class="nds-data-table-filter-select"
-                          [attr.aria-label]="rotuloFiltrar(column)"
+                          [attr.aria-label]="filterLabel(column)"
                           (change)="aoEscolherFiltro(column.id, $event)"
                         >
                           <option value="">{{ rotulos().allOption }}</option>
                           @for (option of column.filter.options ?? []; track option) {
-                            <option [value]="option" [selected]="filtroDaColuna(column.id) === option">
+                            <option [value]="option" [selected]="columnFilterValue(column.id) === option">
                               {{ option }}
                             </option>
                           }
@@ -482,14 +482,14 @@ interface LineRenderizada {
                         <input
                           ndsInput
                           class="nds-data-table-filter-input"
-                          [value]="filtroDaColuna(column.id)"
+                          [value]="columnFilterValue(column.id)"
                           [placeholder]="column.filter.placeholder ?? rotulos().filterPlaceholder"
-                          [attr.aria-label]="rotuloFiltrar(column)"
-                          (input)="aoDigitarFiltroDeColuna(column.id, $event)"
+                          [attr.aria-label]="filterLabel(column)"
+                          (input)="onColumnFilterInput(column.id, $event)"
                         />
                       }
                     } @else {
-                      <span class="nds-sr-only">{{ rotuloSemFiltro(column.header) }}</span>
+                      <span class="nds-sr-only">{{ noFilterLabel(column.header) }}</span>
                     }
                   </th>
                 }
@@ -498,7 +498,7 @@ interface LineRenderizada {
           </thead>
 
           <tbody ndsTableBody>
-            @for (line of linhasDaPagina(); track line.key) {
+            @for (line of pageRows(); track line.key) {
               <tr
                 ndsTableRow
                 class="nds-data-table-tr"
@@ -508,13 +508,13 @@ interface LineRenderizada {
                   <td ndsTableCell class="nds-data-table-td">
                     <button
                       ndsCheckbox
-                      [attr.aria-label]="line.rotuloSelecao"
+                      [attr.aria-label]="line.selectLabel"
                       [checked]="selecionadas().has(line.key)"
-                      (checkedChange)="alternarSelecao(line.key, $event)"
+                      (checkedChange)="toggleSelection(line.key, $event)"
                     ></button>
                   </td>
                 }
-                @for (celula of line.celulas; track celula.colunaId) {
+                @for (celula of line.celulas; track celula.columnId) {
                   <td
                     ndsTableCell
                     class="nds-data-table-td"
@@ -529,7 +529,7 @@ interface LineRenderizada {
                             ndsInput
                             class="nds-data-table-edit-input"
                             [value]="rascunho()"
-                            [attr.aria-label]="celula.rotuloEdicao"
+                            [attr.aria-label]="celula.editLabel"
                             (input)="aoDigitarEdicao($event)"
                             (blur)="confirmarEdicao(line, celula)"
                             (keydown)="aoTeclarNaEdicao($event, line, celula)"
@@ -538,8 +538,8 @@ interface LineRenderizada {
                           <button
                             type="button"
                             class="nds-data-table-edit-btn"
-                            [attr.aria-label]="celula.rotuloEdicao"
-                            (click)="abrirEdicao(celula)"
+                            [attr.aria-label]="celula.editLabel"
+                            (click)="openEdit(celula)"
                           >
                             {{ celula.text }}
                           </button>
@@ -566,7 +566,7 @@ interface LineRenderizada {
       </div>
     </div>
 
-    @if (mostrarPaginacao()) {
+    @if (showPagination()) {
       <div class="nds-data-table-pagination" data-slot="data-table-pagination">
         <div class="nds-data-table-pagination-count">{{ contagemText() }}</div>
 
@@ -576,16 +576,16 @@ interface LineRenderizada {
             <select
               class="nds-data-table-page-size-select"
               [attr.aria-label]="rotulos().rowsPerPage"
-              (change)="aoTrocarTamanhoDePagina($event)"
+              (change)="onPageSizeChange($event)"
             >
               @for (option of pageSizeOptions(); track option) {
-                <option [value]="option" [selected]="option === tamanhoDePagina()">{{ option }}</option>
+                <option [value]="option" [selected]="option === currentPageSize()">{{ option }}</option>
               }
             </select>
           </div>
 
           <div class="nds-data-table-pagination-count">
-            {{ rotulos().page }} {{ paginaAtual() + 1 }} {{ rotulos().pageOf }} {{ totalDePaginas() }}
+            {{ rotulos().page }} {{ currentPage() + 1 }} {{ rotulos().pageOf }} {{ totalDePaginas() }}
           </div>
 
           <div class="nds-data-table-pagination-nav">
@@ -593,25 +593,25 @@ interface LineRenderizada {
               ndsButton variant="outline" size="icon"
               [attr.aria-label]="rotulos().firstPage"
               [disabled]="!podeVoltar()"
-              (click)="irParaPagina(0)"
+              (click)="goToPage(0)"
             ><svg ndsDataTableIcon kind="chevrons-left"></svg></button>
             <button
               ndsButton variant="outline" size="icon"
               [attr.aria-label]="rotulos().prevPage"
               [disabled]="!podeVoltar()"
-              (click)="irParaPagina(paginaAtual() - 1)"
+              (click)="goToPage(currentPage() - 1)"
             ><svg ndsDataTableIcon kind="chevron-left"></svg></button>
             <button
               ndsButton variant="outline" size="icon"
               [attr.aria-label]="rotulos().nextPage"
               [disabled]="!podeAvancar()"
-              (click)="irParaPagina(paginaAtual() + 1)"
+              (click)="goToPage(currentPage() + 1)"
             ><svg ndsDataTableIcon kind="chevron-right"></svg></button>
             <button
               ndsButton variant="outline" size="icon"
               [attr.aria-label]="rotulos().lastPage"
               [disabled]="!podeAvancar()"
-              (click)="irParaPagina(totalDePaginas() - 1)"
+              (click)="goToPage(totalDePaginas() - 1)"
             ><svg ndsDataTableIcon kind="chevrons-right"></svg></button>
           </div>
         </div>
@@ -623,7 +623,7 @@ interface LineRenderizada {
            A região viva anuncia a contagem a cada mudança; ela existe mesmo com
            a paginação desligada, que é onde o número não aparece em lugar
            nenhum da tela. -->
-      <div class="nds-sr-only" role="status" aria-live="polite">{{ textoDaSelecao() }}</div>
+      <div class="nds-sr-only" role="status" aria-live="polite">{{ selectionText() }}</div>
     }
   `,
 })
@@ -673,11 +673,11 @@ export class NdsDataTable<TData> implements OnInit {
 
   protected readonly ordenacao = signal<{ id: string; dir: 'asc' | 'desc' } | null>(null);
   protected readonly filtroGlobal = signal('');
-  protected readonly filtrosPorColuna = signal<ReadonlyMap<string, string>>(new Map());
+  protected readonly filtersByColumn = signal<ReadonlyMap<string, string>>(new Map());
   protected readonly ocultas = signal<ReadonlySet<string>>(new Set());
   protected readonly selecionadas = signal<ReadonlySet<string>>(new Set());
-  protected readonly paginaAtual = signal(0);
-  protected readonly tamanhoDePagina = signal(10);
+  protected readonly currentPage = signal(0);
+  protected readonly currentPageSize = signal(10);
   protected readonly emEdicao = signal<string | null>(null);
   protected readonly rascunho = signal('');
 
@@ -698,7 +698,7 @@ export class NdsDataTable<TData> implements OnInit {
   ngOnInit(): void {
     // Ler `input()` no construtor devolveria o DEFAULT: o binding de quem
     // consome ainda não foi aplicado (armadilha 9 do CLAUDE.md deste stack).
-    this.tamanhoDePagina.set(this.pageSize());
+    this.currentPageSize.set(this.pageSize());
   }
 
   // ─── Rótulos ────────────────────────────────────────────────────────────────
@@ -708,21 +708,21 @@ export class NdsDataTable<TData> implements OnInit {
     ...this.labels(),
   }));
 
-  protected rotuloOrdenar(column: DataTableColumn<TData>): string {
+  protected sortLabel(column: DataTableColumn<TData>): string {
     return preencher(this.rotulos().sortBy, { col: column.header });
   }
 
-  protected rotuloFiltrar(column: DataTableColumn<TData>): string {
+  protected filterLabel(column: DataTableColumn<TData>): string {
     return preencher(this.rotulos().filter, { col: column.header });
   }
 
-  protected rotuloSemFiltro(col: string): string {
+  protected noFilterLabel(col: string): string {
     return preencher(this.rotulos().noFilter, { col });
   }
 
   // ─── Colunas ────────────────────────────────────────────────────────────────
 
-  protected readonly colunasVisiveis = computed(() => {
+  protected readonly visibleColumns = computed(() => {
     const escondidas = this.ocultas();
     return this.columns().filter((c) => !escondidas.has(c.id));
   });
@@ -733,15 +733,15 @@ export class NdsDataTable<TData> implements OnInit {
 
   /** Colunas visíveis mais a de seleção, quando existe — base do `colspan`. */
   protected readonly totalDeColunas = computed(
-    () => this.colunasVisiveis().length + (this.enableRowSelection() ? 1 : 0),
+    () => this.visibleColumns().length + (this.enableRowSelection() ? 1 : 0),
   );
 
-  protected readonly mostrarToolbar = computed(
+  protected readonly showToolbar = computed(
     () => this.enableGlobalFilter() || this.enableColumnVisibility(),
   );
 
-  protected readonly mostrarLinhaDeFiltros = computed(
-    () => this.enableColumnFilters() && this.colunasVisiveis().some((c) => !!c.filter),
+  protected readonly showFilterRow = computed(
+    () => this.enableColumnFilters() && this.visibleColumns().some((c) => !!c.filter),
   );
 
   // ─── Derivação: bruto → filtrado → ordenado → paginado ──────────────────────
@@ -755,7 +755,7 @@ export class NdsDataTable<TData> implements OnInit {
   }
 
   private readonly linhasBrutas = computed<LineRenderizada[]>(() => {
-    const colunas = this.colunasVisiveis();
+    const colunas = this.visibleColumns();
     const all = this.columns();
     const keyOf = this.rowKey();
     const labelOf = this.rowLabel();
@@ -778,12 +778,12 @@ export class NdsDataTable<TData> implements OnInit {
         key,
         index,
         label,
-        rotuloSelecao: preencher(modeloSelection, { row: label }),
+        selectLabel: preencher(modeloSelection, { row: label }),
         // A busca livre casa em TODA coluna, inclusive nas escondidas pelo
         // menu: esconder uma coluna é decisão de leitura, não de escopo.
         search: all.map((c) => this.text(c, row)).join(' ').toLowerCase(),
         celulas: colunas.map((c) => ({
-          colunaId: c.id,
+          columnId: c.id,
           header: c.header,
           text: this.text(c, row),
           // O rascunho da edição parte do valor CRU: abrir o campo com
@@ -795,7 +795,7 @@ export class NdsDataTable<TData> implements OnInit {
           })(),
           numeric: !!c.numeric,
           editable: !!c.editable,
-          rotuloEdicao: preencher(modeloEdit, { col: c.header }),
+          editLabel: preencher(modeloEdit, { col: c.header }),
           key: `${key}:${c.id}`,
         })),
       };
@@ -804,15 +804,15 @@ export class NdsDataTable<TData> implements OnInit {
 
   private readonly linhasFiltradas = computed(() => {
     const search = this.filtroGlobal().trim().toLowerCase();
-    const byColumn = this.filtrosPorColuna();
+    const byColumn = this.filtersByColumn();
     const colunas = this.columns();
     const data = this.data();
 
     return this.linhasBrutas().filter((line) => {
       if (search && !line.search.includes(search)) return false;
-      for (const [colunaId, value] of byColumn) {
+      for (const [columnId, value] of byColumn) {
         if (!value) continue;
-        const column = colunas.find((c) => c.id === colunaId);
+        const column = colunas.find((c) => c.id === columnId);
         if (!column) continue;
         const text = this.text(column, data[line.index]);
         const casa = column.filter?.type === 'select'
@@ -843,26 +843,26 @@ export class NdsDataTable<TData> implements OnInit {
   });
 
   protected readonly totalDePaginas = computed(() => {
-    if (!this.mostrarPaginacao()) return 1;
-    return Math.max(1, Math.ceil(this.linhasOrdenadas().length / this.tamanhoDePagina()));
+    if (!this.showPagination()) return 1;
+    return Math.max(1, Math.ceil(this.linhasOrdenadas().length / this.currentPageSize()));
   });
 
-  protected readonly linhasDaPagina = computed(() => {
+  protected readonly pageRows = computed(() => {
     const lines = this.linhasOrdenadas();
-    if (!this.mostrarPaginacao()) return lines;
+    if (!this.showPagination()) return lines;
     // A página é limitada aqui, e não por efeito colateral: um filtro que
     // encurta o resultado enquanto se está na última página deixaria o índice
     // apontando para o vazio, e a tabela pareceria não ter achado nada.
-    const page = Math.min(this.paginaAtual(), this.totalDePaginas() - 1);
-    const start = page * this.tamanhoDePagina();
-    return lines.slice(start, start + this.tamanhoDePagina());
+    const page = Math.min(this.currentPage(), this.totalDePaginas() - 1);
+    const start = page * this.currentPageSize();
+    return lines.slice(start, start + this.currentPageSize());
   });
 
-  protected readonly mostrarPaginacao = computed(() => this.enablePagination());
+  protected readonly showPagination = computed(() => this.enablePagination());
 
-  protected readonly podeVoltar = computed(() => this.paginaAtual() > 0);
+  protected readonly podeVoltar = computed(() => this.currentPage() > 0);
   protected readonly podeAvancar = computed(
-    () => this.paginaAtual() < this.totalDePaginas() - 1,
+    () => this.currentPage() < this.totalDePaginas() - 1,
   );
 
   // ─── Ordenação ──────────────────────────────────────────────────────────────
@@ -876,14 +876,14 @@ export class NdsDataTable<TData> implements OnInit {
     return order.dir === 'asc' ? 'ascending' : 'descending';
   }
 
-  protected iconeDaOrdem(id: string): DataTableIconKind {
+  protected sortIcon(id: string): DataTableIconKind {
     const order = this.ordenacao();
     if (order?.id !== id) return 'arrow-up-down';
     return order.dir === 'asc' ? 'arrow-up' : 'arrow-down';
   }
 
   /** Três estados, como nas outras stacks: ascendente → descendente → nenhum. */
-  protected alternarOrdenacao(id: string): void {
+  protected toggleSort(id: string): void {
     const order = this.ordenacao();
     if (order?.id !== id) this.ordenacao.set({ id, dir: 'asc' });
     else if (order.dir === 'asc') this.ordenacao.set({ id, dir: 'desc' });
@@ -892,16 +892,16 @@ export class NdsDataTable<TData> implements OnInit {
 
   // ─── Filtros ────────────────────────────────────────────────────────────────
 
-  protected filtroDaColuna(id: string): string {
-    return this.filtrosPorColuna().get(id) ?? '';
+  protected columnFilterValue(id: string): string {
+    return this.filtersByColumn().get(id) ?? '';
   }
 
   protected aoDigitarFiltroGlobal(evento: Event): void {
     this.filtroGlobal.set((evento.target as HTMLInputElement).value);
-    this.paginaAtual.set(0);
+    this.currentPage.set(0);
   }
 
-  protected aoDigitarFiltroDeColuna(id: string, evento: Event): void {
+  protected onColumnFilterInput(id: string, evento: Event): void {
     this.definirFiltro(id, (evento.target as HTMLInputElement).value);
   }
 
@@ -910,11 +910,11 @@ export class NdsDataTable<TData> implements OnInit {
   }
 
   private definirFiltro(id: string, value: string): void {
-    const next = new Map(this.filtrosPorColuna());
+    const next = new Map(this.filtersByColumn());
     if (value) next.set(id, value);
     else next.delete(id);
-    this.filtrosPorColuna.set(next);
-    this.paginaAtual.set(0);
+    this.filtersByColumn.set(next);
+    this.currentPage.set(0);
   }
 
   // ─── Visibilidade ───────────────────────────────────────────────────────────
@@ -926,7 +926,7 @@ export class NdsDataTable<TData> implements OnInit {
    * ocultaria a coluna — porque só `true` é verdadeiro numa comparação estrita,
    * e misto não quer dizer "escondida".
    */
-  protected alternarVisibilidade(id: string, visible: CheckedState): void {
+  protected toggleVisibility(id: string, visible: CheckedState): void {
     const next = new Set(this.ocultas());
     if (visible !== false) next.delete(id);
     else next.add(id);
@@ -936,20 +936,20 @@ export class NdsDataTable<TData> implements OnInit {
   // ─── Seleção ────────────────────────────────────────────────────────────────
 
   protected readonly todasDaPaginaSelecionadas = computed(() => {
-    const page = this.linhasDaPagina();
+    const page = this.pageRows();
     if (page.length === 0) return false;
     const checked = this.selecionadas();
     return page.every((l) => checked.has(l.key));
   });
 
   protected readonly algumasDaPaginaSelecionadas = computed(() => {
-    const page = this.linhasDaPagina();
+    const page = this.pageRows();
     const checked = this.selecionadas();
     const quantas = page.filter((l) => checked.has(l.key)).length;
     return quantas > 0 && quantas < page.length;
   });
 
-  protected alternarSelecao(key: string, marcada: boolean): void {
+  protected toggleSelection(key: string, marcada: boolean): void {
     const next = new Set(this.selecionadas());
     if (marcada) next.add(key);
     else next.delete(key);
@@ -957,9 +957,9 @@ export class NdsDataTable<TData> implements OnInit {
     this.emitirSelecao(next);
   }
 
-  protected alternarTodasDaPagina(marcada: boolean): void {
+  protected toggleAllOnPage(marcada: boolean): void {
     const next = new Set(this.selecionadas());
-    for (const line of this.linhasDaPagina()) {
+    for (const line of this.pageRows()) {
       if (marcada) next.add(line.key);
       else next.delete(line.key);
     }
@@ -974,7 +974,7 @@ export class NdsDataTable<TData> implements OnInit {
     );
   }
 
-  protected readonly textoDaSelecao = computed(() =>
+  protected readonly selectionText = computed(() =>
     preencher(this.rotulos().rowsSelected, {
       s: this.linhasFiltradas().filter((l) => this.selecionadas().has(l.key)).length,
       n: this.linhasFiltradas().length,
@@ -983,24 +983,24 @@ export class NdsDataTable<TData> implements OnInit {
 
   protected readonly contagemText = computed(() =>
     this.enableRowSelection()
-      ? this.textoDaSelecao()
+      ? this.selectionText()
       : preencher(this.rotulos().rowsTotal, { n: this.linhasFiltradas().length }),
   );
 
   // ─── Paginação ──────────────────────────────────────────────────────────────
 
-  protected irParaPagina(index: number): void {
-    this.paginaAtual.set(Math.max(0, Math.min(index, this.totalDePaginas() - 1)));
+  protected goToPage(index: number): void {
+    this.currentPage.set(Math.max(0, Math.min(index, this.totalDePaginas() - 1)));
   }
 
-  protected aoTrocarTamanhoDePagina(evento: Event): void {
-    this.tamanhoDePagina.set(Number((evento.target as HTMLSelectElement).value));
-    this.paginaAtual.set(0);
+  protected onPageSizeChange(evento: Event): void {
+    this.currentPageSize.set(Number((evento.target as HTMLSelectElement).value));
+    this.currentPage.set(0);
   }
 
   // ─── Edição inline ──────────────────────────────────────────────────────────
 
-  protected abrirEdicao(celula: CellRenderizada): void {
+  protected openEdit(celula: CellRenderizada): void {
     this.rascunho.set(celula.raw);
     this.emEdicao.set(celula.key);
   }
@@ -1013,14 +1013,14 @@ export class NdsDataTable<TData> implements OnInit {
     if (this.emEdicao() !== celula.key) return;
     this.emEdicao.set(null);
 
-    const column = this.columns().find((c) => c.id === celula.colunaId);
+    const column = this.columns().find((c) => c.id === celula.columnId);
     const previous = column?.accessor(this.data()[line.index]);
     const raw = this.rascunho();
     // O tipo do valor anterior manda: uma coluna numérica que voltasse como
     // string reordenaria por texto na próxima ordenação, sem erro nenhum.
     const value = typeof previous === 'number' ? Number(raw) : raw;
 
-    this.cellEdit.emit({ rowIndex: line.index, columnId: celula.colunaId, value: value });
+    this.cellEdit.emit({ rowIndex: line.index, columnId: celula.columnId, value: value });
   }
 
   protected aoTeclarNaEdicao(

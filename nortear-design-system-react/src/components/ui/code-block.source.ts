@@ -42,7 +42,7 @@ function literalDeTemplate(code: string): string {
 }
 
 /** Cabeçalho: import mais a declaração do trecho que a prop `code` recebe. */
-function cabecalhoCom(code: string): string {
+function headerWith(code: string): string {
   return `${IMPORT}
 
 const source = \`${literalDeTemplate(code)}\`;`;
@@ -92,7 +92,7 @@ function tagCodeBlock(partes: Array<string | false | undefined>): string {
 export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return jsxSnippet(
-    cabecalhoCom(text(args.code) ?? CODE_BASE),
+    headerWith(text(args.code) ?? CODE_BASE),
     tagCodeBlock([
       propText('language', args.language),
       propText('title', args.title),
@@ -111,7 +111,7 @@ export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) =>
  */
 export function codeBlockRolagemSource(): string {
   return jsxSnippet(
-    cabecalhoCom(`const registro = { id: 1, nome: "linha propositalmente longa para forçar o scroll horizontal do bloco", ativo: true };
+    headerWith(`const registro = { id: 1, nome: "linha propositalmente longa para forçar o scroll horizontal do bloco", ativo: true };
 const total = 40;
 render(registro, total);`),
     tagCodeBlock([propText('language', 'ts')]),
@@ -125,7 +125,7 @@ render(registro, total);`),
  */
 export function codeBlockPaletteSource(): string {
   return jsxSnippet(
-    cabecalhoCom(CODE_BASE),
+    headerWith(CODE_BASE),
     tagCodeBlock([propText('language', 'ts'), propLinhas([2])]),
   );
 }
@@ -151,7 +151,7 @@ render(items, total);`;
  */
 export function codeBlockLineKindsSource(): string {
   return jsxSnippet(
-    cabecalhoCom(DIFF_CODE),
+    headerWith(DIFF_CODE),
     tagCodeBlock([
       propText("language", "ts"),
       'lineKinds={["context", "removed", "added", "context"]}',

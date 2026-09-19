@@ -504,7 +504,7 @@ const carousel = createCarousel({
 
           // `aria-current` SOME no inativo em vez de virar "false": a string
           // "false" casaria com o seletor de presença.
-          const marcarAtual = (index: number) =>
+          const markCurrent = (index: number) =>
             dots.forEach((d, i) => {
               if (i === index) d.setAttribute('aria-current', 'true');
               else d.removeAttribute('aria-current');
@@ -512,12 +512,12 @@ const carousel = createCarousel({
 
           const carousel = createCarousel({
             items: slidesDeExemplo(total, { prefixo: slideLabel }),
-            onIndexChange: (index) => marcarAtual(index),
+            onIndexChange: (index) => markCurrent(index),
           });
 
           carousel.setAttribute('aria-label', stripHtml(t('variants.compositions.withDots.name')));
 
-          marcarAtual(0);
+          markCurrent(0);
 
           wrap.append(carousel, dotsRow);
           return wrap;

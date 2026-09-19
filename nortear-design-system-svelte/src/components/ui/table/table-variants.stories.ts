@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Table } from './index';
 import TableVarianteBasica from './TableVarianteBasica.svelte';
-import TableVarianteComRodape from './TableVarianteComRodape.svelte';
+import TableVariantWithFooter from './TableVariantWithFooter.svelte';
 import TableVarianteCaptionSrOnly from './TableVarianteCaptionSrOnly.svelte';
 import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 import TableVarianteRolagemHorizontal from './TableVarianteRolagemHorizontal.svelte';
@@ -98,7 +98,7 @@ export const WithFooter: Story = {
     docs: { source: { transform: tableWithFooterSource } },
   },
   render: () => ({
-    Component: TableVarianteComRodape,
+    Component: TableVariantWithFooter,
     props: {},
   }),
   play: async ({ canvasElement, step }) => {

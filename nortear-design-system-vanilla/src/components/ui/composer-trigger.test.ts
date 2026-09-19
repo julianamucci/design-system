@@ -96,10 +96,10 @@ describe('findTrigger — qual gatilho ganha', () => {
   });
 
   it('a menção ganha do comando quando está mais perto', () => {
-    const achado = noFim('/ajuda @bru');
+    const finding = noFim('/ajuda @bru');
     // O comando na posição 0 continua válido pelo lugar, mas o termo dele
     // tem espaço — então ele já fechou, e sobra a menção.
-    expect(achado).toMatchObject({ spec: MENTION_TRIGGER, term: 'bru' });
+    expect(finding).toMatchObject({ spec: MENTION_TRIGGER, term: 'bru' });
   });
 
   it('cursor além do texto é tratado como o fim', () => {
@@ -177,9 +177,9 @@ describe('rankByTerm — quem começa pelo termo vem antes', () => {
 
 describe('applyTrigger — o que fica escrito depois da escolha', () => {
   const acharNoFim = (text: string): TriggerMatch => {
-    const achado = findTrigger(text, text.length, GATILHOS);
-    if (!achado) throw new Error(`sem gatilho em ${JSON.stringify(text)}`);
-    return achado;
+    const finding = findTrigger(text, text.length, GATILHOS);
+    if (!finding) throw new Error(`sem gatilho em ${JSON.stringify(text)}`);
+    return finding;
   };
 
   it('troca gatilho e termo, e deixa um espaço', () => {

@@ -145,7 +145,7 @@ export class NdsCarouselStore {
     this._slides.update((list) => documentSort([...list, el]));
   }
 
-  removerSlide(el: HTMLElement): void {
+  removeSlide(el: HTMLElement): void {
     this._slides.update((list) => list.filter((x) => x !== el));
   }
 
@@ -155,14 +155,14 @@ export class NdsCarouselStore {
    * há índice, e a folha trata a ausência como tamanho cheio — que é o que
    * evita o slide nascer encolhido e pular no quadro seguinte.
    */
-  estadoAtivo(el: HTMLElement): 'true' | 'false' | null {
+  activeState(el: HTMLElement): 'true' | 'false' | null {
     const position = this._slides().indexOf(el);
     if (position < 0) return null;
     return slideState(position, this._index());
   }
 
   /** Rótulo acessível de um slide, já com posição e total resolvidos. */
-  rotuloDoSlide(el: HTMLElement): string {
+  resolveSlideLabel(el: HTMLElement): string {
     const list = this._slides();
     const position = list.indexOf(el) + 1;
     return this.slideLabel()
@@ -207,7 +207,7 @@ export class NdsCarouselStore {
   // do componente precisa aprender a vir do sentido contrário: da posição de
   // rolagem para o índice, e não só do índice para a posição.
 
-  private timerDeRolagem: ReturnType<typeof setTimeout> | null = null;
+  private scrollTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Onde a rolagem tem de parar para mostrar o slide `i`.
@@ -237,7 +237,7 @@ export class NdsCarouselStore {
   }
 
   /** Índice do slide cujo início está mais perto da posição de rolagem atual. */
-  indiceMaisProximo(): number | null {
+  nearestIndex(): number | null {
     const vp = this.viewport;
     if (!vp) return null;
     const position = this.orientation() === 'vertical' ? vp.scrollTop : vp.scrollLeft;
@@ -265,10 +265,10 @@ export class NdsCarouselStore {
    * o índice JÁ igual ao destino, e a comparação abaixo a descarta sozinha.
    */
   aoRolar(): void {
-    if (this.timerDeRolagem !== null) clearTimeout(this.timerDeRolagem);
-    this.timerDeRolagem = setTimeout(() => {
-      this.timerDeRolagem = null;
-      const destination = this.indiceMaisProximo();
+    if (this.scrollTimer !== null) clearTimeout(this.scrollTimer);
+    this.scrollTimer = setTimeout(() => {
+      this.scrollTimer = null;
+      const destination = this.nearestIndex();
       if (destination === null || destination === this._index()) return;
       this._index.set(destination);
       this.aoNavegar?.(destination, 'swipe');
@@ -276,14 +276,14 @@ export class NdsCarouselStore {
   }
 
   /** Encosta no ponto de parada mais próximo — o fecho do arraste por mouse. */
-  assentarNoMaisProximo(): void {
-    const destination = this.indiceMaisProximo();
+  settleToNearest(): void {
+    const destination = this.nearestIndex();
     if (destination === null) return;
     this.rolarAte(destination);
   }
 
   /** Posição de rolagem no eixo corrente. Usada pelo arraste por mouse. */
-  posicaoDeRolagem(): number {
+  scrollPosition(): number {
     const vp = this.viewport;
     if (!vp) return 0;
     return this.orientation() === 'vertical' ? vp.scrollTop : vp.scrollLeft;
@@ -297,9 +297,9 @@ export class NdsCarouselStore {
     else vp.scrollLeft = position;
   }
 
-  soltarRelogios(): void {
-    if (this.timerDeRolagem !== null) clearTimeout(this.timerDeRolagem);
-    this.timerDeRolagem = null;
+  releaseTimers(): void {
+    if (this.scrollTimer !== null) clearTimeout(this.scrollTimer);
+    this.scrollTimer = null;
   }
 }
 
@@ -455,7 +455,7 @@ export class NdsCarousel implements OnInit {
   /** Quantidade de slides registrados. */
   readonly total = this.store.total;
   /** Se o avanço automático está rodando neste momento. */
-  readonly autoplayAtivo = computed(() => this._autoplayLigado());
+  readonly autoplayActive = computed(() => this._autoplayLigado());
 
   protected readonly accessibleName = computed(
     () => this.label() ?? this.writtenLabel ?? undefined,
@@ -517,7 +517,7 @@ export class NdsCarousel implements OnInit {
   }
 
   /** Liga/desliga o avanço automático — o controle que a WCAG 2.2.2 pede. */
-  alternarAutoplay(): void {
+  toggleAutoplay(): void {
     if (this._autoplayLigado()) this.stopAutoplay(this.store.index());
     else this._autoplayLigado.set(true);
   }
@@ -610,7 +610,7 @@ export class NdsCarouselContent implements OnDestroy {
 
   private pointer: number | null = null;
   private origemDoPonteiro = 0;
-  private origemDaRolagem = 0;
+  private scrollOrigin = 0;
 
   constructor() {
     this.store.registrarViewport(this.host);
@@ -620,15 +620,15 @@ export class NdsCarouselContent implements OnDestroy {
     // O arraste pendura ouvintes no DOCUMENTO — eles sobrevivem à remoção do
     // componente, e um carrossel destruído no meio de um gesto os deixaria
     // presos a um host que já saiu da página.
-    this.soltarOuvintes();
-    this.store.soltarRelogios();
+    this.releaseListeners();
+    this.store.releaseTimers();
   }
 
-  private soltarOuvintes(): void {
+  private releaseListeners(): void {
     const doc = this.host.ownerDocument;
     doc.removeEventListener('pointermove', this.onMove);
-    doc.removeEventListener('pointerup', this.aoSoltar);
-    doc.removeEventListener('pointercancel', this.aoSoltar);
+    doc.removeEventListener('pointerup', this.onRelease);
+    doc.removeEventListener('pointercancel', this.onRelease);
   }
 
   /**
@@ -651,7 +651,7 @@ export class NdsCarouselContent implements OnDestroy {
     evento.preventDefault();
     this.pointer = evento.pointerId;
     this.origemDoPonteiro = this.vertical() ? evento.clientY : evento.clientX;
-    this.origemDaRolagem = this.store.posicaoDeRolagem();
+    this.scrollOrigin = this.store.scrollPosition();
     this.arrastando.set(true);
     // Ouvintes no DOCUMENTO, e não `setPointerCapture` no host: soltar o botão
     // fora do carrossel precisa encerrar o gesto, senão o arraste fica preso
@@ -660,25 +660,25 @@ export class NdsCarouselContent implements OnDestroy {
     // caso de um gesto conduzido por teste.
     const doc = this.host.ownerDocument;
     doc.addEventListener('pointermove', this.onMove);
-    doc.addEventListener('pointerup', this.aoSoltar);
-    doc.addEventListener('pointercancel', this.aoSoltar);
+    doc.addEventListener('pointerup', this.onRelease);
+    doc.addEventListener('pointercancel', this.onRelease);
   }
 
   private readonly onMove = (evento: PointerEvent): void => {
     if (evento.pointerId !== this.pointer) return;
     const current = this.vertical() ? evento.clientY : evento.clientX;
-    this.store.rolarPara(this.origemDaRolagem - (current - this.origemDoPonteiro));
+    this.store.rolarPara(this.scrollOrigin - (current - this.origemDoPonteiro));
   };
 
-  private readonly aoSoltar = (evento: PointerEvent): void => {
+  private readonly onRelease = (evento: PointerEvent): void => {
     if (evento.pointerId !== this.pointer) return;
     this.pointer = null;
     this.arrastando.set(false);
-    this.soltarOuvintes();
+    this.releaseListeners();
     // O snap volta a valer agora, mas ele só age em rolagem do USUÁRIO — o
     // arraste terminou onde o cursor parou, então quem encosta no ponto de
     // parada é este comando.
-    this.store.assentarNoMaisProximo();
+    this.store.settleToNearest();
   };
 }
 
@@ -717,7 +717,7 @@ export class NdsCarouselItem {
   private readonly writtenLabel = this.host.getAttribute('aria-label');
 
   protected readonly accessibleName = computed(
-    () => this.label() ?? this.writtenLabel ?? this.store.rotuloDoSlide(this.host),
+    () => this.label() ?? this.writtenLabel ?? this.store.resolveSlideLabel(this.host),
   );
 
   /**
@@ -727,11 +727,11 @@ export class NdsCarouselItem {
    * atributo, os valores e a semântica do terceiro estado (a ausência) são os
    * mesmos das outras quatro — o que muda é só por onde a informação anda.
    */
-  protected readonly active = computed(() => this.store.estadoAtivo(this.host));
+  protected readonly active = computed(() => this.store.activeState(this.host));
 
   constructor() {
     this.store.registrarSlide(this.host);
-    inject(DestroyRef).onDestroy(() => this.store.removerSlide(this.host));
+    inject(DestroyRef).onDestroy(() => this.store.removeSlide(this.host));
   }
 }
 

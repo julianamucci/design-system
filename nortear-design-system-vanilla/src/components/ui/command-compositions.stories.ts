@@ -17,7 +17,7 @@ import {
 } from './command.fixtures';
 import { createDialog } from './dialog';
 import { createButton } from './button';
-import { open as abrirDialog, waitForClosed, panel } from './dialog.fixtures';
+import { open as openDialog, waitForClosed, panel } from './dialog.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -413,7 +413,7 @@ export const CommandPalette: Story = {
     });
 
     await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
-      const p = await abrirDialog(canvasElement);
+      const p = await openDialog(canvasElement);
       const idTitle = p.getAttribute('aria-labelledby');
       await expect(idTitle).toBeTruthy();
 
@@ -427,7 +427,7 @@ export const CommandPalette: Story = {
     });
 
     await step('O foco vai direto para a busca, com os 3 comandos na lista', async () => {
-      const p = await abrirDialog(canvasElement);
+      const p = await openDialog(canvasElement);
       await waitFor(async () => {
         await expect(searchOf(p)).toHaveFocus();
       });
@@ -439,7 +439,7 @@ export const CommandPalette: Story = {
     });
 
     await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
-      await abrirDialog(canvasElement);
+      await openDialog(canvasElement);
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
@@ -451,7 +451,7 @@ export const CommandPalette: Story = {
       // D11 vale a CADA abertura. O Dialog reaproveita o nó da paleta, e é o
       // `reset()` chamado no `onOpenChange` que apaga o que a abertura anterior
       // deixou — sem ele, a paleta reabriria filtrada em "in", com Input aceso.
-      const p = await abrirDialog(canvasElement);
+      const p = await openDialog(canvasElement);
       await waitFor(async () => {
         await expect(searchOf(p)).toHaveFocus();
       });
@@ -461,7 +461,7 @@ export const CommandPalette: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
 
-      const reopened = await abrirDialog(canvasElement);
+      const reopened = await openDialog(canvasElement);
       await expect(searchOf(reopened)).toHaveValue('');
       await expect(within(reopened).getAllByRole('option')).toHaveLength(3);
       const first = comando(reopened, 'button');
@@ -497,7 +497,7 @@ export const CommandPalette: Story = {
     });
 
     await step('Escolher um comando executa e fecha', async () => {
-      const p = await abrirDialog(canvasElement);
+      const p = await openDialog(canvasElement);
       const antes = aoExecutarComando.mock.calls.length;
       await userEvent.click(within(p).getByRole('option', { name: /Input/ }));
 

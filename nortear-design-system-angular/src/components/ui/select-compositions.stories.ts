@@ -76,7 +76,7 @@ export const InForm: Story = {
     },
   },
   render: () => {
-    // Espião fora do `props`: o `aoEnviar` fecha sobre ele, então não depende de
+    // Espião fora do `props`: o `handleSubmit` fecha sobre ele, então não depende de
     // `this` — que no renderer Angular é a instância montada da story, não este
     // objeto.
     const onSubmit = fn();
@@ -84,14 +84,14 @@ export const InForm: Story = {
       props: {
         states: STATES,
         onSubmit,
-        aoEnviar: (evento: Event) => {
+        handleSubmit: (evento: Event) => {
           evento.preventDefault();
           const data = new FormData(evento.target as HTMLFormElement);
           onSubmit(Object.fromEntries(data.entries()));
         },
       },
       template: `
-      <form class="nds-stack" data-spacing="sm" (submit)="aoEnviar($event)">
+      <form class="nds-stack" data-spacing="sm" (submit)="handleSubmit($event)">
         <label ndsLabel id="rotulo-estado">Estado</label>
 
         <nds-select name="state" required>

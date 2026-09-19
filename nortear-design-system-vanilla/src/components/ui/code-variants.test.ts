@@ -54,8 +54,8 @@ describe('isCodeVariantNode — quem de fato recusa é a FORMA', () => {
     // É a guarda que torna seguro aceitar a chave nua: `props.table.code` do
     // `code-block` tem `name`/`type`/`description`, e continua sendo texto
     // auditável em vez de virar snippet.
-    const linhaDeTabela = { name: 'code', type: 'string', description: 'O código exibido.' };
-    expect(isCodeVariantNode('code', linhaDeTabela)).toBe(false);
+    const tableRow = { name: 'code', type: 'string', description: 'O código exibido.' };
+    expect(isCodeVariantNode('code', tableRow)).toBe(false);
   });
 
   it('mistura de stack com chave estranha é recusada por inteiro', () => {

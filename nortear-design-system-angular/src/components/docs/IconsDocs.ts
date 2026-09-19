@@ -161,7 +161,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
             </span>
             <!-- Sem opacity extra: --muted-foreground já é o tom secundário, e
                  o 0.7 que as stacks tinham derrubava o contraste para 3.03:1. -->
-            <span class="nds-text-body nds-text-muted-foreground">{{ textoDeDisponiveis() }}</span>
+            <span class="nds-text-body nds-text-muted-foreground">{{ availableText() }}</span>
           </div>
         </header>
 
@@ -175,7 +175,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
             </div>
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-body nds-font-medium">{{ t('howToUse.sizes.title') }}</p>
-              <pre class="nds-docs-code"><code>{{ exemploDeTamanhos }}</code></pre>
+              <pre class="nds-docs-code"><code>{{ sizesExample }}</code></pre>
             </div>
           </div>
         </section>
@@ -222,7 +222,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
               [value]="search()"
               [placeholder]="t('search.placeholder')"
               [attr.aria-label]="t('search.placeholder')"
-              (input)="aoBuscar($event)"
+              (input)="onSearch($event)"
             />
           </div>
           <p class="nds-text-body" aria-live="polite" aria-atomic="true">
@@ -248,7 +248,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
         <ul
           class="nds-icon-grid"
           [class.is-hidden]="noResults()"
-          [attr.aria-label]="textoDeDisponiveis()"
+          [attr.aria-label]="availableText()"
         >
           @for (icon of catalogo; track icon.name) {
             <li
@@ -295,7 +295,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   protected readonly glifoDaBusca = Search;
   protected readonly glifoDoPacote = Package;
   protected readonly exemploDeImportacao = EXEMPLO_IMPORTACAO;
-  protected readonly exemploDeTamanhos = EXEMPLO_SIZES;
+  protected readonly sizesExample = EXEMPLO_SIZES;
   protected readonly exemploDecorativo = EXEMPLO_DECORATIVO;
   protected readonly exemploFuncional = EXEMPLO_FUNCIONAL;
 
@@ -319,7 +319,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
 
   protected readonly noResults = computed(() => this.visible().size === 0);
 
-  protected readonly textoDeDisponiveis = computed(() =>
+  protected readonly availableText = computed(() =>
     t('iconsAvailable').replace('{count}', String(CATALOGO.length)),
   );
 
@@ -333,7 +333,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
       .replace('{query}', query);
   });
 
-  protected aoBuscar(evento: Event): void {
+  protected onSearch(evento: Event): void {
     this.search.set((evento.target as HTMLInputElement).value);
   }
 

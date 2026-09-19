@@ -105,7 +105,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
        existe porque a consistência entre stacks é a regra mais forte aqui. -->
   <DefineMonthTemplate v-slot="{ date }">
     <select
-      :aria-label="rotulos.selecionarMes"
+      :aria-label="rotulos.selectMonth"
       class="nds-calendar-select"
       @change="(e: Event) => {
         placeholder = placeholder.set({
@@ -130,7 +130,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
   <DefineYearTemplate v-slot="{ date }">
     <select
-      :aria-label="rotulos.selecionarAno"
+      :aria-label="rotulos.selectYear"
       class="nds-calendar-select"
       @change="(e: Event) => {
         placeholder = placeholder.set({

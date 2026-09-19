@@ -221,7 +221,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   let value = defaultValue ?? '';
   let isOpen = false;
-  let posicionador: HTMLElement | null = null;
+  let positioner: HTMLElement | null = null;
   let content: HTMLElement | null = null;
   let optionList: Option[] = [];
   let active = -1;
@@ -453,7 +453,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
        de `fechar()`, no mesmo tique em que o painel é anulado. Um evento já
        enfileirado pelo navegador chegaria depois disso, e sem esta linha leria
        `offsetHeight` de `null`. Não há caminho de teste até a fila do navegador. */
-    if (!posicionador || !content) return;
+    if (!positioner || !content) return;
     const r = trigger.getBoundingClientRect();
     const panelHeight = content.offsetHeight;
     const folga = 4;
@@ -464,10 +464,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     // pouco faria o painel pular de lado a cada rolagem.
     const above = espacoBelow < panelHeight && espacoAbove > espacoBelow;
 
-    posicionador.dataset.side = above ? 'top' : 'bottom';
+    positioner.dataset.side = above ? 'top' : 'bottom';
     content.dataset.side = above ? 'top' : 'bottom';
-    posicionador.style.left = `${r.left + window.scrollX}px`;
-    posicionador.style.top = above
+    positioner.style.left = `${r.left + window.scrollX}px`;
+    positioner.style.top = above
       ? `${r.top + window.scrollY - panelHeight - folga}px`
       : `${r.bottom + window.scrollY + folga}px`;
 
@@ -475,8 +475,8 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     // headless publicam estas duas custom properties e `.nds-select-content` tira
     // delas a largura e a altura máxima. Sem publicá-las aqui a largura cairia no
     // `auto` do fallback e o painel sairia mais estreito que o campo.
-    posicionador.style.setProperty('--anchor-width', `${r.width}px`);
-    posicionador.style.setProperty(
+    positioner.style.setProperty('--anchor-width', `${r.width}px`);
+    positioner.style.setProperty(
       '--available-height',
       `${Math.max(above ? espacoAbove : espacoBelow, HEIGHT_MINIMA_PX)}px`,
     );
@@ -574,7 +574,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   // ── Abrir / fechar ─────────────────────────────────────────────────────────
 
   /** Remove agora o painel que estava tocando a animação de saída. */
-  function recolherOutput(): void {
+  function removeOutputPanel(): void {
     if (timerOutput !== null) {
       clearTimeout(timerOutput);
       timerOutput = null;
@@ -592,16 +592,16 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     // Reabrir enquanto o painel anterior ainda desaparece deixaria DOIS
     // `role="listbox"` no documento, e o segundo com `data-state="closed"` —
     // exatamente o estado que faz a espera do teste travar.
-    recolherOutput();
+    removeOutputPanel();
 
-    posicionador = document.createElement('div');
-    posicionador.className = 'nds-select-positioner';
-    posicionador.dataset.slot = 'select-positioner';
-    posicionador.style.position = 'absolute';
+    positioner = document.createElement('div');
+    positioner.className = 'nds-select-positioner';
+    positioner.dataset.slot = 'select-positioner';
+    positioner.style.position = 'absolute';
 
     content = mountContent();
-    posicionador.appendChild(content);
-    document.body.appendChild(posicionador);
+    positioner.appendChild(content);
+    document.body.appendChild(positioner);
     posicionar();
 
     isOpen = true;
@@ -640,10 +640,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     if (!isOpen) return;
 
     const panel = content;
-    const portal = posicionador;
+    const portal = positioner;
     isOpen = false;
     content = null;
-    posicionador = null;
+    positioner = null;
     optionList = [];
     active = -1;
 
@@ -681,10 +681,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
          CI verde escondendo asserção racy), então este ramo não é alcançável aqui
          — e é justamente o que protege quem navega com movimento reduzido. */
       if (getComputedStyle(panel).animationName === 'none') {
-        recolherOutput();
+        removeOutputPanel();
       } else {
-        panel.addEventListener('animationend', recolherOutput, { once: true });
-        timerOutput = setTimeout(recolherOutput, OUTPUT_MS_DURATION);
+        panel.addEventListener('animationend', removeOutputPanel, { once: true });
+        timerOutput = setTimeout(removeOutputPanel, OUTPUT_MS_DURATION);
       }
     }
 
@@ -795,7 +795,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   function onClickOutside(e: MouseEvent): void {
     const target = e.target as Node;
-    if (!posicionador?.contains(target) && !trigger.contains(target)) {
+    if (!positioner?.contains(target) && !trigger.contains(target)) {
       // O foco fica onde a pessoa o pôs: puxá-lo de volta ao gatilho seria
       // roubá-lo do controle que ela acabou de clicar. Mesma decisão do popover.
       close({ devolverFocus: false });
@@ -807,7 +807,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     // O painel pode estar tocando a saída no instante em que a raiz sai do
     // documento: sem isto ele sobreviveria por cima do conteúdo seguinte, que é
     // exatamente o vazamento que a forma compartilhada de limpeza fechou.
-    recolherOutput();
+    removeOutputPanel();
     clearSearch();
   });
 }

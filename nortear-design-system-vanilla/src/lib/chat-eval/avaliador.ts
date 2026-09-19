@@ -38,19 +38,19 @@ export interface AcertoDeRecuperacao {
 export function avaliarRecuperacao(
   slugsRecuperados: readonly string[],
   esperados: readonly string[],
-  opcoes: { exigeTodos?: boolean; first?: string } = {},
+  options: { exigeTodos?: boolean; first?: string } = {},
 ): AcertoDeRecuperacao {
   const faltando = esperados.filter((slug) => !slugsRecuperados.includes(slug));
   const ok =
     esperados.length === 0
       ? true // Nos negativos não há slug certo: quem julga é o critério de recusa.
-      : opcoes.exigeTodos
+      : options.exigeTodos
         ? faltando.length === 0
         : faltando.length < esperados.length;
   return {
     ok,
     faltando,
-    firstOk: opcoes.first ? slugsRecuperados[0] === opcoes.first : null,
+    firstOk: options.first ? slugsRecuperados[0] === options.first : null,
   };
 }
 
@@ -243,7 +243,7 @@ export function negaExistencia(response: string, termo: string): VeredictoDeNega
   const alvo = normalize(termo);
   for (const frase of normalize(response).split(/[.!?\n]+/)) {
     if (!frase.includes(alvo)) continue;
-    if (NEGACOES.some((padrao) => padrao.test(frase))) return { negou: true, frase: frase.trim() };
+    if (NEGACOES.some((pattern) => pattern.test(frase))) return { negou: true, frase: frase.trim() };
   }
   return { negou: false, frase: null };
 }
@@ -370,7 +370,7 @@ export function nomesInventados(
   const noContexto = new Set(
     (contextoDoPrompt.match(PASCAL_CASE) ?? []).map((name) => name.toLowerCase()),
   );
-  const achados = new Set<string>();
+  const findings = new Set<string>();
 
   for (const bruto of response.match(PASCAL_CASE) ?? []) {
     const name = bruto.toLowerCase();
@@ -379,9 +379,9 @@ export function nomesInventados(
     if (noContexto.has(name)) continue;
     // Subcomponente: `AlertTitle` começa com `Alert`, que está no catálogo.
     if (conhecidos.some((conhecido) => name.startsWith(conhecido))) continue;
-    achados.add(bruto);
+    findings.add(bruto);
   }
-  return [...achados];
+  return [...findings];
 }
 
 /* ── 5. Nomes obrigatórios e proibidos, por caso ──────────────────────────── */

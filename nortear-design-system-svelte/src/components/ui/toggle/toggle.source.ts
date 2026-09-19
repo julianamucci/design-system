@@ -45,8 +45,8 @@ function importing(...icons: IconKey[]): string {
 }
 
 /** Um toggle só de ícone, numa linha — a forma que as comparações repetem. */
-function toggleLine(icone: IconKey, ...props: string[]): string {
-  return `<Toggle${attrs(...props)}><${ICONS[icone][0]} aria-hidden="true" /></Toggle>`;
+function toggleLine(icon: IconKey, ...props: string[]): string {
+  return `<Toggle${attrs(...props)}><${ICONS[icon][0]} aria-hidden="true" /></Toggle>`;
 }
 
 /** Playground: um toggle só, com os valores atuais dos controls. */
@@ -73,10 +73,10 @@ export function toggleSource(_gerado?: string, ctx?: { args?: Partial<ToggleArgs
     withLabel ? '' : `aria-label="${ariaLabel || label || 'Alternar'}"`,
   );
 
-  const icone = ICONS[icon][0];
+  const iconComponent = ICONS[icon][0];
   const body = withLabel
-    ? `  <${icone} aria-hidden="true" />\n  ${label}`
-    : `  <${icone} aria-hidden="true" />`;
+    ? `  <${iconComponent} aria-hidden="true" />\n  ${label}`
+    : `  <${iconComponent} aria-hidden="true" />`;
 
   return svelteSnippet(importing(icon), `<Toggle${props}>\n${body}\n</Toggle>`);
 }

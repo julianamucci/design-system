@@ -232,7 +232,7 @@ export class NdsAccordionItem {
     // no Base UI ele desmonta ao fechar. Aqui o painel NUNCA desmonta (ver
     // NdsAccordionItem), então o id sempre resolve — e apontar sempre é o que
     // o Vanilla faz.
-    '[attr.aria-controls]': 'painelId()',
+    '[attr.aria-controls]': 'panelId()',
     // `role="button"` num <button> é redundante; o primitivo o escreve por
     // causa dos hosts não-nativos. Removê-lo mantém o markup igual ao Vanilla.
     '[attr.role]': 'null',
@@ -243,7 +243,7 @@ export class NdsAccordionTrigger {
   private readonly colapsavel = injectCollapsibleRootContext();
 
   protected readonly isOpen = computed(() => this.item.open());
-  protected readonly painelId = computed(() => this.colapsavel.panelId());
+  protected readonly panelId = computed(() => this.colapsavel.panelId());
 }
 
 // ─── NdsAccordionContent ──────────────────────────────────────────────────────

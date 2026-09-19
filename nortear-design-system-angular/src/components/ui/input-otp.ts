@@ -85,7 +85,7 @@ interface CellOtp {
           [disabled]="disabled()"
           [attr.inputmode]="inputMode()"
           [attr.autocomplete]="celula.index === 0 ? autocomplete() : 'off'"
-          [attr.aria-label]="rotuloDoDigito(celula.index)"
+          [attr.aria-label]="resolveDigitLabel(celula.index)"
           [attr.aria-invalid]="invalid() ? 'true' : null"
           [attr.aria-describedby]="describedBy() || null"
           (focus)="aoFocar($event)"
@@ -194,7 +194,7 @@ export class NdsInputOtp implements AfterViewInit {
     if (this.autoFocus()) this.focar(0);
   }
 
-  protected rotuloDoDigito(index: number): string {
+  protected resolveDigitLabel(index: number): string {
     return `${this.digitLabel()} ${index + 1}`;
   }
 

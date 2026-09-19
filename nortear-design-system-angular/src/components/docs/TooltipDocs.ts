@@ -467,7 +467,7 @@ function buildCompositionCode(): Record<
         <button ndsTooltipTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.shareButton') }}
         </button>
-        <ng-template ndsTooltipContent side="bottom">{{ textoLongo() }}</ng-template>
+        <ng-template ndsTooltipContent side="bottom">{{ longTooltipText() }}</ng-template>
       </span>
     </ng-template>
 
@@ -546,7 +546,7 @@ function buildCompositionCode(): Record<
       </span>
     </ng-template>
 
-    <ng-template #tplCompCampo>
+    <ng-template #tplCompField>
       <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <label ndsLabel for="tooltip-token-api">{{ t('demonstration.labels.apiTokenLabel') }}</label>
@@ -793,7 +793,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarLados = viewChild.required<TemplateRef<unknown>>('tplVarLados');
   private readonly tplCompBarraAcoes = viewChild.required<TemplateRef<unknown>>('tplCompBarraAcoes');
   private readonly tplCompAtalho = viewChild.required<TemplateRef<unknown>>('tplCompAtalho');
-  private readonly tplCompCampo = viewChild.required<TemplateRef<unknown>>('tplCompCampo');
+  private readonly tplCompField = viewChild.required<TemplateRef<unknown>>('tplCompField');
   private readonly tplCompMetrica = viewChild.required<TemplateRef<unknown>>('tplCompMetrica');
 
   /**
@@ -898,7 +898,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   });
 
   /** Par "gatilho icon-only" da tabela de UX Writing — vira o Do & Don't 1. */
-  protected readonly uxIcone = computed(() => {
+  protected readonly uxIcon = computed(() => {
     const line = this.uxRows().find((l) => /aria-label/i.test(l.format));
     return {
       good: toPlainText(line?.good ?? ''),
@@ -907,7 +907,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   });
 
   /** Par "texto do balão" da tabela de UX Writing — vira o Do & Don't 2. */
-  protected readonly uxTexto = computed(() => {
+  protected readonly uxText = computed(() => {
     const line = this.uxRows()[0];
     return {
       good: toPlainText(line?.good ?? ''),
@@ -949,7 +949,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
    * exibir a explicação em vez do exemplo. Agora vem da chave de preview
    * `demonstration.labels.shareHint`, que é a mesma que as outras stacks leem.
    */
-  protected readonly textoLongo = computed(() => {
+  protected readonly longTooltipText = computed(() => {
     dict();
     return t('demonstration.labels.shareHint');
   });
@@ -1000,7 +1000,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
     }[] = [
       { key: 'iconButtonWithShortcut', tpl: this.tplCompAtalho()  },
       { key: 'actionBar',              tpl: this.tplCompBarraAcoes() },
-      { key: 'formFieldHelp',          tpl: this.tplCompCampo()   },
+      { key: 'formFieldHelp',          tpl: this.tplCompField()   },
       { key: 'metricDescription',      tpl: this.tplCompMetrica() },
     ];
     return mapa.map(({ key, tpl }) => ({

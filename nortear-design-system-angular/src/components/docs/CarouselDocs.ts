@@ -278,8 +278,8 @@ const CODE_AUTOPLAY = `<nds-carousel
 </nds-carousel>
 
 <!-- WCAG 2.2.2: movimento automático acima de 5s precisa de comando de parar -->
-<button ndsButton variant="outline" size="sm" (click)="carrossel.alternarAutoplay()">
-  {{ carrossel.autoplayAtivo() ? 'Pausar apresentação' : 'Retomar apresentação' }}
+<button ndsButton variant="outline" size="sm" (click)="carrossel.toggleAutoplay()">
+  {{ carrossel.autoplayActive() ? 'Pausar apresentação' : 'Retomar apresentação' }}
 </button>`;
 
 const CODE_DOTS = `<!-- #carrossel JÁ é a instância: a posição e o total saem dela,
@@ -333,12 +333,12 @@ export class NdsCarousel {
   // Leitura pública, para dots e contadores.
   readonly index: Signal<number>;
   readonly total: Signal<number>;
-  readonly autoplayAtivo: Signal<boolean>;
+  readonly autoplayActive: Signal<boolean>;
 
   anterior(origem?: CarouselNavSource): void;
   proximo(origem?: CarouselNavSource): void;
   irPara(index: number, origem?: CarouselNavSource): void;
-  alternarAutoplay(): void;
+  toggleAutoplay(): void;
 }
 
 interface CarouselSlideChange {
@@ -374,12 +374,12 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
 
          Cada <nds-carousel> é um role="region", e região com nome REPETIDO
          reprova em landmark-unique — por isso todo preview recebe um nome
-         próprio, montado em rotuloRegiao(). -->
+         próprio, montado em regionLabel(). -->
 
     <ng-template #tplDoDont1Do>
       <nds-carousel
         class="nds-w-full nds-max-w-sm"
-        [label]="rotuloRegiao(t('doDont.pair1.doName'))"
+        [label]="regionLabel(t('doDont.pair1.doName'))"
         [slideLabel]="moldeDoSlide()"
       >
         <div ndsCarouselContent>
@@ -387,7 +387,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
             <div ndsCarouselItem>
               <div ndsAspectRatio [ratio]="16 / 9">
                 <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                 </div>
               </div>
             </div>
@@ -403,7 +403,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
            teclado o carrossel só anda com o foco já dentro da região. -->
       <nds-carousel
         class="nds-w-full nds-max-w-sm"
-        [label]="rotuloRegiao(t('doDont.pair1.dontName'))"
+        [label]="regionLabel(t('doDont.pair1.dontName'))"
         [slideLabel]="moldeDoSlide()"
       >
         <div ndsCarouselContent>
@@ -411,7 +411,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
             <div ndsCarouselItem>
               <div ndsAspectRatio [ratio]="16 / 9">
                 <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                 </div>
               </div>
             </div>
@@ -429,7 +429,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
         <nds-carousel
           #comPausa
           class="nds-w-full"
-          [label]="rotuloRegiao(t('doDont.pair2.doName'))"
+          [label]="regionLabel(t('doDont.pair2.doName'))"
           [slideLabel]="moldeDoSlide()"
           [loop]="true"
           (autoplayPause)="aoPausarAutoplay($event)"
@@ -439,7 +439,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
               <div ndsCarouselItem>
                 <div ndsAspectRatio [ratio]="16 / 9">
                   <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                   </div>
                 </div>
               </div>
@@ -450,8 +450,8 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
         </nds-carousel>
 
         <!-- O comando que a WCAG 2.2.2 exige para movimento automático. -->
-        <button ndsButton variant="outline" size="sm" (click)="comPausa.alternarAutoplay()">
-          {{ comPausa.autoplayAtivo() ? t('demonstration.labels.pause') : t('demonstration.labels.resume') }}
+        <button ndsButton variant="outline" size="sm" (click)="comPausa.toggleAutoplay()">
+          {{ comPausa.autoplayActive() ? t('demonstration.labels.pause') : t('demonstration.labels.resume') }}
         </button>
       </div>
     </ng-template>
@@ -461,7 +461,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
            para ler fica preso ao relógio. -->
       <nds-carousel
         class="nds-w-full nds-max-w-sm"
-        [label]="rotuloRegiao(t('doDont.pair2.dontName'))"
+        [label]="regionLabel(t('doDont.pair2.dontName'))"
         [slideLabel]="moldeDoSlide()"
         [loop]="true"
       >
@@ -470,7 +470,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
             <div ndsCarouselItem>
               <div ndsAspectRatio [ratio]="16 / 9">
                 <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                 </div>
               </div>
             </div>
@@ -482,7 +482,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
     <ng-template #tplVarHorizontal>
       <nds-carousel
         class="nds-w-full nds-max-w-md"
-        [label]="rotuloRegiao(t('variants.items.horizontal.name'))"
+        [label]="regionLabel(t('variants.items.horizontal.name'))"
         [slideLabel]="moldeDoSlide()"
       >
         <div ndsCarouselContent>
@@ -490,7 +490,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
             <div ndsCarouselItem>
               <div ndsAspectRatio [ratio]="16 / 9">
                 <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                 </div>
               </div>
             </div>
@@ -505,7 +505,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
       <nds-carousel
         class="nds-w-full nds-max-w-xs"
         orientation="vertical"
-        [label]="rotuloRegiao(t('variants.items.vertical.name'))"
+        [label]="regionLabel(t('variants.items.vertical.name'))"
         [slideLabel]="moldeDoSlide()"
       >
         <!-- nds-aspect-4-3 dá a altura DEFINIDA que a base do slide precisa. -->
@@ -513,7 +513,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
           @for (i of quatroSlides; track i) {
             <div ndsCarouselItem>
               <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg nds-h-full" data-justify="center">
-                <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
               </div>
             </div>
           }
@@ -526,7 +526,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
     <ng-template #tplVarSingle>
       <nds-carousel
         class="nds-w-full nds-max-w-md"
-        [label]="rotuloRegiao(t('variants.items.single.name'))"
+        [label]="regionLabel(t('variants.items.single.name'))"
         [slideLabel]="moldeDoSlide()"
       >
         <div ndsCarouselContent>
@@ -534,7 +534,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
             <div ndsCarouselItem class="nds-basis-full">
               <div ndsAspectRatio [ratio]="16 / 9">
                 <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                 </div>
               </div>
             </div>
@@ -548,7 +548,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
     <ng-template #tplVarMulti>
       <nds-carousel
         class="nds-w-full nds-max-w-lg"
-        [label]="rotuloRegiao(t('variants.items.multi.name'))"
+        [label]="regionLabel(t('variants.items.multi.name'))"
         [slideLabel]="moldeDoSlide()"
       >
         <div ndsCarouselContent>
@@ -572,7 +572,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
         <nds-carousel
           #autoDemo
           class="nds-w-full"
-          [label]="rotuloRegiao(t('variants.items.autoplay.name'))"
+          [label]="regionLabel(t('variants.items.autoplay.name'))"
           [slideLabel]="moldeDoSlide()"
           [loop]="true"
           (slideChange)="aoTrocarSlide($event)"
@@ -583,7 +583,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
               <div ndsCarouselItem>
                 <div ndsAspectRatio [ratio]="16 / 9">
                   <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                   </div>
                 </div>
               </div>
@@ -593,8 +593,8 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
           <button ndsCarouselNext [label]="t('demonstration.labels.next')"></button>
         </nds-carousel>
 
-        <button ndsButton variant="outline" size="sm" (click)="autoDemo.alternarAutoplay()">
-          {{ autoDemo.autoplayAtivo() ? t('demonstration.labels.pause') : t('demonstration.labels.resume') }}
+        <button ndsButton variant="outline" size="sm" (click)="autoDemo.toggleAutoplay()">
+          {{ autoDemo.autoplayActive() ? t('demonstration.labels.pause') : t('demonstration.labels.resume') }}
         </button>
       </div>
     </ng-template>
@@ -604,7 +604,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
         <nds-carousel
           #comDots
           class="nds-w-full"
-          [label]="rotuloRegiao(t('variants.compositions.withDots.name'))"
+          [label]="regionLabel(t('variants.compositions.withDots.name'))"
           [slideLabel]="moldeDoSlide()"
           (slideChange)="aoTrocarSlide($event)"
         >
@@ -613,7 +613,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
               <div ndsCarouselItem>
                 <div ndsAspectRatio [ratio]="16 / 9">
                   <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                   </div>
                 </div>
               </div>
@@ -641,9 +641,9 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
               type="button"
               class="nds-carousel-dot"
               [attr.aria-current]="comDots.index() === i - 1 ? 'true' : null"
-              [attr.aria-label]="rotuloDoDot(i, cincoSlides.length)"
+              [attr.aria-label]="dotLabel(i, cincoSlides.length)"
               (click)="comDots.irTo(i - 1)"
-            ><span class="nds-carousel-dot-label">{{ rotuloVisivelDoDot(i) }}</span></button>
+            ><span class="nds-carousel-dot-label">{{ visibleDotLabel(i) }}</span></button>
           }
         </div>
       </div>
@@ -652,7 +652,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
     <ng-template #tplCompGaleria>
       <nds-carousel
         class="nds-w-full nds-max-w-lg"
-        [label]="rotuloRegiao(t('variants.compositions.gallery.name'))"
+        [label]="regionLabel(t('variants.compositions.gallery.name'))"
         [slideLabel]="moldeDoSlide()"
       >
         <div ndsCarouselContent>
@@ -664,7 +664,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
                     <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ i }}</span>
                   </div>
                 </div>
-                <p class="nds-text-body nds-font-semibold nds-m-0">{{ rotuloDoSlide(i) }}</p>
+                <p class="nds-text-body nds-font-semibold nds-m-0">{{ resolveSlideLabel(i) }}</p>
                 <p class="nds-text-caption nds-text-muted-foreground nds-m-0">
                   {{ t('demonstration.labels.galleryCaption') }}
                 </p>
@@ -705,7 +705,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
                 <div ndsCarouselItem>
                   <div ndsAspectRatio [ratio]="16 / 9">
                     <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-                      <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ rotuloDoSlide(i) }}</span>
+                      <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ resolveSlideLabel(i) }}</span>
                     </div>
                   </div>
                 </div>
@@ -841,11 +841,11 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
     return `${t('demonstration.labels.slide')} {index} ${t('demonstration.labels.of')} {total}`;
   });
 
-  protected rotuloDoSlide(position: number): string {
+  protected resolveSlideLabel(position: number): string {
     return `${t('demonstration.labels.slide')} ${position}`;
   }
 
-  protected rotuloDoDot(position: number, total: number): string {
+  protected dotLabel(position: number, total: number): string {
     return `${t('demonstration.labels.goToSlide')} ${position} ${t('demonstration.labels.of')} ${total}`;
   }
 
@@ -857,7 +857,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
    * tecnologia assistiva, então nada é lido duas vezes, e a contenção é o que a
    * WCAG 2.5.3 (Label in Name, A) cobra de quem comanda por voz.
    */
-  protected rotuloVisivelDoDot(position: number): string {
+  protected visibleDotLabel(position: number): string {
     return `${t('demonstration.labels.slide')} ${position}`;
   }
 
@@ -868,7 +868,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
    * página reprovam em `landmark-unique`, e uma região sem nome nenhum some da
    * lista de marcos. O prefixo é o título do componente, o sufixo distingue.
    */
-  protected rotuloRegiao(name: string): string {
+  protected regionLabel(name: string): string {
     return `${t('title')} — ${name}`;
   }
 

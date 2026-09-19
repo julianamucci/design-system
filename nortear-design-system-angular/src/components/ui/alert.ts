@@ -113,7 +113,7 @@ function animationCorrerEnd(
     <ng-content />
     @if (dismissible()) {
       <button
-        #botaoFechar
+        #closeButton
         ndsButton
         variant="ghost"
         size="icon-sm"
@@ -167,7 +167,7 @@ export class NdsAlert implements OnDestroy {
 
   // `read: ElementRef` é obrigatório: numa tag com componente, o `#ref` do
   // template resolve para a INSTÂNCIA do componente, não para o elemento.
-  private readonly botaoFechar = viewChild('botaoFechar', {
+  private readonly closeButton = viewChild('closeButton', {
     read: ElementRef<HTMLButtonElement>,
   });
 
@@ -179,8 +179,8 @@ export class NdsAlert implements OnDestroy {
   // manteria o alert preso em `opacity: 0`, invisível para sempre.
   private readonly entrando = signal(false);
 
-  private cancelarEntrada: (() => void) | undefined;
-  private cancelarSaida: (() => void) | undefined;
+  private cancelEnter: (() => void) | undefined;
+  private cancelExit: (() => void) | undefined;
 
   protected readonly hostClass = computed(() =>
     cn(
@@ -196,8 +196,8 @@ export class NdsAlert implements OnDestroy {
     effect(() => {
       if (!this.dismissible() || this.closed()) return;
       this.entrando.set(true);
-      this.cancelarEntrada?.();
-      this.cancelarEntrada = animationCorrerEnd(
+      this.cancelEnter?.();
+      this.cancelEnter = animationCorrerEnd(
         this.hostRef.nativeElement,
         ENTER_FALLBACK_MS,
         () => this.entrando.set(false),
@@ -211,7 +211,7 @@ export class NdsAlert implements OnDestroy {
     // sobrescrito em silêncio. Como o host binding é constante, o Ivy só
     // escreve na primeira detecção; escrever depois dela é definitivo.
     afterRenderEffect(() => {
-      this.botaoFechar()?.nativeElement.setAttribute('data-slot', 'alert-dismiss');
+      this.closeButton()?.nativeElement.setAttribute('data-slot', 'alert-dismiss');
     });
   }
 
@@ -220,7 +220,7 @@ export class NdsAlert implements OnDestroy {
     // sem isto `dismiss` sairia uma vez por clique.
     if (this.saindo() || this.closed()) return;
     this.saindo.set(true);
-    this.cancelarSaida = animationCorrerEnd(
+    this.cancelExit = animationCorrerEnd(
       this.hostRef.nativeElement,
       EXIT_FALLBACK_MS,
       () => {
@@ -231,8 +231,8 @@ export class NdsAlert implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.cancelarEntrada?.();
-    this.cancelarSaida?.();
+    this.cancelEnter?.();
+    this.cancelExit?.();
   }
 }
 

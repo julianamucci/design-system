@@ -65,7 +65,7 @@ const TRIGGER = `  <DialogTrigger render={<Button variant="outline" />}>
   </DialogTrigger>`;
 
 function dialogSnippet(
-  raizProps: string,
+  rootProps: string,
   contentProps: string,
   body: string,
   header = IMPORT_BASE,
@@ -73,7 +73,7 @@ function dialogSnippet(
 ): string {
   return jsxSnippet(
     header,
-    `<Dialog${raizProps}>
+    `<Dialog${rootProps}>
 ${trigger}
   <DialogContent${contentProps}>
 ${body}

@@ -632,11 +632,11 @@ export const SecondPanelClosesFirst: Story = {
       // recolhesse, o primeiro continuaria na tela e isto reprovaria.
       await waitFor(() => {
         const abertos = document.querySelectorAll('[data-slot="sheet-content"]');
-        const primeiroNoDom = document.body.contains(firstPanel);
-        if (primeiroNoDom || abertos.length !== 1) {
+        const firstInDom = document.body.contains(firstPanel);
+        if (firstInDom || abertos.length !== 1) {
           throw new Error(
             'esperava só o segundo painel na tela — ' +
-            `primeiro ainda no DOM: ${primeiroNoDom}, painéis: ${abertos.length}, ` +
+            `primeiro ainda no DOM: ${firstInDom}, painéis: ${abertos.length}, ` +
             `motivos do primeiro: ${JSON.stringify(firstPanelReasons)}`,
           );
         }

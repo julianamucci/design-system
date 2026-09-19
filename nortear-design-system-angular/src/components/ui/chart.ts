@@ -560,7 +560,7 @@ export class NdsChart {
       || series.every((s) => (s.data ?? []).length === 0 && (s.points ?? []).length === 0);
   });
 
-  protected readonly legendaVisivel = computed(() => {
+  protected readonly legendVisible = computed(() => {
     if (this.compact()) return false;
     // Nem a rosca nem o funil escrevem o nome dentro da forma: a legenda é o
     // rótulo, e é ela que carrega nome, valor e participação por escrito. No
@@ -704,7 +704,7 @@ export class NdsChart {
     dur: number,
   ): echarts.EChartsCoreOption {
     const series = this.serieNorm();
-    const legenda = this.legendaVisivel() || series.length > 1;
+    const legenda = this.legendVisible() || series.length > 1;
     return {
       title,
       tooltip: { trigger: 'item' },
@@ -747,7 +747,7 @@ export class NdsChart {
     return {
       title,
       tooltip: { trigger: 'item' },
-      legend: this.legendaVisivel()
+      legend: this.legendVisible()
         ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
         : undefined,
       radar: {
@@ -807,7 +807,7 @@ export class NdsChart {
     return {
       title,
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-      legend: this.legendaVisivel()
+      legend: this.legendVisible()
         ? {
           bottom: 0,
           icon: 'roundRect',
@@ -858,7 +858,7 @@ export class NdsChart {
         `${stage.label} — ${formatarValue(stage.value)} (${this.shareOfFirst(stage.value)})`,
       ]),
     );
-    const legenda = this.legendaVisivel();
+    const legenda = this.legendVisible();
     // O espaço reservado acima e abaixo do desenho nasce do degrau de texto
     // medido, não de pixel escolhido: título e legenda crescem com a fonte do
     // navegador, e reserva cravada os cortaria (WCAG 1.4.4).
@@ -920,7 +920,7 @@ export class NdsChart {
   ): echarts.EChartsCoreOption {
     const type = this.type();
     const series = this.serieNorm();
-    const legenda = this.legendaVisivel();
+    const legenda = this.legendVisible();
     // Com uma série só não há números se sobrepondo: o valor exato cabe junto
     // do dado. Com duas ou mais, quem entrega o número é a tabela.
     const labelValues = series.length === 1 && !compact;

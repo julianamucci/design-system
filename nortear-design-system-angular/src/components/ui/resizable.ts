@@ -81,11 +81,11 @@ export class NdsResizableStore {
   /** O grupo assina para emitir o output e persistir o layout. */
   aoFinalizar: ((sizes: number[]) => void) | undefined;
 
-  registrarGrupo(el: HTMLElement): void {
+  registerGroup(el: HTMLElement): void {
     this.group = el;
   }
 
-  registrarPainel(p: NdsResizablePanel): void {
+  registerPanel(p: NdsResizablePanel): void {
     this.panels.push(p);
   }
 
@@ -97,29 +97,29 @@ export class NdsResizableStore {
    * Índice lido a cada leitura, e não guardado no painel: guardado, ele
    * envelhece em silêncio no dia em que um painel nascer dentro de um `@if`.
    */
-  private indiceDoPainel(p: NdsResizablePanel): number {
+  private panelIndex(p: NdsResizablePanel): number {
     return this.panels.indexOf(p);
   }
 
-  private indiceDoPunho(h: NdsResizableHandle): number {
+  private handleIndex(h: NdsResizableHandle): number {
     return this.punhos.indexOf(h);
   }
 
   sizeOf(p: NdsResizablePanel): number | undefined {
-    const i = this.indiceDoPainel(p);
+    const i = this.panelIndex(p);
     return i < 0 ? undefined : this._sizes()[i];
   }
 
   /** Painéis à esquerda e à direita de um punho — o punho i separa i de i+1. */
   private neighbours(h: NdsResizableHandle): [NdsResizablePanel, NdsResizablePanel] | undefined {
-    const i = this.indiceDoPunho(h);
+    const i = this.handleIndex(h);
     if (i < 0 || i + 1 >= this.panels.length) return undefined;
     return [this.panels[i], this.panels[i + 1]];
   }
 
   /** Tamanho do painel ANTERIOR ao punho — é o que o `aria-valuenow` anuncia. */
-  valorDe(h: NdsResizableHandle): number | undefined {
-    const i = this.indiceDoPunho(h);
+  valueNowOf(h: NdsResizableHandle): number | undefined {
+    const i = this.handleIndex(h);
     const s = this._sizes();
     return i < 0 || i >= s.length ? undefined : s[i];
   }
@@ -137,7 +137,7 @@ export class NdsResizableStore {
     const v = this.neighbours(h);
     if (!v) return undefined;
     const [a, b] = v;
-    const i = this.indiceDoPunho(h);
+    const i = this.handleIndex(h);
     const s = this._sizes();
     const sum = (s[i] ?? 0) + (s[i + 1] ?? 0);
     return Math.min(a.maxSize(), sum - b.minSize());
@@ -193,7 +193,7 @@ export class NdsResizableStore {
    * somar incrementos a cada pointermove acumularia o erro de arredondamento e
    * o divisor descolaria do cursor ao longo do arrasto.
    */
-  arrastar(h: NdsResizableHandle, deslocamentoPx: number): void {
+  drag(h: NdsResizableHandle, deslocamentoPx: number): void {
     const total = this.horizontal() ? this.group?.offsetWidth : this.group?.offsetHeight;
     if (!total) return;
     this.aplicar(h, (deslocamentoPx / total) * 100, this.base);
@@ -209,7 +209,7 @@ export class NdsResizableStore {
     const v = this.neighbours(h);
     if (!v) return;
     const [a] = v;
-    const i = this.indiceDoPunho(h);
+    const i = this.handleIndex(h);
     const current = this._sizes()[i] ?? 0;
     const destination =
       target === 'min'
@@ -229,7 +229,7 @@ export class NdsResizableStore {
     const v = this.neighbours(h);
     if (!v) return;
     const [a, b] = v;
-    const i = this.indiceDoPunho(h);
+    const i = this.handleIndex(h);
     const sum = (base[i] ?? 0) + (base[i + 1] ?? 0);
 
     const tetoA = Math.min(a.maxSize(), sum - b.minSize());
@@ -279,7 +279,7 @@ export class NdsResizable implements AfterContentInit {
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   constructor() {
-    this.store.registrarGrupo(this.el);
+    this.store.registerGroup(this.el);
     // `effect` e não leitura direta: no construtor `direction()` devolveria o
     // default declarado, nunca o que o consumidor ligou (armadilha 9).
     effect(() => this.store.direction.set(this.direction()));
@@ -339,7 +339,7 @@ export class NdsResizable implements AfterContentInit {
     // inacessível a quem não usa mouse — é o que o Vanilla também faz.
     tabindex: '0',
     '[attr.data-slot]': '"resizable-panel"',
-    '[style.--panel-size]': 'tamanhoCss()',
+    '[style.--panel-size]': 'sizeCss()',
   },
 })
 export class NdsResizablePanel {
@@ -366,7 +366,7 @@ export class NdsResizablePanel {
   private readonly store = inject(NdsResizableStore);
 
   constructor() {
-    this.store.registrarPainel(this);
+    this.store.registerPanel(this);
   }
 
   /**
@@ -379,7 +379,7 @@ export class NdsResizablePanel {
    * sem a folha depender de o container ter altura definida — e os punhos, que
    * ocupam 1px cada, saem da conta em vez de estourarem os 100%.
    */
-  protected readonly tamanhoCss = computed(() => {
+  protected readonly sizeCss = computed(() => {
     const s = this.store.sizeOf(this);
     return s === undefined ? '' : String(Math.round(s * 1e4) / 1e4);
   });
@@ -420,17 +420,17 @@ export class NdsResizablePanel {
     tabindex: '0',
     '[attr.data-slot]': '"resizable-handle"',
     '[attr.aria-orientation]': 'orientacao()',
-    '[attr.aria-valuenow]': 'valorAgora()',
-    '[attr.aria-valuemin]': 'valorMinimo()',
-    '[attr.aria-valuemax]': 'valorMaximo()',
+    '[attr.aria-valuenow]': 'valueNow()',
+    '[attr.aria-valuemin]': 'valueMin()',
+    '[attr.aria-valuemax]': 'valueMax()',
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.data-dragging]': 'arrastando() ? "" : null',
     '(keydown)': 'onKeyDown($event)',
     '(pointerdown)': 'aoPressionar($event)',
     '(pointermove)': 'onMove($event)',
-    '(pointerup)': 'aoSoltar($event)',
-    '(pointercancel)': 'aoSoltar($event)',
+    '(pointerup)': 'onRelease($event)',
+    '(pointercancel)': 'onRelease($event)',
   },
 })
 export class NdsResizableHandle {
@@ -459,9 +459,9 @@ export class NdsResizableHandle {
 
   // Arredondados: `aria-valuenow` é lido em voz alta, e "37.428571" não informa
   // nada além do que "37" já informa.
-  protected readonly valorAgora = computed(() => arredondar(this.store.valorDe(this)));
-  protected readonly valorMinimo = computed(() => arredondar(this.store.minimumOf(this)));
-  protected readonly valorMaximo = computed(() => arredondar(this.store.maximoDe(this)));
+  protected readonly valueNow = computed(() => arredondar(this.store.valueNowOf(this)));
+  protected readonly valueMin = computed(() => arredondar(this.store.minimumOf(this)));
+  protected readonly valueMax = computed(() => arredondar(this.store.maximoDe(this)));
 
   protected aoPressionar(e: PointerEvent): void {
     if (this.disabled() || e.button !== 0) return;
@@ -486,10 +486,10 @@ export class NdsResizableHandle {
   protected onMove(e: PointerEvent): void {
     if (!this.arrastando()) return;
     const pos = this.store.horizontal() ? e.clientX : e.clientY;
-    this.store.arrastar(this, pos - this.origem);
+    this.store.drag(this, pos - this.origem);
   }
 
-  protected aoSoltar(e: PointerEvent): void {
+  protected onRelease(e: PointerEvent): void {
     if (!this.arrastando()) return;
     this.arrastando.set(false);
     if (this.el.hasPointerCapture(e.pointerId)) this.el.releasePointerCapture(e.pointerId);

@@ -96,7 +96,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
    * a rolagem ao topo sem trocar página nenhuma. Com rota, anular o clique
    * seria pior — apagaria o "abrir em nova aba" e o roteador de cliente junto.
    */
-  function pageEndereco(page: number): string {
+  function pageHref(page: number): string {
     return hrefForPage ? hrefForPage(page) : '#';
   }
 
@@ -120,7 +120,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
 
   function makeLink(page: number, isCurrent: boolean): HTMLAnchorElement {
     const a = document.createElement('a');
-    a.href = pageEndereco(page);
+    a.href = pageHref(page);
     a.dataset.slot = 'pagination-link';
     a.className = 'nds-pagination-link';
 
@@ -160,7 +160,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     const a = document.createElement('a');
     // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
     // endereço válido convidaria a abrir em nova aba uma página que não existe.
-    a.href = disabled ? '#' : pageEndereco(destination);
+    a.href = disabled ? '#' : pageHref(destination);
     a.dataset.slot = slot;
     a.setAttribute('aria-label', label);
     a.className = 'nds-pagination-link nds-pagination-icon';

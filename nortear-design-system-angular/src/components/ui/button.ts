@@ -100,7 +100,7 @@ export class NdsButton {
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** `<a href>` já é link e já é focável — não precisa de role nem tabindex. */
-  private readonly ehAncora = this.hostRef.nativeElement.tagName === 'A';
+  private readonly isAnchor = this.hostRef.nativeElement.tagName === 'A';
 
   /**
    * Nome do slot deste botão.
@@ -120,8 +120,8 @@ export class NdsButton {
   protected readonly slotDoHost =
     this.hostRef.nativeElement.getAttribute('data-slot') ?? 'button';
 
-  protected readonly papel = computed(() => (this.ehAncora ? null : undefined));
-  protected readonly tabIndexDoHost = computed(() => (this.ehAncora ? null : undefined));
+  protected readonly papel = computed(() => (this.isAnchor ? null : undefined));
+  protected readonly tabIndexDoHost = computed(() => (this.isAnchor ? null : undefined));
 
   protected readonly hostClass = computed(() =>
     btnClass(this.variant(), this.size()),

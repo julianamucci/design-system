@@ -319,16 +319,16 @@ export const Controlled: Story = {
   },
   render: () => {
     const ControlledDemo = () => {
-      const [isOpen, setAberto] = useState(false);
+      const [isOpen, setIsOpen] = useState(false);
       return (
         <div className="nds-stack nds-max-w-sm nds-min-h-50" data-spacing="md" style={LAYOUT_PARAGRAPH}>
           <div className="nds-cluster" data-spacing="sm">
             {/* Nomes próprios, e não os mesmos do gatilho: dois controles com o
                 mesmo nome acessível são ambíguos em leitor de tela. */}
-            <Button size="sm" variant="outline" onClick={() => setAberto(true)}>
+            <Button size="sm" variant="outline" onClick={() => setIsOpen(true)}>
               Abrir pelo estado externo
             </Button>
-            <Button size="sm" variant="outline" onClick={() => setAberto(false)}>
+            <Button size="sm" variant="outline" onClick={() => setIsOpen(false)}>
               Fechar pelo estado externo
             </Button>
           </div>
@@ -366,7 +366,7 @@ export const Controlled: Story = {
 
               <p className="nds-text-body">
                 Comentário de{" "}
-                <HoverCard open={isOpen} onOpenChange={setAberto}>
+                <HoverCard open={isOpen} onOpenChange={setIsOpen}>
                   <HoverCardTrigger asChild>
                     <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
                       @joana

@@ -21,10 +21,10 @@
   const PREFIXO = '--elevation-';
 
   const elevacoes = $derived.by(() => {
-    const raiz = ((translations as Record<string, unknown>)[$locale]
+    const root = ((translations as Record<string, unknown>)[$locale]
       ?? (translations as Record<string, unknown>)['pt-BR']) as
       { elevation?: { rows?: Record<string, LinhaDeElevacao> } } | undefined;
-    return Object.values(raiz?.elevation?.rows ?? {}).map((row) => ({
+    return Object.values(root?.elevation?.rows ?? {}).map((row) => ({
       label: row.level,
       token: row.token,
       classe: row.token.startsWith(PREFIXO)

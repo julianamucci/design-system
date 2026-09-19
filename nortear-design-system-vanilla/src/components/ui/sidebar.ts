@@ -83,7 +83,7 @@ export type SidebarOptions = {
 //
 // A união abaixo é o que preserva a obrigatoriedade nas peças em que o nome
 // nunca pode faltar: sem nenhuma das duas grafias, a chamada não compila.
-type NameAccessibleObrigatorio =
+type RequiredAccessibleName =
   | { 'aria-label': string; label?: string }
   | { 'aria-label'?: string; label: string };
 
@@ -544,7 +544,7 @@ export function createSidebarFooter(options: { class?: string } = {}): HTMLEleme
  * de quem compõe, e por isso falta.
  */
 export function createSidebarInput(
-  options: InputOptions & NameAccessibleObrigatorio
+  options: InputOptions & RequiredAccessibleName
 ): HTMLInputElement {
   const { label: _label, 'aria-label': _ariaLabel, ...rest } = options;
   const input = createInput({ type: 'search', ...rest, class: cn('nds-sidebar-input', rest.class) });
@@ -594,7 +594,7 @@ export function createSidebarGroupContent(options: { class?: string } = {}): HTM
  * compõe.
  */
 export function createSidebarGroupAction(
-  options: NameAccessibleObrigatorio & { icon?: SVGElement | HTMLElement; onClick?: () => void; class?: string }
+  options: RequiredAccessibleName & { icon?: SVGElement | HTMLElement; onClick?: () => void; class?: string }
 ): HTMLButtonElement {
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -723,7 +723,7 @@ export function createSidebarMenuButton(
  * item o traz de volta para quem chega por teclado.
  */
 export function createSidebarMenuAction(
-  options: NameAccessibleObrigatorio & {
+  options: RequiredAccessibleName & {
     icon?: SVGElement | HTMLElement;
     showOnHover?: boolean;
     onClick?: () => void;

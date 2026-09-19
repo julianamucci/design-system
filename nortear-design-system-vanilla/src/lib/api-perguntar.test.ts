@@ -41,9 +41,9 @@ beforeAll(async () => {
     void handler(req, res);
   });
   await new Promise<void>((resolve) => servidor.listen(0, '127.0.0.1', resolve));
-  const endereco = servidor.address();
-  if (typeof endereco === 'string' || endereco === null) throw new Error('sem porta');
-  base = `http://127.0.0.1:${endereco.port}/api/perguntar`;
+  const address = servidor.address();
+  if (typeof address === 'string' || address === null) throw new Error('sem porta');
+  base = `http://127.0.0.1:${address.port}/api/perguntar`;
 });
 
 afterAll(() => {
@@ -173,8 +173,8 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
 
     it('recusa histórico grande demais pelo teto do corpo', async () => {
       const gigante = Array.from({ length: MAX_HISTORY_TURNS }, () => ({
-        papel: 'user',
-        texto: 'a'.repeat(MAX_HISTORY_CHARS),
+        role: 'user',
+        text: 'a'.repeat(MAX_HISTORY_CHARS),
       }));
       const response = await comHistorico('10.0.1.1', gigante);
       expect(response.status).toBe(413);
@@ -185,8 +185,8 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
     // está ausente — 503 prova que o corpo foi ACEITO, sem chamar o modelo.
     it.each([
       ['não é lista', 'isto não é lista'],
-      ['papel inválido', [{ papel: 'sistema', texto: 'oi' }]],
-      ['texto vazio', [{ papel: 'user', texto: '   ' }]],
+      ['papel inválido', [{ role: 'sistema', text: 'oi' }]],
+      ['texto vazio', [{ role: 'user', text: '   ' }]],
       ['item que não é objeto', [null, 42, 'x']],
       ['sem os campos', [{}]],
     ])('descarta em silêncio o que não tem forma de turno: %s', async (_nome, historico) => {

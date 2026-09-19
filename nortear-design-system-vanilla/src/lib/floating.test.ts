@@ -99,7 +99,7 @@ describe('computeFloatingPosition — sem flip, o contrato de antes', () => {
 
 describe('computeFloatingPosition — flip', () => {
   /** O caso do submenu: item perto da borda direita, painel de 200px. */
-  const submenuNaBorda = (anchorLeft: number) =>
+  const submenuAtEdge = (anchorLeft: number) =>
     computeFloatingPosition({
       anchor: rect(anchorLeft, 300, 50, 30),
       panelWidth: 200,
@@ -112,7 +112,7 @@ describe('computeFloatingPosition — flip', () => {
     });
 
   it('vira para a esquerda quando a direita não cabe e a esquerda cabe', () => {
-    const { left, side } = submenuNaBorda(940);
+    const { left, side } = submenuAtEdge(940);
 
     expect(side).toBe('left');
     // 940 - 200 - 4 = 736, e cabe inteiro na janela.
@@ -122,7 +122,7 @@ describe('computeFloatingPosition — flip', () => {
   });
 
   it('NÃO vira quando o lado pedido já cabe', () => {
-    const { left, side } = submenuNaBorda(100);
+    const { left, side } = submenuAtEdge(100);
 
     expect(side).toBe('right');
     expect(left).toBe(154);
@@ -372,7 +372,7 @@ function fakeAnchor(anchor: FloatingAnchorRect): HTMLElement {
   return { getBoundingClientRect: () => anchor } as unknown as HTMLElement;
 }
 
-function stubJanela(over: Partial<FloatingViewport> = {}): void {
+function stubWindow(over: Partial<FloatingViewport> = {}): void {
   const vp = viewport(over);
   vi.stubGlobal('window', { scrollX: vp.scrollX, scrollY: vp.scrollY });
   vi.stubGlobal('document', {
@@ -386,7 +386,7 @@ afterEach(() => {
 
 describe('positionFloating — escrita no painel', () => {
   it('escreve top/left em px e devolve o lado', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(200, 120);
 
     const side = positionFloating(fakeAnchor(rect(100, 300, 50, 30)), panel, 'right', 'start', 4);
@@ -401,7 +401,7 @@ describe('positionFloating — escrita no painel', () => {
   });
 
   it('sem flip, NÃO toca em data-side — quem o escreve é o chamador', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(200, 120);
     panel.dataset.side = 'right';
 
@@ -412,7 +412,7 @@ describe('positionFloating — escrita no painel', () => {
   });
 
   it('com flip, ANUNCIA o lado final em data-side', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(200, 120);
     // O menubar crava `right` na construção do painel do submenu, antes de
     // existir medida. Depois da troca esse valor estaria mentindo, e é a folha
@@ -434,7 +434,7 @@ describe('positionFloating — escrita no painel', () => {
   });
 
   it('repassa o alignOffset à conta, sem mexer no eixo principal', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(200, 120);
 
     positionFloating(fakeAnchor(rect(100, 300, 50, 30)), panel, 'right', 'start', 4, {
@@ -447,7 +447,7 @@ describe('positionFloating — escrita no painel', () => {
   });
 
   it('com flip e espaço de sobra, o anúncio confirma o lado pedido', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(200, 120);
 
     const side = positionFloating(
@@ -466,7 +466,7 @@ describe('positionFloating — escrita no painel', () => {
 
 describe('positionFloatingAtPoint — escrita no painel', () => {
   it('encaixa o clique do canto inferior direito e não anuncia lado nenhum', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(220, 160);
 
     positionFloatingAtPoint(980, 790, panel);
@@ -479,7 +479,7 @@ describe('positionFloatingAtPoint — escrita no painel', () => {
   });
 
   it('preserva o ponto quando o painel cabe', () => {
-    stubJanela();
+    stubWindow();
     const panel = fakePanel(220, 160);
 
     positionFloatingAtPoint(120, 200, panel);

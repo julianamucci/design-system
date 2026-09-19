@@ -88,8 +88,8 @@ function exportadosPor(slug: string): Set<string> | null {
   // `export { A, B as C }` — o nome que vale é o de fora.
   for (const m of text.matchAll(/export\s*\{([^}]*)\}/g)) {
     for (const parte of m[1]!.split(',')) {
-      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
-      if (nome) nomes.add(nome);
+      const snippetName = parte.trim().split(/\s+as\s+/).pop()?.trim();
+      if (snippetName) nomes.add(snippetName);
     }
   }
   return nomes;
@@ -197,9 +197,9 @@ function ligacoesSemMembro(text: string): string[] {
     const expressao = withoutText.replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
 
     for (const ident of expressao.matchAll(/(?:^|[^.\w$'"`])([A-Za-z_$][\w$]*)/g)) {
-      const nome = ident[1]!;
-      if (NAO_E_MEMBRO.has(nome) || membros.has(nome) || locais.has(nome)) continue;
-      soltos.add(nome);
+      const snippetName = ident[1]!;
+      if (NAO_E_MEMBRO.has(snippetName) || membros.has(snippetName) || locais.has(snippetName)) continue;
+      soltos.add(snippetName);
     }
   };
 
@@ -258,7 +258,7 @@ function ligacoesSemMembro(text: string): string[] {
  *    o membro ao menos existe no exemplo, e o caso é mais raro que o que isto
  *    passa a pegar.
  */
-function ligacoesSemMembroNoTexto(bruto: string): string[] {
+function bindingsWithoutMemberInText(bruto: string): string[] {
   // Os membros que o snippet PUBLICA, nas DUAS formas em que esta stack os
   // escreve — e a segunda foi um falso positivo meu antes de entrar aqui.
   //
@@ -290,8 +290,8 @@ function ligacoesSemMembroNoTexto(bruto: string): string[] {
 
   const soltos = new Set<string>();
   for (const m of text.matchAll(/@for\s*\(\s*[A-Za-z_$][\w$]*\s+of\s+([A-Za-z_$][\w$]*)/g)) {
-    const nome = m[1]!;
-    if (!NAO_E_MEMBRO.has(nome) && !membros.has(nome) && !locais.has(nome)) soltos.add(nome);
+    const snippetName = m[1]!;
+    if (!NAO_E_MEMBRO.has(snippetName) && !membros.has(snippetName) && !locais.has(snippetName)) soltos.add(snippetName);
   }
   return [...soltos].sort();
 }
@@ -325,7 +325,7 @@ describe('transforms do painel Code', () => {
           bruto,
           `${path}: o texto do módulo não chegou à varredura — provavelmente o arquivo saiu do alcance do glob (\`./*.ts\`, sem subpasta), e sem esta falha ele sumiria da medição em silêncio`,
         ).toBeTypeOf('string');
-        const soltos = ligacoesSemMembroNoTexto(bruto!);
+        const soltos = bindingsWithoutMemberInText(bruto!);
         expect(
           soltos,
           `${path}: algum ramo do snippet itera ${soltos.join(', ')}, que nenhuma classe do exemplo declara — quem copiar aquele ramo recebe um laço que não resolve`,
@@ -401,8 +401,8 @@ describe('transforms do painel Code', () => {
             // Slug que este arquivo não alcança — subpasta, ou peça que ainda
             // não existe aqui. Acusar seria acusar a varredura, não o snippet.
             if (!exportados) continue;
-            for (const nome of nomes) {
-              if (!exportados.has(nome)) faltando.push(`${nome} (de ${slug})`);
+            for (const snippetName of nomes) {
+              if (!exportados.has(snippetName)) faltando.push(`${snippetName} (de ${slug})`);
             }
           }
           expect(

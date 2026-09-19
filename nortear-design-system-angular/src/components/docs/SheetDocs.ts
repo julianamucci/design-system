@@ -180,12 +180,12 @@ const TOKENS_CODE = `/* Tokens que o painel consome */
 /* A direção mora em data-side, e é dela que saem posição, borda e animação:
    .nds-sheet-content[data-side="right"] { right: 0; border-left: 1px solid … } */`;
 
-const VARIANT_CODE = (side: string, tituloVar: string) => `<nds-sheet>
+const VARIANT_CODE = (side: string, variantTitle: string) => `<nds-sheet>
   <button ndsSheetTrigger ndsButton variant="outline">Abrir filtros</button>
 
   <ng-template ndsSheetContent side="${side}">
     <div ndsSheetHeader>
-      <h2 ndsSheetTitle>${tituloVar}</h2>
+      <h2 ndsSheetTitle>${variantTitle}</h2>
       <p ndsSheetDescription>Configure os filtros para refinar os resultados.</p>
     </div>
 

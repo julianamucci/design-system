@@ -139,7 +139,7 @@ export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.
       (selectionChange)="selecionadas.set($event)"
     ></div>
 
-    @if (mostrarLote()) {
+    @if (showBatch()) {
       <p class="nds-text-muted-foreground">{{ resumoDoLote() }}</p>
     }
   `,
@@ -154,7 +154,7 @@ export class NdsDataTableDemo {
   readonly enablePagination = input(true, { transform: booleanAttribute });
   readonly enableGlobalFilter = input(true, { transform: booleanAttribute });
   /** Mostra a barra de ação em lote — o que se faz COM as linhas marcadas. */
-  readonly mostrarLote = input(false, { transform: booleanAttribute });
+  readonly showBatch = input(false, { transform: booleanAttribute });
   readonly pageSize = input(5, { transform: numberAttribute });
 
   readonly faturas = signal<InvoiceDT[]>(INVOICES_DT.map((f) => ({ ...f })));

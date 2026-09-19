@@ -72,14 +72,14 @@ function sizeAlignment(sufixo: string): Item[] {
 }
 
 /** Importa da biblioteca de ícones só o que a composição usa, sem repetir. */
-function importIcons(...listas: Item[][]): string {
-  const names = [...new Set(listas.flat().map((item) => item.icon))];
+function importIcons(...itemLists: Item[][]): string {
+  const names = [...new Set(itemLists.flat().map((item) => item.icon))];
   return `import { ${names.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** Bloco `<script setup>` completo: o componente e os ícones da composição. */
-function script(...listas: Item[][]): string {
-  return `${IMPORT}\n${importIcons(...listas)}`;
+function script(...itemLists: Item[][]): string {
+  return `${IMPORT}\n${importIcons(...itemLists)}`;
 }
 
 /**

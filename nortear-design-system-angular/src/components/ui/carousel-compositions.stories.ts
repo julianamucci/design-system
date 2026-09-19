@@ -65,7 +65,7 @@ export const WithDots: Story = {
   render: () => ({
     props: { slides: SLIDES, accessibleName, labelVisible },
     // `#comDots` é a referência de template: `index()`, `total()`,
-    // `irPara()` e `alternarAutoplay()` são a API pública do carrossel, e os
+    // `irPara()` e `toggleAutoplay()` são a API pública do carrossel, e os
     // controles abaixo não precisam de estado próprio para acompanhá-la.
     //
     // `autoplay` fica em falso no primeiro render de propósito: um preview que
@@ -121,8 +121,8 @@ export const WithDots: Story = {
           }
         </div>
 
-        <button ndsButton variant="outline" size="sm" (click)="comDots.alternarAutoplay()">
-          {{ comDots.autoplayAtivo() ? 'Pausar apresentação' : 'Iniciar apresentação' }}
+        <button ndsButton variant="outline" size="sm" (click)="comDots.toggleAutoplay()">
+          {{ comDots.autoplayActive() ? 'Pausar apresentação' : 'Iniciar apresentação' }}
         </button>
       </div>
     `,

@@ -84,7 +84,7 @@ const FONT_ITEMS: Array<{ key: string; className: string }> = [
 export function ThemeColorsDocs() {
   const { t, locale } = useTranslation(themeColorsTranslations);
   const [tokenValues, setTokenValues] = useState<Record<string, string>>({});
-  const [themeActive, setTemaAtivo] = useState<string>('tema-default');
+  const [themeActive, setThemeActive] = useState<string>('tema-default');
   const [darkPage, setPaginaDark] = useState<boolean>(false);
 
   // ─── SEO ────────────────────────────────────────────────────────────────
@@ -119,7 +119,7 @@ export function ThemeColorsDocs() {
       const cl = document.documentElement.classList;
       const theme = ['tema-default', 'tema-warm', 'tema-cold'].find((c) => cl.contains(c))
         ?? 'tema-default';
-      setTemaAtivo(theme);
+      setThemeActive(theme);
       setPaginaDark(cl.contains('dark'));
 
       // Relê os valores HSL resolvidos a cada mudança de classe do <html>.

@@ -64,10 +64,10 @@ export const WithTrackedTrigger: Story = {
     createDocsDemonstration({
       ...args,
       demoFactory: () => {
-        const botao = createButton({ children: 'Salvar' });
-        botao.dataset.track = 'demo';
-        botao.dataset.trackId = 'button:demo:salvar';
-        return botao;
+        const button = createButton({ children: 'Salvar' });
+        button.dataset.track = 'demo';
+        button.dataset.trackId = 'button:demo:salvar';
+        return button;
       },
     }),
 };

@@ -49,8 +49,8 @@ function fraction(panels: HTMLElement[], horizontal: boolean): number[] {
   return panels.map((p) => measurement(p) / total);
 }
 
-function panelsOf(root: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
-  const group = root.querySelector<HTMLElement>(seletorGrupo)!;
+function panelsOf(root: ParentNode, groupSelector = '[data-slot="resizable"]'): HTMLElement[] {
+  const group = root.querySelector<HTMLElement>(groupSelector)!;
   return [...group.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
 }
 

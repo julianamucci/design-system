@@ -299,7 +299,7 @@ const CODE_COMP_FORM = `<form
         ></textarea>
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>{{ t('demonstration.labels.descriptionHelp') }}</span>
-          <span aria-live="polite" [attr.aria-label]="rotuloDoContador(varCounter().length, 500)">
+          <span aria-live="polite" [attr.aria-label]="counterLabel(varCounter().length, 500)">
             {{ varCounter().length }}/500
           </span>
         </div>
@@ -363,7 +363,7 @@ const CODE_COMP_FORM = `<form
         class="nds-stack nds-w-full nds-max-w-md"
         data-spacing="md"
         [attr.aria-label]="t('demonstration.labels.feedbackLabel')"
-        (submit)="enviarFormulario($event)"
+        (submit)="submitForm($event)"
       >
         <div class="nds-stack" data-spacing="sm">
           <label ndsLabel for="comp-form">{{ t('demonstration.labels.feedbackLabel') }}</label>
@@ -377,7 +377,7 @@ const CODE_COMP_FORM = `<form
             (input)="formValue.set($any($event.target).value)"
           ></textarea>
         </div>
-        <button ndsButton type="submit">{{ rotuloEnviar() }}</button>
+        <button ndsButton type="submit">{{ submitLabel() }}</button>
         @if (formEnviado()) {
           <p class="nds-text-caption nds-text-muted-foreground" aria-live="polite">
             {{ formEnviado() }}
@@ -414,11 +414,11 @@ const CODE_COMP_FORM = `<form
                 [placeholder]="t('demonstration.labels.descriptionPlaceholder')"
                 [value]="demoDescription()"
                 (input)="demoDescription.set($any($event.target).value)"
-                (blur)="registrarSaida('description', demoDescription())"
+                (blur)="trackBlur('description', demoDescription())"
               ></textarea>
               <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
                 <span id="demo-description-help">{{ t('demonstration.labels.descriptionHelp') }}</span>
-                <span aria-live="polite" [attr.aria-label]="rotuloDoContador(demoDescription().length, 500)">
+                <span aria-live="polite" [attr.aria-label]="counterLabel(demoDescription().length, 500)">
                   {{ demoDescription().length }}/500
                 </span>
               </div>
@@ -433,7 +433,7 @@ const CODE_COMP_FORM = `<form
                 [placeholder]="t('demonstration.labels.bioPlaceholder')"
                 [value]="demoBio()"
                 (input)="demoBio.set($any($event.target).value)"
-                (blur)="registrarSaida('bio', demoBio())"
+                (blur)="trackBlur('bio', demoBio())"
               ></textarea>
             </div>
 
@@ -446,7 +446,7 @@ const CODE_COMP_FORM = `<form
                 [placeholder]="t('demonstration.labels.feedbackPlaceholder')"
                 [value]="demoFeedback()"
                 (input)="demoFeedback.set($any($event.target).value)"
-                (blur)="registrarSaida('feedback', demoFeedback())"
+                (blur)="trackBlur('feedback', demoFeedback())"
               ></textarea>
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.noResize') }}
@@ -568,14 +568,14 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompForm = viewChild.required<TemplateRef<unknown>>('tplCompForm');
 
   /** O template Angular não tem globais — a interpolação sai daqui. */
-  protected rotuloDoContador(usados: number, max: number): string {
+  protected counterLabel(usados: number, max: number): string {
     const locale = getLocale();
     return locale === 'en'
       ? `${usados} of ${max} characters used`
       : `${usados} de ${max} caracteres usados`;
   }
 
-  protected readonly rotuloEnviar = computed(() => {
+  protected readonly submitLabel = computed(() => {
     dict();
     const locale = getLocale();
     return locale === 'en' ? 'Send' : locale === 'es' ? 'Enviar' : 'Enviar';
@@ -589,13 +589,13 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
     return 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.';
   });
 
-  protected enviarFormulario(evento: Event): void {
+  protected submitForm(evento: Event): void {
     evento.preventDefault();
     const text = this.formValue().trim();
     this.formEnviado.set(text ? `${text.length} / ${this.formValue().length}` : '0');
   }
 
-  protected registrarSaida(field: string, value: string): void {
+  protected trackBlur(field: string, value: string): void {
     if (!value.trim()) return;
     track('field_blur', { component: 'textarea', field_name: field, location: 'docs_demo' });
   }

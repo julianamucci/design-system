@@ -136,7 +136,7 @@ export const WithCheckboxItems: Story = {
   },
   render: () => {
     const Demo = () => {
-      const [name, setNome] = useState(true);
+      const [name, setName] = useState(true);
       const [email, setEmail] = useState(false);
       // Três colunas, como no vanilla, que é a referência: com duas o menu não
       // mostrava que a marcação de uma não mexe nas OUTRAS, só na vizinha.
@@ -150,7 +150,7 @@ export const WithCheckboxItems: Story = {
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-                <DropdownMenuCheckboxItem checked={name} onCheckedChange={setNome}>
+                <DropdownMenuCheckboxItem checked={name} onCheckedChange={setName}>
                   Nome
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem checked={email} onCheckedChange={setEmail}>

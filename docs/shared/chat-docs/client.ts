@@ -66,8 +66,8 @@ function dispatch(pending: PendingEvent, handlers: AskHandlers): void {
  */
 /** Um turno já dito. `model` é o nome que a API do provedor usa para o assistente. */
 export interface TurnoAnterior {
-  papel: 'user' | 'model';
-  texto: string;
+  role: 'user' | 'model';
+  text: string;
 }
 
 export async function ask(

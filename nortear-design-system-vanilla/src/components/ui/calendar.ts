@@ -140,7 +140,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
   /** Move o dia focado e traz a visão junto quando ele cai em outro mês. */
-  function moverFocus(days: number, meses = 0): void {
+  function moveFocus(days: number, meses = 0): void {
     const target = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + days);
     focado = target;
     viewYear = target.getFullYear();
@@ -210,7 +210,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     const selMonth = document.createElement('select');
     selMonth.className = 'nds-calendar-select';
-    selMonth.setAttribute('aria-label', rotulos.selecionarMes);
+    selMonth.setAttribute('aria-label', rotulos.selectMonth);
     monthNames.forEach((name, i) => {
       const opt = document.createElement('option');
       opt.value = String(i);
@@ -225,7 +225,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     const selYear = document.createElement('select');
     selYear.className = 'nds-calendar-select';
-    selYear.setAttribute('aria-label', rotulos.selecionarAno);
+    selYear.setAttribute('aria-label', rotulos.selectYear);
     // A lista é completa, e não uma janela em torno do ano em vista: o painel
     // de um <select> é desenhado pelo navegador e não entrega evento de rolagem
     // ao JS, então não há onde pendurar um "carregar mais ao chegar na ponta" —
@@ -339,7 +339,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         if (isDisabled) { btn.disabled = true; btn.dataset.disabled = ''; }
 
         btn.addEventListener('keydown', (e) => {
-          // O passo parte SEMPRE do dia deste botão. `moverFocus` anda a partir de
+          // O passo parte SEMPRE do dia deste botão. `moveFocus` anda a partir de
           // `focado`, e os dois podem estar em dias diferentes quando o foco
           // chegou aqui por fora da navegação — foco programático, restauração de
           // foco ao fechar um popover. Aí `Home` calculava o deslocamento pelo
@@ -356,13 +356,13 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           if (e.key === 'Home' || e.key === 'End') {
             e.preventDefault();
             const target = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
-            moverFocus(target);
+            moveFocus(target);
             return;
           }
           const step = steps[e.key];
           if (!step) return;
           e.preventDefault();
-          moverFocus(step[0], step[1]);
+          moveFocus(step[0], step[1]);
         });
 
         if (!isDisabled) {

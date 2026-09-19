@@ -62,14 +62,14 @@ describe('o snippet ENSINA o nível do heading do título', () => {
   const titleTags = (output: string) => output.match(/<AlertTitle[^>]*>/g) ?? [];
 
   it('todo snippet com título escreve o nível, e nenhum publica título sem nível', () => {
-    const comTitulo = ALL.map((build) => build()).filter((out) => titleTags(out).length > 0);
+    const withTitle = ALL.map((build) => build()).filter((out) => titleTags(out).length > 0);
     // Contagem declarada de propósito: só `alertNoTitleSource` fica de fora da
     // varredura. Se um snippet perder o título, o portão reprova em vez de
     // continuar verde medindo menos.
-    expect(comTitulo).toHaveLength(ALL.length - 1);
+    expect(withTitle).toHaveLength(ALL.length - 1);
     expect(titleTags(alertNoTitleSource())).toEqual([]);
 
-    for (const output of comTitulo) {
+    for (const output of withTitle) {
       for (const tag of titleTags(output)) expect(tag).toContain('as="h4"');
     }
   });

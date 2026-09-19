@@ -136,7 +136,7 @@ export function attachDrawerSwipe(options: DrawerSwipeOptions): DrawerSwipeHandl
   let lastRefusedAt = 0;
   let travel = 0;
 
-  function limpar(): void {
+  function cleanup(): void {
     panel.style.transform = '';
     delete panel.dataset.swiping;
     dragging = false;
@@ -211,7 +211,7 @@ export function attachDrawerSwipe(options: DrawerSwipeOptions): DrawerSwipeHandl
     const arrastou = dragging;
     const percorrido = travel;
     const decorrido = now() - startedAt;
-    limpar();
+    cleanup();
     if (!arrastou) return;
     if (resolveDrawerRelease({ travel: percorrido, elapsed: decorrido, size }) === 'dismiss') {
       onDismiss();
@@ -227,7 +227,7 @@ export function attachDrawerSwipe(options: DrawerSwipeOptions): DrawerSwipeHandl
    */
   function onPointerCancel(e: PointerEvent): void {
     if (pointerId === null || e.pointerId !== pointerId) return;
-    limpar();
+    cleanup();
   }
 
   panel.addEventListener('pointerdown', onPointerDown);
@@ -241,7 +241,7 @@ export function attachDrawerSwipe(options: DrawerSwipeOptions): DrawerSwipeHandl
       panel.removeEventListener('pointermove', onPointerMove);
       panel.removeEventListener('pointerup', onPointerUp);
       panel.removeEventListener('pointercancel', onPointerCancel);
-      limpar();
+      cleanup();
     },
   };
 }

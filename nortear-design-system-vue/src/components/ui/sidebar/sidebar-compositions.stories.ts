@@ -81,8 +81,8 @@ export const WithNavGroups: Story = {
     await step('As ações têm nome — o "+" e as reticências sozinhos não dizem nada', async () => {
       // O nome vem do <span class="nds-sr-only">, que existe justamente porque
       // o ícone é decorativo.
-      const adicionar = canvas.getByRole('button', { name: 'Adicionar item' });
-      await expect(adicionar).toHaveAttribute('data-slot', 'sidebar-group-action');
+      const addButton = canvas.getByRole('button', { name: 'Adicionar item' });
+      await expect(addButton).toHaveAttribute('data-slot', 'sidebar-group-action');
       const mais = canvas.getByRole('button', { name: 'Mais opções' });
       await expect(mais).toHaveAttribute('data-slot', 'sidebar-menu-action');
     });

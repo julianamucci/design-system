@@ -213,7 +213,7 @@ function closeOthers(current: NdsSheet): void {
 
         <div
           rdxDialogPopup
-          [class]="classeDoPainel()"
+          [class]="resolvedPanelClass()"
           data-slot="sheet-content"
           [attr.data-side]="c.side()"
           [attr.data-state]="state()"
@@ -260,7 +260,7 @@ export class NdsSheet {
    */
   protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 
-  protected readonly classeDoPainel = computed(() =>
+  protected readonly resolvedPanelClass = computed(() =>
     cn('nds-sheet-content', this.content()?.panelClass()),
   );
 

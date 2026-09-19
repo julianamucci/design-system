@@ -407,7 +407,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
            passaria a conter a armadilha que ela está ensinando a evitar. -->
       <div class="nds-stack" data-spacing="xs">
         <p class="nds-text-body nds-font-medium">{{ t('variants.items.bottom') }} + {{ t('variants.items.bottom') }}</p>
-        <p class="nds-text-caption nds-text-destructive">{{ doDontAviso() }}</p>
+        <p class="nds-text-caption nds-text-destructive">{{ doDontWarning() }}</p>
       </div>
     </ng-template>
 
@@ -418,7 +418,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.bottom') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ rotuloDirecao('bottom') }}</h2>
+            <h2 ndsDrawerTitle>{{ directionLabel('bottom') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -433,7 +433,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.top') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ rotuloDirecao('top') }}</h2>
+            <h2 ndsDrawerTitle>{{ directionLabel('top') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -448,7 +448,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.left') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ rotuloDirecao('left') }}</h2>
+            <h2 ndsDrawerTitle>{{ directionLabel('left') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -463,7 +463,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.right') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h2 ndsDrawerTitle>{{ rotuloDirecao('right') }}</h2>
+            <h2 ndsDrawerTitle>{{ directionLabel('right') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -789,13 +789,13 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
   });
 
   /** Aviso do "don't" descritivo do segundo par — a consequência, sem rodeio. */
-  protected readonly doDontAviso = computed(() => {
+  protected readonly doDontWarning = computed(() => {
     dict();
     return toPlainText(t('doDont.pair2.dont'));
   });
 
   /** Chamado do template: `String(...)` e afins não existem no contexto Angular. */
-  protected rotuloDirecao(key: DrawerDirection): string {
+  protected directionLabel(key: DrawerDirection): string {
     return stripHtml(t(CHAVE_DIRECAO[key]));
   }
 
@@ -953,7 +953,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
     ].map(({ key, tpl }) => ({
       name: t(`variants.items.${key}`),
       description: stripHtml(t(`variants.styles.${key}`)),
-      code: VARIANT_CODE(key, this.rotuloDirecao(key)),
+      code: VARIANT_CODE(key, this.directionLabel(key)),
       trackId: key,
       preview: tpl,
     }));

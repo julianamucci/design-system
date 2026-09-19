@@ -467,8 +467,8 @@ const META_A11Y = [
                 href="#"
                 [text]="t('demonstration.labels.previous')"
                 [label]="t('demonstration.labels.previous')"
-                [disabled]="paginaInterativa() === 1"
-                (click)="irTo($event, paginaInterativa() - 1, totalInterativo)"
+                [disabled]="interactivePage() === 1"
+                (click)="irTo($event, interactivePage() - 1, totalInterativo)"
               ></a>
             </li>
             @for (n of paginasInterativo; track n) {
@@ -476,7 +476,7 @@ const META_A11Y = [
                 <a
                   ndsPaginationLink
                   href="#"
-                  [isActive]="n === paginaInterativa()"
+                  [isActive]="n === interactivePage()"
                   [attr.aria-label]="pageLabel(n)"
                   (click)="irTo($event, n, totalInterativo)"
                 >{{ n }}</a>
@@ -488,14 +488,14 @@ const META_A11Y = [
                 href="#"
                 [text]="t('demonstration.labels.next')"
                 [label]="t('demonstration.labels.next')"
-                [disabled]="paginaInterativa() === totalInterativo"
-                (click)="irTo($event, paginaInterativa() + 1, totalInterativo)"
+                [disabled]="interactivePage() === totalInterativo"
+                (click)="irTo($event, interactivePage() + 1, totalInterativo)"
               ></a>
             </li>
           </ul>
         </nav>
         <p class="nds-text-body nds-text-muted-foreground">
-          {{ t('demonstration.labels.current') }}: {{ paginaInterativa() }} / {{ totalInterativo }}
+          {{ t('demonstration.labels.current') }}: {{ interactivePage() }} / {{ totalInterativo }}
         </p>
       </div>
     </ng-template>
@@ -602,8 +602,8 @@ const META_A11Y = [
                       href="#"
                       [text]="t('demonstration.labels.previous')"
                       [label]="t('demonstration.labels.previous')"
-                      [disabled]="paginaDemo() === 1"
-                      (click)="irParaDemo($event, paginaDemo() - 1)"
+                      [disabled]="demoPage() === 1"
+                      (click)="irParaDemo($event, demoPage() - 1)"
                     ></a>
                   </li>
                   @for (n of paginasSimples; track n) {
@@ -611,7 +611,7 @@ const META_A11Y = [
                       <a
                         ndsPaginationLink
                         href="#"
-                        [isActive]="n === paginaDemo()"
+                        [isActive]="n === demoPage()"
                         [attr.aria-label]="pageLabel(n)"
                         (click)="irParaDemo($event, n)"
                       >{{ n }}</a>
@@ -623,14 +623,14 @@ const META_A11Y = [
                       href="#"
                       [text]="t('demonstration.labels.next')"
                       [label]="t('demonstration.labels.next')"
-                      [disabled]="paginaDemo() === totalSimples"
-                      (click)="irParaDemo($event, paginaDemo() + 1)"
+                      [disabled]="demoPage() === totalSimples"
+                      (click)="irParaDemo($event, demoPage() + 1)"
                     ></a>
                   </li>
                 </ul>
               </nav>
               <p class="nds-text-body nds-text-muted-foreground">
-                {{ t('demonstration.labels.current') }}: {{ paginaDemo() }} / {{ totalSimples }}
+                {{ t('demonstration.labels.current') }}: {{ demoPage() }} / {{ totalSimples }}
               </p>
             </div>
 
@@ -815,8 +815,8 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   protected readonly activeSection = signal<string | undefined>(undefined);
 
   /** Estado das duas demonstrações interativas — a da seção e a da variante. */
-  protected readonly paginaDemo = signal(1);
-  protected readonly paginaInterativa = signal(3);
+  protected readonly demoPage = signal(1);
+  protected readonly interactivePage = signal(3);
 
   private readonly tplVarLink = viewChild.required<TemplateRef<unknown>>('tplVarLink');
   private readonly tplVarDirecional = viewChild.required<TemplateRef<unknown>>('tplVarDirecional');
@@ -859,7 +859,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
 
   /** A demonstração da seção guarda estado; as outras só emitem o evento. */
   protected irParaDemo(evento: Event, page: number): void {
-    this.paginaDemo.set(page);
+    this.demoPage.set(page);
     this.irTo(evento, page, SIMPLE_TOTAL);
   }
 

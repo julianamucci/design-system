@@ -521,7 +521,7 @@ export class NdsDrawerSwipe {
 
         <div
           rdxDialogPopup
-          [class]="classeDoPainel()"
+          [class]="resolvedPanelClass()"
           data-slot="drawer-content"
           [attr.data-direction]="direction()"
           [attr.data-state]="state()"
@@ -576,7 +576,7 @@ export class NdsDrawer {
    */
   protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 
-  protected readonly classeDoPainel = computed(() =>
+  protected readonly resolvedPanelClass = computed(() =>
     cn('nds-drawer-content', this.content()?.panelClass()),
   );
 

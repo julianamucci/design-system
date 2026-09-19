@@ -77,12 +77,12 @@ const onCloseSpy = fn();
  * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
  * pelos passos anteriores e o passo de abertura media o vazio.
  */
-async function ensureOpen(canvas: ReturnType<typeof within>, rotuloTrigger: string | RegExp) {
+async function ensureOpen(canvas: ReturnType<typeof within>, triggerLabel: string | RegExp) {
   // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
   // portal da story anterior por alguns quadros, e queryByRole estoura em
   // "multiple elements" antes de a limpeza acontecer.
   if (!document.querySelector('[role="alertdialog"]')) {
-    await userEvent.click(canvas.getByRole('button', { name: rotuloTrigger }));
+    await userEvent.click(canvas.getByRole('button', { name: triggerLabel }));
   }
   return waitForPortal('alertdialog');
 }

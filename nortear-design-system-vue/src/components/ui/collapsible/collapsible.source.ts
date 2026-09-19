@@ -50,27 +50,27 @@ const FILTERS = `    <p>Filtro avançado 1</p>
 /** A composição inteira: raiz, gatilho com rótulo e chevron, e painel. */
 function colapsavel(options: {
   root?: string;
-  classeRaiz?: string;
+  rootClass?: string;
   trigger?: string;
-  classeGatilho?: string;
+  triggerClass?: string;
   chevron?: string;
   label: string;
   body?: string;
 }): string {
   const {
     root = '',
-    classeRaiz = 'nds-w-sm',
+    rootClass = 'nds-w-sm',
     trigger = '',
-    classeGatilho = TRIGGER_GHOST,
+    triggerClass = TRIGGER_GHOST,
     chevron = CHEVRON,
     label,
     body = FILTERS,
   } = options;
-  const triggerAttrs = [trigger, `class="${classeGatilho}"`, 'data-justify="between"']
+  const triggerAttrs = [trigger, `class="${triggerClass}"`, 'data-justify="between"']
     .filter(Boolean)
     .map((atributo) => `    ${atributo}`)
     .join('\n');
-  return `<Collapsible${attrs(root, `class="${classeRaiz}"`)}>
+  return `<Collapsible${attrs(root, `class="${rootClass}"`)}>
   <CollapsibleTrigger
 ${triggerAttrs}
   >
@@ -150,7 +150,7 @@ export function defaultCollapsibleOpenSource(): string {
 export function collapsibleControlledSource(): string {
   const block = colapsavel({
     root: 'v-model:open="aberto"',
-    classeRaiz: 'nds-w-full',
+    rootClass: 'nds-w-full',
     label: `    <span>{{ aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}</span>`,
   });
   return vueSnippet(
@@ -201,7 +201,7 @@ export function collapsibleWithButtonSource(): string {
   return vueSnippet(
     importing(),
     colapsavel({
-      classeGatilho: TRIGGER_OUTLINE,
+      triggerClass: TRIGGER_OUTLINE,
       label: simpleLabel('Exibir opções avançadas'),
       body: `    <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
@@ -236,7 +236,7 @@ export function collapsibleWithChevronSource(): string {
   return vueSnippet(
     importing(),
     colapsavel({
-      classeGatilho: TRIGGER_OUTLINE,
+      triggerClass: TRIGGER_OUTLINE,
       label: simpleLabel('Configurações avançadas'),
       body: `    <div class="nds-cluster" data-justify="between">
       <span class="nds-text-muted-foreground">Notificações</span>

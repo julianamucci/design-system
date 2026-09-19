@@ -471,7 +471,7 @@ const COMPOSITION_CODE = {
           </div>
 
           <div class="nds-stack" data-spacing="sm">
-            @for (option of opcoesFiltro(); track option.id) {
+            @for (option of filterOptions(); track option.id) {
               <div class="nds-cluster" data-spacing="sm">
                 <button ndsCheckbox [id]="option.id"></button>
                 <label ndsLabel [attr.for]="option.id">{{ option.label }}</label>
@@ -496,7 +496,7 @@ const COMPOSITION_CODE = {
       </div>
     </ng-template>
 
-    <ng-template #tplCompCores>
+    <ng-template #tplCompColors>
       <div ndsPopover (onOpenChange)="onChange('color-picker', 'docs_composicoes', $event)">
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.colorPicker.trigger') }}
@@ -706,7 +706,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarDefault = viewChild.required<TemplateRef<unknown>>('tplVarDefault');
   private readonly tplVarWithTitle = viewChild.required<TemplateRef<unknown>>('tplVarWithTitle');
   private readonly tplCompFiltro = viewChild.required<TemplateRef<unknown>>('tplCompFiltro');
-  private readonly tplCompCores = viewChild.required<TemplateRef<unknown>>('tplCompCores');
+  private readonly tplCompColors = viewChild.required<TemplateRef<unknown>>('tplCompColors');
   private readonly tplCompPreferencias =
     viewChild.required<TemplateRef<unknown>>('tplCompPreferencias');
 
@@ -752,7 +752,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * reescrever a frase para a prévia renderizar o número errado de caixas — em
    * silêncio, sem portão nenhum ver.
    */
-  protected readonly opcoesFiltro = computed(() => {
+  protected readonly filterOptions = computed(() => {
     dict();
     return (['active', 'pending', 'archived'] as const).map((key, i) => ({
       id: `pd-filtro-${i + 1}`,
@@ -1021,7 +1021,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     }[] = [
       { key: 'editProfile',   tpl: this.tplCompPerfil()       },
       { key: 'tableFilter',   tpl: this.tplCompFiltro()       },
-      { key: 'colorPicker',   tpl: this.tplCompCores()        },
+      { key: 'colorPicker',   tpl: this.tplCompColors()        },
       { key: 'quickSettings', tpl: this.tplCompPreferencias() },
     ];
     return mapa.map(({ key, tpl }) => ({

@@ -416,7 +416,7 @@ export function createCommand(options: CommandOptions): CommandElement {
     let first = true;
     let groupIndex = 0;
 
-    groups.forEach(({ title: groupName, items: itensDoGrupo }) => {
+    groups.forEach(({ title: groupName, items: groupItems }) => {
       if (!first) list.appendChild(createSeparator());
       first = false;
 
@@ -436,7 +436,7 @@ export function createCommand(options: CommandOptions): CommandElement {
         groupEl.setAttribute('aria-labelledby', heading.id);
       }
 
-      for (const item of itensDoGrupo) {
+      for (const item of groupItems) {
         const el = buildItemEl(item);
         groupEl.appendChild(el);
         visibleItems.push(el);

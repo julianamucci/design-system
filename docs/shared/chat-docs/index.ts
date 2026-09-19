@@ -408,8 +408,8 @@ async function submit(question: string): Promise<void> {
   // Guardar a pergunta antes faria a própria pergunta atual voltar como
   // contexto dela mesma; guardar uma resposta vazia ensinaria o modelo a
   // responder vazio.
-  historico.push({ papel: 'user', texto: text });
-  if (answer.trim()) historico.push({ papel: 'model', texto: answer });
+  historico.push({ role: 'user', text });
+  if (answer.trim()) historico.push({ role: 'model', text: answer });
   while (historico.length > MAX_TURNOS) historico.shift();
 }
 

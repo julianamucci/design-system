@@ -573,14 +573,14 @@ export class NdsSelectGroup {}
   standalone: true,
   host: {
     class: 'nds-select-label',
-    '[attr.id]': 'idDoGrupo',
+    '[attr.id]': 'groupId',
     '[attr.data-slot]': '"select-label"',
   },
 })
 export class NdsSelectLabel {
   private readonly group = inject(RdxSelectGroup, { optional: true });
 
-  protected readonly idDoGrupo = this.group?.id ?? null;
+  protected readonly groupId = this.group?.id ?? null;
 }
 
 // ─── Separator ────────────────────────────────────────────────────────────────

@@ -199,8 +199,8 @@ export const Autoplay: Story = {
           <button ndsCarouselNext label="Próximo item"></button>
         </nds-carousel>
 
-        <button ndsButton variant="outline" size="sm" (click)="carrossel.alternarAutoplay()">
-          {{ carrossel.autoplayAtivo() ? 'Pausar apresentação' : 'Retomar apresentação' }}
+        <button ndsButton variant="outline" size="sm" (click)="carrossel.toggleAutoplay()">
+          {{ carrossel.autoplayActive() ? 'Pausar apresentação' : 'Retomar apresentação' }}
         </button>
       </div>
     `,

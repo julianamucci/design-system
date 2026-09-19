@@ -69,7 +69,7 @@ function importing(items: readonly Item[]): string {
 }
 
 /** Os itens do grupo, um bloco por opção. */
-function marcarItems(items: readonly Item[]): string {
+function renderItems(items: readonly Item[]): string {
   return items
     .map((item) => {
       const props = attrs(
@@ -101,7 +101,7 @@ function mountGroup(options: {
 
   return svelteSnippet(
     `${importing(items)}\n\n${declaration}`,
-    `<ToggleGroup${abertura}>\n${marcarItems(items)}\n</ToggleGroup>`,
+    `<ToggleGroup${abertura}>\n${renderItems(items)}\n</ToggleGroup>`,
   );
 }
 

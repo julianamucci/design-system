@@ -43,7 +43,7 @@ import ts from 'typescript';
 import pkg from '../../../package.json';
 
 const modulos = import.meta.glob<Record<string, unknown>>('./**/*.source.ts', { eager: true });
-const caminhos = Object.keys(modulos).sort();
+const paths = Object.keys(modulos).sort();
 
 /** Fonte crua de cada `*.source.ts` — a segunda passagem LÊ o módulo, não o executa. */
 const sourcesRaw = import.meta.glob<string>('./**/*.source.ts', {
@@ -108,7 +108,7 @@ const HELPERS = new Set([
 ]);
 
 /** `./combobox.source.ts` -> `combobox`, a chave de `slugExportados`. */
-const slugDoCaminho = (path: string) =>
+const pathSlug = (path: string) =>
   path.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
 
 /** Andaime de story por forma do nome — pega o que ainda não foi escrito. */
@@ -420,9 +420,9 @@ function tsBindings(text: string): Set<string> {
  * passagem de laço: é o que permite conferir os ramos que os args padrão não
  * produzem, ao custo de aceitar nome declarado num ramo e usado noutro.
  */
-const ligadosPorCaminho = new Map<string, Set<string>>();
+const boundByPath = new Map<string, Set<string>>();
 function boundNames(path: string): Set<string> {
-  const memo = ligadosPorCaminho.get(path);
+  const memo = boundByPath.get(path);
   if (memo) return memo;
   const textos: string[] = [publishedText(sourcesRaw[path] ?? '')];
   for (const value of Object.values(modulos[path] ?? {})) {
@@ -440,7 +440,7 @@ function boundNames(path: string): Set<string> {
     for (const name of declaredIn(text)) nomes.add(name);
     for (const name of tsBindings(text)) nomes.add(name);
   }
-  ligadosPorCaminho.set(path, nomes);
+  boundByPath.set(path, nomes);
   return nomes;
 }
 
@@ -472,11 +472,11 @@ const GLOBAIS = new Set([
  * que este arquivo já pagou caro. Em JSX o `=` do atributo nunca tem espaço.
  */
 function attributeExpressions(text: string): Array<{ attr: string; expr: string | null }> {
-  const achados: Array<{ attr: string; expr: string | null }> = [];
+  const findings: Array<{ attr: string; expr: string | null }> = [];
   const re = /(?<![\w$.])([A-Za-z_$][\w$]*(?:-[\w$]+)*)=\{/g;
-  let achado: RegExpExecArray | null;
-  while ((achado = re.exec(text))) {
-    const start = achado.index + achado[0].length;
+  let finding: RegExpExecArray | null;
+  while ((finding = re.exec(text))) {
+    const start = finding.index + finding[0].length;
     let prof = 1;
     let i = start;
     while (i < text.length && prof > 0) {
@@ -494,13 +494,13 @@ function attributeExpressions(text: string): Array<{ attr: string; expr: string 
       i++;
     }
     if (prof !== 0) {
-      achados.push({ attr: achado[1]!, expr: null });
+      findings.push({ attr: finding[1]!, expr: null });
       continue;
     }
-    achados.push({ attr: achado[1]!, expr: text.slice(start, i - 1) });
+    findings.push({ attr: finding[1]!, expr: text.slice(start, i - 1) });
     re.lastIndex = i;
   }
-  return achados;
+  return findings;
 }
 
 /**
@@ -677,7 +677,7 @@ function referencesWithoutOrigin(bruto: string, ligados: Set<string>): string[] 
 
 describe('transforms do painel Code', () => {
   it('a varredura encontra os módulos de source', () => {
-    expect(caminhos.length).toBeGreaterThan(0);
+    expect(paths.length).toBeGreaterThan(0);
   });
 
   it('todo arquivo de story importa a transform do seu componente', () => {
@@ -696,7 +696,7 @@ describe('transforms do painel Code', () => {
     expect(noTransform, 'meta sem parameters.docs.source.transform').toEqual([]);
   });
 
-  for (const path of caminhos) {
+  for (const path of paths) {
     const modulo = modulos[path];
     const exportadas = Object.entries(modulo).filter(
       ([, value]) => typeof value === 'function',
@@ -766,9 +766,9 @@ describe('transforms do painel Code', () => {
           // dela, não porque vazou andaime. Sem este filtro a regra reprovava
           // os SETE snippets do combobox por causa de uma peça legítima — e o
           // conserto errado seria renomear o componente nas cinco stacks.
-          const publicados = slugExportados.get(slugDoCaminho(path)) ?? new Set<string>();
+          const publicados = slugExportados.get(pathSlug(path)) ?? new Set<string>();
           const andaimes = [...text.matchAll(new RegExp(FORMA_SCAFFOLD.source, 'g'))]
-            .map((achado) => achado[0])
+            .map((finding) => finding[0])
             .filter((name) => !publicados.has(name));
           expect(
             andaimes,

@@ -194,7 +194,7 @@ export const InForm: Story = {
   render: () => ({
     props: {
       enviado: '',
-      enviar(evento: Event) {
+      onSubmit(evento: Event) {
         evento.preventDefault();
         const data = new FormData(evento.target as HTMLFormElement);
         this.enviado = `Enviado: feedback="${String(data.get('feedback') ?? '')}"`;
@@ -205,7 +205,7 @@ export const InForm: Story = {
         class="nds-stack nds-w-md"
         data-spacing="md"
         aria-label="Formulário de feedback"
-        (submit)="enviar($event)"
+        (submit)="onSubmit($event)"
       >
         <div class="nds-stack" data-spacing="sm">
           <label ndsLabel for="comp-form">Feedback</label>

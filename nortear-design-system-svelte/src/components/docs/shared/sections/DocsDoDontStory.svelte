@@ -10,8 +10,8 @@
   let { umParSo = false }: { umParSo?: boolean } = $props();
 </script>
 
-{#snippet rotuloBom()}<Button>Salvar alterações</Button>{/snippet}
-{#snippet rotuloRuim()}<Button>Clique aqui</Button>{/snippet}
+{#snippet goodLabel()}<Button>Salvar alterações</Button>{/snippet}
+{#snippet badLabel()}<Button>Clique aqui</Button>{/snippet}
 {#snippet parBom()}
   <span class="nds-cluster" data-spacing="md">
     <Button variant="outline">Cancelar</Button>
@@ -33,8 +33,8 @@
           dontLabel: 'Evite',
           doCaption: 'O rótulo nomeia a ação, e é legível fora de contexto.',
           dontCaption: '"Clique aqui" não diz o que acontece.',
-          doPreview: rotuloBom,
-          dontPreview: rotuloRuim,
+          doPreview: goodLabel,
+          dontPreview: badLabel,
         },
       ]
     : [
@@ -43,8 +43,8 @@
           dontLabel: 'Evite',
           doCaption: 'O rótulo nomeia a ação, e é legível fora de contexto.',
           dontCaption: '"Clique aqui" não diz o que acontece, e o leitor de tela anuncia só isso.',
-          doPreview: rotuloBom,
-          dontPreview: rotuloRuim,
+          doPreview: goodLabel,
+          dontPreview: badLabel,
         },
         {
           doLabel: 'Faça',

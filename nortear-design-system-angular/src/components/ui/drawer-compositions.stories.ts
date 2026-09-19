@@ -72,14 +72,14 @@ export const WithForm: Story = {
       triggerLabel: LABEL.trigger(),
       panelTitle: LABEL.title(),
       panelDescription: LABEL.description(),
-      rotuloCampo: LABEL.field(),
+      fieldLabel: LABEL.field(),
       // Nome em inglês, ao contrário dos vizinhos: código se escreve em inglês
       // (guideline 11), e os `rotulo*` daqui são dívida de linha de base que o
       // `identificador_pt_novo` tolera mas não deixa CRESCER — um `rotulo`
       // novo reprovaria o portão.
       emailFieldLabel: LABEL.fieldEmail(),
       closeLabel: LABEL.close(),
-      rotuloConfirmar: LABEL.confirmar(),
+      confirmLabel: LABEL.confirmar(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
@@ -102,7 +102,7 @@ export const WithForm: Story = {
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
             <form id="drawer-comp-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
               <div class="nds-stack" data-spacing="xs">
-                <label ndsLabel for="drawer-comp-nome">{{ rotuloCampo }}</label>
+                <label ndsLabel for="drawer-comp-nome">{{ fieldLabel }}</label>
                 <input ndsInput id="drawer-comp-nome" name="nome" value="Maria Souza" />
               </div>
               <div class="nds-stack" data-spacing="xs">
@@ -126,7 +126,7 @@ export const WithForm: Story = {
           -->
           <div ndsDrawerFooter>
             <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
-            <button ndsButton type="submit" form="drawer-comp-form">{{ rotuloConfirmar }}</button>
+            <button ndsButton type="submit" form="drawer-comp-form">{{ confirmLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -198,7 +198,7 @@ export const WithConfirmation: Story = {
       panelTitle: stripHtml(t('variants.compositions.withConfirmation.name')),
       panelDescription: LABEL.warning(),
       closeLabel: LABEL.close(),
-      rotuloDestruir: LABEL.destruir(),
+      destroyLabel: LABEL.destruir(),
       // Aqui a decisão É a tela, e por isso o foco entra no cancelar — a mesma
       // escolha do AlertDialog: o Enter por reflexo tem de cair na saída segura,
       // nunca na ação que consuma. Na WithForm o padrão FICA (primeiro tabbável,
@@ -230,7 +230,7 @@ export const WithConfirmation: Story = {
 
           <div ndsDrawerFooter>
             <button ndsDrawerClose ndsButton variant="outline">{{ closeLabel }}</button>
-            <button ndsButton variant="destructive">{{ rotuloDestruir }}</button>
+            <button ndsButton variant="destructive">{{ destroyLabel }}</button>
           </div>
         </ng-template>
       </nds-drawer>

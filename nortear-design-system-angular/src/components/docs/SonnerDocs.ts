@@ -294,7 +294,7 @@ const TYPE_CODE: Record<string, string> = {
             <div class="nds-stack" data-spacing="sm">
               <span class="nds-text-caption">{{ tNav('nav.states') }}</span>
               <div class="nds-cluster" data-spacing="sm">
-                <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:with-description" (click)="dispararComDescricao()">
+                <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:with-description" (click)="triggerWithDescription()">
                   {{ t('demonstration.labels.triggerWithDescription') }}
                 </button>
                 <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:with-action" (click)="dispararComAcao()">
@@ -443,7 +443,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
     }
   }
 
-  protected dispararComDescricao(): void {
+  protected triggerWithDescription(): void {
     track('toast_demo_triggered', { component: 'sonner', toast_type: 'with-description', location: 'docs_demo' });
     toast.success(t('demonstration.labels.withDescription'), {
       description: t('demonstration.labels.withDescriptionDesc'),

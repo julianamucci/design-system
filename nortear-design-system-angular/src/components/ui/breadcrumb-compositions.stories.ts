@@ -131,7 +131,7 @@ export const EllipsisWithTrigger: Story = {
   render: () => ({
     props: {
       aoNavegar,
-      aoAbrir: () => onEllipsisOpen({ hidden_count: 3 }),
+      onOpen: () => onEllipsisOpen({ hidden_count: 3 }),
     },
     template: `
       <nav ndsBreadcrumb>
@@ -146,7 +146,7 @@ export const EllipsisWithTrigger: Story = {
               variant="ghost"
               size="icon-sm"
               aria-label="Expandir níveis ocultos"
-              (click)="aoAbrir()"
+              (click)="onOpen()"
             >
               <span ndsBreadcrumbEllipsis></span>
             </button>

@@ -272,7 +272,7 @@ ${[...buttons, ...(primaria ? ['enviar'] : [])].map((b) => `  ${b},`).join('\n')
   };
 }
 
-function panelLines(o: SheetSnippetOptions, trigger: string, rodapeRef?: string): string[] {
+function panelLines(o: SheetSnippetOptions, trigger: string, footerRef?: string): string[] {
   return options([
     ['trigger', trigger],
     // `right` é o padrão da fábrica e não entra no snippet.
@@ -290,7 +290,7 @@ function panelLines(o: SheetSnippetOptions, trigger: string, rodapeRef?: string)
     // Só quando o corpo é nomeado: sem nome a fábrica não emite papel nenhum, e
     // publicar a opção vazia ensinaria um `role="group"` que não existe.
     ['bodyLabel', o.bodyLabel ? text(o.bodyLabel) : undefined],
-    ['footer', rodapeRef],
+    ['footer', footerRef],
     // Só quando é FALSO: `true` é o padrão da fábrica e não entra no snippet.
     ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],
     ['onOpenChange', expressao(o.onOpenChange, CALLBACK_ABERTURA)],

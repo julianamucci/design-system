@@ -316,7 +316,7 @@ export const DisabledItem: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const [trigger, gatilhoVazio] = canvas.getAllByRole('combobox');
+    const [trigger, emptyTrigger] = canvas.getAllByRole('combobox');
     const open = abridor(trigger);
 
     await step('A opção indisponível se anuncia bloqueada', async () => {
@@ -357,22 +357,22 @@ export const DisabledItem: Story = {
     });
 
     await step('Sem nenhuma opção disponível, a lista abre sem apontar nada', async () => {
-      const listbox = await abridor(gatilhoVazio)();
+      const listbox = await abridor(emptyTrigger)();
       await expect(within(listbox).getAllByRole('option')).toHaveLength(2);
       // Nada destacado, e nada apontado: apontar uma opção que o Enter não resolve
       // seria prometer uma escolha que não existe.
       await expect(listbox.querySelectorAll('[data-highlighted]')).toHaveLength(0);
-      await expect(gatilhoVazio).not.toHaveAttribute('aria-activedescendant');
+      await expect(emptyTrigger).not.toHaveAttribute('aria-activedescendant');
     });
 
     await step('E as setas e o Enter não têm o que fazer', async () => {
       const listbox = await waitForPortal('listbox');
-      const textBefore = gatilhoVazio.textContent;
+      const textBefore = emptyTrigger.textContent;
       await userEvent.keyboard('{ArrowDown}{ArrowUp}{Enter}');
       // A lista continua aberta: o Enter sem opção destacada não escolhe nem fecha.
-      await expect(gatilhoVazio).toHaveAttribute('aria-expanded', 'true');
+      await expect(emptyTrigger).toHaveAttribute('aria-expanded', 'true');
       await expect(listbox.querySelectorAll('[data-highlighted]')).toHaveLength(0);
-      await expect(gatilhoVazio.textContent).toBe(textBefore);
+      await expect(emptyTrigger.textContent).toBe(textBefore);
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
     });

@@ -27,7 +27,7 @@ import { NdsDocsVariants, type DocsVariantItem } from './DocsVariants';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <ng-template #tplSalvar><button ndsButton variant="default">Salvar</button></ng-template>
+    <ng-template #tplSave><button ndsButton variant="default">Salvar</button></ng-template>
     <ng-template #tplCancelar><button ndsButton variant="outline">Cancelar</button></ng-template>
     <ng-template #tplExcluir><button ndsButton variant="destructive">Excluir</button></ng-template>
     <ng-template #tplEditar><button ndsButton variant="ghost">Editar</button></ng-template>
@@ -47,7 +47,7 @@ export class NdsDocsVariantsStory {
   /** Só da story: reduz a lista a um item sem código, para mostrar o caso mínimo. */
   readonly apenasUm = input<boolean>(false);
 
-  private readonly tplSalvar = viewChild.required<TemplateRef<unknown>>('tplSalvar');
+  private readonly tplSave = viewChild.required<TemplateRef<unknown>>('tplSave');
   private readonly tplCancelar = viewChild.required<TemplateRef<unknown>>('tplCancelar');
   private readonly tplExcluir = viewChild.required<TemplateRef<unknown>>('tplExcluir');
   private readonly tplEditar = viewChild.required<TemplateRef<unknown>>('tplEditar');
@@ -66,7 +66,7 @@ export class NdsDocsVariantsStory {
             name: 'default',
             description: 'A ação primária do bloco. Uma por tela — duas competem, e a pessoa para para escolher.',
             code: '<button ndsButton>Salvar</button>',
-            preview: this.tplSalvar(),
+            preview: this.tplSave(),
           },
           {
             name: 'outline',

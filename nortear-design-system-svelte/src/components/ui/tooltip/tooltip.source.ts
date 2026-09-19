@@ -101,7 +101,7 @@ function mount(options: {
 
   // Gatilho de texto não leva ícone nem `aria-label`: seria import órfão na mão
   // de quem copia, e nome acessível competindo com o rótulo visível.
-  const gatilho = icon
+  const trigger = icon
     ? `<Button variant="outline" size="icon" aria-label="${options.ariaLabel}" {...props}>
           <${icon[0]} aria-hidden="true" class="nds-size-4" />
         </Button>`
@@ -113,7 +113,7 @@ function mount(options: {
   <Tooltip${options.root}>
     <TooltipTrigger>
       {#snippet child({ props })}
-        ${gatilho}
+        ${trigger}
       {/snippet}
     </TooltipTrigger>
     <TooltipContent${options.content}>${options.body}</TooltipContent>

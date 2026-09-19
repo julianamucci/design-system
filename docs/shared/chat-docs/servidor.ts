@@ -345,8 +345,8 @@ function jsonError(status: number, code: string, message: string): Response {
 
 /** Um turno da conversa. `model` é como o provedor chama o assistente. */
 interface Turno {
-  papel: 'user' | 'model';
-  texto: string;
+  role: 'user' | 'model';
+  text: string;
 }
 
 /**
@@ -361,16 +361,16 @@ function sanearHistorico(bruto: unknown): Turno[] {
   const turnos: Turno[] = [];
   for (const item of bruto.slice(-MAX_HISTORY_TURNS)) {
     if (typeof item !== 'object' || item === null) continue;
-    const { papel, texto } = item as { papel?: unknown; texto?: unknown };
-    if (papel !== 'user' && papel !== 'model') continue;
-    if (typeof texto !== 'string' || texto.trim().length === 0) continue;
-    turnos.push({ papel, texto: texto.trim() });
+    const { role, text } = item as { role?: unknown; text?: unknown };
+    if (role !== 'user' && role !== 'model') continue;
+    if (typeof text !== 'string' || text.trim().length === 0) continue;
+    turnos.push({ role, text: text.trim() });
   }
   // Orçamento de caracteres, gasto do mais recente para trás.
   let restante = MAX_HISTORY_CHARS;
   const cabem: Turno[] = [];
   for (let i = turnos.length - 1; i >= 0; i--) {
-    const custo = turnos[i].texto.length;
+    const custo = turnos[i].text.length;
     if (custo > restante) break;
     restante -= custo;
     cabem.unshift(turnos[i]);
@@ -396,8 +396,8 @@ function sanearHistorico(bruto: unknown): Turno[] {
  * começo puxar todas as respostas seguintes.
  */
 function consultaDeRecuperacao(question: string, historico: Turno[]): string {
-  const ultimaPergunta = [...historico].reverse().find((t) => t.papel === 'user');
-  return ultimaPergunta ? `${ultimaPergunta.texto} ${question}` : question;
+  const ultimaPergunta = [...historico].reverse().find((t) => t.role === 'user');
+  return ultimaPergunta ? `${ultimaPergunta.text} ${question}` : question;
 }
 
 /** Um evento SSE. Nomeado, para o cliente distinguir sem inspecionar o corpo. */
@@ -538,7 +538,7 @@ export interface PedidoAoProvedor {
 
 /** O que o provedor devolve, pedaço a pedaço. Só o último traz `uso`. */
 export interface PedacoDoProvedor {
-  texto?: string;
+  text?: string;
   /**
    * O modelo que o provedor diz ter servido.
    *
@@ -651,8 +651,8 @@ const provedorCompativelOpenAI: Provedor = {
           ...pedido.historico.map((turno) => ({
             // O protocolo da OpenAI chama de `assistant` o que o Google chama
             // de `model`. É a única diferença de vocabulário entre os dois.
-            role: turno.papel === 'model' ? 'assistant' : 'user',
-            content: turno.texto,
+            role: turno.role === 'model' ? 'assistant' : 'user',
+            content: turno.text,
           })),
           { role: 'user', content: pedido.mensagem },
         ],
@@ -707,8 +707,8 @@ const provedorCompativelOpenAI: Provedor = {
           modeloRelatado = evento.model;
           yield { modeloServido: evento.model };
         }
-        const texto = evento.choices?.[0]?.delta?.content;
-        if (texto) yield { texto };
+        const text = evento.choices?.[0]?.delta?.content;
+        if (text) yield { text };
         if (evento.choices?.[0]?.finish_reason) parada = evento.choices[0].finish_reason ?? null;
         if (evento.usage) {
           uso = {
@@ -881,7 +881,7 @@ export async function responder(request: Request): Promise<Response> {
           },
           apiKey,
         )) {
-          if (pedaco.texto) send('delta', { text: pedaco.texto });
+          if (pedaco.text) send('delta', { text: pedaco.text });
           // O pedaço final é o que traz `uso`. Ele fecha o SSE com `done`, que
           // é onde o avaliador de custo lê os tokens de entrada e de saída.
           if (pedaco.uso) {

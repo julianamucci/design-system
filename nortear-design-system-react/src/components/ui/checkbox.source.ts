@@ -54,9 +54,9 @@ function pairLabelled(
   id: string,
   label: string,
   partes: Array<string | false | undefined> = [],
-  atributosDoGrupo = '',
+  groupAttrs = '',
 ): string {
-  return `<div className="nds-cluster" data-spacing="sm"${atributosDoGrupo}>
+  return `<div className="nds-cluster" data-spacing="sm"${groupAttrs}>
   ${tagCheckbox([`id="${id}"`, ...partes])}
   <label htmlFor="${id}" className="nds-label">
     ${label}

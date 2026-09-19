@@ -333,7 +333,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
     <ng-template #tplVarControlled>
       <div class="nds-stack nds-w-full nds-max-w-sm nds-text-body" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
-          {{ rotulos().itemAberto }} <code>{{ itemControlado() || rotulos().nenhum }}</code>
+          {{ rotulos().openItem }} <code>{{ itemControlado() || rotulos().nenhum }}</code>
         </p>
         <div ndsAccordion [value]="itemControlado()" (valueChange)="definirControlado($event)">
           <div ndsAccordionItem value="ctrl-1">
@@ -361,9 +361,9 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
       </div>
     </ng-template>
 
-    <ng-template #tplCompIcone>
+    <ng-template #tplCompIcon>
       <div ndsAccordion class="nds-max-w-lg nds-text-body">
-        @for (item of itensComIcone(); track item.value) {
+        @for (item of itemsWithIcon(); track item.value) {
           <div ndsAccordionItem [value]="item.value">
             <button ndsAccordionTrigger>
               <span class="nds-cluster" data-spacing="xs">
@@ -399,7 +399,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
               <span ndsBadge>{{ rotulos().novo }}</span>
             </span>
           </button>
-          <div ndsAccordionContent>{{ rotulos().novidadesTexto }}</div>
+          <div ndsAccordionContent>{{ rotulos().newsText }}</div>
         </div>
         <div ndsAccordionItem value="comp-beta">
           <button ndsAccordionTrigger>
@@ -408,7 +408,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
               <span ndsBadge variant="info">Beta</span>
             </span>
           </button>
-          <div ndsAccordionContent>{{ rotulos().betaTexto }}</div>
+          <div ndsAccordionContent>{{ rotulos().betaText }}</div>
         </div>
       </div>
     </ng-template>
@@ -437,7 +437,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
           <button ndsAccordionTrigger>{{ rotulos().incluso }}</button>
           <div ndsAccordionContent>
             <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
-              @for (line of itensInclusos(); track line) {
+              @for (line of includedItems(); track line) {
                 <li>{{ line }}</li>
               }
             </ul>
@@ -604,7 +604,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarMultiple = viewChild.required<TemplateRef<unknown>>('tplVarMultiple');
   private readonly tplVarControlled = viewChild.required<TemplateRef<unknown>>('tplVarControlled');
   private readonly tplVarDefaultOpen = viewChild.required<TemplateRef<unknown>>('tplVarDefaultOpen');
-  private readonly tplCompIcone = viewChild.required<TemplateRef<unknown>>('tplCompIcone');
+  private readonly tplCompIcon = viewChild.required<TemplateRef<unknown>>('tplCompIcon');
   private readonly tplCompBadge = viewChild.required<TemplateRef<unknown>>('tplCompBadge');
   private readonly tplCompRico = viewChild.required<TemplateRef<unknown>>('tplCompRico');
   private readonly tplCompFaq = viewChild.required<TemplateRef<unknown>>('tplCompFaq');
@@ -625,21 +625,21 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         sistemas: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS',
         secaoUnica: 'Mostrar informações',
         useCollapsible: 'Uma seção só pede Collapsible, não Accordion.',
-        itemAberto: 'Item aberto:',
+        openItem: 'Item aberto:',
         nenhum: 'nenhum',
         novidades: 'Novidades da versão 3.0',
         novo: 'Novo',
-        novidadesTexto: 'Confira o que mudou nesta release.',
+        newsText: 'Confira o que mudou nesta release.',
         recursosBeta: 'Funcionalidades em beta',
-        betaTexto: 'Recursos em teste — sujeitos a mudanças.',
+        betaText: 'Recursos em teste — sujeitos a mudanças.',
         incluso: 'O que está incluso',
         perguntasFrequentes: 'Perguntas frequentes',
         informacao: 'Informação',
         warning: 'Aviso',
         confirm: 'Confirmação',
-        informacaoTexto: 'Ícones facilitam a identificação rápida do tipo de conteúdo.',
-        avisoTexto: 'Sinalize categorias distintas com ícones semânticos.',
-        confirmacaoTexto: 'Use ícones consistentes entre itens do mesmo accordion.',
+        informationText: 'Ícones facilitam a identificação rápida do tipo de conteúdo.',
+        warningText: 'Sinalize categorias distintas com ícones semânticos.',
+        confirmText: 'Use ícones consistentes entre itens do mesmo accordion.',
         inclusos: ['Cabo de alimentação', 'Manual do usuário', 'Garantia de 24 meses'],
       },
       en: {
@@ -649,21 +649,21 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         sistemas: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS',
         secaoUnica: 'Show information',
         useCollapsible: 'A single section calls for Collapsible, not Accordion.',
-        itemAberto: 'Open item:',
+        openItem: 'Open item:',
         nenhum: 'none',
         novidades: 'What is new in 3.0',
         novo: 'New',
-        novidadesTexto: 'See what changed in this release.',
+        newsText: 'See what changed in this release.',
         recursosBeta: 'Beta features',
-        betaTexto: 'Features under test — subject to change.',
+        betaText: 'Features under test — subject to change.',
         incluso: 'What is included',
         perguntasFrequentes: 'Frequently asked questions',
         informacao: 'Information',
         warning: 'Warning',
         confirm: 'Confirmation',
-        informacaoTexto: 'Icons speed up recognition of the content type.',
-        avisoTexto: 'Use semantic icons to signal distinct categories.',
-        confirmacaoTexto: 'Keep icons consistent across items of the same accordion.',
+        informationText: 'Icons speed up recognition of the content type.',
+        warningText: 'Use semantic icons to signal distinct categories.',
+        confirmText: 'Keep icons consistent across items of the same accordion.',
         inclusos: ['Power cable', 'User manual', '24-month warranty'],
       },
       es: {
@@ -673,21 +673,21 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         sistemas: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS',
         secaoUnica: 'Mostrar información',
         useCollapsible: 'Una sola sección pide Collapsible, no Accordion.',
-        itemAberto: 'Ítem abierto:',
+        openItem: 'Ítem abierto:',
         nenhum: 'ninguno',
         novidades: 'Novedades de la versión 3.0',
         novo: 'Nuevo',
-        novidadesTexto: 'Mira lo que cambió en esta release.',
+        newsText: 'Mira lo que cambió en esta release.',
         recursosBeta: 'Funciones en beta',
-        betaTexto: 'Recursos en prueba — sujetos a cambios.',
+        betaText: 'Recursos en prueba — sujetos a cambios.',
         incluso: 'Qué incluye',
         perguntasFrequentes: 'Preguntas frecuentes',
         informacao: 'Información',
         warning: 'Aviso',
         confirm: 'Confirmación',
-        informacaoTexto: 'Los íconos facilitan identificar el tipo de contenido.',
-        avisoTexto: 'Señala categorías distintas con íconos semánticos.',
-        confirmacaoTexto: 'Usa íconos consistentes entre ítems del mismo accordion.',
+        informationText: 'Los íconos facilitan identificar el tipo de contenido.',
+        warningText: 'Señala categorías distintas con íconos semánticos.',
+        confirmText: 'Usa íconos consistentes entre ítems del mismo accordion.',
         inclusos: ['Cable de alimentación', 'Manual del usuario', 'Garantía de 24 meses'],
       },
     } as const;
@@ -710,12 +710,12 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
-  protected readonly itensComIcone = computed(() => {
+  protected readonly itemsWithIcon = computed(() => {
     const r = this.rotulos();
     return [
-      { value: 'comp-info',    label: r.informacao,   content: r.informacaoTexto,   path: 'M12 16v-4M12 8h.01' },
-      { value: 'comp-warning',   label: r.warning,        content: r.avisoTexto,        path: 'M12 8v4M12 16h.01' },
-      { value: 'comp-sucesso', label: r.confirm,  content: r.confirmacaoTexto,  path: 'm9 12 2 2 4-4' },
+      { value: 'comp-info',    label: r.informacao,   content: r.informationText,   path: 'M12 16v-4M12 8h.01' },
+      { value: 'comp-warning',   label: r.warning,        content: r.warningText,        path: 'M12 8v4M12 16h.01' },
+      { value: 'comp-sucesso', label: r.confirm,  content: r.confirmText,  path: 'm9 12 2 2 4-4' },
     ];
   });
 
@@ -727,7 +727,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
     });
   });
 
-  protected readonly itensInclusos = computed(() => [...this.rotulos().inclusos]);
+  protected readonly includedItems = computed(() => [...this.rotulos().inclusos]);
 
   protected definirControlado(value: unknown): void {
     this.itemControlado.set(typeof value === 'string' ? value : '');
@@ -870,7 +870,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     const mapa: { key: string; code: string; tpl: TemplateRef<unknown> }[] = [
-      { key: 'iconTrigger',  code: CODE_ICON_TRIGGER,  tpl: this.tplCompIcone() },
+      { key: 'iconTrigger',  code: CODE_ICON_TRIGGER,  tpl: this.tplCompIcon() },
       { key: 'badgeTrigger', code: CODE_BADGE_TRIGGER, tpl: this.tplCompBadge() },
       { key: 'richContent',  code: CODE_RICH_CONTENT,  tpl: this.tplCompRico()  },
       { key: 'faq',          code: CODE_FAQ,           tpl: this.tplCompFaq()   },

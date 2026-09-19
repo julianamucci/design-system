@@ -98,35 +98,35 @@ describe('translação', () => {
 });
 
 describe('decisão ao soltar', () => {
-  const tamanho = 400;
+  const size = 400;
 
   it('movimento no sentido de abrir volta ao repouso, por mais rápido que seja', () => {
-    expect(resolveDrawerRelease({ travel: -300, elapsed: 10, size: tamanho })).toBe('reset');
-    expect(resolveDrawerRelease({ travel: 0, elapsed: 10, size: tamanho })).toBe('reset');
+    expect(resolveDrawerRelease({ travel: -300, elapsed: 10, size })).toBe('reset');
+    expect(resolveDrawerRelease({ travel: 0, elapsed: 10, size })).toBe('reset');
   });
 
   it('velocidade acima do limiar dispensa mesmo com pouca distância', () => {
     // 30px em 50ms = 0,6 px/ms, acima dos 0,4 da lib; e 30px é 7,5% de 400,
     // longe do limiar de distância. Só a velocidade pode ter decidido.
-    expect(resolveDrawerRelease({ travel: 30, elapsed: 50, size: tamanho })).toBe('dismiss');
+    expect(resolveDrawerRelease({ travel: 30, elapsed: 50, size })).toBe('dismiss');
     // 30px em 100ms = 0,3 px/ms, logo abaixo: a mesma distância não dispensa.
-    expect(resolveDrawerRelease({ travel: 30, elapsed: 100, size: tamanho })).toBe('reset');
+    expect(resolveDrawerRelease({ travel: 30, elapsed: 100, size })).toBe('reset');
   });
 
   it('devagar e perto, volta ao repouso', () => {
-    expect(resolveDrawerRelease({ travel: 30, elapsed: 2000, size: tamanho })).toBe('reset');
+    expect(resolveDrawerRelease({ travel: 30, elapsed: 2000, size })).toBe('reset');
   });
 
   it('distância acima do limiar dispensa mesmo devagar', () => {
     // 100px de 400 é exatamente o quarto que a lib usa; 99 não é.
-    expect(resolveDrawerRelease({ travel: 100, elapsed: 5000, size: tamanho })).toBe('dismiss');
-    expect(resolveDrawerRelease({ travel: 99, elapsed: 5000, size: tamanho })).toBe('reset');
+    expect(resolveDrawerRelease({ travel: 100, elapsed: 5000, size })).toBe('dismiss');
+    expect(resolveDrawerRelease({ travel: 99, elapsed: 5000, size })).toBe('reset');
   });
 
   it('gesto de duração zero não vira velocidade infinita', () => {
     // Um toque de um quadro só: dividir por zero daria Infinity, que passaria
     // pelo limiar e fecharia o painel sem que ninguém tenha arrastado.
-    expect(resolveDrawerRelease({ travel: 5, elapsed: 0, size: tamanho })).toBe('reset');
+    expect(resolveDrawerRelease({ travel: 5, elapsed: 0, size })).toBe('reset');
   });
 
   it('painel sem tamanho medido não fecha por distância', () => {

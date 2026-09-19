@@ -179,8 +179,8 @@ describe('resolveActivityCalendar', () => {
     const grade = resolveActivityCalendar([], window)!;
 
     for (const [index, mes] of grade.months.entries()) {
-      const proximo = grade.months[index + 1];
-      const fim = proximo ? proximo.column : grade.weeks + 1;
+      const next = grade.months[index + 1];
+      const fim = next ? next.column : grade.weeks + 1;
       expect(mes.span).toBe(fim - mes.column);
     }
   });

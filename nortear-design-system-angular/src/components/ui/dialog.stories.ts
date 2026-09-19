@@ -5,8 +5,8 @@ import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import {
   LABELS,
-  open as abrirDialogo,
-  close as fecharDialogo,
+  open as openDialog,
+  close as closeDialog,
   panel,
   overlay,
   waitForClosed,
@@ -115,7 +115,7 @@ export const Playground: Story = {
     // Abrir só se estiver fechado: o painel Interactions REEXECUTA a play no
     // mesmo DOM, e um clique absoluto partiria do estado que a rodada anterior
     // deixou, invertendo o resultado.
-    const open = () => abrirDialogo(canvasElement);
+    const open = () => openDialog(canvasElement);
 
     await step('O markup é o mesmo das outras stacks', async () => {
       const root = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
@@ -135,7 +135,7 @@ export const Playground: Story = {
       // Interactions o painel já estaria montado. O passo estabelece a própria
       // precondição; quem verifica o estado fechado NA MONTAGEM é a story
       // `Closed`, que não interage com nada.
-      await fecharDialogo();
+      await closeDialog();
       await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');

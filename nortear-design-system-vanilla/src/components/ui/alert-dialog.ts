@@ -319,7 +319,7 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     // em background) antes de completar, ela também não. O timeout garante a
     // remoção.
     let removido = false;
-    const remover = (event?: Event) => {
+    const removeExiting = (event?: Event) => {
       /* v8 ignore next 2 -- filtros de reentrância do animationend: evento de
          um filho animado e segunda chamada depois do timeout. Nenhum dos dois
          acontece com overlay e painel animando juntos, que é o caso da suíte. */
@@ -329,12 +329,12 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
       removido = true;
       window.clearTimeout(timer);
       saindo.forEach((el) => {
-        el.removeEventListener('animationend', remover);
+        el.removeEventListener('animationend', removeExiting);
         el.remove();
       });
     };
-    saindo.forEach((el) => el.addEventListener('animationend', remover));
-    const timer = window.setTimeout(remover, EXIT_FALLBACK_MS);
+    saindo.forEach((el) => el.addEventListener('animationend', removeExiting));
+    const timer = window.setTimeout(removeExiting, EXIT_FALLBACK_MS);
     return true;
   }
 

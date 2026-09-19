@@ -138,9 +138,9 @@ function startCronometro(entry: ToastEntry): void {
   entry.timer = setTimeout(() => removeToast(entry.id), entry.restante);
 }
 
-function schedule(entry: ToastEntry, duracao: number): void {
+function schedule(entry: ToastEntry, duration: number): void {
   stopCronometro(entry);
-  entry.restante = duracao;
+  entry.restante = duration;
   startCronometro(entry);
 }
 
@@ -419,7 +419,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
  * Trocar o nó faria o leitor de tela anunciar duas notificações para um evento
  * só — que é exatamente o que `toast.promise` existe para evitar.
  */
-function update(id: number, type: ToastType, message: string, duracao: number): void {
+function update(id: number, type: ToastType, message: string, duration: number): void {
   const entry = activeToasts.find((t) => t.id === id);
   if (!entry) return;
 
@@ -431,7 +431,7 @@ function update(id: number, type: ToastType, message: string, duracao: number): 
   entry.iconWrap = newIcon;
   if (newIcon) entry.el.insertBefore(newIcon, entry.el.firstChild);
 
-  schedule(entry, duracao);
+  schedule(entry, duration);
 }
 
 // ─── API pública ──────────────────────────────────────────────────────────────

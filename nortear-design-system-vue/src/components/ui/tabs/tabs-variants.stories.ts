@@ -79,10 +79,10 @@ export const Default: Story = {
     });
 
     await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
-      const backgroundAtiva = getComputedStyle(abas[0]).backgroundColor;
-      const backgroundInativa = getComputedStyle(abas[1]).backgroundColor;
-      await expect(backgroundAtiva).not.toBe(backgroundInativa);
-      await expect(backgroundAtiva).not.toBe(TRANSPARENTE);
+      const activeBackground = getComputedStyle(abas[0]).backgroundColor;
+      const inactiveBackground = getComputedStyle(abas[1]).backgroundColor;
+      await expect(activeBackground).not.toBe(inactiveBackground);
+      await expect(activeBackground).not.toBe(TRANSPARENTE);
     });
 
     await step('A caixa do trilho é resultado do respiro, não medida cravada', async () => {

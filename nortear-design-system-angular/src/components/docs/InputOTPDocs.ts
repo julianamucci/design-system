@@ -252,7 +252,7 @@ const TOKENS_MAP: { key: string; token: string }[] = [
         </p>
       </div>
     </ng-template>
-    <ng-template #tplCompErro>
+    <ng-template #tplCompError>
       <div class="nds-stack nds-w-full" data-spacing="sm">
         <span id="comp-erro-label" class="nds-text-label">{{ t('usage.uxWriting.table.label.good') }}</span>
         <nds-input-otp
@@ -429,7 +429,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarAlfanumerico = viewChild.required<TemplateRef<unknown>>('tplVarAlfanumerico');
   private readonly tplCompLabel = viewChild.required<TemplateRef<unknown>>('tplCompLabel');
   private readonly tplCompAjuda = viewChild.required<TemplateRef<unknown>>('tplCompAjuda');
-  private readonly tplCompErro = viewChild.required<TemplateRef<unknown>>('tplCompErro');
+  private readonly tplCompError = viewChild.required<TemplateRef<unknown>>('tplCompError');
   private readonly tplCompReenvio = viewChild.required<TemplateRef<unknown>>('tplCompReenvio');
 
   protected readonly navGroups = computed(() => {
@@ -533,7 +533,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
     const previews: Record<string, TemplateRef<unknown>> = {
       withLabel: this.tplCompLabel(),
       withHelpText: this.tplCompAjuda(),
-      withErrorMessage: this.tplCompErro(),
+      withErrorMessage: this.tplCompError(),
       withResendButton: this.tplCompReenvio(),
     };
     return keysWith(d, 'variants.compositions', 'name')

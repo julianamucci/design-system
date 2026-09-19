@@ -228,8 +228,8 @@ describe('nome de componente traduzido', () => {
     // O caso MEDIDO: "Para mostrar o plano do agente passo a passo, use o
     // AgentPlan". A frase coincide com um título traduzido, mas a pessoa sai
     // dali com o nome pelo qual procurar.
-    const comNome = 'Para mostrar a tela do computador, use o ComputerUse (computer-use).';
-    expect(nomesTraduzidosCitados(comNome, titulos)).toEqual([]);
+    const withName = 'Para mostrar a tela do computador, use o ComputerUse (computer-use).';
+    expect(nomesTraduzidosCitados(withName, titulos)).toEqual([]);
   });
 });
 

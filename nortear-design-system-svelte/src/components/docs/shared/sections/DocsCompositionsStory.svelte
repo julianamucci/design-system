@@ -23,7 +23,7 @@
   </span>
 {/snippet}
 {#snippet destrutiva()}<Button variant="destructive">Excluir projeto</Button>{/snippet}
-{#snippet comIcone()}<Button>Salvar</Button>{/snippet}
+{#snippet withIcon()}<Button>Salvar</Button>{/snippet}
 
 <DocsCompositions
   {note}
@@ -35,7 +35,7 @@
         {
           name: 'Botão com ícone',
           description: 'Ícone à esquerda do rótulo, decorativo e fora da árvore de acessibilidade.',
-          preview: comIcone,
+          preview: withIcon,
         },
       ]
     : [

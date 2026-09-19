@@ -59,7 +59,7 @@ function fieldOtp(options: {
   modelo: string;
   comprimento?: number;
   teclado?: string;
-  padraoAceito?: string;
+  acceptedPattern?: string;
   disabled?: boolean;
   focus?: boolean;
   invalido?: boolean;
@@ -74,7 +74,7 @@ function fieldOtp(options: {
     modelo,
     comprimento = 6,
     teclado = 'numeric',
-    padraoAceito,
+    acceptedPattern,
     disabled = false,
     focus = false,
     invalido = false,
@@ -89,7 +89,7 @@ function fieldOtp(options: {
       `id="${id}"`,
       `v-model="${modelo}"`,
       attrNum('max-length', comprimento),
-      padraoAceito && `pattern="${padraoAceito}"`,
+      acceptedPattern && `pattern="${acceptedPattern}"`,
       attrBool('disabled', disabled, false),
       attrBool('auto-focus', focus, false),
       invalido && 'aria-invalid="true"',
@@ -225,7 +225,7 @@ export function inputOtpAlfanumericoSource(): string {
       id: 'codigo-autenticacao',
       label: 'Código de autenticação',
       modelo: 'codigo',
-      padraoAceito: '^[a-zA-Z0-9]+$',
+      acceptedPattern: '^[a-zA-Z0-9]+$',
       teclado: 'text',
     }),
   );

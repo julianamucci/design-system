@@ -146,12 +146,12 @@ export class NdsTableRow {
    */
   readonly selected = input(false, { transform: booleanAttribute });
 
-  private readonly estadoEscrito = inject<ElementRef<HTMLTableRowElement>>(
+  private readonly writtenState = inject<ElementRef<HTMLTableRowElement>>(
     ElementRef,
   ).nativeElement.getAttribute('data-state');
 
   protected readonly state = computed(() =>
-    this.selected() ? 'selected' : this.estadoEscrito,
+    this.selected() ? 'selected' : this.writtenState,
   );
 }
 

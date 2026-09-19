@@ -83,7 +83,7 @@ export function makeExitFooter(exitLabel: string): HTMLElement {
 /**
  * Rodapé de duas ações — cancelar à esquerda, ação principal à direita.
  *
- * Com `fecharAoClicar`, é o CANCELAR que passa a fechar o painel — pelo contrato
+ * Com `closeOnClick`, é o CANCELAR que passa a fechar o painel — pelo contrato
  * de markup, marcado com `data-slot="sheet-close"`, que a fábrica delega no
  * painel e relata como `close-button`. Antes de 2026-09-11 não havia o que
  * marcar, e a fixture fingia um clique no véu: o motivo relatado era `overlay`
@@ -107,7 +107,7 @@ export function makeExitFooter(exitLabel: string): HTMLElement {
 export function makeFooter(
   cancelLabel: string,
   actionLabel: string,
-  fecharAoClicar = false,
+  closeOnClick = false,
   formId?: string,
 ): HTMLElement {
   const cancel = createButton({ variant: 'outline', label: cancelLabel });
@@ -122,7 +122,7 @@ export function makeFooter(
   footer.dataset.spacing = 'md';
   footer.append(cancel, action);
 
-  if (fecharAoClicar) cancel.dataset.slot = 'sheet-close';
+  if (closeOnClick) cancel.dataset.slot = 'sheet-close';
 
   return footer;
 }

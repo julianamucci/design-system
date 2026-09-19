@@ -44,7 +44,7 @@ export default meta;
 type Story = StoryObj;
 
 /** Dois quadros, que é o que o painel usa para separar os estados da transição. */
-function proximoQuadro(): Promise<void> {
+function nextFrame(): Promise<void> {
   return new Promise((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
   });
@@ -100,7 +100,7 @@ export const Widget: Story = {
 
       await userEvent.click(lancador);
       await ate(() => !panel.hidden);
-      await proximoQuadro();
+      await nextFrame();
 
       expect(lancador.getAttribute('aria-expanded')).toBe('true');
       expect(panel.getAttribute('role')).toBe('dialog');
@@ -123,10 +123,10 @@ export const Widget: Story = {
       // O `.nds-alert` é `width: 100%`. Somando margem lateral, a caixa ficava
       // 24px MAIS LARGA que o painel e vazava na horizontal. `width: auto`
       // devolve o item ao esticamento do flex, que já desconta a margem.
-      const cxPainel = panel.getBoundingClientRect();
-      const cxDemo = demo.getBoundingClientRect();
-      expect(cxDemo.right, 'o aviso não vaza à direita').toBeLessThanOrEqual(cxPainel.right);
-      expect(cxDemo.left, 'o aviso não vaza à esquerda').toBeGreaterThanOrEqual(cxPainel.left);
+      const panelRect = panel.getBoundingClientRect();
+      const demoRect = demo.getBoundingClientRect();
+      expect(demoRect.right, 'o aviso não vaza à direita').toBeLessThanOrEqual(panelRect.right);
+      expect(demoRect.left, 'o aviso não vaza à esquerda').toBeGreaterThanOrEqual(panelRect.left);
       // Mede o PAINEL, e não o documento: quem recorta é ele. O guarda anterior
       // de rolagem horizontal media a raiz, que não transborda — e ficou verde
       // com a barra visível na tela.
@@ -162,10 +162,10 @@ export const Widget: Story = {
       expect(warning.textContent?.trim().length ?? 0).toBeGreaterThan(0);
 
       // O aviso de falha carregava o MESMO defeito de largura do de demonstração.
-      await proximoQuadro();
-      const cxAviso = warning.getBoundingClientRect();
-      expect(cxAviso.right).toBeLessThanOrEqual(panel.getBoundingClientRect().right);
-      expect(cxAviso.left).toBeGreaterThanOrEqual(panel.getBoundingClientRect().left);
+      await nextFrame();
+      const warningRect = warning.getBoundingClientRect();
+      expect(warningRect.right).toBeLessThanOrEqual(panel.getBoundingClientRect().right);
+      expect(warningRect.left).toBeGreaterThanOrEqual(panel.getBoundingClientRect().left);
 
       /* ── Escape fecha e DEVOLVE o foco ──────────────────────────────────── */
 

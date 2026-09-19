@@ -48,7 +48,7 @@ export type ButtonSnippetOptions = {
  * no `append` — que é como as stories os compõem.
  */
 export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
-  const withTextEIcone = Boolean(o.icon && o.label);
+  const hasTextAndIcon = Boolean(o.icon && o.label);
   // O Playground registra um espião em `args.onClick`, e o que chega aqui é uma
   // FUNÇÃO, não um trecho de código. Interpolada, ela sairia como o corpo do
   // mock no painel Code. Só a string escrita por uma story entra no snippet.
@@ -57,7 +57,7 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
   const lines = options([
     ['variant', o.variant && o.variant !== 'default' ? text(o.variant) : undefined],
     ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
-    ['label', o.label && !withTextEIcone ? text(o.label) : undefined],
+    ['label', o.label && !hasTextAndIcon ? text(o.label) : undefined],
     ['aria-label', o.ariaLabel ? text(o.ariaLabel) : undefined],
     ['aria-busy', o.ariaBusy ? 'true' : undefined],
     ['aria-invalid', o.ariaInvalid ? 'true' : undefined],
@@ -78,12 +78,12 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
 conteudo.textContent = ${text(o.childrenElement)};`
     : undefined;
 
-  const labelBlock = withTextEIcone
+  const labelBlock = hasTextAndIcon
     ? `const rotulo = document.createElement('span');
 rotulo.textContent = ${text(o.label!)};`
     : undefined;
 
-  const composition = withTextEIcone
+  const composition = hasTextAndIcon
     ? o.iconSide === 'right'
       ? `botao.append(rotulo, ${icon});`
       : `botao.append(${icon}, rotulo);`

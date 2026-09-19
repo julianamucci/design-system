@@ -59,8 +59,8 @@ import {
 
 function bandeira(name: string): string | undefined {
   const prefixo = `--${name}=`;
-  const achado = process.argv.find((arg) => arg.startsWith(prefixo));
-  return achado?.slice(prefixo.length);
+  const finding = process.argv.find((arg) => arg.startsWith(prefixo));
+  return finding?.slice(prefixo.length);
 }
 
 const CONFIG = (bandeira('config') ?? 'A').toUpperCase();
@@ -96,10 +96,10 @@ interface Resposta {
   fontes: { slug: string; score: number }[];
   fraca: boolean;
   text: string;
-  tokensEntrada: number | null;
-  tokensSaida: number | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
   /** Milissegundos até o PRIMEIRO pedaço de texto — a latência que se sente. */
-  ateOPrimeiro: number | null;
+  firstChunkMs: number | null;
   totalMs: number;
   error: string | null;
 }
@@ -111,12 +111,12 @@ interface Resposta {
  * IP só, a nona pergunta do banco voltaria 429 e o relatório mediria o
  * rate-limiter em vez do modelo. Mesmo truque que `api-perguntar.test.ts` usa.
  */
-let contadorDeIp = 0;
-function proximoIp(): string {
-  contadorDeIp += 1;
+let ipCounter = 0;
+function nextIp(): string {
+  ipCounter += 1;
   // 198.51.100.0/24 é a faixa TEST-NET-2 da RFC 5737 — reservada para
   // documentação e exemplo, nunca roteada.
-  return `198.51.100.${contadorDeIp % 250}`;
+  return `198.51.100.${ipCounter % 250}`;
 }
 
 async function perguntar(
@@ -128,9 +128,9 @@ async function perguntar(
     fontes: [],
     fraca: false,
     text: '',
-    tokensEntrada: null,
-    tokensSaida: null,
-    ateOPrimeiro: null,
+    inputTokens: null,
+    outputTokens: null,
+    firstChunkMs: null,
     totalMs: 0,
     error: null,
   };
@@ -138,7 +138,7 @@ async function perguntar(
   const http = await responder(
     new Request('http://local/api/perguntar', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-forwarded-for': proximoIp() },
+      headers: { 'content-type': 'application/json', 'x-forwarded-for': nextIp() },
       body: JSON.stringify({ pergunta, locale: LOCALE, historico }),
     }),
   );
@@ -175,14 +175,14 @@ async function perguntar(
         response.fontes = fonte.hits;
         response.fraca = fonte.weak;
       } else if (evento === 'delta') {
-        response.ateOPrimeiro ??= Date.now() - start;
+        response.firstChunkMs ??= Date.now() - start;
         response.text += (carga as unknown as { text: string }).text;
       } else if (evento === 'done') {
         const fim = carga as unknown as {
           usage: { input: number | null; output: number | null };
         };
-        response.tokensEntrada = fim.usage.input;
-        response.tokensSaida = fim.usage.output;
+        response.inputTokens = fim.usage.input;
+        response.outputTokens = fim.usage.output;
       } else if (evento === 'error') {
         response.error = (carga as unknown as { code: string }).code;
       }
@@ -216,9 +216,9 @@ interface Linha {
   inventados: string[];
   obrigatoriosFaltando: string[];
   proibidosCitados: string[];
-  tokensEntrada: number | null;
-  tokensSaida: number | null;
-  ateOPrimeiro: number | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  firstChunkMs: number | null;
   totalMs: number;
   error: string | null;
   /** Todos os critérios que se aplicam a este caso passaram. */
@@ -259,8 +259,8 @@ async function rodarCaso(caso: CasoDeAvaliacao): Promise<Linha> {
   for (const pergunta of caso.perguntas) {
     if (ultima) await dormir(PAUSA);
     ultima = await perguntar(pergunta, historico);
-    historico.push({ papel: 'user', texto: pergunta });
-    if (ultima.text.trim()) historico.push({ papel: 'model', texto: ultima.text });
+    historico.push({ role: 'user', text: pergunta });
+    if (ultima.text.trim()) historico.push({ role: 'model', text: ultima.text });
   }
   if (!ultima) throw new Error(`caso sem pergunta: ${caso.id}`);
 
@@ -302,9 +302,9 @@ async function rodarCaso(caso: CasoDeAvaliacao): Promise<Linha> {
     inventados: nomesInventados(ultima.text, catalogo, contextoDoPrompt(slugs)),
     obrigatoriosFaltando: nomesObrigatoriosFaltando(ultima.text, caso.nomesObrigatorios),
     proibidosCitados: nomesProibidosCitados(ultima.text, caso.nomesProibidos),
-    tokensEntrada: ultima.tokensEntrada,
-    tokensSaida: ultima.tokensSaida,
-    ateOPrimeiro: ultima.ateOPrimeiro,
+    inputTokens: ultima.inputTokens,
+    outputTokens: ultima.outputTokens,
+    firstChunkMs: ultima.firstChunkMs,
     totalMs: ultima.totalMs,
     error: ultima.error,
     ok: false,
@@ -367,9 +367,9 @@ async function rodarCasoSeco(caso: CasoDeAvaliacao): Promise<Linha> {
     inventados: [],
     obrigatoriosFaltando: [],
     proibidosCitados: [],
-    tokensEntrada: null,
-    tokensSaida: null,
-    ateOPrimeiro: null,
+    inputTokens: null,
+    outputTokens: null,
+    firstChunkMs: null,
     totalMs: 0,
     error: null,
     ok: recuperacao.ok && recuperacao.firstOk !== false,
@@ -379,8 +379,8 @@ async function rodarCasoSeco(caso: CasoDeAvaliacao): Promise<Linha> {
 
 /* ── Saída ────────────────────────────────────────────────────────────────── */
 
-function pad(text: string, largura: number): string {
-  return text.length >= largura ? text.slice(0, largura) : text.padEnd(largura);
+function pad(text: string, width: number): string {
+  return text.length >= width ? text.slice(0, width) : text.padEnd(width);
 }
 
 function marca(ok: boolean | null): string {
@@ -388,9 +388,9 @@ function marca(ok: boolean | null): string {
   return ok ? ' ok' : 'FAIL';
 }
 
-function mediana(valores: number[]): number {
-  if (valores.length === 0) return 0;
-  const ordenados = [...valores].sort((a, b) => a - b);
+function mediana(values: number[]): number {
+  if (values.length === 0) return 0;
+  const ordenados = [...values].sort((a, b) => a - b);
   const meio = Math.floor(ordenados.length / 2);
   return ordenados.length % 2 ? ordenados[meio] : (ordenados[meio - 1] + ordenados[meio]) / 2;
 }
@@ -426,9 +426,9 @@ function imprimir(linhas: Linha[]): void {
         pad(marca(l.recusaOk), 7),
         pad(marca(l.negouOk), 5),
         pad(marca(nomesOk), 6),
-        pad(l.tokensEntrada === null ? '—' : String(l.tokensEntrada), 8),
-        pad(l.tokensSaida === null ? '—' : String(l.tokensSaida), 6),
-        pad(l.ateOPrimeiro === null ? '—' : `${l.ateOPrimeiro}ms`, 7),
+        pad(l.inputTokens === null ? '—' : String(l.inputTokens), 8),
+        pad(l.outputTokens === null ? '—' : String(l.outputTokens), 6),
+        pad(l.firstChunkMs === null ? '—' : `${l.firstChunkMs}ms`, 7),
         pad(`${l.totalMs}ms`, 7),
       ].join(' '),
     );
@@ -463,9 +463,9 @@ function imprimir(linhas: Linha[]): void {
 function resumir(linhas: Linha[]): void {
   const total = linhas.length;
   const conta = (p: (l: Linha) => boolean) => linhas.filter(p).length;
-  const entradas = linhas.map((l) => l.tokensEntrada).filter((v): v is number => v !== null);
-  const saidas = linhas.map((l) => l.tokensSaida).filter((v): v is number => v !== null);
-  const primeiros = linhas.map((l) => l.ateOPrimeiro).filter((v): v is number => v !== null);
+  const entradas = linhas.map((l) => l.inputTokens).filter((v): v is number => v !== null);
+  const saidas = linhas.map((l) => l.outputTokens).filter((v): v is number => v !== null);
+  const primeiros = linhas.map((l) => l.firstChunkMs).filter((v): v is number => v !== null);
   const totais = linhas.map((l) => l.totalMs).filter((v) => v > 0);
   const soma = (v: number[]) => v.reduce((a, b) => a + b, 0);
 

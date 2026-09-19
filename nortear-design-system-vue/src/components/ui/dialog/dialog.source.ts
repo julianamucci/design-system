@@ -66,7 +66,7 @@ function description(frase: string): string {
 type Frame = {
   /** Props da raiz: `default-open`, `:modal="false"`. */
   root?: string;
-  painelProps?: string;
+  panelProps?: string;
   /**
    * Props do título — hoje só o nível de cabeçalho (`as="h3"`).
    *
@@ -91,7 +91,7 @@ type Frame = {
  * botão DENTRO de outro botão.
  */
 function dialogo(m: Frame): string {
-  const { root = '', painelProps = '', titleProps = '', body = '', footer = '' } = m;
+  const { root = '', panelProps = '', titleProps = '', body = '', footer = '' } = m;
   // Sem corpo e sem rodapé o painel é só cabeçalho: nada de linha em branco
   // sobrando entre o fim do cabeçalho e o fecho do painel.
   const partes = [body, footer].filter(Boolean);
@@ -101,7 +101,7 @@ function dialogo(m: Frame): string {
   <DialogTrigger as-child>
     <Button variant="outline">${m.trigger}</Button>
   </DialogTrigger>
-  <DialogContent${attrs(painelProps)}>
+  <DialogContent${attrs(panelProps)}>
     <DialogHeader>
       <DialogTitle${attrs(titleProps)}>${m.title}</DialogTitle>
 ${description(m.description)}
@@ -192,7 +192,7 @@ export function dialogNoButtonCloseSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS),
     dialogo({
-      painelProps: ':show-close-button="false"',
+      panelProps: ':show-close-button="false"',
       trigger: 'Ver atualização',
       title: 'Aceitar atualização',
       description: 'Uma nova versão está disponível. Clique em continuar para atualizar.',
@@ -310,7 +310,7 @@ const termos = [
   'Do encerramento: o cancelamento pode ser pedido a qualquer momento, e os dados ficam disponíveis por trinta dias.',
 ]`,
     dialogo({
-      painelProps: 'class="nds-max-w-lg"',
+      panelProps: 'class="nds-max-w-lg"',
       trigger: 'Termos de uso',
       title: 'Termos de uso',
       description: 'Leia atentamente antes de aceitar.',
@@ -400,7 +400,7 @@ export function footerDialogCloseSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS.filter((part) => part !== 'DialogClose')),
     dialogo({
-      painelProps: ':show-close-button="false"',
+      panelProps: ':show-close-button="false"',
       trigger: 'Abrir guia',
       title: 'Próximos passos',
       description: 'Continue o fluxo ou volte ao início.',
@@ -510,7 +510,7 @@ export function dialogPreviaDeMidiaSource(): string {
       'DialogTrigger',
     ]),
     dialogo({
-      painelProps: 'class="nds-sm-max-w-md"',
+      panelProps: 'class="nds-sm-max-w-md"',
       trigger: 'Pré-visualizar imagem',
       title: 'Pré-visualização da imagem',
       description: 'captura-de-tela.png · 1920×1080 · 248 KB',

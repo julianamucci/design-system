@@ -345,7 +345,7 @@ describe('premissa das exceções', () => {
     // engolir outra coisa. Tirado o andaime, o que sobra da raiz em diante é
     // comparado com o template do snippet. As duas únicas diferenças são as
     // mesmas do painel simples: o comentário de template não conta, e o
-    // `(click)="aberto = false"` da propriedade solta do renderer vira o método
+    // `(click)="isOpen = false"` da propriedade solta do renderer vira o método
     // `confirmar()` da classe do exemplo.
     const normalize = (t: string) =>
       t.replace(/<!--[\s\S]*?-->/g, '').replace(/\s+/g, ' ').replace(/> </g, '><').trim();
@@ -362,7 +362,7 @@ describe('premissa das exceções', () => {
       if (from === 'template') focusedTemplate = focusedTemplate.replace(normalizedPiece, '');
       else focusedProps = focusedProps.replace(normalizedPiece, '');
     }
-    expect(focusedProps).toBe('aberto: false');
+    expect(focusedProps).toBe('isOpen: false');
 
     const root = focusedTemplate.indexOf('<div ndsPopover');
     const frameEnd = focusedTemplate.lastIndexOf('</div>');
@@ -371,7 +371,15 @@ describe('premissa das exceções', () => {
       .slice(root, frameEnd)
       // O espião tirado deixa um espaço antes do fecho da tag da raiz.
       .replace(/\s+>/g, '>')
-      .replace('(click)="aberto = false"', '(click)="confirmar()"')
+      .replace('(click)="isOpen = false"', '(click)="confirmar()"')
+      // Terceira diferença DECLARADA, desde a campanha de identificadores de
+      // 2026-09-18: o `[(open)]` da story amarra uma PROPRIEDADE SOLTA do
+      // renderer, que passou a se chamar `isOpen`; o snippet amarra o signal da
+      // classe do exemplo, que continua `aberto` — snippet publicado mora em
+      // literal de template, fora do alcance do contador, e as outras stacks
+      // publicam o mesmo nome. Se um dos dois lados mudar de nome, este
+      // `replace` deixa de casar e a comparação abaixo reprova.
+      .replace('[(open)]="isOpen"', '[(open)]="aberto"')
       .trim();
 
     const code = popoverFocusedSource();
@@ -402,7 +410,7 @@ describe('premissa das exceções', () => {
       storyProps(OPEN.file, OPEN.story),
       'States/Open deixou de nascer aberta — popoverOpenSource perdeu o que o ' +
         'separava de popoverBasicSource',
-    ).toBe('aberto: true');
+    ).toBe('isOpen: true');
   });
 
   it('Form e EditProfile renderizam o mesmo painel, tirados os prefixos de id', () => {

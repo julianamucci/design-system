@@ -52,9 +52,9 @@ function tabs(options: {
   list?: string;
   listLabel: string;
   abas: Aba[];
-  classePainel?: string;
+  panelClass?: string;
 }): string {
-  const { root = '', list = '', listLabel, abas, classePainel = CLASSNAME_PANEL } = options;
+  const { root = '', list = '', listLabel, abas, panelClass = CLASSNAME_PANEL } = options;
   const triggers = abas
     .map((aba) =>
       block(
@@ -70,7 +70,7 @@ function tabs(options: {
     .join('\n');
   const panels = abas
     .map((aba) =>
-      block('TabsContent', attrs(`value="${aba.value}"`, `class="${classePainel}"`), aba.panel, 2),
+      block('TabsContent', attrs(`value="${aba.value}"`, `class="${panelClass}"`), aba.panel, 2),
     )
     .join('\n');
   return `<Tabs${attrs(root)}>
@@ -109,7 +109,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
       ).trim(),
       listLabel: 'Seções do componente',
       abas: SECTIONS,
-      classePainel: vertical ? VERTICAL_CLASSNAME_PANEL : CLASSNAME_PANEL,
+      panelClass: vertical ? VERTICAL_CLASSNAME_PANEL : CLASSNAME_PANEL,
     }),
   );
 };
@@ -152,7 +152,7 @@ export function tabsVerticalSource(): string {
     tabs({
       root: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       listLabel: 'Configurações da conta',
-      classePainel: VERTICAL_CLASSNAME_PANEL,
+      panelClass: VERTICAL_CLASSNAME_PANEL,
       abas: [
         {
           value: 'profile',
@@ -331,7 +331,7 @@ import { Settings2, Shield, User } from 'lucide-vue-next'`,
     tabs({
       root: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       listLabel: 'Configurações da conta',
-      classePainel: 'nds-text-body nds-pl-4',
+      panelClass: 'nds-text-body nds-pl-4',
       abas: [
         {
           value: 'profile',
