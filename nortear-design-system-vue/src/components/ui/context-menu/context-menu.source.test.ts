@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   contextMenuWithShortcutsSource,
-  contextMenuWithChoiceUnicaSource,
-  contextMenuWithMarkupSource,
+  contextMenuWithRadioGroupSource,
+  contextMenuWithCheckboxSource,
   contextMenuWithSubmenuSource,
   contextMenuCompletoSource,
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
-  contextMenuItemRecuadoSource,
-  contextMenuMarkupMistaSource,
-  contextMenuPaletteDarkSource,
+  contextMenuItemInsetSource,
+  contextMenuCheckboxIndeterminateSource,
+  contextMenuDarkPaletteSource,
   contextMenuSnippet,
   contextMenuSource,
 } from './context-menu.source';
@@ -123,7 +123,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o recuo mora no rótulo e no item, e convive com a variante', () => {
-    const output = contextMenuItemRecuadoSource();
+    const output = contextMenuItemInsetSource();
     expect(output).toContain('<ContextMenuLabel inset>Arquivo</ContextMenuLabel>');
     expect(output).toContain('<ContextMenuItem inset>Duplicar</ContextMenuItem>');
     expect(output).toContain('<ContextMenuItem inset variant="destructive">Excluir</ContextMenuItem>');
@@ -139,7 +139,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('os três estados da marcação aparecem lado a lado', () => {
-    const output = contextMenuMarkupMistaSource();
+    const output = contextMenuCheckboxIndeterminateSource();
     // Misto é um valor entregue, não um booleano: uma comparação frouxa o leria
     // como marcado.
     expect(output).toContain('<ContextMenuCheckboxItem checked="indeterminate">Colunas');
@@ -150,14 +150,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o rótulo da marcação mora DENTRO do grupo que ele nomeia', () => {
-    const output = contextMenuMarkupMistaSource();
+    const output = contextMenuCheckboxIndeterminateSource();
     expect(output).toContain(`      <ContextMenuGroup>
         <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>`);
     expect(output).toContain('ContextMenuGroup,');
   });
 
   it('a paleta escura não muda uma linha do markup', () => {
-    const output = contextMenuPaletteDarkSource();
+    const output = contextMenuDarkPaletteSource();
     // A troca é global, por classe no documento: nada de prop de tema no menu.
     expect(output).not.toContain('dark');
     expect(output).not.toContain('theme');
@@ -175,7 +175,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a marcação liga o par completo: prop de entrada e evento de volta', () => {
-    const output = contextMenuWithMarkupSource();
+    const output = contextMenuWithCheckboxSource();
     expect(output).toContain(`import { ref } from 'vue'`);
     // Os mesmos estados iniciais da prévia: grade desmarcada, réguas marcadas.
     expect(output).toContain('const showGrid = ref(false)\nconst showRulers = ref(true)');
@@ -185,7 +185,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na escolha única o valor vive no grupo, e cada item traz o seu `value`', () => {
-    const output = contextMenuWithChoiceUnicaSource();
+    const output = contextMenuWithRadioGroupSource();
     expect(output).toContain(`const layout = ref('grid')`);
     expect(output).toContain('<ContextMenuRadioGroup v-model="layout">');
     expect(output).toContain('<ContextMenuRadioItem value="columns">Colunas</ContextMenuRadioItem>');
@@ -195,7 +195,7 @@ describe('transforms das stories de composição', () => {
     // O grupo de rádio já é um grupo por baixo. Um `ContextMenuGroup` em volta
     // seria o segundo, e o de dentro ficaria com `aria-labelledby` pendurado —
     // o rótulo pegaria o id do grupo de fora.
-    const output = contextMenuWithChoiceUnicaSource();
+    const output = contextMenuWithRadioGroupSource();
     expect(output).not.toContain('ContextMenuGroup');
     expect(output).toContain(`      <ContextMenuRadioGroup v-model="layout">
         <ContextMenuLabel>Layout</ContextMenuLabel>

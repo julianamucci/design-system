@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/context-menu";
 import {
   contextMenuCompletoSource,
-  contextMenuWithChoiceUnicaSource,
+  contextMenuWithRadioGroupSource,
   contextMenuWithMarkupSource,
   contextMenuWithSubmenuSource,
   contextMenuWithShortcutSource,
@@ -246,7 +246,7 @@ export const WithRadioGroup: Story = {
     covers: ["functional.item8", "accessibility.item5"],
     // Quem guarda o valor é o grupo de escolha única, peça que não existe no
     // snippet do `meta`.
-    docs: { source: { transform: contextMenuWithChoiceUnicaSource } },
+    docs: { source: { transform: contextMenuWithRadioGroupSource } },
   },
   render: () => <DemoRadio />,
   play: async ({ canvasElement, step }) => {
@@ -375,6 +375,20 @@ export const WithSubmenu: Story = {
           target("sub").getBoundingClientRect().left,
         ),
       );
+    });
+
+    await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {
+      // §8 do PRD: o painel do submenu vive num portal, fora da árvore do
+      // sub-gatilho, e é a ligação entre os dois que faz o leitor de tela dizer
+      // a que menu aquele item leva. Nesta stack quem a escreve é a lib, com
+      // `aria-controls`; o vanilla e o angular decidem à mão e usam
+      // `aria-owns`, e só esses dois afirmavam a relação até 2026-09-18.
+      const panel = submenu()!;
+      const controls = target("sub").getAttribute("aria-controls");
+      await expect(controls).toBeTruthy();
+      // O id tem de RESOLVER no painel aberto — apontar para um id qualquer
+      // não é ligação.
+      await expect(document.getElementById(controls!)).toBe(panel);
     });
 
     await step("Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho", async () => {

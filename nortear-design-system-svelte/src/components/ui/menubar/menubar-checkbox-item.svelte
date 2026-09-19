@@ -12,11 +12,9 @@
 		indeterminate = $bindable(false),
 		// PATCH: bugfix — marcar não fecha o menu, como no vanilla (ver PATCHES.md#svelte-menu-select-keeps-open)
 		closeOnSelect = false,
-		inset,
 		children: childrenProp,
 		...restProps
 	}: WithoutChildrenOrChild<MenubarPrimitive.CheckboxItemProps> & {
-		inset?: boolean;
 		children?: Snippet;
 	} = $props();
 </script>
@@ -29,6 +27,12 @@
 	Sem a animação (D5), o menu sumia a cada marcação. Quem marca uma preferência
 	quer marcar a próxima. Quem consome religa pela mesma prop, e o `onSelect`
 	dele continua chegando à lib por `restProps`.
+
+	Sem `inset`: a folha só recua item comum, rótulo e sub-gatilho
+	(`dropdown-menu.css`, seletores de `[data-inset]`) — o item de marcação reserva
+	a pista do indicador à direita (D8), e a prop não fazia nada. Ela era aceita
+	aqui e escrevia `data-inset` que folha nenhuma lia; o ContextMenu desta stack
+	já a tinha removido pelo mesmo motivo.
 -->
 <MenubarPrimitive.CheckboxItem
 	bind:ref
@@ -36,7 +40,6 @@
 	bind:indeterminate
 	{closeOnSelect}
 	data-slot="menubar-checkbox-item"
-	data-inset={inset}
 	class={cn("nds-dropdown-menu-checkbox-item", className)}
 	{...restProps}
 >

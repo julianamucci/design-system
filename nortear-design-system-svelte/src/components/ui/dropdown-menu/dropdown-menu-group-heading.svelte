@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import { cn } from "@/lib/utils.js";
 	import type { ComponentProps } from "svelte";
+	import DropdownMenuLabel from "./dropdown-menu-label.svelte";
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		inset,
-		...restProps
-	}: ComponentProps<typeof DropdownMenuPrimitive.GroupHeading> & {
-		inset?: boolean;
-	} = $props();
+	let { ref = $bindable(null), ...restProps }: ComponentProps<typeof DropdownMenuLabel> = $props();
 </script>
 
-<DropdownMenuPrimitive.GroupHeading
-	bind:ref
-	data-slot="dropdown-menu-group-heading"
-	data-inset={inset}
-	class={cn("nds-dropdown-menu-label", className)}
-	{...restProps}
-/>
+<!--
+	`GroupHeading` é o nome que a lib dá ao cabeçalho de grupo, e esta stack o
+	publica desde antes do `Label` nomear o grupo. Hoje as duas peças são UMA:
+	este arquivo delega ao `Label`, que dentro de `Group`/`RadioGroup` já é o
+	cabeçalho da lib (ver `menu-group-context.ts`). Mesmo markup e mesmo
+	`data-slot` (`dropdown-menu-label`, o das outras quatro stacks) — antes o
+	cabeçalho saía como `dropdown-menu-group-heading` e com `role="group"` no
+	próprio rótulo, e o mesmo menu tinha dois desenhos de rótulo conforme a peça
+	escolhida.
+
+	Segue exportado porque é API publicada; fora de um grupo não lança erro, como
+	o cabeçalho cru da lib lançaria — desenha o rótulo solto, igual ao `Label`.
+	Mesma forma do `context-menu-group-heading.svelte`.
+-->
+<DropdownMenuLabel bind:ref {...restProps} />

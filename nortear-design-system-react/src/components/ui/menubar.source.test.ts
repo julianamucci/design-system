@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   menubarCheckboxIndeterminateSource,
-  menubarChoiceUnicaSource,
+  menubarWithRadioSource,
   menubarControlledSource,
   menubarEditorSource,
-  menubarItemBloqueadoSource,
+  menubarItemDisabledSource,
   menubarItemCheckedSource,
   menubarItemDestructiveSource,
   menubarItemNeutralSource,
   menubarOpenSource,
+  menubarPanelScrollsSource,
   menubarSnippet,
   menubarSource,
   menubarSubmenuSource,
@@ -21,11 +22,12 @@ const ALL = [
   menubarItemNeutralSource,
   menubarItemDestructiveSource,
   menubarOpenSource,
-  menubarItemBloqueadoSource,
+  menubarPanelScrollsSource,
+  menubarItemDisabledSource,
   menubarItemCheckedSource,
   menubarSubmenuSource,
   selectionMenubarBoxesSource,
-  menubarChoiceUnicaSource,
+  menubarWithRadioSource,
   menubarEditorSource,
   menubarControlledSource,
   menubarCheckboxIndeterminateSource,
@@ -104,9 +106,24 @@ describe('variantes e estados', () => {
   });
 
   it('o bloqueio é o `disabled` do item, sem aria escrito à mão', () => {
-    const output = menubarItemBloqueadoSource();
+    const output = menubarItemDisabledSource();
     expect(output).toContain('<MenubarItem disabled>');
     expect(output).not.toContain('aria-disabled');
+  });
+
+  it('o menu longo publica os SESSENTA itens, e nenhuma prop de rolagem', () => {
+    const output = menubarPanelScrollsSource();
+    // O número é o da medição que fixou a D17, e o mesmo das outras stacks: se
+    // a story e o snippet divergirem, o painel Code ensina um exemplo que não é
+    // o que a página mostra.
+    expect(output.match(/<MenubarItem>/g)).toHaveLength(60);
+    expect(output).toContain('<MenubarItem>Ação 1</MenubarItem>');
+    expect(output).toContain('<MenubarItem>Ação 60</MenubarItem>');
+    // A lição do snippet é que não há lição de markup: quem recorta e rola é a
+    // folha, e quem copia não declara nada para o menu longo caber.
+    expect(output).not.toContain('maxHeight');
+    expect(output).not.toContain('overflow');
+    expect(output).not.toContain('className');
   });
 
   it('o marcado usa defaultChecked, e o desmarcado é a AUSÊNCIA da prop', () => {
@@ -146,7 +163,7 @@ describe('composições', () => {
   });
 
   it('na escolha única o valor mora no GRUPO', () => {
-    const output = menubarChoiceUnicaSource();
+    const output = menubarWithRadioSource();
     expect(output).toContain('<MenubarRadioGroup defaultValue="light">');
     expect(output).not.toContain('checked');
   });

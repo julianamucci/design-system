@@ -7,7 +7,7 @@ import {
   dropdownMenuWithSubmenuSource,
   dropdownMenuControlledSource,
   dropdownMenuDestructiveSource,
-  dropdownMenuIndeterminadoSource,
+  dropdownMenuCheckboxIndeterminateSource,
   dropdownMenuItemDisabledSource,
   dropdownMenuDefaultSource,
   dropdownMenuSource,
@@ -114,7 +114,7 @@ describe('transforms das stories de variação, estado e composição', () => {
       dropdownMenuDefaultSource,
       dropdownMenuDestructiveSource,
       dropdownMenuItemDisabledSource,
-      dropdownMenuIndeterminadoSource,
+      dropdownMenuCheckboxIndeterminateSource,
       dropdownMenuWithLabelSource,
       dropdownMenuWithCheckboxSource,
       dropdownMenuWithRadioSource,
@@ -150,7 +150,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o indeterminado mostra os três estados do alternador de uma vez', () => {
-    const output = dropdownMenuIndeterminadoSource();
+    const output = dropdownMenuCheckboxIndeterminateSource();
     expect(output).toContain('<DropdownMenuCheckboxItem indeterminate>Nome</DropdownMenuCheckboxItem>');
     expect(output).toContain('<DropdownMenuCheckboxItem checked>E-mail</DropdownMenuCheckboxItem>');
     expect(output).toContain('<DropdownMenuCheckboxItem>Telefone</DropdownMenuCheckboxItem>');
@@ -158,8 +158,8 @@ describe('transforms das stories de variação, estado e composição', () => {
 
   it('o grupo com rótulo usa GroupHeading, que é quem nomeia o agrupamento', () => {
     const output = dropdownMenuWithLabelSource();
-    expect(output).toContain('<DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>');
-    expect(output).toContain('<DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>');
+    expect(output).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
+    expect(output).toContain('<DropdownMenuLabel>Suporte</DropdownMenuLabel>');
   });
 
   it('o grupo com rótulo não marca "Sair" de vermelho — sair não é irreversível', () => {
@@ -250,7 +250,7 @@ describe('dropdownMenuEntriesSource — o código dos cards de Variantes', () =>
   it('escreve o gatilho e os rótulos que recebeu, sem português cravado', () => {
     const output = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
     expect(output).toContain('<Button variant="outline" {...props}>Account</Button>');
-    expect(output).toContain('<DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>');
+    expect(output).toContain('<DropdownMenuLabel>Account</DropdownMenuLabel>');
     expect(output).toContain('<DropdownMenuItem>Profile</DropdownMenuItem>');
     expect(output).toContain('<DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>');
     expect(output).not.toMatch(/Perfil|Conta|Sair/);
@@ -259,7 +259,7 @@ describe('dropdownMenuEntriesSource — o código dos cards de Variantes', () =>
   it('o rótulo do grupo mora DENTRO do grupo que ele nomeia', () => {
     const output = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
     expect(output).toContain(
-      '    <DropdownMenuGroup>\n      <DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>',
+      '    <DropdownMenuGroup>\n      <DropdownMenuLabel>Account</DropdownMenuLabel>',
     );
   });
 

@@ -9,6 +9,10 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		// D15: o vão do submenu é 0 e −4, e o −4 sai de token — o mesmo dos outros
+		// dois membros da família. Ver `dropdown-menu-sub-content.svelte`.
+		sideOffset = 0,
+		alignOffset = -4,
 		onkeydown,
 		...restProps
 	}: ContextMenuPrimitive.SubContentProps = $props();
@@ -52,6 +56,8 @@
 	<ContextMenuPrimitive.SubContent
 		bind:ref
 		data-slot="context-menu-sub-content"
+		{sideOffset}
+		{alignOffset}
 		class={cn("nds-dropdown-menu-content", className)}
 		onkeydown={handleKeydown}
 		{...restProps}

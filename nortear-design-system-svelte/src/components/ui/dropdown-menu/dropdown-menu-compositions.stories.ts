@@ -50,9 +50,24 @@ export const WithLabel: Story = {
     const canvas = within(menu);
 
     // É o que o rótulo entrega além do texto: sem o `aria-labelledby`, o leitor
-    // anuncia "grupo" e a pessoa não sabe de qual bloco se trata.
+    // anuncia "grupo" e a pessoa não sabe de qual bloco se trata. Até
+    // 2026-09-18 quem nomeava era outra peça (`GroupHeading`), e o `Label`
+    // desta stack era um `<div>` solto que não amarrava nada.
     await expect(canvas.getByRole('group', { name: 'Conta' })).toBeTruthy();
     await expect(canvas.getByRole('group', { name: 'Suporte' })).toBeTruthy();
+
+    // E as DUAS peças desenham a mesma coisa: "Conta" sai de `Label` e
+    // "Suporte" de `GroupHeading`, que delega a ele. O endereço de markup é um
+    // só — `dropdown-menu-label`, o das outras quatro stacks —, e nenhum rótulo
+    // carrega `role="group"`, que a lib põe no cabeçalho e criaria um bloco
+    // vazio dentro do bloco que ele nomeia.
+    const labels = menu.querySelectorAll<HTMLElement>('[data-slot="dropdown-menu-label"]');
+    await expect(labels).toHaveLength(2);
+    await expect(menu.querySelectorAll('[data-slot="dropdown-menu-group-heading"]')).toHaveLength(0);
+    for (const label of labels) {
+      await expect(label.hasAttribute('role')).toBe(false);
+      await expect(label.classList.contains('nds-dropdown-menu-label')).toBe(true);
+    }
 
     // Rótulo dentro de `role="menu"` não pode ser navegável: a seta o pousaria
     // como se fosse ação, e o typeahead o traria como resultado.

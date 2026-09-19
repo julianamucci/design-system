@@ -25,7 +25,7 @@ import {
 import {
   selectionMenubarBoxesSource,
   menubarEditorSource,
-  menubarChoiceUnicaSource,
+  menubarWithRadioSource,
   menubarSource,
   menubarSubmenuSource,
 } from "./menubar.source"
@@ -246,6 +246,19 @@ export const WithSubmenu: Story = {
       })
     })
 
+    await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {
+      // §8 do PRD: o painel do submenu vive num portal, fora da árvore do
+      // sub-gatilho. Nesta stack quem escreve a ligação é a lib, com
+      // `aria-controls` — o vanilla e o angular decidem à mão e usam
+      // `aria-owns`, e só esses dois afirmavam a relação até 2026-09-18.
+      const panel = submenuPanel()!
+      const controls = subTrigger.getAttribute("aria-controls")
+      await expect(controls).toBeTruthy()
+      // O id tem de RESOLVER no painel aberto: apontar para um id qualquer não
+      // é ligação nenhuma.
+      await expect(document.getElementById(controls!)).toBe(panel)
+    })
+
     await step("O submenu traz os próprios itens e abre AO LADO do pai", async () => {
       const submenu = submenuPanel()!
       await expect(within(submenu).getAllByRole("menuitem")).toHaveLength(
@@ -409,7 +422,7 @@ export const WithRadioGroup: Story = {
     covers: ["functional.item15", "accessibility.item5"],
     // Escolha única: quem guarda o valor é o GRUPO, e é essa relação — não o
     // item isolado — que o snippet precisa mostrar.
-    docs: { source: { transform: menubarChoiceUnicaSource } },
+    docs: { source: { transform: menubarWithRadioSource } },
   },
   render: () => (
     <div className="nds-min-h-90" style={wrapperStyle}>

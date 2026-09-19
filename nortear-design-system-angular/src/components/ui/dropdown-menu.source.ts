@@ -512,3 +512,132 @@ export function dropdownMenuWithShortcutsSource(): string {
         </div>`,
   );
 }
+
+// ─── O menu como DADO ─────────────────────────────────────────────────────────
+//
+// O card de Variantes da docs page monta a prévia VIVA e o código ao lado a
+// partir da MESMA lista de entradas — é isso que impede os dois de divergirem.
+// Até 2026-09-18 o construtor morava dentro da própria docs page
+// (`DropdownMenuDocs.ts`), onde react, vue e vanilla já o expunham em `ui/`
+// (inconsistência 22 da §7 do PRD): snippet montado dentro da página não é
+// importável, e por isso não era testável.
+//
+// Os rótulos chegam RESOLVIDOS — quem chama os lê do conteúdo compartilhado, no
+// idioma da página. O construtor não conhece `translations.json`, e é essa
+// fronteira que o deixa rodar em node.
+//
+// O que NÃO entra: a instrumentação da página (`(onOpenChange)`, `(onSelect)`
+// ligados ao rastreio). É andaime da docs page, não lição do menu.
+
+/** Item de ação. `label` já vem no idioma de quem chama. */
+export type DropdownMenuSnippetItem = {
+  kind: 'item';
+  label: string;
+  /** Texto do atalho exibido à direita, quando há. */
+  shortcut?: string;
+  destructive?: boolean;
+};
+
+/** Item de marcação — `checked` é o estado que o exemplo publica. */
+export type DropdownMenuSnippetCheckbox = {
+  kind: 'checkbox';
+  label: string;
+  checked: boolean;
+};
+
+export type DropdownMenuSnippetEntry =
+  | DropdownMenuSnippetItem
+  | DropdownMenuSnippetCheckbox
+  | { kind: 'separator' }
+  /** O rótulo vai DENTRO do grupo, que é o que faz dele o nome do bloco. */
+  | {
+      kind: 'group';
+      label: string;
+      entries: readonly (DropdownMenuSnippetItem | DropdownMenuSnippetCheckbox)[];
+    }
+  | {
+      kind: 'radio-group';
+      label: string;
+      value: string;
+      options: readonly { label: string; value: string }[];
+    }
+  | { kind: 'sub'; label: string; entries: readonly DropdownMenuSnippetItem[] };
+
+export type DropdownMenuSnippetOptions = {
+  /** Texto do botão que abre o menu. */
+  triggerLabel?: string;
+  /** O menu como lista de entradas; sem ela, o menu canônico. */
+  entries?: readonly DropdownMenuSnippetEntry[];
+};
+
+/**
+ * O menu canônico — o mesmo grupo rotulado, divisor e saída destrutiva que a
+ * guarda transversal chama sem argumento nenhum.
+ */
+const SNIPPET_ENTRIES_DEFAULT: readonly DropdownMenuSnippetEntry[] = [
+  {
+    kind: 'group',
+    label: 'Conta',
+    entries: [
+      { kind: 'item', label: 'Perfil' },
+      { kind: 'item', label: 'Configurações' },
+    ],
+  },
+  { kind: 'separator' },
+  { kind: 'item', label: 'Sair', destructive: true },
+];
+
+/** O trecho do menu descrito por `entries`, com os rótulos exatamente como chegam. */
+export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string {
+  const entries = o.entries ?? SNIPPET_ENTRIES_DEFAULT;
+  const pad = (n: number) => ' '.repeat(n);
+  const itemLines = (e: DropdownMenuSnippetItem, n: number): string[] => {
+    const variant = e.destructive ? ' variant="destructive"' : '';
+    if (!e.shortcut) return [`${pad(n)}<div ndsDropdownMenuItem${variant}>${e.label}</div>`];
+    return [
+      `${pad(n)}<div ndsDropdownMenuItem${variant}>`,
+      `${pad(n + 2)}${e.label} <span ndsDropdownMenuShortcut>${e.shortcut}</span>`,
+      `${pad(n)}</div>`,
+    ];
+  };
+  const leaf = (e: DropdownMenuSnippetItem | DropdownMenuSnippetCheckbox, n: number): string[] =>
+    e.kind === 'item'
+      ? itemLines(e, n)
+      : [`${pad(n)}<div ndsDropdownMenuCheckboxItem [checked]="${e.checked}">${e.label}</div>`];
+
+  const lines: string[] = [];
+  for (const entry of entries) {
+    if (entry.kind === 'separator') {
+      lines.push(`${pad(4)}<div ndsDropdownMenuSeparator></div>`);
+    } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
+      lines.push(...leaf(entry, 4));
+    } else if (entry.kind === 'group') {
+      lines.push(`${pad(4)}<div ndsDropdownMenuGroup>`);
+      lines.push(`${pad(6)}<div ndsDropdownMenuLabel>${entry.label}</div>`);
+      for (const child of entry.entries) lines.push(...leaf(child, 6));
+      lines.push(`${pad(4)}</div>`);
+    } else if (entry.kind === 'radio-group') {
+      lines.push(`${pad(4)}<div ndsDropdownMenuRadioGroup value="${entry.value}">`);
+      lines.push(`${pad(6)}<div ndsDropdownMenuLabel>${entry.label}</div>`);
+      for (const opt of entry.options) {
+        lines.push(`${pad(6)}<div ndsDropdownMenuRadioItem value="${opt.value}">${opt.label}</div>`);
+      }
+      lines.push(`${pad(4)}</div>`);
+    } else {
+      lines.push(`${pad(4)}<nds-dropdown-menu-sub>`);
+      lines.push(`${pad(6)}<div ndsDropdownMenuSubTrigger>${entry.label}</div>`);
+      lines.push(`${pad(6)}<ng-template ndsDropdownMenuSubContent>`);
+      for (const child of entry.entries) lines.push(...itemLines(child, 8));
+      lines.push(`${pad(6)}</ng-template>`);
+      lines.push(`${pad(4)}</nds-dropdown-menu-sub>`);
+    }
+  }
+
+  return `<nds-dropdown-menu>
+  <button ndsDropdownMenuTrigger ndsButton variant="outline">${o.triggerLabel ?? 'Conta'}</button>
+
+  <ng-template ndsDropdownMenuContent>
+${lines.join('\n')}
+  </ng-template>
+</nds-dropdown-menu>`;
+}

@@ -2,15 +2,15 @@ import { describe, expect, it } from 'vitest';
 import {
   dropdownMenuOpenSource,
   dropdownMenuWithShortcutsSource,
-  dropdownMenuWithChoiceUnicaSource,
-  dropdownMenuWithMarkupSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithCheckboxSource,
   dropdownMenuWithLabelSource,
   dropdownMenuWithSubmenuSource,
   dropdownMenuControlledSource,
   dropdownMenuDestructiveSource,
   dropdownMenuClosedSource,
   dropdownMenuItemDisabledSource,
-  dropdownMenuMarkupMistaSource,
+  dropdownMenuCheckboxIndeterminateSource,
   dropdownMenuDefaultSource,
   dropdownMenuSnippet,
   dropdownMenuSource,
@@ -132,7 +132,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('os três estados da marcação aparecem lado a lado, por valor fixo', () => {
-    const output = dropdownMenuMarkupMistaSource();
+    const output = dropdownMenuCheckboxIndeterminateSource();
     expect(output).toContain('<DropdownMenuCheckboxItem model-value="indeterminate">Nome');
     expect(output).toContain('<DropdownMenuCheckboxItem :model-value="true">E-mail');
     expect(output).toContain('<DropdownMenuCheckboxItem :model-value="false">Telefone');
@@ -152,7 +152,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na marcação cada item guarda o seu próprio estado', () => {
-    const output = dropdownMenuWithMarkupSource();
+    const output = dropdownMenuWithCheckboxSource();
     expect(output).toContain('const mostrarNome = ref(true)');
     expect(output).toContain('const mostrarEmail = ref(false)');
     expect(output).toContain('const mostrarFuncao = ref(false)');
@@ -165,7 +165,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na escolha única o valor vive no grupo, e cada item traz o seu `value`', () => {
-    const output = dropdownMenuWithChoiceUnicaSource();
+    const output = dropdownMenuWithRadioSource();
     expect(output).toContain(`const tema = ref('light')`);
     expect(output).toContain('<DropdownMenuRadioGroup v-model="tema">');
     expect(output).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');

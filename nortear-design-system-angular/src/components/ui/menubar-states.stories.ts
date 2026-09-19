@@ -8,7 +8,10 @@ import {
   menubarClosedSource,
   menubarControlledSource,
   menubarItemDisabledSource,
+  menubarLongMenuSource,
   menubarOpenSource,
+  LONG_MENU_ITEMS,
+  LONG_MENU_LABELS,
 } from './menubar.source';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -464,6 +467,126 @@ export const ControlledOpen: Story = {
       // teria saído do DOM.
       await expect(readout.textContent?.trim()).toBe('fechado');
       await expect(file.getAttribute('aria-expanded')).toBe('false');
+    });
+  },
+};
+
+// ─── LongMenu ─────────────────────────────────────────────────────────────────
+//
+// O painel de menu RECORTA na viewport e ROLA (D17 do PRD do dropdown-menu,
+// fixada em 2026-09-18 sobre medição). A decisão veio com uma premissa, e esta
+// story é a premissa virada asserção: **navegar por seta num menu longo traz o
+// item focado para dentro da caixa visível**.
+//
+// A saída oposta — `overflow: visible` nas cinco — foi recusada com o motivo:
+// trocaria um achado de ferramenta por um defeito real, um menu longo
+// transbordando a viewport com parte dele inalcançável por qualquer meio.
+//
+// SOBRE O `scrollable-region-focusable` DO AXE, e por que aqui não há exceção a
+// declarar. A regra pede que região rolável seja alcançável pelo teclado, e o
+// que ela procura é conteúdo TABULÁVEL dentro dela. O menu deste stack tem: o
+// primitivo implementa foco ITINERANTE — `tabindex="0"` no item destacado e
+// `-1` em todos os outros —, que é o que a WAI-ARIA APG pede de um menu. O
+// segundo passo MEDE isso, em vez de supô-lo: se um dia a lib passar a marcar
+// todos os itens com `-1`, este caso reprova e a exceção do axe passa a ser
+// necessária — em vez de o achado aparecer sem ninguém entender por quê.
+
+export const LongMenu: Story = {
+  parameters: {
+    // `item10` é Home/End saltando às pontas — aqui o End é o gesto que leva o
+    // foco ao item fora da caixa visível, que é o assunto da story.
+    covers: ['functional.item10'],
+    docs: { source: { transform: menubarLongMenuSource } },
+  },
+  render: () => ({
+    props: { actions: LONG_MENU_LABELS },
+    template: `
+      <nds-menubar>
+        <nds-menubar-menu>
+          <button ndsMenubarTrigger>Ações</button>
+          <ng-template ndsMenubarContent>
+            @for (action of actions; track action) {
+              <div ndsMenubarItem>{{ action }}</div>
+            }
+          </ng-template>
+        </nds-menubar-menu>
+      </nds-menubar>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('menubar');
+    const [trigger] = within(bar).getAllByRole('menuitem');
+
+    let panel!: HTMLElement;
+
+    /** O item focado está dentro da caixa visível do painel? */
+    const focusedIsInsideBox = async () => {
+      const box = panel.getBoundingClientRect();
+      const focused = (document.activeElement as HTMLElement).getBoundingClientRect();
+      await expect(focused.top).toBeGreaterThanOrEqual(Math.floor(box.top));
+      await expect(focused.bottom).toBeLessThanOrEqual(Math.ceil(box.bottom));
+    };
+
+    await step('Precondição: o painel não cabe na tela e RECORTA', async () => {
+      if (trigger!.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger!);
+      panel = await waitForPortal('menu');
+      await expect(within(panel).getAllByRole('menuitem')).toHaveLength(LONG_MENU_ITEMS);
+
+      // Sem esta conferência a story mediria um menu que COUBE — e passaria
+      // verde sem exercer o recorte, que é o assunto dela. O `max-height` vem
+      // da folha, pela altura disponível; `overflow-y: auto` é o que rola.
+      await expect(window.getComputedStyle(panel).overflowY).toBe('auto');
+      await expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight);
+    });
+
+    await step('O foco é ITINERANTE: um item tabulável por vez, -1 nos demais', async () => {
+      const options = within(panel).getAllByRole('menuitem');
+      options[0]!.focus();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(options[0]);
+      });
+
+      // UM item na roda de tabulação, e ele é o que tem o foco. É o padrão ARIA
+      // de menu — e é ele, e não `tabindex="0"` em toda parte, que mantém o
+      // painel rolável alcançável pelo teclado.
+      //
+      // Dentro do `waitFor` só LEITURA: o atributo sai de um binding, e a
+      // detecção de mudança que o escreve roda depois do `focus()`. Sonda que
+      // MEXE no DOM aqui reagendaria a si mesma pelo observador de mutação e
+      // penduraria o arquivo inteiro, sem reprovar.
+      await waitFor(async () => {
+        const tabbable = options.filter((o) => o.getAttribute('tabindex') === '0');
+        const outsideTabOrder = options.filter((o) => o.getAttribute('tabindex') !== '-1');
+        await expect(tabbable).toHaveLength(1);
+        await expect(tabbable[0]).toBe(document.activeElement);
+        await expect(outsideTabOrder).toEqual(tabbable);
+      });
+    });
+
+    await step('A seta leva o foco ao item que rolou para fora, e ele entra na caixa', async () => {
+      const options = within(panel).getAllByRole('menuitem');
+      const tail = options[options.length - 1]!;
+
+      // `End` vai à ponta (C3) — o gesto mais curto até um item que com certeza
+      // está fora da caixa visível.
+      await userEvent.keyboard('{End}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(tail);
+      });
+
+      // A premissa da D17, medida. Sem a rolagem automática o foco estaria num
+      // item que a pessoa não vê — o defeito real que `overflow: visible`
+      // traria de volta em troca do achado de ferramenta.
+      await waitFor(focusedIsInsideBox);
+      // E a caixa rolou de verdade: no topo, `scrollTop` é 0.
+      await expect(panel.scrollTop).toBeGreaterThan(0);
+
+      await userEvent.keyboard('{Home}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(options[0]);
+      });
+      await waitFor(focusedIsInsideBox);
     });
   },
 };

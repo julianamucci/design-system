@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   contextMenuCompletoSource,
-  contextMenuWithChoiceUnicaSource,
+  contextMenuWithRadioGroupSource,
   contextMenuWithMarkupSource,
   contextMenuWithSubmenuSource,
   contextMenuItemDisabledSource,
@@ -18,7 +18,7 @@ import {
 const ALL = [
   contextMenuSource,
   contextMenuWithMarkupSource,
-  contextMenuWithChoiceUnicaSource,
+  contextMenuWithRadioGroupSource,
   contextMenuWithSubmenuSource,
   contextMenuWithShortcutSource,
   contextMenuDarkPaletteSource,
@@ -124,7 +124,7 @@ describe('composições', () => {
 
   it('a escolha única guarda o valor no grupo, e cada opção declara o seu', () => {
     // Layout Grade/Lista/Colunas, o conteúdo do vanilla — não o Zoom de antes.
-    const output = contextMenuWithChoiceUnicaSource();
+    const output = contextMenuWithRadioGroupSource();
     expect(output).toContain('<ContextMenuRadioGroup value={layout} onValueChange={(valor) => setLayout(valor)}>');
     expect(output).toContain('<ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>');
     expect(output).toContain('<ContextMenuRadioItem value="columns">Colunas</ContextMenuRadioItem>');
@@ -135,7 +135,7 @@ describe('composições', () => {
     // `Group > Label + RadioGroup` fazia dois `role="group"` aninhados, o de
     // dentro sem nome. O rótulo vai dentro do `ContextMenuRadioGroup`, que é
     // quem ele nomeia — e o `ContextMenuGroup` sai até da importação.
-    const output = contextMenuWithChoiceUnicaSource();
+    const output = contextMenuWithRadioGroupSource();
     // A abertura do grupo ocupa a linha inteira — o `=>` do callback impede
     // casar a tag por `[^>]*` —, e o rótulo é a PRIMEIRA coisa dentro dele.
     expect(output).toMatch(/<ContextMenuRadioGroup [^\n]*\n\s*<ContextMenuLabel>Layout<\/ContextMenuLabel>/);

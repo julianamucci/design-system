@@ -62,6 +62,7 @@ const meta: Meta = {
         'itemDisabled',
         'destructive',
         'editor',
+        'long',
       ],
       description: 'Composição interna usada na demonstração.',
       table: { type: { summary: 'string' }, defaultValue: { summary: "'default'" } },
@@ -70,6 +71,9 @@ const meta: Meta = {
     // `MenubarStory` já declarava a prop esperando quem a passasse. Mesma forma
     // do Playground do Vanilla, que usa o mesmo nome.
     onSelect: { control: false, table: { disable: true } },
+    // Espião do MOTIVO do fechamento, na palavra do design system — o valor que
+    // a docs page manda no `reason` do `menubar_close`.
+    onCloseReason: { control: false, table: { disable: true } },
   },
   args: {
     defaultValue: undefined,
@@ -77,6 +81,7 @@ const meta: Meta = {
     variant: 'default',
     demonstration: 'default',
     onSelect: fn(),
+    onCloseReason: fn(),
   },
 };
 
@@ -262,7 +267,30 @@ export const Playground: Story = {
       });
     });
 
-    await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
+    /*
+     * D18 · Enter ou Espaço no gatilho de um menu já aberto — EXCEÇÃO DECLARADA
+     * desta stack, e ela tem nome: `ENTER_NO_GATILHO_ABERTO_INALCANCAVEL`.
+     *
+     * A decisão da dona (2026-09-18) é que o gesto FECHA o menu, com
+     * `reason: overlay`. React, Vue e Angular afirmam isso; o Vanilla passou a
+     * fazê-lo. Aqui o estado é INALCANÇÁVEL, e a premissa é da lib: o
+     * `Menu.Content` do bits passa `trapFocus` como atributo fixo às duas
+     * camadas flutuantes, sem prop que desligue. Medido em 2026-09-18 —
+     * `trigger.focus()` não move o foco com o menu aberto, e focar um botão de
+     * fora devolve o foco ao painel. O foco nunca descansa num gatilho de
+     * menubar aberto, então Enter ali não é gesto que alguém possa executar.
+     *
+     * Escrever a asserção mesmo assim seria portão sem dentes — passaria com e
+     * sem o recurso —, com a agravante de PARECER cobertura. Em vez disso:
+     *
+     *  - o caminho ALCANÇÁVEL é afirmado logo abaixo, pelo ponteiro, com a
+     *    palavra que o contrato manda (`overlay`);
+     *  - a PREMISSA é conferida por `ui/bits-menu-premissas.test.ts`, no projeto
+     *    `unit`: se um bump do bits deixar de prender o foco, aquele portão
+     *    reprova, a exceção vence, e a asserção das outras quatro stacks passa a
+     *    caber aqui.
+     */
+    await step('Clicar no gatilho de um menu aberto fecha o menu, com motivo overlay', async () => {
       if (file.getAttribute('aria-expanded') !== 'true') {
         await userEvent.click(file);
       }
@@ -271,6 +299,10 @@ export const Playground: Story = {
       await userEvent.click(file);
       await waitForPortalGone('menu');
       await expect(file.getAttribute('aria-expanded')).toBe('false');
+      // "Saí sem decidir nada" — a mesma palavra do clique fora e do Tab. É o
+      // que o `menubar_close` manda no `reason`, e o que separa este
+      // fechamento do `api` da escolha de item, afirmado no último passo.
+      await expect(args.onCloseReason).toHaveBeenLastCalledWith('overlay');
     });
 
     // A camada dispensável prende `pointer-events: none` no gatilho enquanto o

@@ -957,7 +957,9 @@ export function ContextMenuDocs() {
               {
                 name: "alignOffset",
                 type: "number",
-                defaultValue: "4",
+                // D15: o painel nasce no PONTEIRO, e deslocá-lo dali é número
+                // mágico. O submenu, que é ancorado no sub-gatilho, usa -4.
+                defaultValue: "0",
                 required: no,
                 description: stripHtml(tContent("props.items.alignOffset")),
               },

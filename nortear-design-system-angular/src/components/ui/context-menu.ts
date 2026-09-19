@@ -197,12 +197,18 @@ export class NdsContextMenu implements NdsMenuTabAnchor {
     () => this.content()?.align() ?? 'start',
   );
 
+  // O painel de topo nasce NO PONTEIRO: `0`/`0`, porque a quina do painel fica
+  // onde o cursor está — é a convenção do menu de contexto nativo, e qualquer
+  // deslocamento ali seria número mágico (D15 do PRD do dropdown-menu). O
+  // submenu segue a regra da família: encostado no painel pai, e -4 (o
+  // `--spacing-1` de padding do painel) devolvendo o recuo para o primeiro item
+  // alinhar com o sub-gatilho.
   protected readonly deslocamentoDoLado = computed<number>(
-    () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 0),
+    () => this.content()?.sideOffset() ?? 0,
   );
 
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -3 : 0),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -4 : 0),
   );
 }
 
@@ -242,7 +248,7 @@ export class NdsContextMenu implements NdsMenuTabAnchor {
         [side]="content()?.side() ?? 'right'"
         [align]="content()?.align() ?? 'start'"
         [sideOffset]="content()?.sideOffset() ?? 0"
-        [alignOffset]="content()?.alignOffset() ?? -3"
+        [alignOffset]="content()?.alignOffset() ?? -4"
       >
         <div
           rdxMenuPopup

@@ -161,13 +161,20 @@
  *
  *     react     max-height 856px   rola   axe: scrollable-region-focusable
  *     vue       max-height 861px   rola   axe: scrollable-region-focusable
- *     angular   max-height 856px   rola   nada — os itens são tabindex="0"
+ *     angular   max-height 856px   rola   nada — cumpre a APG, ver abaixo
  *     svelte    max-height none    NÃO    nada — a cadeia de var() era inválida
  *
- * A hipótese estava certa: sem a regra, o achado aparece. As duas stacks que
- * escapavam escapavam por DEFEITO, não por desenho — o angular por dar aos
- * itens um `tabindex` que o padrão ARIA de foco itinerante não admite, o
- * svelte pela cadeia quebrada de `dropdown-menu.css` (corrigida no mesmo dia).
+ * A hipótese estava certa: sem a regra, o achado aparece.
+ *
+ * O SVELTE escapava por defeito — a cadeia quebrada de `dropdown-menu.css`,
+ * corrigida no mesmo dia. O ANGULAR não: a primeira leitura disse que os itens
+ * dele eram `tabindex="0"` e que isso contrariava o padrão ARIA, e isso é
+ * FALSO. Medido no pacote instalado e em navegador: o radix-ng faz foco
+ * itinerante pelo livro (`highlighted() ? 0 : -1`), com exatamente um item em
+ * `0` — o focado. Ele passa no axe por CUMPRIR a APG, porque a regra procura
+ * conteúdo tabulável dentro da região rolável. A divergência real é entre duas
+ * leituras legítimas do padrão: radix-ng marca o destacado com `0`; base-ui,
+ * reka e bits mantêm todos em `-1`. Registrar, não alinhar.
  *
  * A decisão da dona, com o dado na mão: **o painel ROLA nas cinco**, e a
  * exceção do axe é declarada com premissa conferida — o painel de menu já é

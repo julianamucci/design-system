@@ -14,7 +14,8 @@ import type { ContextMenuItemDef } from './context-menu';
 /** Uma entrada do menu, na forma que a fábrica aceita. */
 export type ContextMenuEntrySnippet = {
   /** `item` é o padrão e por isso não entra no snippet. */
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
+  /** Em `radio-group`, o valor escolhido; nos demais, o valor do item. */
   value?: string;
   label?: string;
   shortcut?: string;
@@ -23,6 +24,8 @@ export type ContextMenuEntrySnippet = {
   disabled?: boolean;
   checked?: boolean;
   indeterminate?: boolean;
+  /** Opções da escolha única, quando `type: 'radio-group'` (D16). */
+  options?: Array<{ value: string; label: string; disabled?: boolean }>;
   /** Itens do submenu, quando `type: 'submenu'`. */
   items?: ContextMenuEntrySnippet[];
 };
@@ -35,8 +38,6 @@ export type ContextMenuSnippetOptions = {
   showDestructive?: boolean;
   /** Lista explícita, quando a story mostra uma peça que a padrão não tem. */
   items?: ContextMenuEntrySnippet[];
-  /** Valor corrente do grupo de escolha única. */
-  radioValue?: string;
   /** Corpo do callback de abertura, quando a story o exercita. */
   onOpenChange?: string;
 };
@@ -88,6 +89,13 @@ export function contextMenuEntriesFrom(defs: ContextMenuItemDef[]): ContextMenuE
     disabled: def.disabled,
     checked: def.checked,
     indeterminate: def.indeterminate,
+    // As opções da escolha única entram sem o `onClick` de rastreio, pelo mesmo
+    // motivo que os itens: o snippet não imprime função.
+    options: def.options?.map((o) => ({
+      value: o.value,
+      label: o.label,
+      disabled: o.disabled,
+    })),
     items: def.items ? contextMenuEntriesFrom(def.items) : undefined,
   }));
 }
@@ -108,6 +116,24 @@ function entriesLines(
     if (entry.disabled) partes.push('disabled: true');
     if (entry.checked !== undefined) partes.push(`checked: ${String(entry.checked)}`);
     if (entry.indeterminate) partes.push('indeterminate: true');
+
+    // A escolha única abre em bloco, como o submenu: as opções são a lista do
+    // grupo, e escondê-las numa linha só ensinaria um `radio-group` que não
+    // escolhe nada.
+    if (entry.options) {
+      return [
+        `${recuo}{`,
+        ...partes.map((p) => `${recuo}  ${p},`),
+        `${recuo}  options: [`,
+        ...entry.options.map((o) => {
+          const pares = [`value: ${text(o.value)}`, `label: ${text(o.label)}`];
+          if (o.disabled) pares.push('disabled: true');
+          return `${recuo}    { ${pares.join(', ')} },`;
+        }),
+        `${recuo}  ],`,
+        `${recuo}},`,
+      ];
+    }
 
     if (!entry.items) return [`${recuo}{ ${partes.join(', ')} },`];
 
@@ -142,7 +168,6 @@ export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
   const lines = options([
     ['trigger', 'area'],
     ['items', entriesLiteral(o.items ?? itemsDefault(o))],
-    ['radioValue', o.radioValue ? text(o.radioValue) : undefined],
     ['onOpenChange', callbackBody(o.onOpenChange)],
   ]);
 

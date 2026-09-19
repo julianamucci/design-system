@@ -57,6 +57,13 @@ const HELPERS = new Set<string>([
   'LABEL_NEXT',
   'LABEL_PAGE',
   'LABEL_PREVIOUS',
+  // Mesma forma, no menu longo do Menubar: a contagem e os rótulos do menu que
+  // não cabe na tela. O construtor fecha sobre eles para escrever os itens, e a
+  // story `States/LongMenu` os importa de volta para renderizar a mesma lista —
+  // em vez de duas cópias, das quais uma envelhece sozinha e faz o painel Code
+  // ensinar um menu diferente do que o preview mostra.
+  'LONG_MENU_ITEMS',
+  'LONG_MENU_LABELS',
 ]);
 
 /**

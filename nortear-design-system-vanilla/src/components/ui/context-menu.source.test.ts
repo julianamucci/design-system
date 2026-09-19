@@ -30,7 +30,10 @@ describe('contextMenuSnippet', () => {
     expect(code).not.toContain("type: 'item'");
     expect(code).not.toContain('inset');
     expect(code).not.toContain('disabled');
+    // `radioValue` na RAIZ saiu com a D16: a escolha única virou um item
+    // `radio-group` com `options` e `value` dentro dele.
     expect(code).not.toContain('radioValue');
+    expect(code).not.toContain('options:');
   });
 
   it('monta a área com DOM curto, sem a sonda de teste', () => {
@@ -60,21 +63,48 @@ describe('contextMenuSnippet', () => {
 
   it('mostra as peças que a story exercita', () => {
     const code = contextMenuSnippet({
-      radioValue: 'grid',
       items: [
         { type: 'label', label: 'Visualização', inset: true },
         { type: 'checkbox', label: 'Colunas', value: 'colunas', indeterminate: true },
-        { type: 'radio', label: 'Grade', value: 'grid' },
+        {
+          type: 'radio-group',
+          value: 'grid',
+          options: [
+            { value: 'grid', label: 'Grade' },
+            { value: 'list', label: 'Lista' },
+          ],
+        },
         { label: 'Duplicar', value: 'off', disabled: true },
       ],
     });
-    expect(code).toContain("radioValue: 'grid'");
     expect(code).toContain("type: 'label'");
     expect(code).toContain("type: 'checkbox'");
-    expect(code).toContain("type: 'radio'");
     expect(code).toContain('indeterminate: true');
     expect(code).toContain('inset: true');
     expect(code).toContain('disabled: true');
+  });
+
+  it('a escolha única é um grupo com as opções dentro, e não itens soltos', () => {
+    // D16: a forma do `createMenubar` vence. O `radioValue` da raiz sumiu, e
+    // com ele a única forma que não dizia quais opções pertenciam ao grupo.
+    const code = contextMenuSnippet({
+      items: [
+        { type: 'label', label: 'Layout' },
+        {
+          type: 'radio-group',
+          value: 'grid',
+          options: [
+            { value: 'grid', label: 'Grade' },
+            { value: 'list', label: 'Lista' },
+          ],
+        },
+      ],
+    });
+    expect(code).toContain("type: 'radio-group'");
+    expect(code).toContain("value: 'grid'");
+    expect(code).toContain('    options: [');
+    expect(code).toContain("      { value: 'list', label: 'Lista' },");
+    expect(code).not.toContain('radioValue');
   });
 
   it('recua o submenu dentro da entrada que o abre', () => {

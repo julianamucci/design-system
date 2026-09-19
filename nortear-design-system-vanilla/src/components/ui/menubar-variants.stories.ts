@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
-import { embrulhar, waitForPanel } from './menubar.fixtures';
+import { embrulhar, triggersOf, waitForPanel } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith } from './menubar.source';
+import { resolveColor, ruleDeclaration } from '@shared/testing/cor';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -77,6 +78,50 @@ export const Default: Story = {
 
     await step('O item neutro herda a cor do painel, sem cor semântica', async () => {
       await expect(getComputedStyle(items[0]).color).toBe(getComputedStyle(panel).color);
+    });
+
+    await step('O PONTEIRO também destaca, no item e no gatilho da barra', async () => {
+      // §7 #16 do PRD: as outras quatro afirmam `userEvent.hover` →
+      // `[data-highlighted]`, escrito pela lib headless. Aqui não há lib — nem
+      // a fábrica do menubar escuta ponteiro —, e quem destaca é o `:hover`
+      // das duas folhas. Esta stack é a que DEPENDE da regra e era a única sem
+      // asserção sobre ela.
+      //
+      // A medida não é o fundo computado depois de um `hover`: a pseudo-classe
+      // só acende com ponteiro real, e o evento sintético deixa o fundo em
+      // repouso (medido no badge em 2026-09-14). Confere-se a DECLARAÇÃO da
+      // folha, resolvida no contexto do elemento — quem expande o `var` e
+      // compõe o alfa continua sendo o navegador.
+      //
+      // Os DOIS pesos entram porque eles não são o mesmo assunto (D4): o item
+      // está sobre o `--popover` de um painel flutuante e vai a 20%; o gatilho
+      // está sobre o `--background` da própria barra, que já se separa da
+      // página por borda e relevo, e vai a 10%. Unificar sem medir os dois é o
+      // que esta asserção existe para impedir.
+      const item = items[0];
+      const declaredItem = ruleDeclaration(
+        document,
+        (selector) => /\.nds-dropdown-menu-item:hover(\s*[,{]|$)/.test(selector),
+        'background-color',
+      );
+      await expect(declaredItem, 'a regra de :hover do item sumiu da folha').not.toBeNull();
+      await expect(resolveColor(item, declaredItem!)).toBe(
+        resolveColor(item, 'hsl(var(--accent) / 0.2)'),
+      );
+
+      const [trigger] = triggersOf(within(canvasElement).getByRole('menubar'));
+      const declaredTrigger = ruleDeclaration(
+        document,
+        (selector) => /\.nds-menubar-trigger:hover(\s*[,{]|$)/.test(selector),
+        'background-color',
+      );
+      await expect(
+        declaredTrigger,
+        'a regra de :hover do gatilho da barra sumiu da folha',
+      ).not.toBeNull();
+      await expect(resolveColor(trigger, declaredTrigger!)).toBe(
+        resolveColor(trigger, 'hsl(var(--accent) / 0.1)'),
+      );
     });
 
     await step('O painel é opaco', async () => {

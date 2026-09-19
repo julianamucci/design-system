@@ -40,6 +40,16 @@ type Story = StoryObj;
 const item = (value: string) =>
   document.querySelector<HTMLElement>(`[data-value="${value}"]`)!;
 
+/**
+ * As opções da escolha única, numa lista só: a prévia, o snippet e as asserções
+ * contam a partir DELA, nunca de um número escrito à mão no play.
+ */
+const LAYOUTS = [
+  { value: 'grid', label: 'Grade' },
+  { value: 'list', label: 'Lista' },
+  { value: 'columns', label: 'Colunas' },
+] as const;
+
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
@@ -143,7 +153,7 @@ export const WithCheckbox: Story = {
       await expect(group.contains(item('reguas'))).toBe(true);
     });
 
-    await step('Marcar alterna o estado anunciado e o indicador', async () => {
+    await step('Marcar alterna o estado anunciado e o indicador, e o menu segue aberto', async () => {
       // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
       // anterior deixou, e um valor esperado fixo inverteria o resultado.
       const antes = item('grade').getAttribute('aria-checked');
@@ -151,6 +161,11 @@ export const WithCheckbox: Story = {
       await userEvent.click(item('grade'));
       await waitFor(() => expect(item('grade').getAttribute('aria-checked')).toBe(esperado));
       await expect(!!item('grade').querySelector('svg')).toBe(esperado === 'true');
+      // C10: marcar NÃO fecha o menu. A contagem é de menus ABERTOS no
+      // documento, e não a presença do nó que `item()` devolve — um menu que
+      // fechasse levaria o painel embora, mas o nó solto continuaria
+      // respondendo por atributo, e a asserção acima passaria do mesmo jeito.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
     });
   },
 };
@@ -160,17 +175,20 @@ export const WithCheckbox: Story = {
 export const WithRadioGroup: Story = {
   parameters: {
     covers: ['functional.item8', 'accessibility.item5'],
-    // A escolha única mora em duas opções ao mesmo tempo — os itens `radio` e o
-    // `radioValue` que diz qual deles vale.
+    // A escolha única é UMA entrada — `type: 'radio-group'`, com as opções e o
+    // valor escolhido dentro dela (D16). Antes eram itens `radio` soltos mais
+    // um `radioValue` na raiz da fábrica, e nada no código dizia quais opções
+    // pertenciam ao grupo.
     docs: {
       source: {
         transform: contextMenuSourceWith({
-          radioValue: 'grid',
           items: [
             { type: 'label', label: 'Layout' },
-            { type: 'radio', label: 'Grade', value: 'grid' },
-            { type: 'radio', label: 'Lista', value: 'list' },
-            { type: 'radio', label: 'Colunas', value: 'columns' },
+            {
+              type: 'radio-group',
+              value: 'grid',
+              options: LAYOUTS.map((l) => ({ value: l.value, label: l.label })),
+            },
           ],
         }),
       },
@@ -179,12 +197,13 @@ export const WithRadioGroup: Story = {
   render: () =>
     createContextMenu({
       trigger: clickCreateArea('Clique com o botão direito aqui'),
-      radioValue: 'grid',
       items: [
         { type: 'label', label: 'Layout' },
-        { type: 'radio', label: 'Grade', value: 'grid' },
-        { type: 'radio', label: 'Lista', value: 'list' },
-        { type: 'radio', label: 'Colunas', value: 'columns' },
+        {
+          type: 'radio-group',
+          value: 'grid',
+          options: LAYOUTS.map((l) => ({ value: l.value, label: l.label })),
+        },
       ],
     }),
   play: async ({ canvasElement, step }) => {
@@ -199,14 +218,25 @@ export const WithRadioGroup: Story = {
     await step('O indicador é a peça de rádio, nomeada pelo data-slot', async () => {
       // O mesmo desenho do item de marcação (D8), mas outra peça: o que separa
       // os dois no markup é o `data-slot`, e é ele que se compara entre stacks.
-      for (const value of ['grid', 'list', 'columns']) {
+      for (const { value } of LAYOUTS) {
         await expect(
           item(value).querySelector('[data-slot="context-menu-radio-item-indicator"]'),
         ).not.toBeNull();
       }
     });
 
-    await step('Escolher uma opção limpa a anterior', async () => {
+    await step('O rótulo dá nome ao grupo da escolha única — um grupo só', async () => {
+      // D16: a escolha única é UM bloco, e o rótulo que vem antes dele É o nome
+      // desse bloco. Um segundo `role="group"` aninhado faria o leitor anunciar
+      // dois grupos para um bloco só.
+      const menu = menuOpen()!;
+      const group = within(menu).getByRole('group', { name: 'Layout' });
+      await expect(group.dataset.slot).toBe('context-menu-radio-group');
+      await expect(within(group).getAllByRole('menuitemradio')).toHaveLength(LAYOUTS.length);
+      await expect(within(menu).getAllByRole('group')).toHaveLength(1);
+    });
+
+    await step('Escolher uma opção limpa a anterior, e o menu segue aberto', async () => {
       // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
       // igual em qualquer rodada, não importa de onde parta.
       const partiuDeGrid = item('grid').getAttribute('aria-checked') === 'true';
@@ -215,6 +245,10 @@ export const WithRadioGroup: Story = {
       await userEvent.click(item(click));
       await waitFor(() => expect(item(click).getAttribute('aria-checked')).toBe('true'));
       await expect(item(other).getAttribute('aria-checked')).toBe('false');
+      // C10: escolher NÃO fecha o menu. A contagem é de menus ABERTOS no
+      // documento, e não a presença do nó que `item()` devolve — nó solto
+      // continua respondendo por atributo depois de o painel sair.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
     });
   },
 };
@@ -377,7 +411,6 @@ export const CompleteComposition: Story = {
     docs: {
       source: {
         transform: contextMenuSourceWith({
-          radioValue: 'grid',
           items: [
             { type: 'label', label: 'Ações' },
             { label: 'Editar', value: 'edit', shortcut: 'Ctrl+E' },
@@ -395,8 +428,14 @@ export const CompleteComposition: Story = {
             { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
             { type: 'separator' },
             { type: 'label', label: 'Layout' },
-            { type: 'radio', label: 'Grade', value: 'grid' },
-            { type: 'radio', label: 'Lista', value: 'list' },
+            {
+              type: 'radio-group',
+              value: 'grid',
+              options: [
+                { value: 'grid', label: 'Grade' },
+                { value: 'list', label: 'Lista' },
+              ],
+            },
             { type: 'separator' },
             { label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
           ],
@@ -407,7 +446,6 @@ export const CompleteComposition: Story = {
   render: () =>
     createContextMenu({
       trigger: clickCreateArea('Clique com o botão direito aqui'),
-      radioValue: 'grid',
       items: [
         { type: 'label', label: 'Ações' },
         { type: 'item', label: 'Editar', value: 'edit', shortcut: 'Ctrl+E', onClick: fn() },
@@ -425,8 +463,14 @@ export const CompleteComposition: Story = {
         { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
         { type: 'separator' },
         { type: 'label', label: 'Layout' },
-        { type: 'radio', label: 'Grade', value: 'grid' },
-        { type: 'radio', label: 'Lista', value: 'list' },
+        {
+          type: 'radio-group',
+          value: 'grid',
+          options: [
+            { value: 'grid', label: 'Grade' },
+            { value: 'list', label: 'Lista' },
+          ],
+        },
         { type: 'separator' },
         { type: 'item', label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
       ],

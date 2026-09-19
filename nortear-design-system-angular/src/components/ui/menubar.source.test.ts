@@ -9,8 +9,12 @@ import {
   menubarDestructiveSource,
   menubarEditorSource,
   menubarItemDisabledSource,
+  menubarLongMenuSource,
   menubarOpenSource,
+  LONG_MENU_ITEMS,
+  LONG_MENU_LABELS,
   menubarPlaygroundSource,
+  menubarSnippet,
   menubarTabAtPageEndSource,
   menubarTabLeavesMenubarSource,
   menubarWithCheckboxSource,
@@ -151,7 +155,7 @@ const STATES = './menubar-states.stories.ts';
 const COMPOSITIONS = './menubar-compositions.stories.ts';
 
 /**
- * Os dezesseis construtores e a story que cada um serve.
+ * Os dezessete construtores de STORY e a story que cada um serve.
  *
  * A lista existe para ser COBRADA nos DOIS sentidos: um caso a compara com o que
  * o módulo exporta, e outro com o que os quatro arquivos de story publicam no
@@ -160,8 +164,9 @@ const COMPOSITIONS = './menubar-compositions.stories.ts';
  * `source-snippets.test.ts` do Vue, onde 28 exports saíram do alcance e a suíte
  * seguiu verde medindo menos.
  *
- * NENHUMA das dezesseis fica sem construtor próprio, e não há exclusão a
- * declarar.
+ * NENHUMA das dezessete fica sem construtor próprio. A única exclusão é o
+ * `menubarSnippet`, que não serve a story nenhuma — declarada em `SEM_STORY`,
+ * com a premissa conferida em caso próprio.
  */
 const CONSTRUCTORS: Array<{
   name: string;
@@ -195,6 +200,7 @@ const CONSTRUCTORS: Array<{
   { name: 'menubarClosedSource', file: STATES, story: 'Closed', build: menubarClosedSource },
   { name: 'menubarOpenSource', file: STATES, story: 'Open', build: menubarOpenSource, bornOpen: true },
   { name: 'menubarItemDisabledSource', file: STATES, story: 'ItemDisabled', build: menubarItemDisabledSource },
+  { name: 'menubarLongMenuSource', file: STATES, story: 'LongMenu', build: menubarLongMenuSource },
   { name: 'menubarCheckboxCheckedSource', file: STATES, story: 'CheckboxChecked', build: menubarCheckboxCheckedSource },
   {
     name: 'menubarCheckboxIndeterminateSource',
@@ -216,13 +222,37 @@ const CONSTRUCTORS: Array<{
   { name: 'menubarEditorSource', file: COMPOSITIONS, story: 'EditorCompleto', build: menubarEditorSource },
 ];
 
+/**
+ * Construtores que NÃO servem a uma story — a exclusão, declarada e com
+ * premissa conferida logo abaixo.
+ *
+ * `menubarSnippet` monta a barra a partir de uma LISTA DE MENUS, e quem o chama
+ * é a docs page: cada ficha de Variantes imprime a prévia viva e o código a
+ * partir da mesma lista. Não há story para ele porque o assunto dele é o dado,
+ * não uma cena. Antes de 2026-09-18 ele morava dentro de `MenubarDocs.ts`, onde
+ * nada podia importá-lo e nada o testava (inconsistência 22 da §7 do PRD).
+ */
+const SEM_STORY = ['menubarSnippet'];
+
 describe('cobertura das quatro stories', () => {
   it('todo construtor exportado pelo módulo entra na varredura', () => {
     const exported = Object.entries(menubarSourceModule)
       .filter(([, value]) => typeof value === 'function')
       .map(([name]) => name)
       .sort();
-    expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
+    expect(exported).toEqual([...CONSTRUCTORS.map((c) => c.name), ...SEM_STORY].sort());
+  });
+
+  it('a exceção declarada não é usada por story nenhuma', () => {
+    // A premissa da exclusão: se um dia uma story passar a publicar
+    // `menubarSnippet` no painel, ela precisa entrar na tabela como as outras —
+    // e é aqui que isso reprova, em vez de o construtor sair da varredura em
+    // silêncio.
+    const usadas = new Set<string>();
+    for (const source of Object.values(storySources)) {
+      for (const transform of transformsByStory(source).values()) usadas.add(transform);
+    }
+    for (const name of SEM_STORY) expect(usadas.has(name), `${name} virou transform de story`).toBe(false);
   });
 
   it('os quatro arquivos de story chegaram à varredura', () => {
@@ -495,5 +525,136 @@ describe('composições', () => {
     }
     expect(code).toContain('<div ndsMenubarLabel>Documento</div>');
     expect(code.indexOf('variant="destructive"')).toBeGreaterThan(code.indexOf('<div ndsMenubarSeparator></div>'));
+  });
+});
+
+// ─── Menu longo ───────────────────────────────────────────────────────────────
+
+describe('menubarLongMenuSource', () => {
+  it('escreve os itens à mão — o laço da story não é lição de ninguém', () => {
+    const code = menubarLongMenuSource();
+    expect(code).not.toContain('@for');
+    expect(code.match(/<div ndsMenubarItem>/g)).toHaveLength(LONG_MENU_ITEMS);
+    // A MESMA lista que a story renderiza: uma cópia aqui faria o painel Code
+    // ensinar um menu diferente do que o preview ao lado mostra.
+    for (const label of [LONG_MENU_LABELS[0]!, LONG_MENU_LABELS[LONG_MENU_ITEMS - 1]!]) {
+      expect(code).toContain(`<div ndsMenubarItem>${label}</div>`);
+    }
+  });
+
+  it('não ensina nada sobre rolagem — quem recorta é a folha', () => {
+    // A lição do exemplo é que NÃO HÁ o que escrever: `max-height` e
+    // `overflow-y` saem de `.nds-dropdown-menu-content`, e o teclado alcança o
+    // item que rolou para fora porque o foco é itinerante (D17 do PRD).
+    const code = menubarLongMenuSource();
+    expect(code).not.toContain('max-height');
+    expect(code).not.toContain('overflow');
+    expect(code).not.toContain('style=');
+    expect(code).not.toContain('tabindex');
+  });
+});
+
+// ─── A barra como DADO ────────────────────────────────────────────────────────
+
+/**
+ * `menubarSnippet` é o construtor das fichas de Variantes da docs page: a mesma
+ * lista de menus monta a barra VIVA e imprime o código ao lado.
+ *
+ * Ele não tem story (exceção declarada em `SEM_STORY`, com a premissa conferida
+ * lá em cima), e até 2026-09-18 não tinha teste NENHUM — morava dentro de
+ * `MenubarDocs.ts`, onde nada podia importá-lo.
+ */
+describe('menubarSnippet — a barra como lista de menus', () => {
+  it('sem argumento nenhum devolve a barra canônica, e não uma string vazia', () => {
+    const code = menubarSnippet();
+    expect(code).toContain('<nds-menubar>');
+    expect(code).toContain('<button ndsMenubarTrigger>Arquivo</button>');
+    expect(code).toContain('<button ndsMenubarTrigger>Editar</button>');
+    expect(code.match(/<nds-menubar-menu>/g)).toHaveLength(2);
+  });
+
+  it('o rótulo sai EXATAMENTE como chega — o construtor não traduz nada', () => {
+    const code = menubarSnippet([
+      { trigger: 'Ajuda', entries: [{ kind: 'item', label: 'Documentação' }] },
+    ]);
+    expect(code).toContain('<button ndsMenubarTrigger>Ajuda</button>');
+    expect(code).toContain('<div ndsMenubarItem>Documentação</div>');
+  });
+
+  it('o atalho vai DENTRO do item, na mesma linha, e sem aria-hidden', () => {
+    const code = menubarSnippet([
+      { trigger: 'Editar', entries: [{ kind: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' }] },
+    ]);
+    expect(code).not.toContain('aria-hidden');
+    expect(code).toContain('<div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl+Z</span></div>');
+  });
+
+  it('o grupo de escolha única dispensa rótulo, e sem ele não sobra linha vazia', () => {
+    // O `label` é opcional aqui, e era a única forma do construtor que uma
+    // ausência podia quebrar: um `<div ndsMenubarLabel></div>` vazio.
+    const code = menubarSnippet([
+      {
+        trigger: 'Tema',
+        entries: [
+          {
+            kind: 'radio-group',
+            value: 'dark',
+            options: [
+              { label: 'Claro', value: 'light' },
+              { label: 'Escuro', value: 'dark' },
+            ],
+          },
+        ],
+      },
+    ]);
+    expect(code).toContain('<div ndsMenubarRadioGroup value="dark">');
+    expect(code).not.toContain('ndsMenubarLabel');
+    expect(code).toContain('<div ndsMenubarRadioItem value="light">Claro</div>');
+  });
+
+  it('o submenu ANINHADO desce mais um nível, e é o único que o faz', () => {
+    const code = menubarSnippet([
+      {
+        trigger: 'Arquivo',
+        entries: [
+          {
+            kind: 'sub',
+            label: 'Exportar',
+            entries: [
+              { kind: 'item', label: 'PDF' },
+              { kind: 'sub', label: 'Imagem', entries: [{ kind: 'item', label: 'PNG' }] },
+            ],
+          },
+        ],
+      },
+    ]);
+    expect(code.match(/<nds-menubar-sub>/g)).toHaveLength(2);
+    expect(code).toContain('<div ndsMenubarSubTrigger>Exportar</div>');
+    expect(code).toContain('<div ndsMenubarSubTrigger>Imagem</div>');
+    // O item do segundo nível é mais fundo que o do primeiro — é o recuo que
+    // diz a quem lê onde cada um mora.
+    expect(code.indexOf('<div ndsMenubarItem>PNG</div>')).toBeGreaterThan(
+      code.indexOf('<div ndsMenubarItem>PDF</div>'),
+    );
+    expect(/\n( +)<div ndsMenubarItem>PNG<\/div>/.exec(code)![1]!.length).toBeGreaterThan(
+      /\n( +)<div ndsMenubarItem>PDF<\/div>/.exec(code)![1]!.length,
+    );
+  });
+
+  it('a instrumentação da docs page NÃO entra no que se copia', () => {
+    const code = menubarSnippet([
+      {
+        trigger: 'Exibir',
+        entries: [
+          { kind: 'item', label: 'Zoom' },
+          { kind: 'checkbox', label: 'Régua', checked: true },
+        ],
+      },
+    ]);
+    expect(code).toContain('<div ndsMenubarCheckboxItem [checked]="true">Régua</div>');
+    expect(code).not.toContain('(onSelect)');
+    expect(code).not.toContain('(onOpenChange)');
+    expect(code).not.toContain('(checkedChange)');
+    expect(code).not.toContain('data-track');
   });
 });

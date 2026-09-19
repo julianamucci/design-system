@@ -2,14 +2,17 @@ import { describe, expect, it } from 'vitest';
 import {
   menubarOpenSource,
   menubarCheckboxCheckedSource,
-  menubarCheckboxMistoSource,
+  menubarCheckboxIndeterminateSource,
   menubarWithShortcutsSource,
   menubarWithCheckboxSource,
   menubarWithRadioSource,
   menubarWithSubmenuSource,
-  menubarEditorCompletoSource,
+  menubarEditorSource,
+  menubarControlledSource,
+  menubarLongMenuSource,
+  LONG_MENU_ITEMS,
   menubarClosedSource,
-  menubarItemBloqueadoSource,
+  menubarItemDisabledSource,
   menubarItemDefaultSource,
   menubarItemDestructiveSource,
   menubarSnippet,
@@ -144,7 +147,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o bloqueio mora no item, e é `:disabled` — nunca no menu inteiro', () => {
-    const output = menubarItemBloqueadoSource();
+    const output = menubarItemDisabledSource();
     expect(output).toContain(':disabled="i.disabled"');
     expect(output).toContain(`{ label: 'Enviar para revisão', disabled: true }`);
     expect(output).not.toContain('<Menubar :disabled');
@@ -161,7 +164,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o misto é um terceiro valor, escrito como string literal', () => {
-    const output = menubarCheckboxMistoSource();
+    const output = menubarCheckboxIndeterminateSource();
     expect(output).toContain('<MenubarCheckboxItem checked="indeterminate">Colunas');
     // Os três estados no mesmo painel: sem os vizinhos não se vê que o misto é
     // outro valor, e não um marcado esquisito.
@@ -203,7 +206,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a barra completa junta grupo, separador, atalho e alternador', () => {
-    const output = menubarEditorCompletoSource();
+    const output = menubarEditorSource();
     for (const menu of ['file', 'edit', 'view', 'help']) {
       expect(output).toContain(`<MenubarMenu value="${menu}">`);
     }
@@ -212,6 +215,43 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('<MenubarCheckboxItem :checked="true">Régua</MenubarCheckboxItem>');
     // A barra nasce fechada: nenhum dos quatro menus abre na montagem.
     expect(output).toContain('<Menubar>');
+  });
+
+  /**
+   * §7 #22 do PRD: este export estava fora do teste do próprio slug. A varredura
+   * transversal (`source-snippets.test.ts`) o alcançava — ela cobra o que vale
+   * para o repositório inteiro —, mas nada afirmava o que ESTE snippet ensina, e
+   * é ele que a docs page mostra no card de extensibilidade.
+   *
+   * O que o caso mede é o assunto do trecho: o estado mora FORA e manda na
+   * barra, e o `v-model` é o caminho de volta. Sem ele o menu abriria pelo botão
+   * e nunca mais fecharia, nem por Escape — armadilha de teclado (WCAG 2.1.2), e
+   * um exemplo que a ensinasse a ensinaria a quem copia.
+   */
+  it('no controlado o estado mora fora, e o `v-model` garante o caminho de volta', () => {
+    const output = menubarControlledSource();
+    expect(output).toContain(`import { ref } from 'vue'`);
+    expect(output).toContain(`const openMenu = ref('')`);
+    expect(output).toContain('<Menubar v-model="openMenu">');
+    // O botão externo é o assunto: é ele que mostra o estado de fora comandando.
+    expect(output).toContain(`@click="openMenu = 'file'"`);
+    // Um `:model-value` sem o `update` seria o mão-única que trava o teclado.
+    expect(output).not.toContain(':model-value=');
+  });
+
+  /**
+   * D17 — o menu que não cabe na tela. A lição do trecho é a AUSÊNCIA: nada no
+   * markup pede rolagem, porque o recorte e o `overflow` saem da folha. Um
+   * snippet que ensinasse `style="max-height: …"` ali seria justamente o valor
+   * de design cravado que a folha existe para carregar.
+   */
+  it('o menu longo não ensina rolagem nenhuma no markup', () => {
+    const output = menubarLongMenuSource();
+    // A lista é gerada, e o número é o MESMO que a story renderiza.
+    expect(output).toContain(`{ length: ${LONG_MENU_ITEMS} }`);
+    expect(output).toContain('<MenubarItem v-for="a in acoes" :key="a">{{ a }}</MenubarItem>');
+    expect(output).not.toContain('max-height');
+    expect(output).not.toContain('overflow');
   });
 });
 
@@ -222,14 +262,16 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     menubarItemDestructiveSource,
     menubarClosedSource,
     menubarOpenSource,
-    menubarItemBloqueadoSource,
+    menubarItemDisabledSource,
     menubarCheckboxCheckedSource,
-    menubarCheckboxMistoSource,
+    menubarCheckboxIndeterminateSource,
     menubarWithShortcutsSource,
     menubarWithSubmenuSource,
     menubarWithCheckboxSource,
     menubarWithRadioSource,
-    menubarEditorCompletoSource,
+    menubarEditorSource,
+    menubarControlledSource,
+    menubarLongMenuSource,
   ];
 
   it('nenhuma traz a moldura de contenção que existe só para a foto do Chromatic', () => {

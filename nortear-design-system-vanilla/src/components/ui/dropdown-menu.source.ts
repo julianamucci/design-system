@@ -20,8 +20,9 @@ import type { DropdownMenuAlign, DropdownMenuSide } from './dropdown-menu';
  */
 export type DropdownMenuSnippetItem = {
   /** `item` é o padrão da fábrica e não entra no snippet. */
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
   label?: string;
+  /** Em `radio-group`, o valor escolhido; nos demais, o valor do item. */
   value?: string;
   /** Ênfase. `default` é o padrão e não entra no snippet. */
   variant?: 'default' | 'destructive';
@@ -30,8 +31,9 @@ export type DropdownMenuSnippetItem = {
   inset?: boolean;
   checked?: boolean;
   indeterminate?: boolean;
-  group?: string;
   disabled?: boolean;
+  /** Opções da escolha única — o que `type: 'radio-group'` exige (D16). */
+  options?: Array<{ value: string; label: string; disabled?: boolean }>;
   /** Itens do submenu — o que `type: 'submenu'` exige para abrir alguma coisa. */
   items?: DropdownMenuSnippetItem[];
 };
@@ -63,18 +65,32 @@ const ITEMS_DEFAULT: DropdownMenuSnippetItem[] = [
   { label: 'Sair', value: 'logout' },
 ];
 
+/** Uma opção da escolha única, na forma que `type: 'radio-group'` recebe. */
+function radioOption(o: { value: string; label: string; disabled?: boolean }): string {
+  const pairs = options([
+    ['value', text(o.value)],
+    ['label', text(o.label)],
+    ['disabled', o.disabled ? 'true' : undefined],
+  ])
+    .map((line) => line.replace(/,$/, ''))
+    .join(', ');
+  return `{ ${pairs} }`;
+}
+
 function item(i: DropdownMenuSnippetItem): string {
   const pairs = options([
     ['type', i.type && i.type !== 'item' ? text(i.type) : undefined],
     ['label', i.label !== undefined ? text(i.label) : undefined],
     ['value', i.value !== undefined ? text(i.value) : undefined],
-    ['group', i.group !== undefined ? text(i.group) : undefined],
     ['variant', i.variant && i.variant !== 'default' ? text(i.variant) : undefined],
     ['shortcut', i.shortcut !== undefined ? text(i.shortcut) : undefined],
     ['inset', i.inset ? 'true' : undefined],
     ['checked', i.checked !== undefined ? String(i.checked) : undefined],
     ['indeterminate', i.indeterminate ? 'true' : undefined],
     ['disabled', i.disabled ? 'true' : undefined],
+    // As opções da escolha única são DADO do grupo, como a lista do submenu é
+    // dado do item que o abre — as duas entram aninhadas na mesma entrada.
+    ['options', i.options ? `[${i.options.map(radioOption).join(', ')}]` : undefined],
     // A lista do filho é DADO, como a do pai: o mesmo `item()` a escreve, e é
     // por isso que o submenu não ganha uma forma própria no snippet.
     ['items', i.items ? `[${i.items.map(item).join(', ')}]` : undefined],

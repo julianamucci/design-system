@@ -148,6 +148,137 @@ export const Open: Story = {
   },
 };
 
+// ─── LongMenu ─────────────────────────────────────────────────────────────────
+//
+// O painel de menu ROLA (D17), e esta story é a prova disso nesta stack.
+//
+// O que mudou: `dropdown-menu.css` passou a fechar a cadeia de `max-height` com
+// um literal de `24rem`. O vanilla não publica `--available-height` nenhuma — o
+// `positionFloating` não a escreve —, então até 2026-09-18 a cadeia inteira caía
+// em `none` e o painel de menu desta stack NUNCA recortava na viewport: um menu
+// longo transbordava a tela, com parte dele inalcançável por qualquer meio.
+//
+// E `menubar.css` perdeu, na mesma data, a regra
+// `.nds-menubar-panel.nds-dropdown-menu-content { overflow: visible }`, que era
+// só desta stack. Ela existia para hospedar o painel de submenu ANINHADO, e o
+// submenu vai a portal desde 2026-09-07 — a regra ficava por uma hipótese que o
+// próprio comentário declarava como não medida.
+
+/** Itens suficientes para o painel passar dos 24rem e precisar rolar. */
+const LONG_MENU = Array.from({ length: 40 }, (_, i) => ({ label: `Ação ${i + 1}` }));
+
+export const LongMenu: Story = {
+  parameters: {
+    /**
+     * EXCEÇÃO DE AXE DECLARADA — `scrollable-region-focusable`, com premissa.
+     *
+     * **MEDIDA em 2026-09-18, e ela NÃO é inerte nesta stack** — a pergunta é
+     * obrigatória, porque no react a exceção equivalente É inerte e foi
+     * recusada lá. Retirando esta linha e rodando só esta story, o axe reprova
+     * nomeando o painel:
+     *
+     *     Expected the HTML found at $('#menubar-panel-1-0') to have no
+     *     violations: "Scrollable region must have keyboard access
+     *     (scrollable-region-focusable)"
+     *
+     * O que separa as duas stacks é ONDE mora o `tabindex="0"`. A regra procura
+     * um descendente TABULÁVEL dentro da região rolável:
+     *
+     *   • nas stacks de lib, o foco itinerante do livro marca o item DESTACADO
+     *     com `tabindex="0"`, e ele fica dentro do painel — a regra passa
+     *     sozinha, e excetuá-la lá desligaria um portão que já estava verde;
+     *   • aqui, TODO item do painel é `tabindex="-1"` permanente
+     *     (`menubar.ts`, `applyComuns`), e o `tabIndex` itinerante desta
+     *     fábrica rove entre os GATILHOS DA BARRA, que ficam FORA do painel.
+     *     O painel rolável fica, então, sem nenhum descendente tabulável.
+     *
+     * O menu continua acessível por teclado — a seta move o foco por código e
+     * traz o item à vista —; o que a ferramenta não enxerga é foco movido para
+     * um elemento não-tabulável. A PREMISSA da exceção é exatamente essa, e ela
+     * não fica como promessa: vira o passo "A seta traz o item focado para
+     * dentro da caixa visível" abaixo, cujos dentes foram provados plantando
+     * `focus({ preventScroll: true })` na fábrica (reprovou com `expected 0 to
+     * be greater than 0`). É o oposto de `a11y.test: 'todo'`, que desligaria a
+     * medição inteira e não cobraria nada.
+     *
+     * `target-size` entra JUNTO, e ligado, de propósito: a lista de regras de
+     * uma story SUBSTITUI a do `preview.ts` em vez de somar-se a ela, e sem
+     * esta linha a exceção desligaria de carona a regra 2.5.8 que o projeto
+     * liga globalmente — um segundo portão apagado em silêncio por um
+     * `enabled: false` que falava de outra coisa.
+     */
+    a11y: {
+      config: {
+        rules: [
+          { id: 'target-size', enabled: true },
+          { id: 'scrollable-region-focusable', enabled: false },
+        ],
+      },
+    },
+    docs: {
+      source: {
+        transform: menubarSourceWith({
+          menus: [{ label: 'Ações', items: LONG_MENU }],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
+  render: () =>
+    embrulhar(createMenubar([{ label: 'Ações', items: LONG_MENU }], { defaultOpen: 0 }), '460px'),
+  play: async ({ canvasElement, step }) => {
+    const panel = await waitFor(() => {
+      const p = panelOpen(canvasElement);
+      if (!p) throw new Error('painel não abriu');
+      return p;
+    });
+    const items = within(panel).getAllByRole('menuitem');
+
+    await step('O painel RECORTA na viewport e rola, em vez de transbordar', async () => {
+      await expect(items).toHaveLength(LONG_MENU.length);
+      // `auto`, e não `visible`: a regra que devolvia `overflow: visible` ao
+      // painel de topo do menubar saiu, e sem ela vale o `overflow-y: auto` da
+      // folha do dropdown, que veste os três membros.
+      await expect(getComputedStyle(panel).overflowY).toBe('auto');
+      // A caixa é menor que o conteúdo — é isso que "rola" quer dizer. Com a
+      // cadeia de `max-height` caindo em `none`, as duas medidas seriam iguais.
+      await expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight);
+    });
+
+    await step('A seta traz o item focado para DENTRO da caixa visível', async () => {
+      // A premissa da exceção de axe declarada acima, como asserção. O foco
+      // parte do primeiro item — é onde a abertura o deixa — e `End` vai à
+      // última ponta, que só existe abaixo da dobra do painel.
+      items[0].focus();
+      await expect(panel.scrollTop).toBe(0);
+
+      await userEvent.keyboard('{End}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[items.length - 1]);
+      });
+      // O painel ROLOU atrás do foco: sem isso o item focado ficaria fora da
+      // caixa, e aí a regra do axe estaria certa e a exceção, errada.
+      await expect(panel.scrollTop).toBeGreaterThan(0);
+
+      const box = panel.getBoundingClientRect();
+      const focused = (document.activeElement as HTMLElement).getBoundingClientRect();
+      // Um pixel de folga: as medidas são fracionárias.
+      await expect(focused.top).toBeGreaterThanOrEqual(box.top - 1);
+      await expect(focused.bottom).toBeLessThanOrEqual(box.bottom + 1);
+
+      // E a volta vale igual: `Home` traz o primeiro item de volta à vista.
+      await userEvent.keyboard('{Home}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0]);
+      });
+      const first = items[0].getBoundingClientRect();
+      const boxAfter = panel.getBoundingClientRect();
+      await expect(first.top).toBeGreaterThanOrEqual(boxAfter.top - 1);
+      await expect(first.bottom).toBeLessThanOrEqual(boxAfter.bottom + 1);
+    });
+  },
+};
+
 // ─── ItemDisabled ─────────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {

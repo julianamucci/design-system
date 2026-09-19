@@ -128,9 +128,10 @@ export type MenubarItem = {
  * Por onde um menu da barra fechou — o vocabulário da família, o mesmo
  * `reason` do `menubar_close`, do `dropdown_menu_close` e do
  * `context_menu_close`. `escape` é a tecla; `overlay` é sair SEM decidir —
- * clique fora, Tab levando o foco embora, clique no gatilho aberto ou passagem
- * ao menu vizinho (seta lateral ou clique noutro gatilho); `api` é o fechamento
- * pedido pelo produto — um item de ação escolhido.
+ * clique fora, Tab levando o foco embora, clique OU Enter/Espaço no gatilho do
+ * menu já aberto (D18), ou passagem ao menu vizinho (seta lateral ou clique
+ * noutro gatilho); `api` é o fechamento pedido pelo produto — um item de ação
+ * escolhido.
  *
  * A barra saindo da página com o menu aberto NÃO é fechamento e não avisa
  * nada: quem desmonta sabe que desmontou, e um `menubar_close` ali seria um
@@ -240,7 +241,13 @@ function createIndicador(icon: SVGSVGElement | null, slot: string): HTMLSpanElem
 
 function applyComuns(el: HTMLElement, item: MenubarItem): void {
   if (item.inset) el.setAttribute('data-inset', '');
-  if (item.disabled) el.setAttribute('aria-disabled', 'true');
+  // Os DOIS marcadores, como o `createContextMenu` já fazia: `aria-disabled` é o
+  // que anuncia, `data-disabled` é o que a folha lê — e as três fábricas de menu
+  // desta stack não podem marcar o mesmo estado de jeitos diferentes.
+  if (item.disabled) {
+    el.setAttribute('aria-disabled', 'true');
+    el.setAttribute('data-disabled', '');
+  }
   el.setAttribute('tabindex', '-1');
 }
 
@@ -335,6 +342,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     // A próxima abertura não herda letras desta.
     typeahead.reset();
     closing.panel.hidden = true;
+    closing.panel.dataset.state = 'closed';
     closing.trigger.dataset.state = 'closed';
     closing.trigger.setAttribute('aria-expanded', 'false');
     isOpen = null;
@@ -385,6 +393,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     // Passar ao vizinho com a barra aberta é sair deste menu sem decidir.
     closeAll('overlay');
     target.panel.hidden = false;
+    target.panel.dataset.state = 'open';
     target.trigger.dataset.state = 'open';
     target.trigger.setAttribute('aria-expanded', 'true');
     isOpen = target;
@@ -432,6 +441,14 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     panel.dataset.side = options.submenu ? 'right' : side;
     panel.dataset.align = options.submenu ? 'start' : align;
     panel.setAttribute('role', 'menu');
+    // A ENTRADA do painel anima sob `[data-open]`/`[data-state="open"]`
+    // (`dropdown-menu.css`), e esta fábrica não escrevia nenhum dos dois. O
+    // painel de SUBMENU é criado a cada abertura e removido ao fechar, então
+    // ele nasce `open` e é a inserção do nó que dispara o keyframe; o de TOPO
+    // vive escondido entre uma abertura e outra, então ele nasce `closed` e
+    // `openMenu`/`hideOpenMenu` trocam o valor — é a TROCA que faz o navegador
+    // reiniciar a animação, e um `open` cravado na construção nunca animaria.
+    panel.dataset.state = options.submenu ? 'open' : 'closed';
     if (!options.submenu) panel.hidden = true;
 
     const focaveis: HTMLElement[] = [];
@@ -796,7 +813,22 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     });
 
     trigger.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        // D18: com o menu JÁ aberto, a tecla FECHA — o mesmo gesto do clique no
+        // gatilho aberto, e o mesmo motivo: a pessoa saiu sem decidir. Até
+        // 2026-09-18 esta tecla chamava `openMenu`, que sai cedo com o menu
+        // aberto (`isOpen?.trigger === target.trigger`): o menu não fechava e
+        // ninguém era avisado, e react, vue e angular já fechavam com
+        // `overlay`. O foco fica onde está, no próprio gatilho, que segue sendo
+        // a parada itinerante da barra.
+        if (isOpen?.trigger === trigger) {
+          closeAll('overlay');
+          moveTabStop(trigger);
+          return;
+        }
+        openMenu(index, 'item');
+      } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         openMenu(index, 'item');
       } else if (e.key === 'Escape') {

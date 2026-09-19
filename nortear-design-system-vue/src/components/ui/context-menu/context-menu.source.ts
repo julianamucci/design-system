@@ -326,7 +326,7 @@ export function contextMenuItemDisabledSource(): string {
  * Ele empurra só a borda esquerda — a caixa continua encostada à direita, senão
  * o menu ganharia um degrau.
  */
-export function contextMenuItemRecuadoSource(): string {
+export function contextMenuItemInsetSource(): string {
   return contextMenuSnippet({
     entries: [
       {
@@ -371,7 +371,7 @@ export function contextMenuItemDestructiveSource(): string {
  * tela anuncia sem dizer a que se aplica. Escrito à mão, e não pela lista de
  * entradas, porque os três estados são prop estática, não `v-model`.
  */
-export function contextMenuMarkupMistaSource(): string {
+export function contextMenuCheckboxIndeterminateSource(): string {
   return vueSnippet(
     importing([
       'ContextMenu',
@@ -396,7 +396,7 @@ export function contextMenuMarkupMistaSource(): string {
  * A troca de tema é global (classe no documento) e não muda uma linha do menu —
  * é exatamente isso que a story mostra.
  */
-export function contextMenuPaletteDarkSource(): string {
+export function contextMenuDarkPaletteSource(): string {
   return contextMenuSnippet({
     entries: [
       { kind: 'item', label: 'Editar' },
@@ -425,7 +425,7 @@ export function contextMenuWithShortcutsSource(): string {
  * `v-model:checked` é o par completo — a prop entra e o evento volta. Ligar só
  * `:checked` deixaria o item preso ao valor inicial.
  */
-export function contextMenuWithMarkupSource(): string {
+export function contextMenuWithCheckboxSource(): string {
   return contextMenuSnippet({
     entries: [
       {
@@ -445,7 +445,7 @@ export function contextMenuWithMarkupSource(): string {
  *
  * UM grupo só: o de rádio, nomeado pelo rótulo que mora dentro dele.
  */
-export function contextMenuWithChoiceUnicaSource(): string {
+export function contextMenuWithRadioGroupSource(): string {
   return contextMenuSnippet({
     entries: [
       {

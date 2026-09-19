@@ -16,7 +16,7 @@ import {
   dropdownMenuControlledSource,
   dropdownMenuClosedSource,
   dropdownMenuItemDisabledSource,
-  dropdownMenuMarkupMistaSource,
+  dropdownMenuCheckboxIndeterminateSource,
 } from './dropdown-menu.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -294,7 +294,7 @@ export const CheckboxIndeterminate: Story = {
     covers: ['functional.item8'],
     // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
     // outra prop.
-    docs: { source: { transform: dropdownMenuMarkupMistaSource } },
+    docs: { source: { transform: dropdownMenuCheckboxIndeterminateSource } },
   },
   render: () => ({
     components: componentes,

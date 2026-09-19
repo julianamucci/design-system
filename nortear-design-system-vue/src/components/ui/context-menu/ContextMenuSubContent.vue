@@ -46,7 +46,32 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<ContextMenuSubContentProps & { class?: HTMLAttributes['class'] }>()
+/**
+ * O VÃO do subpainel — D15 do PRD do DropdownMenu, que é o da FAMÍLIA, decisão
+ * da dona em 2026-09-18.
+ *
+ * `sideOffset: 0` encosta o subpainel no painel pai, e o `alignOffset` entrega
+ * o desenho que a D15 decide: o PRIMEIRO ITEM do submenu alinha com o
+ * SUB-GATILHO que o abriu, em vez de alinhar com a borda da caixa. O painel
+ * RAIZ deste membro é o caso oposto — ele nasce no PONTEIRO, e por isso vai a
+ * `0`/`0`.
+ *
+ * **O número do `alignOffset` aqui é `0`, e não o `-4` da D15** — as três peças
+ * de submenu desta stack saem do mesmo `MenuSubContent` da reka, e nela o `-4`
+ * desfaz o alinhamento em vez de produzi-lo. A medição, o porquê e o que a
+ * story afirma estão por extenso em `dropdown-menu/DropdownMenuSubContent.vue`,
+ * onde foram feitos; repetir o quadro aqui é a terceira cópia que diverge.
+ *
+ * Até esta data esta peça não declarava nada e herdava o padrão da lib, nunca
+ * medido.
+ */
+const props = withDefaults(
+  defineProps<ContextMenuSubContentProps & { class?: HTMLAttributes['class'] }>(),
+  {
+    sideOffset: 0,
+    alignOffset: 0,
+  },
+)
 const emits = defineEmits<ContextMenuSubContentEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class')

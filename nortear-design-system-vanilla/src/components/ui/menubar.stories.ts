@@ -11,6 +11,7 @@ import { menubarSource } from './menubar.source';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { pressTab } from '@/lib/press-tab';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
 import { createButton } from './button';
 import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 
@@ -214,6 +215,23 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
     });
 
+    await step('E o painel ENTRA animado, como nas outras quatro stacks', async () => {
+      // A folha compartilhada anima a entrada sob `[data-open]` /
+      // `[data-state="open"]` (D5), e esta fábrica não escrevia nenhum dos
+      // dois no PAINEL — só no gatilho. O painel de topo daqui é o caso
+      // especial da família: ele não é remontado a cada abertura, vive
+      // escondido entre uma e outra, então o valor TROCA (`closed` → `open`) e
+      // é a troca que reinicia o keyframe.
+      const panel = panelOpen(canvasElement)!;
+      await expect(panel.dataset.state).toBe('open');
+      // Sob movimento reduzido a camada de token zera a escada inteira e a
+      // guarda da folha desliga esta animação — ali o esperado é `none`.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      await expect(getComputedStyle(panel).animationName).toBe(
+        reduced ? 'none' : 'nds-menu-in',
+      );
+    });
+
     await step('E o painel está ANCORADO no lado que publicou', async () => {
       // O painel de TOPO desta stack é o caso especial da família: ele não vai a
       // portal, fica aninhado no wrapper do gatilho e a posição sai da folha —
@@ -225,6 +243,10 @@ export const Playground: Story = {
       // invólucro tem o que medir.
       const panel = panelOpen(canvasElement)!;
       await waitForAncorado(panel);
+      // A entrada anima `translateY`, e ele entra no `getBoundingClientRect`:
+      // sem esperar o fim, a folga medida foi 4,9 contra os 8 que a folha
+      // declara — o quadro do meio da animação, não a posição de repouso.
+      await waitForAnimationsDone(panel);
       expectOndeDiz(file, panel, 8);
     });
 
@@ -336,6 +358,45 @@ export const Playground: Story = {
       });
 
       await userEvent.click(file);
+      await waitFor(async () => {
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
+        await expect(panelOpen(canvasElement)).toBeNull();
+      });
+      await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
+    });
+
+    await step('Enter e Espaço no gatilho de um menu JÁ ABERTO fecham, com overlay', async () => {
+      // D18, decisão da dona sobre medição: o gesto é o mesmo que fecha um menu
+      // aberto em qualquer sistema operacional, e react, vue e angular já o
+      // cumpriam. Aqui a tecla chamava `openMenu`, que sai cedo com o menu já
+      // aberto — o menu não fechava e ninguém era avisado.
+      //
+      // A precondição é CONFERIDA antes da tecla, e não suposta: sem o foco no
+      // gatilho a tecla nem chega a ele, e a asserção mediria outro caminho.
+      if (file.getAttribute('aria-expanded') !== 'true') await userEvent.click(file);
+      file.focus();
+      await waitFor(async () => {
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
+        await expect(document.activeElement).toBe(file);
+      });
+
+      await userEvent.keyboard('{Enter}');
+      await waitFor(async () => {
+        await expect(file.getAttribute('aria-expanded')).toBe('false');
+        await expect(panelOpen(canvasElement)).toBeNull();
+      });
+      // Sair sem decidir — o mesmo motivo do clique no gatilho aberto.
+      await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
+
+      // E o Espaço faz o mesmo. O contrato diz "Enter/Espaço", e afirmar só um
+      // conta meia verdade como verdade inteira. O primeiro Espaço reabre — o
+      // foco continua no gatilho —, e o segundo fecha.
+      await userEvent.keyboard(' ');
+      await waitFor(async () => {
+        await expect(file.getAttribute('aria-expanded')).toBe('true');
+      });
+      file.focus();
+      await userEvent.keyboard(' ');
       await waitFor(async () => {
         await expect(file.getAttribute('aria-expanded')).toBe('false');
         await expect(panelOpen(canvasElement)).toBeNull();
@@ -457,13 +518,19 @@ export const TabLeavesMenubar: Story = {
       await expect(document.activeElement).toBe(after);
     });
 
-    await step('Tab dentro do submenu fecha a barra INTEIRA e sai dela', async () => {
+    /** Abre o menu, entra no submenu e devolve o painel filho já com o foco. */
+    const openSubmenuWithItemFocused = async (): Promise<HTMLElement> => {
       const panel = await openWithItemFocused();
       within(panel).getByRole('menuitem', { name: 'Exportar' }).focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(openMenus()).toHaveLength(2));
       const sub = document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]')!;
       await waitFor(() => expect(sub.contains(document.activeElement)).toBe(true));
+      return sub;
+    };
+
+    await step('Tab dentro do submenu fecha a barra INTEIRA e sai dela', async () => {
+      const sub = await openSubmenuWithItemFocused();
 
       pressTab();
       // O painel filho vive no `body`, e o Tab dele nunca subia até a barra: os
@@ -472,6 +539,21 @@ export const TabLeavesMenubar: Story = {
       await expect(sub.isConnected).toBe(false);
       await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
       await expect(document.activeElement).toBe(after);
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo, e volta ao vizinho ANTERIOR', async () => {
+      // O C2 promete as DUAS direções "também de dentro do submenu", e só a ida
+      // era afirmada aqui. A volta tem um modo de falhar próprio: o painel
+      // filho vive em portal no fim do `<body>`, então um Shift+Tab devolvido
+      // ao navegador cairia no último focável da PÁGINA — e a barra é UMA
+      // parada, de onde a conta do destino sai.
+      const sub = await openSubmenuWithItemFocused();
+
+      pressTab(true);
+      await expect(openMenus()).toHaveLength(0);
+      await expect(sub.isConnected).toBe(false);
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(before);
     });
   },
 };

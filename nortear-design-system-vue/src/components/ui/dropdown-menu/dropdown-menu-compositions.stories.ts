@@ -19,10 +19,11 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForAncorado } from '@shared/testing/ancoragem';
 import {
   dropdownMenuWithShortcutsSource,
-  dropdownMenuWithChoiceUnicaSource,
-  dropdownMenuWithMarkupSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithCheckboxSource,
   dropdownMenuWithLabelSource,
   dropdownMenuWithSubmenuSource,
 } from './dropdown-menu.source';
@@ -126,7 +127,7 @@ export const WithCheckboxItems: Story = {
     covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
     // A marcação exige estado ligado por `v-model` — dois `ref` no script, que
     // o snippet do meta (só itens de ação) não tem.
-    docs: { source: { transform: dropdownMenuWithMarkupSource } },
+    docs: { source: { transform: dropdownMenuWithCheckboxSource } },
   },
   render: () => ({
     components: componentes,
@@ -222,7 +223,7 @@ export const WithRadioGroup: Story = {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
     // Na escolha única o valor vive no GRUPO, não em cada item: outra peça e
     // outro estado.
-    docs: { source: { transform: dropdownMenuWithChoiceUnicaSource } },
+    docs: { source: { transform: dropdownMenuWithRadioSource } },
   },
   render: () => ({
     components: componentes,
@@ -351,11 +352,61 @@ export const WithSubmenu: Story = {
       // A comparação é com a borda DIREITA do pai — comparar com a esquerda
       // passaria com os dois painéis empilhados. O posicionador coloca o popup
       // em passo assíncrono, daí o `waitFor` em volta da medida.
-      await waitFor(async () => {
-        await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
-          menu.getBoundingClientRect().right - 8,
-        );
-      });
+      //
+      // E a folga é ZERO, não "alguma": D15 do PRD, fixada pela dona em
+      // 2026-09-18. Até então o wrapper não declarava `sideOffset` e herdava o
+      // padrão da lib, nunca medido — e a tolerância de 8px que esta linha
+      // tinha passava com qualquer número entre 0 e 8. Vão é valor de design
+      // system (D12), e a asserção tem de cobrar o número decidido.
+      //
+      // A ÂNCORA DO SUBMENU É O SUB-GATILHO, e não a borda do painel pai —
+      // medido ao escrever esta asserção, que reprovou na primeira forma. O
+      // sub-gatilho fica recuado 4px da borda direita do pai (o `padding:
+      // var(--spacing-1)` do painel), então cobrar `sideOffset: 0` contra a
+      // borda do PAI cobraria -4 e acusaria o número certo.
+      //
+      // E a espera é `waitForAncorado`, NÃO um `waitFor` em volta da medida.
+      // Medido ao escrever isto, e é a armadilha que a §7 #16 descreve: no
+      // lugar de espera da reka a diferença já cabe na tolerância, então um
+      // `waitFor` fecha no primeiro quadro e a asserção passa ANTES de a lib
+      // posicionar. Com o defeito plantado (os defaults removidos) ela passava
+      // igual — portão sem dentes com cara de cobertura. A espera certa lê o
+      // `-200%` do invólucro; depois dela a medida é direta.
+      await waitForAncorado(submenu);
+      const triggerBox = subTrigger.getBoundingClientRect();
+      const childBox = submenu.getBoundingClientRect();
+      await expect(Math.abs(childBox.left - triggerBox.right)).toBeLessThanOrEqual(1);
+    });
+
+    await step('O primeiro item do submenu alinha com o SUB-GATILHO que o abriu', async () => {
+      // A outra metade da D15: `alignOffset: -4` é exatamente o `--spacing-1`
+      // de padding do painel (`dropdown-menu.css:62`). Com `align="start"` a lib
+      // encostaria o TOPO DA CAIXA no topo do sub-gatilho, e o primeiro item
+      // desceria os 4px do padding; os -4 sobem a caixa de volta, e quem alinha
+      // passa a ser o item — que é o que a pessoa vê.
+      //
+      // Medir o ITEM, e não a caixa, é o que dá dentes: uma asserção sobre o
+      // topo do painel passaria igual com `alignOffset: 0`, que é o que a lib
+      // faria sozinha.
+      //
+      // Os NÚMEROS, medidos em 2026-09-18 nesta story, depois de
+      // `waitForAncorado`: com `alignOffset: 0` o item nasce **0,6px** abaixo do
+      // sub-gatilho — alinhado; com o `-4` que a D15 escreve, **3,8px ACIMA**
+      // dele. Nesta lib o `-4` DESFAZ o alinhamento em vez de produzi-lo, e o
+      // wrapper declara `0` para entregar o desenho que a D15 decide. O porquê
+      // está em `DropdownMenuSubContent.vue`.
+      //
+      // A tolerância é 2 porque é ela que separa os dois números medidos — 4
+      // deixaria o defeito passar.
+      //
+      // E a OUTRA metade da D15 não tem o que reprovar aqui: medido do mesmo
+      // jeito, `sideOffset` sai 0 com e sem a declaração, porque 0 já é o que a
+      // reka faz neste painel. A linha fica assim mesmo — o número passa a ser
+      // nosso —, mas quem tem dentes é o alinhamento.
+      await waitForAncorado(submenu()!);
+      const itemBox = firstSubItem().getBoundingClientRect();
+      const triggerBox = subTrigger.getBoundingClientRect();
+      await expect(Math.abs(itemBox.top - triggerBox.top)).toBeLessThanOrEqual(2);
     });
 
     await step('O submenu é um painel próprio, fora do pai — e o pai não rola', async () => {

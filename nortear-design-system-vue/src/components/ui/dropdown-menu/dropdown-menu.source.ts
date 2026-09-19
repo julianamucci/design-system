@@ -242,7 +242,7 @@ export function dropdownMenuItemDisabledSource(): string {
  * O valor entra por `model-value` porque aqui ele é fixo, e não ligado: um
  * `v-model` pediria um estado que a story não tem.
  */
-export function dropdownMenuMarkupMistaSource(): string {
+export function dropdownMenuCheckboxIndeterminateSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuCheckboxItem']),
     menu({
@@ -293,7 +293,7 @@ export function dropdownMenuWithLabelSource(): string {
  * Cada item guarda a própria marcação, e alternar não fecha o menu — quem marca
  * uma coluna costuma marcar a próxima.
  */
-export function dropdownMenuWithMarkupSource(): string {
+export function dropdownMenuWithCheckboxSource(): string {
   return vueSnippet(
     `${importing([
       ...BASE,
@@ -324,7 +324,7 @@ const mostrarFuncao = ref(false)`,
  * É o que separa a escolha única da marcação: escolher um item desmarca o
  * anterior sem que ninguém escreva essa regra.
  */
-export function dropdownMenuWithChoiceUnicaSource(): string {
+export function dropdownMenuWithRadioSource(): string {
   return vueSnippet(
     `${importing([
       ...BASE,

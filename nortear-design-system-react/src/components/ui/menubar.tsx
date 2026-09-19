@@ -128,22 +128,22 @@ function MenubarItem({
  * recebe `checked={false}`, e o primeiro clique resolve para marcado; o traço é
  * desenhado aqui, porque o indicador da lib só monta com o item marcado.
  */
+// Sem `inset`, como no ContextMenu e no DropdownMenu desta stack: a folha só lê
+// `[data-inset]` em item, rótulo e sub-gatilho (`dropdown-menu.css:244-248`), e
+// a prop aqui era um nome que não recuava nada.
 function MenubarCheckboxItem({
   className,
   children,
   checked,
   indeterminate = false,
-  inset,
   ...props
 }: MenuPrimitive.CheckboxItem.Props & {
-  inset?: boolean
   /** Estado misto: anunciado como `mixed` e desenhado com traço. Controlado. */
   indeterminate?: boolean
 }) {
   return (
     <MenuPrimitive.CheckboxItem
       data-slot="menubar-checkbox-item"
-      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-checkbox-item",
         className
@@ -177,18 +177,15 @@ function MenubarRadioGroup({
   return <DropdownMenuRadioGroup data-slot="menubar-radio-group" {...props} />
 }
 
+// Sem `inset`, pelo mesmo motivo do item de marcação acima.
 function MenubarRadioItem({
   className,
   children,
-  inset,
   ...props
-}: MenuPrimitive.RadioItem.Props & {
-  inset?: boolean
-}) {
+}: MenuPrimitive.RadioItem.Props) {
   return (
     <MenuPrimitive.RadioItem
       data-slot="menubar-radio-item"
-      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-radio-item",
         className

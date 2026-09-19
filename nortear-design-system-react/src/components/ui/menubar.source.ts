@@ -171,11 +171,40 @@ ${menu('Editar', `      <MenubarItem>Desfazer</MenubarItem>`)}
 }
 
 /**
+ * Menu mais alto que a janela: o painel recorta e rola sozinho, pela folha, sem
+ * nada a declarar no markup. É essa a lição do snippet — quem copia não precisa
+ * de prop nenhuma para o menu longo caber, e o snippet é longo de propósito,
+ * porque é a ALTURA dele que mostra a lição (D17).
+ *
+ * Sessenta itens é o número da medição de 2026-09-18 que fixou a decisão, e é o
+ * mesmo das outras stacks: mudar o número aqui sem mudar a story faria o painel
+ * Code ensinar um exemplo que não é o que a página mostra.
+ */
+export function menubarPanelScrollsSource(): string {
+  const items = Array.from(
+    { length: 60 },
+    (_, i) => `      <MenubarItem>Ação ${i + 1}</MenubarItem>`,
+  ).join('\n');
+  return jsxSnippet(
+    importingMenubar(
+      'Menubar',
+      'MenubarContent',
+      'MenubarItem',
+      'MenubarMenu',
+      'MenubarTrigger',
+    ),
+    `<Menubar>
+${menu('Arquivo', items)}
+</Menubar>`,
+  );
+}
+
+/**
  * Item bloqueado. O primitivo publica `aria-disabled`, e não o atributo
  * `disabled`: o item continua alcançável pela seta para ser ANUNCIADO como
  * indisponível, em vez de sumir sem explicação de quem navega por teclado.
  */
-export function menubarItemBloqueadoSource(): string {
+export function menubarItemDisabledSource(): string {
   return jsxSnippet(
     importingMenubar(
       'Menubar',
@@ -293,7 +322,7 @@ ${menu(
  * Escolha única. O grupo é quem guarda o valor — os itens só declaram o seu —, e
  * por isso a marcação se transfere sozinha de um para o outro.
  */
-export function menubarChoiceUnicaSource(): string {
+export function menubarWithRadioSource(): string {
   return jsxSnippet(
     importingMenubar(
       'Menubar',

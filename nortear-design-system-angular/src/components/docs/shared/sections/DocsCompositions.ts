@@ -34,6 +34,7 @@ export interface DocsCompositionItem extends DocsVariantItem {
       [id]="id()"
       [note]="note()"
       [componentSlug]="componentSlug()"
+      [language]="language()"
       [items]="mergedItems()"
     />
   `,
@@ -45,6 +46,13 @@ export class NdsDocsCompositions {
   readonly useWhenLabel = input<string>('Quando usar:');
   readonly componentSlug = input<string | undefined>(undefined);
   readonly id = input<string>('composicoes');
+  /**
+   * Linguagem do bloco de código, repassada a `NdsDocsVariants`. Mesmo padrão
+   * (`ts`) da seção de baixo, então quem não passa nada não muda de saída —
+   * existe para uma página não ter de escolher entre este container e o de
+   * variantes só por causa do realce.
+   */
+  readonly language = input<string>('ts');
 
   protected readonly mergedItems = computed<DocsVariantItem[]>(() =>
     this.items().map((item) =>

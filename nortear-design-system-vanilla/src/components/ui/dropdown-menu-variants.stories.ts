@@ -5,6 +5,8 @@ import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.sour
 import { createButton } from './button';
 import { clicarQuandoMontado, endClose, mount } from './dropdown-menu.fixtures';
 import { itemContrast } from '@shared/testing/dropdown-menu-probe';
+import { resolveColor, ruleDeclaration } from '@shared/testing/cor';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
@@ -69,6 +71,35 @@ export const Default: Story = {
       const measurement = itemContrast(inRest[0]);
       await expect(measurement).not.toBeNull();
       await expect(measurement!.ratio).toBeGreaterThanOrEqual(4.5);
+    });
+
+    await step('O PONTEIRO também destaca o item, e quem pinta é a folha', async () => {
+      // §7 #16 do PRD: react, vue, svelte e angular afirmam `userEvent.hover` →
+      // `[data-highlighted]`, que a lib headless de cada uma escreve. Aqui não
+      // há lib — as fábricas desta stack NÃO escutam ponteiro nos itens —, e
+      // quem destaca é o `:hover` de `dropdown-menu.css` (D4). Ou seja: esta é
+      // justamente a stack que depende da regra, e era a única sem asserção
+      // sobre ela. Foi assim que marcação, rádio e sub-gatilho passaram meses
+      // sem `:hover` nenhum aqui.
+      //
+      // A medida NÃO é o fundo computado depois de um `hover`: a pseudo-classe
+      // só acende com ponteiro real, e o evento sintético deixa o fundo em
+      // repouso — medido no badge em 2026-09-14. A saída é a mesma daquele
+      // caso: conferir a DECLARAÇÃO da folha e resolvê-la no contexto do item,
+      // onde quem expande o `var` e compõe o alfa continua sendo o navegador.
+      const inRest = items.filter((i) => i !== document.activeElement);
+      const declared = ruleDeclaration(
+        document,
+        (selector) => /\.nds-dropdown-menu-item:hover(\s*[,{]|$)/.test(selector),
+        'background-color',
+      );
+      await expect(declared, 'a regra de :hover do item sumiu da folha').not.toBeNull();
+      // O peso é o da D4 — accent a 20%, o mesmo do `[data-highlighted]`. Um
+      // 10% aqui reprova, que é o estado de antes de 2026-09-10.
+      const expected = resolveColor(inRest[0], 'hsl(var(--accent) / 0.2)');
+      await expect(resolveColor(inRest[0], declared!)).toBe(expected);
+      // E o realce MUDA alguma coisa: em repouso o item não carrega esse fundo.
+      await expect(getComputedStyle(inRest[0]).backgroundColor).not.toBe(expected);
     });
 
     await step('Limpa via ESC', async () => {
@@ -202,6 +233,10 @@ export const Placement: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /abrir para cima/i });
     const menu = await within(document.body).findByRole('menu');
+    // Esta story MEDE a caixa, e a entrada anima `translateY` e `scale(0.98)`:
+    // no meio do quadro as bordas direitas ficam a 1,28px uma da outra — 2% da
+    // largura do painel —, que é o `scale` a caminho e não o `align` errado.
+    await waitForAnimationsDone(menu);
 
     await step('Com side="top" o menu fica ACIMA do gatilho', async () => {
       const menuBox = menu.getBoundingClientRect();

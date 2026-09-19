@@ -90,9 +90,40 @@ import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
 import { positionFloatingAtPoint } from '@/lib/floating';
 import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 
+/**
+ * Uma opção do grupo de escolha única — `type: 'radio-group'`.
+ *
+ * Mesma forma do `MenubarRadioOption` e do `DropdownMenuRadioOption`: a escolha
+ * única é UMA coisa, com as opções dentro dela. Ver a D16 do PRD.
+ */
+// PATCH: api — escolha única unificada em `type: 'radio-group'` (ver PATCHES.md#vanilla-menu-radio-group)
+export type ContextMenuRadioOption = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  /**
+   * Disparado a cada ESCOLHA desta opção, pelo ponteiro ou por Enter/Espaço —
+   * inclusive quando ela já era a escolhida. É dele que sai o
+   * `context_menu_item_select`; o `onValueChange` do grupo só sai com mudança.
+   */
+  onClick?: () => void;
+};
+
 export type ContextMenuItemDef = {
-  /** `item` é o padrão. `submenu` exige `items`; `radio` exige `value`. */
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
+  /**
+   * `item` é o padrão. `submenu` exige `items`; `radio-group` exige `options`.
+   *
+   * **Até 2026-09-18 havia um `radio`**, com o valor corrente (`radioValue`) e
+   * o retorno (`onRadioChange`) na RAIZ da fábrica — um grupo só por menu, e a
+   * terceira forma de escolha única dentro da mesma stack (D16). Vale a forma
+   * do `createMenubar`.
+   */
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
+  /**
+   * Em `radio-group`, o valor ESCOLHIDO do grupo; nos demais tipos, o valor do
+   * item, escrito em `data-value`. Não se cruzam: o item de `radio-group` não
+   * renderiza elemento — quem vira `<li data-value>` são as `options` dele.
+   */
   value?: string;
   label?: string;
   disabled?: boolean;
@@ -111,6 +142,10 @@ export type ContextMenuItemDef = {
    * caixa de seleção avulsa desta stack.
    */
   indeterminate?: boolean;
+  /** Só em `radio-group`: as opções da escolha única. Obrigatório ali. */
+  options?: ContextMenuRadioOption[];
+  /** Só em `radio-group`: avisado quando o valor escolhido MUDA. */
+  onValueChange?: (value: string) => void;
   /** Itens do submenu, quando `type: 'submenu'`. */
   items?: ContextMenuItemDef[];
   onClick?: () => void;
@@ -147,9 +182,6 @@ export type ContextMenuOptions = {
    * `onOpenChange` diz QUE fechou, e só a fábrica sabe por qual caminho.
    */
   onClose?: (reason: ContextMenuCloseReason) => void;
-  /** Grupo de escolha única: o valor corrente entre os itens `radio`. */
-  radioValue?: string;
-  onRadioChange?: (value: string) => void;
   class?: string;
 };
 
@@ -240,7 +272,6 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
-  let radioValue = options.radioValue;
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
   // O `id` de cada rótulo, para o `aria-labelledby` do grupo que ele nomeia.
   // Contador da fábrica, e não do painel: o painel é remontado a cada abertura
@@ -289,22 +320,20 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       return;
     }
 
-    if (type === 'checkbox' || type === 'radio') {
-      let checked =
-        type === 'checkbox' ? item.checked === true : radioValue === item.value;
+    if (type === 'checkbox') {
+      let checked = item.checked === true;
       // O misto vale SOBRE o marcado enquanto durar — é ele quem manda no que se
       // anuncia e no que se desenha. Só o item de marcação o tem.
-      let misto = type === 'checkbox' && item.indeterminate === true;
+      let misto = item.indeterminate === true;
 
       const li = document.createElement('li');
-      li.setAttribute('role', type === 'checkbox' ? 'menuitemcheckbox' : 'menuitemradio');
+      li.setAttribute('role', 'menuitemcheckbox');
       // "mixed" é o que distingue "alguns selecionados" de "todos selecionados";
       // um booleano aqui mentiria para quem lê a tela.
       li.setAttribute('aria-checked', misto ? 'mixed' : String(checked));
       li.setAttribute('tabindex', '-1');
-      li.dataset.slot = type === 'checkbox' ? 'context-menu-checkbox-item' : 'context-menu-radio-item';
-      li.className =
-        type === 'checkbox' ? 'nds-dropdown-menu-checkbox-item' : 'nds-dropdown-menu-radio-item';
+      li.dataset.slot = 'context-menu-checkbox-item';
+      li.className = 'nds-dropdown-menu-checkbox-item';
       if (item.value) li.dataset.value = item.value;
       if (item.disabled) {
         li.setAttribute('aria-disabled', 'true');
@@ -312,10 +341,8 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       }
 
       const indicador = document.createElement('span');
-      // `data-slot` por TIPO de item, como nas outras quatro stacks
-      // (`context-menu-checkbox-item-indicator` / `…-radio-item-indicator`).
-      indicador.dataset.slot =
-        type === 'checkbox' ? 'context-menu-checkbox-item-indicator' : 'context-menu-radio-item-indicator';
+      // `data-slot` por TIPO de item, como nas outras quatro stacks.
+      indicador.dataset.slot = 'context-menu-checkbox-item-indicator';
       indicador.className = 'nds-dropdown-menu-item-indicator';
       if (misto) indicador.appendChild(createMinusIcon());
       else if (checked) indicador.appendChild(createCheckIcon());
@@ -325,34 +352,24 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
       if (!item.disabled) {
         const toggle = () => {
-          if (type === 'checkbox') {
-            if (misto) {
-              // O primeiro clique RESOLVE o misto para marcado, como faz a
-              // propriedade `indeterminate` do input nativo — e não devolve o
-              // misto a ninguém, porque "alguns" é conclusão de quem consome.
-              misto = false;
-              checked = true;
-              li.setAttribute('aria-checked', 'true');
-              indicador.replaceChildren(createCheckIcon());
-              item.onIndeterminateChange?.(false);
-              item.onCheckedChange?.(true);
-              item.onClick?.();
-              return;
-            }
-            checked = !checked;
-            li.setAttribute('aria-checked', String(checked));
-            indicador.replaceChildren();
-            if (checked) indicador.appendChild(createCheckIcon());
-            item.onCheckedChange?.(checked);
-          } else if (item.value) {
-            radioValue = item.value;
-            // O painel é o `role="menu"` mais próximo, e não o do menu raiz: o
-            // rádio pode morar num SUBMENU, cujo painel tem outro `data-slot` e
-            // vive fora da árvore do raiz. Buscar pelo `data-slot` do raiz
-            // devolvia `null` ali, e a escolha não desmarcava os irmãos.
-            sincronizarRadios(li.closest<HTMLElement>('[role="menu"]'));
-            options.onRadioChange?.(item.value);
+          if (misto) {
+            // O primeiro clique RESOLVE o misto para marcado, como faz a
+            // propriedade `indeterminate` do input nativo — e não devolve o
+            // misto a ninguém, porque "alguns" é conclusão de quem consome.
+            misto = false;
+            checked = true;
+            li.setAttribute('aria-checked', 'true');
+            indicador.replaceChildren(createCheckIcon());
+            item.onIndeterminateChange?.(false);
+            item.onCheckedChange?.(true);
+            item.onClick?.();
+            return;
           }
+          checked = !checked;
+          li.setAttribute('aria-checked', String(checked));
+          indicador.replaceChildren();
+          if (checked) indicador.appendChild(createCheckIcon());
+          item.onCheckedChange?.(checked);
           item.onClick?.();
           // Marcar uma opção não fecha o menu: quem marca uma costuma querer
           // marcar a próxima. Só o item de AÇÃO fecha.
@@ -471,15 +488,97 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     return group;
   }
 
-  /** Reflete a escolha única em todos os irmãos do grupo. */
-  function sincronizarRadios(menu: HTMLElement | null): void {
-    if (!menu) return;
-    for (const li of menu.querySelectorAll<HTMLElement>('[role="menuitemradio"]')) {
-      const checked = li.dataset.value === radioValue;
-      li.setAttribute('aria-checked', String(checked));
-      const indicador = li.querySelector<HTMLElement>('.nds-dropdown-menu-item-indicator');
-      indicador?.replaceChildren();
-      if (checked && indicador) indicador.appendChild(createCheckIcon());
+  /**
+   * A escolha única — UM bloco com as opções dentro (D16).
+   *
+   * Logo depois de um rótulo, o grupo que ele acabou de abrir — ainda só com o
+   * rótulo dentro — JÁ É esse bloco e já tem nome; um segundo `role="group"`
+   * aninhado faria o leitor anunciar dois grupos para um bloco só. Sem rótulo
+   * antes, o grupo nasce aqui, sem nome: não há texto que o nomeie. Mesma conta
+   * do `createMenubar` e do `createDropdownMenu`.
+   *
+   * O estado mora NO GRUPO, e não mais na raiz da fábrica: um menu podia ter um
+   * grupo só, e o `sincronizarRadios` que isso exigia varria o `role="menu"`
+   * mais próximo à procura de irmãos — conta que um segundo grupo no mesmo
+   * painel teria quebrado em silêncio.
+   */
+  function buildRadioGroup(
+    item: ContextMenuItemDef,
+    menu: HTMLElement,
+    openGroup: HTMLElement | null,
+  ): void {
+    const reuse = openGroup !== null && openGroup.childElementCount === 1;
+    let group: HTMLElement;
+    if (reuse) {
+      group = openGroup!;
+    } else {
+      const carrier = document.createElement('li');
+      carrier.setAttribute('role', 'presentation');
+      carrier.className = 'nds-dropdown-menu-group';
+      group = document.createElement('ul');
+      group.setAttribute('role', 'group');
+      group.className = 'nds-dropdown-menu-group';
+      carrier.appendChild(group);
+      (openGroup ?? menu).appendChild(carrier);
+    }
+    group.dataset.slot = 'context-menu-radio-group';
+
+    let chosen = item.value;
+    const choices: Array<{ el: HTMLElement; indicator: HTMLElement; value: string }> = [];
+
+    for (const option of item.options ?? []) {
+      const li = document.createElement('li');
+      li.setAttribute('role', 'menuitemradio');
+      li.className = 'nds-dropdown-menu-radio-item';
+      li.dataset.slot = 'context-menu-radio-item';
+      li.dataset.value = option.value;
+      li.setAttribute('tabindex', '-1');
+      if (option.disabled) {
+        li.setAttribute('aria-disabled', 'true');
+        li.dataset.disabled = '';
+      }
+
+      const isChosen = chosen === option.value;
+      li.setAttribute('aria-checked', String(isChosen));
+
+      const indicator = document.createElement('span');
+      indicator.dataset.slot = 'context-menu-radio-item-indicator';
+      indicator.className = 'nds-dropdown-menu-item-indicator';
+      if (isChosen) indicator.appendChild(createCheckIcon());
+      li.appendChild(indicator);
+
+      fillItemContent(li, { label: option.label });
+
+      /**
+       * Escolher a opção JÁ escolhida continua sendo uma escolha: o `onClick`
+       * sai sempre, e é dele que a docs page tira o `context_menu_item_select`.
+       * O que só sai com mudança de fato é o `onValueChange`. Não fecha em
+       * nenhum dos casos.
+       */
+      const choose = (): void => {
+        if (option.disabled) return;
+        if (chosen !== option.value) {
+          chosen = option.value;
+          for (const other of choices) {
+            const active = other.value === chosen;
+            other.el.setAttribute('aria-checked', String(active));
+            other.indicator.replaceChildren();
+            if (active) other.indicator.appendChild(createCheckIcon());
+          }
+          item.onValueChange?.(chosen);
+        }
+        option.onClick?.();
+      };
+      li.addEventListener('click', choose);
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          choose();
+        }
+      });
+
+      choices.push({ el: li, indicator, value: option.value });
+      group.appendChild(li);
     }
   }
 
@@ -504,6 +603,10 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       if (type === 'separator') {
         openGroup = null;
         buildItem(def, menu);
+        return;
+      }
+      if (type === 'radio-group') {
+        buildRadioGroup(def, menu, openGroup);
         return;
       }
       buildItem(def, openGroup ?? menu);
@@ -563,7 +666,6 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       '--transform-origin',
       `${x + window.scrollX - left}px ${y + window.scrollY - top}px`,
     );
-    sincronizarRadios(panelEl);
 
     isOpen = true;
 

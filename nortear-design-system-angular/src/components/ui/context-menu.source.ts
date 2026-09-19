@@ -517,3 +517,135 @@ export function contextMenuCompleteCompositionSource(): string {
   readonly layout = signal('grid');`,
   );
 }
+
+// ─── O menu como DADO ─────────────────────────────────────────────────────────
+//
+// O card de Variantes da docs page monta a prévia VIVA e o código ao lado a
+// partir da MESMA lista de entradas — é isso que impede os dois de divergirem.
+// Até 2026-09-18 o construtor morava dentro da própria docs page
+// (`ContextMenuDocs.ts`), onde react, vue e vanilla já o expunham em `ui/`
+// (inconsistência 22 da §7 do PRD): snippet montado dentro da página não é
+// importável, e por isso não era testável.
+//
+// Os rótulos chegam RESOLVIDOS — quem chama os lê do conteúdo compartilhado, no
+// idioma da página. O construtor não conhece `translations.json`, e é essa
+// fronteira que o deixa rodar em node.
+//
+// O que NÃO entra: a instrumentação da página (`(onOpenChange)`, `(onSelect)`
+// ligados ao rastreio). É andaime da docs page, não lição do menu.
+
+/** Item de ação. `label` já vem no idioma de quem chama. */
+export type ContextMenuSnippetItem = {
+  kind: 'item';
+  label: string;
+  /** Texto do atalho exibido à direita, quando há. */
+  shortcut?: string;
+  destructive?: boolean;
+  inset?: boolean;
+};
+
+/** Item de marcação — `checked` é o estado que o exemplo publica. */
+export type ContextMenuSnippetCheckbox = {
+  kind: 'checkbox';
+  label: string;
+  checked: boolean;
+};
+
+export type ContextMenuSnippetEntry =
+  | ContextMenuSnippetItem
+  | ContextMenuSnippetCheckbox
+  | { kind: 'separator' }
+  /** O rótulo vai DENTRO do grupo, que é o que faz dele o nome do bloco. */
+  | {
+      kind: 'group';
+      label: string;
+      inset?: boolean;
+      entries: readonly (ContextMenuSnippetItem | ContextMenuSnippetCheckbox)[];
+    }
+  | {
+      kind: 'radio-group';
+      label: string;
+      value: string;
+      options: readonly { label: string; value: string }[];
+    }
+  | { kind: 'sub'; label: string; entries: readonly { label: string }[] };
+
+export type ContextMenuSnippetOptions = {
+  /** Texto dentro da ÁREA de clique direito. */
+  triggerLabel?: string;
+  /** O menu como lista de entradas; sem ela, o menu canônico. */
+  entries?: readonly ContextMenuSnippetEntry[];
+};
+
+/** O menu canônico — o mesmo par de ações que a guarda transversal chama sem argumento. */
+const SNIPPET_ENTRIES_DEFAULT: readonly ContextMenuSnippetEntry[] = [
+  { kind: 'item', label: 'Editar' },
+  { kind: 'item', label: 'Duplicar' },
+  { kind: 'separator' },
+  { kind: 'item', label: 'Excluir', destructive: true },
+];
+
+/** O trecho do menu descrito por `entries`, com os rótulos exatamente como chegam. */
+export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
+  const entries = o.entries ?? SNIPPET_ENTRIES_DEFAULT;
+  const pad = (n: number) => ' '.repeat(n);
+  const item = (e: ContextMenuSnippetItem, n: number): string[] => {
+    const attrs = `${e.destructive ? ' variant="destructive"' : ''}${e.inset ? ' [inset]="true"' : ''}`;
+    if (!e.shortcut) return [`${pad(n)}<div ndsContextMenuItem${attrs}>${e.label}</div>`];
+    return [
+      `${pad(n)}<div ndsContextMenuItem${attrs}>`,
+      `${pad(n + 2)}${e.label}`,
+      `${pad(n + 2)}<span ndsContextMenuShortcut>${e.shortcut}</span>`,
+      `${pad(n)}</div>`,
+    ];
+  };
+  const leaf = (e: ContextMenuSnippetItem | ContextMenuSnippetCheckbox, n: number): string[] =>
+    e.kind === 'item'
+      ? item(e, n)
+      : [`${pad(n)}<div ndsContextMenuCheckboxItem [checked]="${e.checked}">${e.label}</div>`];
+
+  const lines: string[] = [];
+  for (const entry of entries) {
+    if (entry.kind === 'separator') {
+      lines.push(`${pad(4)}<div ndsContextMenuSeparator></div>`);
+    } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
+      lines.push(...leaf(entry, 4));
+    } else if (entry.kind === 'group') {
+      lines.push(`${pad(4)}<div ndsContextMenuGroup>`);
+      lines.push(
+        `${pad(6)}<div ndsContextMenuLabel${entry.inset ? ' [inset]="true"' : ''}>${entry.label}</div>`,
+      );
+      for (const child of entry.entries) lines.push(...leaf(child, 6));
+      lines.push(`${pad(4)}</div>`);
+    } else if (entry.kind === 'radio-group') {
+      lines.push(`${pad(4)}<div ndsContextMenuRadioGroup value="${entry.value}">`);
+      lines.push(`${pad(6)}<div ndsContextMenuLabel>${entry.label}</div>`);
+      for (const option of entry.options) {
+        lines.push(`${pad(6)}<div ndsContextMenuRadioItem value="${option.value}">${option.label}</div>`);
+      }
+      lines.push(`${pad(4)}</div>`);
+    } else {
+      lines.push(`${pad(4)}<div ndsContextMenuSub>`);
+      lines.push(`${pad(6)}<div ndsContextMenuSubTrigger>${entry.label}</div>`);
+      lines.push(`${pad(6)}<ng-template ndsContextMenuSubContent>`);
+      for (const child of entry.entries) {
+        lines.push(`${pad(8)}<div ndsContextMenuItem>${child.label}</div>`);
+      }
+      lines.push(`${pad(6)}</ng-template>`);
+      lines.push(`${pad(4)}</div>`);
+    }
+  }
+
+  return `<div ndsContextMenu>
+  <div
+    ndsContextMenuTrigger
+    class="${AREA_CLICK_DIREITO}"
+    data-align="center"
+    data-justify="center"
+  >${o.triggerLabel ?? 'Clique com o botão direito aqui'}</div>
+
+  <ng-template ndsContextMenuContent>
+${lines.join('\n')}
+  </ng-template>
+</div>`;
+}

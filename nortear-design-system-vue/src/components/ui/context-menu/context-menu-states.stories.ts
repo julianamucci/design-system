@@ -18,9 +18,9 @@ import {
   contextMenuSource,
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
-  contextMenuItemRecuadoSource,
-  contextMenuMarkupMistaSource,
-  contextMenuPaletteDarkSource,
+  contextMenuItemInsetSource,
+  contextMenuCheckboxIndeterminateSource,
+  contextMenuDarkPaletteSource,
 } from './context-menu.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -148,7 +148,7 @@ export const ItemInset: Story = {
   parameters: {
     // O recuo é a prop `inset` no rótulo e no item — nada disso aparece no
     // snippet do meta, que mostra o menu sem alinhamento de indicador.
-    docs: { source: { transform: contextMenuItemRecuadoSource } },
+    docs: { source: { transform: contextMenuItemInsetSource } },
   },
   render: () => ({
     components: componentes,
@@ -255,7 +255,7 @@ export const CheckboxIndeterminate: Story = {
     covers: ['functional.item11'],
     // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
     // outra prop.
-    docs: { source: { transform: contextMenuMarkupMistaSource } },
+    docs: { source: { transform: contextMenuCheckboxIndeterminateSource } },
   },
   render: () => ({
     components: componentes,
@@ -325,7 +325,7 @@ export const DarkPalette: Story = {
     covers: ['visual.item6'],
     // Menu curto, sem grupo nem atalho: o que a story mostra é que a paleta
     // troca sem uma linha de markup mudar.
-    docs: { source: { transform: contextMenuPaletteDarkSource } },
+    docs: { source: { transform: contextMenuDarkPaletteSource } },
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },

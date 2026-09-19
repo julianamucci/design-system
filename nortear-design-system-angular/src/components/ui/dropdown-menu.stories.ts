@@ -276,13 +276,17 @@ export const TabLeavesMenu: Story = {
       await waitFor(() => expect(document.activeElement).toBe(before));
     });
 
-    await step('Tab dentro do submenu fecha o menu INTEIRO e segue do gatilho', async () => {
+    const openSubmenuWithItemFocused = async () => {
       const menu = await openWithItemFocused();
       within(menu).getByRole('menuitem', { name: 'Exportar' }).focus();
       await userEvent.keyboard('{ArrowRight}');
       const submenu = () =>
         document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]');
       await waitFor(() => expect(submenu()?.contains(document.activeElement)).toBe(true));
+    };
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue do gatilho', async () => {
+      await openSubmenuWithItemFocused();
 
       pressTab();
       // Os DOIS painéis: fechar só o submenu deixaria o foco num menu que a
@@ -290,6 +294,20 @@ export const TabLeavesMenu: Story = {
       await waitForPortalVanish('menu');
       await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+
+    // O C2 promete as duas direções "também de dentro do submenu", e até
+    // 2026-09-18 esta stack afirmava só uma (inconsistência 12 da §7 do PRD).
+    // Sem o wrapper, a lib fecha só o submenu e devolve o foco ao sub-gatilho —
+    // que é o mesmo lugar em que o Tab a deixava, então o par de direções é o
+    // que separa "fecha a cadeia" de "recua um nível".
+    await step('Shift+Tab dentro do submenu também fecha tudo', async () => {
+      await openSubmenuWithItemFocused();
+
+      pressTab(true);
+      await waitForPortalVanish('menu');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(() => expect(document.activeElement).toBe(before));
     });
   },
 };

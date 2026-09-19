@@ -316,11 +316,13 @@ export class NdsMenubarMenu implements NdsSubmenuPanel {
     () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 8),
   );
 
-  // -4px devolvem o padding lateral do popup, alinhando o texto do primeiro
-  // item com o texto do gatilho. No submenu o alvo é o item que o abriu, cujo
-  // recuo é 3px.
+  // -4px são o `--spacing-1` de padding do painel, devolvido: no menu da barra
+  // alinham o texto do primeiro item com o do gatilho, e no submenu alinham o
+  // primeiro item com o SUB-GATILHO que o abriu. O mesmo número nos dois níveis
+  // e nos três membros da família (D15 do PRD do dropdown-menu, decisão da dona
+  // em 2026-09-18) — até essa data o submenu usava -3, que não saía de token.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -3 : -4),
+    () => this.content()?.alignOffset() ?? -4,
   );
 }
 

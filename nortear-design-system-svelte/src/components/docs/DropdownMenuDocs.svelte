@@ -5,7 +5,7 @@
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuGroup,
-    DropdownMenuGroupHeading,
+    DropdownMenuLabel,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuShortcut,
@@ -85,18 +85,22 @@
     return out;
   }
 
-  // Nível WCAG e ferramenta ficam aqui, e não no conteúdo compartilhado, porque
-  // são IDENTIFICADORES (número de critério, nome do verificador) e
-  // identificador não se traduz. Item além da lista cai no par padrão.
+  // Nível WCAG e forma de verificar ficam aqui, e não no conteúdo compartilhado,
+  // porque são IDENTIFICADORES (número de critério, consulta da suíte, regra do
+  // axe) e identificador não se traduz. A coluna "como verificar" dizia "DOM
+  // inspection", "Keyboard test" e "Contrast analyzer" — frase em inglês, igual
+  // nos três idiomas e sem dizer o que de fato mede; agora diz a consulta ou a
+  // regra, como no ContextMenu desta stack e no DropdownMenu do vue. Item novo
+  // além da lista cai no par padrão em vez de sumir.
   const a11yTestLevels = ['AA', '4.1.2', '4.1.2', '4.1.2', '2.4.3', '1.4.3', '4.1.2'];
   const a11yTestHow = [
     'axe-core',
-    'DOM inspection',
-    'DOM inspection',
-    'DOM inspection',
-    'Keyboard test',
-    'Contrast analyzer',
-    'Keyboard test',
+    'aria-haspopup · aria-expanded',
+    "getByRole('menu')",
+    "getAllByRole('menuitem' | 'menuitemcheckbox' | 'menuitemradio')",
+    'Escape · document.activeElement',
+    'axe-core · color-contrast',
+    'ArrowDown · document.activeElement',
   ];
 
   // ─── Rastreio ────────────────────────────────────────────────────────────────
@@ -451,9 +455,8 @@
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuGroupHeading,
-  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";`;
@@ -601,12 +604,12 @@ interface DropdownMenuRadioGroupProps {
   <!-- Conta: o grupo nomeado e a saída destrutiva — `demo-account`. -->
   {#snippet accountItems(tracker: DropdownMenuTracker)}
     <!--
-      `Group` + `GroupHeading` é a dupla que dá NOME ao agrupamento: o heading
-      vira o `aria-labelledby` do grupo. Um `Label` solto rotula visualmente e
-      não nomeia nada.
+      `Group` + `Label` é a dupla que dá NOME ao agrupamento: dentro do grupo o
+      rótulo vira o cabeçalho da lib, e o `id` dele entra no `aria-labelledby`.
+      Um `Label` FORA de um grupo rotula visualmente e não nomeia nada.
     -->
     <DropdownMenuGroup>
-      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.account')}</DropdownMenuGroupHeading>
+      <DropdownMenuLabel>{$tStore('demonstration.labels.account')}</DropdownMenuLabel>
       <DropdownMenuItem onSelect={tracker.select('profile')}>{$tStore('demonstration.labels.profile')}</DropdownMenuItem>
       <DropdownMenuItem onSelect={tracker.select('settings')}>{$tStore('demonstration.labels.settings')}</DropdownMenuItem>
     </DropdownMenuGroup>
@@ -617,13 +620,13 @@ interface DropdownMenuRadioGroupProps {
   <!-- Dois grupos nomeados, Conta e Suporte — o faça do par 1. -->
   {#snippet accountSupportItems(tracker: DropdownMenuTracker)}
     <DropdownMenuGroup>
-      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.account')}</DropdownMenuGroupHeading>
+      <DropdownMenuLabel>{$tStore('demonstration.labels.account')}</DropdownMenuLabel>
       <DropdownMenuItem onSelect={tracker.select('profile')}>{$tStore('demonstration.labels.profile')}</DropdownMenuItem>
       <DropdownMenuItem onSelect={tracker.select('settings')}>{$tStore('demonstration.labels.settings')}</DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
-      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.support')}</DropdownMenuGroupHeading>
+      <DropdownMenuLabel>{$tStore('demonstration.labels.support')}</DropdownMenuLabel>
       <DropdownMenuItem onSelect={tracker.select('documentation')}>{$tStore('demonstration.labels.documentation')}</DropdownMenuItem>
       <DropdownMenuItem onSelect={tracker.select('logout')}>{$tStore('demonstration.labels.logout')}</DropdownMenuItem>
     </DropdownMenuGroup>
@@ -635,7 +638,7 @@ interface DropdownMenuRadioGroupProps {
   -->
   {#snippet columnsItems(tracker: DropdownMenuTracker)}
     <DropdownMenuGroup>
-      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.visibleColumns')}</DropdownMenuGroupHeading>
+      <DropdownMenuLabel>{$tStore('demonstration.labels.visibleColumns')}</DropdownMenuLabel>
       <DropdownMenuCheckboxItem
         bind:checked={columns['column-name']}
         onSelect={tracker.toggle('column-name')}
@@ -660,7 +663,7 @@ interface DropdownMenuRadioGroupProps {
   <!-- Aparência: escolha única; o grupo de rádio já é um grupo, e o rótulo o nomeia. -->
   {#snippet themeItems(tracker: DropdownMenuTracker)}
     <DropdownMenuRadioGroup bind:value={theme}>
-      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.appearance')}</DropdownMenuGroupHeading>
+      <DropdownMenuLabel>{$tStore('demonstration.labels.appearance')}</DropdownMenuLabel>
       <DropdownMenuRadioItem value="light" onSelect={tracker.toggle('light')}>{$tStore('demonstration.labels.light')}</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="dark" onSelect={tracker.toggle('dark')}>{$tStore('demonstration.labels.dark')}</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="system" onSelect={tracker.toggle('system')}>{$tStore('demonstration.labels.system')}</DropdownMenuRadioItem>
@@ -702,7 +705,7 @@ interface DropdownMenuRadioGroupProps {
         <DropdownMenuSeparator />
       {:else if entry.type === 'group'}
         <DropdownMenuGroup>
-          <DropdownMenuGroupHeading>{entry.label}</DropdownMenuGroupHeading>
+          <DropdownMenuLabel>{entry.label}</DropdownMenuLabel>
           {@render menuEntries(entry.items, tracker)}
         </DropdownMenuGroup>
       {:else if entry.type === 'checkbox'}
@@ -714,7 +717,7 @@ interface DropdownMenuRadioGroupProps {
         </DropdownMenuCheckboxItem>
       {:else if entry.type === 'radio-group'}
         <DropdownMenuRadioGroup bind:value={variantState.radio[entry.name]}>
-          <DropdownMenuGroupHeading>{entry.label}</DropdownMenuGroupHeading>
+          <DropdownMenuLabel>{entry.label}</DropdownMenuLabel>
           {#each entry.items as option (option.value)}
             <DropdownMenuRadioItem value={option.value} onSelect={tracker.toggle(option.value)}>
               {option.label}
@@ -1015,6 +1018,11 @@ interface DropdownMenuRadioGroupProps {
           // próprio `open`, que é bindável, e o bloqueio de interação não é
           // configurável aqui. Documentar prop que o componente ignora é
           // prometer o que o produto não cumpre.
+          //
+          // A premissa é conferida por `ui/bits-menu-premissas.test.ts`: o
+          // `MenuRootPropsWithoutHTML` do bits declara `open` e `onOpenChange` e
+          // nada mais. Se um bump passar a expor as duas props, o portão reprova
+          // e esta omissão vira dívida em vez de decisão.
           { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: $tStore('props.table.side.description')         },
           { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: $tStore('props.table.align.description')        },
         ],

@@ -63,24 +63,33 @@ const { t, subscribe } = createTranslation(menubarTranslations as Record<string,
     'props.factory.class': 'Classes adicionais na raiz da barra.',
     'props.factory.defaultOpenIndex': 'Aqui é o índice do menu na lista.',
     'props.factory.menuOnOpenChange': 'Avisado quando este menu abre ou fecha. É por menu: trocar de menu com a barra aberta avisa o que fecha antes do que abre.',
-    'props.factory.menuOnClose': 'Motivo do fechamento do menu, uma vez por fechamento e antes do callback de mudança: escape, overlay (clique fora, Tab, clique no gatilho aberto ou passagem ao menu vizinho) ou api (item escolhido). Sair da página não é fechamento e não dispara.',
+    'props.factory.menuOnClose': 'Motivo do fechamento do menu, uma vez por fechamento e antes do callback de mudança: escape, overlay (clique fora, Tab, clique ou Enter/Espaço no gatilho do menu aberto, ou passagem ao menu vizinho) ou api (item escolhido). Sair da página não é fechamento e não dispara.',
     'props.factory.radioOptionOnClick': 'Avisado a cada escolha da opção, pelo ponteiro ou por Enter/Espaço — também quando ela já era a escolhida. A mudança de valor é o callback de mudança do grupo.',
+    'props.factory.itemOptions': 'Opções da escolha única, quando o tipo do item é "radio-group". O grupo é uma coisa só: as opções vivem dentro dele.',
+    'props.factory.itemValue': 'Valor escolhido do grupo de escolha única, quando o tipo do item é "radio-group".',
+    'props.factory.itemOnValueChange': 'Avisado quando o valor escolhido do grupo MUDA. Escolher de novo a opção já escolhida não dispara — isso é o callback da opção.',
   },
   en: {
     'props.factory.menus': 'List of menus: the trigger label, the items and the open and close callbacks of each one.',
     'props.factory.class': 'Additional classes on the bar root.',
     'props.factory.defaultOpenIndex': 'Here it is the index of the menu in the list.',
     'props.factory.menuOnOpenChange': 'Called when this menu opens or closes. It is per menu: switching menus with the bar open notifies the one closing before the one opening.',
-    'props.factory.menuOnClose': 'Close reason of the menu, once per close and before the change callback: escape, overlay (click outside, Tab, click on the open trigger or moving to the next menu) or api (item chosen). Leaving the page is not a close and does not fire it.',
+    'props.factory.menuOnClose': 'Close reason of the menu, once per close and before the change callback: escape, overlay (click outside, Tab, click or Enter/Space on the open menu trigger, or moving to the next menu) or api (item chosen). Leaving the page is not a close and does not fire it.',
     'props.factory.radioOptionOnClick': 'Called on every choice of the option, by pointer or by Enter/Space — also when it was already the chosen one. The value change is the group change callback.',
+    'props.factory.itemOptions': 'Options of the single-choice group, when the item type is "radio-group". The group is one thing: the options live inside it.',
+    'props.factory.itemValue': 'Chosen value of the single-choice group, when the item type is "radio-group".',
+    'props.factory.itemOnValueChange': 'Called when the chosen value of the group CHANGES. Choosing the already chosen option again does not fire it — that is the option callback.',
   },
   es: {
     'props.factory.menus': 'Lista de menús: el rótulo del disparador, los ítems y los avisos de apertura y cierre de cada uno.',
     'props.factory.class': 'Clases adicionales en la raíz de la barra.',
     'props.factory.defaultOpenIndex': 'Aquí es el índice del menú en la lista.',
     'props.factory.menuOnOpenChange': 'Se avisa cuando este menú se abre o se cierra. Es por menú: cambiar de menú con la barra abierta avisa al que se cierra antes que al que se abre.',
-    'props.factory.menuOnClose': 'Motivo del cierre del menú, una vez por cierre y antes del callback de cambio: escape, overlay (clic fuera, Tab, clic en el disparador abierto o paso al menú vecino) o api (ítem elegido). Salir de la página no es un cierre y no lo dispara.',
+    'props.factory.menuOnClose': 'Motivo del cierre del menú, una vez por cierre y antes del callback de cambio: escape, overlay (clic fuera, Tab, clic o Enter/Espacio en el disparador del menú abierto, o paso al menú vecino) o api (ítem elegido). Salir de la página no es un cierre y no lo dispara.',
     'props.factory.radioOptionOnClick': 'Se avisa en cada elección de la opción, con el puntero o con Enter/Espacio — también cuando ya era la elegida. El cambio de valor es el callback de cambio del grupo.',
+    'props.factory.itemOptions': 'Opciones del grupo de selección única, cuando el tipo del ítem es "radio-group". El grupo es una sola cosa: las opciones viven dentro de él.',
+    'props.factory.itemValue': 'Valor elegido del grupo de selección única, cuando el tipo del ítem es "radio-group".',
+    'props.factory.itemOnValueChange': 'Se avisa cuando el valor elegido del grupo CAMBIA. Elegir de nuevo la opción ya elegida no lo dispara — eso es el callback de la opción.',
   },
 });
 
@@ -889,6 +898,16 @@ export function createMenubar(
                 { name: 'options.align',        type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: no,  description: toPlainText(t('props.table.align.description')) },
                 { name: 'MenubarMenu.onOpenChange', type: '(open: boolean) => void',         defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.menuOnOpenChange')) },
                 { name: 'MenubarMenu.onClose',  type: "(reason: 'escape' | 'overlay' | 'api') => void", defaultValue: '—', required: no, description: toPlainText(t('props.factory.menuOnClose')) },
+                // As três linhas da escolha única. Elas existiam na interface
+                // acima e faltavam NA TABELA, que é onde se procura prop: o
+                // `options` que o grupo exige, o `value` que diz qual opção
+                // vale e o retorno da mudança. A descrição vem de override
+                // porque o `props.table.value` do conteúdo compartilhado é
+                // OUTRA coisa — lá ele é o menu aberto em modo controlado, que
+                // esta fábrica não tem.
+                { name: 'MenubarItem.options',        type: 'MenubarRadioOption[]',          defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.itemOptions')) },
+                { name: 'MenubarItem.value',          type: 'string',                        defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.itemValue')) },
+                { name: 'MenubarItem.onValueChange',  type: '(value: string) => void',       defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.itemOnValueChange')) },
                 { name: 'MenubarRadioOption.onClick', type: '() => void',                    defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.radioOptionOnClick')) },
               ],
             },

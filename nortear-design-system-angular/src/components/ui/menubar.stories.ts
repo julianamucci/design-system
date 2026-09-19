@@ -436,12 +436,16 @@ export const TabLeavesMenubar: Story = {
       await waitFor(() => expect(document.activeElement).toBe(before));
     });
 
-    await step('Tab dentro do submenu fecha o menu INTEIRO e sai da barra', async () => {
+    const openSubmenuWithItemFocused = async () => {
       const menu = await openWithItemFocused();
       within(menu).getByRole('menuitem', { name: 'Exportar' }).focus();
       await userEvent.keyboard('{ArrowRight}');
       const submenu = () => document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]');
       await waitFor(() => expect(submenu()?.contains(document.activeElement)).toBe(true));
+    };
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e sai da barra', async () => {
+      await openSubmenuWithItemFocused();
 
       pressTab();
       // Os DOIS painéis: fechar só o submenu deixaria o foco num menu que a
@@ -449,6 +453,17 @@ export const TabLeavesMenubar: Story = {
       await waitForPortalVanish('menu');
       await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
       await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+
+    // O C2 promete as duas direções "também de dentro do submenu", e até
+    // 2026-09-18 esta stack afirmava só uma (inconsistência 12 da §7 do PRD).
+    await step('Shift+Tab dentro do submenu também fecha tudo', async () => {
+      await openSubmenuWithItemFocused();
+
+      pressTab(true);
+      await waitForPortalVanish('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(() => expect(document.activeElement).toBe(before));
     });
   },
 };

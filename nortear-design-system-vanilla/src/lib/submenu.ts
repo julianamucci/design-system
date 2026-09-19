@@ -35,8 +35,31 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
  */
 const DEFAULT_CLOSE_DELAY = 300;
 
-/** Vão entre o gatilho e o painel, em px — o padrão das fábricas de menu. */
-const DEFAULT_SIDE_OFFSET = 4;
+/**
+ * Vão do submenu no eixo PRINCIPAL, em px — D15 do PRD do DropdownMenu.
+ *
+ * `0` encosta o subpainel no painel pai. Era `4`, e o `4` não vinha de decisão
+ * nenhuma: era o `sideOffset` do menu RAIZ repassado pelo `dropdown-menu`, que
+ * é o vão entre um gatilho e o painel que desce dele — outra relação. Submenu
+ * não desce de um botão, ele sai da lateral de um painel que já está na tela, e
+ * ali o vão separa duas superfícies que a pessoa lê como uma continuação.
+ */
+const DEFAULT_SIDE_OFFSET = 0;
+
+/**
+ * Vão do submenu no eixo do ALINHAMENTO, em px — a outra metade da D15.
+ *
+ * `-4` é exatamente o `--spacing-1` de padding do painel, e é ele que faz o
+ * PRIMEIRO ITEM do submenu alinhar com o sub-gatilho que o abriu, em vez de
+ * alinhar com a borda da caixa — que é meio item acima. Sem ele o subpainel
+ * nasce sempre 4px baixo demais, e a relação que a seta do gatilho promete fica
+ * um degrau fora.
+ *
+ * Constante, e não opção: o número é de design system (a mesma leitura da D12,
+ * que fixou o vão do Menubar em 8 e o do DropdownMenu em 4), e os três menus
+ * desta stack desenham o mesmo submenu.
+ */
+const ALIGN_OFFSET = -4;
 
 /**
  * A ORIGEM do zoom de entrada é a borda que encosta no item, na altura do item:
@@ -81,7 +104,10 @@ export type SubmenuOptions = {
    * painel quando o teclado o abre.
    */
   getItems: (panel: HTMLElement) => HTMLElement[];
-  /** Vão entre gatilho e painel, em px. */
+  /**
+   * Vão entre gatilho e painel, em px. Padrão `0` (D15) — nenhum dos três menus
+   * desta stack o informa, e a opção fica para quem tiver medida em contrário.
+   */
   sideOffset?: number;
   /**
    * Carência do fechamento por ponteiro, em ms. `0` desliga o fechar por
@@ -367,7 +393,10 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     // painel, enquanto o painel está aberto (`autoUpdateFloating`, logo abaixo):
     // perto da borda, rolar pode ser o que vira o lado, e a origem segue o lado.
     const place = (): void => {
-      const side = positionFloating(trigger, panel, 'right', 'start', sideOffset, { flip: true });
+      const side = positionFloating(trigger, panel, 'right', 'start', sideOffset, {
+        flip: true,
+        alignOffset: ALIGN_OFFSET,
+      });
       writeTransformOrigin(trigger, panel, side);
     };
     place();

@@ -2,7 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
-import { menubarSource } from './menubar.source';
+import {
+  menubarSource,
+  menubarWithShortcutsSource,
+  menubarWithSubmenuSource,
+  menubarWithCheckboxSource,
+  menubarWithRadioSource,
+} from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -55,7 +61,10 @@ export const WithShortcuts: Story = {
   args: { defaultValue: 'edit', demonstration: 'shortcuts' },
   // F16: o atalho dentro do nome acessível e à direita do rótulo — os passos
   // abaixo medem as duas metades.
-  parameters: { covers: ['functional.item16', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item16', 'visual.item2'],
+    docs: { source: { transform: menubarWithShortcutsSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const items = within(menu).getAllByRole('menuitem');
@@ -100,7 +109,10 @@ export const WithShortcuts: Story = {
 
 export const WithSubmenu: Story = {
   args: { defaultValue: 'file', demonstration: 'submenu' },
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: { source: { transform: menubarWithSubmenuSource } },
+  },
   play: async ({ step }) => {
     const body = within(document.body);
     const menu = await waitForPortal('menu');
@@ -212,7 +224,10 @@ export const WithSubmenu: Story = {
 
 export const WithCheckboxItems: Story = {
   args: { defaultValue: 'view', demonstration: 'checkbox' },
-  parameters: { covers: ['functional.item7', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item3'],
+    docs: { source: { transform: menubarWithCheckboxSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const boxes = within(menu).getAllByRole('menuitemcheckbox');
@@ -278,7 +293,10 @@ export const WithRadioGroup: Story = {
   args: { defaultValue: 'theme', demonstration: 'radio' },
   // F15: a escolha transfere a marcação e o menu segue aberto — o último passo
   // conta os menus DEPOIS do clique, em vez de ler uma referência antiga.
-  parameters: { covers: ['functional.item15', 'accessibility.item5'] },
+  parameters: {
+    covers: ['functional.item15', 'accessibility.item5'],
+    docs: { source: { transform: menubarWithRadioSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const options = within(menu).getAllByRole('menuitemradio');
@@ -286,6 +304,28 @@ export const WithRadioGroup: Story = {
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {
       await expect(options).toHaveLength(THEMES.length);
       await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+    });
+
+    await step('O grupo de rádio tem NOME, dado pelo próprio rótulo', async () => {
+      // Nesta lib o rótulo dentro do grupo vira o cabeçalho, e a lib escreve o
+      // `id` dele no `aria-labelledby` — é o que faz o leitor de tela anunciar
+      // "Tema" antes das três opções. Até 2026-09-18 quem nomeava era outra
+      // peça, com outro `data-slot` (`menubar-group-heading`), e o `MenubarLabel`
+      // era um `<div>` solto que não amarrava nada.
+      //
+      // O rótulo desta prévia é escrito com `GroupHeading`, o nome da lib que
+      // esta stack também publica: ele DELEGA ao `Label`, e é por isso que o
+      // endereço de markup conferido aqui é `menubar-label`.
+      const radioGroup = menu.querySelector<HTMLElement>('[data-slot="menubar-radio-group"]')!;
+      const labelledBy = radioGroup.getAttribute('aria-labelledby');
+      await expect(labelledBy).toBeTruthy();
+      const groupLabel = document.getElementById(labelledBy!)!;
+      await expect(groupLabel.textContent).toContain('Tema');
+      await expect(groupLabel.getAttribute('data-slot')).toBe('menubar-label');
+      // Sem `role="group"` no rótulo: seria um bloco vazio dentro do bloco que
+      // ele nomeia, e o leitor de tela anunciaria um grupo a mais.
+      await expect(groupLabel.hasAttribute('role')).toBe(false);
+      await expect(menu.querySelectorAll('[data-slot="menubar-group-heading"]')).toHaveLength(0);
     });
 
     await step('O indicador publica o data-slot do seu tipo de item', async () => {

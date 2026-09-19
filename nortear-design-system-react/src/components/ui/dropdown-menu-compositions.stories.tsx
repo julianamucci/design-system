@@ -363,6 +363,22 @@ export const WithSubmenu: Story = {
       });
     });
 
+    await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {
+      // §8 do PRD: o painel do submenu vive num portal, fora da árvore do
+      // sub-gatilho, e a ligação entre os dois é o que faz o leitor de tela
+      // dizer a que menu aquele item leva. Nesta stack quem escreve a ligação é
+      // a lib, e ela usa `aria-controls` (o vanilla e o angular decidem à mão e
+      // usam `aria-owns`). Até 2026-09-18 nenhuma das três stacks de
+      // `aria-controls` afirmava a relação — e atributo que ninguém afirma é
+      // atributo que some numa troca de versão sem nada reprovar.
+      const panel = submenu()!;
+      const controls = subTrigger.getAttribute("aria-controls");
+      await expect(controls).toBeTruthy();
+      // Apontar para um id QUALQUER não é ligação: o id tem de resolver no
+      // painel que acabou de abrir.
+      await expect(document.getElementById(controls!)).toBe(panel);
+    });
+
     await step("O submenu abre AO LADO, não por cima do menu pai", async () => {
       const panel = submenu()!;
       await expect(within(panel).getAllByRole("menuitem")).toHaveLength(2);

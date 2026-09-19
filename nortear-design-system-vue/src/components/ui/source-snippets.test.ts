@@ -27,7 +27,19 @@ const SCAFFOLD = /\b[A-Z][A-Za-z0-9]*Story\b|\bwrapper\b|\bcaso\b|\.fixtures\b/;
  * Lista fechada de propósito. Acrescentar um nome aqui é declarar a exceção;
  * deixar de fora é reprovar — que é como o portão volta a ter dentes.
  */
-const HELPERS = new Set(['HEIGHT_PLAYGROUND', 'attrRatio', 'ratioExpression']);
+const HELPERS = new Set([
+  'HEIGHT_PLAYGROUND',
+  'attrRatio',
+  'ratioExpression',
+  // A MEDIDA do menu longo do Menubar (D17) e a lista de rótulos que ela gera.
+  // Nenhuma das duas constrói snippet: elas são a massa, e a story
+  // `States/LongMenu` as importa de volta para renderizar exatamente a mesma
+  // lista que `menubarLongMenuSource` imprime. Compartilhar em vez de duplicar é
+  // o que impede a story de medir sessenta itens enquanto o painel Code ensina
+  // outro número.
+  'LONG_MENU_ITEMS',
+  'LONG_MENU_LABELS',
+]);
 
 /** Regra do repositório: nada de nome de outra stack no que o leitor vê. */
 const OTHER_STACK = /\b(React|Svelte|Angular|Vanilla|bits-ui|base-ui|radix)\b/i;

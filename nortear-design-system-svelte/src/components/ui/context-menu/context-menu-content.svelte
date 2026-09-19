@@ -14,6 +14,13 @@
 		id = `nds-context-menu-content-${uid}`,
 		portalProps,
 		class: className,
+		// D15: o ContextMenu raiz é `0`/`0`. O painel nasce no PONTEIRO, e
+		// qualquer deslocamento ali seria número mágico — a quina do painel fica
+		// onde o cursor está, que é a convenção do menu de contexto nativo. Até
+		// 2026-09-18 esta stack herdava o `sideOffset: 2` do bits
+		// (`context-menu-content.svelte` da lib), que não saía de token nenhum.
+		sideOffset = 0,
+		alignOffset = 0,
 		onkeydown,
 		...restProps
 	}: ContextMenuPrimitive.ContentProps & {
@@ -54,6 +61,8 @@
 		bind:ref
 		{id}
 		data-slot="context-menu-content"
+		{sideOffset}
+		{alignOffset}
 		class={cn("nds-dropdown-menu-content", className)}
 		onkeydown={handleKeydown}
 		{...restProps}

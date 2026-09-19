@@ -30,7 +30,8 @@ export type MenubarArgs = {
     | 'radio'
     | 'itemDisabled'
     | 'destructive'
-    | 'editor';
+    | 'editor'
+    | 'long';
 };
 
 /** Ordem estável dos nomes no bloco de import, independente da composição. */
@@ -41,7 +42,6 @@ const ORDER = [
   'MenubarContent',
   'MenubarItem',
   'MenubarGroup',
-  'MenubarGroupHeading',
   'MenubarLabel',
   'MenubarSeparator',
   'MenubarShortcut',
@@ -121,7 +121,7 @@ function composition(
 
   if (demonstration === 'checkbox') {
     return {
-      parts: [...BASE, 'MenubarGroup', 'MenubarGroupHeading', 'MenubarCheckboxItem'],
+      parts: [...BASE, 'MenubarGroup', 'MenubarLabel', 'MenubarCheckboxItem'],
       state: [
         'let regua = $state(true);',
         'let barraLateral = $state(false);',
@@ -133,7 +133,7 @@ function composition(
         // O par grupo + cabeçalho é o que dá nome ao conjunto de alternadores:
         // o cabeçalho vira o `aria-labelledby` do grupo.
         `      <MenubarGroup>
-        <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
+        <MenubarLabel>Mostrar na tela</MenubarLabel>
         <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
         <MenubarCheckboxItem bind:checked={barraLateral}>Barra lateral</MenubarCheckboxItem>
         <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
@@ -159,13 +159,13 @@ function composition(
 
   if (demonstration === 'radio') {
     return {
-      parts: [...BASE, 'MenubarGroupHeading', 'MenubarRadioGroup', 'MenubarRadioItem'],
+      parts: [...BASE, 'MenubarLabel', 'MenubarRadioGroup', 'MenubarRadioItem'],
       state: ['let tema = $state("light");'],
       menus: menu(
         'theme',
         'Aparência',
         `      <MenubarRadioGroup bind:value={tema}>
-        <MenubarGroupHeading>Tema</MenubarGroupHeading>
+        <MenubarLabel>Tema</MenubarLabel>
         <MenubarRadioItem value="light">Claro</MenubarRadioItem>
         <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
         <MenubarRadioItem value="system">Do sistema</MenubarRadioItem>
@@ -202,13 +202,31 @@ function composition(
     };
   }
 
+  if (demonstration === 'long') {
+    // O menu mais alto que a janela: o painel recorta e rola sozinho, pela
+    // folha, sem nada a declarar no markup. É essa a lição do snippet — quem
+    // copia não precisa de prop nenhuma para o menu longo caber.
+    return {
+      parts: [...BASE, 'MenubarItem'],
+      state: [],
+      menus: menu(
+        'file',
+        'Arquivo',
+        Array.from(
+          { length: 60 },
+          (_, i) => `      <MenubarItem>Ação ${i + 1}</MenubarItem>`,
+        ).join('\n'),
+      ),
+    };
+  }
+
   if (demonstration === 'editor') {
     return {
       parts: [
         ...BASE,
         'MenubarItem',
         'MenubarGroup',
-        'MenubarGroupHeading',
+        'MenubarLabel',
         'MenubarSeparator',
         'MenubarShortcut',
         'MenubarCheckboxItem',
@@ -219,7 +237,7 @@ function composition(
           'file',
           'Arquivo',
           `      <MenubarGroup>
-        <MenubarGroupHeading>Documento</MenubarGroupHeading>
+        <MenubarLabel>Documento</MenubarLabel>
         <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
         <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
       </MenubarGroup>
@@ -236,7 +254,7 @@ function composition(
           'view',
           'Exibir',
           `      <MenubarGroup>
-        <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
+        <MenubarLabel>Mostrar na tela</MenubarLabel>
         <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
         <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
       </MenubarGroup>`,
@@ -309,6 +327,76 @@ export function menubarSource(_gerado?: string, ctx?: { args?: Partial<MenubarAr
 ${menus}
 </Menubar>`,
   );
+}
+
+// ─── Overrides por story ──────────────────────────────────────────────────────
+//
+// As stories de variação, estado e composição nascem com um menu ABERTO para a
+// captura do Chromatic, e nesta lib abrir ao montar é `bind:value` com o `value`
+// do menu — `let menuAberto = $state("file")`. Isso é andaime da foto, não
+// lição: uma barra que se abre sozinha ao carregar a página é justamente o que
+// não se deve copiar. Os overrides abaixo reaproveitam a MESMA transform sem o
+// estado de abertura, como os do DropdownMenu desta stack.
+//
+// `States/Closed` e `States/Open` ficam de fora de propósito: numa a barra
+// fechada é o assunto, e na outra a barra aberta É a lição — ali o `bind:value`
+// do meta é exatamente o que se quer ensinar. Mesma divisão do DropdownMenu.
+// `Compositions/EditorCompleto` também fica: ela já monta sem `defaultValue`.
+
+/** Variants/Default — o item neutro, sem cor semântica. */
+export function menubarDefaultSource(): string {
+  return menubarSource('', { args: { variant: 'default', demonstration: 'default' } });
+}
+
+/** Variants/Destructive — a ação irreversível marcada pela cor de perigo. */
+export function menubarDestructiveSource(): string {
+  return menubarSource('', { args: { demonstration: 'destructive' } });
+}
+
+/** States/ItemDisabled — o item indisponível continua no menu, e é anunciado. */
+export function menubarItemDisabledSource(): string {
+  return menubarSource('', { args: { demonstration: 'itemDisabled' } });
+}
+
+/** States/CheckboxChecked — o alternador marcado ao montar, dentro do grupo nomeado. */
+export function menubarCheckboxCheckedSource(): string {
+  return menubarSource('', { args: { demonstration: 'checkbox' } });
+}
+
+/** States/CheckboxIndeterminate — os três estados do alternador lado a lado. */
+export function menubarCheckboxIndeterminateSource(): string {
+  return menubarSource('', { args: { demonstration: 'indeterminate' } });
+}
+
+/** Compositions/WithShortcuts — o atalho encostado na borda direita do item. */
+export function menubarWithShortcutsSource(): string {
+  return menubarSource('', { args: { demonstration: 'shortcuts' } });
+}
+
+/** Compositions/WithSubmenu — um segundo nível que abre ao lado. */
+export function menubarWithSubmenuSource(): string {
+  return menubarSource('', { args: { demonstration: 'submenu' } });
+}
+
+/** Compositions/WithCheckboxItems — alternadores independentes entre si. */
+export function menubarWithCheckboxSource(): string {
+  return menubarSource('', { args: { demonstration: 'checkbox' } });
+}
+
+/** Compositions/WithRadioGroup — escolha única dentro de um menu da barra. */
+export function menubarWithRadioSource(): string {
+  return menubarSource('', { args: { demonstration: 'radio' } });
+}
+
+/**
+ * States/PanelScrolls — o menu mais alto que a janela (D17).
+ *
+ * Nada no markup declara rolagem: quem recorta é o `max-height` de
+ * `.nds-dropdown-menu-content`, e quem rola é o `overflow-y: auto` da mesma
+ * folha. O snippet é longo de propósito — é a altura que faz a lição.
+ */
+export function menubarPanelScrollsSource(): string {
+  return menubarSource('', { args: { demonstration: 'long' } });
 }
 
 /**

@@ -15,6 +15,8 @@
     DropdownMenuSubContent,
     DropdownMenuGroup,
     DropdownMenuGroupHeading,
+    createMenuCloseWatch,
+    type MenuCloseReason,
   } from './index';
   import { Button } from '@/components/ui/button';
 
@@ -50,6 +52,18 @@
      * play afirmar que um fechamento NÃO executou nada — o clique fora (F13).
      */
     onSelect?: (value: string) => void;
+    /**
+     * Espião do MOTIVO do fechamento, na palavra do design system.
+     *
+     * A lib não publica motivo — o `onOpenChange` avisa QUE o menu fechou,
+     * nunca por quê —, então quem traduz gesto em palavra é o
+     * `menu-close-reason.ts`, ao lado das peças e compartilhado pelos três
+     * membros da família. É o mesmo caminho que a docs page usa para alimentar
+     * o `reason` do `dropdown_menu_close`, e é por ele que a play afirma que o
+     * clique fora sai `overlay` e a escolha de item sai `api` — as outras
+     * quatro stacks já afirmavam isso no Playground, e só esta não.
+     */
+    onCloseReason?: (reason: MenuCloseReason) => void;
   }
   // `defaultOpen` não existe no bits-ui nem no vaul-svelte: a prop era
   // passada, ignorada, e o overlay nunca abria. A API real é `open`
@@ -66,7 +80,32 @@
     variant = 'default',
     neighbors = undefined,
     onSelect = () => {},
+    onCloseReason = undefined,
   }: Props = $props();
+
+  // O observador do gesto: o painel anota Escape, clique fora e Tab; o gatilho
+  // anota o clique com o menu JÁ ABERTO. Quem lê a palavra é o `onOpenChange`
+  // abaixo, uma vez por fechamento.
+  const closeWatch = createMenuCloseWatch({
+    subContentSelector: '[data-slot="dropdown-menu-sub-content"]',
+    isOpen: () => open,
+  });
+
+  function handleOpenChange(next: boolean) {
+    if (next) {
+      closeWatch.reset();
+      return;
+    }
+    onCloseReason?.(closeWatch.takeReason());
+  }
+
+  /** A escolha de um item de AÇÃO é a decisão que fecha o menu — motivo `api`. */
+  function chooseItem(value: string) {
+    return () => {
+      closeWatch.markItemPress();
+      onSelect(value);
+    };
+  }
 
   // states for interactive variants
   let showName = $state(true);
@@ -84,26 +123,32 @@
         Divergência de API de framework não se alinha: fica registrada aqui, e o
         control saiu junto, porque control morto é pior que control ausente.
       -->
-      <DropdownMenu bind:open>
-        <DropdownMenuTrigger>
+      <DropdownMenu bind:open onOpenChange={handleOpenChange}>
+        <DropdownMenuTrigger {...closeWatch.trigger}>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{triggerLabel}</Button>
           {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent {side} {align} {sideOffset}>
+        <DropdownMenuContent {side} {align} {sideOffset} {...closeWatch.content}>
           {#if variant === 'destructive'}
             <DropdownMenuItem>Editar</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
           {:else if variant === 'withLabel'}
             <!--
-              `Group` + `GroupHeading` é a dupla que dá NOME ao agrupamento: o
-              heading vira o `aria-labelledby` do grupo, e sem ele o leitor de
-              tela anuncia "grupo" sem dizer de qual bloco se trata. Um `Label`
-              solto rotula visualmente e não nomeia nada.
+              `Group` + `Label` é a dupla que dá NOME ao agrupamento: dentro de
+              um grupo o rótulo VIRA o cabeçalho da lib, e o `id` dele entra no
+              `aria-labelledby` do grupo — sem isso o leitor de tela anuncia
+              "grupo" sem dizer de qual bloco se trata. Fora de um grupo o mesmo
+              `Label` rotula visualmente e não nomeia nada.
+
+              O SEGUNDO grupo usa `GroupHeading`, o nome da lib que esta stack
+              também publica: ele delega ao `Label`, e a play conta DOIS rótulos
+              com o mesmo `data-slot` — é o que prova que as duas peças não
+              divergem. Mesma forma do ContextMenu desta stack.
             -->
             <DropdownMenuGroup>
-              <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+              <DropdownMenuLabel>Conta</DropdownMenuLabel>
               <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuItem>Configurações</DropdownMenuItem>
             </DropdownMenuGroup>
@@ -205,9 +250,9 @@
             <DropdownMenuItem>Duplicar</DropdownMenuItem>
           {:else}
             <DropdownMenuGroup>
-              <DropdownMenuItem onSelect={() => onSelect('profile')}>Perfil</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => onSelect('settings')}>Configurações</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => onSelect('team')}>Equipe</DropdownMenuItem>
+              <DropdownMenuItem onSelect={chooseItem('profile')}>Perfil</DropdownMenuItem>
+              <DropdownMenuItem onSelect={chooseItem('settings')}>Configurações</DropdownMenuItem>
+              <DropdownMenuItem onSelect={chooseItem('team')}>Equipe</DropdownMenuItem>
             </DropdownMenuGroup>
           {/if}
         </DropdownMenuContent>

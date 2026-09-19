@@ -315,10 +315,13 @@ export class NdsDropdownMenu implements NdsSubmenuPanel {
     () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 4),
   );
 
-  // -3px compensam o padding do popup pai, alinhando o primeiro item do submenu
-  // com o item que o abriu.
+  // -4px são o `--spacing-1` de padding do painel pai, devolvido: é ele que faz
+  // o primeiro item do submenu alinhar com o SUB-GATILHO que o abriu, em vez de
+  // alinhar com a borda da caixa. Valor de design system, não da lib (D15 do PRD
+  // do dropdown-menu, decisão da dona em 2026-09-18) — até essa data era -3, que
+  // não saía de token nenhum.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -3 : 0),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -4 : 0),
   );
 }
 

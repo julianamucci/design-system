@@ -142,10 +142,18 @@ function ContextMenuTrigger({
   )
 }
 
+/**
+ * Vão do painel raiz — D15: `sideOffset: 0` e `alignOffset: 0`.
+ *
+ * O painel do menu de contexto nasce no PONTEIRO, e qualquer deslocamento ali é
+ * número mágico: a quina do painel fica onde o cursor está, que é a convenção do
+ * menu de contexto nativo. O `alignOffset: 4` que estava aqui empurrava a quina
+ * para longe do clique sem sair de token nenhum.
+ */
 function ContextMenuContent({
   className,
   align = "start",
-  alignOffset = 4,
+  alignOffset = 0,
   side = "right",
   sideOffset = 0,
   onKeyDown,
@@ -283,13 +291,24 @@ function ContextMenuSubTrigger({
   )
 }
 
+/**
+ * Vão do SUBMENU — D15, e é outro número que o do painel raiz logo acima.
+ *
+ * O submenu não nasce no ponteiro: ele é ancorado no SUB-GATILHO, como em
+ * qualquer menu da família. Daí `alignOffset: -4`, o `--spacing-1` de padding do
+ * painel, que alinha o primeiro item do submenu com o sub-gatilho que o abriu —
+ * o mesmo valor que `DropdownMenuSubContent` declara para os outros dois
+ * membros. Herdar o `0` do raiz alinharia pela borda da caixa.
+ */
 function ContextMenuSubContent({
+  alignOffset = -4,
   ...props
 }: React.ComponentProps<typeof ContextMenuContent>) {
   return (
     <ContextMenuContent
       data-slot="context-menu-sub-content"
       side="right"
+      alignOffset={alignOffset}
       {...props}
     />
   )

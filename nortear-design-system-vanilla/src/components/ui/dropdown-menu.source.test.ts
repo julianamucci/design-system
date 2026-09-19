@@ -3,6 +3,7 @@ import {
   dropdownMenuControlledSnippet,
   dropdownMenuSnippet,
   dropdownMenuSource,
+  dropdownMenuSourceControlled,
   dropdownMenuSourceWith,
 } from './dropdown-menu.source';
 
@@ -75,7 +76,14 @@ describe('dropdownMenuSnippet', () => {
       items: [
         { type: 'label', label: 'Colunas visíveis' },
         { type: 'checkbox', label: 'Nome', value: 'nome', indeterminate: true },
-        { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
+        {
+          type: 'radio-group',
+          value: 'light',
+          options: [
+            { value: 'light', label: 'Claro' },
+            { value: 'dark', label: 'Escuro' },
+          ],
+        },
         { type: 'separator' },
         { label: 'Excluir conta', value: 'delete', variant: 'destructive' },
         { label: 'Copiar', value: 'copy', shortcut: 'Ctrl+C' },
@@ -86,9 +94,14 @@ describe('dropdownMenuSnippet', () => {
     expect(code).toContain(
       "{ type: 'checkbox', label: 'Nome', value: 'nome', indeterminate: true }",
     );
+    // A escolha única é UM grupo com as opções dentro (D16), e não itens soltos
+    // amarrados por um nome — a forma que o `createMenubar` já tinha.
     expect(code).toContain(
-      "{ type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true }",
+      "{ type: 'radio-group', value: 'light', " +
+        "options: [{ value: 'light', label: 'Claro' }, { value: 'dark', label: 'Escuro' }] }",
     );
+    expect(code).not.toContain("type: 'radio'");
+    expect(code).not.toContain('group:');
     expect(code).toContain("{ type: 'separator' }");
     expect(code).toContain("variant: 'destructive'");
     expect(code).toContain("shortcut: 'Ctrl+C'");
@@ -174,6 +187,44 @@ describe('dropdownMenuSource', () => {
     expect(dropdownMenuSource('<ul role="menu" data-side="bottom">', {})).not.toContain(
       'data-side=',
     );
+  });
+});
+
+/**
+ * O transform da story `Controlled`, e não só o construtor que ele embrulha.
+ *
+ * Ele era um export que este arquivo NÃO cobria: a varredura transversal
+ * (`source-snippets.test.ts`) o chamava com os args padrão e o achava honesto,
+ * e o teste do componente parava no `dropdownMenuControlledSnippet`. O que
+ * ficava sem portão é justamente o que o transform acrescenta — a fusão das
+ * opções FIXAS da story com os `ctx.args` do Storybook, que é onde as duas
+ * outras transforms deste arquivo já tiveram defeito.
+ */
+describe('dropdownMenuSourceControlled', () => {
+  it('leva as opções fixas da story para dentro do trecho comandado', () => {
+    const transform = dropdownMenuSourceControlled({
+      triggerLabel: 'Ações',
+      items: [
+        { label: 'Comando A', value: 'a' },
+        { label: 'Comando B', value: 'b' },
+      ],
+    });
+    const code = transform('', { args: { triggerLabel: 'Abrir menu' } });
+    // A opção fixa vence o control: é a story que sabe o que está na tela.
+    expect(code).toContain("label: 'Ações'");
+    expect(code).toContain("{ label: 'Comando A', value: 'a' },");
+    expect(code).not.toContain("label: 'Perfil'");
+    // E continua sendo o trecho COMANDADO — o verbo público, não um clique
+    // encenado num gatilho escondido.
+    expect(code).toContain('menu.open()');
+    expect(code).toContain('const gatilho = createButton(');
+    expect(code).not.toContain('nds-sr-only');
+  });
+
+  it('sem opções fixas cai na lista canônica, como o construtor', () => {
+    const code = dropdownMenuSourceControlled()('', {});
+    expect(code).toContain("{ type: 'label', label: 'Conta' },");
+    expect(code).toContain('onOpenChange:');
   });
 });
 

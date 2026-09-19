@@ -21,6 +21,13 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_MENUBAR, MenuCloseTracker } from '@/components/ui/menubar';
+import {
+  menubarSnippet,
+  type MenubarSnippetCheckbox,
+  type MenubarSnippetEntry,
+  type MenubarSnippetItem,
+  type MenubarSnippetMenu,
+} from '@/components/ui/menubar.source';
 import uiTranslations from '@/i18n/ui.json';
 import menubarTranslations from '@shared/content/menubar/translations.json';
 
@@ -78,8 +85,6 @@ const { t, dict } = useTranslation(menubarTranslations as Record<string, unknown
       'location é a SEÇÃO da tela onde a barra mora: nestas docs, docs_<seção>; no produto, a seção dele.',
     'snippet.reasons':
       'escape: Escape · overlay: clique fora, Tab, gatilho aberto ou menu vizinho · api: item ou código',
-    'props.class.description':
-      'Classes extras escritas no elemento são mescladas com as do componente; não há prop de classe.',
     'props.modal.description':
       'Enquanto um menu está aberto, bloqueia a interação com o resto da página e a rolagem. Vale para todos os menus da barra.',
     'props.barDisabled.description':
@@ -136,8 +141,6 @@ const { t, dict } = useTranslation(menubarTranslations as Record<string, unknown
       'location is the SECTION of the screen where the bar lives: in these docs, docs_<section>; in the product, its own.',
     'snippet.reasons':
       'escape: Escape · overlay: click outside, Tab, open trigger or next menu · api: item or code',
-    'props.class.description':
-      'Extra classes written on the element are merged with the component ones; there is no class prop.',
     'props.modal.description':
       'While a menu is open, blocks interaction with the rest of the page and page scrolling. Applies to every menu on the bar.',
     'props.barDisabled.description':
@@ -189,8 +192,6 @@ const { t, dict } = useTranslation(menubarTranslations as Record<string, unknown
       'location es la SECCIÓN de la pantalla donde vive la barra: en estas docs, docs_<sección>; en el producto, la suya.',
     'snippet.reasons':
       'escape: Escape · overlay: clic fuera, Tab, disparador abierto o menú vecino · api: ítem o código',
-    'props.class.description':
-      'Las clases extra escritas en el elemento se combinan con las del componente; no hay prop de clase.',
     'props.modal.description':
       'Mientras un menú está abierto, bloquea la interacción con el resto de la página y el desplazamiento. Vale para todos los menús de la barra.',
     'props.barDisabled.description':
@@ -732,6 +733,55 @@ const VARIANTS = [
 type VariantKey = (typeof VARIANTS)[number]['key'];
 
 /**
+ * A lista da barra TRADUZIDA, na forma que o construtor de snippet consome.
+ *
+ * O construtor mora em `ui/menubar.source.ts` desde 2026-09-18 — snippet
+ * montado dentro da docs page não é importável, e por isso não era testável
+ * (inconsistência 22 da §7 do PRD). Aqui fica só a tradução: a chave vira texto
+ * no idioma da página.
+ */
+function snippetMenus(menus: readonly BarMenu[]): readonly MenubarSnippetMenu[] {
+  const leafItem = (e: ItemEntry): MenubarSnippetItem => ({
+    kind: 'item',
+    label: t(e.label),
+    ...(e.shortcut ? { shortcut: t(e.shortcut) } : {}),
+    ...(e.destructive ? { destructive: true } : {}),
+  });
+  const leaf = (e: ItemEntry | CheckboxEntry): MenubarSnippetItem | MenubarSnippetCheckbox =>
+    e.kind === 'item' ? leafItem(e) : { kind: 'checkbox', label: t(e.label), checked: e.checked };
+
+  const entry = (e: PreviewEntry): MenubarSnippetEntry => {
+    switch (e.kind) {
+      case 'separator':
+        return { kind: 'separator' };
+      case 'group':
+        return { kind: 'group', label: t(e.label), entries: e.entries.map(leaf) };
+      case 'radio-group':
+        return {
+          kind: 'radio-group',
+          ...(e.label ? { label: t(e.label) } : {}),
+          value: e.value,
+          options: e.options.map((o) => ({ label: t(o.label), value: o.value })),
+        };
+      case 'sub':
+        return {
+          kind: 'sub',
+          label: t(e.label),
+          entries: e.entries.map((child) =>
+            child.kind === 'sub'
+              ? { kind: 'sub' as const, label: t(child.label), entries: child.entries.map(leafItem) }
+              : leafItem(child),
+          ),
+        };
+      default:
+        return leaf(e);
+    }
+  };
+
+  return menus.map((m) => ({ trigger: t(m.trigger), entries: m.entries.map(entry) }));
+}
+
+/**
  * O código da ficha, a partir da MESMA lista que monta a barra — com os rótulos
  * no idioma da página, para que código e prévia digam o mesmo nos três.
  *
@@ -739,72 +789,7 @@ type VariantKey = (typeof VARIANTS)[number]['key'];
  * rastreio) não entra: é andaime desta docs page, não lição do menubar.
  */
 function barSnippet(menus: readonly BarMenu[]): string {
-  const pad = (n: number) => ' '.repeat(n);
-  const itemLines = (e: ItemEntry, n: number): string[] => {
-    const attrs = e.destructive ? ' variant="destructive"' : '';
-    const shortcut = e.shortcut ? ` <span ndsMenubarShortcut>${t(e.shortcut)}</span>` : '';
-    return [`${pad(n)}<div ndsMenubarItem${attrs}>${t(e.label)}${shortcut}</div>`];
-  };
-  const leaf = (e: ItemEntry | CheckboxEntry, n: number): string[] =>
-    e.kind === 'item'
-      ? itemLines(e, n)
-      : [`${pad(n)}<div ndsMenubarCheckboxItem [checked]="${e.checked}">${t(e.label)}</div>`];
-  const sub = (label: LabelKey, children: string[], n: number): string[] => [
-    `${pad(n)}<nds-menubar-sub>`,
-    `${pad(n + 2)}<div ndsMenubarSubTrigger>${t(label)}</div>`,
-    `${pad(n + 2)}<ng-template ndsMenubarSubContent>`,
-    ...children,
-    `${pad(n + 2)}</ng-template>`,
-    `${pad(n)}</nds-menubar-sub>`,
-  ];
-
-  const entryLines = (entries: readonly PreviewEntry[], n: number): string[] => {
-    const lines: string[] = [];
-    for (const entry of entries) {
-      if (entry.kind === 'separator') {
-        lines.push(`${pad(n)}<div ndsMenubarSeparator></div>`);
-      } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
-        lines.push(...leaf(entry, n));
-      } else if (entry.kind === 'group') {
-        lines.push(`${pad(n)}<div ndsMenubarGroup>`);
-        lines.push(`${pad(n + 2)}<div ndsMenubarLabel>${t(entry.label)}</div>`);
-        for (const child of entry.entries) lines.push(...leaf(child, n + 2));
-        lines.push(`${pad(n)}</div>`);
-      } else if (entry.kind === 'radio-group') {
-        lines.push(`${pad(n)}<div ndsMenubarRadioGroup value="${entry.value}">`);
-        if (entry.label) lines.push(`${pad(n + 2)}<div ndsMenubarLabel>${t(entry.label)}</div>`);
-        for (const opt of entry.options) {
-          lines.push(`${pad(n + 2)}<div ndsMenubarRadioItem value="${opt.value}">${t(opt.label)}</div>`);
-        }
-        lines.push(`${pad(n)}</div>`);
-      } else {
-        const children: string[] = [];
-        for (const child of entry.entries) {
-          if (child.kind === 'sub') {
-            const leaves = child.entries.flatMap((l) => itemLines(l, n + 8));
-            children.push(...sub(child.label, leaves, n + 4));
-          } else {
-            children.push(...itemLines(child, n + 4));
-          }
-        }
-        lines.push(...sub(entry.label, children, n));
-      }
-    }
-    return lines;
-  };
-
-  const body = menus.map((m) =>
-    [
-      `  <nds-menubar-menu>`,
-      `    <button ndsMenubarTrigger>${t(m.trigger)}</button>`,
-      `    <ng-template ndsMenubarContent>`,
-      ...entryLines(m.entries, 6),
-      `    </ng-template>`,
-      `  </nds-menubar-menu>`,
-    ].join('\n'),
-  );
-
-  return `<nds-menubar>\n${body.join('\n\n')}\n</nds-menubar>`;
+  return menubarSnippet(snippetMenus(menus));
 }
 
 /**
@@ -1360,7 +1345,22 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
       description: toPlainText(t(`props.table.${key}.description`)),
     });
 
-    /** Linha que só existe neste stack — descrição vem do override. */
+    /**
+     * Linha que só existe neste stack — descrição vem do override.
+     *
+     * O override é o MÍNIMO: toda prop que o conteúdo compartilhado descreve
+     * entra por `ofContent`, e só o que este stack acrescenta de verdade cai
+     * aqui. Até 2026-09-18 havia também uma linha `class` — e o texto dela
+     * dizia que não existe prop de classe, ou seja, uma linha de tabela de
+     * PROPS para algo que não é prop.
+     *
+     * As três linhas de abertura do MENU (`open`, `openChange`, `defaultOpen`)
+     * são locais por divergência real de API: no conteúdo compartilhado a
+     * abertura do Menubar é `value`/`onValueChange`/`defaultValue` na BARRA —
+     * qual menu está aberto —, e aqui cada `nds-menubar-menu` governa o
+     * próprio estado (§7 do PRD: divergência de API de framework, registrada e
+     * não alinhada).
+     */
     const local = (name: string, type: string, defaultValue: string, key: string) => ({
       name: name,
       type: type,
@@ -1368,8 +1368,6 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
       required: not,
       description: toPlainText(t(`props.${key}.description`)),
     });
-
-    const className = local('class', 'string', '—', 'class');
 
     return [
       {
@@ -1380,7 +1378,6 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
           ofContent('loopFocus', 'loop'),
           local('modal', 'boolean', 'true', 'modal'),
           local('disabled', 'boolean', 'false', 'barDisabled'),
-          className,
         ],
       },
       {

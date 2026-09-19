@@ -8,6 +8,14 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		// D15: o vão do submenu é 0 e −4, e o −4 sai de token.
+		// `sideOffset: 0` encosta o subpainel no painel pai; `alignOffset: -4` é
+		// exatamente o `--spacing-1` de padding do painel, e é ele que faz o
+		// primeiro item do submenu alinhar com o SUB-GATILHO que o abriu, em vez
+		// de alinhar com a borda da caixa. Até 2026-09-18 nada era declarado aqui
+		// e o vão era o padrão da lib, nunca medido.
+		sideOffset = 0,
+		alignOffset = -4,
 		onkeydown,
 		...restProps
 	}: DropdownMenuPrimitive.SubContentProps = $props();
@@ -50,6 +58,8 @@
 	<DropdownMenuPrimitive.SubContent
 		bind:ref
 		data-slot="dropdown-menu-sub-content"
+		{sideOffset}
+		{alignOffset}
 		class={cn("nds-dropdown-menu-content", className)}
 		onkeydown={handleKeydown}
 		{...restProps}

@@ -568,3 +568,188 @@ export function menubarEditorSource(): string {
     ]),
   );
 }
+
+// ─── Menu longo ───────────────────────────────────────────────────────────────
+
+/**
+ * Quantas ações o menu longo lista.
+ *
+ * Trinta e seis a ~32px de altura passam de mil pixels — mais alto que qualquer
+ * viewport que a suíte abra, e é isso que faz o painel RECORTAR e rolar. Número
+ * menor deixaria a story verde sem exercer o recorte, que é o assunto dela
+ * (D17 do PRD do dropdown-menu).
+ */
+export const LONG_MENU_ITEMS = 36;
+
+/** Os rótulos do menu longo — a mesma lista que a story renderiza. */
+export const LONG_MENU_LABELS: readonly string[] = Array.from(
+  { length: LONG_MENU_ITEMS },
+  (_, i) => `Ação ${i + 1}`,
+);
+
+/**
+ * O menu que não cabe na tela, escrito à mão.
+ *
+ * A story monta a lista com `@for`; o snippet escreve os itens, porque o `@for`
+ * é do andaime dela e quem copia precisa ver a forma de um item. A lição do
+ * exemplo é que NÃO HÁ nada a escrever: o recorte e a rolagem saem da folha
+ * (`max-height` pela altura disponível, `overflow-y: auto`), e o teclado
+ * continua alcançando o item que rolou para fora porque o foco é itinerante.
+ */
+export function menubarLongMenuSource(): string {
+  return example(
+    bar([menu('Ações', LONG_MENU_LABELS.map((l) => `          <div ndsMenubarItem>${l}</div>`).join('\n'))]),
+  );
+}
+
+// ─── A barra como DADO ────────────────────────────────────────────────────────
+//
+// A ficha de Variantes da docs page monta a barra VIVA e o código ao lado a
+// partir da MESMA lista de menus — é isso que impede os dois de divergirem.
+// Até 2026-09-18 o construtor morava dentro da própria docs page
+// (`MenubarDocs.ts`), onde react, vue e vanilla já o expunham em `ui/`
+// (inconsistência 22 da §7 do PRD): snippet montado dentro da página não é
+// importável, e por isso não era testável.
+//
+// Os rótulos chegam RESOLVIDOS — quem chama os lê do conteúdo compartilhado, no
+// idioma da página. O construtor não conhece `translations.json`, e é essa
+// fronteira que o deixa rodar em node.
+//
+// O que NÃO entra: a instrumentação da página (`(onOpenChange)`, `(onSelect)`
+// ligados ao rastreio). É andaime da docs page, não lição do menubar.
+
+/** Item de ação. `label` já vem no idioma de quem chama. */
+export type MenubarSnippetItem = {
+  kind: 'item';
+  label: string;
+  /** Texto do atalho exibido à direita, quando há. */
+  shortcut?: string;
+  destructive?: boolean;
+};
+
+/** Item de marcação — `checked` é o estado que o exemplo publica. */
+export type MenubarSnippetCheckbox = {
+  kind: 'checkbox';
+  label: string;
+  checked: boolean;
+};
+
+/** Submenu dentro de submenu — o segundo nível, que só um exemplo usa. */
+export type MenubarSnippetNestedSub = {
+  kind: 'sub';
+  label: string;
+  entries: readonly MenubarSnippetItem[];
+};
+
+export type MenubarSnippetEntry =
+  | MenubarSnippetItem
+  | MenubarSnippetCheckbox
+  | { kind: 'separator' }
+  /** O rótulo vai DENTRO do grupo, que é o que faz dele o nome do bloco. */
+  | {
+      kind: 'group';
+      label: string;
+      entries: readonly (MenubarSnippetItem | MenubarSnippetCheckbox)[];
+    }
+  /** O rótulo é opcional aqui: um grupo de escolha única pode dispensar cabeçalho. */
+  | {
+      kind: 'radio-group';
+      label?: string;
+      value: string;
+      options: readonly { label: string; value: string }[];
+    }
+  | { kind: 'sub'; label: string; entries: readonly (MenubarSnippetItem | MenubarSnippetNestedSub)[] };
+
+/** Um menu da barra: o texto do gatilho e o que ele abre. */
+export type MenubarSnippetMenu = {
+  trigger: string;
+  entries: readonly MenubarSnippetEntry[];
+};
+
+/** A barra canônica — dois menus, que é o que a guarda transversal chama sem argumento. */
+const SNIPPET_MENUS_DEFAULT: readonly MenubarSnippetMenu[] = [
+  {
+    trigger: 'Arquivo',
+    entries: [
+      { kind: 'item', label: 'Novo' },
+      { kind: 'item', label: 'Abrir' },
+    ],
+  },
+  {
+    trigger: 'Editar',
+    entries: [
+      { kind: 'item', label: 'Desfazer' },
+      { kind: 'item', label: 'Refazer' },
+    ],
+  },
+];
+
+/** A barra descrita por `menus`, com os rótulos exatamente como chegam. */
+export function menubarSnippet(menus: readonly MenubarSnippetMenu[] = SNIPPET_MENUS_DEFAULT): string {
+  const pad = (n: number) => ' '.repeat(n);
+  const itemLines = (e: MenubarSnippetItem, n: number): string[] => {
+    const variant = e.destructive ? ' variant="destructive"' : '';
+    const shortcut = e.shortcut ? ` <span ndsMenubarShortcut>${e.shortcut}</span>` : '';
+    return [`${pad(n)}<div ndsMenubarItem${variant}>${e.label}${shortcut}</div>`];
+  };
+  const leaf = (e: MenubarSnippetItem | MenubarSnippetCheckbox, n: number): string[] =>
+    e.kind === 'item'
+      ? itemLines(e, n)
+      : [`${pad(n)}<div ndsMenubarCheckboxItem [checked]="${e.checked}">${e.label}</div>`];
+  const sub = (label: string, children: string[], n: number): string[] => [
+    `${pad(n)}<nds-menubar-sub>`,
+    `${pad(n + 2)}<div ndsMenubarSubTrigger>${label}</div>`,
+    `${pad(n + 2)}<ng-template ndsMenubarSubContent>`,
+    ...children,
+    `${pad(n + 2)}</ng-template>`,
+    `${pad(n)}</nds-menubar-sub>`,
+  ];
+
+  const entryLines = (entries: readonly MenubarSnippetEntry[], n: number): string[] => {
+    const lines: string[] = [];
+    for (const entry of entries) {
+      if (entry.kind === 'separator') {
+        lines.push(`${pad(n)}<div ndsMenubarSeparator></div>`);
+      } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
+        lines.push(...leaf(entry, n));
+      } else if (entry.kind === 'group') {
+        lines.push(`${pad(n)}<div ndsMenubarGroup>`);
+        lines.push(`${pad(n + 2)}<div ndsMenubarLabel>${entry.label}</div>`);
+        for (const child of entry.entries) lines.push(...leaf(child, n + 2));
+        lines.push(`${pad(n)}</div>`);
+      } else if (entry.kind === 'radio-group') {
+        lines.push(`${pad(n)}<div ndsMenubarRadioGroup value="${entry.value}">`);
+        if (entry.label) lines.push(`${pad(n + 2)}<div ndsMenubarLabel>${entry.label}</div>`);
+        for (const opt of entry.options) {
+          lines.push(`${pad(n + 2)}<div ndsMenubarRadioItem value="${opt.value}">${opt.label}</div>`);
+        }
+        lines.push(`${pad(n)}</div>`);
+      } else {
+        const children: string[] = [];
+        for (const child of entry.entries) {
+          if (child.kind === 'sub') {
+            const leaves = child.entries.flatMap((l) => itemLines(l, n + 8));
+            children.push(...sub(child.label, leaves, n + 4));
+          } else {
+            children.push(...itemLines(child, n + 4));
+          }
+        }
+        lines.push(...sub(entry.label, children, n));
+      }
+    }
+    return lines;
+  };
+
+  const body = menus.map((m) =>
+    [
+      `  <nds-menubar-menu>`,
+      `    <button ndsMenubarTrigger>${m.trigger}</button>`,
+      `    <ng-template ndsMenubarContent>`,
+      ...entryLines(m.entries, 6),
+      `    </ng-template>`,
+      `  </nds-menubar-menu>`,
+    ].join('\n'),
+  );
+
+  return `<nds-menubar>\n${body.join('\n\n')}\n</nds-menubar>`;
+}

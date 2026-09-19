@@ -32,6 +32,16 @@ type Story = StoryObj;
 /** As listas daqui são as mais longas do componente — a moldura acompanha. */
 const FRAME_HEIGHT = '220px';
 
+/**
+ * As opções da escolha única, numa lista só: a prévia, o snippet e as asserções
+ * contam a partir DELA, e não de um número escrito à mão no play.
+ */
+const THEMES = [
+  { value: 'light', label: 'Claro' },
+  { value: 'dark', label: 'Escuro' },
+  { value: 'system', label: 'Sistema' },
+] as const;
+
 // ─── Com Label ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
@@ -81,6 +91,21 @@ export const WithLabel: Story = {
       const rotulos = menu.querySelectorAll('.nds-dropdown-menu-label');
       await expect(rotulos).toHaveLength(2);
       for (const r of rotulos) await expect(r.getAttribute('role')).toBe('presentation');
+    });
+
+    await step('Rótulo e separador têm ENDEREÇO próprio, como nas outras quatro', async () => {
+      // `data-slot` é por onde a auditoria cross-stack compara o markup, e estas
+      // duas peças eram as únicas da família sem ele — nesta fábrica, que é a
+      // REFERÊNCIA. As outras quatro stacks escrevem os dois nomes, e as duas
+      // fábricas irmãs desta stack também; faltava só aqui.
+      for (const r of menu.querySelectorAll<HTMLElement>('.nds-dropdown-menu-label')) {
+        await expect(r.dataset.slot).toBe('dropdown-menu-label');
+      }
+      const separadores = menu.querySelectorAll<HTMLElement>('[role="separator"]');
+      await expect(separadores).toHaveLength(1);
+      for (const s of separadores) {
+        await expect(s.dataset.slot).toBe('dropdown-menu-separator');
+      }
     });
 
     await step('O rótulo dá nome ao grupo que ele encabeça', async () => {
@@ -208,18 +233,20 @@ export const WithCheckboxItems: Story = {
 export const WithRadioGroup: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
-    // Override de story: a escolha única depende do `group`, que é o que faz os
-    // irmãos desmarcarem juntos — sem ele a lista viraria um punhado de
-    // alternadores independentes.
+    // Override de story: a escolha única é UM grupo com as opções dentro
+    // (`type: 'radio-group'`, D16) — o snippet do meta mostraria itens de ação
+    // soltos, que é o oposto do que esta composição ensina.
     docs: {
       source: {
         transform: dropdownMenuSourceWith({
           triggerLabel: 'Tema',
           items: [
             { type: 'label', label: 'Aparência' },
-            { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
-            { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
-            { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
+            {
+              type: 'radio-group',
+              value: 'light',
+              options: THEMES.map((theme) => ({ value: theme.value, label: theme.label })),
+            },
           ],
         }),
       },
@@ -230,9 +257,11 @@ export const WithRadioGroup: Story = {
       'Tema',
       [
         { type: 'label', label: 'Aparência' },
-        { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
-        { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
-        { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
+        {
+          type: 'radio-group',
+          value: 'light',
+          options: THEMES.map((theme) => ({ value: theme.value, label: theme.label })),
+        },
       ],
       FRAME_HEIGHT,
     ),
@@ -243,9 +272,20 @@ export const WithRadioGroup: Story = {
     const escuro = canvas.getByRole('menuitemradio', { name: 'Escuro' });
 
     await step('Um item por vez se anuncia escolhido', async () => {
-      await expect(canvas.getAllByRole('menuitemradio')).toHaveLength(3);
+      await expect(canvas.getAllByRole('menuitemradio')).toHaveLength(THEMES.length);
       await expect(light.getAttribute('aria-checked')).toBe('true');
       await expect(escuro.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O rótulo dá nome ao grupo da escolha única — um grupo só', async () => {
+      // D16: a escolha única é UM bloco, e o rótulo que vem antes dele É o nome
+      // desse bloco. Um segundo `role="group"` aninhado faria o leitor anunciar
+      // dois grupos para um bloco só; a forma antiga — itens soltos com um
+      // `group` por item — não nomeava nada.
+      const group = canvas.getByRole('group', { name: 'Aparência' });
+      await expect(group.dataset.slot).toBe('dropdown-menu-radio-group');
+      await expect(within(group).getAllByRole('menuitemradio')).toHaveLength(THEMES.length);
+      await expect(canvas.getAllByRole('group')).toHaveLength(1);
     });
 
     await step('Escolher outro desmarca o anterior', async () => {

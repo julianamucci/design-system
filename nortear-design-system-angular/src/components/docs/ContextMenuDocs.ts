@@ -18,6 +18,12 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_CONTEXT_MENU, menuCloseReason } from '@/components/ui/context-menu';
+import {
+  contextMenuSnippet,
+  type ContextMenuSnippetCheckbox,
+  type ContextMenuSnippetEntry,
+  type ContextMenuSnippetItem,
+} from '@/components/ui/context-menu.source';
 import { NdsButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
@@ -31,7 +37,7 @@ import {
   NdsDocsWhenToUse,
   NdsDocsDoDont,
   NdsDocsImport,
-  NdsDocsVariants,
+  NdsDocsCompositions,
   NdsDocsStates,
   NdsDocsProps,
   NdsDocsTokens,
@@ -258,6 +264,58 @@ const PAIR2_DONT_ENTRIES: readonly PreviewEntry[] = [EDIT, DELETE, DUPLICATE];
 const PAIR3_ENTRIES: readonly PreviewEntry[] = [EDIT, DUPLICATE];
 
 /**
+ * A lista da prévia TRADUZIDA, na forma que o construtor de snippet consome.
+ *
+ * O construtor mora em `ui/context-menu.source.ts` desde 2026-09-18 — snippet
+ * montado dentro da docs page não é importável, e por isso não era testável
+ * (inconsistência 22 da §7 do PRD). Aqui fica só a tradução: a chave vira texto
+ * no idioma da página.
+ */
+function snippetEntries(entries: readonly PreviewEntry[]): readonly ContextMenuSnippetEntry[] {
+  const leaf = (
+    e: ItemEntry | CheckboxEntry,
+  ): ContextMenuSnippetItem | ContextMenuSnippetCheckbox =>
+    e.kind === 'item'
+      ? {
+          kind: 'item',
+          label: t(e.label),
+          ...(e.shortcut ? { shortcut: t(e.shortcut) } : {}),
+          ...(e.destructive ? { destructive: true } : {}),
+          ...(e.inset ? { inset: true } : {}),
+        }
+      : { kind: 'checkbox', label: t(e.label), checked: e.checked };
+
+  return entries.map((entry): ContextMenuSnippetEntry => {
+    switch (entry.kind) {
+      case 'separator':
+        return { kind: 'separator' };
+      case 'group':
+        return {
+          kind: 'group',
+          label: t(entry.label),
+          ...(entry.inset ? { inset: true } : {}),
+          entries: entry.entries.map(leaf),
+        };
+      case 'radio-group':
+        return {
+          kind: 'radio-group',
+          label: t(entry.label),
+          value: entry.value,
+          options: entry.options.map((o) => ({ label: t(o.label), value: o.value })),
+        };
+      case 'sub':
+        return {
+          kind: 'sub',
+          label: t(entry.label),
+          entries: entry.entries.map((child) => ({ label: t(child.label) })),
+        };
+      default:
+        return leaf(entry);
+    }
+  });
+}
+
+/**
  * O código do card, a partir da MESMA lista que monta a prévia — com os rótulos
  * no idioma da página, para que código e prévia digam o mesmo nos três.
  *
@@ -265,66 +323,10 @@ const PAIR3_ENTRIES: readonly PreviewEntry[] = [EDIT, DUPLICATE];
  * rastreio) não entra: é andaime desta docs page, não lição do menu.
  */
 function menuSnippet(entries: readonly PreviewEntry[]): string {
-  const pad = (n: number) => ' '.repeat(n);
-  const item = (e: ItemEntry, n: number): string[] => {
-    const attrs = `${e.destructive ? ' variant="destructive"' : ''}${e.inset ? ' [inset]="true"' : ''}`;
-    if (!e.shortcut) return [`${pad(n)}<div ndsContextMenuItem${attrs}>${t(e.label)}</div>`];
-    return [
-      `${pad(n)}<div ndsContextMenuItem${attrs}>`,
-      `${pad(n + 2)}${t(e.label)}`,
-      `${pad(n + 2)}<span ndsContextMenuShortcut>${t(e.shortcut)}</span>`,
-      `${pad(n)}</div>`,
-    ];
-  };
-  const leaf = (e: ItemEntry | CheckboxEntry, n: number): string[] =>
-    e.kind === 'item'
-      ? item(e, n)
-      : [`${pad(n)}<div ndsContextMenuCheckboxItem [checked]="${e.checked}">${t(e.label)}</div>`];
-
-  const lines: string[] = [];
-  for (const entry of entries) {
-    if (entry.kind === 'separator') {
-      lines.push(`${pad(4)}<div ndsContextMenuSeparator></div>`);
-    } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
-      lines.push(...leaf(entry, 4));
-    } else if (entry.kind === 'group') {
-      lines.push(`${pad(4)}<div ndsContextMenuGroup>`);
-      lines.push(
-        `${pad(6)}<div ndsContextMenuLabel${entry.inset ? ' [inset]="true"' : ''}>${t(entry.label)}</div>`,
-      );
-      for (const child of entry.entries) lines.push(...leaf(child, 6));
-      lines.push(`${pad(4)}</div>`);
-    } else if (entry.kind === 'radio-group') {
-      lines.push(`${pad(4)}<div ndsContextMenuRadioGroup value="${entry.value}">`);
-      lines.push(`${pad(6)}<div ndsContextMenuLabel>${t(entry.label)}</div>`);
-      for (const option of entry.options) {
-        lines.push(`${pad(6)}<div ndsContextMenuRadioItem value="${option.value}">${t(option.label)}</div>`);
-      }
-      lines.push(`${pad(4)}</div>`);
-    } else {
-      lines.push(`${pad(4)}<div ndsContextMenuSub>`);
-      lines.push(`${pad(6)}<div ndsContextMenuSubTrigger>${t(entry.label)}</div>`);
-      lines.push(`${pad(6)}<ng-template ndsContextMenuSubContent>`);
-      for (const child of entry.entries) {
-        lines.push(`${pad(8)}<div ndsContextMenuItem>${t(child.label)}</div>`);
-      }
-      lines.push(`${pad(6)}</ng-template>`);
-      lines.push(`${pad(4)}</div>`);
-    }
-  }
-
-  return `<div ndsContextMenu>
-  <div
-    ndsContextMenuTrigger
-    class="${AREA_CLICK_DIREITO}"
-    data-align="center"
-    data-justify="center"
-  >${t('demonstration.labels.triggerLabel')}</div>
-
-  <ng-template ndsContextMenuContent>
-${lines.join('\n')}
-  </ng-template>
-</div>`;
+  return contextMenuSnippet({
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    entries: snippetEntries(entries),
+  });
 }
 
 /**
@@ -530,7 +532,7 @@ export class NdsContextMenuPreview {
   imports: [
     NdsContextMenuPreview, NdsButton,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
-    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
+    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsCompositions,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
@@ -656,9 +658,17 @@ export class NdsContextMenuPreview {
           language="ts"
         />
 
-        <nds-docs-variants
+        <!--
+          O container de COMPOSIÇÕES, como nas outras catorze páginas da
+          família: até 2026-09-18 esta era a única a usar nds-docs-variants
+          direto (inconsistência 21(a) da §7 do PRD). O layout é o mesmo — o de
+          composições renderiza o de variantes por dentro —, e o id continua
+          "variantes" porque é a seção do menu lateral que salta para cá.
+        -->
+        <nds-docs-compositions
           [note]="t('variants.note')"
           [items]="variantItems()"
+          [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="context-menu"
           id="variantes"
           language="html"

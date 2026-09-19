@@ -347,6 +347,56 @@ export const Playground: Story = {
       await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
     });
 
+    await step('Shift+F10 na área focada abre o menu, e o foco entra nele', async () => {
+      // O segundo caminho de teclado que o conteúdo compartilhado promete
+      // ("Right-click / Menu / Shift+F10"), e o único que faltava aqui — as
+      // outras quatro stacks já o afirmavam.
+      //
+      // A tecla é APERTADA de verdade, e o que se afirma é onde ela chegou: o
+      // `keydown` tem de atingir a ÁREA, que é o que o `tabindex={0}` dela
+      // existe para permitir. O que o `userEvent` não faz é a AÇÃO PADRÃO do
+      // navegador para essa combinação — disparar `contextmenu` no elemento que
+      // recebeu a tecla —, e essa metade a play faz, no alvo que o `keydown` de
+      // fato atingiu. Mesma forma do `openByKey` do vanilla, que é a referência.
+      await closeMenu();
+      area().focus();
+      await expect(document.activeElement).toBe(area());
+
+      let alvo: EventTarget | null = null;
+      const registrar = (event: KeyboardEvent) => {
+        if (event.key === 'F10') alvo = event.target;
+      };
+      document.addEventListener('keydown', registrar, true);
+      try {
+        await userEvent.keyboard('{Shift>}{F10}{/Shift}');
+      } finally {
+        document.removeEventListener('keydown', registrar, true);
+      }
+      await expect(alvo).toBe(area());
+
+      const box = area().getBoundingClientRect();
+      (alvo as unknown as HTMLElement).dispatchEvent(
+        new MouseEvent('contextmenu', {
+          bubbles: true,
+          cancelable: true,
+          clientX: box.left + box.width / 2,
+          clientY: box.top + box.height / 2,
+        }),
+      );
+
+      const menu = await waitForPortal('menu');
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(true);
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
+      // E a seta alcança os itens a partir dali, sem o mouse: é o caminho
+      // inteiro de quem abriu pelo teclado.
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(() => {
+        const active = document.activeElement as HTMLElement | null;
+        expect(active?.getAttribute('role')).toBe('menuitem');
+        expect(menu.contains(active)).toBe(true);
+      });
+    });
+
     await step('A story termina com o menu ABERTO', async () => {
       // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
       // descreve o menu aberto, não a área vazia.

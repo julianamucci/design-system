@@ -7,7 +7,7 @@ import { createButton } from './button';
 import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { pressTab } from '@/lib/press-tab';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForAnimationsDone, waitForPortal } from '@/lib/wait-for-portal';
 import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -153,9 +153,39 @@ export const Playground: Story = {
       // igual para `defaultOpen`, que já abriu na montagem.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const menu = await body.findByRole('menu');
+      // O painel ENTRA animado desde 2026-09-18, e a entrada parte de
+      // `opacity: 0`: medir no quadro zero lê "invisível" e reprova um menu que
+      // está abrindo certo. Espera pura, sem tocar no DOM.
+      await waitForAnimationsDone(menu);
       await expect(menu).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
+      // C1: o foco ENTRA no painel. ONDE ele pousa varia por stack — aqui é
+      // sempre o primeiro item —, e o invariante que as cinco afirmam é o
+      // CONTAINMENT. Esta era a única das cinco que não o afirmava: o
+      // Playground conferia `aria-haspopup` e `aria-controls` e seguia, então
+      // um menu que abrisse com o foco parado no gatilho passava — e a seta
+      // seguinte rolaria a página em vez de andar pelos itens.
+      await waitFor(async () => {
+        await expect(menu.contains(document.activeElement)).toBe(true);
+      });
+    });
+
+    await step('E o painel ENTRA animado, como nas outras quatro stacks', async () => {
+      // A folha compartilhada anima a entrada sob `[data-open]` /
+      // `[data-state="open"]` (D5), e esta fábrica não escrevia nenhum dos
+      // dois: o menu aparecia seco. `center` do `transform-origin` e ausência
+      // de animação são os dois defeitos SILENCIOSOS desta folha — não há
+      // compilador, suíte nem folha que reprove um painel que só não anima.
+      const menu = await body.findByRole('menu');
+      await expect(menu.dataset.state).toBe('open');
+      // Sob movimento reduzido a camada de token zera a escada inteira e a
+      // guarda da folha desliga esta animação — ali o esperado é `none`, e
+      // cobrar `nds-menu-in` seria reprovar o comportamento certo.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      await expect(getComputedStyle(menu).animationName).toBe(
+        reduced ? 'none' : 'nds-menu-in',
+      );
     });
 
     await step('Os controles de posição e de modal chegam ao menu', async () => {
@@ -180,6 +210,10 @@ export const Playground: Story = {
       // propósito dentro do auxiliar; a folga continua valendo.
       const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
       await waitForAncorado(panel);
+      // A entrada anima `translateY` e `scale`, e os dois entram no
+      // `getBoundingClientRect`: sem esperar o fim, a folga medida é a do meio
+      // do quadro, não a de repouso.
+      await waitForAnimationsDone(panel);
       expectOndeDiz(trigger, panel, 4);
     });
 
@@ -328,13 +362,19 @@ export const TabLeavesMenu: Story = {
       await expect(document.activeElement).toBe(before);
     });
 
-    await step('Tab dentro do submenu fecha o menu INTEIRO e segue do gatilho', async () => {
+    /** Abre o menu, entra no submenu e devolve o painel filho já com o foco. */
+    const openSubmenuWithItemFocused = async (): Promise<HTMLElement> => {
       const menu = await openWithItemFocused(trigger);
       within(menu).getByRole('menuitem', { name: 'Compartilhar' }).focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(openMenus()).toHaveLength(2));
       const sub = document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]')!;
       await waitFor(() => expect(sub.contains(document.activeElement)).toBe(true));
+      return sub;
+    };
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue do gatilho', async () => {
+      await openSubmenuWithItemFocused();
 
       pressTab();
       // Os dois painéis: fechar só o filho deixaria o raiz aberto com o foco
@@ -342,6 +382,21 @@ export const TabLeavesMenu: Story = {
       await expect(openMenus()).toHaveLength(0);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(document.activeElement).toBe(after);
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo, e volta ao vizinho ANTERIOR', async () => {
+      // O C2 promete as DUAS direções "também de dentro do submenu", e só a ida
+      // era afirmada aqui. A volta tem um modo de falhar próprio: o painel
+      // filho vive em portal no fim do `<body>`, então um Shift+Tab devolvido
+      // ao navegador cairia no último focável da PÁGINA, e não no vizinho de
+      // antes do gatilho — que é justamente o defeito que a consumação da
+      // tecla existe para impedir.
+      await openSubmenuWithItemFocused();
+
+      pressTab(true);
+      await expect(openMenus()).toHaveLength(0);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(document.activeElement).toBe(before);
     });
   },
 };

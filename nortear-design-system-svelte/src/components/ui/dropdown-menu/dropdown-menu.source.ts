@@ -94,18 +94,18 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   withLabel: {
     names: [
       'DropdownMenuGroup',
-      'DropdownMenuGroupHeading',
+      'DropdownMenuLabel',
       'DropdownMenuItem',
       'DropdownMenuSeparator',
     ],
     markup: `<DropdownMenuGroup>
-  <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+  <DropdownMenuLabel>Conta</DropdownMenuLabel>
   <DropdownMenuItem>Perfil</DropdownMenuItem>
   <DropdownMenuItem>Configurações</DropdownMenuItem>
 </DropdownMenuGroup>
 <DropdownMenuSeparator />
 <DropdownMenuGroup>
-  <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
+  <DropdownMenuLabel>Suporte</DropdownMenuLabel>
   <DropdownMenuItem>Documentação</DropdownMenuItem>
   <DropdownMenuItem>Sair</DropdownMenuItem>
 </DropdownMenuGroup>`,
@@ -295,7 +295,7 @@ export function dropdownMenuItemDisabledSource(): string {
 }
 
 /** States/CheckboxIndeterminate — os três estados do alternador lado a lado. */
-export function dropdownMenuIndeterminadoSource(): string {
+export function dropdownMenuCheckboxIndeterminateSource(): string {
   return dropdownMenuSource('', { args: { variant: 'indeterminate', triggerLabel: 'Colunas' } });
 }
 

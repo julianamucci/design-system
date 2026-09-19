@@ -22,8 +22,8 @@ import {
 import {
   contextMenuSource,
   contextMenuWithShortcutsSource,
-  contextMenuWithChoiceUnicaSource,
-  contextMenuWithMarkupSource,
+  contextMenuWithRadioGroupSource,
+  contextMenuWithCheckboxSource,
   contextMenuWithSubmenuSource,
   contextMenuCompletoSource,
 } from './context-menu.source';
@@ -168,7 +168,7 @@ export const WithCheckbox: Story = {
     covers: ['functional.item7', 'accessibility.item4'],
     // A marcação exige estado ligado por `v-model:checked` — um `ref` no script,
     // que o snippet do meta (só itens de ação) não tem.
-    docs: { source: { transform: contextMenuWithMarkupSource } },
+    docs: { source: { transform: contextMenuWithCheckboxSource } },
   },
   render: () => ({
     components: componentes,
@@ -263,7 +263,7 @@ export const WithRadioGroup: Story = {
     covers: ['functional.item8', 'accessibility.item5'],
     // Na escolha única o valor vive no GRUPO, não em cada item: outra peça e
     // outro estado.
-    docs: { source: { transform: contextMenuWithChoiceUnicaSource } },
+    docs: { source: { transform: contextMenuWithRadioGroupSource } },
   },
   render: () => ({
     components: componentes,

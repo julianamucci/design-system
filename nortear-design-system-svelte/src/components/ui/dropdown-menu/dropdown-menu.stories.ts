@@ -64,6 +64,10 @@ const meta: Meta = {
     // Espião da escolha de item: é por ele que a play afirma que o clique fora
     // fechou SEM executar nada. Sem control — não é algo que se edite no painel.
     onSelect: { control: false, table: { disable: true } },
+    // Espião do MOTIVO do fechamento, na palavra do design system — é o valor
+    // que a docs page manda no `reason` do `dropdown_menu_close`. As outras
+    // quatro stacks já o afirmavam no Playground; só esta não.
+    onCloseReason: { control: false, table: { disable: true } },
   },
   args: {
     side: 'bottom',
@@ -72,6 +76,7 @@ const meta: Meta = {
     triggerLabel: 'Mais ações',
     variant: 'default',
     onSelect: fn(),
+    onCloseReason: fn(),
   },
 };
 
@@ -153,6 +158,9 @@ export const Playground: Story = {
       // A escolha chega a quem consome: é o que dá dentes ao passo do clique
       // fora, lá embaixo — o espião que ali NÃO pode ser chamado aqui é.
       await expect(args.onSelect).toHaveBeenLastCalledWith('profile');
+      // Nenhum gesto de SAÍDA: quem fechou foi a decisão de escolher — `api`.
+      // É a palavra que a docs page manda no `reason` do `dropdown_menu_close`.
+      await expect(args.onCloseReason).toHaveBeenLastCalledWith('api');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
       await waitFor(async () => {
@@ -177,6 +185,8 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+      // E o motivo diz que foi a tecla: `escape`, separado do clique fora.
+      await expect(args.onCloseReason).toHaveBeenLastCalledWith('escape');
     });
 
     await step('Clicar fora fecha o menu sem executar nenhum item', async () => {
@@ -194,6 +204,11 @@ export const Playground: Story = {
       await waitForPortalGone('menu');
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(args.onSelect).toHaveBeenCalledTimes(selectedBefore);
+      // E o motivo diz que foi FORA: `overlay`, a mesma palavra do Tab e do
+      // clique no gatilho já aberto — "saí sem decidir nada". As três
+      // asserções deste Playground medem as três palavras do vocabulário, e é
+      // isso que impede uma delas de passar por outra.
+      await expect(args.onCloseReason).toHaveBeenLastCalledWith('overlay');
     });
   },
 };

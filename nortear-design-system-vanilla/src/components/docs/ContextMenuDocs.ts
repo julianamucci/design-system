@@ -53,34 +53,39 @@ function screenReaderItems(): string[] {
 }
 // Opções que só esta stack tem.
 //
-// `trigger`, `items`, `onClose`, `radioValue`, `type` e o `items` do submenu são
-// a API da FÁBRICA — as outras stacks compõem peças e não têm linha para elas no
+// `trigger`, `items`, `onClose`, `type`, `options` e o `items` do submenu são a
+// API da FÁBRICA — as outras stacks compõem peças e não têm linha para elas no
 // conteúdo compartilhado. Ficam no override, e não em texto fixo na tabela:
 // presas em pt-BR apareciam em português nas versões en e es da página.
+//
+// O `radioValue` saiu daqui em 2026-09-18 (D16): a escolha única virou um item
+// `radio-group` com `options` e `value`, e o `value` do item já tem linha no
+// conteúdo compartilhado — o override existia justamente porque a forma antiga
+// não tinha onde caber.
 const { t, subscribe } = createTranslation(contextMenuTranslations as Record<string, unknown>, {
   'pt-BR': {
     'props.items.trigger': 'Elemento que captura o gesto — clique direito, tecla de menu ou Shift+F10 sobre ele. A fábrica lhe dá parada de tabulação se ele não tiver.',
     'props.items.items': 'Lista de itens, separadores, rótulos e submenus do menu.',
     'props.items.onClose': 'Disparado a cada fechamento, antes do callback de mudança, com o motivo: escape, overlay (clique fora ou Tab) ou api (item escolhido). Sair da página não é fechamento e não dispara.',
-    'props.items.radioValue': 'Valor corrente do grupo de escolha única — ele vive no menu, não em cada item.',
-    'props.items.type': 'Tipo do item. "submenu" exige a lista de itens; "radio" exige o valor.',
+    'props.items.type': 'Tipo do item. "submenu" exige a lista de itens; "radio-group" exige as opções.',
     'props.items.subItems': 'Itens do submenu, quando o tipo é "submenu".',
+    'props.items.options': 'Opções da escolha única, quando o tipo é "radio-group". O grupo é uma coisa só: as opções vivem dentro dele, e o valor escolhido também.',
   },
   en: {
     'props.items.trigger': 'Element that captures the gesture — right-click, the menu key or Shift+F10 on it. The factory gives it a tab stop if it has none.',
     'props.items.items': 'List of items, separators, labels and submenus in the menu.',
     'props.items.onClose': 'Fired on every close, before the change callback, with the reason: escape, overlay (click outside or Tab) or api (item chosen). Leaving the page is not a close and does not fire it.',
-    'props.items.radioValue': 'Current value of the single-choice group — it lives in the menu, not in each item.',
-    'props.items.type': 'Item type. "submenu" requires the item list; "radio" requires the value.',
+    'props.items.type': 'Item type. "submenu" requires the item list; "radio-group" requires the options.',
     'props.items.subItems': 'Submenu items, when the type is "submenu".',
+    'props.items.options': 'Options of the single-choice group, when the type is "radio-group". The group is one thing: the options live inside it, and so does the chosen value.',
   },
   es: {
     'props.items.trigger': 'Elemento que captura el gesto — clic derecho, tecla de menú o Shift+F10 sobre él. La fábrica le da una parada de tabulación si no la tiene.',
     'props.items.items': 'Lista de ítems, separadores, rótulos y submenús del menú.',
     'props.items.onClose': 'Se dispara en cada cierre, antes del callback de cambio, con el motivo: escape, overlay (clic fuera o Tab) o api (ítem elegido). Salir de la página no es un cierre y no lo dispara.',
-    'props.items.radioValue': 'Valor actual del grupo de selección única — vive en el menú, no en cada ítem.',
-    'props.items.type': 'Tipo del ítem. "submenu" exige la lista de ítems; "radio" exige el valor.',
+    'props.items.type': 'Tipo del ítem. "submenu" exige la lista de ítems; "radio-group" exige las opciones.',
     'props.items.subItems': 'Ítems del submenú, cuando el tipo es "submenu".',
+    'props.items.options': 'Opciones del grupo de selección única, cuando el tipo es "radio-group". El grupo es una sola cosa: las opciones viven dentro de él, y el valor elegido también.',
   },
 });
 
@@ -127,21 +132,27 @@ const A11Y_TEST_HOW = [
 ];
 
 /**
- * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ * Varre `base.<prefixo>1`, `base.<prefixo>2`, … enquanto existirem no conteúdo.
  *
  * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
  * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
  * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com
  * o nono critério de acessibilidade deste componente, o que registra que a seta
  * POUSA no item desabilitado em vez de pulá-lo.
+ *
+ * O PREFIXO entra por parâmetro porque nem toda lista do conteúdo se chama
+ * `item`: as notas deste componente são `notes.tip1`…`notes.tip5`, e era
+ * justamente por não caber aqui que elas estavam cravadas uma a uma na seção —
+ * a mesma armadilha da contagem fixa, com a mesma consequência silenciosa.
  */
 function stringsFromDict(
   translate: (key: string, defaultValue?: string) => string,
   base: string,
+  prefixo = 'item',
 ): string[] {
   const out: string[] = [];
   for (let i = 1; ; i++) {
-    const value = translate(`${base}.item${i}`, '');
+    const value = translate(`${base}.${prefixo}${i}`, '');
     if (!value) break;
     out.push(value);
   }
@@ -213,6 +224,27 @@ function withItemTracking(
     const type = def.type ?? 'item';
     if (type === 'submenu') {
       return { ...def, items: withItemTracking(def.items ?? [], menu, location) };
+    }
+    if (type === 'radio-group') {
+      // A escolha única rastreia pelo `onClick` da OPÇÃO, e não pelo
+      // `onValueChange` do grupo: este não dispara quando a opção escolhida já
+      // era a marcada, e o `context_menu_item_select` sumiria justo no gesto de
+      // confirmar. É a mesma leitura do Menubar.
+      return {
+        ...def,
+        options: (def.options ?? []).map((option) => ({
+          ...option,
+          onClick: () => {
+            option.onClick?.();
+            track('context_menu_item_select', {
+              component: 'context-menu',
+              label: option.value,
+              menu,
+              location,
+            });
+          },
+        })),
+      };
     }
     if (type === 'separator' || type === 'label' || !def.value) return def;
     const label = def.value;
@@ -345,7 +377,6 @@ function buildMenuPreview(options: {
   items: ContextMenuItemDef[];
   menu: string;
   location: PreviewLocation;
-  radioValue?: string;
   trigger?: HTMLElement;
 }): HTMLElement {
   const wrap = document.createElement('div');
@@ -356,7 +387,6 @@ function buildMenuPreview(options: {
     createContextMenu({
       trigger: options.trigger ?? makeTriggerArea(t('demonstration.labels.triggerLabel')),
       items: withItemTracking(options.items, options.menu, options.location),
-      radioValue: options.radioValue,
       ...menuTracking(options.menu, options.location),
     }),
   );
@@ -382,7 +412,7 @@ type VariantKey =
   | 'withSubmenu'
   | 'withShortcuts';
 
-function variantMenu(key: VariantKey): { items: ContextMenuItemDef[]; radioValue?: string } {
+function variantMenu(key: VariantKey): { items: ContextMenuItemDef[] } {
   switch (key) {
     case 'default':
       return { items: [itemEdit(), itemDuplicate()] };
@@ -406,12 +436,19 @@ function variantMenu(key: VariantKey): { items: ContextMenuItemDef[]; radioValue
       };
     case 'withRadio':
       return {
-        radioValue: 'layout-grid',
         items: [
           { type: 'label', label: t('demonstration.labels.groupLayout') },
-          { type: 'radio', label: t('demonstration.labels.layoutGrid'), value: 'layout-grid' },
-          { type: 'radio', label: t('demonstration.labels.layoutList'), value: 'layout-list' },
-          { type: 'radio', label: t('demonstration.labels.layoutColumns'), value: 'layout-columns' },
+          {
+            // D16: a escolha única é UMA entrada, com as opções e o valor
+            // escolhido dentro dela — e o rótulo acima nomeia esse bloco.
+            type: 'radio-group',
+            value: 'layout-grid',
+            options: [
+              { value: 'layout-grid', label: t('demonstration.labels.layoutGrid') },
+              { value: 'layout-list', label: t('demonstration.labels.layoutList') },
+              { value: 'layout-columns', label: t('demonstration.labels.layoutColumns') },
+            ],
+          },
         ],
       };
     case 'withSubmenu':
@@ -443,11 +480,10 @@ function variantPreview(key: VariantKey, location: PreviewLocation): HTMLElement
 }
 
 function variantCode(key: VariantKey): string {
-  const { items, radioValue } = variantMenu(key);
+  const { items } = variantMenu(key);
   return contextMenuSnippet({
     triggerLabel: t('demonstration.labels.triggerLabel'),
     items: contextMenuEntriesFrom(items),
-    radioValue,
   });
 }
 
@@ -696,12 +732,17 @@ export function createContextMenuDocs(): HTMLElement {
           secondaryDescription: t('import.withCheckbox'),
           secondaryCode: `createContextMenu({
   trigger,
-  radioValue: 'layout-grid',
   items: [
     { type: 'checkbox', label: ${text(t('demonstration.labels.showGrid'))}, value: 'show-grid', checked: true },
     { type: 'separator' },
-    { type: 'radio', label: ${text(t('demonstration.labels.layoutGrid'))}, value: 'layout-grid' },
-    { type: 'radio', label: ${text(t('demonstration.labels.layoutList'))}, value: 'layout-list' },
+    {
+      type: 'radio-group',
+      value: 'layout-grid',
+      options: [
+        { value: 'layout-grid', label: ${text(t('demonstration.labels.layoutGrid'))} },
+        { value: 'layout-list', label: ${text(t('demonstration.labels.layoutList'))} },
+      ],
+    },
   ],
 });`,
         });
@@ -809,8 +850,15 @@ export function createContextMenuDocs(): HTMLElement {
         // submenu, atalho, recuo e variante — a página prometia MENOS do que o
         // componente entrega.
         const interfaceCode = `// createContextMenu(options)
+export type ContextMenuRadioOption = {
+  value:     string;
+  label:     string;
+  disabled?: boolean;
+  onClick?:  () => void;
+};
+
 export type ContextMenuItemDef = {
-  type?:           'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
+  type?:           'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
   value?:          string;
   label?:          string;
   disabled?:       boolean;
@@ -819,10 +867,12 @@ export type ContextMenuItemDef = {
   shortcut?:       string;
   checked?:        boolean;
   indeterminate?:  boolean;
+  options?:        ContextMenuRadioOption[];
   items?:          ContextMenuItemDef[];
   onClick?:              () => void;
   onCheckedChange?:      (checked: boolean) => void;
   onIndeterminateChange?: (indeterminate: boolean) => void;
+  onValueChange?:        (value: string) => void;
 };
 
 export type ContextMenuCloseReason = 'escape' | 'overlay' | 'api';
@@ -832,8 +882,6 @@ export type ContextMenuOptions = {
   items:          ContextMenuItemDef[];
   onOpenChange?:  (open: boolean) => void;
   onClose?:       (reason: ContextMenuCloseReason) => void;
-  radioValue?:    string;
-  onRadioChange?: (value: string) => void;
   class?:         string;
 };`;
 
@@ -863,8 +911,6 @@ export type ContextMenuOptions = {
                 { name: 'items',         type: 'ContextMenuItemDef[]',    defaultValue: '—', required: yes, description: toPlainText(t('props.items.items')) },
                 { name: 'onOpenChange',  type: '(open: boolean) => void', defaultValue: '—', required: no,  description: toPlainText(t('props.items.onOpenChange')) },
                 { name: 'onClose',       type: "(reason: 'escape' | 'overlay' | 'api') => void", defaultValue: '—', required: no, description: toPlainText(t('props.items.onClose')) },
-                { name: 'radioValue',    type: 'string',                  defaultValue: '—', required: no,  description: toPlainText(t('props.items.radioValue')) },
-                { name: 'onRadioChange', type: '(value: string) => void', defaultValue: '—', required: no,  description: toPlainText(t('props.items.onValueChange')) },
                 { name: 'class',         type: 'string',                  defaultValue: '—', required: no,  description: toPlainText(t('props.items.class')) },
               ],
             },
@@ -872,7 +918,7 @@ export type ContextMenuOptions = {
               title: t('props.itemTitle'),
               cols: propsCols,
               items: [
-                { name: 'type',          type: '"item" | "separator" | "label" | "checkbox" | "radio" | "submenu"', defaultValue: '"item"', required: no, description: toPlainText(t('props.items.type')) },
+                { name: 'type',          type: '"item" | "separator" | "label" | "checkbox" | "radio-group" | "submenu"', defaultValue: '"item"', required: no, description: toPlainText(t('props.items.type')) },
                 { name: 'label',         type: 'string',                       defaultValue: '—',         required: no, description: toPlainText(t('props.items.label')) },
                 { name: 'value',         type: 'string',                       defaultValue: '—',         required: no, description: toPlainText(t('props.items.value')) },
                 { name: 'disabled',      type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.disabled')) },
@@ -881,10 +927,12 @@ export type ContextMenuOptions = {
                 { name: 'shortcut',      type: 'string',                       defaultValue: '—',         required: no, description: toPlainText(t('props.items.shortcut')) },
                 { name: 'checked',       type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.checked')) },
                 { name: 'indeterminate', type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.indeterminate')) },
+                { name: 'options',       type: 'ContextMenuRadioOption[]',     defaultValue: '—',         required: no, description: toPlainText(t('props.items.options')) },
                 { name: 'items',         type: 'ContextMenuItemDef[]',         defaultValue: '—',         required: no, description: toPlainText(t('props.items.subItems')) },
                 { name: 'onClick',       type: '() => void',                   defaultValue: '—',         required: no, description: toPlainText(t('props.items.onSelect')) },
                 { name: 'onCheckedChange', type: '(checked: boolean) => void', defaultValue: '—',         required: no, description: toPlainText(t('props.items.onCheckedChange')) },
                 { name: 'onIndeterminateChange', type: '(indeterminate: boolean) => void', defaultValue: '—', required: no, description: toPlainText(t('props.items.onIndeterminateChange')) },
+                { name: 'onValueChange', type: '(value: string) => void',      defaultValue: '—',         required: no, description: toPlainText(t('props.items.onValueChange')) },
               ],
             },
           ],
@@ -982,14 +1030,12 @@ export type ContextMenuOptions = {
 
       // ── 12. Notas ────────────────────────────────────────────────────────
       case 'notas':
+        // Lido do DICIONÁRIO, como as outras quatro stacks fazem. As cinco
+        // chaves estavam cravadas aqui uma a uma: uma nota nova no conteúdo
+        // compartilhado não chegava a esta página, nos três idiomas, sem erro
+        // nem aviso — e uma nota removida deixaria um item vazio.
         return createDocsNotes({
-          items: [
-            { title: '', content: t('notes.tip1') },
-            { title: '', content: t('notes.tip2') },
-            { title: '', content: t('notes.tip3') },
-            { title: '', content: t('notes.tip4') },
-            { title: '', content: t('notes.tip5') },
-          ],
+          items: stringsFromDict(t, 'notes', 'tip').map((content) => ({ title: '', content })),
         });
 
       // ── 13. Analytics ────────────────────────────────────────────────────

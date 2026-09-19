@@ -233,7 +233,7 @@ ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
  * rótulo nomeia (`aria-labelledby`). Embrulhado num segundo grupo, o leitor de
  * tela anunciava dois — o de fora com nome, o de dentro anônimo.
  */
-export function contextMenuWithChoiceUnicaSource(): string {
+export function contextMenuWithRadioGroupSource(): string {
   return jsxSnippet(
     `${importDe(
   'ContextMenu',

@@ -3,7 +3,14 @@ import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
 import MenubarControlledStory from './MenubarControlledStory.svelte';
-import { menubarSource, menubarControlledSource } from './menubar.source';
+import {
+  menubarSource,
+  menubarControlledSource,
+  menubarItemDisabledSource,
+  menubarCheckboxCheckedSource,
+  menubarCheckboxIndeterminateSource,
+  menubarPanelScrollsSource,
+} from './menubar.source';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
@@ -122,6 +129,7 @@ export const ItemDisabled: Story = {
   parameters: {
     covers: ['accessibility.item8'],
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    docs: { source: { transform: menubarItemDisabledSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -172,6 +180,7 @@ export const CheckboxChecked: Story = {
   parameters: {
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item7'],
+    docs: { source: { transform: menubarCheckboxCheckedSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -194,7 +203,7 @@ export const CheckboxChecked: Story = {
     });
 
     await step('Desmarcar o que estava marcado mantém o menu aberto', async () => {
-      // Idempotente: o clique só acontece com a caixa ainda marcada.
+      // Idempotente: o clique só acontece com a box ainda marcada.
       if (regua.getAttribute('aria-checked') !== 'false') await userEvent.click(regua);
       await waitFor(async () => {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
@@ -216,6 +225,7 @@ export const CheckboxIndeterminate: Story = {
   parameters: {
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item9'],
+    docs: { source: { transform: menubarCheckboxIndeterminateSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -320,6 +330,138 @@ export const ControlledOpen: StoryObj<Record<string, never>> = {
       // teria saído do DOM.
       await expect(readout.textContent?.trim()).toBe('fechado');
       await expect(file.getAttribute('aria-expanded')).toBe('false');
+    });
+  },
+};
+
+// ─── PanelScrolls ─────────────────────────────────────────────────────────────
+//
+// D17 · O painel de menu ROLA, e a exceção do axe é DECLARADA.
+//
+// Decisão da dona em 2026-09-18, sobre medição: um menu mais alto que a janela
+// recorta na viewport e rola. A saída oposta — `overflow: visible` nas cinco —
+// foi recusada com o motivo: trocaria um achado de ferramenta por um defeito
+// real, um menu longo transbordando a viewport com parte dele inalcançável por
+// qualquer meio.
+//
+// O QUE MUDOU NESTA STACK, e é por isso que a story nasce aqui: até 2026-09-18
+// a cadeia de `max-height` de `.nds-dropdown-menu-content` não tinha degrau
+// `--bits-*` nem literal no fim — ela era INVÁLIDA no svelte, `max-height`
+// computava `none`, e os painéis dos TRÊS membros nunca recortavam (medido:
+// 1748px de painel numa janela de 900). Com a cadeia consertada, o painel
+// recorta em `24rem` e rola. Esta story é a asserção que cobre isso.
+
+/**
+ * A regra do axe que o painel rolável dispara, DESLIGADA COM MOTIVO, com a
+ * premissa virando asserção e com a INÉRCIA medida — nunca `a11y.test: 'todo'`.
+ *
+ * `scrollable-region-focusable` cobra que uma região com rolagem seja
+ * alcançável por teclado, e mede isso procurando conteúdo TABULÁVEL dentro do
+ * container. Um menu WAI-ARIA não tem: quem anda é o foco ITINERANTE, conduzido
+ * pelas setas. A ferramenta não enxerga foco itinerante — o painel É operável
+ * por teclado, e é justamente por ser operável assim que ela o acusa.
+ *
+ * **E aqui ela acusa de verdade, o que NÃO é igual em todas as stacks.** Medido
+ * em 2026-09-18, plantando e restaurando na mesma chamada: com esta linha
+ * retirada a story reprova com
+ * `Scrollable region must have keyboard access (scrollable-region-focusable)`
+ * no `#nds-menubar-content-*`. Sem exceção NENHUMA ligada, essa é a única
+ * violação que sai — então a exceção desliga exatamente uma coisa, e é esta.
+ *
+ * O mecanismo é da lib, e é o que separa esta stack da do React: o
+ * `MenuItemSharedState` do bits crava `tabindex: -1` nas `props` do item, FIXO,
+ * sem depender de destaque (`bits-ui/dist/bits/menu/menu.svelte.js`). Todos os
+ * sessenta itens ficam em `-1` o tempo todo, o painel também, e o container não
+ * tem um único tabulável dentro. A base-ui do React faz o contrário — dá `0` ao
+ * item destacado —, e lá a mesma exceção seria INERTE. Sonda desta story, com o
+ * painel aberto: `tabindex=["-1"] destacados=0 painel="-1" focaveis=0`.
+ *
+ * O que substitui a regra desligada é a PREMISSA dela, afirmada no play abaixo:
+ * navegar por seta num menu longo traz o item focado para dentro da caixa
+ * visível. Se a rolagem deixar de acompanhar o foco, o passo reprova — que é a
+ * coisa que `scrollable-region-focusable` protegeria aqui.
+ */
+const MENU_ROLAVEL_GUARDA = { id: 'scrollable-region-focusable', enabled: false } as const;
+
+export const PanelScrolls: Story = {
+  args: { defaultValue: 'file', demonstration: 'long' },
+  parameters: {
+    // SEM `FOCUS_RULE_GUARDA`, e a ausência é medida: as outras stories deste
+    // arquivo o declaram, mas em 2026-09-18 ele foi medido INERTE nas cinco —
+    // tirando-o dos dez pontos do Menubar e dos seis do ContextMenu, as suítes
+    // dos três membros fecham iguais (menubar 17/17, context 12/12; o
+    // DropdownMenu nem o usa). Exceção que não desliga nada é portão sem dentes
+    // com cara de cobertura, então esta story não a herda. A dívida das outras
+    // quatro stories fica RELATADA, não varrida por conta própria.
+    a11y: { config: { rules: [MENU_ROLAVEL_GUARDA] } },
+    docs: { source: { transform: menubarPanelScrollsSource } },
+  },
+  play: async ({ step }) => {
+    const menu = await waitForPortal('menu');
+    const items = within(menu).getAllByRole('menuitem');
+
+    await step('O painel RECORTA na janela em vez de crescer sem fim', async () => {
+      // As duas metades, e a segunda é a que tinha o defeito: a folha declara
+      // `overflow-y: auto`, mas com `max-height: none` não havia o que recortar
+      // — o painel media a lista inteira e saía por baixo da janela. Comparar
+      // a altura do painel com a da lista é o que separa "rola" de "cabe".
+      await expect(items.length).toBeGreaterThan(10);
+      await expect(getComputedStyle(menu).overflowY).toBe('auto');
+      // A PREMISSA da exceção do axe, afirmada: não há UM tabulável dentro do
+      // painel. O bits crava `tabindex: -1` no item, fixo, sem depender de
+      // destaque — se um bump passar a dar `0` ao item destacado (que é o que a
+      // base-ui do React faz), a regra do axe passa sozinha, a exceção lá em
+      // cima vira inerte, e é esta linha que avisa em vez de a cobertura sumir
+      // em silêncio.
+      await expect([...new Set(items.map((i) => i.getAttribute('tabindex')))]).toEqual(['-1']);
+      await expect(menu.querySelectorAll('[tabindex="0"]')).toHaveLength(0);
+      await expect(menu.scrollHeight).toBeGreaterThan(menu.clientHeight);
+      await expect(menu.getBoundingClientRect().height).toBeLessThanOrEqual(
+        window.innerHeight,
+      );
+    });
+
+    await step('A seta traz o item focado para DENTRO da caixa visível', async () => {
+      // É a premissa da exceção do axe, e é ela que vira asserção: o painel é
+      // operável por teclado porque a rolagem ACOMPANHA o foco itinerante. Sem
+      // isso o item focado ficaria fora da caixa e ninguém veria onde está.
+      //
+      // Parte do primeiro item e anda até o último com a seta — nenhum
+      // `focus()` à mão, que mediria o `scrollIntoView` do navegador em vez do
+      // percurso do teclado.
+      items[0].focus();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0]);
+      });
+
+      await userEvent.keyboard('{End}');
+      const lastItem = items[items.length - 1];
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(lastItem);
+      });
+
+      // Leitura PURA dentro do `waitFor`: as caixas são lidas, nada é escrito
+      // no DOM — sonda que mexe no DOM reagenda a si mesma pelo observador de
+      // mutação e pendura a aba sem reprovar.
+      await waitFor(async () => {
+        const box = menu.getBoundingClientRect();
+        const target = lastItem.getBoundingClientRect();
+        await expect(target.top).toBeGreaterThanOrEqual(box.top - 1);
+        await expect(target.bottom).toBeLessThanOrEqual(box.bottom + 1);
+      });
+
+      // E a volta: Home traz o primeiro de novo, com a rolagem no topo. Só o
+      // End provaria metade — um painel que rolasse e nunca voltasse passaria.
+      await userEvent.keyboard('{Home}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0]);
+      });
+      await waitFor(async () => {
+        const box = menu.getBoundingClientRect();
+        const target = items[0].getBoundingClientRect();
+        await expect(target.top).toBeGreaterThanOrEqual(box.top - 1);
+        await expect(target.bottom).toBeLessThanOrEqual(box.bottom + 1);
+      });
     });
   },
 };

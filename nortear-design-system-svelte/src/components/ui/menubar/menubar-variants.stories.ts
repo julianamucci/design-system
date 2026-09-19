@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
-import { menubarSource } from './menubar.source';
+import {
+  menubarSource,
+  menubarDefaultSource,
+  menubarDestructiveSource,
+} from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -38,7 +42,10 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: { defaultValue: 'file', variant: 'default', demonstration: 'default' },
-  parameters: { covers: ['accessibility.item7'] },
+  parameters: {
+    covers: ['accessibility.item7'],
+    docs: { source: { transform: menubarDefaultSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const items = within(menu).getAllByRole('menuitem');
@@ -74,7 +81,10 @@ export const Default: Story = {
 
 export const Destructive: Story = {
   args: { defaultValue: 'file', demonstration: 'destructive' },
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: menubarDestructiveSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
@@ -84,6 +94,27 @@ export const Destructive: Story = {
     await step('A variante chega ao markup', async () => {
       await expect(perigoso.getAttribute('data-variant')).toBe('destructive');
       await expect(perigoso.getAttribute('data-slot')).toBe('menubar-item');
+    });
+
+    await step('A divisória se anuncia como DIVISÓRIA, e não como grupo', async () => {
+      // O `MenuSeparatorState` do bits crava `role="group"` no separador e
+      // mescla os próprios atributos por último, então passar `role` por fora é
+      // ignorado em silêncio — um `role="group"` vazio dentro de `role="menu"` é
+      // anunciado como um grupo sem nada dentro, e a divisória perde a semântica.
+      // Medido em navegador em 2026-09-18: este era o ÚNICO dos quinze
+      // separadores da família saindo como `group`, e sem `aria-orientation`.
+      // O wrapper passou a renderizar pelo snippet `child`, que devolve a última
+      // palavra ao nosso markup — como o Vanilla, que é a referência, e como os
+      // outros dois membros desta stack já faziam.
+      const separatorEl = menu.querySelector<HTMLElement>('[data-slot="menubar-separator"]')!;
+      await expect(separatorEl).not.toBeNull();
+      await expect(separatorEl.getAttribute('role')).toBe('separator');
+      await expect(separatorEl.getAttribute('aria-orientation')).toBe('horizontal');
+      await expect(separatorEl.classList.contains('nds-dropdown-menu-separator')).toBe(true);
+      // E o painel não ganha um grupo de brinde: com o papel errado, esta
+      // contagem dava 1 em vez de 0.
+      await expect(within(menu).queryAllByRole('group')).toHaveLength(0);
+      await expect(within(menu).getAllByRole('separator')).toHaveLength(1);
     });
 
     await step('A cor do texto distingue a ação irreversível', async () => {

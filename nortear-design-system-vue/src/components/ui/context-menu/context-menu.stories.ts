@@ -10,7 +10,7 @@ import {
   closeMenu,
   menuOpen,
 } from '@shared/testing/context-menu-area';
-import { expectInvolucroComCaixa } from '@shared/testing/ancoragem';
+import { expectInvolucroComCaixa, waitForAncorado } from '@shared/testing/ancoragem';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -220,7 +220,15 @@ export const Playground: Story = {
       // para 0×0 e ela passa a calcular colisão contra uma caixa sem tamanho.
       // O defeito é silencioso até o TAMANHO do painel entrar na conta. Ver
       // `ancoragem.ts`.
+      //
+      // A ESPERA vem antes, e ela não é firula (§7 #16). As libs de linhagem
+      // Radix estacionam o painel num lugar de espera e só o medem depois do
+      // primeiro quadro: sem `waitForAncorado` a asserção lê o invólucro ANTES
+      // de a lib o posicionar, e aí ou ela passa por acaso, ou reprova por
+      // tempo e não por defeito. Asserção que depende de quem chegou primeiro
+      // não reprova o que existe para reprovar.
       const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
       expectInvolucroComCaixa(panel);
     });
 
@@ -559,7 +567,8 @@ export const TabLeavesMenu: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
 
-    await step('Tab dentro do submenu fecha o menu INTEIRO e segue da área', async () => {
+    /** O submenu aberto pela seta, com o foco num item DELE. */
+    const openSubmenuWithItemFocused = async () => {
       const menu = await openWithItemFocused();
       within(menu).getByRole('menuitem', { name: 'Compartilhar' }).focus();
       await userEvent.keyboard('{ArrowRight}');
@@ -567,12 +576,32 @@ export const TabLeavesMenu: Story = {
       const sub = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
       within(sub).getAllByRole('menuitem')[0].focus();
       await expect(sub.contains(document.activeElement)).toBe(true);
+      return sub;
+    };
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue da área', async () => {
+      await openSubmenuWithItemFocused();
 
       pressTab();
       // Os dois painéis: fechar só o filho deixaria o raiz aberto com o foco
       // fora dele.
       await waitForPortalGone('menu');
       await waitFor(() => expect(document.activeElement).toBe(after));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo, e volta ao anterior', async () => {
+      // §7 #12 do PRD: o C2 promete as duas direções "também de dentro do
+      // submenu", e esta era a única das três stories de Tab desta stack que
+      // afirmava só uma. O DropdownMenu e o Menubar já afirmavam as duas — e
+      // uma direção provada não prova a outra: o destino sai de um cálculo
+      // próprio (`tabbableBeside(..., 'prev')`), com um ramo que o `'next'`
+      // não exercita.
+      await openSubmenuWithItemFocused();
+
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(before));
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
   },

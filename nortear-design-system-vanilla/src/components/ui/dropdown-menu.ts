@@ -124,9 +124,44 @@ import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 export type DropdownMenuSide = FloatingSide;
 export type DropdownMenuAlign = FloatingAlign;
 
+/**
+ * Uma opção do grupo de escolha única — `type: 'radio-group'`.
+ *
+ * Mesma forma do `MenubarRadioOption`: a escolha única é UMA coisa, com as
+ * opções dentro dela, e não itens soltos amarrados por um nome de grupo. Ver a
+ * D16 do PRD.
+ */
+// PATCH: api — escolha única unificada em `type: 'radio-group'` (ver PATCHES.md#vanilla-menu-radio-group)
+export type DropdownMenuRadioOption = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  /**
+   * Disparado a cada ESCOLHA desta opção, pelo ponteiro ou por Enter/Espaço —
+   * inclusive quando ela já era a escolhida. É o gesto de escolher, e não a
+   * mudança de valor: essa é o `onValueChange` do grupo, que não dispara quando
+   * nada mudou. É dele que sai o `dropdown_menu_item_select`.
+   */
+  onClick?: () => void;
+};
+
 export type DropdownMenuItemDef = {
-  /** `item` é o padrão. `submenu` exige `items`. */
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
+  /**
+   * `item` é o padrão. `submenu` exige `items`; `radio-group` exige `options`.
+   *
+   * **Até 2026-09-18 havia um `radio`**, com um `group` por item — uma das TRÊS
+   * formas de escolha única que a referência cross-stack ensinava ao mesmo
+   * tempo (D16). Vale a forma do `createMenubar`, que é a única que declara o
+   * grupo como uma coisa só e a única cujo par `value`/`onValueChange` é o que
+   * o resto do design system usa para escolha controlada.
+   */
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
+  /**
+   * Em `radio-group`, o valor ESCOLHIDO do grupo; nos demais tipos, o valor do
+   * item, escrito em `data-value`. São sentidos diferentes de propósito, e não
+   * se cruzam: o item de `radio-group` não renderiza elemento nenhum — quem
+   * vira `<li data-value>` são as `options` dele.
+   */
   value?: string;
   label?: string;
   disabled?: boolean;
@@ -142,7 +177,7 @@ export type DropdownMenuItemDef = {
    */
   // PATCH: api — recuo de item, rótulo e sub-gatilho, como no context-menu e no menubar (ver PATCHES.md#vanilla-dropdown-menu-inset)
   inset?: boolean;
-  /** Só em `checkbox` e `radio`: estado inicial de marcação. */
+  /** Só em `checkbox`: estado inicial de marcação. */
   checked?: boolean;
   /**
    * Só em `checkbox`: estado misto ("alguns dos filhos selecionados"). Vale
@@ -151,12 +186,14 @@ export type DropdownMenuItemDef = {
    * caixa de seleção avulsa desta stack.
    */
   indeterminate?: boolean;
-  /** Só em `radio`: nome do grupo de escolha única a que o item pertence. */
-  group?: string;
+  /** Só em `radio-group`: as opções da escolha única. Obrigatório ali. */
+  options?: DropdownMenuRadioOption[];
+  /** Só em `radio-group`: avisado quando o valor escolhido MUDA. */
+  onValueChange?: (value: string) => void;
   /** Itens do submenu. Obrigatório quando `type: 'submenu'`. */
   items?: DropdownMenuItemDef[];
   onClick?: () => void;
-  /** Só em `checkbox` e `radio`: avisado a cada mudança de marcação. */
+  /** Só em `checkbox`: avisado a cada mudança de marcação. */
   onCheckedChange?: (checked: boolean) => void;
   /** Só em `checkbox`: disparado quando o estado misto é resolvido por interação. */
   onIndeterminateChange?: (indeterminate: boolean) => void;
@@ -232,18 +269,21 @@ export type DropdownMenuElement = DestroyableElement & {
   setOpen: (open: boolean) => void;
 };
 
-/** Papel ARIA de cada tipo de item que se comporta como item de menu. */
+/**
+ * Papel ARIA de cada tipo de item que se comporta como item de menu.
+ *
+ * A escolha única saiu daqui com a D16: ela não é um TIPO DE ITEM, é um grupo
+ * com opções dentro, e o `menuitemradio` é escrito por quem monta as opções.
+ */
 const TYPE_ROLE = {
   item: 'menuitem',
   checkbox: 'menuitemcheckbox',
-  radio: 'menuitemradio',
 } as const;
 
 /** Classe `.nds-*` de cada tipo — o contrato visual que o CSS compartilhado define. */
 const TYPE_CLASSNAME = {
   item: 'nds-dropdown-menu-item',
   checkbox: 'nds-dropdown-menu-checkbox-item',
-  radio: 'nds-dropdown-menu-radio-item',
 } as const;
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -356,7 +396,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     triggerSlot: 'dropdown-menu-sub-trigger',
     panelIdPrefix: `${menuId}-sub`,
     getItems: getMenuItems,
-    sideOffset,
+    // O `sideOffset` do MENU não é repassado ao submenu desde a D15: ele é o vão
+    // entre o gatilho e o painel que desce dele, e o submenu sai da lateral de
+    // um painel — outra relação, outro número (`0` e `-4`, em `@/lib/submenu`).
     // `data-state` no sub-gatilho: é o que a folha lê para mantê-lo destacado
     // com o submenu aberto e o foco já dentro dele — sem isto o destaque sumia.
     writeStateAttr: true,
@@ -386,6 +428,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     menu.setAttribute('role', 'menu');
     menu.className = cn('nds-dropdown-menu-content', isRoot ? options.class : undefined);
     menu.dataset.slot = slot;
+    // A ENTRADA do painel anima sob `[data-open]`/`[data-state="open"]`
+    // (`dropdown-menu.css`), e esta fábrica não escrevia nenhum dos dois: o
+    // menu aparecia seco onde as outras quatro stacks e o `createContextMenu`
+    // desta mesma stack entram com fade e zoom. O painel só existe enquanto
+    // está aberto — é criado ao abrir e removido ao fechar —, então o valor é
+    // sempre `open`, e é a inserção do nó que dispara o keyframe.
+    menu.dataset.state = 'open';
     // Lado e encosto escolhidos ficam legíveis no markup, como nas outras
     // stacks. É por eles que uma story prova que a opção chegou ao painel sem
     // depender de medir pixels. O painel do submenu não os leva: ele não sai do
@@ -407,6 +456,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       if (type === 'separator') {
         const sep = document.createElement('li');
         sep.setAttribute('role', 'separator');
+        // `data-slot` como nas outras quatro stacks e nas duas fábricas irmãs
+        // desta: é por ele que a auditoria cross-stack compara o markup, e a
+        // referência era a única peça sem endereço próprio aqui.
+        sep.dataset.slot = 'dropdown-menu-separator';
         sep.className = 'nds-dropdown-menu-separator';
         openGroup = null;
         menu.appendChild(sep);
@@ -442,6 +495,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         const lbl = document.createElement('li');
         lbl.id = labelId;
         lbl.setAttribute('role', 'presentation');
+        // Mesma razão do separador acima: o `data-slot` é o endereço com que as
+        // cinco stacks se comparam, e ele faltava só aqui.
+        lbl.dataset.slot = 'dropdown-menu-label';
         lbl.className = 'nds-dropdown-menu-label';
         // Presente só quando pedido: a folha casa `[data-inset]` por presença,
         // e um `data-inset="false"` recuaria do mesmo jeito.
@@ -481,8 +537,108 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         return;
       }
 
-      // 'item' | 'checkbox' | 'radio' — os três se comportam como item de menu;
-      // o que muda é o papel ARIA, a classe e o que a ativação faz.
+      if (type === 'radio-group') {
+        // A escolha única é UM bloco — `role="group"` com as opções dentro —, e
+        // não itens soltos amarrados por um nome (D16). Logo depois de um
+        // rótulo, o grupo que ele acabou de abrir, ainda só com o rótulo
+        // dentro, JÁ É esse bloco e já tem nome: um segundo `role="group"`
+        // aninhado faria o leitor anunciar dois grupos para um bloco só. Sem
+        // rótulo antes, o grupo nasce aqui, sem nome — não há texto que o
+        // nomeie. É a mesma conta do `createMenubar`.
+        const reuse = openGroup !== null && openGroup.childElementCount === 1;
+        let group: HTMLElement;
+        if (reuse) {
+          group = openGroup!;
+        } else {
+          // `<ul>` não é filho válido de `<ul>`: o portador existe pelo HTML, e
+          // o `role="presentation"` o apaga da árvore de acessibilidade para
+          // que o grupo continue sendo possuído pelo menu. Os dois níveis levam
+          // `.nds-dropdown-menu-group` (`display: contents` na folha).
+          const carrier = document.createElement('li');
+          carrier.setAttribute('role', 'presentation');
+          carrier.className = 'nds-dropdown-menu-group';
+          group = document.createElement('ul');
+          group.setAttribute('role', 'group');
+          group.className = 'nds-dropdown-menu-group';
+          carrier.appendChild(group);
+          (openGroup ?? menu).appendChild(carrier);
+        }
+        group.dataset.slot = 'dropdown-menu-radio-group';
+
+        let chosen = item.value;
+        const choices: Array<{ el: HTMLElement; value: string }> = [];
+
+        for (const option of item.options ?? []) {
+          const choice = document.createElement('li');
+          choice.setAttribute('role', 'menuitemradio');
+          choice.className = 'nds-dropdown-menu-radio-item';
+          choice.dataset.slot = 'dropdown-menu-radio-item';
+          choice.dataset.value = option.value;
+          // `tabindex` em TODA opção, inclusive na indisponível: sem ele o
+          // `focus()` das setas é no-op.
+          choice.setAttribute('tabindex', '-1');
+          if (option.disabled) {
+            choice.setAttribute('aria-disabled', 'true');
+            choice.dataset.disabled = '';
+          }
+
+          const isChosen = chosen === option.value;
+          choice.setAttribute('aria-checked', String(isChosen));
+          choice.appendChild(
+            createIndicador(
+              isChosen ? 'checked' : 'unchecked',
+              'dropdown-menu-radio-item-indicator',
+            ),
+          );
+
+          const text = document.createElement('span');
+          text.textContent = option.label;
+          choice.appendChild(text);
+
+          /**
+           * Escolher: pelo ponteiro E pelo teclado.
+           *
+           * Escolher a opção JÁ escolhida continua sendo uma escolha — o
+           * `onClick` sai sempre, e é dele que a docs page tira o
+           * `dropdown_menu_item_select`. O que só sai com mudança de fato é o
+           * `onValueChange`. Não fecha em nenhum dos casos: quem escolhe o tema
+           * quer ver o resultado com o menu ali.
+           */
+          const choose = (): void => {
+            if (option.disabled) return;
+            if (chosen !== option.value) {
+              chosen = option.value;
+              for (const other of choices) {
+                const active = other.value === chosen;
+                other.el.setAttribute('aria-checked', String(active));
+                other.el.replaceChild(
+                  createIndicador(
+                    active ? 'checked' : 'unchecked',
+                    'dropdown-menu-radio-item-indicator',
+                  ),
+                  other.el.firstElementChild!,
+                );
+              }
+              item.onValueChange?.(chosen);
+            }
+            option.onClick?.();
+          };
+          choice.addEventListener('click', choose);
+          choice.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              choose();
+            }
+          });
+
+          choices.push({ el: choice, value: option.value });
+          group.appendChild(choice);
+        }
+        return;
+      }
+
+      // 'item' | 'checkbox' — os dois se comportam como item de menu; o que
+      // muda é o papel ARIA, a classe e o que a ativação faz.
       const kind = type as keyof typeof TYPE_ROLE;
       const li = document.createElement('li');
       li.setAttribute('role', TYPE_ROLE[kind]);
@@ -492,13 +648,18 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       // Recuo só no item de ação: marcação e escolha única já têm o indicador
       // ocupando a margem, e é com eles que o recuo alinha.
       if (kind === 'item' && item.inset) li.setAttribute('data-inset', '');
-      if (item.disabled) li.setAttribute('aria-disabled', 'true');
+      // Os DOIS marcadores, como o `createContextMenu` já fazia: `aria-disabled`
+      // é o que anuncia, `data-disabled` é o que a folha lê — e as duas fábricas
+      // irmãs desta stack não podem marcar o mesmo estado de jeitos diferentes.
+      if (item.disabled) {
+        li.setAttribute('aria-disabled', 'true');
+        li.dataset.disabled = '';
+      }
       // `tabindex` em TODO item, inclusive no desabilitado: sem ele o `focus()`
       // das setas é no-op, e o item ficaria na lista de candidatos sem nunca
       // receber o foco — a roda pareceria pular um passo em vez de pousar.
       li.setAttribute('tabindex', '-1');
       if (item.value) li.dataset.value = item.value;
-      if (item.group) li.dataset.group = item.group;
 
       const marcavel = kind !== 'item';
       const slotDoIndicador = `dropdown-menu-${kind}-item-indicator`;
@@ -536,39 +697,20 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       }
 
       function toggleMarkup(): void {
-        if (kind === 'checkbox') {
-          if (misto) {
-            // O primeiro clique RESOLVE o misto para marcado, como faz a
-            // propriedade `indeterminate` do input nativo — e não devolve o
-            // misto a ninguém, porque "alguns" é conclusão de quem consome.
-            misto = false;
-            checked = true;
-            pintarMarkup();
-            item.onIndeterminateChange?.(false);
-            item.onCheckedChange?.(true);
-            return;
-          }
-          checked = !checked;
+        if (misto) {
+          // O primeiro clique RESOLVE o misto para marcado, como faz a
+          // propriedade `indeterminate` do input nativo — e não devolve o
+          // misto a ninguém, porque "alguns" é conclusão de quem consome.
+          misto = false;
+          checked = true;
           pintarMarkup();
-          item.onCheckedChange?.(checked);
+          item.onIndeterminateChange?.(false);
+          item.onCheckedChange?.(true);
           return;
         }
-        // Escolha única: os irmãos do mesmo grupo desmarcam junto.
-        const irmaos = menu.querySelectorAll<HTMLElement>(
-          `[role="menuitemradio"]${item.group ? `[data-group="${item.group}"]` : ''}`,
-        );
-        irmaos.forEach((irmao) => {
-          const escolhido = irmao === li;
-          irmao.setAttribute('aria-checked', String(escolhido));
-          irmao.replaceChild(
-            createIndicador(
-              escolhido ? 'checked' : 'unchecked',
-              'dropdown-menu-radio-item-indicator',
-            ),
-            irmao.firstElementChild!,
-          );
-        });
-        item.onCheckedChange?.(true);
+        checked = !checked;
+        pintarMarkup();
+        item.onCheckedChange?.(checked);
       }
 
       if (!item.disabled) {

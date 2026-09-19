@@ -83,7 +83,7 @@ export function menuStateName(value: string): string {
 // ─── O código que a lista escreve ─────────────────────────────────────────────
 //
 // As peças têm o MESMO sufixo nos dois componentes (`Item`, `Shortcut`,
-// `GroupHeading`, `SubContent`…), e só o prefixo muda: `DropdownMenu` ou
+// `Label`, `SubContent`…), e só o prefixo muda: `DropdownMenu` ou
 // `Menubar`. O escritor é um só para que os dois cards imprimam a mesma forma —
 // o rótulo de grupo DENTRO do grupo, o atalho numa linha própria dentro do item,
 // a marcação ligada a uma variável que o `<script>` do exemplo declara.
@@ -107,14 +107,14 @@ export function menuEntriesParts(
         parts.add(`${prefix}Separator`);
         break;
       case 'group':
-        parts.add(`${prefix}Group`).add(`${prefix}GroupHeading`);
+        parts.add(`${prefix}Group`).add(`${prefix}Label`);
         menuEntriesParts(prefix, entry.items, parts);
         break;
       case 'checkbox':
         parts.add(`${prefix}CheckboxItem`);
         break;
       case 'radio-group':
-        parts.add(`${prefix}RadioGroup`).add(`${prefix}GroupHeading`).add(`${prefix}RadioItem`);
+        parts.add(`${prefix}RadioGroup`).add(`${prefix}Label`).add(`${prefix}RadioItem`);
         break;
       case 'submenu':
         parts.add(`${prefix}Sub`).add(`${prefix}SubTrigger`).add(`${prefix}SubContent`);
@@ -148,7 +148,7 @@ export function menuEntriesMarkup(
       case 'group':
         return [
           `${indent}<${prefix}Group>`,
-          `${indent}  <${prefix}GroupHeading>${entry.label}</${prefix}GroupHeading>`,
+          `${indent}  <${prefix}Label>${entry.label}</${prefix}Label>`,
           ...menuEntriesMarkup(prefix, entry.items, `${indent}  `),
           `${indent}</${prefix}Group>`,
         ];
@@ -161,7 +161,7 @@ export function menuEntriesMarkup(
       case 'radio-group':
         return [
           `${indent}<${prefix}RadioGroup bind:value={${entry.name}}>`,
-          `${indent}  <${prefix}GroupHeading>${entry.label}</${prefix}GroupHeading>`,
+          `${indent}  <${prefix}Label>${entry.label}</${prefix}Label>`,
           ...entry.items.map(
             (option) =>
               `${indent}  <${prefix}RadioItem value="${option.value}">${option.label}</${prefix}RadioItem>`,

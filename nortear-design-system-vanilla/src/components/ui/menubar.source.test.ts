@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { menubarSnippet, menubarSource, menubarSourceWith } from './menubar.source';
+import {
+  menubarControlledSource,
+  menubarSnippet,
+  menubarSource,
+  menubarSourceWith,
+} from './menubar.source';
 
 describe('menubarSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da barra', () => {
@@ -133,6 +138,40 @@ describe('menubarSource', () => {
     expect(menubarSource('<div data-slot="menubar" aria-orientation="horizontal">', {})).not.toContain(
       'aria-orientation',
     );
+  });
+});
+
+/**
+ * O snippet da story `ControlledOpen`, que este arquivo não cobria.
+ *
+ * A varredura transversal (`source-snippets.test.ts`) o chamava e conferia que
+ * ele é honesto — importa o que usa, não vaza andaime —, mas nada cobrava o que
+ * ele existe para ENSINAR: que a fábrica tem só a METADE de volta do par
+ * controlado, e que o exemplo não pode inventar a prop que falta.
+ */
+describe('menubarControlledSource', () => {
+  it('ensina o par que EXISTE: `defaultOpen` na construção e `onOpenChange` de volta', () => {
+    const code = menubarControlledSource();
+    expect(code).toContain("import { createMenubar } from '@/components/ui/menubar';");
+    expect(code).toContain('onOpenChange:');
+    expect(code).toContain('defaultOpen: indice');
+    // A barra é REFEITA, que é o que "comandar" quer dizer aqui — e a anterior
+    // precisa morrer, senão cada troca deixa uma barra viva com os ouvintes
+    // dela presos ao documento.
+    expect(code).toContain('barra.destroy();');
+  });
+
+  it('e NÃO inventa a prop de ida que a fábrica não tem', () => {
+    // As outras stacks expõem uma ligação reativa (`open` + retorno). Aqui a
+    // ida não existe: ensinar `open`/`setOpen` numa barra seria API que o
+    // design system não publica.
+    const code = menubarControlledSource();
+    expect(code).not.toContain('barra.open(');
+    expect(code).not.toContain('barra.setOpen(');
+    expect(code).not.toContain('barra.toggle(');
+    // E não volta a espiar o DOM: o caminho de volta é o callback.
+    expect(code).not.toContain('MutationObserver');
+    expect(code).not.toContain('aria-expanded');
   });
 });
 

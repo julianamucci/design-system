@@ -20,8 +20,9 @@ import {
   menubarOpenSource,
   menubarCheckboxIndeterminateSource,
   menubarControlledSource,
-  menubarItemBloqueadoSource,
+  menubarItemDisabledSource,
   menubarItemCheckedSource,
+  menubarPanelScrollsSource,
   menubarSource,
 } from "./menubar.source"
 import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbox-indicator"
@@ -190,7 +191,7 @@ export const ItemDisabled: Story = {
     a11y: AXE_WITH_MENU_OPEN,
     // O `disabled` de um item só existe nesta composição; o snippet do meta
     // mostraria três itens todos disponíveis.
-    docs: { source: { transform: menubarItemBloqueadoSource } },
+    docs: { source: { transform: menubarItemDisabledSource } },
   },
   render: () => (
       <div className="nds-min-h-70" style={wrapperStyle}>
@@ -500,6 +501,129 @@ export const ControlledOpen: Story = {
       // teria saído do DOM.
       await expect(readout.textContent?.trim()).toBe("fechado")
       await expect(file.getAttribute("aria-expanded")).toBe("false")
+    })
+  },
+}
+
+// ─── PanelScrolls ─────────────────────────────────────────────────────────────
+
+// Os itens do menu LONGO. São SESSENTA, o mesmo número da medição de 2026-09-18
+// que fixou a D17: com eles, numa janela de 900px, o painel desta stack recorta
+// em 856px e rola. Menos do que isso e o painel cabe inteiro na altura
+// disponível — a asserção abaixo passaria POR ACASO, sem a rolagem existir.
+const LONG_ITEMS = Array.from({ length: 60 }, (_, i) => `Ação ${i + 1}`)
+
+/**
+ * A EXCEÇÃO DO AXE NÃO ENTRA AQUI, e a premissa dela é que decidiu isso —
+ * medida nesta stack em 2026-09-18, e ela contradiz a tabela da D17.
+ *
+ * A D17 conta que `scrollable-region-focusable` acusa o painel do react e que a
+ * saída é desligar a regra declarando a premissa. A regra cobra que uma região
+ * com rolagem seja alcançável por teclado, e mede isso procurando algo TABULÁVEL
+ * dentro dela. E a base-ui faz foco ITINERANTE pelo livro — `tabIndex: open &&
+ * highlighted ? 0 : -1`, em `menu/item/useMenuItemCommonProps.js:39` —, ou seja
+ * com um item destacado existe exatamente UM item em `0`, e a regra passa
+ * sozinha. Medido por plantio nos dois sentidos: com a exceção retirada a story
+ * fecha limpa, e com só ela ligada o axe RODA e acusa outras duas violações, o
+ * que descarta "a ferramenta não mediu".
+ *
+ * O que a D17 mediu, então, foi o painel aberto SEM item destacado (o caminho
+ * de ponteiro do C1, em que o foco pousa no painel): ali todos os itens estão em
+ * `-1` e a regra acusa de verdade. Esta story termina com um item destacado, e
+ * declarar aqui uma exceção que não desliga nada seria portão sem dentes com
+ * cara de cobertura.
+ *
+ * O que fica no lugar dela é a PREMISSA, afirmada no play abaixo, e essa vale
+ * independentemente da ferramenta: navegar por tecla num menu longo traz o item
+ * focado para dentro da caixa visível. É o que a base-ui resolve com
+ * `scrollIntoView({ block: 'nearest' })` em
+ * `floating-ui-react/hooks/useListNavigation.js:168`, e é ele que faltaria numa
+ * lib que focasse com `preventScroll` — WCAG 2.4.11. Provado por plantio: sem a
+ * tecla que move o foco, o passo reprova.
+ */
+export const PanelScrolls: Story = {
+  parameters: {
+    // As mesmas duas regras das outras stories que terminam com menu aberto, e
+    // nenhuma terceira: ver o bloco acima.
+    a11y: AXE_WITH_MENU_OPEN,
+    // O menu longo não é o do meta, e é a ALTURA dele que carrega a lição.
+    docs: { source: { transform: menubarPanelScrollsSource } },
+  },
+  render: () => (
+    <div className="nds-min-h-70" style={wrapperStyle}>
+      <Menubar modal={false}>
+        <MenubarMenu defaultOpen>
+          <MenubarTrigger>Arquivo</MenubarTrigger>
+          <MenubarContent>
+            {LONG_ITEMS.map((label) => (
+              <MenubarItem key={label}>{label}</MenubarItem>
+            ))}
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+    </div>
+  ),
+  play: async ({ step }) => {
+    const menu = await waitForPortal("menu")
+    const items = within(menu).getAllByRole("menuitem")
+
+    await step("O painel RECORTA na janela em vez de crescer sem fim", async () => {
+      // As duas metades, e a segunda é a que tem defeito quando a cadeia de
+      // `max-height` quebra: a folha declara `overflow-y: auto`, mas com
+      // `max-height: none` não há o que recortar — o painel mede a lista
+      // inteira e sai por baixo da janela. Comparar a altura do painel com a da
+      // lista é o que separa "rola" de "cabe".
+      await expect(items).toHaveLength(LONG_ITEMS.length)
+      await expect(getComputedStyle(menu).overflowY).toBe("auto")
+      await expect(menu.scrollHeight).toBeGreaterThan(menu.clientHeight)
+      await expect(menu.getBoundingClientRect().height).toBeLessThanOrEqual(
+        window.innerHeight
+      )
+    })
+
+    await step("A seta traz o item focado para DENTRO da caixa visível", async () => {
+      // A premissa da D17, e ela é o que dá sentido a um painel que rola: o
+      // menu é operável por teclado porque a rolagem ACOMPANHA o foco
+      // itinerante. Sem isso o item focado ficaria FORA da caixa e ninguém
+      // veria onde está — WCAG 2.4.11, e é o buraco que uma lib que foca com
+      // `preventScroll` e nunca rola deixa aberto em silêncio.
+      //
+      // Parte do primeiro item e vai ao último pelo TECLADO — nenhum `focus()`
+      // à mão no destino, que mediria o `scrollIntoView` do navegador em vez do
+      // percurso das teclas.
+      items[0].focus()
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0])
+      })
+
+      const lastItem = items[items.length - 1]
+      await userEvent.keyboard("{End}")
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(lastItem)
+      })
+
+      // Leitura PURA dentro do `waitFor`: as caixas são lidas, nada é escrito
+      // no DOM — sonda que mexe no DOM reagenda a si mesma pelo observador de
+      // mutação e pendura a aba sem reprovar.
+      await waitFor(async () => {
+        const box = menu.getBoundingClientRect()
+        const target = lastItem.getBoundingClientRect()
+        await expect(target.top).toBeGreaterThanOrEqual(box.top - 1)
+        await expect(target.bottom).toBeLessThanOrEqual(box.bottom + 1)
+      })
+
+      // E a volta: Home traz o primeiro de novo, com a rolagem no topo. Só o
+      // End provaria metade — um painel que rolasse e nunca voltasse passaria.
+      await userEvent.keyboard("{Home}")
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[0])
+      })
+      await waitFor(async () => {
+        const box = menu.getBoundingClientRect()
+        const target = items[0].getBoundingClientRect()
+        await expect(target.top).toBeGreaterThanOrEqual(box.top - 1)
+        await expect(target.bottom).toBeLessThanOrEqual(box.bottom + 1)
+      })
     })
   },
 }

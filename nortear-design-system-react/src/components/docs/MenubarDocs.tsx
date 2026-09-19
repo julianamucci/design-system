@@ -104,21 +104,25 @@ function entriesFromDict<K extends string>(
 }
 
 /**
- * Nível WCAG e ferramenta de cada critério de acessibilidade, por índice.
+ * Nível WCAG e forma de verificar cada critério de acessibilidade, por índice.
  * Ficam aqui, e não no conteúdo compartilhado, porque são IDENTIFICADORES
- * (número de critério, nome do verificador) e identificador não se traduz.
- * Item novo que chegue além da lista cai no par padrão em vez de sumir.
+ * (número de critério, consulta da suíte, regra do axe) e identificador não se
+ * traduz. A coluna dizia "DevTools a11y tree", "DevTools attribute", "Keyboard
+ * test" e "Contrast checker" — frase em inglês, igual nos três idiomas e sem
+ * dizer o que de fato mede; agora diz a CONSULTA ou a regra concreta, como no
+ * ContextMenu desta stack e como no vue e no svelte. Item novo que chegue além
+ * da lista cai no par padrão em vez de sumir.
  */
 const A11Y_TEST_LEVELS = ["AA", "1.3.1", "4.1.2", "4.1.2", "4.1.2", "2.4.3", "1.4.3", "2.1.1"];
 const A11Y_TEST_HOW = [
   "axe-core",
-  "DevTools a11y tree",
-  "DevTools attribute",
-  "DevTools a11y tree",
-  "DevTools a11y tree",
-  "Keyboard test",
-  "Contrast checker",
-  "Keyboard test",
+  "getByRole('menubar')",
+  "aria-haspopup · aria-expanded",
+  "getByRole('menu')",
+  "getAllByRole('menuitem' | 'menuitemcheckbox' | 'menuitemradio')",
+  "Escape · document.activeElement",
+  "axe-core · color-contrast",
+  "ArrowDown · document.activeElement",
 ];
 
 // ─── Rastreamento das prévias vivas ───────────────────────────────────────────

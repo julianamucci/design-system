@@ -187,6 +187,27 @@ function withItemTracking(
     if (type === 'submenu') {
       return { ...def, items: withItemTracking(def.items ?? [], menu, location) };
     }
+    if (type === 'radio-group') {
+      // A escolha única rastreia pelo `onClick` da OPÇÃO, e não pelo
+      // `onValueChange` do grupo: este não dispara quando a opção escolhida já
+      // era a marcada, e o `dropdown_menu_item_select` sumiria justo no gesto
+      // de confirmar. É a mesma leitura do Menubar.
+      return {
+        ...def,
+        options: (def.options ?? []).map((option) => ({
+          ...option,
+          onClick: () => {
+            option.onClick?.();
+            track('dropdown_menu_item_select', {
+              component: 'dropdown-menu',
+              menu,
+              label: option.value,
+              location,
+            });
+          },
+        })),
+      };
+    }
     if (type === 'separator' || type === 'label' || !def.value) return def;
     const label = def.value;
     return {
@@ -279,9 +300,19 @@ function columnsItems(): DropdownMenuItemDef[] {
 function themeItems(): DropdownMenuItemDef[] {
   return [
     { type: 'label', label: t('demonstration.labels.appearance') },
-    { type: 'radio', label: t('demonstration.labels.light'), value: 'light', group: 'theme', checked: true },
-    { type: 'radio', label: t('demonstration.labels.dark'), value: 'dark', group: 'theme' },
-    { type: 'radio', label: t('demonstration.labels.system'), value: 'system', group: 'theme' },
+    {
+      // D16: a escolha única é UMA entrada, com as opções e o valor escolhido
+      // dentro dela — e o rótulo acima nomeia esse bloco. Até 2026-09-18 eram
+      // itens `radio` soltos amarrados por um `group`, e o grupo não tinha
+      // nome porque não era um elemento.
+      type: 'radio-group',
+      value: 'light',
+      options: [
+        { value: 'light', label: t('demonstration.labels.light') },
+        { value: 'dark', label: t('demonstration.labels.dark') },
+        { value: 'system', label: t('demonstration.labels.system') },
+      ],
+    },
   ];
 }
 
@@ -385,8 +416,10 @@ function snippetItems(defs: DropdownMenuItemDef[]): DropdownMenuSnippetItem[] {
     inset: def.inset,
     checked: def.checked,
     indeterminate: def.indeterminate,
-    group: def.group,
     disabled: def.disabled,
+    // As opções da escolha única entram sem o `onClick` de rastreio, pelo mesmo
+    // motivo dos itens: o snippet não imprime função.
+    options: def.options?.map((o) => ({ value: o.value, label: o.label, disabled: o.disabled })),
     items: def.items ? snippetItems(def.items) : undefined,
   }));
 }
@@ -826,21 +859,29 @@ menu.setOpen(false);`,
 
       case 'propriedades': {
         const interfaceCode = `// createDropdownMenu(options)
+export type DropdownMenuRadioOption = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  onClick?: () => void;
+};
+
 export type DropdownMenuItemDef = {
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
-  value?: string;
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
+  value?: string;             // radio-group: o valor escolhido
   label?: string;
   disabled?: boolean;
   variant?: 'default' | 'destructive';
   shortcut?: string;
   inset?: boolean;            // item | label | submenu
-  checked?: boolean;          // checkbox | radio
+  checked?: boolean;          // checkbox
   indeterminate?: boolean;    // checkbox
-  group?: string;             // radio
-  items?: DropdownMenuItemDef[]; // submenu
+  options?: DropdownMenuRadioOption[]; // radio-group
+  items?: DropdownMenuItemDef[];       // submenu
   onClick?: () => void;
   onCheckedChange?: (checked: boolean) => void;
   onIndeterminateChange?: (indeterminate: boolean) => void;
+  onValueChange?: (value: string) => void; // radio-group
 };
 
 export type DropdownMenuCloseReason = 'escape' | 'overlay' | 'api';

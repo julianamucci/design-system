@@ -303,9 +303,19 @@ function DropdownMenuSubTrigger({
   )
 }
 
+/**
+ * Vão do submenu — D15 do `prd/dropdown-menu.md`, e ele vale nos TRÊS membros
+ * (o `MenubarSubContent` e o submenu do ContextMenu chegam aqui pelo mesmo
+ * caminho).
+ *
+ * `sideOffset: 0` encosta o subpainel no painel pai. `alignOffset: -4` é
+ * exatamente o `--spacing-1` de padding do painel: é ele que faz o primeiro item
+ * do submenu alinhar com o SUB-GATILHO que o abriu, em vez de alinhar com a
+ * borda da caixa. O `-3` que estava aqui não saía de token nenhum.
+ */
 function DropdownMenuSubContent({
   align = "start",
-  alignOffset = -3,
+  alignOffset = -4,
   side = "right",
   sideOffset = 0,
   className,
@@ -350,22 +360,23 @@ function DropdownMenuSubContent({
  * O `MenubarCheckboxItem` repete a forma: o item da barra é a mesma peça da lib,
  * com o endereço de markup (`data-slot`) da barra.
  */
+// Sem `inset`, como no ContextMenu: a folha só lê `[data-inset]` em item,
+// rótulo e sub-gatilho (`dropdown-menu.css:244-248`). Aceitar a prop aqui era
+// oferecer um nome que não recua nada — e o item de marcação já reserva a pista
+// do indicador, que é o recuo que ele tem.
 function DropdownMenuCheckboxItem({
   className,
   children,
   checked,
   indeterminate = false,
-  inset,
   ...props
 }: MenuPrimitive.CheckboxItem.Props & {
-  inset?: boolean
   /** Estado misto: anunciado como `mixed` e desenhado com traço. Controlado. */
   indeterminate?: boolean
 }) {
   return (
     <MenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
-      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-checkbox-item",
         className
@@ -402,18 +413,15 @@ function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props) {
   )
 }
 
+// Sem `inset`, pelo mesmo motivo do item de marcação acima.
 function DropdownMenuRadioItem({
   className,
   children,
-  inset,
   ...props
-}: MenuPrimitive.RadioItem.Props & {
-  inset?: boolean
-}) {
+}: MenuPrimitive.RadioItem.Props) {
   return (
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
-      data-inset={inset || undefined}
       className={cn("nds-dropdown-menu-radio-item", className)}
       {...props}
     >

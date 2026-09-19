@@ -24,7 +24,7 @@ import {
   menubarWithCheckboxSource,
   menubarWithRadioSource,
   menubarWithSubmenuSource,
-  menubarEditorCompletoSource,
+  menubarEditorSource,
 } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
@@ -472,7 +472,7 @@ export const EditorCompleto: Story = {
     docs: {
       // Quatro menus, cada um com um tipo de conteúdo diferente: é a única story
       // em que grupo, separador, atalho e alternador convivem na mesma barra.
-      source: { transform: menubarEditorCompletoSource },
+      source: { transform: menubarEditorSource },
     },
   },
   render: () => ({

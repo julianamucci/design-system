@@ -7,7 +7,7 @@
     MenubarContent,
     MenubarItem,
     MenubarGroup,
-    MenubarGroupHeading,
+    MenubarLabel,
     MenubarSeparator,
     MenubarShortcut,
     MenubarCheckboxItem,
@@ -172,19 +172,22 @@
   }
 
   // Nível WCAG e forma de verificar cada critério de acessibilidade, por índice.
-  // São identificadores (número de critério, ferramenta), e identificador não se
-  // traduz: por isso ficam aqui e não no conteúdo. Item além da lista cai no par
-  // padrão em vez de sumir.
+  // São identificadores (número de critério, consulta da suíte, regra do axe), e
+  // identificador não se traduz: por isso ficam aqui e não no conteúdo. A coluna
+  // "como verificar" dizia "DOM inspection", "Keyboard test" e "Contrast
+  // analyzer" — frase em inglês, igual nos três idiomas e sem dizer o que de
+  // fato mede; agora diz a consulta ou a regra, como no ContextMenu desta stack
+  // e no Menubar do vue. Item além da lista cai no par padrão em vez de sumir.
   const a11yTestLevels = ['AA', '1.3.1', '4.1.2', '4.1.2', '4.1.2', '2.4.3', '1.4.3', '2.1.1'];
   const a11yTestHow = [
     'axe-core',
-    'DOM inspection',
-    'DOM inspection',
-    'DOM inspection',
-    'DOM inspection',
-    'Keyboard test',
-    'Contrast analyzer',
-    'Keyboard test',
+    "getByRole('menubar')",
+    'aria-haspopup · aria-expanded',
+    "getByRole('menu')",
+    "getAllByRole('menuitem' | 'menuitemcheckbox' | 'menuitemradio')",
+    'Escape · document.activeElement',
+    'axe-core · color-contrast',
+    'ArrowDown · document.activeElement',
   ];
 
   // ─── Rastreio ────────────────────────────────────────────────────────────────
@@ -482,7 +485,7 @@
   MenubarContent,
   MenubarItem,
   MenubarGroup,
-  MenubarGroupHeading,
+  MenubarLabel,
   MenubarSeparator,
   MenubarShortcut,
   MenubarCheckboxItem,
@@ -627,11 +630,12 @@ interface MenubarRadioGroupProps {
           <MenubarTrigger {...bars.demo.trigger}>{$tStore('demonstration.labels.view')}</MenubarTrigger>
           <MenubarContent {...bars.demo.content}>
             <!--
-              `Group` + `GroupHeading`: o cabeçalho vira o `aria-labelledby` do
-              grupo, e é isso que dá nome aos alternadores para quem ouve.
+              `Group` + `Label`: dentro do grupo o rótulo vira o cabeçalho da
+              lib e o `id` dele entra no `aria-labelledby` — é isso que dá nome
+              aos alternadores para quem ouve.
             -->
             <MenubarGroup>
-              <MenubarGroupHeading>{$tStore('demonstration.labels.appearance')}</MenubarGroupHeading>
+              <MenubarLabel>{$tStore('demonstration.labels.appearance')}</MenubarLabel>
               <MenubarCheckboxItem
                 checked={demoDarkMode}
                 onCheckedChange={(v) => (demoDarkMode = v)}
@@ -952,7 +956,7 @@ interface MenubarRadioGroupProps {
         <MenubarSeparator />
       {:else if entry.type === 'group'}
         <MenubarGroup>
-          <MenubarGroupHeading>{entry.label}</MenubarGroupHeading>
+          <MenubarLabel>{entry.label}</MenubarLabel>
           {@render menuEntries(entry.items, tracker)}
         </MenubarGroup>
       {:else if entry.type === 'checkbox'}
@@ -964,7 +968,7 @@ interface MenubarRadioGroupProps {
         </MenubarCheckboxItem>
       {:else if entry.type === 'radio-group'}
         <MenubarRadioGroup bind:value={variantState.radio[entry.name]}>
-          <MenubarGroupHeading>{entry.label}</MenubarGroupHeading>
+          <MenubarLabel>{entry.label}</MenubarLabel>
           {#each entry.items as option (option.value)}
             <MenubarRadioItem value={option.value} onSelect={tracker.toggle(option.value)}>
               {option.label}
@@ -1035,6 +1039,15 @@ interface MenubarRadioGroupProps {
         items: [
           { name: 'value',         type: $tStore('props.table.value.type'),         defaultValue: $tStore('props.table.value.default'),         required: $tStore('props.table.value.required'),         description: $tStore('props.table.value.description')         },
           { name: 'onValueChange', type: $tStore('props.table.onValueChange.type'), defaultValue: $tStore('props.table.onValueChange.default'), required: $tStore('props.table.onValueChange.required'), description: $tStore('props.table.onValueChange.description') },
+          // `defaultValue` não entra, e a AUSÊNCIA é declarada: a raiz do bits
+          // não tem a prop (`MenubarRootPropsWithoutHTML` expõe `dir`, `loop`,
+          // `value` e `onValueChange`, e nada mais). O menu aberto ao montar sai
+          // do próprio `value`, que é bindável — é o que o `menubar.svelte`
+          // registra. Documentar prop que o componente ignora é prometer o que o
+          // produto não cumpre; é a mesma recusa do `defaultOpen` e do `modal` na
+          // página do DropdownMenu. A premissa é conferida por
+          // `ui/bits-menu-premissas.test.ts`: se um bump do bits passar a expor
+          // `defaultValue`, o portão reprova e esta linha vira dívida.
           { name: 'loop',          type: $tStore('props.table.loop.type'),          defaultValue: $tStore('props.table.loop.default'),          required: $tStore('props.table.loop.required'),          description: $tStore('props.table.loop.description')          },
           { name: 'side',          type: $tStore('props.table.side.type'),          defaultValue: $tStore('props.table.side.default'),          required: $tStore('props.table.side.required'),          description: $tStore('props.table.side.description')          },
           { name: 'align',         type: $tStore('props.table.align.type'),         defaultValue: $tStore('props.table.align.default'),         required: $tStore('props.table.align.required'),         description: $tStore('props.table.align.description')         },

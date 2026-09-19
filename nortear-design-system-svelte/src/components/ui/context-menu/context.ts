@@ -1,33 +1,20 @@
 import { getContext, setContext } from "svelte";
 import type { MenuRootAccess } from "@/components/ui/dropdown-menu/tab-leaves-menu";
+import { isInsideMenuGroup, markMenuGroup } from "@/components/ui/menu-group-context";
 
 // ─── Grupo ────────────────────────────────────────────────────────────────────
-
-/**
- * Marca de "estou dentro de um grupo" — é ela que decide se o rótulo NOMEIA.
- *
- * O rótulo nomeia um bloco, e nomear exige que exista um bloco: o `Label` desta
- * stack era um `<div>` solto que desenhava igual ao das outras quatro e não
- * amarrava nada. Dentro de `Group` ou `RadioGroup` ele passa a ser o cabeçalho
- * da lib, e a lib escreve o `id` dele no `aria-labelledby` do grupo — o leitor
- * de tela anuncia "Visualização, grupo" em vez de um bloco anônimo, como no
- * vanilla (onde o rótulo abre o grupo sozinho).
- *
- * A marca existe porque o cabeçalho da lib EXIGE o contexto de grupo e lança
- * erro fora dele, e o contexto da lib não é exportado. Os dois contextos correm
- * pela mesma árvore de componentes, então a marca acompanha o da lib: é ligada
- * pelos wrappers `context-menu-group.svelte` e `context-menu-radio-group.svelte`,
- * os dois pontos em que a lib também abre um grupo. Fora deles o rótulo continua
- * sendo o `<div>` de antes — solto, e sem nome a dar.
- */
-const GROUP_KEY = Symbol("nds-context-menu-group");
+//
+// O mecanismo mora em `menu-group-context.ts`, ao lado das três pastas: desde
+// 2026-09-18 o DropdownMenu e o Menubar seguem o mesmo caminho, e o que era um
+// contorno só deste componente passaria a ser três cópias do mesmo contorno.
+// Aqui ficam só os nomes que as peças deste menu já importavam.
 
 export function markContextMenuGroup(): void {
-	setContext(GROUP_KEY, true);
+	markMenuGroup("context-menu");
 }
 
 export function isInsideContextMenuGroup(): boolean {
-	return getContext<boolean | undefined>(GROUP_KEY) === true;
+	return isInsideMenuGroup("context-menu");
 }
 
 // ─── Raiz ─────────────────────────────────────────────────────────────────────

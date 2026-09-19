@@ -14,7 +14,33 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<ContextMenuContentProps & { class?: HTMLAttributes['class'] }>()
+/**
+ * O VÃO do painel raiz é `0`/`0` — D15 do PRD do DropdownMenu, que é o da
+ * FAMÍLIA, em 2026-09-18.
+ *
+ * Aqui o painel não é ancorado num gatilho: ele nasce no PONTEIRO, e a quina
+ * fica onde o cursor está, que é a convenção do menu de contexto nativo.
+ * Qualquer deslocamento seria número mágico — não há folga de desenho a
+ * declarar entre um painel e um ponto.
+ *
+ * **METADE DO `0`/`0` NÃO EXISTE NESTA LIB, e isso é declaração e não omissão.**
+ * Medido na reka 2.10.4: `ContextMenuContentProps` é
+ * `Omit<MenuContentProps, 'side' | 'sideOffset' | 'align' | …>` — o painel se
+ * ancora numa referência VIRTUAL, o ponto do gesto, e lado e vão de lado não
+ * têm com o que se medir ali. Declarar `sideOffset` aqui nem compilaria. O que
+ * sobra é o `alignOffset`, e ele é declarado mesmo já valendo `0` por padrão da
+ * lib: o número passa a ser NOSSO, e um bump que mude o padrão reprova em vez
+ * de mudar o desenho em silêncio.
+ *
+ * A premissa — a reka continua sem `sideOffset` neste painel, e o resto da
+ * família continua com ele — tem portão em `menu-props-da-lib.test.ts`.
+ */
+const props = withDefaults(
+  defineProps<ContextMenuContentProps & { class?: HTMLAttributes['class'] }>(),
+  {
+    alignOffset: 0,
+  },
+)
 const emits = defineEmits<ContextMenuContentEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class')

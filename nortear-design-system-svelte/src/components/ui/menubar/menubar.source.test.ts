@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { menubarEntriesSource, menubarSource } from './menubar.source';
+import {
+  menubarCheckboxCheckedSource,
+  menubarCheckboxIndeterminateSource,
+  menubarControlledSource,
+  menubarDefaultSource,
+  menubarDestructiveSource,
+  menubarEntriesSource,
+  menubarItemDisabledSource,
+  menubarPanelScrollsSource,
+  menubarSource,
+  menubarWithCheckboxSource,
+  menubarWithRadioSource,
+  menubarWithShortcutsSource,
+  menubarWithSubmenuSource,
+} from './menubar.source';
 
 describe('menubarSource', () => {
   it('sem args, entrega a barra canônica com as quatro categorias clássicas', () => {
@@ -89,7 +103,7 @@ describe('menubarSource', () => {
     const output = menubarSource('', { args: { demonstration: 'checkbox' } });
     expect(output).toContain('let regua = $state(true);');
     expect(output).toContain('<MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>');
-    expect(output).toContain('<MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>');
+    expect(output).toContain('<MenubarLabel>Mostrar na tela</MenubarLabel>');
   });
 
   it('o estado misto é escrito por prop própria, ao lado do marcado e do vazio', () => {
@@ -114,7 +128,7 @@ describe('menubarSource', () => {
   it('a barra de editor junta as quatro categorias com grupos, atalhos e alternadores', () => {
     const output = menubarSource('', { args: { demonstration: 'editor' } });
     expect(output.match(/<MenubarMenu value="/g)).toHaveLength(4);
-    expect(output).toContain('<MenubarGroupHeading>Documento</MenubarGroupHeading>');
+    expect(output).toContain('<MenubarLabel>Documento</MenubarLabel>');
     expect(output).toContain('let grade = $state(false);');
   });
 
@@ -195,7 +209,153 @@ describe('menubarEntriesSource — o código dos cards de Variantes', () => {
     });
     expect(output).toContain('let sidebar = $state(true);');
     expect(output).toContain('let grid = $state(false);');
-    expect(output).toContain('<MenubarGroupHeading>Panels</MenubarGroupHeading>');
+    expect(output).toContain('<MenubarLabel>Panels</MenubarLabel>');
     expect(output).toContain('<MenubarCheckboxItem bind:checked={grid}>');
+  });
+});
+
+// ─── Overrides por story ──────────────────────────────────────────────────────
+//
+// A tabela é a LISTA FECHADA dos builders de story deste módulo, e ela é
+// cobrada nos dois sentidos logo abaixo: todo export terminado em `Source` tem
+// caso aqui ou exceção declarada, e todo caso aqui produz um snippet sem
+// andaime. É o que o `source-snippets.test.ts` do repositório ensinou por
+// contraexemplo — contagem gerada a partir de uma lista encolhe em silêncio
+// quando um nome sai dela.
+
+const OVERRIDES: Array<{ name: string; build: () => string; contains: string[] }> = [
+  {
+    name: 'menubarDefaultSource',
+    build: menubarDefaultSource,
+    contains: ['<MenubarItem>Novo</MenubarItem>'],
+  },
+  {
+    name: 'menubarDestructiveSource',
+    build: menubarDestructiveSource,
+    contains: ['<MenubarItem variant="destructive">Descartar alterações</MenubarItem>'],
+  },
+  {
+    name: 'menubarItemDisabledSource',
+    build: menubarItemDisabledSource,
+    contains: ['<MenubarItem disabled>Enviar para revisão</MenubarItem>'],
+  },
+  {
+    name: 'menubarCheckboxCheckedSource',
+    build: menubarCheckboxCheckedSource,
+    contains: ['<MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>'],
+  },
+  {
+    name: 'menubarCheckboxIndeterminateSource',
+    build: menubarCheckboxIndeterminateSource,
+    contains: ['<MenubarCheckboxItem indeterminate>Colunas</MenubarCheckboxItem>'],
+  },
+  {
+    name: 'menubarWithShortcutsSource',
+    build: menubarWithShortcutsSource,
+    contains: ['<MenubarShortcut>Ctrl+Z</MenubarShortcut>'],
+  },
+  {
+    name: 'menubarWithSubmenuSource',
+    build: menubarWithSubmenuSource,
+    contains: ['<MenubarSubTrigger>Exportar</MenubarSubTrigger>'],
+  },
+  {
+    name: 'menubarWithCheckboxSource',
+    build: menubarWithCheckboxSource,
+    contains: ['<MenubarLabel>Mostrar na tela</MenubarLabel>'],
+  },
+  {
+    name: 'menubarWithRadioSource',
+    build: menubarWithRadioSource,
+    contains: ['<MenubarRadioGroup bind:value={tema}>'],
+  },
+  {
+    name: 'menubarPanelScrollsSource',
+    build: menubarPanelScrollsSource,
+    // Nada declara rolagem: quem recorta e rola é a folha. O que o snippet
+    // precisa ter é ALTURA — o primeiro e o último item da lista.
+    contains: ['<MenubarItem>Ação 1</MenubarItem>', '<MenubarItem>Ação 60</MenubarItem>'],
+  },
+];
+
+describe('os overrides de story escrevem a composição SEM o andaime da foto', () => {
+  it.each(OVERRIDES)('$name', ({ build, contains }) => {
+    const output = build();
+    for (const snippet of contains) expect(output).toContain(snippet);
+    // A barra que se abre sozinha é andaime do Chromatic, não lição: nenhum
+    // override publica o `bind:value` da raiz nem o estado que o alimenta.
+    expect(output).not.toContain('bind:value={menuAberto}');
+    expect(output).not.toContain('let menuAberto');
+  });
+});
+
+describe('menubarControlledSource — a barra comandada de fora', () => {
+  // Este export ficava sem caso nenhum: `--only soltos` não o alcança, o teste
+  // não o citava, e o painel de `States/ControlledOpen` era a única coisa que o
+  // exercitava — no navegador, onde a saída do painel nem chega ao DOM.
+  it('a ligação é de MÃO DUPLA, e o botão de fora entra no trecho', () => {
+    const output = menubarControlledSource();
+    expect(output).toContain('let menuAberto = $state("");');
+    expect(output).toContain('<Menubar bind:value={menuAberto}>');
+    // Sem o caminho de volta a barra abriria e nunca mais fecharia, nem por
+    // Escape — armadilha de teclado (WCAG 2.1.2). O `bind:` é o caminho de
+    // volta, e o botão externo é o assunto da story.
+    expect(output).toContain('onclick={() => (menuAberto = "file")}');
+    expect(output).toContain('Abrir Arquivo');
+  });
+
+  it('importa só as peças que usa', () => {
+    const output = menubarControlledSource();
+    expect(output).toContain('  MenubarItem,');
+    expect(output).not.toContain('MenubarCheckboxItem');
+    expect(output).not.toContain('MenubarSeparator');
+  });
+});
+
+describe('cobertura — todo construtor deste módulo tem caso', () => {
+  /**
+   * Exceções DECLARADAS, com o motivo. Lista fechada de propósito: quem não
+   * entra aqui e não tem caso reprova, que é o que dá dentes à convenção.
+   */
+  const WITHOUT_OWN_CASE = new Map<string, string>([
+    [
+      'menubarSource',
+      'é a transform do META, e o bloco de cima já a exercita composição por composição',
+    ],
+    [
+      'menubarEntriesSource',
+      'é o construtor dos cards de Variantes da docs page, e tem bloco próprio abaixo',
+    ],
+  ]);
+
+  it('nenhum export terminado em Source fica fora da tabela nem das exceções', async () => {
+    const mod = await import('./menubar.source');
+    const builders = Object.keys(mod).filter((key) => key.endsWith('Source'));
+    // O filtro por sufixo é o mesmo que já encolheu em silêncio no
+    // `source-snippets.test.ts` quando um nome mudou de forma: a contagem
+    // abaixo é o que impede isso de se repetir aqui.
+    expect(builders.length).toBeGreaterThan(0);
+
+    const covered = new Set([
+      ...OVERRIDES.map((o) => o.name),
+      'menubarControlledSource',
+      ...WITHOUT_OWN_CASE.keys(),
+    ]);
+    const undeclared = builders.filter((key) => !covered.has(key));
+    expect(
+      undeclared,
+      'construtor de snippet sem caso e sem exceção declarada — cubra ou declare '
+        + 'em WITHOUT_OWN_CASE, com o motivo',
+    ).toEqual([]);
+  });
+
+  it('e nenhuma exceção declarada sobrevive ao export que ela justifica', async () => {
+    const mod = await import('./menubar.source');
+    for (const [name, reason] of WITHOUT_OWN_CASE) {
+      expect(
+        Object.keys(mod),
+        `a exceção de ${name} (${reason}) perdeu a premissa: o export não existe mais`,
+      ).toContain(name);
+    }
   });
 });

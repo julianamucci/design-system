@@ -208,7 +208,7 @@ export function menubarOpenSource(): string {
  * ele é ANUNCIADO como indisponível em vez de sumir sem explicação de quem
  * navega por teclado.
  */
-export function menubarItemBloqueadoSource(): string {
+export function menubarItemDisabledSource(): string {
   return vueSnippet(
     `${importa('Menubar', 'MenubarContent', 'MenubarItem', 'MenubarMenu', 'MenubarTrigger')}
 
@@ -272,7 +272,7 @@ const estado = reactive<Record<string, boolean>>({ 'Régua': true, Grade: false 
  * que diz "alguns dos filhos". Ele entra como string literal — a comparação
  * frouxa de um booleano leria o misto como marcado.
  */
-export function menubarCheckboxMistoSource(): string {
+export function menubarCheckboxIndeterminateSource(): string {
   return vueSnippet(
     importa(
       'Menubar',
@@ -450,11 +450,56 @@ const tema = ref('light')`,
 }
 
 /**
+ * Quantas ações o menu longo lista.
+ *
+ * SESSENTA, que é o número da medição que fixou a D17: com 60 itens numa janela
+ * de 900px o painel transborda e o axe acusa `scrollable-region-focusable`. O
+ * número não é decorativo — menor, o painel CABE, e a story fecharia verde sem
+ * exercer o recorte que é o assunto dela. É a armadilha medida no svelte no
+ * mesmo dia.
+ */
+export const LONG_MENU_ITEMS = 60;
+
+/** Os rótulos do menu longo — a mesma lista que a story renderiza. */
+export const LONG_MENU_LABELS: readonly string[] = Array.from(
+  { length: LONG_MENU_ITEMS },
+  (_, i) => `Ação ${i + 1}`,
+);
+
+/**
+ * O menu que não cabe na tela (D17).
+ *
+ * A lição do exemplo é que NÃO HÁ nada a escrever: o recorte e a rolagem saem
+ * da folha — `max-height` pela altura disponível, `overflow-y: auto` —, e o
+ * teclado continua alcançando o item que rolou para fora porque o foco é
+ * itinerante. Nenhuma prop do markup pede rolagem, e essa ausência é o que o
+ * painel Code ensina aqui.
+ *
+ * A lista é GERADA no trecho, e não escrita item a item: sessenta linhas de
+ * `<MenubarItem>` ensinariam a repetição do andaime e não a forma do item.
+ */
+export function menubarLongMenuSource(): string {
+  return vueSnippet(
+    `${importa('Menubar', 'MenubarContent', 'MenubarItem', 'MenubarMenu', 'MenubarTrigger')}
+
+const acoes = Array.from({ length: ${LONG_MENU_ITEMS} }, (_, i) => \`Ação \${i + 1}\`)`,
+    `<Menubar>
+  <MenubarMenu value="actions">
+    <MenubarTrigger>Ações</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem v-for="a in acoes" :key="a">{{ a }}</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+  );
+}
+
+/**
  * A barra inteira de um editor: as quatro categorias convivem, e cada uma usa
  * a peça que o seu conteúdo pede — grupo com rótulo, separador antes do item
  * de perigo, atalho no item de teclado e alternador no menu de exibição.
  */
-export function menubarEditorCompletoSource(): string {
+export function menubarEditorSource(): string {
   return vueSnippet(
     importa(
       'Menubar',

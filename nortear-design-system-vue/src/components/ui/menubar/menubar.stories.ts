@@ -501,6 +501,36 @@ export const TabLeavesMenubar: Story = {
         await expect(document.activeElement).toBe(before);
       });
     });
+
+    await step('Tab com o foco no GATILHO do menu aberto também sai como `overlay`', async () => {
+      // §7 #20 do PRD, medido em navegador em 2026-09-18: este era o único
+      // ponto da família em que esta stack saía do contrato. Os passos acima
+      // partem do PAINEL, e quem decide o Tab ali é o ouvinte de captura do
+      // conteúdo; uma tecla apertada no gatilho nunca chega a um painel que
+      // vive em portal. A barra fechava por focus-out sem anotação, e o motivo
+      // caía no `api` que sobra — "o código fechou" para um gesto que é saída
+      // sem decisão.
+      //
+      // A precondição é CONFERIDA e não suposta, como a medição da D18 fez: o
+      // estado é alcançável pelo ponteiro (um clique abre e deixa o foco no
+      // gatilho), e uma asserção escrita para um estado inalcançável não pode
+      // reprovar.
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      await waitForPortal('menu');
+      fileTrigger.focus();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(fileTrigger);
+      });
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('true');
+
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+      await expect(tabValueChange).toHaveBeenLastCalledWith('', 'overlay');
+    });
   },
 };
 

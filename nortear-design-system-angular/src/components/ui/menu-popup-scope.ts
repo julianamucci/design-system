@@ -125,9 +125,62 @@ export class NdsMenuPopupScope {
   constructor() {
     const onKeydown = (event: KeyboardEvent) => this.leaveOnTab(event);
     this.popup.addEventListener('keydown', onKeydown, { capture: true });
-    inject(DestroyRef).onDestroy(() =>
-      this.popup.removeEventListener('keydown', onKeydown, { capture: true }),
-    );
+    const onFocusIn = (event: FocusEvent) => this.revealFocused(event);
+    this.popup.addEventListener('focusin', onFocusIn);
+    inject(DestroyRef).onDestroy(() => {
+      this.popup.removeEventListener('keydown', onKeydown, { capture: true });
+      this.popup.removeEventListener('focusin', onFocusIn);
+    });
+  }
+
+  // PATCH: a11y — o item focado entra na caixa visível do painel que rola.
+  // A decisão mora na D17 do PRD do dropdown-menu; a âncora em PATCHES.md ainda
+  // precisa ser escrita, e o arquivo é da raiz do repositório.
+  /**
+   * O item que recebeu o foco entra na CAIXA VISÍVEL do painel.
+   *
+   * ─── O defeito que isto fecha ─────────────────────────────────────────────
+   *
+   * O painel recorta na viewport e rola (`max-height` pela altura disponível,
+   * `overflow-y: auto` — D17 do PRD do dropdown-menu). Num menu longo, seta e
+   * `End` levam o foco a um item que está fora dessa caixa — e o primitivo foca
+   * com `focus({ preventScroll: true })` em TODOS os caminhos de teclado
+   * (`focusMenuItem` do `RdxMenuPopup`), que é justamente o que desliga a
+   * rolagem automática do navegador. Lido no pacote instalado: não há uma
+   * ocorrência de `scrollIntoView` no módulo de menu.
+   *
+   * O resultado era o pior tipo de defeito silencioso — nada quebra, nenhuma
+   * asserção reprova, e quem navega por teclado fica com o foco num item que
+   * não vê (WCAG 2.4.11, Focus Not Obscured). Só aparece quando o menu é longo
+   * o bastante para recortar, que é o caso que a D17 decidiu manter.
+   *
+   * ─── Por que aritmética de `scrollTop`, e não `scrollIntoView` ────────────
+   *
+   * `scrollIntoView` sobe a árvore e rola o que mais encontrar pelo caminho —
+   * inclusive a PÁGINA por trás do painel portalado. Aqui o que precisa rolar é
+   * o painel, e só ele: mexer no `scrollTop` dele é a operação exata.
+   *
+   * O `padding` do painel entra na conta para o item não encostar na borda
+   * recortada — é o mesmo `--spacing-1` que a folha declara, lido do estilo
+   * computado em vez de cravado.
+   */
+  private revealFocused(event: FocusEvent): void {
+    const item = event.target;
+    if (!(item instanceof HTMLElement) || item === this.popup) return;
+    // Só o miolo DESTE painel: o de um submenu vive noutro nó e tem o seu.
+    if (item.closest('[rdxMenuPopup]') !== this.popup) return;
+    if (this.popup.scrollHeight <= this.popup.clientHeight) return;
+
+    const style = getComputedStyle(this.popup);
+    const padTop = Number.parseFloat(style.paddingTop) || 0;
+    const padBottom = Number.parseFloat(style.paddingBottom) || 0;
+    const box = this.popup.getBoundingClientRect();
+    const rect = item.getBoundingClientRect();
+
+    const aboveTop = rect.top - (box.top + padTop);
+    const belowBottom = rect.bottom - (box.bottom - padBottom);
+    if (aboveTop < 0) this.popup.scrollTop += aboveTop;
+    else if (belowBottom > 0) this.popup.scrollTop += belowBottom;
   }
 
   // PATCH: a11y — Tab fecha o menu inteiro e o foco segue a página (ver PATCHES.md#angular-dropdown-menu-tab-exit)

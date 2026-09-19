@@ -6,7 +6,7 @@ import DropdownMenuStory from './DropdownMenuStory.svelte';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   dropdownMenuControlledSource,
-  dropdownMenuIndeterminadoSource,
+  dropdownMenuCheckboxIndeterminateSource,
   dropdownMenuItemDisabledSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
@@ -214,7 +214,7 @@ export const CheckboxIndeterminate: Story = {
   args: { defaultOpen: true, variant: 'indeterminate', triggerLabel: 'Colunas' },
   parameters: {
     covers: ['functional.item8'],
-    docs: { source: { transform: dropdownMenuIndeterminadoSource } },
+    docs: { source: { transform: dropdownMenuCheckboxIndeterminateSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');

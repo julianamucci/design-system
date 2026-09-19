@@ -9,6 +9,7 @@ import {
   contextMenuItemDisabledSource,
   contextMenuItemInsetSource,
   contextMenuPlaygroundSource,
+  contextMenuSnippet,
   contextMenuTabLeavesMenuSource,
   contextMenuWithCheckboxSource,
   contextMenuWithRadioGroupSource,
@@ -292,13 +293,38 @@ const CONSTRUCTORS: Array<{
   },
 ];
 
+/**
+ * Construtores que NÃO servem a uma story — a exclusão, declarada e com
+ * premissa conferida logo abaixo.
+ *
+ * `contextMenuSnippet` monta o menu a partir de uma LISTA DE ENTRADAS, e quem o
+ * chama é a docs page: cada card de Variantes imprime a prévia viva e o código
+ * a partir da mesma lista. Não há story para ele porque o assunto dele é o
+ * dado, não uma cena. Antes de 2026-09-18 ele morava dentro de
+ * `ContextMenuDocs.ts`, onde nada podia importá-lo e nada o testava
+ * (inconsistência 22 da §7 do PRD).
+ */
+const SEM_STORY = ['contextMenuSnippet'];
+
 describe('cobertura das três stories', () => {
   it('todo construtor exportado pelo módulo entra na varredura', () => {
     const exported = Object.entries(contextMenuSourceModule)
       .filter(([, value]) => typeof value === 'function')
       .map(([name]) => name)
       .sort();
-    expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
+    expect(exported).toEqual([...CONSTRUCTORS.map((c) => c.name), ...SEM_STORY].sort());
+  });
+
+  it('a exceção declarada não é usada por story nenhuma', () => {
+    // A premissa da exclusão: se um dia uma story passar a publicar
+    // `contextMenuSnippet` no painel, ela precisa entrar na tabela como as
+    // outras — e é aqui que isso reprova, em vez de o construtor sair da
+    // varredura em silêncio.
+    const usadas = new Set<string>();
+    for (const source of Object.values(storySources)) {
+      for (const transform of transformsByStory(source).values()) usadas.add(transform);
+    }
+    for (const name of SEM_STORY) expect(usadas.has(name), `${name} virou transform de story`).toBe(false);
   });
 
   it('os três arquivos de story chegaram à varredura', () => {
@@ -688,5 +714,103 @@ describe('composições', () => {
     // Os dois sinais que a classe declara, com os valores iniciais da story.
     expect(code).toContain('  readonly showGrid = signal(true);');
     expect(code).toContain(`  readonly layout = signal('grid');`);
+  });
+});
+
+// ─── O menu como DADO ─────────────────────────────────────────────────────────
+
+/**
+ * `contextMenuSnippet` é o construtor dos cards de Variantes da docs page: a
+ * mesma lista de entradas monta a prévia VIVA e imprime o código ao lado.
+ *
+ * Ele não tem story (exceção declarada em `SEM_STORY`, com a premissa conferida
+ * lá em cima), e até 2026-09-18 não tinha teste NENHUM — morava dentro de
+ * `ContextMenuDocs.ts`, onde nada podia importá-lo.
+ */
+describe('contextMenuSnippet — o menu como lista de entradas', () => {
+  it('sem argumento nenhum devolve o menu canônico, e não uma string vazia', () => {
+    const code = contextMenuSnippet();
+    expect(code).toContain('<div ndsContextMenu>');
+    expect(code).toContain('<div ndsContextMenuItem>Editar</div>');
+    expect(code).toContain('<div ndsContextMenuItem variant="destructive">Excluir</div>');
+    expect(code).toContain('<ng-template ndsContextMenuContent>');
+  });
+
+  it('a ÁREA leva a classe compartilhada, e não uma cópia escrita à mão', () => {
+    // A mesma constante que a prévia viva e as cinco stacks usam. Cravar a
+    // lista de classes aqui criaria uma segunda cópia que envelhece sozinha.
+    const code = contextMenuSnippet({ triggerLabel: 'Clique aqui' });
+    expect(code).toContain(`class="${AREA_CLICK_DIREITO}"`);
+    expect(code).toContain('>Clique aqui</div>');
+  });
+
+  it('o rótulo sai EXATAMENTE como chega — o construtor não traduz nada', () => {
+    const code = contextMenuSnippet({ entries: [{ kind: 'item', label: 'Renomear' }] });
+    expect(code).toContain('<div ndsContextMenuItem>Renomear</div>');
+  });
+
+  it('o atalho vai em LINHA PRÓPRIA dentro do item, e sem aria-hidden', () => {
+    const code = contextMenuSnippet({
+      entries: [{ kind: 'item', label: 'Excluir', shortcut: 'Delete', destructive: true }],
+    });
+    expect(code).not.toContain('aria-hidden');
+    expect(code).toContain('<div ndsContextMenuItem variant="destructive">');
+    expect(code).toContain('<span ndsContextMenuShortcut>Delete</span>');
+  });
+
+  it('o recuo é escrito como BINDING, e vale no item e no rótulo de grupo', () => {
+    // `[inset]="true"`, e não `inset` solto: a prop é booleana de verdade, e o
+    // atributo vazio ensinaria uma forma que o Angular lê como string.
+    const code = contextMenuSnippet({
+      entries: [
+        {
+          kind: 'group',
+          label: 'Ações',
+          inset: true,
+          entries: [{ kind: 'item', label: 'Editar', inset: true }],
+        },
+      ],
+    });
+    expect(code).toContain('<div ndsContextMenuLabel [inset]="true">Ações</div>');
+    expect(code).toContain('<div ndsContextMenuItem [inset]="true">Editar</div>');
+  });
+
+  it('marcação, escolha única e submenu publicam a peça de cada tipo', () => {
+    const code = contextMenuSnippet({
+      entries: [
+        { kind: 'checkbox', label: 'Grade', checked: false },
+        { kind: 'separator' },
+        {
+          kind: 'radio-group',
+          label: 'Layout',
+          value: 'grid',
+          options: [
+            { label: 'Grade', value: 'grid' },
+            { label: 'Lista', value: 'list' },
+          ],
+        },
+        { kind: 'sub', label: 'Compartilhar', entries: [{ label: 'Por link' }] },
+      ],
+    });
+    expect(code).toContain('<div ndsContextMenuCheckboxItem [checked]="false">Grade</div>');
+    expect(code).toContain('<div ndsContextMenuSeparator></div>');
+    expect(code).toContain('<div ndsContextMenuRadioGroup value="grid">');
+    expect(code).toContain('<div ndsContextMenuRadioItem value="list">Lista</div>');
+    // O submenu do ContextMenu é um `<div ndsContextMenuSub>`, e não um
+    // elemento próprio como no DropdownMenu: a raiz dele é outra (§7 do PRD).
+    expect(code).toContain('<div ndsContextMenuSub>');
+    expect(code).toContain('<div ndsContextMenuSubTrigger>Compartilhar</div>');
+    expect(code).toContain('        <div ndsContextMenuItem>Por link</div>');
+  });
+
+  it('a instrumentação da docs page NÃO entra no que se copia', () => {
+    const code = contextMenuSnippet({
+      entries: [{ kind: 'item', label: 'Editar' }, { kind: 'checkbox', label: 'Grade', checked: true }],
+    });
+    expect(code).not.toContain('(onSelect)');
+    expect(code).not.toContain('(onOpenChange)');
+    expect(code).not.toContain('(checkedChange)');
+    expect(code).not.toContain('data-track');
+    expect(code).not.toContain('data-testid');
   });
 });

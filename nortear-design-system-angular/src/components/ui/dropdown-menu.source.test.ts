@@ -9,6 +9,7 @@ import {
   dropdownMenuItemDisabledSource,
   dropdownMenuOpenSource,
   dropdownMenuPlaygroundSource,
+  dropdownMenuSnippet,
   dropdownMenuTabAtPageEndSource,
   dropdownMenuTabLeavesMenuSource,
   dropdownMenuWithCheckboxSource,
@@ -292,13 +293,42 @@ const CONSTRUCTORS: Array<{
   },
 ];
 
+/**
+ * Construtores que NÃO servem a uma story — a exclusão, declarada e com
+ * premissa conferida abaixo.
+ *
+ * `dropdownMenuSnippet` monta o menu a partir de uma LISTA DE ENTRADAS, e quem
+ * o chama é a docs page: cada ficha de Variantes imprime a prévia viva e o
+ * código a partir da mesma lista. Não há story para ele porque o assunto dele é
+ * o dado, não uma cena. Antes de 2026-09-18 ele morava dentro de
+ * `DropdownMenuDocs.ts`, onde nada podia importá-lo e nada o testava
+ * (inconsistência 22 da §7 do PRD).
+ *
+ * A PREMISSA da exclusão é medida no bloco `dropdownMenuSnippet` mais abaixo:
+ * ele não pertence a nenhum dos quatro arquivos de story, e a tabela de
+ * cobertura das stories continua fechada nos dois sentidos sem ele.
+ */
+const SEM_STORY = ['dropdownMenuSnippet'];
+
 describe('cobertura das quatro stories', () => {
   it('todo construtor exportado pelo módulo entra na varredura', () => {
     const exported = Object.entries(dropdownMenuSourceModule)
       .filter(([, value]) => typeof value === 'function')
       .map(([name]) => name)
       .sort();
-    expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
+    expect(exported).toEqual([...CONSTRUCTORS.map((c) => c.name), ...SEM_STORY].sort());
+  });
+
+  it('a exceção declarada não é usada por story nenhuma', () => {
+    // A premissa da exclusão: se um dia uma story passar a publicar
+    // `dropdownMenuSnippet` no painel, ela precisa entrar na tabela como as
+    // outras — e é aqui que isso reprova, em vez de o construtor sair da
+    // varredura em silêncio.
+    const usadas = new Set<string>();
+    for (const source of Object.values(storySources)) {
+      for (const transform of transformsByStory(source).values()) usadas.add(transform);
+    }
+    for (const name of SEM_STORY) expect(usadas.has(name), `${name} virou transform de story`).toBe(false);
   });
 
   it('os quatro arquivos de story chegaram à varredura', () => {
@@ -651,5 +681,105 @@ describe('composições', () => {
     }
     // O separador que a story ao lado desenha antes de "Colar".
     expect(code.match(/<div ndsDropdownMenuSeparator><\/div>/g)).toHaveLength(1);
+  });
+});
+
+// ─── O menu como DADO ─────────────────────────────────────────────────────────
+
+/**
+ * `dropdownMenuSnippet` é o construtor das fichas de Variantes da docs page: a
+ * mesma lista de entradas monta a prévia VIVA e imprime o código ao lado.
+ *
+ * Ele não tem story (exceção declarada em `SEM_STORY`, com a premissa conferida
+ * lá em cima), e até 2026-09-18 não tinha teste NENHUM — morava dentro de
+ * `DropdownMenuDocs.ts`, onde nada podia importá-lo. Foi assim que 234
+ * construtores ficaram sem guarda no repositório.
+ */
+describe('dropdownMenuSnippet — o menu como lista de entradas', () => {
+  it('sem argumento nenhum devolve o menu canônico, e não uma string vazia', () => {
+    const code = dropdownMenuSnippet();
+    expect(code).toContain('<nds-dropdown-menu>');
+    expect(code).toContain('<button ndsDropdownMenuTrigger ndsButton variant="outline">Conta</button>');
+    expect(code).toContain('<ng-template ndsDropdownMenuContent>');
+    expect(code).toContain('<div ndsDropdownMenuGroup>');
+    expect(code).toContain('<div ndsDropdownMenuItem variant="destructive">Sair</div>');
+  });
+
+  it('o rótulo sai EXATAMENTE como chega — o construtor não traduz nada', () => {
+    // A tradução é de quem chama: a docs page resolve a chave no idioma da
+    // página antes de entregar a lista. Traduzir aqui obrigaria o construtor a
+    // conhecer `translations.json`, e ele deixaria de rodar em node.
+    const code = dropdownMenuSnippet({
+      triggerLabel: 'Ajustes',
+      entries: [{ kind: 'item', label: 'Preferências' }],
+    });
+    expect(code).toContain('>Ajustes</button>');
+    expect(code).toContain('<div ndsDropdownMenuItem>Preferências</div>');
+  });
+
+  it('o atalho vai DENTRO do item, e sem aria-hidden', () => {
+    const code = dropdownMenuSnippet({
+      entries: [{ kind: 'item', label: 'Copiar', shortcut: 'Ctrl+C' }],
+    });
+    expect(code).not.toContain('aria-hidden');
+    expect(code).toContain('Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>');
+    // Item de uma linha quando não há atalho; de três quando há — é a diferença
+    // que deixa o atalho entrar no nome acessível ("Copiar Ctrl+C").
+    expect(code).toMatch(/<div ndsDropdownMenuItem>\n\s+Copiar <span/);
+  });
+
+  it('o rótulo de grupo nasce DENTRO do grupo, que é o que o faz nomear o bloco', () => {
+    const code = dropdownMenuSnippet({
+      entries: [
+        { kind: 'group', label: 'Conta', entries: [{ kind: 'item', label: 'Perfil' }] },
+      ],
+    });
+    expect(code.indexOf('<div ndsDropdownMenuGroup>')).toBeLessThan(
+      code.indexOf('<div ndsDropdownMenuLabel>Conta</div>'),
+    );
+    expect(code.indexOf('<div ndsDropdownMenuLabel>Conta</div>')).toBeLessThan(
+      code.indexOf('<div ndsDropdownMenuItem>Perfil</div>'),
+    );
+  });
+
+  it('marcação, escolha única e submenu publicam a peça de cada tipo', () => {
+    const code = dropdownMenuSnippet({
+      entries: [
+        { kind: 'checkbox', label: 'Régua', checked: true },
+        { kind: 'separator' },
+        {
+          kind: 'radio-group',
+          label: 'Tema',
+          value: 'dark',
+          options: [
+            { label: 'Claro', value: 'light' },
+            { label: 'Escuro', value: 'dark' },
+          ],
+        },
+        { kind: 'sub', label: 'Exportar', entries: [{ kind: 'item', label: 'PDF' }] },
+      ],
+    });
+    expect(code).toContain('<div ndsDropdownMenuCheckboxItem [checked]="true">Régua</div>');
+    expect(code).toContain('<div ndsDropdownMenuSeparator></div>');
+    expect(code).toContain('<div ndsDropdownMenuRadioGroup value="dark">');
+    expect(code).toContain('<div ndsDropdownMenuRadioItem value="light">Claro</div>');
+    expect(code).toContain('<nds-dropdown-menu-sub>');
+    expect(code).toContain('<div ndsDropdownMenuSubTrigger>Exportar</div>');
+    expect(code).toContain('<ng-template ndsDropdownMenuSubContent>');
+    // O item do submenu é filho do `ng-template` do submenu, e não do painel
+    // pai — dois espaços a mais de recuo é o que diz isso a quem lê.
+    expect(code).toContain('        <div ndsDropdownMenuItem>PDF</div>');
+  });
+
+  it('a instrumentação da docs page NÃO entra no que se copia', () => {
+    // `(onOpenChange)` e `(onSelect)` existem na prévia para disparar os eventos
+    // de produto. São andaime da página, não lição do menu.
+    const code = dropdownMenuSnippet({
+      entries: [{ kind: 'item', label: 'Perfil' }, { kind: 'checkbox', label: 'Régua', checked: false }],
+    });
+    expect(code).not.toContain('(onSelect)');
+    expect(code).not.toContain('(onOpenChange)');
+    expect(code).not.toContain('(checkedChange)');
+    expect(code).not.toContain('data-track');
   });
 });

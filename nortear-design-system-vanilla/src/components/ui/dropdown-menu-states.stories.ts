@@ -10,6 +10,7 @@ import { createButton } from './button';
 import { clicarQuandoMontado, mount, wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { checkPanelFollowsTrigger } from './floating-follow-probe';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -118,6 +119,9 @@ export const Open: Story = {
       // painel Interactions parte do mesmo estado da primeira rodada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const menu = await body.findByRole('menu');
+      // O painel ENTRA animado desde 2026-09-18, a partir de `opacity: 0`:
+      // medir no quadro zero lê "invisível" e reprova um menu que abre certo.
+      await waitForAnimationsDone(menu);
       await expect(menu).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
@@ -292,6 +296,8 @@ export const Controlled: Story = {
       // chega ao mesmo lugar sem o espelho de estado que guardava este clique.
       await userEvent.click(buttonExterno);
       const menu = await body.findByRole('menu');
+      // Mesma espera da `Open`: a entrada parte de `opacity: 0`.
+      await waitForAnimationsDone(menu);
       await expect(menu).toBeVisible();
       // O `data-open` do botão de fora é escrito pelo `onOpenChange`: se o
       // callback não tivesse voltado, o estado externo ficaria dessincronizado

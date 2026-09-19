@@ -55,6 +55,32 @@ export async function waitForPortal(
 }
 
 /**
+ * Aguarda as animações DAQUELE elemento terminarem. Leitura pura.
+ *
+ * Irmã de `waitForPortal`, e existe porque a pergunta é outra. Aquela espera o
+ * painel ficar VISÍVEL (opacidade quase final), que é o bastante para afirmar
+ * presença; esta espera a animação ACABAR, que é o que uma medida de GEOMETRIA
+ * precisa — `nds-menu-in` anima `translateY` e `scale(0.98)`, e os dois entram
+ * no `getBoundingClientRect`.
+ *
+ * Medido em 2026-09-18, quando o painel de menu desta stack passou a animar a
+ * entrada como as outras quatro (D5): a `Placement` do DropdownMenu passou a
+ * ler 1,28px de diferença entre as bordas direitas — que é exatamente 2% da
+ * largura do painel, o `scale` a meio caminho —, e a `Playground` do Menubar
+ * mediu 4,9px de vão onde a folha declara 8, que é o `translateY` ainda em
+ * curso. Nenhum dos dois era defeito de posição: eram medidas tiradas no meio
+ * de um quadro de animação.
+ *
+ * `finished` rejeita quando a animação é cancelada (o painel sai antes de
+ * terminar); ali não há o que esperar, e o `catch` devolve o controle em vez de
+ * derrubar a play. Animação já concluída não aparece em `getAnimations()`
+ * (a escada não usa `fill`), então chamar depois da hora resolve na hora.
+ */
+export async function waitForAnimationsDone(el: Element): Promise<void> {
+  await Promise.all(el.getAnimations().map((a) => a.finished.catch(() => undefined)));
+}
+
+/**
  * Aguarda o portal sumir do DOM.
  *
  * As factories desta stack adiam a remoção até a animação de saída terminar

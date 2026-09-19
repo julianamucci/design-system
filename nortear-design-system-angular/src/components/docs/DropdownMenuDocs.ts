@@ -18,6 +18,12 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_DROPDOWN_MENU, menuCloseReason } from '@/components/ui/dropdown-menu';
+import {
+  dropdownMenuSnippet,
+  type DropdownMenuSnippetCheckbox,
+  type DropdownMenuSnippetEntry,
+  type DropdownMenuSnippetItem,
+} from '@/components/ui/dropdown-menu.source';
 import { NdsButton, type ButtonSize } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import dropdownMenuTranslations from '@shared/content/dropdown-menu/translations.json';
@@ -48,9 +54,12 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // do conteúdo compartilhado; os que divergem viram const neste arquivo, com a
 // divergência reportada.
 //
-// `notes.item1` — o texto compartilhado lista as libs das outras stacks pelo
-// nome, e cada docs page é consumida isoladamente.
-// `notes.item2` / `notes.item5` — o comportamento descrito é o desta stack.
+// NENHUMA nota entra aqui. Até 2026-09-18 esta página reescrevia `notes.item1`,
+// `item2` e `item5` e acrescentava `item6` e `item7`: sete notas onde o conteúdo
+// compartilhado tem cinco, e onde as outras quatro stacks mostram cinco
+// (inconsistência 21(b) da §7 do PRD, maioria = o conteúdo compartilhado sem
+// override). O `item1` compartilhado já é neutro de API — "a lib headless desta
+// stack" —, que é exatamente o que uma página consumida isoladamente precisa.
 // `props.*` — as props que o conteúdo compartilhado não descreve (as quatro
 // peças deste stack têm mais superfície do que as seis linhas da tabela dele).
 // `snippet.*` — os COMENTÁRIOS do código de extensibilidade desta stack, que é
@@ -69,8 +78,6 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       'location é a SEÇÃO da tela onde o menu mora: nestas docs, docs_<seção>; no produto, a seção dele.',
     'snippet.reasons':
       'escape: Escape · overlay: clique fora, Tab ou gatilho aberto · api: item escolhido ou código',
-    'props.class.description':
-      'Classes extras escritas no elemento são mescladas com as do componente; não há prop de classe.',
     'props.disabled.description':
       'Bloqueia a abertura do menu inteiro. Itens individuais têm o próprio bloqueio.',
     'props.loopFocus.description':
@@ -100,16 +107,6 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       'Valor desta opção. É o que o grupo compara para decidir quem está marcado.',
     'props.openChangeDetail.description':
       'Emite a mudança de abertura junto do motivo ({ open, reason }): diz se o menu fechou por Escape, por clique fora ou por item escolhido.',
-    'notes.item1':
-      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/menu</code> — entrega os papéis ARIA, o foco no primeiro item ao abrir, roving tabindex, setas, Home/End, typeahead, Escape com devolução do foco, posicionamento com fuga de colisão e submenu com abertura em diagonal.',
-    'notes.item2':
-      '<strong>Portal</strong>: o popup é teleportado para o <code>body</code> ao abrir e desmontado ao fechar, então nenhum <code>overflow: hidden</code> de ancestral o recorta. Fechado, ele não existe no DOM — não é um painel escondido.',
-    'notes.item5':
-      '<strong>Gatilho</strong>: o mesmo <code>&lt;button&gt;</code> recebe o gatilho e o estilo de botão. Um botão dentro de outro é violação de ARIA e quebra o teclado.',
-    'notes.item6':
-      '<strong>Item é um <code>&lt;div&gt;</code></strong> com papel de menu, e não um <code>&lt;button&gt;</code>: a folha do componente não zera a aparência nativa de botão. O que a semântica pede é papel, foco e teclado — e os três vêm do primitivo.',
-    'notes.item7':
-      '<strong>Pendência da lib</strong>: as âncoras de foco que cercam o conteúdo portalizado combinam <code>aria-hidden</code> com <code>tabindex="0"</code>, e o axe lê isso como armadilha de foco. Elas existem justamente para o Tab não ficar preso; a regra está desligada nas stories que terminam com o menu aberto, com o achado registrado.',
   },
   en: {
     'snippet.controlled': 'Controlled menu, with positioning and analytics',
@@ -122,8 +119,6 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       'location is the SECTION of the screen where the menu lives: in these docs, docs_<section>; in the product, its own.',
     'snippet.reasons':
       'escape: Escape · overlay: click outside, Tab or open trigger · api: item chosen or code',
-    'props.class.description':
-      'Extra classes written on the element are merged with the component ones; there is no class prop.',
     'props.disabled.description':
       'Blocks the whole menu from opening. Individual items have their own switch.',
     'props.loopFocus.description':
@@ -148,16 +143,6 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       'This option value. It is what the group compares to decide which one is checked.',
     'props.openChangeDetail.description':
       'Emits the open change together with its reason ({ open, reason }): tells whether the menu closed by Escape, by a click outside or by a chosen item.',
-    'notes.item1':
-      '<strong>Primitive</strong>: <code>@radix-ng/primitives/menu</code> — provides the ARIA roles, focus on the first item when opening, roving tabindex, arrows, Home/End, typeahead, Escape with focus return, collision-aware positioning and diagonal submenu opening.',
-    'notes.item2':
-      '<strong>Portal</strong>: the popup is teleported to the <code>body</code> on open and unmounted on close, so no ancestor <code>overflow: hidden</code> clips it. While closed it is absent from the DOM — not a hidden panel.',
-    'notes.item5':
-      '<strong>Trigger</strong>: the same <code>&lt;button&gt;</code> carries the trigger and the button styling. A button inside a button is an ARIA violation and breaks the keyboard.',
-    'notes.item6':
-      '<strong>An item is a <code>&lt;div&gt;</code></strong> with a menu role, not a <code>&lt;button&gt;</code>: the component stylesheet does not reset the browser button look. What semantics asks for is role, focus and keyboard — and the primitive provides all three.',
-    'notes.item7':
-      '<strong>Upstream pending item</strong>: the focus guards around the portaled content combine <code>aria-hidden</code> with <code>tabindex="0"</code>, and axe reads that as a focus trap. They exist precisely so Tab does not get trapped; the rule is off in the stories that end with the menu open, and the finding is on record.',
   },
   es: {
     'snippet.controlled': 'Menú controlado, con posicionamiento y analytics',
@@ -170,8 +155,6 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       'location es la SECCIÓN de la pantalla donde vive el menú: en estas docs, docs_<sección>; en el producto, la suya.',
     'snippet.reasons':
       'escape: Escape · overlay: clic fuera, Tab o disparador abierto · api: ítem elegido o código',
-    'props.class.description':
-      'Las clases extra escritas en el elemento se combinan con las del componente; no hay prop de clase.',
     'props.disabled.description':
       'Bloquea la apertura de todo el menú. Los items tienen su propio bloqueo.',
     'props.loopFocus.description':
@@ -197,16 +180,6 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       'Valor de esta opción. Es lo que el grupo compara para decidir cuál está marcada.',
     'props.openChangeDetail.description':
       'Emite el cambio de apertura junto con el motivo ({ open, reason }): dice si el menú se cerró por Escape, por clic fuera o por ítem elegido.',
-    'notes.item1':
-      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/menu</code> — aporta los roles ARIA, el foco en el primer item al abrir, roving tabindex, flechas, Home/End, typeahead, Escape con devolución del foco, posicionamiento con evasión de colisión y submenú con apertura en diagonal.',
-    'notes.item2':
-      '<strong>Portal</strong>: el popup se teletransporta al <code>body</code> al abrir y se desmonta al cerrar, así ningún <code>overflow: hidden</code> ancestro lo recorta. Cerrado no existe en el DOM — no es un panel escondido.',
-    'notes.item5':
-      '<strong>Disparador</strong>: el mismo <code>&lt;button&gt;</code> recibe el disparador y el estilo de botón. Un botón dentro de otro es violación de ARIA y rompe el teclado.',
-    'notes.item6':
-      '<strong>El item es un <code>&lt;div&gt;</code></strong> con papel de menú, no un <code>&lt;button&gt;</code>: la hoja del componente no anula la apariencia nativa de botón. Lo que la semántica pide es papel, foco y teclado — y los tres vienen del primitivo.',
-    'notes.item7':
-      '<strong>Pendiente de la lib</strong>: las anclas de foco que rodean el contenido portalizado combinan <code>aria-hidden</code> con <code>tabindex="0"</code>, y axe lo lee como trampa de foco. Existen justamente para que el Tab no quede atrapado; la regla está desactivada en las stories que terminan con el menú abierto, con el hallazgo registrado.',
   },
 });
 
@@ -516,6 +489,53 @@ const VARIANTS = [
 type VariantKey = (typeof VARIANTS)[number]['key'];
 
 /**
+ * A lista da prévia TRADUZIDA, na forma que o construtor de snippet consome.
+ *
+ * O construtor mora em `ui/dropdown-menu.source.ts` desde 2026-09-18 — snippet
+ * montado dentro da docs page não é importável, e por isso não era testável
+ * (inconsistência 22 da §7 do PRD). Aqui fica só a tradução: a chave vira texto
+ * no idioma da página, e o `suffix` (o número de "Ação 1" … "Ação 10"), que não
+ * se traduz, é concatenado nesta passagem.
+ */
+function snippetEntries(entries: readonly PreviewEntry[]): readonly DropdownMenuSnippetEntry[] {
+  const leaf = (
+    e: ItemEntry | CheckboxEntry,
+  ): DropdownMenuSnippetItem | DropdownMenuSnippetCheckbox =>
+    e.kind === 'item'
+      ? {
+          kind: 'item',
+          label: `${t(e.label)}${e.suffix ?? ''}`,
+          ...(e.shortcut ? { shortcut: t(e.shortcut) } : {}),
+          ...(e.destructive ? { destructive: true } : {}),
+        }
+      : { kind: 'checkbox', label: t(e.label), checked: e.checked };
+
+  return entries.map((entry): DropdownMenuSnippetEntry => {
+    switch (entry.kind) {
+      case 'separator':
+        return { kind: 'separator' };
+      case 'group':
+        return { kind: 'group', label: t(entry.label), entries: entry.entries.map(leaf) };
+      case 'radio-group':
+        return {
+          kind: 'radio-group',
+          label: t(entry.label),
+          value: entry.value,
+          options: entry.options.map((o) => ({ label: t(o.label), value: o.value })),
+        };
+      case 'sub':
+        return {
+          kind: 'sub',
+          label: t(entry.label),
+          entries: entry.entries.map((child) => leaf(child) as DropdownMenuSnippetItem),
+        };
+      default:
+        return leaf(entry);
+    }
+  });
+}
+
+/**
  * O código da ficha, a partir da MESMA lista que monta a prévia — com os
  * rótulos no idioma da página, para que código e prévia digam o mesmo nos três.
  *
@@ -523,57 +543,7 @@ type VariantKey = (typeof VARIANTS)[number]['key'];
  * rastreio) não entra: é andaime desta docs page, não lição do menu.
  */
 function menuSnippet(trigger: LabelKey, entries: readonly PreviewEntry[]): string {
-  const pad = (n: number) => ' '.repeat(n);
-  const itemLines = (e: ItemEntry, n: number): string[] => {
-    const attrs = e.destructive ? ' variant="destructive"' : '';
-    const text = `${t(e.label)}${e.suffix ?? ''}`;
-    if (!e.shortcut) return [`${pad(n)}<div ndsDropdownMenuItem${attrs}>${text}</div>`];
-    return [
-      `${pad(n)}<div ndsDropdownMenuItem${attrs}>`,
-      `${pad(n + 2)}${text} <span ndsDropdownMenuShortcut>${t(e.shortcut)}</span>`,
-      `${pad(n)}</div>`,
-    ];
-  };
-  const leaf = (e: ItemEntry | CheckboxEntry, n: number): string[] =>
-    e.kind === 'item'
-      ? itemLines(e, n)
-      : [`${pad(n)}<div ndsDropdownMenuCheckboxItem [checked]="${e.checked}">${t(e.label)}</div>`];
-
-  const lines: string[] = [];
-  for (const entry of entries) {
-    if (entry.kind === 'separator') {
-      lines.push(`${pad(4)}<div ndsDropdownMenuSeparator></div>`);
-    } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
-      lines.push(...leaf(entry, 4));
-    } else if (entry.kind === 'group') {
-      lines.push(`${pad(4)}<div ndsDropdownMenuGroup>`);
-      lines.push(`${pad(6)}<div ndsDropdownMenuLabel>${t(entry.label)}</div>`);
-      for (const child of entry.entries) lines.push(...leaf(child, 6));
-      lines.push(`${pad(4)}</div>`);
-    } else if (entry.kind === 'radio-group') {
-      lines.push(`${pad(4)}<div ndsDropdownMenuRadioGroup value="${entry.value}">`);
-      lines.push(`${pad(6)}<div ndsDropdownMenuLabel>${t(entry.label)}</div>`);
-      for (const opt of entry.options) {
-        lines.push(`${pad(6)}<div ndsDropdownMenuRadioItem value="${opt.value}">${t(opt.label)}</div>`);
-      }
-      lines.push(`${pad(4)}</div>`);
-    } else {
-      lines.push(`${pad(4)}<nds-dropdown-menu-sub>`);
-      lines.push(`${pad(6)}<div ndsDropdownMenuSubTrigger>${t(entry.label)}</div>`);
-      lines.push(`${pad(6)}<ng-template ndsDropdownMenuSubContent>`);
-      for (const child of entry.entries) lines.push(...itemLines(child, 8));
-      lines.push(`${pad(6)}</ng-template>`);
-      lines.push(`${pad(4)}</nds-dropdown-menu-sub>`);
-    }
-  }
-
-  return `<nds-dropdown-menu>
-  <button ndsDropdownMenuTrigger ndsButton variant="outline">${t(trigger)}</button>
-
-  <ng-template ndsDropdownMenuContent>
-${lines.join('\n')}
-  </ng-template>
-</nds-dropdown-menu>`;
+  return dropdownMenuSnippet({ triggerLabel: t(trigger), entries: snippetEntries(entries) });
 }
 
 /**
@@ -1225,7 +1195,15 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       description: toPlainText(t(`props.table.${key}.description`)),
     });
 
-    /** Linha que só existe neste stack — descrição vem do override. */
+    /**
+     * Linha que só existe neste stack — descrição vem do override.
+     *
+     * O override é o MÍNIMO: toda prop que o conteúdo compartilhado descreve
+     * entra por `ofContent`, e só o que este stack acrescenta de verdade cai
+     * aqui. Até 2026-09-18 havia também uma linha `class` — e o texto dela
+     * dizia que não existe prop de classe, ou seja, uma linha de tabela de
+     * PROPS para algo que não é prop.
+     */
     const local = (name: string, type: string, defaultValue: string, key: string) => ({
       name: name,
       type: type,
@@ -1233,8 +1211,6 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       required: not,
       description: toPlainText(t(`props.${key}.description`)),
     });
-
-    const className = local('class', 'string', '—', 'class');
 
     return [
       {
@@ -1248,7 +1224,6 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
           ofContent('modal', 'modal'),
           local('disabled', 'boolean', 'false', 'disabled'),
           local('loopFocus', 'boolean', 'true', 'loopFocus'),
-          className,
         ],
       },
       {
@@ -1259,7 +1234,6 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
           ofContent('align', 'align'),
           local('sideOffset', 'number', '4', 'sideOffset'),
           local('alignOffset', 'number', '0', 'alignOffset'),
-          className,
         ],
       },
       {
@@ -1375,7 +1349,10 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     dict();
-    return [1, 2, 3, 4, 5, 6, 7].map((i) => ({ title: '', content: t(`notes.item${i}`) }));
+    // CINCO, que é o que o conteúdo compartilhado tem e o que as outras quatro
+    // stacks mostram. Até 2026-09-18 eram sete, com `item6`/`item7` nascendo só
+    // aqui (inconsistência 21(b) da §7 do PRD).
+    return [1, 2, 3, 4, 5].map((i) => ({ title: '', content: t(`notes.item${i}`) }));
   });
 
   protected readonly analyticsCols = computed(() => {
