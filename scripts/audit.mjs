@@ -9414,6 +9414,20 @@ function identsPtNoCodigo(bruto, caminho = '') {
   //    dentro do `<script>` de um .svelte passava limpo. Medido.
   //  - `{expr}` entre tags é código, não texto. Por isso o padrão recusa chave:
   //    `<span>{rotuloAtivo}</span>` continua sendo lido.
+  //
+  // E a recusa da chave abria um vazamento, medido em 2026-09-18: o padrão só
+  // apaga o texto de um nó INTEIRO, de `>` a `<`. Interpolação no meio parte o
+  // nó, e o pedaço depois do `}` não começa em `>` — então sobrevivia.
+  // `<p>Parágrafo {i + 1}: … a rolagem interna do panel.</p>` contava `rolagem`
+  // como identificador declarado, e era o último nome da dívida do svelte.
+  //
+  // As três passadas a mais cobrem cabeça, miolo e cauda em volta da chave, e
+  // valem só em `.vue`/`.svelte` — onde o `<script>` já saiu de lado e o que
+  // resta é template, em que `}` só fecha interpolação ou bloco. Em `.tsx` o
+  // código convive com o JSX no mesmo arquivo: ali `}` fecha bloco de verdade,
+  // e apagar de `}` até o próximo `<` engoliria declaração real. Isso seria
+  // anistia, que é o sentido perigoso — o A/B contra a árvore inteira confirmou
+  // que a mudança tira UMA entrada e não mexe em nenhuma outra.
   if (/\.(vue|svelte|tsx)$/.test(caminho)) {
     const scripts = [];
     codigo = codigo
@@ -9422,6 +9436,12 @@ function identsPtNoCodigo(bruto, caminho = '') {
         return '<script></script>';
       })
       .replace(/>[^<>{}]*</g, '><');
+    if (/\.(vue|svelte)$/.test(caminho)) {
+      codigo = codigo
+        .replace(/>[^<>{}]*\{/g, '>{')
+        .replace(/\}[^<>{}]*\{/g, '}{')
+        .replace(/\}[^<>{}]*</g, '}<');
+    }
     codigo += '\n' + scripts.join('\n');
   }
   const vistos = new Set();
