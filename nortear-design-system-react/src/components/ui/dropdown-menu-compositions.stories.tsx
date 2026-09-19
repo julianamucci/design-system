@@ -3,6 +3,7 @@ import { useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { waitForAncorado } from "@shared/testing/ancoragem";
 import {
+  axeRules,
   waitForPortal,
   FOCUS_RULE_GUARDA,
   MENU_RULE_CHILDREN,
@@ -46,7 +47,7 @@ const meta = {
     // Estas stories terminam com o menu ABERTO, de propósito: é o estado que o
     // Chromatic precisa fotografar. As duas regras do axe que isso acende são
     // da lib, e o motivo de cada uma está em `wait-for-portal.ts`.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN) } },
     docs: {
       source: { transform: dropdownMenuSource },
       description: {

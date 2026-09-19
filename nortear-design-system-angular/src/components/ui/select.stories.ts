@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_SELECT } from './select';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import { NdsSelectDocs } from '@/components/docs/SelectDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { selectPlaygroundSource, type SelectArgs } from './select.source';
@@ -26,7 +26,7 @@ const meta: Meta<SelectArgs> = {
   decorators: [moduleMetadata({ imports: [...NDS_SELECT] })],
   parameters: {
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: { page: withAutoDocsTab(NdsSelectDocs) },
   },
   argTypes: {

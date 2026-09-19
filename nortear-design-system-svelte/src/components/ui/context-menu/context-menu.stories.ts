@@ -4,7 +4,7 @@ import { within, userEvent, expect, fn, waitFor } from 'storybook/test';
 import ContextMenuStory from './ContextMenuStory.svelte';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, axeRules, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { gestoOpen, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
 import { expectInvolucroComCaixa, waitForAncorado } from '@shared/testing/ancoragem';
 import { contextMenuSource } from './context-menu.source';
@@ -17,7 +17,7 @@ const meta: Meta = {
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       page: withAutoDocsTab(ContextMenuDocs),
       source: { transform: contextMenuSource },

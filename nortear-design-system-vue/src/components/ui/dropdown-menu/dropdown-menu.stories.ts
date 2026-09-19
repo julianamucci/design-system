@@ -15,7 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 import { dropdownMenuSource } from './dropdown-menu.source';
 
@@ -27,7 +27,7 @@ const meta = {
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),
       source: { transform: dropdownMenuSource },

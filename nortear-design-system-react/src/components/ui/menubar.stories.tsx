@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { userEvent, within, expect, fn, waitFor } from "storybook/test"
 import {
+  axeRules,
   waitForPortal,
   waitForPortalGone,
   FOCUS_RULE_GUARDA,
@@ -88,7 +89,7 @@ const meta = {
   tags: ["autodocs", "navigation"],
   parameters: {
     layout: "centered",
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       page: withAutoDocsTab(MenubarDocs),
       // O painel imprimia a árvore do `render`, que monta a barra a partir de

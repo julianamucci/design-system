@@ -8,7 +8,7 @@ import {
   NdsDataTableDemo,
   LABELS_DT,
 } from './data-table.fixtures';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -124,7 +124,7 @@ export const WithColumnFilters: Story = {
 
 export const WithColumnVisibility: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story:

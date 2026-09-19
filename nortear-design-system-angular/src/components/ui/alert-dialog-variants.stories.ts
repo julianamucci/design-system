@@ -4,7 +4,7 @@ import { expect, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsAlertIcon } from './alert';
 import { NdsButton } from './button';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import {
   LONG_DESCRIPTION,
   WITHOUT_DESCRIPTION_LABELS,
@@ -44,7 +44,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     // Cada story declara a sua; esta é a queda, e é a composição canônica.
     docs: { source: { transform: alertDialogDestructiveSource } },
   },

@@ -15,7 +15,7 @@ import {
   navigationMenuActiveSource,
   navigationMenuSource,
 } from "./navigation-menu.source";
-import { FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
+import { axeRules, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
 
 const meta = {
   title: "Components/Navigation/NavigationMenu/States",
@@ -104,7 +104,7 @@ export const Open: Story = {
   parameters: {
     covers: ["accessibility.item3", "accessibility.item6", "visual.item4"],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Valor inicial casando com o `value` do item, mais a seta indicadora que
       // nasce desligada: duas props que os controls deste arquivo não alcançam.

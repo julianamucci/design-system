@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
 } from './index';
 import { waitForPanel, panelOpen } from './navigation-menu.fixtures';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   navigationMenuOpenSource,
   navigationMenuActiveSource,
@@ -108,7 +108,7 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item3', 'accessibility.item6', 'visual.item4'],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Aberto na montagem é PRESENÇA de `default-value`, e traz junto a seta
       // indicadora — peça que a do meta, fechada, não tem por que mostrar.

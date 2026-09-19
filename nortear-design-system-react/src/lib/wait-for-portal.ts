@@ -27,8 +27,17 @@ export const FOCUS_RULE_GUARDA = { id: "aria-hidden-focus", enabled: false } as 
  * o axe não roda regra 2.2 por default. A story deixa de medir alvo de toque, e
  * nada acusa: o painel fica verde por medir menos.
  *
- * Medido no repositório inteiro: 82 usos em 66 arquivos, em quatro stacks, e
- * nenhum preservava a regra global.
+ * **Histórico, e a lição é do próprio comentário.** Quando este helper nasceu, o
+ * docblock dizia "medido no repositório inteiro: 82 usos em 66 arquivos, em
+ * quatro stacks, e nenhum preservava a regra global" — e a conversão parou em 4
+ * arquivos desta stack. O helper foi criado certo, a medição foi escrita, e o
+ * número ficou envelhecendo no único lugar que ninguém relê. Em 2026-09-19 a
+ * varredura achou 79 arquivos ainda com array cru, nas cinco stacks.
+ *
+ * Por isso o número saiu daqui: **quem cobra agora é o portão
+ * `regra_de_axe_crua` do `scripts/audit.mjs`**, que reprova `rules: [` perto de
+ * `a11y` em qualquer story das cinco. Contagem em comentário envelhece calada;
+ * portão não.
  */
 export const axeRules = (...guards: ReadonlyArray<{ id: string; enabled: boolean }>) => [
   { id: "target-size", enabled: true },

@@ -10,7 +10,7 @@ import {
   contextMenuItemDisabledSource,
   contextMenuItemInsetSource,
 } from './context-menu.source';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -26,7 +26,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

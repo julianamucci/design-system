@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './index';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { focusMeasureRing, STATES, VALUE_STATES } from '@shared/testing/select-probe';
 import {
   selectBloqueadoSource,
@@ -155,7 +155,7 @@ export const Open: Story = {
     // regressão visual precisa fotografar. Com a lista aberta o primitivo
     // marca o resto da página como escondido para o leitor de tela, e o axe lê
     // a combinação como armadilha de foco: ver o motivo em `wait-for-portal`.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story: 'Lista aberta, em portal. As setas andam item a item e o destaque acompanha.',

@@ -10,7 +10,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from './index';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   menubarOpenSource,
@@ -119,7 +119,7 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['accessibility.item4'],
     docs: {
       // Aberto na montagem é PRESENÇA de `default-value`; a do meta mostra a
@@ -184,7 +184,7 @@ export const Open: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['accessibility.item8'],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // O bloqueio mora no ITEM, e por item: a do meta não tem `:disabled` em
       // lugar nenhum.
@@ -258,7 +258,7 @@ export const ItemDisabled: Story = {
 
 export const CheckboxChecked: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['functional.item7'],
     docs: {
       // Outro tipo de item e outra API: `checked`/`@update:checked` sobre estado
@@ -367,7 +367,7 @@ export const CheckboxChecked: Story = {
 
 export const CheckboxIndeterminate: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['functional.item9'],
     docs: {
       // O misto é um TERCEIRO valor de `checked`, escrito como string literal —
@@ -591,7 +591,7 @@ export const LongMenu: Story = {
     // `item10` é Home/End saltando às pontas — aqui o End é o gesto que leva o
     // foco ao item que está fora da caixa visível, que é o assunto da story.
     covers: ['functional.item10'],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA, MENU_ROLAVEL_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA, MENU_ROLAVEL_GUARDA) } },
     docs: { source: { transform: menubarLongMenuSource } },
   },
   render: () => ({

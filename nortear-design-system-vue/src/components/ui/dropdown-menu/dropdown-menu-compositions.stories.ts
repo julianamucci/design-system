@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { waitForAncorado } from '@shared/testing/ancoragem';
 import {
   dropdownMenuWithShortcutsSource,
@@ -38,7 +38,7 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: dropdownMenuWithLabelSource },
       description: {

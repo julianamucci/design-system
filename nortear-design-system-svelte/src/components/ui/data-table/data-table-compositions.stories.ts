@@ -3,7 +3,7 @@ import { within, userEvent, waitFor, fireEvent, expect, fn } from 'storybook/tes
 import DataTable from './data-table.svelte';
 import DataTableEditStory from './DataTableEditStory.svelte';
 import type { DataTableColumn } from './index';
-import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import {
   dataTableColumnsRedimensionaveisSource,
   dataTableEditInlineSource,
@@ -180,7 +180,7 @@ export const ReorderableAndPinnable: Story = {
   },
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: { source: { transform: dataTableReordenarEFixarSource } },
   },
   play: async ({ canvasElement, step }) => {

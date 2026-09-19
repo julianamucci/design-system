@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   dropdownMenuOpenSource,
@@ -29,7 +29,7 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: dropdownMenuClosedSource },
       description: {

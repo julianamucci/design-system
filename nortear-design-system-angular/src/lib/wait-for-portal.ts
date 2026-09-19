@@ -18,6 +18,41 @@ import { within, waitFor } from 'storybook/test';
 export const FOCUS_RULE_GUARDA = { id: 'aria-hidden-focus', enabled: false } as const;
 
 /**
+ * Regras do axe de uma story que precisa de guarda — **use isto, nunca um array
+ * cru**.
+ *
+ * O Storybook SUBSTITUI array ao mesclar parâmetro, em vez de concatenar. Então
+ * `a11y: { config: { rules: [FOCUS_RULE_GUARDA] } }` numa story apaga o `rules`
+ * global do `.storybook/preview.ts`, que é onde `target-size` (WCAG 2.5.8) está
+ * ligado — o axe não roda regra WCAG 2.2 por default, então aquela linha é a
+ * única coisa que faz alvo de toque ser medido no repositório inteiro. A story
+ * deixa de medir alvo de toque e nada acusa: o painel fica verde por medir
+ * menos.
+ *
+ * É a forma silenciosa do portão que encolhe — a mesma do `source-snippets`,
+ * que perdeu 28 exports quando o filtro deixou de casar com o nome. Quem
+ * desliga UMA regra apaga de carona um portão que fala de outra coisa, e a
+ * exceção fica maior do que quem a escreveu pretendia.
+ *
+ * Medido no repositório inteiro em 2026-09-19: 83 arquivos de story nas cinco
+ * stacks, 22 deles neste stack, e nenhum preservava a regra global.
+ *
+ * @example
+ * a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } }
+ *
+ * **O número acima envelhece; o portão não.** Quem cobra esta forma é a regra
+ * `regra_de_axe_crua` do `scripts/audit.mjs`, que reprova `rules: [` perto de
+ * `a11y` em qualquer story das cinco stacks. Ela nasceu junto com esta
+ * conversão, e pelo motivo que o próprio helper ilustra: quando ele foi criado,
+ * o docblock dele já trazia a medição do defeito — e a conversão parou em 4
+ * arquivos, com o número certo escrito ao lado.
+ */
+export const axeRules = (...guards: ReadonlyArray<{ id: string; enabled: boolean }>) => [
+  { id: 'target-size', enabled: true },
+  ...guards,
+];
+
+/**
  * Espera um elemento portalizado aparecer e assentar.
  *
  * Overlay não mora no canvas: o portal do primitivo o anexa ao `body`, então

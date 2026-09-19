@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import {
+  axeRules,
   waitForPortal,
   waitForPortalGone,
   FOCUS_RULE_GUARDA,
@@ -34,7 +35,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Fechado é o padrão do componente, e abrir por clique ou por seta não é
       // markup: esta transform serve tanto a Closed quanto a Open.

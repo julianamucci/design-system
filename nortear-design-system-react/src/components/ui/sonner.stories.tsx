@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { axeRules } from "@/lib/wait-for-portal";
 import { within, expect, userEvent } from "storybook/test";
 import { toast, type ExternalToast } from "sonner";
 import { Toaster, REGION_LABEL, DEFAULT_POSITION } from "./sonner";
@@ -35,10 +36,10 @@ const meta = {
     // escreve `<div data-title aria-label>` no markup dela.
     a11y: {
       config: {
-        rules: [
+        rules: axeRules(
           { id: "color-contrast", enabled: false },
           { id: "aria-prohibited-attr", enabled: false },
-        ],
+        ),
       },
     },
   },

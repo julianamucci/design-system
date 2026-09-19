@@ -4,7 +4,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 import { open, waitForPanel, waitForPanelVanish, panelOpen } from './navigation-menu.fixtures';
 import { navigationMenuSource } from './navigation-menu.source';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'Components/Navigation/NavigationMenu/Compositions',
@@ -113,7 +113,7 @@ export const MegaMenuGrid: Story = {
   parameters: {
     covers: ['visual.item2'],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story:
@@ -161,7 +161,7 @@ export const WithHighlightedCard: Story = {
   },
   parameters: {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story:

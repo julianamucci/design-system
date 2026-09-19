@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, within } from 'storybook/test';
 import { noTransicao } from '@shared/testing/input-probe';
+import { axeRules } from '@/lib/wait-for-portal';
 
 import InputGroupStory from './InputGroupStory.svelte';
 import {
@@ -188,7 +189,7 @@ export const Disabled: Story = {
     // 5,38:1. O que isto NÃO cobre é qualquer outro estado desta moldura — as
     // outras duas stories do arquivo seguem medindo contraste, e é lá que um
     // prefixo ilegível de verdade reprovaria.
-    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+    a11y: { config: { rules: axeRules({ id: 'color-contrast', enabled: false }) } },
   },
   render: () => ({
     Component: InputGroupStory,

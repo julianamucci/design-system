@@ -9,7 +9,7 @@ import {
   menubarWithShortcutsSource,
   menubarWithSubmenuSource,
 } from './menubar.source';
-import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -42,7 +42,7 @@ const meta: Meta = {
     // Sem `args` próprios: sem isto a aba Actions lista espião que estas stories
     // não usam, do mesmo jeito que o Controls abriria vazio.
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

@@ -13,7 +13,7 @@ import {
   LONG_MENU_ITEMS,
   LONG_MENU_LABELS,
 } from './menubar.source';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -99,7 +99,7 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     // Sem `functional.item3` aqui: este item do contrato fala de ABRIR por
     // teclado, e esta story nasce aberta por `defaultOpen`, sem interação
     // nenhuma. A declaração era honesta na intenção e vazia no efeito.
@@ -161,7 +161,7 @@ export const Open: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['accessibility.item8'],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: { source: { transform: menubarItemDisabledSource } },
   },
   argTypes: {
@@ -232,7 +232,7 @@ export const ItemDisabled: Story = {
 
 export const CheckboxChecked: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['functional.item7'],
     docs: { source: { transform: menubarCheckboxCheckedSource } },
   },
@@ -307,7 +307,7 @@ export const CheckboxChecked: Story = {
 
 export const CheckboxIndeterminate: Story = {
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['functional.item9'],
     docs: { source: { transform: menubarCheckboxIndeterminateSource } },
   },

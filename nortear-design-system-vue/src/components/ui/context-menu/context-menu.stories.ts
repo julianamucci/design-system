@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor, fn } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.vue';
-import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { axeRules, FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import {
   AREA_CLICK_DIREITO,
   gestoOpen,
@@ -42,7 +42,7 @@ const meta: Meta<ContextMenuArgs> = {
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: { page: withAutoDocsTab(ContextMenuDocs), source: { transform: contextMenuSource } },
   },
   argTypes: {

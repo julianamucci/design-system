@@ -2785,6 +2785,62 @@ const CADEIA_ORIGEM_SEM_BITS = {
  * `max-height` válido, `center` era `transform-origin` válido. Nenhum
  * compilador, suíte ou folha reprova.
  */
+/**
+ * Story que declara regra de axe em ARRAY CRU — e com isso apaga a regra global.
+ *
+ * O Storybook SUBSTITUI array ao mesclar parâmetro, em vez de concatenar. O
+ * `preview.ts` das cinco stacks liga `target-size` (WCAG 2.5.8) no `a11y.config.rules`
+ * global, e o axe não roda regra 2.2 por padrão: aquela linha é a ÚNICA coisa que
+ * faz alvo de toque ser medido no repositório. Toda story que escreve a própria
+ * lista a apaga, e fica verde por medir menos.
+ *
+ * Medido em 2026-09-19: **83 arquivos nas cinco stacks**, e o helper que soma em
+ * vez de substituir (`axeRules()`) existia numa stack só, usado em 4 arquivos.
+ * Pior: o docblock do próprio helper já trazia a medição do defeito — "82 usos em
+ * 66 arquivos, em quatro stacks, e nenhum preservava a regra global" — escrita
+ * quando ele nasceu. O helper foi criado, a medição registrada, e a conversão
+ * parou em 4 arquivos. Defeito medido e adiado, que é a família que este
+ * repositório mais paga.
+ *
+ * Por isso a regra existe: a conversão é de uma rodada, e nada impedia a próxima
+ * story de nascer com array cru. É a mesma leitura do `source-snippets.test.ts` —
+ * o portão encolhe e a suíte segue verde medindo menos.
+ *
+ * **O falso positivo, e ele é sistemático**: `DocsWhenToUse.stories.*` existe nas
+ * cinco stacks e declara `rules:` como NOME DE COLUNA de uma tabela de UX writing
+ * (`rules: "Regra"`). Uma contagem ingênua o pega em todas as cinco. A regra pede
+ * `[` depois dos dois pontos, o que basta: o dado de conteúdo é string.
+ */
+function auditRegraDeAxeCrua() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components');
+    for (const caminho of walkDir(dir, ['.ts', '.tsx', '.svelte', '.vue'])) {
+      if (!/\.stories\.[a-z]+$/.test(basename(caminho))) continue;
+      const bruto = readFile(caminho);
+      if (!bruto) continue;
+      const src = stripComments(bruto);
+      for (const m of src.matchAll(/\brules\s*:\s*\[/g)) {
+        // `a11y` perto: é o que separa regra de acessibilidade de qualquer outro
+        // campo chamado `rules` num fixture. A janela é generosa de propósito —
+        // `parameters: { a11y: { config: { rules: [` cabe folgado, e um `rules`
+        // de conteúdo não tem `a11y` por perto em arquivo nenhum medido.
+        const antes = src.slice(Math.max(0, m.index - 400), m.index);
+        if (!/\ba11y\b/.test(antes)) continue;
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, caminho), line: src.slice(0, m.index).split('\n').length,
+          rule: 'regra_de_axe_crua',
+          message: 'regra de axe em array cru apaga o `rules` global do `preview.ts`, e com ele '
+            + 'o `target-size` (WCAG 2.5.8) — a story passa a medir MENOS sem nada acusar. '
+            + 'Use o helper `axeRules(...)` de `src/lib/wait-for-portal.ts`, que SOMA em vez de substituir',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditCadeiaVarSemSaida() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -12810,7 +12866,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditCadeiaVarSemSaida(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado(), ...auditIdentificadorPtInfra()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditCadeiaVarSemSaida(), ...auditRegraDeAxeCrua(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado(), ...auditIdentificadorPtInfra()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

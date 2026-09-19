@@ -8,6 +8,7 @@ import { waitForToast, clearToasts, TEXTS, type ToastType } from './sonner.fixtu
 import SonnerDocs from '@/components/docs/SonnerDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sonnerPlaygroundSource } from './sonner.source';
+import { axeRules } from '@/lib/wait-for-portal';
 
 type SonnerArgs = {
   type: ToastType;
@@ -32,10 +33,10 @@ const meta = {
     // escreve `<div data-title aria-label>` no markup dela.
     a11y: {
       config: {
-        rules: [
+        rules: axeRules(
           { id: 'color-contrast', enabled: false },
           { id: 'aria-prohibited-attr', enabled: false },
-        ],
+        ),
       },
     },
   },

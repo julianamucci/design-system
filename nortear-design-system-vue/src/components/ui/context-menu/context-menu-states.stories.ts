@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
-import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { axeRules, FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, gestoOpen, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
@@ -33,7 +33,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // O padrão do arquivo é a forma CANÔNICA do menu, e não o snippet de um
       // estado: cada story declara o seu logo abaixo. Com `ItemDisabled` no

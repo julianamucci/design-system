@@ -5,7 +5,7 @@ import { parseDate, type DateValue } from '@internationalized/date';
 import { NdsCalendar } from './calendar';
 import { NDS_POPOVER } from './popover';
 import { NdsButton } from './button';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -25,7 +25,7 @@ const meta: Meta = {
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

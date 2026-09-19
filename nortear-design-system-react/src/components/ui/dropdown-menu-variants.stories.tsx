@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { waitForPortal, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
+import { axeRules, waitForPortal, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
 import { itemContrast } from "@shared/testing/dropdown-menu-probe";
 import {
   DropdownMenu,
@@ -26,7 +26,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: dropdownMenuSource },
       description: {

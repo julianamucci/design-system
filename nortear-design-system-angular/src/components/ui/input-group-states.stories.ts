@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, within } from 'storybook/test';
 import { noTransicao } from '@shared/testing/cor';
+import { axeRules } from '@/lib/wait-for-portal';
 import { NDS_INPUT_GROUP } from './input-group';
 import { NdsButton } from './button';
 import {
@@ -229,7 +230,7 @@ export const Disabled: Story = {
     //
     // Fora do estado desabilitado o mesmo prefixo é medido pela story `Rest`,
     // onde o axe segue sendo portão.
-    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+    a11y: { config: { rules: axeRules({ id: 'color-contrast', enabled: false }) } },
     docs: { source: { transform: inputGroupDisabledSource } },
   },
   render: () => ({

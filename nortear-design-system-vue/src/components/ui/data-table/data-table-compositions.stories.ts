@@ -3,7 +3,7 @@ import { h, ref } from 'vue';
 import { within, userEvent, waitFor, fireEvent, expect, fn } from 'storybook/test';
 import { DataTable, type DataTableColumn } from './index';
 import { Badge } from '@/components/ui/badge';
-import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   type Invoice,
   invoices,
@@ -196,7 +196,7 @@ export const ReorderableAndPinnable: Story = {
   }),
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     controls: { disable: true },
     actions: { disable: true },
     // Duas flags que nenhuma outra story liga, e que andam em par: reordenar

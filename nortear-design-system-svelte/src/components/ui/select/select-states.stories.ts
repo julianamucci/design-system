@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
@@ -108,7 +108,7 @@ export const Open: Story = {
     // A story TERMINA aberta — é o estado que ela documenta e o que a
     // regressão visual precisa fotografar. Ver o motivo do guarda de foco em
     // `wait-for-portal`.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story: 'Lista aberta, em portal. As setas andam item a item e o destaque acompanha.',

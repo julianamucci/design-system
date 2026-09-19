@@ -25,6 +25,7 @@ import {
   inputGroupRestSource,
   inputGroupSource,
 } from './input-group.source';
+import { axeRules } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -244,7 +245,7 @@ export const Disabled: Story = {
     // só por causa da opacidade. Fora do estado desabilitado quem responde pelo
     // mesmo prefixo é a story `Rest`, onde o axe segue sendo portão — e é lá que
     // um prefixo ilegível de verdade reprovaria.
-    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+    a11y: { config: { rules: axeRules({ id: 'color-contrast', enabled: false }) } },
   },
   render: () => ({
     components: parts,

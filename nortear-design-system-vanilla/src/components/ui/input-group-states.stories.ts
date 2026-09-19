@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { noTransicao } from '@shared/testing/input-probe';
+import { axeRules } from '@/lib/wait-for-portal';
 import {
   buildInputGroup,
   buildInvalidField,
@@ -188,7 +189,12 @@ export const Disabled: Story = {
     // 2,85:1, os dois só por causa da opacidade. Fora do estado desabilitado o
     // mesmo prefixo mede 5,38:1 — quem responde por ele é a story `Rest`, onde
     // o axe segue sendo portão.
-    a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+    //
+    // Pelo `axeRules`, e não por array cru: a lista de uma story SUBSTITUI a do
+    // `preview.ts` em vez de somar-se a ela, e o array cru que estava aqui
+    // apagava de carona o `target-size` (WCAG 2.5.8) que o projeto liga
+    // globalmente. A exceção fala de contraste; o alvo de toque continua medido.
+    a11y: { config: { rules: axeRules({ id: 'color-contrast', enabled: false }) } },
     docs: {
       source: {
         transform: inputGroupSourceWith({

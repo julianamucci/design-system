@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 import { NDS_SELECT } from './select';
 import { NdsButton } from './button';
 import { NdsLabel } from './label';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 const STATES = [
   { value: 'sp', label: 'São Paulo' },
@@ -39,7 +39,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

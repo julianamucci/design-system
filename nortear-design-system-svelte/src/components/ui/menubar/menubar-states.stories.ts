@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
 import MenubarControlledStory from './MenubarControlledStory.svelte';
 import {
@@ -85,7 +85,7 @@ export const Closed: Story = {
 export const Open: Story = {
   args: { defaultValue: 'file', demonstration: 'default' },
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['accessibility.item4'],
   },
   play: async ({ canvasElement, step }) => {
@@ -128,7 +128,7 @@ export const ItemDisabled: Story = {
   },
   parameters: {
     covers: ['accessibility.item8'],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: { source: { transform: menubarItemDisabledSource } },
   },
   play: async ({ step }) => {
@@ -178,7 +178,7 @@ export const ItemDisabled: Story = {
 export const CheckboxChecked: Story = {
   args: { defaultValue: 'view', demonstration: 'checkbox' },
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['functional.item7'],
     docs: { source: { transform: menubarCheckboxCheckedSource } },
   },
@@ -223,7 +223,7 @@ export const CheckboxChecked: Story = {
 export const CheckboxIndeterminate: Story = {
   args: { defaultValue: 'view', demonstration: 'indeterminate' },
   parameters: {
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     covers: ['functional.item9'],
     docs: { source: { transform: menubarCheckboxIndeterminateSource } },
   },
@@ -393,7 +393,7 @@ export const PanelScrolls: Story = {
     // DropdownMenu nem o usa). Exceção que não desliga nada é portão sem dentes
     // com cara de cobertura, então esta story não a herda. A dívida das outras
     // quatro stories fica RELATADA, não varrida por conta própria.
-    a11y: { config: { rules: [MENU_ROLAVEL_GUARDA] } },
+    a11y: { config: { rules: axeRules(MENU_ROLAVEL_GUARDA) } },
     docs: { source: { transform: menubarPanelScrollsSource } },
   },
   play: async ({ step }) => {

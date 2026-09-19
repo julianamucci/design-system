@@ -14,6 +14,7 @@ import {
   waitForPortal,
   FOCUS_RULE_GUARDA,
   LIST_RULE_SCROLL,
+  axeRules,
 } from '@/lib/wait-for-portal';
 import {
   selectAgrupadoSource,
@@ -48,7 +49,7 @@ const meta = {
     // lista aberta o primitivo marca o resto da página como escondido para o
     // leitor de tela, e o axe lê a combinação como armadilha de foco — o motivo
     // completo está em `wait-for-portal`.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: selectListPlanaSource },
       description: {
@@ -132,7 +133,7 @@ export const WithGroups: Story = {
   parameters: {
     // Sete opções mais dois cabeçalhos: esta lista transborda a caixa e ROLA.
     // O motivo de a regra sair está em `wait-for-portal`.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA, LIST_RULE_SCROLL] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA, LIST_RULE_SCROLL) } },
     docs: {
       // Grupo e cabeçalho são dois componentes a mais na composição.
       source: { transform: selectAgrupadoSource },

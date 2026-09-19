@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { Root as ContextMenu } from './index';
 import ContextMenuCompositionStory from './ContextMenuCompositionStory.svelte';
-import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, axeRules, waitForPortal } from '@/lib/wait-for-portal';
 import { gestoOpen } from '@shared/testing/context-menu-area';
 import { waitForAncorado } from '@shared/testing/ancoragem';
 import {
@@ -25,7 +25,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
       // sua própria composição logo abaixo.

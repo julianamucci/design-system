@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect, waitFor } from "storybook/test";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { ContextMenuDocs } from "@/components/docs/ContextMenuDocs";
-import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { axeRules, FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { expectInvolucroComCaixa, waitForAncorado } from "@shared/testing/ancoragem";
 import {
   AREA_CLICK_DIREITO,
@@ -96,7 +96,7 @@ const meta: Meta<ContextMenuArgs> = {
   parameters: {
     design: figmaDesign("dropdownMenu"),
     layout: "centered",
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

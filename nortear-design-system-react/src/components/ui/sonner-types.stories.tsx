@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { axeRules } from "@/lib/wait-for-portal";
 import { expect } from "storybook/test";
 import { toast } from "sonner";
 import { Toaster } from "./sonner";
@@ -33,10 +34,10 @@ const meta = {
     // Ver PATCHES.md#sonner-rich-colors-contrast.
     a11y: {
       config: {
-        rules: [
+        rules: axeRules(
           { id: "color-contrast", enabled: false },
           { id: "aria-prohibited-attr", enabled: false },
-        ],
+        ),
       },
     },
     docs: {

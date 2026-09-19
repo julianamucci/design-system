@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 import { waitForPanel, panelOpen } from './navigation-menu.fixtures';
 import { navigationMenuSource } from './navigation-menu.source';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'Components/Navigation/NavigationMenu/States',
@@ -75,7 +75,7 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item3', 'accessibility.item6', 'visual.item4'],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story:

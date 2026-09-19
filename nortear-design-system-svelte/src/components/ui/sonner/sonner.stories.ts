@@ -7,6 +7,7 @@ import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
 import SonnerDocs from '@/components/docs/SonnerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sonnerSource } from './sonner.source';
+import { axeRules } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'Components/Feedback/Sonner',
@@ -24,10 +25,10 @@ const meta: Meta = {
     // escreve `<div data-title aria-label>` no markup dela.
     a11y: {
       config: {
-        rules: [
+        rules: axeRules(
           { id: 'color-contrast', enabled: false },
           { id: 'aria-prohibited-attr', enabled: false },
-        ],
+        ),
       },
     },
   },

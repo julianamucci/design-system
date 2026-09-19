@@ -21,7 +21,7 @@ import {
   navigationMenuSomenteTargetsSource,
   navigationMenuSource,
 } from "./navigation-menu.source";
-import { FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
+import { axeRules, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
 
 const meta = {
   title: "Components/Navigation/NavigationMenu/Compositions",
@@ -193,7 +193,7 @@ export const MegaMenuGrid: Story = {
   parameters: {
     covers: ["visual.item2"],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Grade de duas colunas com uma linha de contexto por destino: a
       // descrição é o que atende ao propósito do link, e o meta não a tem.
@@ -294,7 +294,7 @@ export const MegaMenuGrid: Story = {
 export const WithHighlightedCard: Story = {
   parameters: {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Destino em destaque ao lado de uma lista de apoio: a hierarquia vem do
       // tamanho do bloco, e some se o snippet mostrar só a lista.

@@ -10,7 +10,7 @@ import {
   dataTableSource,
 } from "./data-table.source"
 import { Badge } from "@/components/ui/badge"
-import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal"
+import { axeRules, waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal"
 import {
   baseColumns,
   currency,
@@ -195,7 +195,7 @@ export const ReorderableAndPinnable: Story = {
   },
   parameters: {
     covers: ["functional.item6", "visual.item3"],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     controls: { disable: true },
     actions: { disable: true },
     // As duas flags andam juntas e nenhuma delas está nos args do `meta`.

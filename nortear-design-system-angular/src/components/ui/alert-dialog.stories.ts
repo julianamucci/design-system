@@ -7,7 +7,7 @@ import { NdsButton } from './button';
 import { alertDialogPlaygroundSource, type AlertDialogArgs } from './alert-dialog.source';
 import { NdsAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 import { figmaDesign } from '@shared/figma/design-links';
 
@@ -120,7 +120,7 @@ export const Playground: Story = {
       'accessibility.item7',
       'visual.item1', 'visual.item2',
     ],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
   },
   render: (args) => ({
     props: { ...args },

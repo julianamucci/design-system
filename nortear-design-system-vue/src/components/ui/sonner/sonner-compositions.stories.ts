@@ -16,6 +16,7 @@ import {
   sonnerPersistentSource,
   sonnerPromiseSource,
 } from './sonner.source';
+import { axeRules } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -43,10 +44,10 @@ const meta = {
     // Ver PATCHES.md#sonner-rich-colors-contrast.
     a11y: {
       config: {
-        rules: [
+        rules: axeRules(
           { id: 'color-contrast', enabled: false },
           { id: 'aria-prohibited-attr', enabled: false },
-        ],
+        ),
       },
     },
     docs: {

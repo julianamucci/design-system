@@ -18,7 +18,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from './index';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   menubarWithShortcutsSource,
   menubarWithCheckboxSource,
@@ -56,7 +56,7 @@ const meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: menubarWithShortcutsSource },
       description: {

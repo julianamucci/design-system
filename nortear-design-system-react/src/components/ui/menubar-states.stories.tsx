@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { useState } from "react"
 import { within, expect, fn, userEvent, waitFor } from "storybook/test"
 import {
+  axeRules,
   waitForPortal,
   FOCUS_RULE_GUARDA,
   MENU_RULE_CHILDREN,
@@ -32,7 +33,7 @@ import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbo
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
 const AXE_WITH_MENU_OPEN = {
-  config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] },
+  config: { rules: axeRules(FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN) },
 } as const
 
 const MENUS_FECHADOS = ["Arquivo", "Editar", "Exibir", "Ajuda"] as const

@@ -10,7 +10,7 @@ import {
   dropdownMenuWithSubmenuSource,
 } from './dropdown-menu.source';
 import { NdsButton } from './button';
-import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
@@ -22,7 +22,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { ref } from 'vue';
-import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { axeRules, FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, gestoOpen, menuOpen } from '@shared/testing/context-menu-area';
 import {
   ContextMenu,
@@ -38,7 +38,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // O padrão do arquivo é a forma CANÔNICA do menu, e não o snippet de uma
       // composição: cada story declara a sua logo abaixo. Com `WithShortcuts`

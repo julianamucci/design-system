@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
 import { menubarDefaultSource, menubarDestructiveSource } from './menubar.source';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import { backgroundEffective, byTheme, noTransicao, ratio } from '@shared/testing/cor';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
@@ -22,7 +22,7 @@ const meta: Meta = {
     // Sem `args` próprios: sem isto a aba Actions lista espião que estas stories
     // não usam, do mesmo jeito que o Controls abriria vazio.
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         component:

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { FOCUS_RULE_GUARDA, waitForPortal } from "@/lib/wait-for-portal";
+import { axeRules, FOCUS_RULE_GUARDA, waitForPortal } from "@/lib/wait-for-portal";
 import { gestoOpen, brilho } from "@shared/testing/context-menu-area";
 import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbox-indicator";
 import { AreaTrigger } from "./context-menu.fixtures";
@@ -35,7 +35,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: contextMenuSource },
       description: {

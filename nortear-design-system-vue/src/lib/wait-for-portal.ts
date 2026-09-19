@@ -19,6 +19,36 @@ import { within, waitFor } from "storybook/test";
 export const FOCUS_RULE_GUARDA = { id: 'aria-hidden-focus', enabled: false } as const;
 
 /**
+ * Regras do axe de uma story que precisa de guarda — **use isto, nunca um array
+ * cru**.
+ *
+ * O Storybook SUBSTITUI array ao mesclar parâmetro, em vez de concatenar. Então
+ * `a11y: { config: { rules: [FOCUS_RULE_GUARDA] } }` numa story apaga o `rules`
+ * global do `preview.ts`, que é onde `target-size` (WCAG 2.5.8) está ligado —
+ * o axe não roda regra 2.2 por default. A story deixa de medir alvo de toque, e
+ * nada acusa: o painel fica verde por medir menos.
+ *
+ * O defeito é silencioso nos dois sentidos: quem escreve a exceção está falando
+ * de UMA regra (foco, contraste, rolagem) e derruba de carona um portão que
+ * fala de outra coisa. Foi assim que ele apareceu — por acaso.
+ *
+ * Medido no repositório inteiro em 2026-09-19: 83 arquivos de story nas cinco
+ * stacks declaravam array cru, e nenhum preservava a regra global. Nesta stack
+ * eram 21 arquivos, 27 pontos.
+ *
+ * **O número acima envelhece; o portão não.** Quem cobra esta forma é a regra
+ * `regra_de_axe_crua` do `scripts/audit.mjs`, que reprova `rules: [` perto de
+ * `a11y` em qualquer story das cinco stacks. Ela nasceu junto com esta
+ * conversão, e pelo motivo que o próprio helper ilustra: quando ele foi criado,
+ * o docblock dele já trazia a medição do defeito — e a conversão parou em 4
+ * arquivos, com o número certo escrito ao lado.
+ */
+export const axeRules = (...guards: ReadonlyArray<{ id: string; enabled: boolean }>) => [
+  { id: 'target-size', enabled: true },
+  ...guards,
+];
+
+/**
  * Regra do axe desligada nas stories cuja lista aberta é longa o bastante para
  * ROLAR.
  *

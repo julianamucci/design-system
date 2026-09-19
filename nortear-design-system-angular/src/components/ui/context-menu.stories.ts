@@ -10,7 +10,7 @@ import {
 } from './context-menu.source';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
 import { NdsButton } from './button';
 import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
@@ -27,7 +27,7 @@ const meta: Meta<ContextMenuArgs> = {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsContextMenuDocs) },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
   },
   argTypes: {
     triggerLabel: { control: 'text', description: 'Texto da área que responde ao gesto.' },

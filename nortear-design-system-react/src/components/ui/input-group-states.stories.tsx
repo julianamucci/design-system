@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
+import { axeRules } from "@/lib/wait-for-portal"
 import { expect, within } from "storybook/test"
 import {
   InputGroup,
@@ -222,7 +223,7 @@ export const Disabled: Story = {
     // O que isto NÃO cobre: qualquer outro estado desta moldura. As outras duas
     // stories do arquivo continuam medindo contraste normalmente, e é lá que um
     // prefixo ilegível de verdade reprovaria.
-    a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } },
+    a11y: { config: { rules: axeRules({ id: "color-contrast", enabled: false }) } },
   },
   render: () => (
     <InputGroup>

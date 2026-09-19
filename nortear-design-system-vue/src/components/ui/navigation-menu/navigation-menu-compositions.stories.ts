@@ -10,7 +10,7 @@ import {
   NavigationMenuTrigger,
 } from './index';
 import { open, waitForPanel, waitForPanelVanish, panelOpen } from './navigation-menu.fixtures';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { axeRules, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   navigationMenuWithHighlightSource,
   navigationMenuWithPanelSource,
@@ -187,7 +187,7 @@ export const MegaMenuGrid: Story = {
   parameters: {
     covers: ['visual.item2'],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // Grade de duas colunas e descrição por destino: nenhuma outra story do
       // arquivo mostra a linha de contexto dentro do bloco.
@@ -287,7 +287,7 @@ export const MegaMenuGrid: Story = {
 export const WithHighlightedCard: Story = {
   parameters: {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       // O destaque é um destino SOLTO na grade, irmão da lista de apoio — não
       // há `<li>` em volta dele, e é isso que o deixa ocupar a coluna inteira.

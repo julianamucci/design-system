@@ -5,6 +5,7 @@ import { embrulhar, triggersOf, panelOpen } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith, menubarControlledSource } from './menubar.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { tornarDestruivel } from '@/lib/destroy';
+import { axeRules } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -201,18 +202,17 @@ export const LongMenu: Story = {
      * be greater than 0`). É o oposto de `a11y.test: 'todo'`, que desligaria a
      * medição inteira e não cobraria nada.
      *
-     * `target-size` entra JUNTO, e ligado, de propósito: a lista de regras de
-     * uma story SUBSTITUI a do `preview.ts` em vez de somar-se a ela, e sem
-     * esta linha a exceção desligaria de carona a regra 2.5.8 que o projeto
-     * liga globalmente — um segundo portão apagado em silêncio por um
-     * `enabled: false` que falava de outra coisa.
+     * A exceção passa pelo `axeRules`, e não por array cru: a lista de regras de
+     * uma story SUBSTITUI a do `preview.ts` em vez de somar-se a ela, então um
+     * array escrito à mão desligaria de carona a regra `target-size` (2.5.8) que
+     * o projeto liga globalmente — um segundo portão apagado em silêncio por um
+     * `enabled: false` que falava de outra coisa. Foi aqui que o defeito
+     * apareceu, em 2026-09-18; o helper é o que o tira da convenção e o põe no
+     * mecanismo, para as duas stories desta stack e para as próximas.
      */
     a11y: {
       config: {
-        rules: [
-          { id: 'target-size', enabled: true },
-          { id: 'scrollable-region-focusable', enabled: false },
-        ],
+        rules: axeRules({ id: 'scrollable-region-focusable', enabled: false }),
       },
     },
     docs: {

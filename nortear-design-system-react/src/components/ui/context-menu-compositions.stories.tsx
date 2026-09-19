@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { useState } from "react";
 import {
+  axeRules,
   MENU_RULE_CHILDREN,
   FOCUS_RULE_GUARDA,
   waitForPortal,
@@ -45,7 +46,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: contextMenuSource },
       description: {
@@ -322,7 +323,7 @@ export const WithSubmenu: Story = {
     // `aria-expanded="false"` no sub-gatilho, e o segundo, `aria-expanded`
     // virando `true` quando o submenu abre.
     covers: ["functional.item5", "functional.item6", "accessibility.item10", "visual.item3"],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN) } },
     // As três peças do submenu andam juntas e nenhuma aparece no snippet do
     // `meta`.
     docs: { source: { transform: contextMenuWithSubmenuSource } },

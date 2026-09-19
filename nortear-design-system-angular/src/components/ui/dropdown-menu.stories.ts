@@ -9,7 +9,7 @@ import {
   type DropdownMenuArgs,
 } from './dropdown-menu.source';
 import { NdsButton } from './button';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
 import { clickOutside } from '@shared/testing/context-menu-area';
 import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
@@ -26,7 +26,7 @@ const meta: Meta<DropdownMenuArgs> = {
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: { page: withAutoDocsTab(NdsDropdownMenuDocs) },
   },
   argTypes: {
