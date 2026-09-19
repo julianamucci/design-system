@@ -165,8 +165,22 @@ export const Open: Story = {
 // submenu vai a portal desde 2026-09-07 — a regra ficava por uma hipótese que o
 // próprio comentário declarava como não medida.
 
-/** Itens suficientes para o painel passar dos 24rem e precisar rolar. */
-const LONG_MENU = Array.from({ length: 40 }, (_, i) => ({ label: `Ação ${i + 1}` }));
+/**
+ * Itens suficientes para o painel passar dos 24rem e precisar rolar.
+ *
+ * **Sessenta é contrato das cinco stacks, não escolha local.** A story nasceu
+ * com dois nomes e três contagens — 40 aqui, 36 no angular, 60 nas outras três,
+ * duas delas ainda sob o nome `PanelScrolls`. Sessenta é o número da medição que
+ * originou a D17 (`docs/shared/prd/dropdown-menu.md`) e era a maioria; o nome
+ * `LongMenu` desta stack é que virou o das cinco. Comparar a mesma story entre
+ * as páginas é o que essas duas coisas existem para permitir.
+ *
+ * A contagem NÃO afeta a geometria do recorte: o painel é travado em 24rem pela
+ * cadeia de `max-height` da folha do dropdown, então `clientHeight` é o mesmo
+ * com 40 ou com 60 e só o `scrollHeight` cresce. As asserções abaixo continuam
+ * valendo pelo mecanismo — a precondição do recorte é medida, não suposta.
+ */
+const LONG_MENU = Array.from({ length: 60 }, (_, i) => ({ label: `Ação ${i + 1}` }));
 
 export const LongMenu: Story = {
   parameters: {

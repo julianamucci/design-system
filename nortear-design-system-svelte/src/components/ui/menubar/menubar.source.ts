@@ -389,13 +389,13 @@ export function menubarWithRadioSource(): string {
 }
 
 /**
- * States/PanelScrolls — o menu mais alto que a janela (D17).
+ * States/LongMenu — o menu mais alto que a janela (D17).
  *
  * Nada no markup declara rolagem: quem recorta é o `max-height` de
  * `.nds-dropdown-menu-content`, e quem rola é o `overflow-y: auto` da mesma
  * folha. O snippet é longo de propósito — é a altura que faz a lição.
  */
-export function menubarPanelScrollsSource(): string {
+export function menubarLongMenuSource(): string {
   return menubarSource('', { args: { demonstration: 'long' } });
 }
 

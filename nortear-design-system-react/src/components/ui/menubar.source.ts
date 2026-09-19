@@ -180,7 +180,7 @@ ${menu('Editar', `      <MenubarItem>Desfazer</MenubarItem>`)}
  * mesmo das outras stacks: mudar o número aqui sem mudar a story faria o painel
  * Code ensinar um exemplo que não é o que a página mostra.
  */
-export function menubarPanelScrollsSource(): string {
+export function menubarLongMenuSource(): string {
   const items = Array.from(
     { length: 60 },
     (_, i) => `      <MenubarItem>Ação ${i + 1}</MenubarItem>`,

@@ -7,7 +7,7 @@ import {
   menubarDestructiveSource,
   menubarEntriesSource,
   menubarItemDisabledSource,
-  menubarPanelScrollsSource,
+  menubarLongMenuSource,
   menubarSource,
   menubarWithCheckboxSource,
   menubarWithRadioSource,
@@ -270,8 +270,8 @@ const OVERRIDES: Array<{ name: string; build: () => string; contains: string[] }
     contains: ['<MenubarRadioGroup bind:value={tema}>'],
   },
   {
-    name: 'menubarPanelScrollsSource',
-    build: menubarPanelScrollsSource,
+    name: 'menubarLongMenuSource',
+    build: menubarLongMenuSource,
     // Nada declara rolagem: quem recorta e rola é a folha. O que o snippet
     // precisa ter é ALTURA — o primeiro e o último item da lista.
     contains: ['<MenubarItem>Ação 1</MenubarItem>', '<MenubarItem>Ação 60</MenubarItem>'],

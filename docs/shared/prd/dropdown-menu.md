@@ -708,6 +708,25 @@ comportamento certo, e é o oposto do que um briefing uniforme teria produzido.
 **Onde a exceção fica, a premissa dela também é asserção.** No svelte, o conjunto
 de `tabindex` dos itens tem de ser exatamente `['-1']`: se um bump do bits adotar
 o modelo da base-ui, a linha avisa antes de a exceção virar cobertura falsa.
+
+**A story chama-se `States/LongMenu`, tem 60 itens, e mora em
+`menubar-states.stories.*` nas cinco.** Fixado em 2026-09-19 por decisão da dona.
+Ela nasceu divergente na mesma semana em que foi criada — dois nomes
+(`LongMenu` em três stacks, `PanelScrolls` em duas) e três contagens (36, 40 e
+60) —, e o construtor de snippet acompanha (`menubarLongMenuSource`).
+
+O nome está escrito AQUI porque não estava em lugar nenhum: o PRD descrevia a
+decisão e não nomeava a story, então não havia âncora contra a qual a divergência
+reprovasse. O grupo da barra lateral sai do ARQUIVO e por isso já batia nas
+cinco; o NOME é o que o leitor compara entre stacks e o que vira `snippet_id` no
+`docs_code_copy` — divergente, ele parte a mesma série em duas. É a forma do
+`story_group_divergent` uma casa ao lado, e nenhum portão a via.
+
+**Sessenta é o número da medição que originou a D17**, e não um arredondamento:
+é com ele que o painel mede 1748px numa janela de 900. Contagem menor deixa a
+asserção valer por FOLGA em vez de por mecanismo — por isso as duas stacks que
+subiram a contagem replantaram o defeito para confirmar que a asserção ainda
+reprova.
 **A saída oposta foi recusada, com o motivo**: `overflow: visible` nas cinco
 alinharia ao vanilla e faria o achado sumir, mas trocaria um achado de
 ferramenta por um defeito real — menu longo transbordando a viewport, com parte

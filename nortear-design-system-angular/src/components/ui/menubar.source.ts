@@ -574,12 +574,18 @@ export function menubarEditorSource(): string {
 /**
  * Quantas ações o menu longo lista.
  *
- * Trinta e seis a ~32px de altura passam de mil pixels — mais alto que qualquer
- * viewport que a suíte abra, e é isso que faz o painel RECORTAR e rolar. Número
- * menor deixaria a story verde sem exercer o recorte, que é o assunto dela
- * (D17 do PRD do dropdown-menu).
+ * Sessenta a ~32px de altura passam de mil e novecentos pixels — mais alto que
+ * qualquer viewport que a suíte abra, e é isso que faz o painel RECORTAR e
+ * rolar. Número menor deixaria a story verde sem exercer o recorte, que é o
+ * assunto dela (D17 do PRD do dropdown-menu).
+ *
+ * Sessenta é o número da MEDIÇÃO que originou a D17 — "medido com 60 itens numa
+ * janela de 900px, nas quatro stacks de lib" — e é o mesmo nas cinco stacks
+ * desde 2026-09-19. Esta story nasceu com 36 aqui e 40 no vanilla, três
+ * contagens ao todo: comparar as cinco páginas deixava de responder alguma
+ * coisa, e a folga do recorte variava por stack sem que nada o dissesse.
  */
-export const LONG_MENU_ITEMS = 36;
+export const LONG_MENU_ITEMS = 60;
 
 /** Os rótulos do menu longo — a mesma lista que a story renderiza. */
 export const LONG_MENU_LABELS: readonly string[] = Array.from(

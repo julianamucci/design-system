@@ -9,7 +9,7 @@ import {
   menubarItemDisabledSource,
   menubarCheckboxCheckedSource,
   menubarCheckboxIndeterminateSource,
-  menubarPanelScrollsSource,
+  menubarLongMenuSource,
 } from './menubar.source';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -334,7 +334,7 @@ export const ControlledOpen: StoryObj<Record<string, never>> = {
   },
 };
 
-// ─── PanelScrolls ─────────────────────────────────────────────────────────────
+// ─── LongMenu ─────────────────────────────────────────────────────────────────
 //
 // D17 · O painel de menu ROLA, e a exceção do axe é DECLARADA.
 //
@@ -383,7 +383,7 @@ export const ControlledOpen: StoryObj<Record<string, never>> = {
  */
 const MENU_ROLAVEL_GUARDA = { id: 'scrollable-region-focusable', enabled: false } as const;
 
-export const PanelScrolls: Story = {
+export const LongMenu: Story = {
   args: { defaultValue: 'file', demonstration: 'long' },
   parameters: {
     // SEM `FOCUS_RULE_GUARDA`, e a ausência é medida: as outras stories deste
@@ -394,7 +394,7 @@ export const PanelScrolls: Story = {
     // com cara de cobertura, então esta story não a herda. A dívida das outras
     // quatro stories fica RELATADA, não varrida por conta própria.
     a11y: { config: { rules: axeRules(MENU_ROLAVEL_GUARDA) } },
-    docs: { source: { transform: menubarPanelScrollsSource } },
+    docs: { source: { transform: menubarLongMenuSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');

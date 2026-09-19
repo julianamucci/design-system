@@ -8,8 +8,8 @@ import {
   menubarItemCheckedSource,
   menubarItemDestructiveSource,
   menubarItemNeutralSource,
+  menubarLongMenuSource,
   menubarOpenSource,
-  menubarPanelScrollsSource,
   menubarSnippet,
   menubarSource,
   menubarSubmenuSource,
@@ -22,7 +22,7 @@ const ALL = [
   menubarItemNeutralSource,
   menubarItemDestructiveSource,
   menubarOpenSource,
-  menubarPanelScrollsSource,
+  menubarLongMenuSource,
   menubarItemDisabledSource,
   menubarItemCheckedSource,
   menubarSubmenuSource,
@@ -112,7 +112,7 @@ describe('variantes e estados', () => {
   });
 
   it('o menu longo publica os SESSENTA itens, e nenhuma prop de rolagem', () => {
-    const output = menubarPanelScrollsSource();
+    const output = menubarLongMenuSource();
     // O número é o da medição que fixou a D17, e o mesmo das outras stacks: se
     // a story e o snippet divergirem, o painel Code ensina um exemplo que não é
     // o que a página mostra.

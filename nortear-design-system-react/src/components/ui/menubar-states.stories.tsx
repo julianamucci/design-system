@@ -23,7 +23,7 @@ import {
   menubarControlledSource,
   menubarItemDisabledSource,
   menubarItemCheckedSource,
-  menubarPanelScrollsSource,
+  menubarLongMenuSource,
   menubarSource,
 } from "./menubar.source"
 import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbox-indicator"
@@ -506,7 +506,7 @@ export const ControlledOpen: Story = {
   },
 }
 
-// ─── PanelScrolls ─────────────────────────────────────────────────────────────
+// ─── LongMenu ─────────────────────────────────────────────────────────────────
 
 // Os itens do menu LONGO. São SESSENTA, o mesmo número da medição de 2026-09-18
 // que fixou a D17: com eles, numa janela de 900px, o painel desta stack recorta
@@ -542,13 +542,13 @@ const LONG_ITEMS = Array.from({ length: 60 }, (_, i) => `Ação ${i + 1}`)
  * lib que focasse com `preventScroll` — WCAG 2.4.11. Provado por plantio: sem a
  * tecla que move o foco, o passo reprova.
  */
-export const PanelScrolls: Story = {
+export const LongMenu: Story = {
   parameters: {
     // As mesmas duas regras das outras stories que terminam com menu aberto, e
     // nenhuma terceira: ver o bloco acima.
     a11y: AXE_WITH_MENU_OPEN,
     // O menu longo não é o do meta, e é a ALTURA dele que carrega a lição.
-    docs: { source: { transform: menubarPanelScrollsSource } },
+    docs: { source: { transform: menubarLongMenuSource } },
   },
   render: () => (
     <div className="nds-min-h-70" style={wrapperStyle}>
