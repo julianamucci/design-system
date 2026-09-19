@@ -259,7 +259,12 @@ interface AnalyticsEvents {
   dropdown_menu_close: {
     component: 'dropdown-menu';
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    // TRÊS palavras, e a quarta é exceção DECLARADA no portão
+    // (`FECHAMENTO_SEM_PALAVRA`, 2026-09-18): `close-button` não ocorre porque
+    // menu não tem controle de fechar (PRD do dropdown-menu §9). A premissa é
+    // mecânica — o tipo do COMPONENTE (`MenuCloseReason`) também não a declara;
+    // no dia em que declarar, a exceção cai e o evento volta a precisar dela.
+    reason: 'escape' | 'overlay' | 'api';
     location: string;
     label?: never;
   };
@@ -303,12 +308,14 @@ interface AnalyticsEvents {
   /**
    * `reason` no vocabulário da família (portão `reason_vocabulario_divergente`):
    * o ContextMenu fecha por `escape`, por clique fora ou Tab (`overlay`) ou pela escolha
-   * de um item (`api`) — não tem botão de fechar, mas o tipo carrega as quatro.
+   * de um item (`api`). São TRÊS palavras: menu não tem botão de fechar, e
+   * `close-button` é exceção declarada no portão desde 2026-09-18 — ver a nota
+   * do `dropdown_menu_close`.
    */
   context_menu_close: {
     component: 'context-menu';
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    reason: 'escape' | 'overlay' | 'api';
     location: string;
     label?: never;
   };
@@ -331,7 +338,9 @@ interface AnalyticsEvents {
   menubar_close: {
     component: 'menubar';
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    // TRÊS palavras, como nos dois irmãos — ver a nota do `dropdown_menu_close`.
+    // A passagem ao menu vizinho sai como `overlay`, "saiu sem decidir".
+    reason: 'escape' | 'overlay' | 'api';
     location: string;
     label?: never;
   };

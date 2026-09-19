@@ -3904,10 +3904,76 @@ const FECHAMENTO_SEM_REASON = {
   },
 };
 
+/**
+ * `*_close` que omite uma PALAVRA do vocabulário de propósito — com motivo e
+ * premissa conferida.
+ *
+ * A regra exigia as quatro palavras em TODO evento de fechamento, e a exigência
+ * tem razão de ser: o `reason` é dimensão do GA4, e união idêntica entre stacks
+ * e entre eventos é o que mantém a série comparável. Declarar só o que cada
+ * evento consegue emitir produziria cinco uniões ligeiramente diferentes, e a
+ * regra deixaria de distinguir "estreitado de propósito" de "esqueceram uma".
+ *
+ * Só que o efeito colateral era o inverso do que a regra quer: a família de
+ * menus declarava `close-button` nos três eventos de fechamento, nas cinco
+ * stacks, **sem ter controle de fechar**. O PRD (`dropdown-menu.md` §9) já dizia
+ * "`close-button` não ocorre — menu não tem controle de fechar", e chamava isso
+ * do que é: palavra sem comportamento atrás, que é a mesma dívida do
+ * comportamento sem palavra, do outro lado.
+ *
+ * Medido em 2026-09-18: tirar a palavra do tipo do evento fazia os três slugs
+ * reprovarem em `reason_vocabulario_divergente`. Ou seja, a regra OBRIGAVA a
+ * dívida que o PRD mandava pagar.
+ *
+ * A saída é a mesma que a regra já usa para o caso vizinho (`FECHAMENTO_SEM_REASON`):
+ * exceção declarada, e **a premissa é mecânica** — o tipo do COMPONENTE não
+ * pode declarar a palavra. Se o menu ganhar um controle de fechar, o tipo do
+ * componente ganha a palavra, a exceção cai e o evento volta a ter de declará-la.
+ * É o encaixe exato entre as duas camadas que a §7 #18 registrava como
+ * divergente.
+ *
+ * Contraste que prova que a premissa mede algo: `PopoverCloseReason` declara
+ * `close-button`, porque o popover TEM o botão. Os quatro tipos desta família
+ * declaram três palavras.
+ */
+const FECHAMENTO_SEM_PALAVRA = {
+  dropdown_menu_close: { palavras: ['close-button'], tipos: /^(?:Menu|DropdownMenu)CloseReason$/ },
+  context_menu_close: { palavras: ['close-button'], tipos: /^(?:Menu|ContextMenu)CloseReason$/ },
+  menubar_close: { palavras: ['close-button'], tipos: /^(?:Menu|Menubar)CloseReason$/ },
+};
+
+const MOTIVO_SEM_PALAVRA = 'menu não tem controle de fechar (PRD dropdown-menu §9); '
+  + 'a premissa é o tipo do componente não declarar a palavra';
+
 function auditVocabularioDeFechamento() {
   const violations = [];
   const canon = new Set(VOCABULARIO_DE_FECHAMENTO);
   const palavras = (union) => [...union.matchAll(/['"]([a-z-]+)['"]/g)].map((m) => m[1]);
+
+  // Premissa de cada exceção de PALAVRA: nenhum tipo de componente da família
+  // declara a palavra omitida. Conferida antes de usar — exceção cuja premissa
+  // caiu tem de reprovar, e não seguir calada.
+  const porTipo = coletarReasonPorTipo();
+  const omissaoValida = {};
+  for (const [evento, { palavras: omitidas, tipos }] of Object.entries(FECHAMENTO_SEM_PALAVRA)) {
+    const caiu = [];
+    for (const [nome, ocorrencias] of Object.entries(porTipo)) {
+      if (!tipos.test(nome)) continue;
+      for (const oc of ocorrencias) {
+        for (const p of omitidas) if (oc.palavras.includes(p)) caiu.push(`${nome} (${oc.file}:${oc.line})`);
+      }
+    }
+    if (caiu.length) {
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack: 'shared',
+        file: 'scripts/audit.mjs', rule: 'reason_vocabulario_divergente',
+        message: `a exceção de ${evento} em FECHAMENTO_SEM_PALAVRA caiu: ${caiu.join(', ')} `
+          + `declara ${omitidas.join(', ')} — o comportamento existe, então o evento tem de declarar a palavra`,
+      });
+      continue;
+    }
+    omissaoValida[evento] = new Set(omitidas);
+  }
   for (const [evento, { premissa }] of Object.entries(FECHAMENTO_SEM_REASON)) {
     if (premissa.presente.test(readFile(join(ROOT, premissa.arquivo)) || '')) continue;
     violations.push({
@@ -3950,7 +4016,23 @@ function auditVocabularioDeFechamento() {
       for (const { c: campo, i } of campos) {
         const ws = palavras(campo[2]);
         const fora = ws.filter((w) => !canon.has(w));
-        const faltam = VOCABULARIO_DE_FECHAMENTO.filter((w) => !ws.includes(w));
+        const omitivel = omissaoValida[evento];
+        const faltam = VOCABULARIO_DE_FECHAMENTO
+          .filter((w) => !ws.includes(w))
+          .filter((w) => !omitivel?.has(w));
+        // Declarar a palavra que a exceção diz não existir também reprova: a
+        // exceção é um CONTRATO nos dois sentidos, e sem esta metade ela seria
+        // só permissão — o evento poderia manter a palavra morta para sempre.
+        const sobram = omitivel ? [...omitivel].filter((w) => ws.includes(w)) : [];
+        if (sobram.length) {
+          violations.push({
+            category: 'analytics', severity: 'high', slug: '_infra', stack,
+            file: rel, line: i + 1, rule: 'reason_vocabulario_divergente',
+            message: `${evento}.reason declara ${sobram.join(', ')}, e FECHAMENTO_SEM_PALAVRA diz que `
+              + `não ocorre: ${MOTIVO_SEM_PALAVRA}. Palavra sem comportamento atrás é a mesma dívida `
+              + 'do comportamento sem palavra, do outro lado',
+          });
+        }
         if (campo[1] !== '?' && !fora.length && !faltam.length) continue;
         const partes = [];
         if (campo[1] === '?') partes.push('é opcional — campo que só parte das demos preenche é amostra enviesada');

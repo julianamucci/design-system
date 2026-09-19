@@ -272,7 +272,7 @@ interface AnalyticsEvents {
   dropdown_menu_close: {
     component: 'dropdown-menu';
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    reason: 'escape' | 'overlay' | 'api';
     location: string;
     label?: never;
   };
@@ -321,7 +321,7 @@ interface AnalyticsEvents {
   context_menu_close: {
     component: 'context-menu';
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    reason: 'escape' | 'overlay' | 'api';
     location: string;
     label?: never;
   };
@@ -344,7 +344,7 @@ interface AnalyticsEvents {
   menubar_close: {
     component: 'menubar';
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    reason: 'escape' | 'overlay' | 'api';
     location: string;
     label?: never;
   };
