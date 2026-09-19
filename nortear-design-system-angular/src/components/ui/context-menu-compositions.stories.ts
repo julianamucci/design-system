@@ -316,7 +316,7 @@ export const WithSubmenu: Story = {
     const subTrigger = () => document.querySelector<HTMLElement>('[data-testid="sub"]')!;
     const submenu = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
-    const painelRaiz = () =>
+    const rootPanel = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-content"]')!;
 
     await step('O sub-gatilho diz que abre um menu', async () => {
@@ -336,7 +336,7 @@ export const WithSubmenu: Story = {
       // redimensionamento e mudança de TAMANHO, e `transform` não muda nenhum
       // dos três. Medido na família em 2026-09-19: a deriva é da ordem de 1px,
       // a mesma distância que a asserção de alinhamento adiante precisa separar.
-      await waitForPousado(painelRaiz());
+      await waitForPousado(rootPanel());
       subTrigger().focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
@@ -399,7 +399,7 @@ export const WithSubmenu: Story = {
       // do outro, e com tolerância 1 a asserção passaria com o `-4` de volta.
       // Os DOIS painéis assentados: o pai porque é nele que o sub-gatilho mora,
       // o filho porque é ele que acabou de ser posicionado.
-      await waitForPousado(painelRaiz());
+      await waitForPousado(rootPanel());
       const panel = submenu()!;
       await waitForPousado(panel);
       const itemBox = panel

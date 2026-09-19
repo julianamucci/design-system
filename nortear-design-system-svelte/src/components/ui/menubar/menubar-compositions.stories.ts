@@ -108,12 +108,12 @@ const medirSubmenu = async (subTrigger: HTMLElement, submenu: HTMLElement) => {
   const item = submenu.querySelector<HTMLElement>(
     '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
   )!;
-  const gatilho = subTrigger.getBoundingClientRect();
-  const painel = submenu.getBoundingClientRect();
+  const triggerBox = subTrigger.getBoundingClientRect();
+  const panelBox = submenu.getBoundingClientRect();
   return {
-    deslocamentoDoItem: item.getBoundingClientRect().top - gatilho.top,
-    deslocamentoDaCaixa: painel.top - gatilho.top,
-    vaoLateral: painel.left - gatilho.right,
+    deslocamentoDoItem: item.getBoundingClientRect().top - triggerBox.top,
+    deslocamentoDaCaixa: panelBox.top - triggerBox.top,
+    vaoLateral: panelBox.left - triggerBox.right,
   };
 };
 
@@ -185,7 +185,7 @@ export const WithSubmenu: Story = {
     await assentarAnimacoes(menu);
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
-    await step('O sub-gatilho anuncia que abre outro menu', async () => {
+    await step('O sub-triggerBox anuncia que abre outro menu', async () => {
       await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger.getAttribute('data-slot')).toBe('menubar-sub-trigger');
     });
@@ -211,7 +211,7 @@ export const WithSubmenu: Story = {
       });
     };
 
-    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu e leva o foco ao primeiro item', async () => {
+    await step('Seta Baixo alcança o sub-triggerBox; Seta Direita abre o submenu e leva o foco ao primeiro item', async () => {
       // Idempotente: só navega e abre quando ainda está fechado. No replay ele
       // já está aberto pela seta do último passo, com o foco onde ela o deixou.
       if (subTrigger.getAttribute('aria-expanded') !== 'true') {
@@ -233,7 +233,7 @@ export const WithSubmenu: Story = {
       });
     });
 
-    await step('O submenu traz os próprios itens, com o painel desenhado', async () => {
+    await step('O submenu traz os próprios itens, com o panelBox desenhado', async () => {
       const submenu = body.getAllByRole('menu').find((m) => m !== menu)!;
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(EXPORTACOES.length);
       await expect(submenu.getAttribute('data-slot')).toBe('menubar-sub-content');
@@ -245,7 +245,7 @@ export const WithSubmenu: Story = {
       await expect(menu.contains(submenu)).toBe(false);
     });
 
-    await step('D15 · o submenu encosta no sub-gatilho e alinha o primeiro item com ele', async () => {
+    await step('D15 · o submenu encosta no sub-triggerBox e alinha o primeiro item com ele', async () => {
       const submenu = body.getAllByRole('menu').find((m) => m !== menu)!;
       const { deslocamentoDoItem, deslocamentoDaCaixa, vaoLateral } = await medirSubmenu(subTrigger, submenu);
       // D15 fixa o RESULTADO, não o número: o topo do PRIMEIRO ITEM do submenu
@@ -294,14 +294,14 @@ export const WithSubmenu: Story = {
       await expect(menu.isConnected).toBe(true);
     };
 
-    await step('A seta para a esquerda fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+    await step('A seta para a esquerda fecha só o submenu e devolve o foco ao sub-triggerBox', async () => {
       // O foco está no submenu porque a SETA o levou até lá, no primeiro passo.
       await expect(document.activeElement).toBe(firstSubItem());
       await userEvent.keyboard('{ArrowLeft}');
       await onlyBarMenuStaysOpen();
     });
 
-    await step('Escape no submenu fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+    await step('Escape no submenu fecha só o submenu e devolve o foco ao sub-triggerBox', async () => {
       // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
       // aberto. O bits fechava o menu da barra junto — um nível de volta custava
       // os dois (ver `dropdown-menu/sub-escape.ts`). O foco volta ao submenu

@@ -184,14 +184,14 @@ export const WithSubmenu: Story = {
     await waitForAnimationsDone(panel);
     const subTrigger = within(panel).getByRole('menuitem', { name: 'Exportar' });
 
-    await step('O sub-gatilho anuncia que abre outro menu', async () => {
+    await step('O sub-triggerBox anuncia que abre outro menu', async () => {
       await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger.getAttribute('data-slot')).toBe('menubar-sub-trigger');
     });
 
     const visibleMenus = () => within(document.body).queryAllByRole('menu');
 
-    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu e o foco ENTRA nele', async () => {
+    await step('Seta Baixo alcança o sub-triggerBox; Seta Direita abre o submenu e o foco ENTRA nele', async () => {
       // Precondição própria: o replay do painel Interactions reexecuta a play no
       // mesmo DOM, e a rodada anterior termina com o submenu aberto. O clique no
       // sub-gatilho aberto o fecha — e devolve o foco a ele.
@@ -245,7 +245,7 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step('O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele', async () => {
+    await step('O subpainel ENCOSTA no sub-triggerBox e alinha o primeiro item com ele', async () => {
       // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
       // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM alinha com o topo do
       // sub-gatilho que o abriu — não com a borda da caixa. Quem alinha é o
@@ -270,15 +270,15 @@ export const WithSubmenu: Story = {
       const submenu = visibleMenus()[1];
       await waitForAncorado(submenu);
       await waitForAnimationsDone(submenu);
-      const gatilho = subTrigger.getBoundingClientRect();
+      const triggerBox = subTrigger.getBoundingClientRect();
       const caixa = submenu.getBoundingClientRect();
       const item = within(submenu).getAllByRole('menuitem')[0].getBoundingClientRect();
       const diagnostico =
-        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
-        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
-        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
-      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
-      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
+        `vão lateral=${(caixa.left - triggerBox.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - triggerBox.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - triggerBox.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - triggerBox.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - triggerBox.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     // As duas saídas do submenu, que o `covers` de `functional.item5` prometia e
@@ -347,7 +347,7 @@ export const WithSubmenu: Story = {
       });
     });
 
-    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+    await step('Com o painel aberto, o triggerBox deslocado e a página rolada reposicionam o painel junto dele', async () => {
       // O painel do submenu mora no `body`; o sub-gatilho, no menu da barra, que
       // é ancorado por CSS dentro do canvas. Sem o acompanhamento de
       // `autoUpdateFloating` em `@/lib/submenu`, o submenu ficava onde abriu
@@ -462,7 +462,7 @@ export const NestedSubmenu: Story = {
       await expect(exportTrigger.getAttribute('aria-owns')).toBe(null);
     });
 
-    await step('Escolher no nível mais fundo fecha a barra INTEIRA e volta ao gatilho', async () => {
+    await step('Escolher no nível mais fundo fecha a barra INTEIRA e volta ao triggerBox', async () => {
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(async () => {
         await expect(document.activeElement).toBe(formatTrigger());

@@ -210,14 +210,14 @@ export const WithSubmenu: Story = {
     const [fileTrigger] = within(within(canvasElement).getByRole("menubar")).getAllByRole("menuitem")
     const submenuPanel = () => body.queryAllByRole("menu").find((m) => m !== menu)
 
-    await step("O sub-gatilho anuncia que abre outro menu", async () => {
+    await step("O sub-triggerBox anuncia que abre outro menu", async () => {
       await expect(subTrigger.getAttribute("aria-haspopup")).toBe("menu")
       await expect(subTrigger.getAttribute("data-slot")).toBe(
         "menubar-sub-trigger"
       )
     })
 
-    await step("Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu", async () => {
+    await step("Seta Baixo alcança o sub-triggerBox; Seta Direita abre o submenu", async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
       if (subTrigger.getAttribute("aria-expanded") !== "true") {
         // Quantas setas até o sub-gatilho depende de onde a lib deixou o
@@ -248,7 +248,7 @@ export const WithSubmenu: Story = {
       })
     })
 
-    await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {
+    await step("O sub-triggerBox APONTA o painel do submenu na árvore de acessibilidade", async () => {
       // §8 do PRD: o painel do submenu vive num portal, fora da árvore do
       // sub-gatilho. Nesta stack quem escreve a ligação é a lib, com
       // `aria-controls` — o vanilla e o angular decidem à mão e usam
@@ -273,7 +273,7 @@ export const WithSubmenu: Story = {
       )
     })
 
-    await step("O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele", async () => {
+    await step("O subpainel ENCOSTA no sub-triggerBox e alinha o primeiro item com ele", async () => {
       // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
       // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM do submenu alinha com
       // o topo do sub-gatilho que o abriu — não com a borda da caixa. Quem
@@ -304,15 +304,15 @@ export const WithSubmenu: Story = {
       await Promise.all(
         panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined))
       )
-      const gatilho = subTrigger.getBoundingClientRect()
+      const triggerBox = subTrigger.getBoundingClientRect()
       const caixa = panel.getBoundingClientRect()
       const item = within(panel).getAllByRole("menuitem")[0].getBoundingClientRect()
       const diagnostico =
-        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
-        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
-        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`
-      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75)
-      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75)
+        `vão lateral=${(caixa.left - triggerBox.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - triggerBox.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - triggerBox.top).toFixed(2)} (esperado 0)`
+      await expect(Math.abs(caixa.left - triggerBox.right), diagnostico).toBeLessThanOrEqual(0.75)
+      await expect(Math.abs(item.top - triggerBox.top), diagnostico).toBeLessThanOrEqual(0.75)
     })
 
     /** Só o submenu fechou: o foco no sub-gatilho, e o menu da barra é o MESMO nó, aberto. */
@@ -334,7 +334,7 @@ export const WithSubmenu: Story = {
       await expect(fileTrigger.getAttribute("aria-expanded")).toBe("true")
     }
 
-    await step("A seta para a esquerda fecha só o submenu e devolve o foco ao sub-gatilho", async () => {
+    await step("A seta para a esquerda fecha só o submenu e devolve o foco ao sub-triggerBox", async () => {
       await userEvent.keyboard("{ArrowLeft}")
       await onlySubmenuClosed()
     })

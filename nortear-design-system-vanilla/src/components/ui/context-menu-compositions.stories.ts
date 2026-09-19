@@ -304,7 +304,7 @@ export const WithSubmenu: Story = {
     const submenu = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
 
-    await step('O sub-gatilho diz que abre um menu', async () => {
+    await step('O sub-triggerBox diz que abre um menu', async () => {
       await gestoOpen(area());
       await expect(subTrigger().getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger().getAttribute('aria-expanded')).toBe('false');
@@ -335,7 +335,7 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step('E o foco ENTRA no submenu, no primeiro item dele', async () => {
+    await step('E o foco ENTRA no submenu, no firstItemBox item dele', async () => {
       // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
       // não percorre: o percurso do teclado é o do painel que tem o foco.
       await expect(document.activeElement).toBe(
@@ -343,7 +343,7 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step('Com o foco lá dentro, o sub-gatilho continua destacado', async () => {
+    await step('Com o foco lá dentro, o sub-triggerBox continua destacado', async () => {
       // O destaque do sub-gatilho vinha só do `:focus`, e sumia no passo em que
       // o foco entra no painel filho — a pessoa perdia de vista de onde ele
       // saiu. Quem o segura agora é o `data-state="open"`, que a folha lê. A
@@ -354,7 +354,7 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step('O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele', async () => {
+    await step('O subpainel ENCOSTA no sub-triggerBox e alinha o firstItemBox item com ele', async () => {
       // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
       // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM alinha com o topo do
       // sub-gatilho que o abriu — não com a borda da caixa. Quem alinha é o
@@ -378,17 +378,17 @@ export const WithSubmenu: Story = {
       const panel = submenu()!;
       await waitForAncorado(panel);
       await waitForAnimationsDone(panel);
-      const gatilho = subTrigger().getBoundingClientRect();
+      const triggerBox = subTrigger().getBoundingClientRect();
       const caixa = panel.getBoundingClientRect();
-      const primeiro = panel
+      const firstItemBox = panel
         .querySelector<HTMLElement>('[data-slot="context-menu-item"]')!
         .getBoundingClientRect();
       const diagnostico =
-        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
-        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
-        `topo do 1º item=${(primeiro.top - gatilho.top).toFixed(2)} (esperado 0)`;
-      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
-      await expect(Math.abs(primeiro.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
+        `vão lateral=${(caixa.left - triggerBox.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - triggerBox.top).toFixed(2)} · ` +
+        `topo do 1º item=${(firstItemBox.top - triggerBox.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - triggerBox.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(firstItemBox.top - triggerBox.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     await step('O submenu cresce a partir do item, não do meio', async () => {
@@ -400,14 +400,14 @@ export const WithSubmenu: Story = {
       await expect(ox).toBeLessThan(panel.offsetWidth / 4);
     });
 
-    await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
+    await step('Seta esquerda fecha o submenu e devolve o foco ao sub-triggerBox', async () => {
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('false'));
       await expect(document.activeElement).toBe(subTrigger());
       await expect(subTrigger().getAttribute('data-state')).toBe('closed');
     });
 
-    await step('Escape no submenu fecha SÓ o submenu e devolve o foco ao sub-gatilho', async () => {
+    await step('Escape no submenu fecha SÓ o submenu e devolve o foco ao sub-triggerBox', async () => {
       // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
       // aberto (C5 do PRD). Fechar a árvore inteira custaria os dois níveis por
       // um, e a pessoa recomeçaria do clique direito.
@@ -434,7 +434,7 @@ export const WithSubmenu: Story = {
       await waitFor(() => expect(submenu()).not.toBeNull());
     });
 
-    await step('Com o painel aberto, o gatilho deslocado e a página rolada reposicionam o painel junto dele', async () => {
+    await step('Com o painel aberto, o triggerBox deslocado e a página rolada reposicionam o painel junto dele', async () => {
       // O menu raiz é ancorado num PONTO e não acompanha nada — ponto não se
       // move. O submenu é ancorado no ITEM, e é ele que tem de seguir: quem se
       // desloca aqui é o próprio sub-gatilho, porque o painel raiz que o contém

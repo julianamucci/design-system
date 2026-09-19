@@ -380,7 +380,7 @@ export const WithSubmenu: Story = {
     await waitForAnimationsDone(menu);
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
-    await step('O sub-gatilho anuncia que abre um menu, e que está fechado', async () => {
+    await step('O sub-triggerBox anuncia que abre um menu, e que está fechado', async () => {
       await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
       // Fechado, não há painel para apontar — `aria-owns` só existe enquanto o
@@ -426,7 +426,7 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step('O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele', async () => {
+    await step('O subpainel ENCOSTA no sub-triggerBox e alinha o primeiro item com ele', async () => {
       // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
       // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM alinha com o topo do
       // sub-gatilho que o abriu — não com a borda da caixa. Quem alinha é o
@@ -461,15 +461,15 @@ export const WithSubmenu: Story = {
       const panel = body.getAllByRole('menu')[1];
       await waitForAncorado(panel);
       await waitForAnimationsDone(panel);
-      const gatilho = subTrigger.getBoundingClientRect();
+      const triggerBox = subTrigger.getBoundingClientRect();
       const caixa = panel.getBoundingClientRect();
       const item = within(panel).getAllByRole('menuitem')[0].getBoundingClientRect();
       const diagnostico =
-        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
-        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
-        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
-      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
-      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
+        `vão lateral=${(caixa.left - triggerBox.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - triggerBox.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - triggerBox.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - triggerBox.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - triggerBox.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     await step('A seta para a esquerda fecha o submenu e devolve o foco', async () => {

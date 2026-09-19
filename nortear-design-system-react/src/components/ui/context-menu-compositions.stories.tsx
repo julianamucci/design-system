@@ -349,7 +349,7 @@ export const WithSubmenu: Story = {
     const submenu = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
 
-    await step("O sub-gatilho diz que abre um menu", async () => {
+    await step("O sub-triggerBox diz que abre um menu", async () => {
       await gestoOpen(area());
       await expect(target("sub").getAttribute("aria-haspopup")).toBe("menu");
       await expect(target("sub").getAttribute("aria-expanded")).toBe("false");
@@ -379,7 +379,7 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step("O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele", async () => {
+    await step("O subpainel ENCOSTA no sub-triggerBox e alinha o primeiro item com ele", async () => {
       // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
       // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM do submenu alinha com
       // o topo do sub-gatilho que o abriu — não com a borda da caixa. Quem
@@ -409,18 +409,18 @@ export const WithSubmenu: Story = {
       await Promise.all(
         panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined)),
       );
-      const gatilho = target("sub").getBoundingClientRect();
+      const triggerBox = target("sub").getBoundingClientRect();
       const caixa = panel.getBoundingClientRect();
       const item = target("por-email").getBoundingClientRect();
       const diagnostico =
-        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
-        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
-        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
-      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
-      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
+        `vão lateral=${(caixa.left - triggerBox.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - triggerBox.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - triggerBox.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - triggerBox.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - triggerBox.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
-    await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {
+    await step("O sub-triggerBox APONTA o painel do submenu na árvore de acessibilidade", async () => {
       // §8 do PRD: o painel do submenu vive num portal, fora da árvore do
       // sub-gatilho, e é a ligação entre os dois que faz o leitor de tela dizer
       // a que menu aquele item leva. Nesta stack quem a escreve é a lib, com
@@ -434,13 +434,13 @@ export const WithSubmenu: Story = {
       await expect(document.getElementById(controls!)).toBe(panel);
     });
 
-    await step("Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho", async () => {
+    await step("Seta esquerda fecha o submenu e devolve o foco ao sub-triggerBox", async () => {
       await userEvent.keyboard("{ArrowLeft}");
       await waitFor(() => expect(target("sub").getAttribute("aria-expanded")).toBe("false"));
       await expect(document.activeElement).toBe(target("sub"));
     });
 
-    await step("Escape no submenu fecha só o submenu e devolve o foco ao sub-gatilho", async () => {
+    await step("Escape no submenu fecha só o submenu e devolve o foco ao sub-triggerBox", async () => {
       // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
       // aberto. Fechar a árvore inteira faria um nível de volta custar os dois,
       // e a pessoa recomeçaria do clique direito.

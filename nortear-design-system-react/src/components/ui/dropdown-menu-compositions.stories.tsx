@@ -340,7 +340,7 @@ export const WithSubmenu: Story = {
     const menu = await waitForPortal("menu");
     const subTrigger = within(menu).getByRole("menuitem", { name: "Exportar" });
 
-    await step("O sub-gatilho anuncia que abre um menu", async () => {
+    await step("O sub-triggerBox anuncia que abre um menu", async () => {
       await expect(subTrigger).toHaveAttribute("aria-haspopup", "menu");
       await expect(subTrigger).toHaveAttribute("aria-expanded", "false");
     });
@@ -365,7 +365,7 @@ export const WithSubmenu: Story = {
       });
     });
 
-    await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {
+    await step("O sub-triggerBox APONTA o painel do submenu na árvore de acessibilidade", async () => {
       // §8 do PRD: o painel do submenu vive num portal, fora da árvore do
       // sub-gatilho, e a ligação entre os dois é o que faz o leitor de tela
       // dizer a que menu aquele item leva. Nesta stack quem escreve a ligação é
@@ -395,7 +395,7 @@ export const WithSubmenu: Story = {
       });
     });
 
-    await step("O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele", async () => {
+    await step("O subpainel ENCOSTA no sub-triggerBox e alinha o primeiro item com ele", async () => {
       // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
       // subpainel, e o TOPO DO PRIMEIRO ITEM alinha com o topo do sub-gatilho
       // que o abriu — não com a borda da caixa. Quem alinha é o item, que é o
@@ -435,15 +435,15 @@ export const WithSubmenu: Story = {
       await Promise.all(
         panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined)),
       );
-      const gatilho = subTrigger.getBoundingClientRect();
+      const triggerBox = subTrigger.getBoundingClientRect();
       const caixa = panel.getBoundingClientRect();
       const item = within(panel).getAllByRole("menuitem")[0].getBoundingClientRect();
       const diagnostico =
-        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
-        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
-        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
-      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
-      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
+        `vão lateral=${(caixa.left - triggerBox.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - triggerBox.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - triggerBox.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - triggerBox.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - triggerBox.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     /** Só o submenu fechou: o foco no sub-gatilho, e o raiz é o MESMO nó, aberto. */
@@ -462,7 +462,7 @@ export const WithSubmenu: Story = {
       await expect(menus[0]).toBe(menu);
     };
 
-    await step("A seta para a esquerda fecha só o submenu e devolve o foco ao sub-gatilho", async () => {
+    await step("A seta para a esquerda fecha só o submenu e devolve o foco ao sub-triggerBox", async () => {
       await userEvent.keyboard("{ArrowLeft}");
       await onlySubmenuClosed();
     });

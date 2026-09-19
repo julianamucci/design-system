@@ -93,12 +93,12 @@ const medirSubmenu = async (subTrigger: HTMLElement, submenu: HTMLElement) => {
   const item = submenu.querySelector<HTMLElement>(
     '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
   )!;
-  const gatilho = subTrigger.getBoundingClientRect();
-  const painel = submenu.getBoundingClientRect();
+  const triggerBox = subTrigger.getBoundingClientRect();
+  const panelBox = submenu.getBoundingClientRect();
   return {
-    deslocamentoDoItem: item.getBoundingClientRect().top - gatilho.top,
-    deslocamentoDaCaixa: painel.top - gatilho.top,
-    vaoLateral: painel.left - gatilho.right,
+    deslocamentoDoItem: item.getBoundingClientRect().top - triggerBox.top,
+    deslocamentoDaCaixa: panelBox.top - triggerBox.top,
+    vaoLateral: panelBox.left - triggerBox.right,
   };
 };
 
@@ -302,7 +302,7 @@ export const WithSubmenu: Story = {
     const rootPanel = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-content"]');
 
-    await step('O sub-gatilho diz que abre um menu', async () => {
+    await step('O sub-triggerBox diz que abre um menu', async () => {
       await gestoOpen(area());
       // O painel PAI assenta ANTES de qualquer submenu abrir — ver
       // `assentarAnimacoes`. Aqui, e não junto da medida: o que estraga a medida
@@ -327,7 +327,7 @@ export const WithSubmenu: Story = {
       await waitFor(() => expect(document.activeElement).toBe(target('share-email')));
     });
 
-    await step('D15 · o submenu encosta no sub-gatilho e alinha o primeiro item com ele', async () => {
+    await step('D15 · o submenu encosta no sub-triggerBox e alinha o primeiro item com ele', async () => {
       const { deslocamentoDoItem, deslocamentoDaCaixa, vaoLateral } = await medirSubmenu(target('sub'), submenu()!);
       // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
       // um `side` errado quebraria sem nenhum aviso. E a medida é DIRETA, depois
@@ -358,13 +358,13 @@ export const WithSubmenu: Story = {
       await expect(Math.abs(deslocamentoDaCaixa + 5)).toBeLessThanOrEqual(0.75);
     });
 
-    await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
+    await step('Seta esquerda fecha o submenu e devolve o foco ao sub-triggerBox', async () => {
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(() => expect(target('sub').getAttribute('aria-expanded')).toBe('false'));
       await expect(document.activeElement).toBe(target('sub'));
     });
 
-    await step('Escape no submenu fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+    await step('Escape no submenu fecha só o submenu e devolve o foco ao sub-triggerBox', async () => {
       // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
       // aberto. O bits fechava a árvore inteira — um nível de volta custava os
       // dois, e a pessoa recomeçava do clique direito (ver `context.ts`).

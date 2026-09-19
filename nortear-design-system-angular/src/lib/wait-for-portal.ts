@@ -113,15 +113,15 @@ export async function waitForPousado(panel: HTMLElement, timeout = 3000): Promis
   );
 
   const limite = Date.now() + timeout;
-  let anterior = '';
+  let previous = '';
   while (Date.now() < limite) {
     await new Promise((resolve) => setTimeout(resolve, 25));
     const caixa = panel.getBoundingClientRect();
     const atual = `${caixa.top}|${caixa.left}|${caixa.width}`;
-    if (atual === anterior && caixa.width > 0) return;
-    anterior = atual;
+    if (atual === previous && caixa.width > 0) return;
+    previous = atual;
   }
-  throw new Error(`o painel não assentou em ${timeout}ms: a caixa ainda muda (${anterior})`);
+  throw new Error(`o painel não assentou em ${timeout}ms: a caixa ainda muda (${previous})`);
 }
 
 /** Espera o portal sumir — para provar Escape, clique fora e seleção de item. */
