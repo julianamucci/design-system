@@ -10,7 +10,7 @@ import {
   contextMenuWithShortcutSource,
   contextMenuWithSubmenuSource,
 } from './context-menu.source';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, waitForPousado } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 import { formaDoIndicador } from '@shared/testing/menu-checkbox-indicator';
 
@@ -316,6 +316,8 @@ export const WithSubmenu: Story = {
     const subTrigger = () => document.querySelector<HTMLElement>('[data-testid="sub"]')!;
     const submenu = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
+    const painelRaiz = () =>
+      document.querySelector<HTMLElement>('[data-slot="context-menu-content"]')!;
 
     await step('O sub-gatilho diz que abre um menu', async () => {
       await gestoOpen(area());
@@ -327,6 +329,14 @@ export const WithSubmenu: Story = {
     });
 
     await step('Seta direita abre o submenu, ao lado do item que o dispara', async () => {
+      // O painel PAI assenta ANTES de o submenu abrir. O painel entra com
+      // `translateY` + `scale(0.98)`, e o sub-gatilho mora DENTRO dele: abrir no
+      // meio da animação ancora o subpainel contra um item em movimento, e ele
+      // fica lá — o observador de reposicionamento acompanha rolagem,
+      // redimensionamento e mudança de TAMANHO, e `transform` não muda nenhum
+      // dos três. Medido na família em 2026-09-19: a deriva é da ordem de 1px,
+      // a mesma distância que a asserção de alinhamento adiante precisa separar.
+      await waitForPousado(painelRaiz());
       subTrigger().focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
@@ -368,6 +378,49 @@ export const WithSubmenu: Story = {
       // Com o foco lá dentro, o sub-gatilho segue destacado: é ele que diz de
       // onde o painel saiu.
       await expect(subTrigger().hasAttribute('data-popup-open')).toBe(true);
+    });
+
+    await step('O primeiro item do submenu alinha com o SUB-GATILHO que o abriu', async () => {
+      // O RESULTADO que a D15 fixa — e ele vale para o SUBMENU, não para o
+      // painel de topo, que nasce no ponteiro com `0`/`0` e não tem gatilho com
+      // que se alinhar.
+      //
+      // Medir o ITEM, e não a caixa, é o que dá dentes: uma asserção sobre o
+      // topo do painel passaria com `alignOffset: 0`, que é o que a lib faz
+      // sozinha. Os números, medidos em 2026-09-19 com o painel assentado:
+      //
+      //     alignOffset  0 → +5,00   -3 → +2,00   -4 → +1,00   -5 → 0,00   -6 → -1,00
+      //
+      // O `-4` que a primeira versão da D15 mandava aplicar deixa o item 1px
+      // abaixo do gatilho: a derivação era o `--spacing-1` de padding do painel
+      // e esquecia o `border: 1px` que vem junto. São 5px, não 4.
+      //
+      // Tolerância 0,75, e não 1: os dois candidatos ficam a exatamente 1px um
+      // do outro, e com tolerância 1 a asserção passaria com o `-4` de volta.
+      // Os DOIS painéis assentados: o pai porque é nele que o sub-gatilho mora,
+      // o filho porque é ele que acabou de ser posicionado.
+      await waitForPousado(painelRaiz());
+      const panel = submenu()!;
+      await waitForPousado(panel);
+      const itemBox = panel
+        .querySelector<HTMLElement>('[data-slot="context-menu-item"]')!
+        .getBoundingClientRect();
+      const triggerBox = subTrigger().getBoundingClientRect();
+      await expect(
+        Math.abs(itemBox.top - triggerBox.top),
+        `1º item em ${itemBox.top.toFixed(2)}, sub-gatilho em ${triggerBox.top.toFixed(2)}` +
+          ` · caixa do painel a ${(panel.getBoundingClientRect().top - triggerBox.top).toFixed(2)}`,
+      ).toBeLessThanOrEqual(0.75);
+
+      // A outra metade da D15, e a âncora é o SUB-GATILHO, não a borda do painel
+      // pai: `sideOffset: 0` encosta o subpainel no item que o abriu. O passo de
+      // abertura compara o painel com a ESQUERDA do sub-gatilho, que passa com
+      // qualquer vão; esta linha é a que tem dentes.
+      await expect(
+        Math.abs(panel.getBoundingClientRect().left - triggerBox.right),
+        `painel a ${panel.getBoundingClientRect().left.toFixed(2)}, ` +
+          `borda direita do sub-gatilho em ${triggerBox.right.toFixed(2)}`,
+      ).toBeLessThanOrEqual(0.75);
     });
 
     await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {

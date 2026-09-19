@@ -49,17 +49,33 @@ const DEFAULT_SIDE_OFFSET = 0;
 /**
  * Vão do submenu no eixo do ALINHAMENTO, em px — a outra metade da D15.
  *
- * `-4` é exatamente o `--spacing-1` de padding do painel, e é ele que faz o
- * PRIMEIRO ITEM do submenu alinhar com o sub-gatilho que o abriu, em vez de
- * alinhar com a borda da caixa — que é meio item acima. Sem ele o subpainel
- * nasce sempre 4px baixo demais, e a relação que a seta do gatilho promete fica
- * um degrau fora.
+ * O que a D15 fixa é um RESULTADO, não um número: o TOPO DO PRIMEIRO ITEM do
+ * submenu alinha com o topo do sub-gatilho que o abriu, e não com a borda da
+ * caixa — que é meio item acima. Cada stack mede o número que produz esse
+ * resultado, porque cada uma parte de uma linha de base diferente.
+ *
+ * Aqui a linha de base é NOSSA, e por isso ela é conhecida: `positionFloating`
+ * com `align: 'start'` ancora a BORDA da caixa do painel no topo do gatilho
+ * (`top = anchor.top`), e do topo do painel ao topo do primeiro item há
+ * `border: 1px` MAIS `padding: var(--spacing-1)` de `.nds-dropdown-menu-content`
+ * — **5px, não 4**. Medido em 2026-09-19 nos três membros, dígito a dígito
+ * iguais entre eles:
+ *
+ *   alignOffset   topo do painel − topo do gatilho   topo do 1º item − idem
+ *        0                   0,00                          +5,00
+ *       -2                  -2,00                          +3,00
+ *       -4                  -4,00                          +1,00
+ *       -5                  -5,00                           0,00  ← alinhado
+ *
+ * O `-4` que esteve aqui até 2026-09-19 derivava só do `--spacing-1` e
+ * ESQUECIA a borda: ele deixava o item 1px abaixo do gatilho, perto o bastante
+ * para ninguém ver e longe o bastante para não ser o desenho pedido.
  *
  * Constante, e não opção: o número é de design system (a mesma leitura da D12,
  * que fixou o vão do Menubar em 8 e o do DropdownMenu em 4), e os três menus
  * desta stack desenham o mesmo submenu.
  */
-const ALIGN_OFFSET = -4;
+const ALIGN_OFFSET = -5;
 
 /**
  * A ORIGEM do zoom de entrada é a borda que encosta no item, na altura do item:

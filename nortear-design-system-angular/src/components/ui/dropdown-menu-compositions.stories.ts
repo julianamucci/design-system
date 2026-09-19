@@ -10,7 +10,7 @@ import {
   dropdownMenuWithSubmenuSource,
 } from './dropdown-menu.source';
 import { NdsButton } from './button';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
@@ -317,6 +317,18 @@ export const WithSubmenu: Story = {
     });
 
     await step('A seta para a direita abre o submenu e o foco ENTRA nele', async () => {
+      // O painel PAI assenta ANTES de o submenu abrir, e isto não é zelo.
+      // `waitForPortal` libera com `opacity >= 0.9`, e nesse ponto o
+      // `translateY` + `scale(0.98)` da entrada ainda corre: o sub-gatilho mora
+      // dentro do pai, então abrir aqui ancora o subpainel contra um item EM
+      // MOVIMENTO — e ele fica lá, porque o observador de reposicionamento
+      // acompanha rolagem, redimensionamento e mudança de TAMANHO, e `transform`
+      // não muda nenhum dos três. Medida na família em 2026-09-19, a deriva é da
+      // ordem de 1px, que é exatamente a distância que a asserção de
+      // alinhamento abaixo precisa separar: sem esta espera ela reprova em
+      // rodadas arbitrárias e passa com defeito em outras.
+      await waitForPousado(menu);
+
       // Sem guarda de idempotência: com o submenu já aberto, a mesma seta ainda
       // tem de levar o foco para dentro — é o caso que a lib não cobre sozinha.
       subTrigger.focus();
@@ -355,6 +367,56 @@ export const WithSubmenu: Story = {
           menu.getBoundingClientRect().right - 8,
         );
       });
+    });
+
+    await step('O primeiro item do submenu alinha com o SUB-GATILHO que o abriu', async () => {
+      // O RESULTADO que a D15 fixa, e ele é o que a pessoa vê: o topo do
+      // primeiro item do submenu no topo do sub-gatilho, não o topo da CAIXA.
+      //
+      // Medir o ITEM é o que dá dentes. Uma asserção sobre o topo do painel
+      // passaria com `alignOffset: 0`, que é o que a lib faz sozinha.
+      //
+      // Os números, medidos em 2026-09-19 nesta story, com o painel assentado:
+      //
+      //     alignOffset  0 → +5,00   -3 → +2,00   -4 → +1,00   -5 → 0,00   -6 → -1,00
+      //
+      // O `-4` que a primeira versão da D15 mandava aplicar deixa o item 1px
+      // abaixo do gatilho: a derivação dela era o `--spacing-1` de padding do
+      // painel e esquecia o `border: 1px` que vem junto. São 5px, não 4.
+      //
+      // A tolerância é 0,75 e não 1: os dois candidatos ficam a exatamente 1px
+      // um do outro, e com tolerância 1 a asserção não os separa — passaria com
+      // o `-4` de volta, que é o defeito que ela existe para pegar.
+      //
+      // E a espera é `waitForPousado`, NÃO um `waitFor` em volta da medida: o
+      // `waitFor` fecha no primeiro quadro em que a conta cabe na tolerância, e
+      // isso acontece ANTES de a lib posicionar. Ver o porquê medido lá.
+      // Os DOIS painéis assentados: o pai porque é nele que o sub-gatilho mora,
+      // o filho porque é ele que acabou de ser posicionado.
+      await waitForPousado(menu);
+      const panel = submenu()!;
+      await waitForPousado(panel);
+      const itemBox = firstSubItem()!.getBoundingClientRect();
+      const triggerBox = subTrigger.getBoundingClientRect();
+      await expect(
+        Math.abs(itemBox.top - triggerBox.top),
+        `1º item em ${itemBox.top.toFixed(2)}, sub-gatilho em ${triggerBox.top.toFixed(2)}` +
+          ` · caixa do painel a ${(panel.getBoundingClientRect().top - triggerBox.top).toFixed(2)}`,
+      ).toBeLessThanOrEqual(0.75);
+
+      // A outra metade da D15, e a âncora é o SUB-GATILHO, não a borda do painel
+      // pai: `sideOffset: 0` encosta o subpainel no item que o abriu. Medido, a
+      // esquerda do subpainel cai 5px à ESQUERDA da borda direita do pai — que é
+      // exatamente o recuo do gatilho (1px de borda + `--spacing-1` de padding).
+      // Cobrar contra a borda do PAI cobraria -5 e acusaria o número certo.
+      //
+      // O passo anterior já compara com o pai, mas com folga de 8px: ele passa
+      // com `sideOffset: 8`. Esta linha é a que tem dentes.
+      await expect(
+        Math.abs(panel.getBoundingClientRect().left - triggerBox.right),
+        `painel a ${panel.getBoundingClientRect().left.toFixed(2)}, ` +
+          `borda direita do sub-gatilho em ${triggerBox.right.toFixed(2)}`,
+      ).toBeLessThanOrEqual(0.75);
     });
 
     await step('Seta esquerda fecha SÓ o submenu e devolve o foco ao sub-gatilho', async () => {

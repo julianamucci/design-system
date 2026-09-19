@@ -295,13 +295,22 @@ function ContextMenuSubTrigger({
  * Vão do SUBMENU — D15, e é outro número que o do painel raiz logo acima.
  *
  * O submenu não nasce no ponteiro: ele é ancorado no SUB-GATILHO, como em
- * qualquer menu da família. Daí `alignOffset: -4`, o `--spacing-1` de padding do
- * painel, que alinha o primeiro item do submenu com o sub-gatilho que o abriu —
- * o mesmo valor que `DropdownMenuSubContent` declara para os outros dois
- * membros. Herdar o `0` do raiz alinharia pela borda da caixa.
+ * qualquer menu da família, e o que a D15 decide é o DESENHO — o topo do
+ * primeiro item alinha com o topo do sub-gatilho. Herdar o `0` do raiz alinharia
+ * pela borda da caixa, 5px abaixo.
+ *
+ * `-5` é o número MEDIDO nesta lib (2026-09-19), e ele é o mesmo que
+ * `DropdownMenuSubContent` declara para os outros dois membros: a base-ui ancora
+ * a borda do painel no topo do sub-gatilho, e do topo do painel ao topo do
+ * primeiro item há `border: 1px` + `padding: var(--spacing-1)` = 5px. A tabela
+ * de medição, com os quatro valores testados neste mesmo componente, está no
+ * docblock de `DropdownMenuSubContent`.
+ *
+ * **O `-4` que estava aqui deixava o item 1px acima do sub-gatilho** — vinha da
+ * primeira versão da D15, que derivou o número só do padding e esqueceu a borda.
  */
 function ContextMenuSubContent({
-  alignOffset = -4,
+  alignOffset = -5,
   ...props
 }: React.ComponentProps<typeof ContextMenuContent>) {
   return (

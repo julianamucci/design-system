@@ -315,13 +315,23 @@ export class NdsDropdownMenu implements NdsSubmenuPanel {
     () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 4),
   );
 
-  // -4px são o `--spacing-1` de padding do painel pai, devolvido: é ele que faz
-  // o primeiro item do submenu alinhar com o SUB-GATILHO que o abriu, em vez de
-  // alinhar com a borda da caixa. Valor de design system, não da lib (D15 do PRD
-  // do dropdown-menu, decisão da dona em 2026-09-18) — até essa data era -3, que
-  // não saía de token nenhum.
+  // -5px é o recuo do topo do painel até o topo do primeiro item: 1px de borda
+  // MAIS o `--spacing-1` de padding (`dropdown-menu.css`). Devolvido aqui, é ele
+  // que faz o primeiro item do submenu alinhar com o SUB-GATILHO que o abriu, em
+  // vez de alinhar com a borda da caixa — que é o RESULTADO que a D15 fixa.
+  //
+  // O número é medido, não derivado: o radix-ng ancora a CAIXA DE BORDA do
+  // painel no topo do sub-gatilho, então o deslocamento entra sem resíduo.
+  // Medido em 2026-09-19, na `Compositions/WithSubmenu`, topo do 1º item menos
+  // topo do sub-gatilho, depois de o painel assentar:
+  //
+  //     alignOffset  0 → +5,00   -3 → +2,00   -4 → +1,00   -5 → 0,00   -6 → -1,00
+  //
+  // Os mesmos dígitos nos três membros da família. O `-4` que a primeira versão
+  // da D15 mandava aplicar deixa o item 1px ABAIXO do gatilho, porque a
+  // derivação dela contava o padding e esquecia a borda.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -4 : 0),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -5 : 0),
   );
 }
 

@@ -547,10 +547,73 @@ verificou, porque a decisão vinha escrita como número. **Decisão escrita como
 valor se aplica; decisão escrita como resultado se MEDE** — e só a segunda forma
 tem como reprovar.
 
-Cada stack mede o deslocamento real e escolhe o valor que alinha, com asserção
-que reprova se desalinhar. Hoje: vue `0`/`0`, medido e afirmado (dentes provados
-— `alignOffset: −4` reprova, `sideOffset: 8` reprova). As outras quatro estão com
-`−4` aplicado às cegas e precisam da mesma medição.
+**E medidas as cinco, o número deixou de ser por stack.** Ele tem uma regra, em
+duas partes, e as duas foram descobertas medindo:
+
+    1. tem de HAVER alinhamento — `align: "start"` no subpainel.
+       Radix, radix-ng e reka cravam; o bits NÃO.
+    2. havendo, o valor é
+         −(borda + padding)  quando a lib ancora a CAIXA do painel
+         0                   quando a lib já ancora o CONTEÚDO
+
+`.nds-dropdown-menu-content` tem `border: 1px` mais `padding: var(--spacing-1)`,
+então `−(borda + padding)` é **−5**. **A derivação original desta decisão dizia
+que −4 era "exatamente o `--spacing-1` de padding do painel" e ESQUECEU A
+BORDA** — por isso as quatro stacks que a aplicaram ficaram 1px altas.
+
+O teste de qual dos dois casos a lib é: medir o **topo do painel** menos o topo
+do sub-gatilho. Se sair exatamente igual ao `alignOffset`, sem resíduo, a lib
+ancora a caixa.
+
+| stack | lib | o que ancora | `align` | `alignOffset` | `sideOffset` |
+|---|---|---|---|---|---|
+| react | base-ui | a caixa | dado | **−5** | `0` — e NÃO é no-op: sem ele o submenu herda o vão do painel pai |
+| vanilla | `positionFloating` | a caixa (`top = anchor.top`, geometria pura) | dado | **−5** | `0` |
+| svelte | bits | a caixa | **faltava** — ver abaixo | **−5** | `0` — coincide com o padrão da lib, mas tem dentes |
+| angular | radix-ng | a caixa | dado | **−5** | `0` — no-op em valor; declarado para o número ser nosso |
+| vue | reka | o CONTEÚDO | dado | **0** | `0` |
+
+Medições idênticas dígito a dígito nos três membros de cada stack.
+
+**No svelte o `alignOffset` era INERTE, e esse é o achado mais fundo da
+decisão.** O `menu-sub-content` do bits fixa `side="right"` e **não fixa
+`align`**; sem alinhamento o subpainel cai em `align: "center"`, nasce centrado
+no sub-gatilho, e o desvio depende da ALTURA do painel — medido: −14px com dois
+itens, −29px com os cinco do Menubar. Não é deslocamento constante que número
+nenhum corrige. E o `alignOffset` não fazia nada, porque o middleware `offset`
+do floating-ui só aplica o eixo de alinhamento quando a colocação TEM
+alinhamento. O `−4` aplicado ali **não piorou nem melhorou: nunca chegou a
+existir**.
+
+A assinatura de um `alignOffset` inerte é fácil e vale para qualquer lib nova:
+**se `0`, `−4` e "nada declarado" derem o MESMO número, o problema não é o
+valor.**
+
+**E o conhecimento já estava na própria stack.** O `popover-content.svelte`
+documenta desde 2026-09-17 que "o middleware `offset` só aplica `alignmentAxis`
+quando há alinhamento; com `center`, o padrão, o deslocamento some sem aviso" —
+um dia antes de esta decisão ser escrita, no componente vizinho, e não
+atravessou. É a mesma forma da omissão de `transform-origin` que voltou como
+achado novo três vezes: o registro existe, no lugar que ninguém relê ao
+trabalhar noutro componente.
+
+**A asserção é do RESULTADO, com tolerância abaixo de 1px.** Os dois candidatos
+(`−4` e `−5`) ficam a exatamente 1px um do outro: com tolerância de 1 a asserção
+não os separa e **passa com o defeito plantado**. As cinco usam `0,75`, e todas
+provaram dentes com `alignOffset` errado E com `sideOffset: 8` — a segunda
+metade não era afirmada em lugar nenhum, e no angular o passo "abre AO LADO" que
+já existia comparava com folga de 8px e passava com o defeito.
+
+**A corrida que a D5 criou, e que teria envenenado esta asserção.** O painel PAI
+anima a entrada (`translateY` + `scale(0.98)`) e o sub-gatilho mora dentro dele:
+abrir o submenu nesse intervalo o ancora contra um alvo EM MOVIMENTO, e ele fica
+lá — o reposicionador observa rolagem, redimensionamento e tamanho, e `transform`
+não muda nenhum dos três. Medido no vanilla: deriva de **1,13px**, maior que o
+1,00px que a asserção precisa separar; sondado com o `−4` plantado, o dropdown
+devolveu `−5,13` e **passou por acidente numa rodada em que devia reprovar**. O
+angular viu a mesma assinatura (um ponto a `−3,10` entre quarenta inteiros
+exatos). As cinco plays agora assentam as animações do painel PAI **antes de
+abrir** o submenu, não só antes de medir.
 
 **O ContextMenu raiz é `0`/`0`** — o painel nasce no PONTEIRO, e qualquer
 deslocamento ali é número mágico: a quina do painel fica onde o cursor está, que
@@ -564,6 +627,9 @@ agente do vue envolvia a medida num `waitFor` e **passava com o defeito
 plantado** — no lugar de espera da lib a diferença já cabe na tolerância, e o
 `waitFor` fecha no primeiro quadro. Asserção de vão usa `waitForAncorado` e
 leitura direta, nunca `waitFor` em volta da medida.
+
+> **PENDÊNCIA · 2026-09-19 — o painel da BARRA do Menubar declara `alignOffset: -4` com uma justificativa medida como FALSA.** Achada ao separar os dois números do angular: `menubar.ts:325` servia raiz e submenu com o mesmo `-4`, e o comentário dizia que ele "alinha o texto do primeiro item com o do gatilho". Medido com a barra a 200px da borda da janela: `0` → +1,00px, **`-1` → 0,00 (alinharia)**, `-4` → −3,00, `-5` → −4,00. O `-4` erra por 3px. **Por que ninguém viu**: encostado na borda esquerda da janela o painel trava em `left: 5px` e `0`, `-4`, `-5` e até `-40` leem idênticos — só recuando a barra o número aparece, e nenhuma story a recuava. O número é da família (react e vue também declaram `-4` na raiz), não da D15, e mudá-lo atravessa as cinco stacks.
+> **Fecha quando**: o `alignOffset` do painel de topo do Menubar tem valor decidido pela dona com a medição na mão, aplicado nas cinco, e uma story que posiciona a barra LONGE da borda afirma o resultado — sem isso a asserção passa com qualquer número.
 
 ### D15-A · O vão do submenu era `0` e `−4` (histórico)
 

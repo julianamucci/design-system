@@ -9,7 +9,7 @@ import {
   menubarWithShortcutsSource,
   menubarWithSubmenuSource,
 } from './menubar.source';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -184,6 +184,16 @@ export const WithSubmenu: Story = {
     });
 
     await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu e o foco ENTRA nele', async () => {
+      // O painel PAI assenta ANTES de o submenu abrir. `waitForPortal` libera
+      // com `opacity >= 0.9`, e aí o `translateY` + `scale(0.98)` da entrada
+      // ainda corre: o sub-gatilho mora dentro do pai, então abrir agora ancora
+      // o subpainel contra um item EM MOVIMENTO — e ele fica lá, porque o
+      // observador de reposicionamento acompanha rolagem, redimensionamento e
+      // mudança de TAMANHO, e `transform` não muda nenhum dos três. A deriva é
+      // da ordem de 1px, a mesma distância que a asserção de alinhamento abaixo
+      // precisa separar.
+      await waitForPousado(menu);
+
       // Idempotente: só navega quando o submenu ainda está fechado. A seta
       // direita vai sempre — com o submenu já aberto, ela ainda tem de levar o
       // foco para dentro, que é o caso que a lib não cobre sozinha.
@@ -226,6 +236,50 @@ export const WithSubmenu: Story = {
       await expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         menu.getBoundingClientRect().left,
       );
+    });
+
+    await step('O primeiro item do submenu alinha com o SUB-GATILHO que o abriu', async () => {
+      // O RESULTADO que a D15 fixa: o topo do primeiro item do submenu no topo
+      // do sub-gatilho, não o topo da CAIXA. Medir o ITEM é o que dá dentes —
+      // uma asserção sobre o topo do painel passaria com `alignOffset: 0`, que
+      // é o que a lib faz sozinha.
+      //
+      // Os números, medidos em 2026-09-19 com o painel assentado:
+      //
+      //     alignOffset  0 → +5,00   -3 → +2,00   -4 → +1,00   -5 → 0,00   -6 → -1,00
+      //
+      // O `-4` que a primeira versão da D15 mandava aplicar deixa o item 1px
+      // abaixo do gatilho: a derivação era o `--spacing-1` de padding do painel
+      // e esquecia o `border: 1px` que vem junto. São 5px, não 4.
+      //
+      // Tolerância 0,75, e não 1: os dois candidatos ficam a exatamente 1px um
+      // do outro, e com tolerância 1 a asserção passaria com o `-4` de volta.
+      //
+      // Esta asserção cobre só o SUBMENU. O painel da barra usa `-4`, que é
+      // número da família (react e vue declaram o mesmo) e não sai daqui — o que
+      // ele produz está medido em `menubar.ts`.
+      // Os DOIS painéis assentados: o pai porque é nele que o sub-gatilho mora,
+      // o filho porque é ele que acabou de ser posicionado.
+      await waitForPousado(menu);
+      const panel = submenu()!;
+      await waitForPousado(panel);
+      const itemBox = firstSubItem()!.getBoundingClientRect();
+      const triggerBox = subTrigger.getBoundingClientRect();
+      await expect(
+        Math.abs(itemBox.top - triggerBox.top),
+        `1º item em ${itemBox.top.toFixed(2)}, sub-gatilho em ${triggerBox.top.toFixed(2)}` +
+          ` · caixa do painel a ${(panel.getBoundingClientRect().top - triggerBox.top).toFixed(2)}`,
+      ).toBeLessThanOrEqual(0.75);
+
+      // A outra metade da D15, e a âncora é o SUB-GATILHO, não a borda do painel
+      // pai: `sideOffset: 0` encosta o subpainel no item que o abriu. O passo
+      // anterior compara com o pai e passa com `sideOffset: 8`; esta linha é a
+      // que tem dentes.
+      await expect(
+        Math.abs(panel.getBoundingClientRect().left - triggerBox.right),
+        `painel a ${panel.getBoundingClientRect().left.toFixed(2)}, ` +
+          `borda direita do sub-gatilho em ${triggerBox.right.toFixed(2)}`,
+      ).toBeLessThanOrEqual(0.75);
     });
 
     await step('Seta esquerda fecha SÓ o submenu e devolve o foco ao sub-gatilho', async () => {

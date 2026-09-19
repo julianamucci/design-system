@@ -19,6 +19,14 @@
 		// onde o cursor está, que é a convenção do menu de contexto nativo. Até
 		// 2026-09-18 esta stack herdava o `sideOffset: 2` do bits
 		// (`context-menu-content.svelte` da lib), que não saía de token nenhum.
+		//
+		// MEDIDO em 2026-09-19, com o clique direito no centro da área e a quina
+		// do painel comparada à coordenada do ponteiro: o `sideOffset: 2` do bits
+		// punha a quina a **dx=+2,00 / dy=0,00**; com o `0` declarado ela fica em
+		// **dx=0,00 / dy=0,00**. Os dois publicam `data-side="right"` e
+		// `data-align="start"` — o atributo não distinguia os dois casos, e por
+		// isso a asserção antiga (quina a menos de 24px do centro da área) passava
+		// com qualquer um. O `0` melhorou 2px e não piorou nada mensurável.
 		sideOffset = 0,
 		alignOffset = 0,
 		onkeydown,

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForAncorado } from '@shared/testing/ancoragem';
 import MenubarStory from './MenubarStory.svelte';
 import {
   menubarSource,
@@ -54,6 +55,67 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+/**
+ * Espera as animações de um painel ASSENTAREM. Espera PURA: só aguarda
+ * `finished`, não lê nem escreve DOM, então não tem como provocar a própria
+ * reagendagem.
+ *
+ * **Isto tem de rodar no painel PAI ANTES de o submenu abrir, e não só antes de
+ * medir.** O painel entra por `nds-menu-in` (`nds/dropdown-menu.css`), que anima
+ * `translateY` + `scale(0.98)`, e o SUB-GATILHO mora dentro dele. Abrir o
+ * submenu nesse intervalo o ancora contra um gatilho EM MOVIMENTO — e ele fica
+ * lá, porque o observador de reposicionamento da lib acompanha rolagem,
+ * redimensionamento e mudança de TAMANHO, e `transform` não muda nenhum dos
+ * três.
+ *
+ * Medido no vanilla em 2026-09-19, mesma folha e mesma animação: a deriva foi de
+ * **1,13px**, a mesma ordem de grandeza do `-4`/`-5` que esta asserção precisa
+ * separar. O dropdown sondado com o `-4` plantado devolveu −5,13 em vez de
+ * −4,00, ou seja PASSOU numa rodada em que deveria reprovar. É intermitência
+ * latente: no caso feliz a animação já acabou e ninguém vê.
+ */
+const assentarAnimacoes = async (el: HTMLElement) => {
+  const nos = [el, el.parentElement].filter(Boolean) as HTMLElement[];
+  await Promise.all(
+    nos.flatMap((no) => no.getAnimations().map((a) => a.finished.catch(() => undefined))),
+  );
+};
+
+/**
+ * A medida da D15 — o submenu contra o SUB-GATILHO que o abriu.
+ *
+ * `deslocamentoDoItem` é o topo do PRIMEIRO ITEM do subpainel menos o topo do
+ * sub-gatilho; a D15 pede zero. `deslocamentoDaCaixa` é o topo do PAINEL menos o
+ * mesmo topo, e ele diz o que a lib ancora: medido em 2026-09-19, ele sai
+ * EXATAMENTE igual ao `alignOffset` (0 → 0,00; −4 → −4,00; −5 → −5,00), o que
+ * prova que o bits ancora a CAIXA DE BORDA do painel — como a base-ui e como o
+ * `positionFloating` do vanilla, e ao contrário da reka, que desconta borda e
+ * padding sozinha e por isso quer `0`. É daí que sai o número: `−(borda +
+ * padding)`. `vaoLateral` é a borda esquerda do subpainel menos a borda direita
+ * do sub-gatilho, que é o `sideOffset` de fato aplicado.
+ *
+ * **A espera é PURA, e a leitura é DIRETA.** `waitForAncorado` lê o `-200%` que
+ * a lib deixa no invólucro enquanto mede, e as animações são esperadas por
+ * `getAnimations().finished` — nenhum `waitFor` em volta da medida. Medido no
+ * vue em 2026-09-18 e registrado na D15: envolver esta medida num `waitFor` faz
+ * a asserção PASSAR COM O DEFEITO PLANTADO, porque no lugar de espera da lib a
+ * diferença já cabe na tolerância e o `waitFor` fecha no primeiro quadro.
+ */
+const medirSubmenu = async (subTrigger: HTMLElement, submenu: HTMLElement) => {
+  await waitForAncorado(submenu);
+  await assentarAnimacoes(submenu);
+  const item = submenu.querySelector<HTMLElement>(
+    '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+  )!;
+  const gatilho = subTrigger.getBoundingClientRect();
+  const painel = submenu.getBoundingClientRect();
+  return {
+    deslocamentoDoItem: item.getBoundingClientRect().top - gatilho.top,
+    deslocamentoDaCaixa: painel.top - gatilho.top,
+    vaoLateral: painel.left - gatilho.right,
+  };
+};
 
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 
@@ -116,6 +178,11 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     const menu = await waitForPortal('menu');
+    // O painel PAI assenta ANTES de qualquer submenu abrir — ver
+    // `assentarAnimacoes`. Aqui, e não junto da medida: o que estraga a medida é
+    // o submenu ter sido ANCORADO contra um sub-gatilho em movimento, e depois
+    // disso nenhuma espera desfaz.
+    await assentarAnimacoes(menu);
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
@@ -176,6 +243,38 @@ export const WithSubmenu: Story = {
       await expect(submenu.classList.contains('nds-dropdown-menu-content')).toBe(true);
       await expect(getComputedStyle(submenu).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       await expect(menu.contains(submenu)).toBe(false);
+    });
+
+    await step('D15 · o submenu encosta no sub-gatilho e alinha o primeiro item com ele', async () => {
+      const submenu = body.getAllByRole('menu').find((m) => m !== menu)!;
+      const { deslocamentoDoItem, deslocamentoDaCaixa, vaoLateral } = await medirSubmenu(subTrigger, submenu);
+      // D15 fixa o RESULTADO, não o número: o topo do PRIMEIRO ITEM do submenu
+      // alinha com o topo do sub-gatilho que o abriu. Medir o ITEM, e não a
+      // caixa, é o que dá dentes — uma asserção sobre o topo do painel passaria
+      // com `alignOffset: 0`, que é o que a lib faria sozinha.
+      //
+      // Este é o painel em que o defeito de antes aparecia maior, e é o motivo
+      // de a asserção ser de RESULTADO: sem `align="start"` a lib centra o
+      // subpainel no gatilho, então o desvio depende da ALTURA do painel —
+      // medido em 2026-09-19, −29,00 aqui (cinco formatos) contra −14,00 nos
+      // painéis de dois itens do DropdownMenu e do ContextMenu. Com
+      // `align="start"`: `alignOffset: -5` sai 0,00 e `-4` sai +1,00.
+      //
+      // **A tolerância é 0,75, e não 1**: os dois candidatos plausíveis (`-4` e
+      // `-5`) ficam a exatamente 1px um do outro, e com tolerância de 1 a
+      // asserção passaria com o `-4` plantado.
+      await expect(Math.abs(deslocamentoDoItem)).toBeLessThanOrEqual(0.75);
+      // `sideOffset: 0` encosta o subpainel no SUB-GATILHO — que é a âncora, e
+      // não a borda do painel pai. Tem dentes: o vão acompanha o número
+      // (0 → 0,00; 8 → 8,00).
+      await expect(Math.abs(vaoLateral)).toBeLessThanOrEqual(1);
+      // E o que a lib ANCORA é a CAIXA DE BORDA do painel: o topo dele sai
+      // exatamente no `alignOffset`. É a premissa de onde o -5 vem — ele é
+      // `−(borda + padding)` porque a lib não desconta nenhum dos dois. Se o
+      // bits passar a descontar sozinho, como a reka faz (e aí o número vira
+      // 0), este passo reprova e manda remedir, em vez de o desenho quebrar em
+      // silêncio.
+      await expect(Math.abs(deslocamentoDaCaixa + 5)).toBeLessThanOrEqual(0.75);
     });
 
     // Fecha só o submenu, e o menu da barra segue aberto: a prova é o painel

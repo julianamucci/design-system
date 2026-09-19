@@ -887,9 +887,13 @@ interface ContextMenuLabelProps {
   <!-- ── Propriedades ──────────────────────────────────────────────────── -->
   <!--
     Só o que esta stack TEM, com os nomes dela, e os padrões da coluna Padrão são
-    os do conteúdo do bits (`context-menu-content.svelte`: `side = "right"`,
-    `sideOffset = 2`, `align = "start"`; `alignOffset` cai no 0 da camada
-    flutuante). `inset` fica fora dos itens de marcação e de rádio: a folha não
+    os do WRAPPER desta stack — não os da lib. A distinção passou a importar em
+    2026-09-18: a D15 fixou o ContextMenu raiz em `sideOffset: 0`, e o
+    `context-menu-content.svelte` daqui declara o `0` por cima do `2` do bits. A
+    tabela publicava o `2` da lib, que esta stack já não entrega — medido em
+    2026-09-19, com a quina do painel a dx=+2,00 do ponteiro no `2` e a dx=0,00
+    no `0`. Os outros três saem do wrapper também (`side = "right"`,
+    `align = "start"`, `alignOffset = 0`). `inset` fica fora dos itens de marcação e de rádio: a folha não
     os recua, e a prop saiu dos dois. "Obrigatório" sai de `common.yes`/`no`.
     O `value` do GRUPO de rádio é a opção marcada (`props.items.modelValue`); o
     do ITEM é o valor dele no grupo (`props.items.value`) — o nome da prop é o
@@ -924,7 +928,7 @@ interface ContextMenuLabelProps {
           { name: 'align',       type: '"start" | "center" | "end"',          defaultValue: '"start"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.align'))       },
           { name: 'alignOffset', type: 'number',                               defaultValue: '0',       required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.alignOffset')) },
           { name: 'side',        type: '"top" | "right" | "bottom" | "left"', defaultValue: '"right"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.side'))        },
-          { name: 'sideOffset',  type: 'number',                               defaultValue: '2',       required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.sideOffset'))  },
+          { name: 'sideOffset',  type: 'number',                               defaultValue: '0',       required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.sideOffset'))  },
         ],
       },
       {

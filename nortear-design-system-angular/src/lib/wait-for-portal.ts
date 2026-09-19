@@ -52,6 +52,43 @@ export async function waitForPortal(
   );
 }
 
+/**
+ * Espera o painel flutuante ASSENTAR, para quem vai MEDIR a posição dele.
+ *
+ * `waitForPortal` prova que o painel apareceu; isto prova que ele parou de se
+ * mexer, que é outra coisa. O popup entra com `@keyframes` (fade + `translateY`
+ * + `scale`) e o floating-ui escreve `left`/`top` no invólucro em passo
+ * assíncrono: quem lê a caixa antes das duas coisas mede a posição de partida.
+ *
+ * **Não é um `waitFor`, e a diferença é o ponto.** O `waitFor` da suíte
+ * reagenda por observador de mutação e fecha no primeiro quadro em que a
+ * condição passa — e numa medida de vão a diferença entre dois candidatos a 1px
+ * um do outro já cabe na tolerância enquanto a lib ainda posiciona, de modo que
+ * a asserção passa COM o defeito plantado. Medido no vue ao escrever a mesma
+ * asserção (D15 do PRD do dropdown-menu). Aqui a espera é de relógio e só LÊ:
+ * primeiro as animações terminam, depois a caixa precisa repetir o mesmo valor
+ * em duas leituras seguidas. Quem chama mede DIRETO depois disto.
+ */
+export async function waitForPousado(panel: HTMLElement, timeout = 3000): Promise<void> {
+  const alvos = [panel, panel.parentElement].filter((el): el is HTMLElement => el !== null);
+  await Promise.all(
+    alvos.flatMap((el) =>
+      el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
+
+  const limite = Date.now() + timeout;
+  let anterior = '';
+  while (Date.now() < limite) {
+    await new Promise((resolve) => setTimeout(resolve, 25));
+    const caixa = panel.getBoundingClientRect();
+    const atual = `${caixa.top}|${caixa.left}|${caixa.width}`;
+    if (atual === anterior && caixa.width > 0) return;
+    anterior = atual;
+  }
+  throw new Error(`o painel não assentou em ${timeout}ms: a caixa ainda muda (${anterior})`);
+}
+
 /** Espera o portal sumir — para provar Escape, clique fora e seleção de item. */
 export async function waitForPortalVanish(
   role: 'menu' | 'dialog' | 'alertdialog' | 'listbox' | 'tooltip',

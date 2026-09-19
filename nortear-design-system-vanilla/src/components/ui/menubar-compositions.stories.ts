@@ -4,6 +4,8 @@ import { createMenubar } from './menubar';
 import { embrulhar, waitForPanel, triggersOf } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith } from './menubar.source';
 import { checkPanelFollowsTrigger } from './floating-follow-probe';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
+import { waitForAncorado } from '@shared/testing/ancoragem';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -170,6 +172,16 @@ export const WithSubmenu: Story = {
     ),
   play: async ({ canvasElement, step }) => {
     const panel = await waitForPanel(canvasElement);
+    // O painel da barra nasce ABERTO (`defaultOpen: 0`) e ANIMA a entrada —
+    // `translateY` e `scale(0.98)` (D5). O sub-gatilho mora dentro dele, então
+    // enquanto a escada roda o item está até ~1px do lugar onde vai parar. Um
+    // submenu aberto nesse intervalo é posicionado contra o item EM MOVIMENTO e
+    // fica lá: `autoUpdateFloating` observa rolagem, redimensionamento e
+    // mudança de TAMANHO, e `transform` não muda nenhum dos três. Medido em
+    // 2026-09-19 ao escrever a asserção da D15: sem esta espera o primeiro item
+    // do submenu nasce 1,13px acima do sub-gatilho, e a origem dessa diferença
+    // não está no vão nenhum — está no quadro em que a medida foi tirada.
+    await waitForAnimationsDone(panel);
     const subTrigger = within(panel).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
@@ -231,6 +243,42 @@ export const WithSubmenu: Story = {
       await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         panel.getBoundingClientRect().left,
       );
+    });
+
+    await step('O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele', async () => {
+      // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
+      // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM alinha com o topo do
+      // sub-gatilho que o abriu — não com a borda da caixa. Quem alinha é o
+      // item, que é o que a pessoa vê; uma asserção sobre o topo do PAINEL
+      // passaria com `alignOffset: 0`, que é o que a conta faria sozinha. E a
+      // âncora é o SUB-GATILHO: ele fica recuado 5px da borda direita do painel
+      // pai (`border: 1px` mais `padding: var(--spacing-1)`), então cobrar o
+      // vão contra a borda do PAI aceitaria o número errado — é o que o passo
+      // acima faz, e por isso ele não substitui este.
+      //
+      // Medido em 2026-09-19, igual nos três membros: `alignOffset` 0 põe o
+      // item 5,00px ABAIXO do sub-gatilho, -4 o põe a 1,00 e **-5 a 0,00**.
+      // `positionFloating` com `align: 'start'` ancora a BORDA da caixa no topo
+      // do sub-gatilho, e do topo do painel ao primeiro item há os mesmos 5px
+      // de borda + padding — o `-4` da primeira D15 esquecia a borda.
+      //
+      // Tolerância 0,75 e não 1: os dois candidatos ficam a exatamente 1px um
+      // do outro, e com 1 a asserção não os separaria. A espera é o fim das
+      // animações e leitura DIRETA, nunca um `waitFor` em volta da medida — a
+      // entrada anima `translateY` e `scale(0.98)` (D5), e o `waitFor` fecharia
+      // no primeiro quadro com o defeito de pé.
+      const submenu = visibleMenus()[1];
+      await waitForAncorado(submenu);
+      await waitForAnimationsDone(submenu);
+      const gatilho = subTrigger.getBoundingClientRect();
+      const caixa = submenu.getBoundingClientRect();
+      const item = within(submenu).getAllByRole('menuitem')[0].getBoundingClientRect();
+      const diagnostico =
+        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     // As duas saídas do submenu, que o `covers` de `functional.item5` prometia e

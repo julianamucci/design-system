@@ -156,13 +156,23 @@ export const Playground: Story = {
       // única diferença real em relação ao DropdownMenu.
       const menu = await gestoOpen(area());
       const boxArea = area().getBoundingClientRect();
+      await waitForAncorado(menu);
       const boxMenu = menu.getBoundingClientRect();
+      // A tolerância é 1, e não os 24 de antes. D15: o ContextMenu raiz é
+      // `0`/`0` porque a QUINA do painel fica onde o cursor está — a convenção
+      // do menu de contexto nativo. Medido em 2026-09-19, com o clique direito
+      // no centro da área: o `sideOffset: 2` que esta stack herdava do bits
+      // punha a quina a dx=+2,00 / dy=0,00, e com o `0` declarado ela fica em
+      // dx=0,00 / dy=0,00. Os dois publicavam `data-side="right"` e
+      // `data-align="start"`, então o atributo não distinguia os dois casos — e
+      // com 24px de folga a asserção passava com qualquer um dos dois. É o 1
+      // que dá dentes ao número que a D15 decide.
       await expect(
         Math.abs(boxMenu.left - (boxArea.left + boxArea.width / 2)),
-      ).toBeLessThan(24);
+      ).toBeLessThanOrEqual(1);
       await expect(
         Math.abs(boxMenu.top - (boxArea.top + boxArea.height / 2)),
-      ).toBeLessThan(24);
+      ).toBeLessThanOrEqual(1);
       // A abertura chega a quem consome: é o aviso que a docs page mede.
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(true);
     });

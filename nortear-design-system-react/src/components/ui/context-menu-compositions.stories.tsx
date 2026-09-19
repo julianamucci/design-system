@@ -7,6 +7,7 @@ import {
   waitForPortal,
 } from "@/lib/wait-for-portal";
 import { gestoOpen, menuOpen } from "@shared/testing/context-menu-area";
+import { waitForAncorado } from "@shared/testing/ancoragem";
 import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
@@ -375,6 +376,47 @@ export const WithSubmenu: Story = {
           target("sub").getBoundingClientRect().left,
         ),
       );
+    });
+
+    await step("O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele", async () => {
+      // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
+      // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM do submenu alinha com
+      // o topo do sub-gatilho que o abriu — não com a borda da caixa. Quem
+      // alinha é o item, que é o que a pessoa vê; uma asserção sobre o topo do
+      // PAINEL passaria com `alignOffset: 0`, que é o que a lib faria sozinha.
+      //
+      // É o SUBMENU, não o painel raiz: o raiz nasce no PONTEIRO com `0`/`0` e
+      // não tem gatilho a que se alinhar. O número do submenu é declarado em
+      // `ContextMenuSubContent`, e é o mesmo dos outros dois membros.
+      //
+      // Os NÚMEROS medidos neste membro em 2026-09-19: `alignOffset` 0 → o item
+      // nasce 5,00px ABAIXO do sub-gatilho; -2 → 3,00; -4 → 1,00; **-5 →
+      // 0,00**. A base-ui ancora a BORDA do painel no topo do sub-gatilho, e do
+      // topo do painel ao topo do primeiro item há `border: 1px` +
+      // `padding: var(--spacing-1)` = 5px. O `-4` que estava declarado aqui
+      // derivava só do `--spacing-1` e esquecia a borda.
+      //
+      // A tolerância é 0,75 porque os dois números candidatos ficam a exatamente
+      // 1px um do outro: a faixa precisa ser menor que 1 para separá-los, e o
+      // resto dela cobre o meio pixel de coordenada fracionária.
+      //
+      // E a espera é `waitForAncorado` mais o fim das animações, NUNCA um
+      // `waitFor` em volta da medida — no lugar de espera da lib a diferença já
+      // cabe na tolerância, e o `waitFor` fecharia no primeiro quadro.
+      const panel = submenu()!;
+      await waitForAncorado(panel);
+      await Promise.all(
+        panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined)),
+      );
+      const gatilho = target("sub").getBoundingClientRect();
+      const caixa = panel.getBoundingClientRect();
+      const item = target("por-email").getBoundingClientRect();
+      const diagnostico =
+        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     await step("O sub-gatilho APONTA o painel do submenu na árvore de acessibilidade", async () => {

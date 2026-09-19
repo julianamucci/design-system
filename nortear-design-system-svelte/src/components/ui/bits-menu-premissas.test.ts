@@ -196,3 +196,82 @@ describe('premissa · a raiz dos menus não tem prop de estado inicial', () => {
     ).toBe(false);
   });
 });
+
+describe('premissa · D15 — o bits não alinha o submenu, e por isso o `align` é nosso', () => {
+  /**
+   * Premissa de: `align="start"` declarado nos TRÊS `*-sub-content.svelte`.
+   *
+   * O Radix e a reka cravam `align: "start"` no sub-content do menu; o bits
+   * não. O `menu-sub-content.svelte` dele fixa só `side = "right"`, e o
+   * alinhamento cai no `align = "center"` do `floating-layer-content.svelte`.
+   *
+   * Duas consequências, medidas em 2026-09-19 nos três membros (bits-ui 2.19.0):
+   *
+   *   1. o subpainel nasce CENTRADO no sub-gatilho, então o desvio do primeiro
+   *      item depende da ALTURA do painel — −14px com dois itens, −29px com os
+   *      cinco do Menubar. A D15 pede zero;
+   *   2. o `alignOffset` fica INERTE, porque o `offset` do floating-ui só aplica
+   *      `alignmentAxis` quando a colocação tem alinhamento (`right-start`), e
+   *      `right` puro não tem. Foi assim que o `alignOffset: -4` declarado em
+   *      2026-09-18 não mudou nada: ele não piorou o desenho, nunca chegou a
+   *      existir.
+   *
+   * Se um bump alinhar o bits ao Radix, esta premissa reprova e o `align="start"`
+   * dos três wrappers passa a ser redundante — que é exatamente o tipo de
+   * contorno que envelhece em silêncio se ninguém o cobrar.
+   */
+  it('o sub-content do bits continua sem declarar `align`', () => {
+    const source = read('dist', 'bits', 'menu', 'components', 'menu-sub-content.svelte');
+    // Sentinela: o `side = "right"` ESTÁ lá. Sem ela, um recorte que deixasse de
+    // achar o arquivo provaria a ausência contra o vazio.
+    expect(
+      /side\s*=\s*"right"/.test(source),
+      'não achei o `side = "right"` do sub-content — o recorte deixou de medir a lib',
+    ).toBe(true);
+    const props = source.slice(source.indexOf('let {'), source.indexOf('} = $props()'));
+    expect(
+      /\balign\s*=/.test(props),
+      'o bits passou a declarar `align` no sub-content do menu — confira o valor: se '
+        + 'for "start", o `align="start"` dos três `*-sub-content.svelte` virou redundante',
+    ).toBe(false);
+  });
+
+  it('a camada flutuante do bits continua caindo em `align = "center"`', () => {
+    const source = read(
+      'dist', 'bits', 'utilities', 'floating-layer', 'components', 'floating-layer-content.svelte',
+    );
+    const props = source.slice(source.indexOf('let {'), source.indexOf('} = $props()'));
+    expect(props.length, 'não achei a lista de props da camada flutuante').toBeGreaterThan(50);
+    expect(
+      /align\s*=\s*"center"/.test(props),
+      'a camada flutuante do bits mudou o padrão de `align` — o desvio medido para a '
+        + 'D15 partia de "center", e os números dos três sub-contents precisam ser remedidos',
+    ).toBe(true);
+    // E o `sideOffset` do sub-content NÃO é herdado do painel pai: ele cai neste
+    // zero. O `sideOffset: 0` dos três wrappers coincide com o padrão da lib, e
+    // é declarado para que o número seja do design system.
+    expect(
+      /sideOffset\s*=\s*0/.test(props),
+      'a camada flutuante do bits mudou o padrão de `sideOffset` — o `0` declarado nos '
+        + 'sub-contents deixou de coincidir com ele, e o vão lateral precisa ser remedido',
+    ).toBe(true);
+  });
+
+  it('o content do ContextMenu do bits continua empurrando 2px', () => {
+    /**
+     * Premissa de: `sideOffset: 0` em `context-menu-content.svelte`.
+     *
+     * O painel do menu de contexto nasce no PONTEIRO, e o `sideOffset = 2` que a
+     * lib declara punha a quina 2px ao lado do cursor — medido em 2026-09-19,
+     * dx=+2,00 com o padrão da lib contra dx=0,00 com o `0` declarado. Os dois
+     * publicavam `data-side="right"` e `data-align="start"`, então o atributo
+     * não distinguia os dois casos.
+     */
+    const source = read('dist', 'bits', 'context-menu', 'components', 'context-menu-content.svelte');
+    expect(
+      /sideOffset\s*=\s*2/.test(source),
+      'o bits deixou de empurrar o painel do ContextMenu em 2px — o `sideOffset: 0` do '
+        + 'wrapper pode ter virado redundante, e a asserção da quina precisa ser remedida',
+    ).toBe(true);
+  });
+});

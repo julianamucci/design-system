@@ -199,16 +199,20 @@ export class NdsContextMenu implements NdsMenuTabAnchor {
 
   // O painel de topo nasce NO PONTEIRO: `0`/`0`, porque a quina do painel fica
   // onde o cursor está — é a convenção do menu de contexto nativo, e qualquer
-  // deslocamento ali seria número mágico (D15 do PRD do dropdown-menu). O
-  // submenu segue a regra da família: encostado no painel pai, e -4 (o
-  // `--spacing-1` de padding do painel) devolvendo o recuo para o primeiro item
-  // alinhar com o sub-gatilho.
+  // deslocamento ali seria número mágico (D15 do PRD do dropdown-menu).
+  //
+  // O submenu segue a regra da família: encostado no painel pai, e -5
+  // devolvendo o recuo do topo do painel até o topo do primeiro item — 1px de
+  // borda MAIS o `--spacing-1` de padding — para o item alinhar com o
+  // sub-gatilho. Medido em 2026-09-19; a tabela e o porquê do `-5` (e não do
+  // `-4` que a primeira versão da D15 mandava) estão em `NdsContextMenuSub`,
+  // logo abaixo, que é quem de fato posiciona o subpainel.
   protected readonly deslocamentoDoLado = computed<number>(
     () => this.content()?.sideOffset() ?? 0,
   );
 
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -4 : 0),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -5 : 0),
   );
 }
 
@@ -241,6 +245,27 @@ export class NdsContextMenu implements NdsMenuTabAnchor {
   template: `
     <ng-content />
 
+    <!--
+      \`sideOffset: 0\` encosta o subpainel no SUB-GATILHO — e é o gatilho a
+      âncora, não a borda do painel pai: medido, a esquerda do subpainel cai 5px
+      À ESQUERDA da borda direita do pai, que é exatamente o recuo do gatilho
+      (1px de borda + 4px de padding do painel). É a metade da D15 SEM dentes
+      neste stack: o \`sideOffset\` do \`RdxPopperContentWrapper\` já nasce 0
+      (\`this.config.sideOffset ?? 0\`, e a stack não provê \`RdxPopperContentConfig\`),
+      então declarar 0 aqui não muda pixel nenhum. Fica declarado porque o número
+      passa a ser nosso — quem tem dentes é o alinhamento.
+
+      \`alignOffset: -5\` devolve o recuo do topo do painel até o topo do primeiro
+      item (1px de borda + \`--spacing-1\` de padding) e faz o item alinhar com o
+      sub-gatilho, que é o RESULTADO que a D15 fixa. Medido em 2026-09-19, topo
+      do 1º item menos topo do sub-gatilho, com o painel assentado:
+
+          alignOffset  0 → +5,00   -3 → +2,00   -4 → +1,00   -5 → 0,00   -6 → -1,00
+
+      Os mesmos dígitos no DropdownMenu e no Menubar. O \`-4\` da primeira versão
+      da D15 deixa o item 1px ABAIXO do gatilho: a derivação contava o padding e
+      esquecia a borda.
+    -->
     <ng-template rdxMenuPortal>
       <div
         rdxMenuPositioner
@@ -248,7 +273,7 @@ export class NdsContextMenu implements NdsMenuTabAnchor {
         [side]="content()?.side() ?? 'right'"
         [align]="content()?.align() ?? 'start'"
         [sideOffset]="content()?.sideOffset() ?? 0"
-        [alignOffset]="content()?.alignOffset() ?? -4"
+        [alignOffset]="content()?.alignOffset() ?? -5"
       >
         <div
           rdxMenuPopup

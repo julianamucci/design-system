@@ -306,16 +306,42 @@ function DropdownMenuSubTrigger({
 /**
  * Vão do submenu — D15 do `prd/dropdown-menu.md`, e ele vale nos TRÊS membros
  * (o `MenubarSubContent` e o submenu do ContextMenu chegam aqui pelo mesmo
- * caminho).
+ * caminho; o do ContextMenu por uma declaração própria, com o mesmo número e o
+ * mesmo motivo).
  *
- * `sideOffset: 0` encosta o subpainel no painel pai. `alignOffset: -4` é
- * exatamente o `--spacing-1` de padding do painel: é ele que faz o primeiro item
- * do submenu alinhar com o SUB-GATILHO que o abriu, em vez de alinhar com a
- * borda da caixa. O `-3` que estava aqui não saía de token nenhum.
+ * **O que a D15 decide é o DESENHO, não o número**: `sideOffset: 0` encosta o
+ * subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM do submenu alinha com o
+ * topo do sub-gatilho que o abriu — não com a borda da caixa. Cada lib parte de
+ * uma linha de base diferente, então o número é medido por stack.
+ *
+ * **Medido nesta lib em 2026-09-19**, nos três membros, em navegador, depois de
+ * `waitForAncorado` e das animações de entrada assentarem. Os três deram o MESMO
+ * número, dígito a dígito:
+ *
+ *   alignOffset   topo do painel − topo do sub-gatilho   topo do 1º item − idem
+ *        0                    0,00                              5,00
+ *       -2                   -2,00                              3,00
+ *       -4                   -4,00                              1,00
+ *       -5                   -5,00                              0,00
+ *
+ * A base-ui ancora a BORDA DO PAINEL no topo do sub-gatilho — `deltaPainel` sai
+ * igual ao `alignOffset`, sem resíduo —, e do topo do painel até o topo do
+ * primeiro item há **5px**: o `border: 1px` mais o `padding: var(--spacing-1)`
+ * de `.nds-dropdown-menu-content`. Daí `-5`.
+ *
+ * **O `-4` da primeira versão da D15 estava 1px alto**, e o erro é de derivação,
+ * não de medida: ele saía só do `--spacing-1`, e esqueceu que o anel de 1px da
+ * borda também separa a caixa do primeiro item. Ficou aplicado às cegas nas
+ * quatro stacks que não mediram.
+ *
+ * **O `sideOffset: 0` NÃO é no-op aqui, e a declaração é necessária**: medido no
+ * mesmo par de rodadas, `sideOffset: 8` devolve vão lateral de 8,00 — a lib
+ * respeita o número. E sem a declaração o padrão herdado seria o `4` do
+ * `DropdownMenuContent`, que descolaria o subpainel do pai.
  */
 function DropdownMenuSubContent({
   align = "start",
-  alignOffset = -4,
+  alignOffset = -5,
   side = "right",
   sideOffset = 0,
   className,

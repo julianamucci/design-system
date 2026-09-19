@@ -12,6 +12,8 @@ import {
   menuOpen,
 } from '@shared/testing/context-menu-area';
 import { checkPanelFollowsTrigger } from './floating-follow-probe';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
+import { waitForAncorado } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -309,6 +311,14 @@ export const WithSubmenu: Story = {
     });
 
     await step('Seta direita abre o submenu ao lado do item que o dispara', async () => {
+      // O painel raiz ANIMA a entrada — `translateY` e `scale(0.98)` (D5) —, e
+      // o sub-gatilho mora dentro dele: enquanto a escada roda, o item está até
+      // ~1px do lugar onde vai parar. Um submenu aberto nesse intervalo é
+      // posicionado contra o item EM MOVIMENTO e fica lá, porque
+      // `autoUpdateFloating` observa rolagem, redimensionamento e mudança de
+      // TAMANHO — e `transform` não muda nenhum dos três. Sem esta espera a
+      // asserção de alinhamento da D15, lá embaixo, oscila entre rodadas.
+      await waitForAnimationsDone(menuOpen()!);
       subTrigger().focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
@@ -342,6 +352,43 @@ export const WithSubmenu: Story = {
       await expect(getComputedStyle(subTrigger()).backgroundColor).not.toBe(
         getComputedStyle(item('duplicate')).backgroundColor,
       );
+    });
+
+    await step('O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele', async () => {
+      // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
+      // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM alinha com o topo do
+      // sub-gatilho que o abriu — não com a borda da caixa. Quem alinha é o
+      // item, que é o que a pessoa vê; uma asserção sobre o topo do PAINEL
+      // passaria com `alignOffset: 0`, que é o que a conta faria sozinha. E a
+      // âncora é o SUB-GATILHO: ele fica recuado 5px da borda direita do painel
+      // pai (`border: 1px` mais `padding: var(--spacing-1)`), então cobrar o
+      // vão contra a borda do PAI aceitaria o número errado.
+      //
+      // Medido em 2026-09-19, igual nos três membros: `alignOffset` 0 põe o
+      // item 5,00px ABAIXO do sub-gatilho, -4 o põe a 1,00 e **-5 a 0,00**.
+      // `positionFloating` com `align: 'start'` ancora a BORDA da caixa no topo
+      // do sub-gatilho, e do topo do painel ao primeiro item há os mesmos 5px
+      // de borda + padding — o `-4` da primeira D15 esquecia a borda.
+      //
+      // Tolerância 0,75 e não 1: os dois candidatos ficam a exatamente 1px um
+      // do outro, e com 1 a asserção não os separaria. A espera é o fim das
+      // animações e leitura DIRETA, nunca um `waitFor` em volta da medida — a
+      // entrada anima `translateY` e `scale(0.98)` (D5), e o `waitFor` fecharia
+      // no primeiro quadro com o defeito de pé.
+      const panel = submenu()!;
+      await waitForAncorado(panel);
+      await waitForAnimationsDone(panel);
+      const gatilho = subTrigger().getBoundingClientRect();
+      const caixa = panel.getBoundingClientRect();
+      const primeiro = panel
+        .querySelector<HTMLElement>('[data-slot="context-menu-item"]')!
+        .getBoundingClientRect();
+      const diagnostico =
+        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
+        `topo do 1º item=${(primeiro.top - gatilho.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(primeiro.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     await step('O submenu cresce a partir do item, não do meio', async () => {

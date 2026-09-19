@@ -9,10 +9,14 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		// D15: o vão do submenu é 0 e −4, e o −4 sai de token — o mesmo dos outros
-		// dois membros da família. Ver `dropdown-menu-sub-content.svelte`.
+		// D15: `align="start"` + `sideOffset: 0` + `alignOffset: -5`, o mesmo dos
+		// outros dois membros da família — os três montam o mesmo `bits/menu`, e
+		// o desvio medido foi idêntico nos três. O porquê de cada número, e por
+		// que o `align` é o que faltava, está em
+		// `dropdown-menu/dropdown-menu-sub-content.svelte`.
 		sideOffset = 0,
-		alignOffset = -4,
+		align = "start",
+		alignOffset = -5,
 		onkeydown,
 		...restProps
 	}: ContextMenuPrimitive.SubContentProps = $props();
@@ -57,6 +61,7 @@
 		bind:ref
 		data-slot="context-menu-sub-content"
 		{sideOffset}
+		{align}
 		{alignOffset}
 		class={cn("nds-dropdown-menu-content", className)}
 		onkeydown={handleKeydown}

@@ -316,13 +316,29 @@ export class NdsMenubarMenu implements NdsSubmenuPanel {
     () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 8),
   );
 
-  // -4px são o `--spacing-1` de padding do painel, devolvido: no menu da barra
-  // alinham o texto do primeiro item com o do gatilho, e no submenu alinham o
-  // primeiro item com o SUB-GATILHO que o abriu. O mesmo número nos dois níveis
-  // e nos três membros da família (D15 do PRD do dropdown-menu, decisão da dona
-  // em 2026-09-18) — até essa data o submenu usava -3, que não saía de token.
+  // Os dois níveis pedem números DIFERENTES, e é medição que separa os dois.
+  //
+  // **Submenu: -5.** É o recuo do topo do painel até o topo do primeiro item —
+  // 1px de borda MAIS o `--spacing-1` de padding (`dropdown-menu.css`) —,
+  // devolvido para o primeiro item alinhar com o SUB-GATILHO que o abriu, que é
+  // o RESULTADO que a D15 fixa. Medido em 2026-09-19, topo do 1º item menos topo
+  // do sub-gatilho, com o painel assentado:
+  //
+  //     alignOffset  0 → +5,00   -3 → +2,00   -4 → +1,00   -5 → 0,00   -6 → -1,00
+  //
+  // Os mesmos dígitos no DropdownMenu e no ContextMenu. O `-4` da primeira
+  // versão da D15 deixa o item 1px ABAIXO do gatilho: a derivação contava o
+  // padding e esquecia a borda.
+  //
+  // **Painel da barra: -4**, que é o que react e vue também declaram — é número
+  // da FAMÍLIA, não da D15, e por isso não muda aqui. Fica a medição para quem
+  // for revisitá-lo: com a barra longe da borda da janela, `alignOffset: -4`
+  // deixa o texto do primeiro item 3px à ESQUERDA do texto do gatilho; quem
+  // alinharia os dois textos é `-1`. Encostada na borda esquerda da janela a
+  // diferença some, porque o painel para de andar — foi assim que o número
+  // passou despercebido.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? -4,
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -5 : -4),
   );
 }
 

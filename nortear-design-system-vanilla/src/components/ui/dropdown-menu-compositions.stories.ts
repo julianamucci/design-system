@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { endClose, mount } from './dropdown-menu.fixtures';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
+import { waitForAncorado } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
@@ -366,6 +368,16 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     const menu = await body.findByRole('menu');
+    // O painel raiz ANIMA a entrada — `translateY` e `scale(0.98)` (D5) —, e o
+    // sub-gatilho mora dentro dele: enquanto a escada roda, o item está até
+    // ~1px do lugar onde vai parar. Um submenu aberto nesse intervalo é
+    // posicionado contra o item EM MOVIMENTO e fica lá, porque
+    // `autoUpdateFloating` observa rolagem, redimensionamento e mudança de
+    // TAMANHO — e `transform` não muda nenhum dos três. Medido em 2026-09-19 ao
+    // escrever a asserção da D15: sem esta espera a medida oscila 1,13px entre
+    // rodadas, e a asserção de alinhamento vira intermitente sem que nada no
+    // componente tenha mudado.
+    await waitForAnimationsDone(menu);
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre um menu, e que está fechado', async () => {
@@ -412,6 +424,52 @@ export const WithSubmenu: Story = {
       await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         menu.getBoundingClientRect().right - 8,
       );
+    });
+
+    await step('O subpainel ENCOSTA no sub-gatilho e alinha o primeiro item com ele', async () => {
+      // D15, e ela fixa um RESULTADO, não um número: `sideOffset: 0` encosta o
+      // subpainel no painel pai, e o TOPO DO PRIMEIRO ITEM alinha com o topo do
+      // sub-gatilho que o abriu — não com a borda da caixa. Quem alinha é o
+      // item, que é o que a pessoa vê; uma asserção sobre o topo do PAINEL
+      // passaria com `alignOffset: 0`, que é o que a conta faria sozinha.
+      //
+      // A ÂNCORA É O SUB-GATILHO, não a borda do painel pai. O sub-gatilho fica
+      // recuado 5px da borda direita do pai (o `border: 1px` mais o
+      // `padding: var(--spacing-1)` de `.nds-dropdown-menu-content`), então
+      // cobrar o vão contra a borda do PAI aceitaria o número errado — é o que
+      // o passo acima faz com tolerância de 8px, e por isso ele não substitui
+      // este.
+      //
+      // Os NÚMEROS medidos em 2026-09-19, iguais nos três membros da família:
+      // `alignOffset` 0 → o item nasce 5,00px ABAIXO do sub-gatilho; -2 → 3,00;
+      // -4 → 1,00; **-5 → 0,00**. `positionFloating` com `align: 'start'`
+      // ancora a BORDA da caixa do painel no topo do sub-gatilho, e do topo do
+      // painel ao topo do primeiro item há os mesmos 5px de borda + padding. O
+      // `-4` que a primeira versão da D15 escreveu derivava só do `--spacing-1`
+      // e esquecia a borda.
+      //
+      // A tolerância é 0,75 e não é conforto: os dois números candidatos ficam a
+      // exatamente 1px um do outro, então a faixa PRECISA ser menor que 1 para
+      // separá-los; o resto dela cobre o meio pixel que aparece quando o gatilho
+      // cai em coordenada fracionária.
+      //
+      // E a espera é `waitForAncorado` mais o fim das animações, NUNCA um
+      // `waitFor` em volta da medida: no lugar de espera a diferença já cabe na
+      // tolerância, e o `waitFor` fecha no primeiro quadro — passaria com o
+      // defeito plantado. A entrada anima `translateY` e `scale(0.98)` (D5), e
+      // medir no quadro zero mede a animação.
+      const panel = body.getAllByRole('menu')[1];
+      await waitForAncorado(panel);
+      await waitForAnimationsDone(panel);
+      const gatilho = subTrigger.getBoundingClientRect();
+      const caixa = panel.getBoundingClientRect();
+      const item = within(panel).getAllByRole('menuitem')[0].getBoundingClientRect();
+      const diagnostico =
+        `vão lateral=${(caixa.left - gatilho.right).toFixed(2)} · ` +
+        `topo do painel=${(caixa.top - gatilho.top).toFixed(2)} · ` +
+        `topo do 1º item=${(item.top - gatilho.top).toFixed(2)} (esperado 0)`;
+      await expect(Math.abs(caixa.left - gatilho.right), diagnostico).toBeLessThanOrEqual(0.75);
+      await expect(Math.abs(item.top - gatilho.top), diagnostico).toBeLessThanOrEqual(0.75);
     });
 
     await step('A seta para a esquerda fecha o submenu e devolve o foco', async () => {

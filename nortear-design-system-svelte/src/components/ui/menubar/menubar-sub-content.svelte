@@ -9,10 +9,19 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		// D15: o vão do submenu é 0 e −4, e o −4 sai de token — o mesmo dos outros
-		// dois membros da família. Ver `dropdown-menu-sub-content.svelte`.
+		// D15: `align="start"` + `sideOffset: 0` + `alignOffset: -5`, o mesmo dos
+		// outros dois membros da família — os três montam o mesmo `bits/menu`, e
+		// o desvio medido foi idêntico nos três. O porquê de cada número, e por
+		// que o `align` é o que faltava, está em
+		// `dropdown-menu/dropdown-menu-sub-content.svelte`.
+		//
+		// Aqui o sintoma era o maior dos três: sem `align="start"` o subpainel
+		// nasce centrado no sub-gatilho, e como este menu tem cinco formatos de
+		// exportação o primeiro item saía **29px ACIMA** do gatilho — contra 14px
+		// nos painéis de dois itens. O desvio crescia com o conteúdo.
 		sideOffset = 0,
-		alignOffset = -4,
+		align = "start",
+		alignOffset = -5,
 		onkeydown,
 		...restProps
 	}: MenubarPrimitive.SubContentProps = $props();
@@ -56,6 +65,7 @@
 		bind:ref
 		data-slot="menubar-sub-content"
 		{sideOffset}
+		{align}
 		{alignOffset}
 		class={cn("nds-dropdown-menu-content", className)}
 		onkeydown={handleKeydown}
