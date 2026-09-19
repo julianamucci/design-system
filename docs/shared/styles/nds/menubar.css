@@ -144,27 +144,41 @@
 }
 
 /*
- * A razão ORIGINAL desta regra acabou, e ela fica por outra.
+ * A regra de `overflow: visible` que morava aqui SAIU em 2026-09-18, e o que a
+ * tirou foi a medição que ela própria pedia.
  *
- * Ela existia porque o painel do menubar hospedava o submenu dentro de si: o
- * subpainel nascia como filho absoluto e saía da caixa, o `overflow-y: auto`
- * herdado o transformava em região rolável, o axe reprovava com
- * `scrollable-region-focusable` e o submenu ainda ficava RECORTADO. Desde
- * 2026-09-07 o submenu vai para o body, e nada disso se aplica.
+ * Ela existia por um motivo que acabou — o submenu nascia dentro do painel e
+ * era recortado; desde 2026-09-07 ele vai para o body — e ficava por outro,
+ * declarado como hipótese: sem ela o painel volta a ter `overflow-y: auto`, e
+ * um menu longo vira região rolável cujos itens se alcançam por SETA e não por
+ * Tab, que é a condição do `scrollable-region-focusable`. O comentário dizia,
+ * com todas as letras, que aquilo "precisa ser MEDIDO com um menu longo, não
+ * deduzido" e que "enquanto não for medido, a regra fica".
  *
- * NÃO foi removida, e a escolha é declarada: sem ela o painel volta a ter
- * `overflow-y: auto`, e um menu longo vira região rolável cujos itens se
- * alcançam por SETA e não por Tab — que é a condição exata do
- * `scrollable-region-focusable`. Removê-la pode reintroduzir o achado por um
- * caminho novo, e isso precisa ser MEDIDO com um menu longo, não deduzido.
- * Enquanto não for medido, a regra fica.
+ * MEDIDO em 2026-09-18, com 60 itens numa janela de 900px, nas quatro stacks
+ * de lib — que nunca receberam esta regra, porque só o vanilla escreve
+ * `.nds-menubar-panel`:
  *
- * Duas classes no seletor de propósito: a regra precisa vencer a de
- * `dropdown-menu.css` independentemente da ordem em que as folhas entram.
+ *     react     max-height 856px   rola   axe: scrollable-region-focusable
+ *     vue       max-height 861px   rola   axe: scrollable-region-focusable
+ *     angular   max-height 856px   rola   nada — os itens são tabindex="0"
+ *     svelte    max-height none    NÃO    nada — a cadeia de var() era inválida
+ *
+ * A hipótese estava certa: sem a regra, o achado aparece. As duas stacks que
+ * escapavam escapavam por DEFEITO, não por desenho — o angular por dar aos
+ * itens um `tabindex` que o padrão ARIA de foco itinerante não admite, o
+ * svelte pela cadeia quebrada de `dropdown-menu.css` (corrigida no mesmo dia).
+ *
+ * A decisão da dona, com o dado na mão: **o painel ROLA nas cinco**, e a
+ * exceção do axe é declarada com premissa conferida — o painel de menu já é
+ * acessível por teclado, a seta move o foco e traz o item para dentro da caixa
+ * visível, e é isso que a ferramenta não enxerga. A premissa vira asserção nas
+ * cinco, em vez de `a11y.test: 'todo'`.
+ *
+ * A saída oposta — `overflow: visible` nas cinco — foi recusada com o motivo:
+ * trocaria um achado de ferramenta por um defeito real, com o menu longo
+ * transbordando a viewport e parte dele inalcançável por qualquer meio.
  */
-.nds-menubar-panel.nds-dropdown-menu-content {
-  overflow: visible;
-}
 
 /*
  * O vão é 8px, e não 4 — `--spacing-2`, não `--spacing-1`.

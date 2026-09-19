@@ -311,8 +311,24 @@ ter lastro. Medido em 2026-09-12: com a linha do relevo da barra na §5, o
 portão não está errado; ele foi escrito para um PRD de um componente, e este é de
 uma família com duas folhas.
 
-> **PENDÊNCIA · 2026-09-12** — a `.nds-menubar-panel` (e com ela o `overflow: visible` de `menubar.css:165-167`) é escrita só pelo vanilla (`menubar.ts:422-424`); nas outras quatro o painel do Menubar leva só `nds-dropdown-menu-content` (react `menubar.tsx:91-97` via `DropdownMenuContent`, vue `MenubarContent.vue:65`, svelte `menubar-content.svelte:73`, angular `menubar.ts:251`) e fica com o `overflow-y: auto` do bloco composto. Conferido em 2026-09-15: continua assim, e nenhuma story das cinco monta um menu longo o bastante para rolar — o passo 1 abaixo não foi feito. Aplicar a classe inteira nas quatro NÃO é saída: ela traz `position: absolute` com `top`/`left`, e disputaria posição com a lib (D12). A ordem é (1) medir com um menu longo, nas quatro stacks de lib, se o axe acusa `scrollable-region-focusable` — se não acusar, a regra `menubar.css:146-167` é obsoleta e sai; (2) se acusar, separar o `overflow` da ancoragem num seletor aplicável às cinco; (3) aplicar com asserção nas cinco.
-> **Fecha quando**: existe nas cinco stacks uma story de Menubar com menu longo o bastante para rolar, com a medição do axe registrada aqui, e a regra de `menubar.css:146-167` foi apagada (achado ausente) ou passou a alcançar o painel das cinco (achado presente).
+**FECHADA · 2026-09-18 — o passo 1 foi medido, e ele virou a D17.** A pendência
+pedia, antes de qualquer conserto, medir com um menu longo se o axe acusa
+`scrollable-region-focusable`. Medido com 60 itens numa janela de 900px, nas
+quatro stacks de lib:
+
+| stack | `max-height` | rola? | axe |
+|---|---|---|---|
+| react | 856px | sim | **`scrollable-region-focusable`** |
+| vue | 861px | sim | **`scrollable-region-focusable`** |
+| angular | 856px | sim | nada — os itens são `tabindex="0"` |
+| svelte | `none` | **não** | nada — a cadeia de `var()` era inválida |
+
+O achado aparece, então a regra não era obsoleta. **As duas stacks que
+escapavam escapavam por DEFEITO**, e os dois defeitos eram maiores que a
+pendência: o angular por dar aos itens um `tabindex` que o padrão ARIA de foco
+itinerante não admite (as outras quatro usam `-1`), e o svelte pela cadeia
+quebrada de `max-height` em `dropdown-menu.css` — que vestia os TRÊS membros e
+também deixava o vanilla sem recorte. Ver a D17 e a nota de §5.
 
 ### D12 · A folha NÃO posiciona o painel, e o vão do Menubar é 8
 
@@ -470,6 +486,100 @@ baseline, de propósito — o docblock dela registra que catraca esconderia a
 dívida de quem foi consertá-la. Ou a story ganha snippet, ou o `meta` cobre o
 arquivo inteiro porque todas publicam o mesmo; mover para o `meta` stories que
 renderizam coisas diferentes cala a regra sem pagar nada.
+
+### D15 · O vão do submenu é `0` e `−4`, e o −4 sai do token
+
+**Fixada em** 2026-09-18, por decisão da dona.
+**O que havia**: react e angular declaravam `sideOffset 0` / `alignOffset −3`; o
+vanilla `4` sem deslocamento de alinhamento (`submenu.ts:39`); vue e svelte não
+declaravam nada e herdavam o padrão da lib, nunca medido. Cinco
+comportamentos, três deles não medidos.
+**O que vale**: `sideOffset: 0` encosta o subpainel no painel pai, e
+`alignOffset: −4` é exatamente o `--spacing-1` de padding do painel — é ele que
+faz o primeiro item do submenu alinhar com o sub-gatilho que o abriu, em vez de
+alinhar com a borda da caixa. O `−3` de antes não saía de token nenhum.
+**Por que o número é do design system e não da API**: é a mesma leitura da D12,
+que já fixou o vão do Menubar em 8 e o do DropdownMenu em 4. Vão é desenho.
+**O ContextMenu raiz segue o mesmo princípio com `0` e `0`** — o painel nasce no
+PONTEIRO, e qualquer deslocamento ali seria número mágico: a quina do painel fica
+onde o cursor está, que é a convenção do menu de contexto nativo. Antes: react
+`0`/`4`, angular `0`/`0`, svelte herdando `2` do bits, vue herdando da reka, e o
+vanilla sem a opção. **Esta metade não foi perguntada à dona** — ela decidiu o
+submenu, e eu derivei o ContextMenu do mesmo princípio; se o `0`/`0` não for o
+desejado, é esta linha que muda.
+
+### D16 · No vanilla, escolha única é `type: 'radio-group'` nas três fábricas
+
+**Fixada em** 2026-09-18, por decisão da dona.
+**O que havia**: a referência cross-stack divergia DE SI MESMA em três formas —
+`createDropdownMenu` com `type: 'radio'` e `group` por item
+(`dropdown-menu.ts:153-154`), `createContextMenu` com um grupo só e
+`radioValue`/`onRadioChange` na raiz (`context-menu.ts:150-152`), e
+`createMenubar` com `type: 'radio-group'` mais `options`/`value`/`onValueChange`
+(`menubar.ts:119-122`).
+**O que vale**: a forma do `createMenubar`. É a única que declara o grupo como
+uma coisa só e a única cujo par `value`/`onValueChange` é o que o resto do design
+system usa para escolha controlada.
+**Custo, declarado**: muda API pública de dois componentes do vanilla. Foi
+decidido assim mesmo, porque a alternativa era a referência seguir ensinando três
+contratos para um conceito — e é o vanilla que as outras quatro stacks
+consultam quando divergem.
+
+### D17 · O painel de menu ROLA nas cinco, e a exceção do axe é declarada
+
+**Fixada em** 2026-09-18, por decisão da dona, sobre medição.
+**Medição**: ver a nota que fechou a pendência da D9 — com 60 itens numa janela
+de 900px, react e vue acusam `scrollable-region-focusable`; o angular escapava
+por dar aos itens `tabindex="0"`, e o svelte por uma cadeia de `var()` inválida.
+**O que vale**: o painel recorta na viewport e rola. A exceção do axe é
+**declarada com premissa**, e a premissa vira asserção nas cinco: navegar por
+seta num menu longo traz o item focado para dentro da caixa visível. O painel de
+menu já é acessível por teclado — a ferramenta é que não enxerga foco itinerante
+—, e `a11y.test: 'todo'` não é o caminho para isso.
+**A saída oposta foi recusada, com o motivo**: `overflow: visible` nas cinco
+alinharia ao vanilla e faria o achado sumir, mas trocaria um achado de
+ferramenta por um defeito real — menu longo transbordando a viewport, com parte
+dele inalcançável por qualquer meio.
+**Duas consequências que não eram da pendência**:
+
+1. **`menubar.css` perdeu a regra de `overflow: visible`.** Ela existia por um
+   motivo que acabou em 2026-09-07 e ficava por uma HIPÓTESE que o próprio
+   comentário declarava como não medida. Medida, a hipótese estava certa — e a
+   decisão foi para o outro lado.
+2. **Os itens do angular passam a `tabindex="-1"`**, com foco itinerante como
+   nas outras quatro. `0` em item de menu não é o padrão ARIA, e era ele que
+   escondia o achado naquela stack.
+
+### D18 · Enter ou Espaço no gatilho de um menu já aberto FECHA, com `overlay`
+
+**Fixada em** 2026-09-18, por decisão da dona, sobre medição.
+**Medição em 2026-09-18**, com a precondição conferida (menu aberto e
+`document.activeElement === gatilho`) antes da tecla:
+
+| stack | fecha? | `reason` |
+|---|---|---|
+| react | sim | `overlay` (motivo da lib: `trigger-press`) |
+| vue | sim | `overlay` |
+| angular | sim | `overlay` |
+| vanilla | **não**, e não avisa | nenhum |
+| svelte | **estado inalcançável** | — |
+
+**O que vale**: fecha, com `reason: overlay`. O vanilla passa a fechar e a
+avisar; o gesto é o mesmo que fecha um menu aberto em qualquer sistema
+operacional.
+**O svelte é exceção DECLARADA, e a premissa é da lib**: o bits crava
+`trapFocus` em `Menu.Content` (`menu-content.svelte:69`, `:100`), não como prop.
+Medido: `trigger.focus()` não move o foco, e focar um botão de fora devolve o
+foco ao painel — então o foco nunca descansa num gatilho de menubar aberto, e
+Enter ali não é gesto que alguém possa executar. Pelo ponteiro o estado é
+alcançável, e um clique fecha com `overlay`.
+**Por que a exceção e não uma asserção igual às outras quatro**: asserção
+escrita para um estado inalcançável não pode reprovar — é portão sem dentes, com
+a agravante de parecer cobertura. O portão confere a PREMISSA: se o bits deixar
+de prender o foco, a exceção vence e reprova.
+**Até 2026-09-15 a §7 deduzia** que o svelte saía com `api` por leitura de
+código. A dedução errava o fenômeno inteiro: não é que o motivo seja outro, é que
+o gesto não acontece.
 
 ## 4. Anatomia
 
@@ -818,8 +928,12 @@ código, e não medição em navegador, diz isso no próprio item.
    DropdownMenu e o ContextMenu do svelte contornam isso e escrevem
    `role="separator"` (`dropdown-menu-separator.svelte:23-33`,
    `context-menu-separator.svelte:24-31`), como as outras quatro stacks e o
-   vanilla (`menubar.ts:452`). Maioria (14 de 15): `separator`. Lido na fonte, não
-   medido em navegador.
+   vanilla (`menubar.ts:452`). Maioria (14 de 15): `separator`.
+   **MEDIDO EM NAVEGADOR em 2026-09-18 — confirma a leitura.** Abrindo os três
+   painéis do svelte e lendo `[data-slot="*-separator"]`: Menubar `group` e sem
+   `aria-orientation`, DropdownMenu `separator`, ContextMenu `separator`. O
+   mecanismo confere no pacote instalado — `MenuSeparatorState.props` crava
+   `role: "group"` em `menu.svelte.js:1331-1335`.
 
 6. **DropdownMenu e Menubar — `inset` aceito em item de marcação e de rádio, onde
    a folha não recua nada.** A folha só lê `[data-inset]` em item, rótulo e
@@ -869,13 +983,21 @@ código, e não medição em navegador, diz isso no próprio item.
    (`menubar.ts:119-122`). Divergência de API dentro de uma stack — registrar, não
    alinhar sem decisão (muda API pública de dois componentes).
 
-10. **Menubar, no vue — reabrir pelo teclado só entra se o primeiro item for
-    `menuitem`.** O conserto de `MenubarTrigger.vue:37-62` procura
-    `[role="menuitem"]` (`:59`); menu que começa por marcação ou rádio fica com o
-    foco no gatilho na reabertura. As outras quatro entram no primeiro item de
-    qualquer papel (vanilla `menubar.ts:392` sobre `focaveis`; angular
-    `menu-popup-scope.ts:182-183` casa os cinco seletores de item). Lido, não
-    medido em navegador.
+10. ~~**Menubar, no vue — reabrir pelo teclado só entra se o primeiro item for
+    `menuitem`.**~~ **RETIRADA em 2026-09-18: a medição em navegador CONTRADIZ a
+    leitura, e não havia inconsistência.** A leitura de 2026-09-15 era: o
+    conserto de `MenubarTrigger.vue:37-62` procura `[role="menuitem"]` (`:59`),
+    então um menu que comece por marcação ou rádio ficaria com o foco no gatilho
+    na reabertura. Medido com um menu SEM nenhum `[role="menuitem"]`
+    (`temMenuitemPuro: false`), na sequência gatilho → Enter → Escape → Enter: o
+    foco pousa no `menuitemcheckbox` nas TRÊS stacks medidas — vue, vanilla e
+    angular. O `querySelector` do conserto não tinha o que casar e o foco entrou
+    assim mesmo: a entrada da própria reka cobre esta forma hoje. Medido numa
+    barra de dois menus, então a tabulação itinerante é real e não caso especial
+    de gatilho único. **A lição é do MÉTODO**: o item nascia marcado como
+    dedução, e a dedução leu o conserto como se ele fosse o único caminho de
+    foco. Fica registrado em vez de apagado — inconsistência que nunca existiu
+    volta como achado novo se ninguém escrever que foi medida.
 
 11. **Os três membros — o conjunto de stories difere só no vanilla.** Existem só
     no vanilla: `Placement` (`dropdown-menu-variants.stories.ts:148`), `ItemInset`
@@ -946,19 +1068,35 @@ código, e não medição em navegador, diz isso no próprio item.
     `:341`). A tabela `analytics` do conteúdo mostra três. Iguais entre stacks,
     divergentes entre as duas camadas.
 
-19. **Menubar — Enter ou Espaço no gatilho do menu já aberto.** vue: fecha com
-    `overlay` (`MenubarTrigger.vue:73-77`); angular: `overlay` pelo gesto de saída
-    (`menu-close-reason.ts:62`, `:75`); vanilla: não fecha e não avisa — o
-    `keydown` chama `openMenu` (`menubar.ts:798-801`), que sai cedo com o menu já
-    aberto (`:384`); svelte: o vigia da docs page só marca o ponteiro
-    (`menu-close-reason.ts:153-156`), então sai `api` (dedução, não medido);
-    react: depende do motivo da base-ui, não conferido. Sem maioria medida.
+19. **Menubar — Enter ou Espaço no gatilho do menu já aberto. MEDIDO em
+    2026-09-18, e virou a D18.** A leitura de 2026-09-15 deixava dois vazios: o
+    react "não conferido" e o svelte deduzido como `api`. Medidos: react FECHA
+    com `overlay` (motivo da lib: `trigger-press`; Espaço idêntico), e no svelte
+    o estado é **inalcançável** — o bits crava `trapFocus` em `Menu.Content`, e o
+    foco nunca descansa num gatilho aberto. A dedução não errava o motivo, errava
+    o fenômeno. Confirmados: vue `overlay`, angular `overlay`, vanilla não fecha
+    e não avisa. Contrato fixado na D18.
 
-20. **Menubar, no svelte — Tab com o foco no gatilho do menu aberto sai `api`.**
-    O fechamento vai por `menubar.svelte:32-37` e `menubar-content.svelte:58-60`
-    sem passar pelo vigia da docs page (dedução do código); vanilla `overlay`
-    (`menubar.ts:377`), vue `overlay` (`menubar/tab-leaves-menu.ts:41`). Maioria
-    medida (2): `overlay`.
+20. **Menubar — Tab com o foco no gatilho do menu aberto. MEDIDO em 2026-09-18,
+    e a medição INVERTE quem é o fora da curva.** A leitura de 2026-09-15 dizia
+    que o svelte saía `api` e que o vue saía `overlay` por
+    `menubar/tab-leaves-menu.ts:41`. Medido despachando o `keydown` primeiro,
+    registrando `defaultPrevented` e só então movendo o foco — a ordem real do
+    navegador:
+
+    | stack | consumiu o keydown? | fecha? | `reason` |
+    |---|---|---|---|
+    | vanilla | sim (`root` → `leaveByTab`) | sim | `overlay` — confirma |
+    | react | não | ao sair o foco | `overlay` (lib: `focus-out`) |
+    | angular | não | ao sair o foco | `overlay` |
+    | vue | não | ao sair o foco | **`api`** — contradiz |
+    | svelte | — | — | inalcançável (mesmo `trapFocus` da D18) |
+
+    O `tab-leaves-menu.ts:41` que a leitura citava é um ouvinte de captura no
+    CONTEÚDO, e um Tab dado no GATILHO nunca chega nele: a reka fecha por
+    focus-out sem anotar nada, e `closeReasonFor` cai em `api`. **O fora da
+    curva é o vue, não o svelte** — e o svelte não está no meio da comparação,
+    porque ali o estado não existe.
 
 21. **Docs pages — as mesmas quinze seções na mesma ordem, e quatro divergências
     de conteúdo.** (a) A seção de variantes do ContextMenu no angular é
@@ -996,14 +1134,19 @@ código, e não medição em navegador, diz isso no próprio item.
     contra `contextMenuDarkPaletteSource` nas outras três. Maioria: construtor em
     `ui/` e nome em inglês.
 
-> **PENDÊNCIA · 2026-09-15** — o separador do Menubar no svelte sai com `role="group"` (inconsistência 5), e é o único dos quinze; lido na fonte do bits, falta medir em navegador e corrigir no wrapper como os outros dois membros do svelte já fazem.
+> **PENDÊNCIA · 2026-09-15 · medida em 2026-09-18, em conserto** — o separador do Menubar no svelte sai com `role="group"` (inconsistência 5), e é o único dos quinze. A metade que faltava — medir em navegador — está feita e confirma a leitura; falta o conserto no wrapper, como os outros dois membros do svelte já fazem.
 > **Fecha quando**: `menubar-separator.svelte` escreve `role="separator"` e uma story do Menubar nas cinco stacks afirma o papel do separador.
 
 > **PENDÊNCIA · 2026-09-15** — o painel do `createDropdownMenu` e o painel de topo do `createMenubar` no vanilla não animam a entrada que as outras stacks animam (inconsistência 7).
 > **Fecha quando**: os dois painéis do vanilla levam o marcador que `dropdown-menu.css:409-412` lê, ou a D5 registra que o vanilla não anima e por quê.
 
-> **PENDÊNCIA · 2026-09-15** — Enter ou Espaço no gatilho de um menu da barra JÁ aberto fecha com `overlay` no vue e no angular, não fecha nem avisa no vanilla, e sai `api` no svelte por dedução do código (inconsistência 19); falta decidir o comportamento e medir as cinco, react incluído.
-> **Fecha quando**: uma story de Menubar nas cinco stacks aperta Enter no gatilho aberto e afirma o mesmo estado final e o mesmo `reason`.
+**PENDÊNCIA DE 2026-09-15 SOBRE O ENTER — FECHADA em 2026-09-18.** Ela pedia
+decidir o comportamento e medir as cinco, react incluído. As cinco foram
+medidas, a dona decidiu, e o contrato está na **D18**: fecha com `overlay`, com
+o svelte declarado como estado inalcançável e a premissa do `trapFocus`
+conferida por portão. O que a pendência supunha — "uma story nas cinco afirma o
+mesmo estado final" — não vale como escrito: no svelte essa asserção seria
+inerte, e inerte é portão sem dentes.
 
 ## 8. Acessibilidade
 

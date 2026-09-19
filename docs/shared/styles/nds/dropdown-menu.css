@@ -174,9 +174,32 @@
  * Sem os quatro degraus a cadeia caía em `center` no Svelte, e o menu crescia do
  * MEIO em vez de crescer do gatilho. Nada reprovava: `center` é fallback válido,
  * e por isso a omissão é silenciosa — foi relatada como achado novo duas vezes.
- * Portão: `cadeia_transform_origin_sem_bits`. */
+ * Portão: `cadeia_transform_origin_sem_bits`.
+ *
+ * **A MESMA omissão estava uma linha acima, no `max-height`, e sobreviveu à
+ * correção de 2026-09-13** — medida em 2026-09-18. A cadeia parava nos três
+ * degraus da reka: sem degrau `--bits-*` e, pior, SEM LITERAL no fim. Sem
+ * literal a cadeia inteira é INVÁLIDA quando nenhuma variável existe, e
+ * `max-height` computa `none`. Duas das cinco stacks estavam assim:
+ *
+ *   - **svelte**, por falta do degrau do bits — medido: `max-height: none`,
+ *     painel de 1748px numa janela de 900, sem recorte;
+ *   - **vanilla**, porque `positionFloating` não publica `--available-height`
+ *     nenhuma. Os painéis de dropdown e de context menu do vanilla nunca
+ *     recortaram.
+ *
+ * As duas folhas irmãs já tinham o literal — `combobox.css` cai em `18rem`,
+ * `select.css` em `24rem` — e só esta não tinha. O valor aqui é `24rem`, o
+ * mesmo do select, que é o vizinho de forma (lista de escolha ancorada).
+ *
+ * O que torna esta família de defeito cara é ela ser SILENCIOSA e com cara de
+ * correta: `none` é valor válido de `max-height`, `center` era fallback válido
+ * de `transform-origin`. Não há compilador, suíte nem folha que reprove. Por
+ * isso o portão deixou de casar o NOME da propriedade e passou a casar o
+ * PADRÃO — cadeia de `var()` que nomeia `--reka-*` sem irmã `--bits-*` ou sem
+ * literal no fim. Escrito para a propriedade, ele não podia ver a vizinha. */
 .nds-dropdown-menu-content {
-  max-height: var(--available-height, var(--reka-dropdown-menu-content-available-height, var(--reka-context-menu-content-available-height, var(--reka-menubar-content-available-height))));
+  max-height: var(--available-height, var(--reka-dropdown-menu-content-available-height, var(--reka-context-menu-content-available-height, var(--reka-menubar-content-available-height, var(--bits-dropdown-menu-content-available-height, var(--bits-context-menu-content-available-height, var(--bits-menubar-content-available-height, var(--bits-menu-content-available-height, 24rem))))))));
   width: var(--anchor-width, var(--reka-dropdown-menu-trigger-width, auto));
   overflow-x: hidden;
   overflow-y: auto;

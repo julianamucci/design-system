@@ -1,0 +1,89 @@
+{
+  "_leia": [
+    "Catraca da regra `cadeia_var_sem_saida` do `scripts/audit.mjs`, criada em 2026-09-18.",
+    "",
+    "A regra nasceu de um defeito MEDIDO na família de menus: a cadeia de `max-height`",
+    "de `.nds-dropdown-menu-content` não tinha degrau `--bits-*` nem literal no fim, e",
+    "por isso computava `none` em DUAS das cinco stacks — no svelte por falta do degrau,",
+    "no vanilla porque `positionFloating` não publica variável nenhuma. O painel de menu",
+    "nunca recortava na viewport: 1748px numa janela de 900px.",
+    "",
+    "Ao ser generalizada de `transform-origin` (uma propriedade) para o PADRÃO (qualquer",
+    "cadeia por lib), a regra achou de imediato mais nove ocorrências em três outras",
+    "folhas. Elas são de OUTROS componentes e a direção do conserto NÃO foi medida — e",
+    "escrever motivo não medido é a dívida que este repositório já pagou caro duas vezes.",
+    "",
+    "Então elas entram aqui como DÍVIDA DECLARADA, não como exceção com motivo: a regra",
+    "reprova toda ocorrência NOVA, e estas nove ficam registradas com o que de fato se",
+    "observou. Sair daqui é medir a stack afetada e ou consertar, ou promover a entrada a",
+    "exceção com a premissa conferida. Catraca só desce.",
+    "",
+    "A triagem preliminar, que é LEITURA e não medição, está em `triagem` de cada entrada."
+  ],
+  "medido_em": "2026-09-18",
+  "entradas": [
+    {
+      "arquivo": "docs/shared/styles/nds/combobox.css",
+      "linha": 307,
+      "propriedade": "min-width",
+      "regra": "cadeia_var_sem_bits",
+      "triagem": "degradação provável no svelte: sem o degrau `--bits-combobox-anchor-width` o painel cai no literal `12rem` em vez de acompanhar a largura do gatilho. O bits publica o nome — `getFloatingContentCSSVars` é chamado com \"combobox\" na dist instalada."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/combobox.css",
+      "linha": 320,
+      "propriedade": "max-height",
+      "regra": "cadeia_var_sem_bits",
+      "triagem": "degradação provável no svelte: cai no literal `18rem` em vez da altura disponível na viewport."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/dropdown-menu.css",
+      "linha": 203,
+      "propriedade": "width",
+      "regra": "cadeia_var_sem_bits",
+      "triagem": "discutível, e talvez a cadeia inteira seja resíduo de cópia do select: menu não tem por que ter a largura do gatilho. O fim `auto` é o comportamento que um menu quer, então a ausência do degrau do bits não produz defeito visível — mas no react o `--anchor-width` da base-ui EXISTE, e ali o menu passa a ter a largura do gatilho. Medir antes de mexer."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/navigation-menu.css",
+      "linha": 342,
+      "propriedade": "height",
+      "regra": "cadeia_var_sem_literal",
+      "triagem": "provavelmente ausente por desenho: onde nenhuma lib publica a altura do viewport (vanilla), a propriedade deve mesmo sumir e o elemento se dimensiona pelo conteúdo. Não medido."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/navigation-menu.css",
+      "linha": 356,
+      "propriedade": "width",
+      "regra": "cadeia_var_sem_literal",
+      "triagem": "mesmo caso da linha 342."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/select.css",
+      "linha": 202,
+      "propriedade": "max-height",
+      "regra": "cadeia_var_sem_bits",
+      "triagem": "degradação provável no svelte: cai no literal `24rem` em vez da altura disponível."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/select.css",
+      "linha": 203,
+      "propriedade": "width",
+      "regra": "cadeia_var_sem_bits",
+      "triagem": "degradação provável no svelte: cai em `auto` em vez de acompanhar o gatilho — e no select, ao contrário do menu, acompanhar o gatilho É o desenho."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/select.css",
+      "linha": 229,
+      "propriedade": "height",
+      "regra": "cadeia_var_sem_literal",
+      "triagem": "provavelmente ausente por desenho: no vanilla não há variável de altura do gatilho, e o item se dimensiona pelo próprio padding. Não medido."
+    },
+    {
+      "arquivo": "docs/shared/styles/nds/select.css",
+      "linha": 231,
+      "propriedade": "min-width",
+      "regra": "cadeia_var_sem_literal",
+      "triagem": "mesmo caso da linha 229."
+    }
+  ]
+}

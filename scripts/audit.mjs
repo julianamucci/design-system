@@ -2760,6 +2760,108 @@ const CADEIA_ORIGEM_SEM_BITS = {
     + '`getFloatingContentCSSVars` no pacote dele (medido na 2.19.0)',
 };
 
+/**
+ * Cadeia de `var()` por LIB que não tem saída — e esta regra casa o PADRÃO, não
+ * o nome da propriedade.
+ *
+ * A `cadeia_transform_origin_sem_bits` foi escrita em 2026-09-13 para uma
+ * propriedade só, e por isso não podia ver a vizinha: em 2026-09-18 o
+ * `max-height` de `.nds-dropdown-menu-content` estava com o MESMO defeito, UMA
+ * LINHA ACIMA da cadeia que aquela regra guarda, e com um agravante — sem
+ * literal no fim.
+ *
+ * As duas metades, e a segunda é a pior:
+ *
+ *  - **sem degrau `--bits-*`**: no svelte a cadeia pula para o próximo degrau e,
+ *    se houver literal, cai nele — degradação silenciosa mas contida;
+ *  - **sem LITERAL no fim**: quando nenhuma variável da cadeia existe, a
+ *    declaração inteira é inválida e a propriedade some. `max-height` virou
+ *    `none` em DUAS das cinco stacks — no svelte por falta do degrau do bits,
+ *    no vanilla porque `positionFloating` não publica variável nenhuma —, e o
+ *    painel de menu nunca recortava na viewport. Medido: 1748px de painel numa
+ *    janela de 900px.
+ *
+ * O que torna a família cara é ser silenciosa e ter cara de correta: `none` é
+ * `max-height` válido, `center` era `transform-origin` válido. Nenhum
+ * compilador, suíte ou folha reprova.
+ */
+function auditCadeiaVarSemSaida() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+
+  // Dívida DECLARADA, não exceção: ao ser generalizada de uma propriedade para o
+  // padrão, a regra achou nove ocorrências em folhas de OUTROS componentes, e a
+  // direção do conserto de nenhuma delas foi medida. Registrar o que se observou
+  // e travar o crescimento vale mais que inventar motivo — portão que despeja
+  // backlog ensina a ignorar o portão, e motivo não medido envelhece ensinando a
+  // coisa errada. A chave é arquivo+propriedade+regra, e não a LINHA: linha anda
+  // com qualquer edição acima, e catraca que destrava sozinha não é catraca.
+  const divida = new Set();
+  try {
+    const bruto = readFile(join(ROOT, 'docs', 'shared', 'primitives', 'cadeia-var-sem-saida-divida.json'));
+    for (const e of JSON.parse(bruto || '{}').entradas || []) {
+      divida.add(`${e.arquivo}|${e.propriedade}|${e.regra}`);
+    }
+  } catch { /* sem arquivo de dívida: a regra cobra tudo */ }
+  const declarada = (caminho, prop, regra) =>
+    divida.has(`${relative(ROOT, caminho).split('\\').join('/')}|${prop}|${regra}`);
+
+  /** O `var(` mais interno da linha tem fallback que NÃO é outra variável? */
+  const terminaEmLiteral = (linha) => {
+    const i = linha.lastIndexOf('var(');
+    if (i < 0) return true;
+    let profundidade = 0;
+    let fim = -1;
+    for (let j = i + 3; j < linha.length; j += 1) {
+      if (linha[j] === '(') profundidade += 1;
+      else if (linha[j] === ')') { profundidade -= 1; if (!profundidade) { fim = j; break; } }
+    }
+    if (fim < 0) return true; // linha partida: não é o defeito desta regra
+    const dentro = linha.slice(i + 4, fim);
+    const virgula = dentro.indexOf(',');
+    if (virgula < 0) return false; // `var(--x)` puro no fim da cadeia
+    return dentro.slice(virgula + 1).trim().length > 0;
+  };
+
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const arquivo = basename(caminho);
+    const conteudo = readFile(caminho);
+    if (!conteudo) continue;
+    // Comentário fora ANTES de medir: os docblocks desta pasta citam cadeias
+    // quebradas como EXEMPLO do defeito, e a regra acusaria a própria
+    // documentação — o mesmo erro que a guarda de nome acessível cometeu.
+    const linhas = conteudo.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')).split('\n');
+
+    linhas.forEach((linha, idx) => {
+      if (!/var\(\s*--(?:reka|bits)-/.test(linha)) return;
+      const prop = (/^\s*([a-z-]+)\s*:/.exec(linha) || [, '?'])[1];
+
+      if (!terminaEmLiteral(linha) && !declarada(caminho, prop, 'cadeia_var_sem_literal')) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, caminho), line: idx + 1, rule: 'cadeia_var_sem_literal',
+          message: `a cadeia de \`${prop}\` não termina em literal — quando nenhuma variável `
+            + 'da cadeia existe a declaração inteira é INVÁLIDA e a propriedade some, sem nada '
+            + 'reprovar. As folhas irmãs caem em `18rem` (combobox) e `24rem` (select)',
+        });
+      }
+
+      if (/--reka-/.test(linha) && !/--bits-/.test(linha) && !CADEIA_ORIGEM_SEM_BITS[arquivo]
+          && !declarada(caminho, prop, 'cadeia_var_sem_bits')) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, caminho), line: idx + 1, rule: 'cadeia_var_sem_bits',
+          message: `a cadeia de \`${prop}\` enumera \`--reka-*\` e nenhum \`--bits-*\` — no `
+            + 'Svelte ela pula o degrau da lib. Declare o degrau, ou a folha em '
+            + '`CADEIA_ORIGEM_SEM_BITS` com o motivo medido',
+        });
+      }
+    });
+  }
+
+  return violations;
+}
+
 function auditCadeiaTransformOrigin() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -12626,7 +12728,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado(), ...auditIdentificadorPtInfra()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditCadeiaVarSemSaida(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado(), ...auditIdentificadorPtInfra()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
