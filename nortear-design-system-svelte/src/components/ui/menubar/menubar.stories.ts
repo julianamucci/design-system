@@ -336,8 +336,96 @@ export const Playground: Story = {
       await waitForPortalGone('menu');
       await expect(args.onSelect).toHaveBeenLastCalledWith(MENUS[0].items[0]);
     });
+
+    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+      // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
+      // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO — o
+      // `alignOffset` do `MenubarContent`. As duas moram na Playground porque é
+      // aqui que a barra tem quatro menus, e são o par do mesmo contrato de
+      // ancoragem.
+      //
+      // O SEGUNDO menu, e não o primeiro. O painel do primeiro gatilho nasce
+      // colado à borda esquerda e a conta TRAVA ali: `0`, `-1`, `-4` e até
+      // `-40` leem idêntico, e foi por isso que o erro sobreviveu — nenhuma
+      // story abria um gatilho longe da borda. Mudar o exemplo para recuar a
+      // barra criaria divergência de exemplo entre as cinco; abrir um gatilho
+      // que já nasce longe, não.
+      //
+      // TEXTO contra TEXTO, e não caixa contra caixa: o contrato é sobre o que
+      // a pessoa vê alinhado. A caixa do painel encosta na caixa do gatilho e
+      // passaria com qualquer recuo — quem paga a diferença é a soma
+      // borda(1) + padding do painel(4) + padding do item(8) = 13 contra o
+      // padding do gatilho(12).
+      //
+      // Tolerância 0,75 e não 1: os dois candidatos do eixo ficam a exatamente
+      // 1px um do outro, e com 1 a asserção não os separaria — mesma razão da
+      // D15 no submenu. A espera é `waitForAncorado` mais o fim das animações,
+      // e a leitura é DIRETA: um `waitFor` em volta da medida fecharia no
+      // primeiro quadro, e a entrada anima `translateY` e `scale(0.98)` (D5).
+      //
+      // Precondição e limpeza próprias (abre, mede, fecha) para não perturbar
+      // os steps anteriores nem o replay do painel Interactions.
+      const segundo = triggers[1];
+      await expect(segundo).toHaveAccessibleName(MENUS[1].label);
+      if (segundo.getAttribute('aria-expanded') !== 'true') await userEvent.click(segundo);
+      await waitForPortal('menu');
+
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      await Promise.all(
+        panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined)),
+      );
+
+      const primeiro = within(panel).getAllByRole('menuitem')[0];
+      const delta = textLeft(primeiro) - textLeft(segundo);
+      await expect(
+        Math.abs(delta),
+        `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +
+          'o recuo é o `alignOffset` de `MenubarContent` em menubar-content.svelte: ' +
+          '0 mede +1,08 · -1 mede +0,08 · -4 mede -2,92 (medido em 2026-09-19)',
+      ).toBeLessThanOrEqual(0.75);
+
+      // Fecha: a play termina com a barra em repouso, como terminava antes.
+      await userEvent.click(segundo);
+      await waitForPortalGone('menu');
+    });
   },
 };
+
+/**
+ * Borda ESQUERDA da caixa de TEXTO do elemento, em coordenada de viewport.
+ *
+ * `getBoundingClientRect()` do elemento devolveria a caixa com o `padding`
+ * dentro, e o contrato de alinhamento do painel da barra é sobre o texto: o
+ * gatilho tem `padding-inline: var(--spacing-3)` e o item do painel tem
+ * `var(--spacing-2)` mais a borda e o `padding` do próprio painel. Medir caixa
+ * contra caixa aceitaria qualquer recuo.
+ *
+ * Um `Range` resolve os dois formatos de markup de uma vez, e os dois existem
+ * no design system: a árvore canônica de `docs/shared/styles/nds/menubar.css`
+ * põe o rótulo do item num `<span>` próprio, e é assim que o Vanilla monta;
+ * nesta stack o rótulo é nó de TEXTO SOLTO nos dois lados — no `<button>` do
+ * gatilho e no item, onde o único `<span>` é o do atalho (`MenubarShortcut`).
+ * Por isso a busca é pelo primeiro nó de texto não vazio, e não por
+ * `querySelector('span')`, que aqui pegaria "Ctrl+Z". O `selectNodeContents`
+ * fica de reserva para markup que embrulhe o rótulo.
+ *
+ * É leitura PURA: não escreve no DOM, então não corre o risco do `waitFor` que
+ * se reagenda sozinho.
+ */
+function textLeft(el: HTMLElement): number {
+  const range = el.ownerDocument.createRange();
+  const rotulo = Array.from(el.childNodes).find(
+    (n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? '').trim() !== '',
+  );
+  if (rotulo) {
+    range.setStart(rotulo, 0);
+    range.setEnd(rotulo, (rotulo.textContent ?? '').length);
+  } else {
+    range.selectNodeContents(el);
+  }
+  return range.getBoundingClientRect().left;
+}
 
 /**
  * Clique fora da barra, por despacho direto no `<body>`.

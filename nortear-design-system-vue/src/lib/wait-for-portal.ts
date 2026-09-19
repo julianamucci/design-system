@@ -175,6 +175,28 @@ export async function waitForPortal(
   );
 }
 
+/**
+ * Aguarda TODA animação em curso no elemento terminar.
+ *
+ * Irmã de `waitForPortal`, e existe porque a pergunta é outra. Aquela espera o
+ * painel ficar VISÍVEL (opacidade quase final), que é o bastante para afirmar
+ * presença; esta espera a animação ACABAR, que é o que uma medida de GEOMETRIA
+ * precisa — a entrada do painel de menu anima `translateY` e `scale(0.98)`
+ * (D5), e os dois entram no `getBoundingClientRect`. Opacidade em 0,9 é 90% da
+ * escada, não o fim dela.
+ *
+ * `finished` rejeita quando a animação é cancelada (o painel sai antes de
+ * terminar); ali não há o que esperar, e o `catch` devolve o controle em vez de
+ * derrubar a play. Animação já concluída não aparece em `getAnimations()`,
+ * então chamar depois da hora resolve na hora.
+ *
+ * E é leitura PURA — não escreve no DOM —, o que a torna segura fora e dentro
+ * de qualquer espera.
+ */
+export async function waitForAnimationsDone(el: Element): Promise<void> {
+  await Promise.all(el.getAnimations().map((a) => a.finished.catch(() => undefined)));
+}
+
 /** Aguarda portal fechar (útil pra testar Escape, click outside, etc.) */
 export async function waitForPortalGone(
   role: "tooltip" | "dialog" | "alertdialog" | "listbox" | "menu",

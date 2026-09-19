@@ -188,6 +188,44 @@ export const Destructive: Story = {
       await expect(perigoso.getAttribute('data-slot')).toBe('menubar-item');
     });
 
+    await step('A divisória se anuncia como DIVISÓRIA, e não como grupo', async () => {
+      // Esta stack é a REFERÊNCIA, e é o markup daqui (`menubar.ts:465-472`) que
+      // define o que as outras quatro têm de produzir. Lá a asserção existe
+      // porque a lib pode desfazer o papel na próxima versão — foi assim que o
+      // separador do Menubar do svelte passou a sair como `group`, o único dos
+      // quinze da família. Aqui não há lib: a asserção existe porque a
+      // referência precisa AFIRMAR o que define. Se este separador mudar sem
+      // ninguém notar, as outras quatro passam a estar alinhadas com o nada.
+      // A busca é pelo `data-slot`, e não pelo papel: procurar por
+      // `getAllByRole('separator')` e então afirmar o papel seria circular —
+      // o defeito que esta asserção existe para pegar some da própria busca.
+      const separatorEl = panel.querySelector<HTMLElement>('[data-slot="menubar-separator"]');
+      await expect(separatorEl).not.toBeNull();
+      await expect(separatorEl!.getAttribute('role')).toBe('separator');
+      await expect(separatorEl!.classList.contains('nds-dropdown-menu-separator')).toBe(true);
+
+      // `aria-orientation` PRESENTE e `horizontal`, decidido em 2026-09-19.
+      // Esta asserção afirmava a AUSÊNCIA até aquele dia, e a ausência era o
+      // estado medido: a fábrica não escrevia o atributo em nenhum dos três
+      // menus desta stack, enquanto as outras quatro o recebem da lib headless
+      // e afirmam `"horizontal"`. Não era defeito de acessibilidade —
+      // `horizontal` é o valor IMPLÍCITO de `role="separator"`, e o que é
+      // anunciado é o mesmo —, era divergência de MARKUP entre as cinco, e a
+      // referência é quem define o markup. A decisão foi a referência passar a
+      // escrever, nos três membros de uma vez (`menubar.ts`,
+      // `dropdown-menu.ts`, `context-menu.ts`); as outras quatro agora se
+      // alinham a alguma coisa em vez de a nada.
+      await expect(separatorEl!.getAttribute('aria-orientation')).toBe('horizontal');
+
+      // E o painel não ganha um grupo de brinde: com o papel errado, esta
+      // contagem daria 1 em vez de 0 — é ela que pegou o defeito no svelte.
+      // Esta ficha não declara nenhum item `label`, e é o `label` que abre o
+      // `role="group"` nesta fábrica (`menubar.ts:475-487`), então o zero aqui
+      // mede o separador e não o painel.
+      await expect(canvas.queryAllByRole('group')).toHaveLength(0);
+      await expect(canvas.getAllByRole('separator')).toHaveLength(1);
+    });
+
     await step('A cor do texto distingue a ação irreversível', async () => {
       // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
       // chegasse, esta asserção pegaria a mesma cor do item neutro.

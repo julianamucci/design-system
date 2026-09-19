@@ -9,7 +9,13 @@ import {
   type MenubarArgs,
 } from './menubar.source';
 import { NdsButton } from './button';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
+import {
+  waitForPortal,
+  waitForPortalVanish,
+  waitForPousado,
+  FOCUS_RULE_GUARDA,
+  axeRules,
+} from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
 import { clickOutside } from '@shared/testing/context-menu-area';
 import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
@@ -58,6 +64,26 @@ const MENUS: MenuDemo[] = [
     ],
   },
 ];
+
+/**
+ * Borda ESQUERDA da caixa de TEXTO do nó, em coordenada de viewport.
+ *
+ * `getBoundingClientRect()` do ELEMENTO devolveria a caixa com o `padding`
+ * dentro, e o contrato de alinhamento do painel da barra é sobre o texto: o
+ * gatilho tem `padding-inline: var(--spacing-3)` e o item do painel tem
+ * `var(--spacing-2)` mais a borda e o `padding` do próprio painel. Medir caixa
+ * contra caixa aceitaria qualquer recuo.
+ *
+ * Um `Range` sobre o conteúdo resolve elemento e nó de texto com o mesmo código
+ * — nesta stack o rótulo do gatilho e o do item são os dois nós de texto soltos
+ * — e é leitura PURA: não escreve no DOM, então pode entrar numa espera sem o
+ * risco do `waitFor` que se reagenda sozinho.
+ */
+function textLeft(no: Node): number {
+  const range = no.ownerDocument!.createRange();
+  range.selectNodeContents(no);
+  return range.getBoundingClientRect().left;
+}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -347,6 +373,63 @@ export const Playground: Story = {
       // quem escuta a abertura ficou sabendo que o menu fechou.
       await expect(itemChoice).not.toHaveBeenCalled();
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
+
+    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+      // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
+      // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO — o
+      // `alignOffset` do painel da barra, que vale `-1` e é a BORDA do painel
+      // (a aritmética inteira está em `menubar.ts`). As duas são o par do mesmo
+      // contrato de ancoragem, e por isso moram juntas na Playground: é aqui
+      // que a barra tem quatro menus.
+      //
+      // O SEGUNDO menu, e não o primeiro. O painel do PRIMEIRO gatilho nasce
+      // encostado na borda esquerda da janela e a conta TRAVA — ali `0`, `-1`,
+      // `-4` e até `-40` leem idêntico, e foi por isso que o erro sobreviveu.
+      // Mudar o exemplo criaria divergência de exemplo entre as cinco; abrir um
+      // gatilho que já nasce longe da borda, não.
+      //
+      // TEXTO contra TEXTO, e não caixa contra caixa: o contrato é sobre o que
+      // a pessoa vê alinhado. A caixa do painel encosta na caixa do gatilho e
+      // passaria com qualquer recuo — quem paga a diferença é a soma
+      // borda(1) + padding do painel(4) + padding do item(8) contra o
+      // padding do gatilho(12).
+      //
+      // Tolerância 0,75 e não 1: os dois candidatos do eixo (`0` e `-1`) ficam
+      // a exatamente 1px um do outro, e com 1 a asserção não os separaria —
+      // mesma razão da D15 no submenu. A espera é `waitForPousado` e a leitura
+      // é DIRETA, nunca um `waitFor` em volta da medida: o painel entra com
+      // `translateY` e `scale` (D5) e o posicionador escreve `left` em passo
+      // assíncrono, e medir antes disso já produziu deriva nesta stack.
+      const segundo = triggers[1];
+      await expect(segundo).toHaveAccessibleName(MENUS[1].label);
+      if (segundo.getAttribute('aria-expanded') !== 'true') await userEvent.click(segundo);
+      const panel = await waitForPortal('menu');
+      await waitForAncorado(panel);
+      await waitForPousado(panel);
+
+      const primeiro = within(panel).getAllByRole('menuitem')[0];
+      // O rótulo do item é nó de TEXTO solto no `<div>` — o `<span>` que existe
+      // ali dentro é o do ATALHO, encostado à direita, e mirar nele mediria a
+      // outra ponta da linha. O do gatilho também é nó de texto solto no
+      // `<button>`. Um `Range` sobre o conteúdo mede a CAIXA DO TEXTO nos dois
+      // casos, que é o que a caixa do elemento não dá: o gatilho tem
+      // `padding-inline`, e ela não começa onde a letra começa.
+      const rotulo = [...primeiro.childNodes].find(
+        (no): no is Text => no.nodeType === Node.TEXT_NODE && (no.textContent ?? '').trim() !== '',
+      );
+      await expect(rotulo, 'o item perdeu o nó de texto do rótulo').toBeDefined();
+      const delta = textLeft(rotulo!) - textLeft(segundo);
+      await expect(
+        Math.abs(delta),
+        `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +
+          'o recuo é o `alignOffset` do painel da barra em menubar.ts: ' +
+          '0 mede +1,00 · -1 mede 0,00 · -4 mede -3,00 (medido em 2026-09-19)',
+      ).toBeLessThanOrEqual(0.75);
+
+      // Fecha: a play termina com a barra em repouso, como terminava antes.
+      await userEvent.click(segundo);
+      await waitForPortalVanish('menu');
     });
   },
 };

@@ -138,6 +138,27 @@ export const Destructive: Story = {
       await expect(perigoso.getAttribute('data-slot')).toBe('menubar-item');
     });
 
+    await step('A divisória se anuncia como DIVISÓRIA, e não como grupo', async () => {
+      // Um `role="group"` vazio dentro de `role="menu"` é anunciado como um
+      // grupo sem nada dentro, e a divisória perde a semântica. Aconteceu numa
+      // stack irmã, por a lib cravar o papel e mesclar por último; aqui o
+      // `MenuSeparator` da reka crava `role="separator"` e
+      // `aria-orientation="horizontal"`, e a classe vem do nosso wrapper.
+      // A asserção existe para que a próxima versão da lib não desfaça isso
+      // em silêncio — atributo certo sem asserção foi exatamente como o
+      // defeito irmão sobreviveu até ser achado por leitura de código.
+      const separatorEl = menu.querySelector<HTMLElement>('[data-slot="menubar-separator"]')!;
+      await expect(separatorEl).not.toBeNull();
+      await expect(separatorEl.getAttribute('role')).toBe('separator');
+      await expect(separatorEl.getAttribute('aria-orientation')).toBe('horizontal');
+      await expect(separatorEl.classList.contains('nds-dropdown-menu-separator')).toBe(true);
+      // E o painel não ganha um grupo de brinde: esta ficha não compõe nenhum
+      // `MenubarGroup`/`MenubarRadioGroup`, então qualquer `group` aqui só
+      // pode ter vindo do separador.
+      await expect(within(menu).queryAllByRole('group')).toHaveLength(0);
+      await expect(within(menu).getAllByRole('separator')).toHaveLength(1);
+    });
+
     await step('A cor do texto distingue a ação irreversível', async () => {
       // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
       // chegasse, esta asserção pegaria a mesma cor do item neutro.

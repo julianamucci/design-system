@@ -169,6 +169,28 @@ export const Destructive: Story = {
       await expect(perigoso.getAttribute('data-slot')).toBe('menubar-item');
     });
 
+    await step('A divisória se anuncia como DIVISÓRIA, e não como grupo', async () => {
+      // O papel do separador não é escrito pelo nosso markup: ele vem do
+      // `RdxMenuSeparator`, que entra como `hostDirective` e crava `role`
+      // estático mais `aria-orientation` ligado a `orientation()`. Atributo
+      // estático no `<div>` da story perderia para esse host binding em
+      // silêncio — então o que vale afirmar é o que CHEGA ao DOM.
+      // Medido em navegador em 2026-09-18 nas cinco stacks: o separador do
+      // Menubar do svelte era o ÚNICO dos quinze da família saindo como
+      // `group`, porque lá o `MenuSeparatorState` do bits mescla o próprio
+      // papel por último. Aqui sai `separator` — e sem asserção isso é
+      // exatamente o que volta na próxima versão da lib.
+      const separatorEl = menu.querySelector<HTMLElement>('[data-slot="menubar-separator"]');
+      await expect(separatorEl).not.toBeNull();
+      await expect(separatorEl!.getAttribute('role')).toBe('separator');
+      await expect(separatorEl!.getAttribute('aria-orientation')).toBe('horizontal');
+      await expect(separatorEl!.classList.contains('nds-dropdown-menu-separator')).toBe(true);
+      // E o painel não ganha um grupo de brinde: com o papel errado, esta
+      // contagem daria 1 em vez de 0 — é ela que pegou o defeito no svelte.
+      await expect(canvas.queryAllByRole('group')).toHaveLength(0);
+      await expect(canvas.getAllByRole('separator')).toHaveLength(1);
+    });
+
     await step('A cor do texto distingue a ação irreversível', async () => {
       // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
       // chegasse, esta asserção pegaria a mesma cor do item neutro.

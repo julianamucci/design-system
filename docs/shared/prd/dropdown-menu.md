@@ -628,8 +628,65 @@ plantado** — no lugar de espera da lib a diferença já cabe na tolerância, e
 `waitFor` fecha no primeiro quadro. Asserção de vão usa `waitForAncorado` e
 leitura direta, nunca `waitFor` em volta da medida.
 
-> **PENDÊNCIA · 2026-09-19 — o painel da BARRA do Menubar declara `alignOffset: -4` com uma justificativa medida como FALSA.** Achada ao separar os dois números do angular: `menubar.ts:325` servia raiz e submenu com o mesmo `-4`, e o comentário dizia que ele "alinha o texto do primeiro item com o do gatilho". Medido com a barra a 200px da borda da janela: `0` → +1,00px, **`-1` → 0,00 (alinharia)**, `-4` → −3,00, `-5` → −4,00. O `-4` erra por 3px. **Por que ninguém viu**: encostado na borda esquerda da janela o painel trava em `left: 5px` e `0`, `-4`, `-5` e até `-40` leem idênticos — só recuando a barra o número aparece, e nenhuma story a recuava. O número é da família (react e vue também declaram `-4` na raiz), não da D15, e mudá-lo atravessa as cinco stacks.
-> **Fecha quando**: o `alignOffset` do painel de topo do Menubar tem valor decidido pela dona com a medição na mão, aplicado nas cinco, e uma story que posiciona a barra LONGE da borda afirma o resultado — sem isso a asserção passa com qualquer número.
+### D19 · O painel da BARRA recua `1px` — e o 1px é a borda
+
+**Fixada em** 2026-09-19, por decisão da dona, sobre medição nas cinco.
+
+**O que havia**: `alignOffset: -4` nas quatro stacks de lib e `left: 0` na folha
+do vanilla, com um comentário afirmando que aquilo alinhava o TEXTO do primeiro
+item com o TEXTO do gatilho. **O comentário era falso e errava por 3px.**
+
+**A aritmética, medida no vanilla:**
+
+    borda do painel (1) + padding do painel (--spacing-1, 4)
+                        + padding-inline do item (--spacing-2, 8)  = 13
+    padding-inline do gatilho (--spacing-3, 12)                    = 12
+                                                          sobra    =  1
+
+Os dois paddings quase se cancelam no eixo horizontal; sobra exatamente a borda.
+O `-1` não é ajuste empírico — é ela.
+
+**Medido nas cinco, no SEGUNDO gatilho da barra:**
+
+| recuo | vanilla | angular | react · vue · svelte |
+|---|---:|---:|---:|
+| `0` | +1,00 | +1,00 | +1,08 |
+| **`-1`** | **0,00** | **0,00** | **+0,08** |
+| `-4` (o de antes) | −3,00 | −3,00 | −2,92 |
+
+O resíduo de 0,08 nas três últimas é a barra pousar em coordenada fracionária
+sob `layout: 'centered'`, não o recuo: os valores diferem entre si por 1,00 e
+4,00 exatos nas cinco. **O lever difere e o contrato não**: quatro declaram
+`alignOffset` no positioner da lib, o vanilla declara `left` na folha
+(`menubar.css`, `[data-align="start"]`), porque o painel de topo dele é ancorado
+por FOLHA e não por medida (D9).
+
+**Por que sobreviveu**: encostado na borda esquerda da janela o painel TRAVA, e
+ali `0`, `-1`, `-4` e até `-40` leem idênticos. Nenhuma story recuava a barra. A
+asserção que guarda isto **abre o SEGUNDO menu**, cujo gatilho já nasce longe da
+borda — em vez de mudar o exemplo, que criaria divergência nas cinco.
+
+**Tolerância `0,75`, e ela é o ponto.** Os candidatos `0` e `-1` ficam a
+exatamente 1px um do outro: com tolerância de 1 a asserção não os separa e
+**passa com o defeito plantado**. As cinco provaram plantando os DOIS valores
+errados, não só o antigo.
+
+**A asserção mora no mesmo lugar nas cinco** — `menubar.stories.*`, story
+`Playground`, último `step`, ao lado da asserção do eixo do LADO (o vão de 8px):
+as duas são o par do mesmo contrato de ancoragem. Divergência de ONDE a asserção
+vive é a terceira forma da regra de divergência, e por isso o lugar foi fixado
+pela referência antes de as outras quatro escreverem a delas.
+
+**E a reka se comporta DIFERENTE nos dois painéis do mesmo componente**: no
+`MenubarSubContent` ela desconta borda e padding sozinha (por isso a D15 fixou
+`0` ali), no `MenubarContent` não desconta nada (por isso aqui é `-1`, como as
+outras). É a segunda confirmação da lição da D15 — medir cada painel em vez de
+deduzir do irmão —, desta vez DENTRO de uma lib só. Deduzir teria errado 1px.
+
+> **PENDÊNCIA · 2026-09-19 — a árvore canônica da folha descreve o que UMA das cinco faz.** `menubar.css:12-15` declara o rótulo do item dentro de um `<span>` próprio. Medido nas cinco ao escrever a asserção da D19: **só o vanilla embrulha**; react, vue, svelte e angular põem o rótulo como nó de TEXTO SOLTO, e o único `<span>` dentro do item é o do atalho — `querySelector('span')` mediria `"Ctrl+Z"` nas quatro. Nenhuma lib impõe a forma: bits (`menu-item.svelte`) e radix-ng renderizam os filhos sem embrulhar, e no react e no vue o rótulo vai solto no JSX/template. A folha **não estiliza** esse span, então nada quebra hoje em nenhuma direção. Decisão da dona: **as quatro embrulham**, pela regra da casa (em divergência de markup, alinham ao vanilla) e porque é o `<span>` que torna possível truncar o rótulo com reticências sem afetar o atalho, que precisa de elemento próprio.
+> **Fecha quando**: as quatro stacks embrulham o rótulo do item de menu num `<span>` nos TRÊS membros da família, e uma asserção cobra a forma — sem ela, a próxima story nasce com texto solto de novo.
+>
+> **Como isto apareceu é a lição.** A divergência é antiga, não quebra nada, não aparece em build nem em suíte, e ninguém a viu porque **nenhuma asserção media TEXTO** — todas mediam caixa de elemento. Foi preciso ir medir a posição de uma letra, para outro assunto, para a anatomia publicada ser confrontada com o DOM. É a forma exata do que o Check 14 mediu em 16 de 51 componentes: a anatomia publicando elemento inexistente, com as cinco concordando entre si e o documento dizendo outra coisa.
 
 ### D15-A · O vão do submenu era `0` e `−4` (histórico)
 
@@ -1381,13 +1438,47 @@ código, e não medição em navegador, diz isso no próprio item.
     uso em par antes de tirar, porque exceção que some sem medição é o defeito de
     volta com outra roupa.
 
-**PENDÊNCIA DO SEPARADOR — metade fechada em 2026-09-19.** `menubar-separator.svelte`
-escreve `role="separator"` e `aria-orientation="horizontal"`, e o svelte afirma o
-papel numa story (dentes provados: replantando o `Separator` cru da lib,
-`expected 'group' to be 'separator'`). **Falta a outra metade do "fecha quando"**:
-as quatro stacks restantes já escrevem `separator`, mas nenhuma AFIRMA — e
-atributo certo sem asserção é o caso que volta na próxima versão da lib. Na leva
-de fechamento desta passagem.
+**PENDÊNCIA DO SEPARADOR — FECHADA em 2026-09-19.** `menubar-separator.svelte`
+escreve `role="separator"` e `aria-orientation="horizontal"`, e **as CINCO stacks
+afirmam o papel** na `Destructive` de `menubar-variants.stories.*` — mesma story,
+mesma posição, mesma forma. Dentes provados em cada uma, plantando `role="group"`
+e restaurando na mesma chamada.
+
+**E fechar a segunda metade explicou a primeira.** Ao medir o que cada lib de
+fato produz, apareceu o que ninguém tinha perguntado: **por que quatro das cinco
+já escreviam `separator` sem nunca terem sido corrigidas?** Não era acerto do
+nosso markup — é a ordem da mescla de cada lib:
+
+| stack | lib | ordem da mescla | `role` passado por fora |
+|---|---|---|---|
+| react | base-ui | internos primeiro, `elementProps` por último | **vence** |
+| vue | reka | `mergeProps(props, {role, aria-orientation})` | **vence** |
+| angular | radix-ng | atributo estático de host da diretiva | **vence** |
+| svelte | bits | crava `role: "group"` e mescla por ÚLTIMO | **ignorado em silêncio** |
+| vanilla | — | a fábrica escreve | é o nosso markup |
+
+Por isso a mesma asserção guarda contra dois modos de falha OPOSTOS: nas quatro
+onde o externo vence, ela pega o WRAPPER estragando; no svelte, pegava a LIB
+impondo. Sintoma igual, causa invertida — e uma asserção escrita só onde o
+defeito apareceu teria coberto exatamente a metade errada.
+
+**O angular mediu um excedente e NÃO o afirmou**, deliberadamente: o radix-ng
+também escreve `data-orientation="horizontal"`, que o bits não escreve. Afirmá-lo
+faria uma stack cobrar mais que as irmãs, que é o `coverage_divergence` na
+direção menos óbvia — o risco de sempre é afirmar de menos. Fica como dado.
+
+**`aria-orientation`: a referência passa a escrever.** O vanilla era a única das
+cinco que o OMITIA — as outras quatro o escrevem porque as libs delas escrevem.
+Não é defeito de acessibilidade (`horizontal` é o valor implícito de
+`role="separator"`, então o anúncio é o mesmo), mas a referência é quem define o
+markup que as outras devem produzir, e a própria stack já escreve o atributo no
+`separator.ts`. Decisão da dona em 2026-09-19: as três fábricas do vanilla
+passam a escrever, e a asserção das cinco cobra `horizontal`.
+
+Até essa decisão, a agente do vanilla tinha afirmado a AUSÊNCIA com o motivo, em
+vez de omitir a linha — e a escolha estava certa: omitir seria a exclusão
+silenciosa do `source-snippets.test.ts`, e afirmar a ausência é o que forçaria a
+rodada cross-stack no dia em que a fábrica derivasse sozinha.
 
 **PENDÊNCIA DA ANIMAÇÃO — FECHADA em 2026-09-19.** Os painéis do
 `createDropdownMenu` e do `createMenubar` (raiz e submenu) passaram a escrever

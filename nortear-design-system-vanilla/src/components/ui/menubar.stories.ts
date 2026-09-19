@@ -48,6 +48,26 @@ const MENUS = [
   },
 ] as const;
 
+/**
+ * Borda ESQUERDA da caixa de TEXTO do elemento, em coordenada de viewport.
+ *
+ * `getBoundingClientRect()` do elemento devolveria a caixa com o `padding`
+ * dentro, e o contrato de alinhamento do painel da barra é sobre o texto: o
+ * gatilho tem `padding-inline: var(--spacing-3)` e o item do painel tem
+ * `var(--spacing-2)` mais a borda e o `padding` do próprio painel. Medir caixa
+ * contra caixa aceitaria qualquer recuo.
+ *
+ * Um `Range` sobre o conteúdo resolve os dois formatos de uma vez — o rótulo do
+ * item é um `<span>`, o do gatilho é nó de texto solto no `<button>` — e é
+ * leitura PURA: não escreve no DOM, então pode entrar numa espera sem o risco
+ * do `waitFor` que se reagenda sozinho.
+ */
+function textLeft(el: HTMLElement): number {
+  const range = el.ownerDocument.createRange();
+  range.selectNodeContents(el);
+  return range.getBoundingClientRect().left;
+}
+
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type MenubarArgs = {
@@ -421,6 +441,63 @@ export const Playground: Story = {
       // Nenhum item rodou: o clique fora é sair sem decidir.
       await expect(args.onSelect).toHaveBeenCalledTimes(selectsBefore);
       await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
+    });
+
+    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+      // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
+      // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO — o que as
+      // outras quatro stacks chamam de `alignOffset` e esta resolve por folha
+      // (`.nds-menubar-panel[data-side="bottom"][data-align="start"]`, em
+      // `menubar.css`). As duas moram na Playground, uma ao lado da outra no
+      // assunto ainda que não na linha: é aqui que a barra tem quatro menus.
+      //
+      // O SEGUNDO menu, e não o primeiro. Nas stacks que posicionam por medida
+      // o painel do PRIMEIRO gatilho nasce encostado na borda esquerda da
+      // janela e a conta TRAVA em `left: 5px` — ali `0`, `-4`, `-5` e até `-40`
+      // leem idêntico, e foi por isso que o erro sobreviveu: nenhuma story
+      // recuava a barra. Mudar o exemplo criaria divergência de exemplo entre
+      // as cinco; abrir um gatilho que já nasce longe da borda, não.
+      //
+      // TEXTO contra TEXTO, e não caixa contra caixa: o contrato é sobre o que
+      // a pessoa vê alinhado. A caixa do painel encosta na caixa do gatilho e
+      // passaria com qualquer recuo — quem paga a diferença é a soma
+      // borda(1) + padding do painel(4) + padding do item(8) contra o
+      // padding do gatilho(12).
+      //
+      // Tolerância 0,75 e não 1: os dois candidatos do eixo ficam a exatamente
+      // 1px um do outro, e com 1 a asserção não os separaria — mesma razão da
+      // D15 no submenu. A espera é o fim das animações e leitura DIRETA, nunca
+      // um `waitFor` em volta da medida: a entrada anima `translateY` e
+      // `scale(0.98)` (D5), e medir no quadro zero já produziu 1,13px de deriva
+      // nesta stack.
+      const segundo = triggers[1];
+      await expect(segundo).toHaveAccessibleName(MENUS[1].label);
+      if (segundo.getAttribute('aria-expanded') !== 'true') await userEvent.click(segundo);
+      const panel = await waitForPanel(canvasElement);
+      await waitForAncorado(panel);
+      await waitForAnimationsDone(panel);
+
+      const primeiro = within(panel).getAllByRole('menuitem')[0];
+      // O rótulo do item mora num `<span>` próprio; o do gatilho é nó de texto
+      // solto no `<button>`. Um `Range` sobre o conteúdo mede a CAIXA DO TEXTO
+      // nos dois casos, que é o que a caixa do elemento não dá no gatilho — ele
+      // tem `padding-inline`, ela não começa onde a letra começa.
+      const rotulo = primeiro.querySelector('span');
+      await expect(rotulo, 'o item perdeu o span de rótulo').not.toBeNull();
+      const delta = textLeft(rotulo!) - textLeft(segundo);
+      await expect(
+        Math.abs(delta),
+        `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +
+          'o recuo do painel é `left` em ' +
+          'docs/shared/styles/nds/menubar.css, na regra [data-align="start"]: ' +
+          '0 mede +1,00 · -1px mede 0,00 · -4px mede -3,00 (medido em 2026-09-19)',
+      ).toBeLessThanOrEqual(0.75);
+
+      // Fecha: a play termina com a barra em repouso, como terminava antes.
+      await userEvent.click(segundo);
+      await waitFor(async () => {
+        await expect(panelOpen(canvasElement)).toBeNull();
+      });
     });
   },
 };

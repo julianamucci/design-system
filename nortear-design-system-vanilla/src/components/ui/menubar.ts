@@ -467,6 +467,15 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         sep.className = 'nds-dropdown-menu-separator';
         sep.dataset.slot = 'menubar-separator';
         sep.setAttribute('role', 'separator');
+        // `aria-orientation` EXPLÍCITO, decidido em 2026-09-19. `horizontal` é
+        // o valor implícito de `role="separator"`, então o que é anunciado não
+        // muda — o que muda é a divergência de markup: as outras quatro stacks
+        // recebem o atributo da lib headless e o afirmam, e a referência era a
+        // única sem ele nos três menus. Referência que não escreve o atributo
+        // deixa as quatro alinhadas com o nada, e o `separator.ts` desta mesma
+        // stack já o escrevia para o separador solto — a inconsistência era
+        // interna também.
+        sep.setAttribute('aria-orientation', 'horizontal');
         openGroup = null;
         panel.appendChild(sep);
         return;

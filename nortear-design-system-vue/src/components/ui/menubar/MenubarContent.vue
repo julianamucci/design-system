@@ -16,11 +16,48 @@ defineOptions({
   inheritAttrs: false,
 })
 
+/**
+ * O recuo do painel de TOPO no eixo cruzado — decisão da dona em 2026-09-19,
+ * medida nesta stack no mesmo dia.
+ *
+ * **O que se decide é o desenho**: o TEXTO do primeiro item alinha com o TEXTO
+ * do gatilho da barra. A conta que o entrega está medida no vanilla, que é a
+ * referência: borda do painel (1) + `padding` do painel (`--spacing-1`, 4) +
+ * `padding-inline` do item (`--spacing-2`, 8) = 13, contra o `padding-inline`
+ * do gatilho (`--spacing-3`, 12). Sobra exatamente a borda de 1px, e é ela que
+ * o `alignOffset` desconta.
+ *
+ * Mesma família da D15 do submenu, com uma diferença que vale reparar: lá o
+ * alinhamento pede −(borda + padding), porque o eixo é o VERTICAL e só o
+ * padding do painel separa o topo da caixa do topo do item; aqui os dois
+ * `padding-inline` se cancelam quase inteiros e sobra a borda.
+ *
+ * **Medido nesta stack** na `Playground`, no SEGUNDO gatilho da barra, texto
+ * contra texto (`Range.selectNodeContents`), depois de `waitForAncorado` e do
+ * fim das animações:
+ *
+ *   alignOffset   texto do 1º item − texto do gatilho
+ *     0                  +1,08
+ *    -1                   +0,08   ← alinha
+ *    -4  (o de antes)     -2,92
+ *
+ * Ou seja: aqui a reka aplica o recuo DIRETO, e o número desta stack é o mesmo
+ * das outras quatro. **Não é o caso do subpainel** — lá a lib já desconta borda
+ * e padding sozinha, e por isso `MenubarSubContent` declara `0`. Que o mesmo
+ * componente de duas libs irmãs se comporte diferente nos dois painéis é o
+ * motivo de cada número ser medido e não deduzido.
+ *
+ * O `-4` que estava aqui vinha com um comentário afirmando este mesmo desenho,
+ * e o comentário era falso: ele deixava o item 3px À ESQUERDA do gatilho.
+ *
+ * Quem reprova é a `Playground`, no último passo da play — e a tolerância dela
+ * é 0,75 justamente porque `0` e `-1` ficam a 1px um do outro.
+ */
 const props = withDefaults(
   defineProps<MenubarContentProps & { class?: HTMLAttributes['class'] }>(),
   {
     align: 'start',
-    alignOffset: -4,
+    alignOffset: -1,
     sideOffset: 8,
   },
 )

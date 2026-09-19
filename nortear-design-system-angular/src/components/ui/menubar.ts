@@ -330,15 +330,28 @@ export class NdsMenubarMenu implements NdsSubmenuPanel {
   // versão da D15 deixa o item 1px ABAIXO do gatilho: a derivação contava o
   // padding e esquecia a borda.
   //
-  // **Painel da barra: -4**, que é o que react e vue também declaram — é número
-  // da FAMÍLIA, não da D15, e por isso não muda aqui. Fica a medição para quem
-  // for revisitá-lo: com a barra longe da borda da janela, `alignOffset: -4`
-  // deixa o texto do primeiro item 3px à ESQUERDA do texto do gatilho; quem
-  // alinharia os dois textos é `-1`. Encostada na borda esquerda da janela a
-  // diferença some, porque o painel para de andar — foi assim que o número
-  // passou despercebido.
+  // **Painel da barra: -1**, e o -1 é a BORDA. O contrato aqui é o TEXTO do
+  // primeiro item alinhado com o TEXTO do gatilho, e a aritmética da folha
+  // fecha sozinha: borda do painel (1) mais o `--spacing-1` de padding do
+  // painel (4) mais o `--spacing-2` de `padding-inline` do item (8) dão 13,
+  // contra o `--spacing-3` de `padding-inline` do gatilho (12). Sobra
+  // exatamente 1px, que é a borda — não é ajuste empírico.
+  //
+  // Mesma família da D15, com a conta virada de eixo: lá o submenu pedia
+  // −(borda + padding) porque mede o vertical; aqui só a borda, porque no eixo
+  // horizontal os dois paddings se cancelam.
+  //
+  // Medido em 2026-09-19, texto do 1º item menos texto do gatilho, com o painel
+  // assentado e a barra LONGE da borda esquerda da janela:
+  //
+  //     alignOffset  0 → +1,00   -1 → 0,00   -4 → -3,00   -5 → -4,00
+  //
+  // O `-4` de antes era número da FAMÍLIA e não medição — deixa o texto 3px à
+  // esquerda. Encostado na borda da janela o painel PARA de andar e `0`, `-1`,
+  // `-4` e até `-40` leem idêntico; foi assim que o erro sobreviveu, e é por
+  // isso que a asserção da `Playground` abre o SEGUNDO menu da barra.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -5 : -4),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -5 : -1),
   );
 }
 

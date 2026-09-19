@@ -461,6 +461,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         // referência era a única peça sem endereço próprio aqui.
         sep.dataset.slot = 'dropdown-menu-separator';
         sep.className = 'nds-dropdown-menu-separator';
+        // `aria-orientation` EXPLÍCITO — ver o mesmo ponto em `menubar.ts`. A
+        // decisão de 2026-09-19 vale nos TRÊS membros da família de uma vez:
+        // consertar só onde o defeito foi medido deixaria a referência
+        // internamente divergente, que é o que ela existe para não ser.
+        sep.setAttribute('aria-orientation', 'horizontal');
         openGroup = null;
         menu.appendChild(sep);
         return;

@@ -212,9 +212,33 @@
 .nds-menubar-panel[data-side="left"]   { right: 100%;  margin-right: var(--spacing-2); }
 
 /* Alinhamento no eixo PERPENDICULAR ao lado: horizontal para um painel que
- * nasce acima ou abaixo, vertical para um que nasce à esquerda ou à direita. */
+ * nasce acima ou abaixo, vertical para um que nasce à esquerda ou à direita.
+ *
+ * **O `-1px` do `start` é a BORDA do painel, e ele fecha por aritmética.**
+ * Medido em 2026-09-19, com a barra longe da borda da janela:
+ *
+ *     left: 0     texto do 1º item − texto do gatilho = +1,00
+ *     left: -1px                                        0,00   ← alinha
+ *     left: -4px                                       -3,00
+ *
+ * A conta: borda do painel (1) + padding do painel (`--spacing-1`, 4) +
+ * `padding-inline` do item (`--spacing-2`, 8) = 13, contra o `padding-inline`
+ * do gatilho (`--spacing-3`, 12). Sobra exatamente a borda.
+ *
+ * É a mesma família da D15 — lá o alinhamento do submenu pedia
+ * −(borda + padding); aqui só a borda entra, porque no eixo horizontal os dois
+ * paddings já se cancelam.
+ *
+ * **Por que ninguém via**: encostado na borda esquerda da janela o painel trava,
+ * e `0`, `-1`, `-4` e até `-40` leem idênticos. Nenhuma story recuava a barra, e
+ * o comentário do `alignOffset: -4` das stacks de lib afirmava, sem medição, que
+ * ele alinhava o texto — errava por 3px. A asserção que guarda isto abre o
+ * SEGUNDO menu da barra, justamente para o gatilho não nascer na borda.
+ *
+ * NÃO medido, e vale a mesma pergunta: o `[data-align="end"]` usa `right: 0` e
+ * carrega a mesma borda no outro sentido. O default do componente é `start`. */
 .nds-menubar-panel[data-side="bottom"][data-align="start"],
-.nds-menubar-panel[data-side="top"][data-align="start"]   { left: 0; }
+.nds-menubar-panel[data-side="top"][data-align="start"]   { left: -1px; }
 .nds-menubar-panel[data-side="bottom"][data-align="center"],
 .nds-menubar-panel[data-side="top"][data-align="center"]  { left: 50%; transform: translateX(-50%); }
 .nds-menubar-panel[data-side="bottom"][data-align="end"],

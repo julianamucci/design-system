@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import MenubarDocs from '@/components/docs/MenubarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { waitForAnimationsDone, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 import { menubarSource } from './menubar.source';
 
@@ -121,6 +121,37 @@ function clickOutside(): void {
   for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
     document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
   }
+}
+
+/**
+ * Borda ESQUERDA da caixa de TEXTO do elemento, em coordenada de viewport.
+ *
+ * `getBoundingClientRect()` do elemento devolveria a caixa com o `padding`
+ * dentro, e o contrato de alinhamento do painel da barra é sobre o texto: o
+ * gatilho tem `padding-inline: var(--spacing-3)` e o item do painel tem
+ * `var(--spacing-2)` mais a borda e o `padding` do próprio painel. Medir caixa
+ * contra caixa aceitaria qualquer recuo.
+ *
+ * Um `Range` sobre o PRIMEIRO NÓ DE TEXTO não vazio resolve os dois formatos de
+ * rótulo de uma vez, e isso não é zelo: a forma DIVERGE entre as stacks. A
+ * árvore canônica da folha (`docs/shared/styles/nds/menubar.css`) põe o rótulo
+ * do item num `<span>` próprio e o vanilla monta assim; aqui o rótulo é nó de
+ * texto solto no item, e o único `<span>` que existe ali é o do ATALHO — um
+ * `querySelector('span')` copiado da referência mediria "Ctrl+Z". O gatilho é
+ * nó de texto solto nas duas. Descer até o texto também é imune a um ícone à
+ * esquerda, que a caixa do elemento e um `Range` sobre o item inteiro pegariam.
+ *
+ * É leitura PURA: não escreve no DOM.
+ *
+ * Não exportado: toda exportação de um `*.stories.ts` vira story.
+ */
+function textLeft(el: HTMLElement): number {
+  const range = el.ownerDocument.createRange();
+  const walker = el.ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  let node: Node | null = walker.nextNode();
+  while (node && !node.nodeValue?.trim()) node = walker.nextNode();
+  range.selectNodeContents(node ?? el);
+  return range.getBoundingClientRect().left;
 }
 
 export const Playground: Story = {
@@ -362,6 +393,57 @@ export const Playground: Story = {
       await expect(itemSelected).not.toHaveBeenCalled();
       // E o motivo diz que foi fora: `overlay`, a mesma palavra do Tab.
       await expect(args['onUpdate:modelValue']).toHaveBeenLastCalledWith('', 'overlay');
+    });
+
+    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+      // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
+      // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO, o
+      // `alignOffset` que `MenubarContent` declara. As duas moram na Playground
+      // porque é aqui que a barra tem quatro menus.
+      //
+      // O SEGUNDO menu, e não o primeiro. O painel do PRIMEIRO gatilho pode
+      // nascer encostado na borda esquerda da janela, e ali a conta TRAVA: `0`,
+      // `-1`, `-4` e até `-40` leem idêntico, e foi por isso que o erro
+      // sobreviveu. Mudar o exemplo para recuar a barra criaria divergência de
+      // exemplo entre as cinco; abrir um gatilho que já nasce longe da borda,
+      // não.
+      //
+      // TEXTO contra TEXTO, e não caixa contra caixa: o contrato é sobre o que
+      // a pessoa vê alinhado. A caixa do painel encosta na caixa do gatilho e
+      // passaria com qualquer recuo — quem paga a diferença é a soma
+      // borda(1) + padding do painel(4) + padding do item(8) contra o
+      // padding do gatilho(12).
+      //
+      // Tolerância 0,75 e não 1: os dois candidatos do eixo ficam a exatamente
+      // 1px um do outro (medido: `0` dá +1,08 e `-1` dá +0,08), e com 1 a
+      // asserção não os separaria — mesma razão da D15 no submenu. A espera é o
+      // fim das animações e leitura DIRETA, nunca um `waitFor` em volta da
+      // medida: a entrada anima `translateY` e `scale(0.98)` (D5), e medir no
+      // quadro zero mede a animação, não a ancoragem.
+      //
+      // Precondição e limpeza próprias — abre, mede e fecha —, para não
+      // perturbar os passos anteriores nem o replay do painel Interactions.
+      const segundo = triggers[1];
+      await expect(segundo).toHaveAccessibleName(MENUS[1].label);
+      if (segundo.getAttribute('aria-expanded') !== 'true') await userEvent.click(segundo);
+      const panel = await waitForPortal('menu');
+      await waitForAncorado(panel);
+      await waitForAnimationsDone(panel);
+
+      // `textLeft` desce até o primeiro nó de texto: nesta stack o rótulo do
+      // item é texto solto, e o `<span>` que existe dentro dele é o do ATALHO.
+      const primeiro = within(panel).getAllByRole('menuitem')[0];
+      const delta = textLeft(primeiro) - textLeft(segundo);
+      await expect(
+        Math.abs(delta),
+        `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +
+          'o recuo do painel é `alignOffset` em MenubarContent.vue: ' +
+          '0 mede +1,08 · -1 mede +0,08 · -4 mede -2,92 (medido em 2026-09-19)',
+      ).toBeLessThanOrEqual(0.75);
+
+      // Fecha: a play termina com a barra em repouso, como terminava antes.
+      await userEvent.click(segundo);
+      await waitForPortalGone('menu');
     });
   },
 };

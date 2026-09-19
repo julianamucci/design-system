@@ -30,11 +30,52 @@
 	 */
 	const uid = $props.id();
 
+	/**
+	 * O painel de TOPO de um menu da barra.
+	 *
+	 * **`alignOffset: -1`, e o número é medido** (2026-09-19, decisão da dona). O
+	 * contrato de alinhamento do painel da barra é sobre o TEXTO: o rótulo do
+	 * primeiro item tem de nascer na mesma coluna do rótulo do gatilho, porque é
+	 * o que a pessoa vê alinhado. Antes daqui o valor era `-4`, com um comentário
+	 * dizendo que alinhava o texto — e o comentário era falso. Medido nesta
+	 * stack, com a barra longe da borda da janela (o SEGUNDO gatilho):
+	 *
+	 *   alignOffset   texto do 1º item − texto do gatilho
+	 *      0                 +1,08
+	 *     -1                 +0,08   ← alinha
+	 *     -4  (o de antes)   -2,92
+	 *
+	 * Os 0,08 de resíduo são constantes e não são do recuo: a `Playground` é
+	 * `layout: 'centered'`, a barra pousa em coordenada fracionária, e as três
+	 * medidas diferem entre si por 1,00 e 4,00 exatos. Entre os inteiros, `-1` é
+	 * o de módulo mínimo — e o único dentro da tolerância de 0,75.
+	 *
+	 * A conta fecha e explica o 1: a lib ancora a BORDA do painel na borda do
+	 * gatilho, e do lado de dentro somam-se borda(1) + `padding` do painel
+	 * (`--spacing-1`, 4) + `padding-inline` do item (`--spacing-2`, 8) = 13,
+	 * contra o `padding-inline` do gatilho (`--spacing-3`, 12). Sobra exatamente
+	 * a borda de 1px — no eixo horizontal os dois `padding` quase se cancelam.
+	 *
+	 * É a mesma família da D15 (`menubar-sub-content.svelte`, `alignOffset: -5`),
+	 * e são dois números diferentes de propósito: lá o eixo é o VERTICAL e a
+	 * conta é −(borda + padding do painel); aqui só a borda entra. Mexer num não
+	 * é mexer no outro.
+	 *
+	 * O `align="start"` abaixo NÃO é decorativo, e é o que separa este caso do
+	 * sub-painel: no bits-ui o `alignOffset` só tem efeito quando o alinhamento
+	 * é declarado. Aqui ele já estava declarado — e é por isso que o `-4` de
+	 * antes ERA mesmo aplicado, ao contrário do que acontecia no sub-content
+	 * antes da D15.
+	 *
+	 * O portão é o último `step` da `Playground` em `menubar.stories.ts`, que
+	 * mede texto contra texto com tolerância 0,75 — menor que 1, porque `0` e
+	 * `-1` ficam a exatamente 1px um do outro.
+	 */
 	let {
 		ref = $bindable(null),
 		class: className,
 		sideOffset = 8,
-		alignOffset = -4,
+		alignOffset = -1,
 		align = "start",
 		side = "bottom",
 		portalProps,

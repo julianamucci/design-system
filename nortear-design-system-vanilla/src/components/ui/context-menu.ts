@@ -316,6 +316,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       sep.setAttribute('role', 'separator');
       sep.dataset.slot = 'context-menu-separator';
       sep.className = 'nds-dropdown-menu-separator';
+      // `aria-orientation` EXPLÍCITO — ver o mesmo ponto em `menubar.ts`. A
+      // decisão de 2026-09-19 vale nos TRÊS membros da família de uma vez.
+      sep.setAttribute('aria-orientation', 'horizontal');
       menu.appendChild(sep);
       return;
     }

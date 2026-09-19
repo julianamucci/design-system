@@ -163,6 +163,30 @@ export const Destructive: Story = {
       await expect(perigoso.getAttribute("data-slot")).toBe("menubar-item")
     })
 
+    await step("A divisória se anuncia como DIVISÓRIA, e não como grupo", async () => {
+      // Medido em 2026-09-18 nas cinco: o separador do Menubar saía com
+      // `role="group"` numa delas — um `role="group"` vazio dentro de
+      // `role="menu"` é anunciado como um grupo sem nada dentro, e a divisória
+      // perde a semântica. O atributo certo sem asserção é o caso que volta na
+      // próxima versão da lib, e foi assim que aquele defeito sobreviveu até
+      // ser achado por leitura de código: aqui o papel passa a ser AFIRMADO.
+      const separatorEl = menu.querySelector<HTMLElement>(
+        '[data-slot="menubar-separator"]'
+      )!
+      await expect(separatorEl).not.toBeNull()
+      await expect(separatorEl.getAttribute("role")).toBe("separator")
+      await expect(separatorEl.getAttribute("aria-orientation")).toBe("horizontal")
+      await expect(separatorEl.classList.contains("nds-dropdown-menu-separator")).toBe(
+        true
+      )
+      // E o painel não ganha um grupo de brinde: com o papel errado, esta
+      // contagem dá 1 em vez de 0. Esta ficha não compõe nenhum grupo — nem
+      // `MenubarGroup`, nem `MenubarRadioGroup` —, então o zero aqui mede o
+      // separador, e não o painel.
+      await expect(canvas.queryAllByRole("group")).toHaveLength(0)
+      await expect(canvas.getAllByRole("separator")).toHaveLength(1)
+    })
+
     await step("A cor do texto distingue a ação irreversível", async () => {
       // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
       // chegasse, esta asserção pegaria a mesma cor do item neutro.
