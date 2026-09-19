@@ -50,15 +50,54 @@
  *
  * ---
  *
- * **A CAMPANHA, e o que ela custou até aqui.** A base saiu de 1186 nomes e está
- * em 263, em três levas:
+ * **A CAMPANHA, e o que ela custou.** A base saiu de 1186 nomes e está em 5, em
+ * três levas:
  *
  *     1186 → 1052   o contador deixa de atravessar a fronteira de literal
  *     1052 →  611   leva 1, os 29 nomes mais frequentes, 441 pagos
  *      611 →  263   leva 2, os 88 nomes em 2+ arquivos, 348 pagos
+ *      263 →    6   leva 3, a cauda longa — 202 dos 211 nomes viviam num
+ *                   arquivo só, então o método deixou de ser dicionário e
+ *                   passou a ser julgamento por nome
+ *        6 →    5   o contrato de fio do chat (`papel`/`texto` → `role`/`text`)
+ *                   e as chaves de `CalendarLabels`, ambos declarados em
+ *                   `docs/shared/` — edição de dono único, com as stacks paradas
  *
- * Nenhuma regeneração concedeu anistia: em toda elas o número de caminhos NOVOS
- * na base foi zero.
+ * Nenhuma regeneração concedeu anistia: em todas elas o número de caminhos
+ * NOVOS na base foi zero. O que resta é o `janela` de `MANTIDOS`, abaixo.
+ *
+ * **A leva 3 também fechou o SEXTO caminho de vazamento do contador**, e este
+ * era no sentido de contar prosa. O descascamento de texto de tela apaga de `>`
+ * a `<`, e só o nó INTEIRO: interpolação no meio parte o nó, e o pedaço depois
+ * do `}` não começava em `>`. `<p>Parágrafo {i + 1}: … a rolagem interna</p>`
+ * contava `rolagem` como identificador declarado. As três passadas novas cobrem
+ * cabeça, miolo e cauda em volta da chave, e valem só em `.vue`/`.svelte`, onde
+ * o `<script>` já saiu de lado e `}` só fecha interpolação — em `.tsx` o mesmo
+ * padrão engoliria declaração real, que seria anistia. O A/B contra a árvore
+ * inteira mostrou UMA entrada a menos e nenhuma outra linha mexida.
+ *
+ * ---
+ *
+ * **ABERTO · o gerador da base não varre `docs/shared/`.** `gerarBaselinePt`
+ * percorre `nortear-design-system-<stack>/src` e mais nada, então todo
+ * identificador declarado no compartilhado é invisível às duas regras — a por
+ * componente e a `_infra`. É a MESMA forma do descompasso que fechou em
+ * 2026-09-18 (a base cobria 673 arquivos, a regra auditava 547), uma camada
+ * acima.
+ *
+ * Medido em 2026-09-18, só no subsistema de chat (`docs/shared/chat-docs/` mais
+ * o `chat-eval` do vanilla, 11 arquivos): **117 identificadores em português de
+ * 944 declarações, 12%** — e o contador enxergava TRÊS, porque `texto` é o
+ * único que cai nos radicais. `servidor.ts` sozinho tem 46 (`Turno`, `bruto`,
+ * `cabem`, `restante`, `custo`, `pedaco`, `parada`, `uso`). As sondas de
+ * `docs/shared/testing/` carregam outra família (`papel` para `role`), ainda
+ * não medida.
+ *
+ * Isso NÃO é a cauda de radicais que a campanha declaradamente não cobre
+ * (`partes`, `modulos`, `colapsavel`): é alcance de gerador. Estender
+ * `gerarBaselinePt` ao compartilhado é aperto puro — nada novo passa a ser
+ * permitido —, mas a dívida que ele revelaria é tarefa própria, não rabo de
+ * leva.
  *
  * **E três motivos desta lista estavam DESATUALIZADOS quando fomos pagá-los** —
  * o que vale mais que os números. O `padrao` não era ambíguo do jeito que a
@@ -86,7 +125,10 @@ export const PENDENTES: Record<string, string> = {
 /**
  * Nome em português que FICA, e por quê.
  *
- * Vazio por enquanto — nenhum caso apareceu ainda. Quando aparecer, o motivo é
- * obrigatório: é o que separa "decidido" de "esquecido".
+ * O motivo é obrigatório: é o que separa "decidido" de "esquecido". `MANTIDOS`
+ * vence `PENDENTES`, então declarar aqui já cala a regra.
  */
-export const MANTIDOS: Record<string, string> = {};
+export const MANTIDOS: Record<string, string> = {
+  janela:
+    'em `vanilla/src/lib/locale-negotiation.test.ts`, `function janela(…)` fabrica uma janela de mentira, e o arquivo inteiro testa o SOMBREAMENTO do `window` global. Declarar `function window` ali cria exatamente a confusão que o teste existe para pegar — o alvo natural é o nome que o teste ataca. Primeira entrada de `MANTIDOS` da campanha, decidida na leva 3. Em `activity-calendar.test.ts` não havia `janela` nenhum: a agente do vanilla corrigiu o brief, e o nome contado ali era `proximo`',
+};
