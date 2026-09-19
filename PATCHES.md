@@ -1024,7 +1024,7 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### vue/dropdown-menu + menubar — Tab sai do menu pelo vizinho do gatilho {#vue-menu-tab-leaves}
 
-- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/` (`tab-leaves-menu.ts` — `useTabLeavesMenu`, que desde 2026-09-11 serve também o ContextMenu; `DropdownMenuContent.vue`, `DropdownMenuSubContent.vue`) e `menubar/` (`tab-leaves-menu.ts`, `MenubarContent.vue`, `MenubarSubContent.vue` — o Menubar fica à parte: a reka o monta não modal e ele fecha sozinho no foco que sai, então mover o foco é o conserto inteiro)
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/` (`tab-leaves-menu.ts` — `useTabLeavesMenu`, que desde 2026-09-11 serve também o ContextMenu; `DropdownMenuContent.vue`, `DropdownMenuSubContent.vue`) e `menubar/` (`tab-leaves-menu.ts`, `MenubarContent.vue`, `MenubarSubContent.vue`, **`MenubarTrigger.vue` desde 2026-09-19** — o Menubar fica à parte: a reka o monta não modal e ele fecha sozinho no foco que sai, então mover o foco é o conserto inteiro)
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `reka-ui/dist/Menu/MenuContentImpl.js:210` (`preventDefault` no Tab com a raiz modal)
@@ -1036,6 +1036,23 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 **Motivo:** C2 e D1 do `prd/dropdown-menu.md`. O destino segue o `handleTabKeyDown` do bits-ui.
 
 **Verificação após bump:** `TabLeavesMenu`/`TabAtPageEnd` (dropdown-menu.stories) e `TabLeavesMenubar`/`TabAtPageEnd` (menubar.stories). Se a reka parar de barrar o Tab e passar a conduzir o foco, o ouvinte sai.
+
+**Acréscimo de 2026-09-19 — o gatilho também precisava do ouvinte.** Medido: com o menu da barra aberto e o foco no GATILHO, o Tab saía com `reason: 'api'` no vue e `overlay` nas outras. O ouvinte de captura vivia só no CONTEÚDO, que a reka monta em portal, e uma tecla dada no gatilho nunca chegava nele — a reka fechava por focus-out sem anotar nada e o motivo caía no padrão. `MenubarTrigger.vue` passa a rodar o mesmo `useMenubarTabLeaves`, sob guarda de `aria-expanded === 'true'`. Afirmado no último passo de `TabLeavesMenubar`, com dentes provados.
+
+### angular/dropdown-menu + menubar + context-menu — a seta traz o item focado para dentro do painel {#angular-menu-reveal-focused}
+
+- **Arquivos:** `nortear-design-system-angular/src/components/ui/menu-popup-scope.ts` (`revealFocused`), compartilhado pelos três membros
+- **Categoria:** a11y
+- **Data:** 2026-09-19
+- **Upstream ref:** `@radix-ng/primitives` — `RdxMenuPopup.focusMenuItem` usa `focus({ preventScroll: true })` em TODOS os caminhos de teclado (`radix-ng-primitives-menu.mjs:1385`), e o módulo não tem uma ocorrência de `scrollIntoView`
+
+**Antes (medido com menu de 36 itens numa janela de 900px):** seta e `End` levavam o foco a um item FORA da caixa visível do painel — 192px abaixo da borda. WCAG 2.4.11 (foco não obscurecido). Silencioso: nada quebrava, e nenhuma story tinha menu longo o bastante para revelá-lo. O defeito só apareceu quando a D17 do `prd/dropdown-menu.md` mandou transformar em ASSERÇÃO a premissa "a seta traz o item focado para dentro da caixa".
+
+**Depois:** ouvinte de `focusin` no painel que ajusta o `scrollTop` **do painel** pela aritmética das caixas, com o `padding` lido do estilo computado. Deliberadamente NÃO usa `scrollIntoView`: ele rolaria a página por trás do portal.
+
+**Motivo:** D17 do `prd/dropdown-menu.md` — o painel de menu rola, e a exceção do axe que isso autoriza se apoia nesta premissa. Sem o conserto, a exceção seria amnistia com aparência de decisão.
+
+**Verificação após bump:** `LongMenu` (menubar-states.stories), passos de `End` e `Home`. Reprova sem o ouvinte, medido — `expected 1087.5 to be less than or equal to 895`. Se o radix-ng passar a revelar o item focado, o ouvinte sai.
 
 ---
 
