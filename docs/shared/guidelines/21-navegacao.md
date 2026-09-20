@@ -429,3 +429,51 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
     `role="menu"` e `aria-haspopup`**, que o vanilla recusa de propósito e nenhuma
     stack emite. É a folha documentando o padrão que a categoria proíbe para
     navegação — ver §Teclado na navegação.
+30. **A categoria usa LISTA, e a família de menus é onde isso quebra — de forma
+    assimétrica.** Medido no DOM renderizado em 2026-09-19, durante a passagem
+    `fix` da família de menus, e trazido para cá porque a pergunta é de categoria
+    e não daquela família.
+
+    Contagem de `<ul>`/`<li>` por componente, no vanilla (a referência):
+
+    | componente | | componente | |
+    |---|---:|---|---:|
+    | dropdown-menu | 10 | breadcrumb | 3 |
+    | context-menu | 11 | pagination | 3 |
+    | sidebar | 4 | navigation-menu | 2 |
+    | **menubar** | **0** | **tabs** | **0** |
+
+    E as quatro stacks de lib usam lista em breadcrumb, pagination,
+    navigation-menu e sidebar — ou seja, **fora da família de menus a categoria
+    inteira é lista, nas cinco**. Dentro dela:
+
+    | | painel | item |
+    |---|---|---|
+    | vanilla dropdown-menu, context-menu | `<ul>` | `<li>` |
+    | vanilla menubar | `<div>` | `<div>` |
+    | as quatro, nos três membros | `<div>` | `<div>` |
+
+    São duas perguntas, e a segunda é a que tem resposta fácil:
+
+    - **A referência diverge de si mesma**: duas fábricas montam lista e a
+      terceira não, com os mesmos `role` e as mesmas classes. Isso não depende de
+      lib nenhuma e é decidível aqui.
+    - **As quatro não montam lista na família de menus porque a lib headless
+      renderiza `<div role="menuitem">`**. Alinhá-las exigiria `asChild` em cada
+      peça. Alinhar o vanilla a `<div>` são duas fábricas.
+
+    **O que depende desta decisão, medido**: `list-style: none` é hoje inerte em
+    4 das 5 stacks e em 2 dos 3 membros da quinta; e
+    `.nds-dropdown-menu-group { display: contents }` só alcança o vanilla, porque
+    nas quatro o grupo é `div[role=group]` **sem classe nenhuma**. As duas regras
+    de `dropdown-menu.css` ficam ou não ficam conforme a resposta.
+
+    **Por que isto sobreviveu**: as duas árvores ASCII da anatomia publicavam uma
+    fábrica do vanilla cada — corrigidas no mesmo dia —, e nenhuma asserção media
+    TEXTO, só caixa de elemento. Foi preciso medir a posição de uma letra, para
+    outro assunto, para a anatomia publicada ser confrontada com o DOM. Detalhe
+    completo na **D20** do [`prd/dropdown-menu.md`](../prd/dropdown-menu.md).
+
+    Vale ler junto com o **item 1** desta lista: decidir em que categoria o
+    Menubar mora e decidir se ele monta lista são a mesma conversa — ele é, hoje,
+    o único componente de navegação da referência que não monta.

@@ -741,6 +741,24 @@ regra da casa não tem fonte de verdade: registra-se, não se alinha.
 - **O atalho é a ÚNICA peça idêntica nas cinco**, nos três membros — e a árvore
   do dropdown nem o mostrava.
 
+**O que NÃO se decide aqui, e onde ele foi parar.** O item é `<li>` no dropdown e
+no context do vanilla, e `<div>` nas outras quatro e no menubar do próprio
+vanilla — a referência divergindo de si mesma, com os mesmos `role` e as mesmas
+classes. Isso **não é questão da família**: medido em 2026-09-19, fora dela a
+categoria de navegação inteira monta lista nas cinco stacks (breadcrumb,
+pagination, navigation-menu, sidebar), e a família de menus é onde isso quebra.
+Por decisão da dona, a pergunta foi para o item **30** de
+[`guidelines/21-navegacao.md`](../guidelines/21-navegacao.md), §"O que está
+aberto", com a medição completa e o que depende dela — duas regras de
+`dropdown-menu.css` que hoje só alcançam uma stack.
+
+Isto **não** é "endereçar pendência a outra passagem", que é o mecanismo pelo
+qual duas pendências desta mesma família saíram sem dono em 2026-09-10. A
+diferença é de escopo e de casa: aquelas eram da família, endereçadas ao membro
+vizinho, e ficaram sem lugar. Esta é de CATEGORIA, tem número numa lista que já
+existe, carrega a medição que a decide, e conversa com o item 1 de lá — em que
+categoria o Menubar mora, que é a mesma pergunta pelo outro lado.
+
 **Um achado de grep que a medição DERRUBOU**, e vale como método: um `grep`
 tinha encontrado `<ul role="menu">` no angular, e eu quase o registrei. Não
 existe — os `<ul>` daquela stack são do `navigation-menu`, que é outro
