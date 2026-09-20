@@ -1020,7 +1020,7 @@ export type ContextMenuOptions = {
       case 'relacionados':
         return createDocsRelated({
           items: [
-            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs'  },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs'  },
             { name: 'Menubar',      description: toPlainText(t('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'       },
             { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/components-overlay-dialog--docs'        },
             { name: 'AlertDialog',  description: toPlainText(t('related.alertDialog')),  path: '?path=/docs/components-overlay-alertdialog--docs'   },

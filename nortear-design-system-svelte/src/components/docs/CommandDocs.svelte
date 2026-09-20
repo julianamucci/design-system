@@ -818,7 +818,7 @@ interface CommandLoadingProps {
   <DocsRelated
     items={[
       { name: 'Select',        description: $tStore('related.select'),       path: '?path=/docs/components-form-select--docs'       },
-      { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { name: 'Dialog',        description: $tStore('related.dialog'),       path: '?path=/docs/components-overlay-dialog--docs'       },
     ]}
   />

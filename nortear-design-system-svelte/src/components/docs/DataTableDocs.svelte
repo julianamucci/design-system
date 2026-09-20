@@ -499,7 +499,7 @@ const columns: DataTableColumn<Invoice>[] = [
       { name: 'Pagination',   description: $tStore('related.pagination'),   path: '?path=/docs/components-navigation-pagination--docs'   },
       { name: 'Checkbox',     description: $tStore('related.checkbox'),     path: '?path=/docs/components-form-checkbox--docs'     },
       { name: 'Input',        description: $tStore('related.input'),        path: '?path=/docs/components-form-input--docs'        },
-      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
     ]}
   />
 

@@ -1223,7 +1223,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { k: 'tooltip',      path: '?path=/docs/components-overlay-tooltip--docs'       },
-      { k: 'dropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { k: 'dropdownMenu', path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { k: 'dialog',       path: '?path=/docs/components-overlay-dialog--docs'        },
       { k: 'hoverCard',    path: '?path=/docs/components-overlay-hovercard--docs'    },
     ].map(({ k, path }) => ({

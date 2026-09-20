@@ -757,7 +757,7 @@ interface BreadcrumbEllipsisProps {
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: 'Stepper',        description: $tStore('related.stepper'),        path: '?path=/docs/components-navigation-stepper--docs'        },
       { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/components-navigation-tabs--docs'           },
-      { name: 'DropdownMenu',   description: toPlainText($tStore('related.dropdownMenu')),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
+      { name: 'DropdownMenu',   description: toPlainText($tStore('related.dropdownMenu')),   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
     ]}
   />
 

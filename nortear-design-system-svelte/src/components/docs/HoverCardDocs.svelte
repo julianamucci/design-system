@@ -826,7 +826,7 @@ interface HoverCardContentProps {
     items={[
       { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
       { name: $tStore('related.items.popover.name'),      description: $tStore('related.items.popover.description'),      path: '?path=/docs/components-overlay-popover--docs'      },
-      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { name: $tStore('related.items.card.name'),         description: $tStore('related.items.card.description'),         path: '?path=/docs/components-layout-card--docs'         },
     ]}
   />

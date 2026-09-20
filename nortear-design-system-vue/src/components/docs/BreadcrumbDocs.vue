@@ -362,7 +362,7 @@ const relatedItems = computed(() => [
   { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
   { name: 'Stepper',        description: toPlainText(tContent('related.stepper')),        path: '?path=/docs/components-navigation-stepper--docs'        },
   { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/components-navigation-tabs--docs'           },
-  { name: 'DropdownMenu',   description: toPlainText(tContent('related.dropdownMenu')),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
+  { name: 'DropdownMenu',   description: toPlainText(tContent('related.dropdownMenu')),   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
 ]);
 
 const noteItems = computed(() => [

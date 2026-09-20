@@ -21,9 +21,9 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
-  title: "Components/Overlay/DropdownMenu",
+  title: "Components/Navigation/DropdownMenu",
   component: DropdownMenu,
-  tags: ["autodocs", "overlay"],
+  tags: ["autodocs", "navigation"],
   parameters: {
     design: figmaDesign("dropdownMenu"),
     layout: "centered",

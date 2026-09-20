@@ -44,13 +44,13 @@ stack, e por isso não há comando `dev` fora dele.
 | Categoria | Componentes |
 |---|---|
 | **Layout** | Card, Sidebar, ScrollArea, AspectRatio, Resizable, Separator |
-| **Navigation** | Breadcrumb, Menubar, NavigationMenu, Pagination, Tabs |
+| **Navigation** | Breadcrumb, ContextMenu, DropdownMenu, Menubar, NavigationMenu, Pagination, Stepper, Tabs |
 | **Form** | Button, Input, Textarea, Select, DatePicker, Calendar, Checkbox, RadioGroup, Switch, Slider, Form, InputOTP, Label, Toggle, ToggleGroup |
 | **Feedback** | Alert, Badge, Progress, Skeleton, Sonner |
 | **Display** | Avatar, Carousel, Chart |
 | **Tables** | Table, DataTable (sort/filter/select/resize/reorder/pin/edit/virtualize) |
 | **Disclosure** | Accordion, Collapsible, Sheet, Drawer |
-| **Overlay** | Dialog, AlertDialog, DropdownMenu, Popover, Tooltip, ContextMenu, Command, HoverCard |
+| **Overlay** | Dialog, AlertDialog, Popover, Tooltip, Command, HoverCard |
 
 Cada componente tem **stories** (Playground + variações), **docs page** (15 seções padronizadas em 3 idiomas) e atende **WCAG 2.1 AA** verificado via axe (addon-a11y no Storybook Test).
 

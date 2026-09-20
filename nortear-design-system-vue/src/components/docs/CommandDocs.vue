@@ -511,7 +511,7 @@ const keyboardItems = computed(() => [
 
 const relatedItems = computed(() => [
   { name: 'Select',       description: toPlainText(tContent('related.select')),       path: '?path=/docs/components-form-select--docs'       },
-  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
   { name: 'Dialog',       description: toPlainText(tContent('related.dialog')),       path: '?path=/docs/components-overlay-dialog--docs'       },
 ]);
 

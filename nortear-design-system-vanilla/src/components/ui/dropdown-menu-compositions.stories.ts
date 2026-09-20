@@ -7,8 +7,8 @@ import { waitForAncorado } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  tags: ['overlay'],
-  title: 'Components/Overlay/DropdownMenu/Compositions',
+  tags: ['navigation'],
+  title: 'Components/Navigation/DropdownMenu/Compositions',
   parameters: {
     design: figmaDesign('dropdownMenu'),
     actions: { disable: true },

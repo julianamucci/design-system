@@ -12,8 +12,8 @@ import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/DropdownMenu/Variants',
-  tags: ['overlay'],
+  title: 'Components/Navigation/DropdownMenu/Variants',
+  tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {
     design: figmaDesign('dropdownMenu'),

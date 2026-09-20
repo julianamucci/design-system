@@ -25,7 +25,7 @@ Leia primeiro o [`CLAUDE.md` da raiz](../CLAUDE.md): as convenções cross-stack
 | [`06-form-components.md`](guidelines/06-form-components.md) | componentes de formulário |
 | [`19-feedback.md`](../docs/shared/guidelines/19-feedback.md) | **a regra da categoria Feedback**, uma vez para as cinco stacks |
 | [`20-tabelas.md`](../docs/shared/guidelines/20-tabelas.md) | **a regra da categoria Tabelas** (Table, DataTable), uma vez para as cinco stacks |
-| [`21-navegacao.md`](../docs/shared/guidelines/21-navegacao.md) | **a regra da categoria Navegação** (Breadcrumb, Menubar, NavigationMenu, Pagination, Stepper, Tabs), uma vez para as cinco stacks |
+| [`21-navegacao.md`](../docs/shared/guidelines/21-navegacao.md) | **a regra da categoria Navegação** (Breadcrumb, ContextMenu, DropdownMenu, Menubar, NavigationMenu, Pagination, Stepper, Tabs), uma vez para as cinco stacks |
 | [`08-display-components.md`](guidelines/08-display-components.md) | componentes de exibição |
 | [`09-disclosure-components.md`](guidelines/09-disclosure-components.md) | componentes de divulgação |
 | [`11-documentacao-componentes.md`](guidelines/11-documentacao-componentes.md) | docs page e stories |

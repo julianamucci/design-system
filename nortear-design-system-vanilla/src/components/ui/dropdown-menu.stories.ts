@@ -24,8 +24,8 @@ type DropdownArgs = {
 };
 
 const meta: Meta<DropdownArgs> = {
-  title: 'Components/Overlay/DropdownMenu',
-  tags: ['autodocs', 'overlay'],
+  title: 'Components/Navigation/DropdownMenu',
+  tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'padded',

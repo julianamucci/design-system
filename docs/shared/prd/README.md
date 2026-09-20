@@ -149,8 +149,12 @@ consome, que publica `guidelines/` e não `prd/`.
 
 ## Índice
 
-A categoria Overlay inteira — onze componentes em nove PRDs — passou pela revisão
-serial e, depois dela, pela pipeline `fix`. As duas primeiras colunas de data são
+A categoria Overlay — hoje oito componentes em oito PRDs — passou pela revisão
+serial e, depois dela, pela pipeline `fix`. Ela tinha onze componentes em nove PRDs
+até 2026-09-20, quando a família de menus migrou para Navegação: DropdownMenu,
+ContextMenu e Menubar são de lá, e o PRD deles está na seção daquela categoria. As
+datas de revisão continuam contando, porque o componente é o mesmo — o que mudou é
+onde ele mora. As duas primeiras colunas de data são
 diferentes de propósito: a primeira é quando a revisão fechou o componente, a
 segunda é a última passagem que mudou o código dele e, com ele, este registro.
 
@@ -167,7 +171,6 @@ item dela é visto por portão.
 | HoverCard | [hover-card.md](hover-card.md) | 2026-09-06 | 2026-09-10 | 2026-09-15 |
 | Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 | 2026-09-12 | 2026-09-15 |
 | Sheet | [sheet.md](sheet.md) | 2026-09-06 | 2026-09-11 | 2026-09-15 |
-| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 | 2026-09-11 | 2026-09-15 |
 | Drawer | [drawer.md](drawer.md) | 2026-09-07 | 2026-09-11 | 2026-09-15 |
 | Dialog | [dialog.md](dialog.md) | 2026-09-10 | 2026-09-11 | 2026-09-15 |
 | AlertDialog | [alert-dialog.md](alert-dialog.md) | 2026-09-10 | 2026-09-12 | 2026-09-15 |
@@ -241,14 +244,23 @@ base. O que precisa de decisão está na §"O que está aberto" da
 | Pagination | [pagination.md](pagination.md) | 2026-09-16 | 24 | 4 |
 | Stepper | [stepper.md](stepper.md) | 2026-09-17 | 24 | 6 |
 | Tabs | [tabs.md](tabs.md) | 2026-09-17 | 30 | 8 |
-| Menubar | [dropdown-menu.md](dropdown-menu.md) — PRD da família de menus | 2026-09-07 | — | — |
+| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](dropdown-menu.md) — PRD da FAMÍLIA de menus | 2026-09-07 | 24, medidas em 2026-09-15 | 4 |
 
-**O Menubar não ganhou PRD próprio, e a categoria dele está em disputa.** O conteúdo
-compartilhado e o Storybook o põem em Navegação; o PRD da família e a
-[`18-overlay.md`](../guidelines/18-overlay.md) o tratam como menu de comandos. Até a
-decisão, o contrato continua no PRD da família — e o `catalogo_duplicado_com_prd`
-não vê as seções `## Menubar` das guidelines de stack, porque ele exige
-um PRD com o nome do componente e não lê `prd-familia`.
+**A família de menus entrou nesta categoria em 2026-09-20, por decisão da dona**, e a
+linha dela não é como as outras cinco: o PRD nasceu na rodada de Overlay, em
+2026-09-07, já passou por revisão serial e por várias passagens `fix` — a última em
+2026-09-19, que mediu a estrutura de DOM dos três membros. As inconsistências dele
+estão na §7 com a data de 2026-09-15, e as quatro pendências abertas são as da
+estrutura de lista, abertas com a decisão de categoria.
+
+**O que a migração fecha, e o que ela abre.** Fecha os itens 1 e 30 da
+§"O que está aberto" da [`21-navegacao.md`](../guidelines/21-navegacao.md) — em que
+categoria o Menubar mora, e se a categoria monta lista. Abre o conserto do markup: 13
+das 15 implementações montam `<div>` onde a regra agora pede `<ul>`/`<li>`, e o
+`catalogo_duplicado_com_prd` continua sem ver seção de Menubar ou de ContextMenu nas
+guidelines de stack, porque exige um PRD com o nome do componente e não lê
+`prd-familia`. As quatro seções `## Menubar` que existem são legítimas: são mecânica
+de stack, declarada no título.
 
 **Linha de base do auditor, antes dos PRDs de navegação**, medida em 2026-09-17:
 navigation-menu 38 achados, pagination 21, tabs 18, stepper 14, breadcrumb 7 e

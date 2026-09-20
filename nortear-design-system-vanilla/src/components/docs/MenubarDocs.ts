@@ -964,7 +964,7 @@ export function createMenubar(
         return createDocsRelated({
           items: [
             { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
-            { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
+            { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
             { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/components-layout-sidebar--docs'        },
             { name: t('related.items.command.name'),        description: toPlainText(t('related.items.command.description')),        path: '?path=/docs/components-overlay-command--docs'        },
           ],

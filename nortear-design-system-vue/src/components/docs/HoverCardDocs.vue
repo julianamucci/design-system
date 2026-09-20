@@ -358,7 +358,7 @@ const keyboardItems = computed(() => [
 const relatedItems = computed(() => [
   { name: tContent('related.items.tooltip.name'),      description: toPlainText(tContent('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
   { name: tContent('related.items.popover.name'),      description: toPlainText(tContent('related.items.popover.description')),      path: '?path=/docs/components-overlay-popover--docs'      },
-  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
   { name: tContent('related.items.card.name'),         description: toPlainText(tContent('related.items.card.description')),         path: '?path=/docs/components-layout-card--docs'         },
 ]);
 

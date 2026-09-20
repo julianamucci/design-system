@@ -1066,7 +1066,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
     return [
       { key: 'combobox',     path: '?path=/docs/components-form-combobox--docs'     },
       { key: 'radioGroup',   path: '?path=/docs/components-form-radiogroup--docs'   },
-      { key: 'dropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { key: 'dropdownMenu', path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { key: 'form',         path: '?path=/docs/components-form-input--docs'        },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),

@@ -902,7 +902,7 @@ interface SelectContentProps {
           {
             name: tContent("related.items.dropdownMenu.name"),
             description: toPlainText(tContent("related.items.dropdownMenu.description")),
-            path: "?path=/docs/components-overlay-dropdownmenu--docs",
+            path: "?path=/docs/components-navigation-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.form.name"),

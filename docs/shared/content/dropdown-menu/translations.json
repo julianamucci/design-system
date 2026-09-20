@@ -1,11 +1,11 @@
 {
   "pt-BR": {
     "title": "DropdownMenu",
-    "category": "Overlay",
+    "category": "Navegação",
     "type": "Componente",
     "description": "Menu suspenso acionado por botão que apresenta ações ou opções de seleção em um popup com navegação por teclado.",
     "seo": {
-      "title": "DropdownMenu — Overlay",
+      "title": "DropdownMenu — Navegação",
       "description": "Documentação do DropdownMenu: menu suspenso com itens, checkbox, radio, submenus, atalhos e WCAG 2.2 AA.",
       "aiSummary": "Componente DropdownMenu que apresenta menu suspenso com items, checkbox-items, radio-items, submenus, separators e shortcuts em popup acessível.",
       "aiEntities": "DropdownMenu, React, Vue, Svelte, Vanilla, Angular, aria-expanded, role=menu, role=menuitem, WCAG 2.2, aria-checked, aria-haspopup"
@@ -525,11 +525,11 @@
   },
   "en": {
     "title": "DropdownMenu",
-    "category": "Overlay",
+    "category": "Navigation",
     "type": "Component",
     "description": "Button-triggered dropdown menu that presents actions or selection options in a popup with full keyboard navigation.",
     "seo": {
-      "title": "DropdownMenu — Overlay",
+      "title": "DropdownMenu — Navigation",
       "description": "DropdownMenu documentation: dropdown menu with items, checkboxes, radios, submenus, shortcuts and WCAG 2.2 AA.",
       "aiSummary": "DropdownMenu component presenting a dropdown menu with items, checkbox-items, radio-items, submenus, separators and shortcuts in an accessible popup.",
       "aiEntities": "DropdownMenu, React, Vue, Svelte, Vanilla, Angular, aria-expanded, role=menu, role=menuitem, WCAG 2.2, aria-checked, aria-haspopup"
@@ -1049,11 +1049,11 @@
   },
   "es": {
     "title": "DropdownMenu",
-    "category": "Overlay",
+    "category": "Navegación",
     "type": "Componente",
     "description": "Menú desplegable accionado por botón que presenta acciones u opciones de selección en un popup con navegación por teclado.",
     "seo": {
-      "title": "DropdownMenu — Overlay",
+      "title": "DropdownMenu — Navegación",
       "description": "Documentación de DropdownMenu: menú desplegable con items, checkbox, radio, submenús, atajos y WCAG 2.2 AA.",
       "aiSummary": "Componente DropdownMenu que presenta un menú desplegable con items, checkbox-items, radio-items, submenús, separators y shortcuts en un popup accesible.",
       "aiEntities": "DropdownMenu, React, Vue, Svelte, Vanilla, Angular, aria-expanded, role=menu, role=menuitem, WCAG 2.2, aria-checked, aria-haspopup"

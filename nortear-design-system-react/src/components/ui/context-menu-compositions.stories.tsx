@@ -38,8 +38,8 @@ import { figmaDesign } from "@shared/figma/design-links";
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "Components/Overlay/ContextMenu/Compositions",
-  tags: ["overlay"],
+  title: "Components/Navigation/ContextMenu/Compositions",
+  tags: ["navigation"],
   component: ContextMenu,
   parameters: {
     design: figmaDesign("dropdownMenu"),

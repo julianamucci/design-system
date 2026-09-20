@@ -381,7 +381,7 @@ const relatedItems = computed(() => [
   { name: 'Pagination',   description: toPlainText(tContent('related.pagination')),   path: '?path=/docs/components-navigation-pagination--docs'   },
   { name: 'Checkbox',     description: toPlainText(tContent('related.checkbox')),     path: '?path=/docs/components-form-checkbox--docs'     },
   { name: 'Input',        description: toPlainText(tContent('related.input')),        path: '?path=/docs/components-form-input--docs'        },
-  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
 ]);
 
 const noteItems = computed(() => [

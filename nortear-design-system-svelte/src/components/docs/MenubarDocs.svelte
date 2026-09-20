@@ -1112,7 +1112,7 @@ interface MenubarRadioGroupProps {
   <DocsRelated
     items={[
       { name: $tStore('related.items.navigationMenu.name'), description: $tStore('related.items.navigationMenu.description'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
-      { name: $tStore('related.items.dropdownMenu.name'),   description: $tStore('related.items.dropdownMenu.description'),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
+      { name: $tStore('related.items.dropdownMenu.name'),   description: $tStore('related.items.dropdownMenu.description'),   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
       { name: $tStore('related.items.sidebar.name'),        description: $tStore('related.items.sidebar.description'),        path: '?path=/docs/components-layout-sidebar--docs'        },
       { name: $tStore('related.items.command.name'),        description: $tStore('related.items.command.description'),        path: '?path=/docs/components-overlay-command--docs'        },
     ]}

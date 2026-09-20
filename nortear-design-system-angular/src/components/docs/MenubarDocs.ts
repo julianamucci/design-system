@@ -1508,7 +1508,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'navigationMenu', path: '?path=/docs/components-navigation-navigationmenu--docs' },
-      { key: 'dropdownMenu',   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
+      { key: 'dropdownMenu',   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
       { key: 'sidebar',        path: '?path=/docs/components-layout-sidebar--docs'        },
       { key: 'command',        path: '?path=/docs/components-overlay-command--docs'        },
     ].map(({ key, path }) => ({

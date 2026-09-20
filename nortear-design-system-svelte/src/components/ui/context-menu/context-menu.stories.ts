@@ -11,9 +11,9 @@ import { contextMenuSource } from './context-menu.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/ContextMenu',
+  title: 'Components/Navigation/ContextMenu',
   component: ContextMenuStory,
-  tags: ['autodocs', 'overlay'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',

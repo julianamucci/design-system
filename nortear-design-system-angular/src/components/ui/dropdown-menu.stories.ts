@@ -20,8 +20,8 @@ import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<DropdownMenuArgs> = {
-  title: 'Components/Overlay/DropdownMenu',
-  tags: ['autodocs', 'overlay'],
+  title: 'Components/Navigation/DropdownMenu',
+  tags: ['autodocs', 'navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {
     design: figmaDesign('dropdownMenu'),

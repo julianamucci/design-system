@@ -707,7 +707,7 @@ export interface BreadcrumbEllipsisOptions {
             { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/components-navigation-stepper--docs' },
             { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/components-navigation-tabs--docs' },
-            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
           ],
         });
 

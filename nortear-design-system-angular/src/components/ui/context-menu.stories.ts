@@ -18,8 +18,8 @@ import { expectInvolucroComCaixa, waitForAncorado } from '@shared/testing/ancora
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<ContextMenuArgs> = {
-  title: 'Components/Overlay/ContextMenu',
-  tags: ['autodocs', 'overlay'],
+  title: 'Components/Navigation/ContextMenu',
+  tags: ['autodocs', 'navigation'],
   // `NdsButton` serve aos vizinhos da story de Tab — um ponto de tabulação antes
   // e outro depois da área.
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU, NdsButton] })],

@@ -1335,7 +1335,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'contextMenu', path: '?path=/docs/components-overlay-contextmenu--docs' },
+      { key: 'contextMenu', path: '?path=/docs/components-navigation-contextmenu--docs' },
       { key: 'menubar',     path: '?path=/docs/components-navigation-menubar--docs'     },
       { key: 'command',     path: '?path=/docs/components-overlay-command--docs'     },
       { key: 'popover',     path: '?path=/docs/components-overlay-popover--docs'     },

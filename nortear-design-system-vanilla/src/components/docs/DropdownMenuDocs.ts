@@ -519,7 +519,7 @@ export function createDropdownMenuDocs(): HTMLElement {
       aiEntities: t('seo.aiEntities'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
-        { name: t('category'), item: '/components/overlay' },
+        { name: t('category'), item: '/components/navigation' },
         { name: t('title') },
       ],
     });
@@ -992,7 +992,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       case 'relacionados':
         return createDocsRelated({
           items: [
-            { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/components-overlay-contextmenu--docs' },
+            { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/components-navigation-contextmenu--docs' },
             { name: t('related.items.menubar.name'),     description: toPlainText(t('related.items.menubar.description')),     path: '?path=/docs/components-navigation-menubar--docs'     },
             { name: t('related.items.command.name'),     description: toPlainText(t('related.items.command.description')),     path: '?path=/docs/components-overlay-command--docs'     },
             { name: t('related.items.popover.name'),     description: toPlainText(t('related.items.popover.description')),     path: '?path=/docs/components-overlay-popover--docs'     },

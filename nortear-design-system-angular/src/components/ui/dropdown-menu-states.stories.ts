@@ -15,8 +15,8 @@ import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbo
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/DropdownMenu/States',
-  tags: ['overlay'],
+  title: 'Components/Navigation/DropdownMenu/States',
+  tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {
     design: figmaDesign('dropdownMenu'),

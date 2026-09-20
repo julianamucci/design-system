@@ -828,7 +828,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'select',       name: 'Select',        path: '?path=/docs/components-form-select--docs'       },
-      { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/components-overlay-dialog--docs'       },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });

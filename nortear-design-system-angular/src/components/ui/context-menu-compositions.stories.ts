@@ -18,8 +18,8 @@ import { figmaDesign } from '@shared/figma/design-links';
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
 const meta: Meta = {
-  title: 'Components/Overlay/ContextMenu/Compositions',
-  tags: ['overlay'],
+  title: 'Components/Navigation/ContextMenu/Compositions',
+  tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {
     design: figmaDesign('dropdownMenu'),

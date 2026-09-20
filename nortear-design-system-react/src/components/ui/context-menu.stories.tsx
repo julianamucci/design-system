@@ -91,8 +91,8 @@ function dispatchContextMenu(target: HTMLElement): void {
 // componente — passa a não existir para o TypeScript. A aba API Reference sai
 // dos `argTypes` escritos aqui, então nada se perde.
 const meta: Meta<ContextMenuArgs> = {
-  title: "Components/Overlay/ContextMenu",
-  tags: ["autodocs", "overlay"],
+  title: "Components/Navigation/ContextMenu",
+  tags: ["autodocs", "navigation"],
   parameters: {
     design: figmaDesign("dropdownMenu"),
     layout: "centered",

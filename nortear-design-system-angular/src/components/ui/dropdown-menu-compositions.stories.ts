@@ -14,8 +14,8 @@ import { waitForPortal, waitForPousado, FOCUS_RULE_GUARDA, axeRules } from '@/li
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/DropdownMenu/Compositions',
-  tags: ['overlay'],
+  title: 'Components/Navigation/DropdownMenu/Compositions',
+  tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {
     design: figmaDesign('dropdownMenu'),

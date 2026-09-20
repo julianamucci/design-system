@@ -25,9 +25,9 @@ import {
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/ContextMenu/States',
+  title: 'Components/Navigation/ContextMenu/States',
   component: ContextMenu,
-  tags: ['overlay'],
+  tags: ['navigation'],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     controls: { disable: true },

@@ -36,9 +36,9 @@ type ContextMenuArgs = {
 };
 
 const meta: Meta<ContextMenuArgs> = {
-  title: 'Components/Overlay/ContextMenu',
+  title: 'Components/Navigation/ContextMenu',
   component: ContextMenu,
-  tags: ['autodocs', 'overlay'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',

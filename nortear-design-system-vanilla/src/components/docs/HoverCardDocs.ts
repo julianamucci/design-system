@@ -832,7 +832,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement;`;
           items: [
             { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
             { name: t('related.items.popover.name'),      description: toPlainText(t('related.items.popover.description')),      path: '?path=/docs/components-overlay-popover--docs'      },
-            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
             { name: t('related.items.card.name'),         description: toPlainText(t('related.items.card.description')),         path: '?path=/docs/components-layout-card--docs'         },
           ],
         });

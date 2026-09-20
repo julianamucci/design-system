@@ -1084,7 +1084,7 @@ interface ContextMenuLabelProps {
   <!-- A descrição é TEXTO no container: sem `toPlainText`, tag vira texto. -->
   <DocsRelated
     items={[
-      { name: 'DropdownMenu', description: toPlainText($tStore('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: 'DropdownMenu', description: toPlainText($tStore('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { name: 'Menubar',      description: toPlainText($tStore('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'      },
       { name: 'Dialog',       description: toPlainText($tStore('related.dialog')),       path: '?path=/docs/components-overlay-dialog--docs'       },
       { name: 'AlertDialog',  description: toPlainText($tStore('related.alertDialog')),  path: '?path=/docs/components-overlay-alertdialog--docs'  },

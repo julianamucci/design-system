@@ -19,6 +19,17 @@
 Menu suspenso disparado por um gatilho, em que **o teclado pertence à lista**:
 as setas andam item a item, letra digitada é typeahead, e Tab fecha.
 
+**Categoria: Navegação**, nos três membros, desde 2026-09-20 — por decisão da dona, e
+a regra da categoria está em
+[`guidelines/21-navegacao.md`](../guidelines/21-navegacao.md). Antes disso o
+DropdownMenu e o ContextMenu eram Overlay e o Menubar estava nas duas casas ao mesmo
+tempo; este PRD nunca declarou categoria nenhuma, o que é por que a divergência durou.
+A camada continua sendo a flutuante, e a mecânica dela — superfície, degrau `--z-*`,
+posicionamento, `transform-origin`, retorno de foco, clique fora, ausência de
+`aria-modal`, vocabulário de `reason` — continua em
+[`guidelines/18-overlay.md`](../guidelines/18-overlay.md). Categoria é onde o
+componente mora; camada é como o painel dele se comporta.
+
 É a folha mais reusada da família: o **miolo do painel** — item, rótulo,
 separador, atalho, marcação, escolha única, recuo e variante destrutiva — é o
 mesmo no menu de contexto e no menubar, e mora aqui. O **menu de contexto** não
@@ -741,23 +752,55 @@ regra da casa não tem fonte de verdade: registra-se, não se alinha.
 - **O atalho é a ÚNICA peça idêntica nas cinco**, nos três membros — e a árvore
   do dropdown nem o mostrava.
 
-**O que NÃO se decide aqui, e onde ele foi parar.** O item é `<li>` no dropdown e
-no context do vanilla, e `<div>` nas outras quatro e no menubar do próprio
-vanilla — a referência divergindo de si mesma, com os mesmos `role` e as mesmas
-classes. Isso **não é questão da família**: medido em 2026-09-19, fora dela a
-categoria de navegação inteira monta lista nas cinco stacks (breadcrumb,
-pagination, navigation-menu, sidebar), e a família de menus é onde isso quebra.
-Por decisão da dona, a pergunta foi para o item **30** de
-[`guidelines/21-navegacao.md`](../guidelines/21-navegacao.md), §"O que está
-aberto", com a medição completa e o que depende dela — duas regras de
-`dropdown-menu.css` que hoje só alcançam uma stack.
+**O que NÃO se decidia aqui — e foi DECIDIDO em 2026-09-20, na guideline de
+navegação.** O item era `<li>` no dropdown e no context do vanilla, e `<div>` nas
+outras quatro e no menubar do próprio vanilla — a referência divergindo de si
+mesma, com os mesmos `role` e as mesmas classes. Isso **não era questão da
+família**: medido em 2026-09-19, fora dela a categoria de navegação inteira monta
+lista nas cinco stacks (breadcrumb, pagination, navigation-menu, sidebar), e a
+família de menus é onde isso quebrava. Por decisão da dona, a pergunta foi para o
+item **30** de [`guidelines/21-navegacao.md`](../guidelines/21-navegacao.md), com a
+medição completa e o que depende dela — duas regras de `dropdown-menu.css` que hoje
+só alcançam uma stack.
+
+**A resposta, de 2026-09-20**: a categoria monta LISTA, e os três menus passam a
+montar. A regra está em [`21-navegacao.md`](../guidelines/21-navegacao.md)
+§Estrutura, junto com os limites por lib, medidos na fonte instalada. O que é da
+família, e portanto daqui:
+
+- **o `<span>` de dentro do item FICA**, declarado — a regra alcança o elemento que
+  carrega estrutura, não o que embrulha texto. O custo de tirá-lo já estava medido
+  nesta mesma decisão: 964 call sites, e no Angular o item é diretiva nua que teria
+  de virar componente;
+- **as quatro libs deixam trocar o elemento** — `render` no base-ui 1.7.0,
+  `as`/`asChild` no reka-ui 2.10.4, snippet `child` no bits-ui 2.19.0, e as peças do
+  radix-ng 1.1.2 são diretivas de seletor de atributo sem template nenhum, então
+  `<li rdxMenuItem>` aplica. Medido em 2026-09-20. **Nenhuma peça de nenhuma lib
+  recusa**: o que falta é trabalho por peça, não permissão;
+- **o bloqueio é nosso, e no Angular ele é silencioso**: 36 seletores nossos estão
+  pinados em `div[...]`, e `<li ndsDropdownMenuItem>` não aplicaria a diretiva sem
+  que o `ngc` reprovasse — atributo estático desconhecido em elemento conhecido não é
+  erro de compilação. Mais quatro `<div rdxMenuPopup>` cravados nos nossos templates;
+- **duas peças não ficam iguais às outras**, e é limite real: `a[rdxMenuLinkItem]` TEM
+  de ser `<a>`, então ali a forma é `<li><a>` com o `<li>` como invólucro que a lib
+  não conhece; e a barra do Angular é `<nds-menubar>`, elemento customizado, que não
+  vira `<ul>` sem trocar o seletor do componente;
+- **o grupo são dois níveis** (`<li role="presentation">` + `<ul role="group">`),
+  porque `<ul>` não é filho válido de `<ul>`. A referência já faz, e nenhuma lib
+  oferece: esse `role` é nosso nas cinco.
+
+O conserto do markup é da revisão de cada membro — ver as pendências da §7 —, porque
+mexe em DOM de três componentes nas cinco stacks e pede suíte de navegador, que é
+autorização da dona.
 
 Isto **não** é "endereçar pendência a outra passagem", que é o mecanismo pelo
 qual duas pendências desta mesma família saíram sem dono em 2026-09-10. A
 diferença é de escopo e de casa: aquelas eram da família, endereçadas ao membro
-vizinho, e ficaram sem lugar. Esta é de CATEGORIA, tem número numa lista que já
-existe, carrega a medição que a decide, e conversa com o item 1 de lá — em que
-categoria o Menubar mora, que é a mesma pergunta pelo outro lado.
+vizinho, e ficaram sem lugar. Esta era de CATEGORIA, tinha número numa lista que já
+existia, carregava a medição que a decidia, e conversava com o item 1 de lá — em que
+categoria o Menubar mora. Os dois itens fecharam juntos, em 2026-09-20, e a prova de
+que o mecanismo funcionou é essa: a pergunta tinha endereço, e quem decidiu encontrou
+a medição no lugar onde ela estava.
 
 **Um achado de grep que a medição DERRUBOU**, e vale como método: um `grep`
 tinha encontrado `<ul role="menu">` no angular, e eu quase o registrei. Não
@@ -1582,6 +1625,55 @@ o svelte declarado como estado inalcançável e a premissa do `trapFocus`
 conferida por portão. O que a pendência supunha — "uma story nas cinco afirma o
 mesmo estado final" — não vale como escrito: no svelte essa asserção seria
 inerte, e inerte é portão sem dentes.
+
+### A estrutura de lista, por stack — o que a decisão de 2026-09-20 abriu
+
+A regra está em [`21-navegacao.md`](../guidelines/21-navegacao.md) §Estrutura; o que
+falta é o markup. O escopo abaixo foi medido em 2026-09-20 na fonte instalada das
+libs e nos nossos arquivos, um por um, e é dele que sai cada pendência.
+
+> **PENDÊNCIA · 2026-09-20** — o **menubar do vanilla** monta `<div>` no painel, no
+> item, no grupo, no rótulo de grupo, no separador e no sub-gatilho, com os mesmos
+> `role` e as mesmas classes dos dois irmãos, que montam `<ul>`/`<li>`. É a metade
+> mais barata do conserto e não depende de lib nenhuma: são duas fábricas
+> (`menubar.ts` e o que ela reusa). O rótulo de grupo dele também não leva
+> `role="presentation"`, que os dois irmãos levam — `menubar.ts` não tem uma
+> ocorrência da palavra.
+> **Fecha quando**: `menubar.ts` montar `<ul role="menubar">` na barra, `<li>` em cada
+> menu, `<ul role="menu">` no painel e `<li>` em cada item, com o grupo em dois níveis
+> como em `dropdown-menu.ts:483-495`, e uma story afirmar `tagName` das peças — porque
+> nenhum portão de auditor lê elemento.
+
+> **PENDÊNCIA · 2026-09-20** — nas **quatro stacks de lib**, os três membros montam
+> `<div>` em toda peça. As quatro libs deixam trocar (`render`, `as`/`asChild`,
+> snippet `child`, e diretiva de atributo no Angular), então isto é trabalho por peça,
+> não limite de lib. No Angular há dois bloqueios nossos: 36 seletores pinados em
+> `div[...]` — e trocar o elemento sem trocar o seletor faz a diretiva NÃO aplicar, em
+> silêncio, sem o `ngc` reprovar — e quatro `<div rdxMenuPopup>` cravados nos nossos
+> templates. Duas peças não ficam uniformes, por limite real: `a[rdxMenuLinkItem]` tem
+> de ser `<a>` (a forma ali é `<li><a>`), e a barra é `<nds-menubar>`.
+> **Fecha quando**: as quatro montarem `<ul>`/`<li>` nas peças de painel, item, grupo,
+> rótulo e separador dos três membros, com os seletores do Angular trocados no mesmo
+> commit, e a asserção de `tagName` nas plays das cinco.
+
+> **PENDÊNCIA · 2026-09-20** — duas regras de `dropdown-menu.css` só alcançam UMA
+> stack, e é a decisão de estrutura que define o destino delas: `list-style: none`
+> (`:84`, `:163`) é inerte em 4 das 5 stacks e em 2 dos 3 membros da quinta, e
+> `.nds-dropdown-menu-group { display: contents }` (`:161-164`) só alcança o vanilla,
+> porque nas quatro o grupo é `div[role=group]` **sem classe nenhuma**. Com a lista nas
+> cinco as duas passam a valer em todas; sem ela, ficam prometendo o que não fazem.
+> **Fecha quando**: as peças das quatro stacks levarem as classes `.nds-*` do grupo e
+> do painel, e `list-style: none` estar declarado em CADA `<ul>` — nunca por herança,
+> pelo motivo medido em `dropdown-menu.css:145-160`.
+
+> **PENDÊNCIA · 2026-09-20** — `role="presentation"` no rótulo de grupo existe em
+> vanilla e react e não em vue, svelte e angular. No react ele vem da LIB
+> (`menu/group-label/MenuGroupLabel.js:40`), não do nosso wrapper — medido em
+> 2026-09-20. Com o grupo em dois níveis a decisão volta, porque é o invólucro `<li>`
+> que precisa do `role`, e nenhuma lib o oferece.
+> **Fecha quando**: os três membros escreverem o mesmo `role` no invólucro nas cinco
+> stacks, com a premissa da lib do react conferida por portão — se a lib parar de
+> escrever, o nosso tem de escrever.
 
 ## 8. Acessibilidade
 

@@ -1129,7 +1129,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
       { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/components-navigation-pagination--docs'   },
       { key: 'checkbox',     name: 'Checkbox',     path: '?path=/docs/components-form-checkbox--docs'     },
       { key: 'input',        name: 'Input',        path: '?path=/docs/components-form-input--docs'        },
-      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/components-navigation-dropdownmenu--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

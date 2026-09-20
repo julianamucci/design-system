@@ -1047,7 +1047,7 @@ interface TableRowProps {
           { name: 'Badge',         description: $tStore('related.badge'),        path: '?path=/docs/components-feedback-badge--docs'        },
           { name: 'Pagination',    description: $tStore('related.pagination'),   path: '?path=/docs/components-navigation-pagination--docs'   },
           { name: 'Skeleton',      description: $tStore('related.skeleton'),     path: '?path=/docs/components-feedback-skeleton--docs'     },
-          { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+          { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
         ]}
       />
 

@@ -1261,7 +1261,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       { key: 'skeleton',     name: 'Skeleton',     path: '?path=/docs/components-feedback-skeleton--docs'     },
       { key: 'avatar',       name: 'Avatar',       path: '?path=/docs/components-display-avatar--docs'       },
       { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/components-navigation-pagination--docs'   },
-      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/components-navigation-dropdownmenu--docs' },
     ].map(({ key, name, path }) => ({
       name: name,
       description: toPlainText(t(`related.${key}`)),

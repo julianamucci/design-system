@@ -1044,7 +1044,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
     return [
       { k: 'tooltip',      path: '?path=/docs/components-overlay-tooltip--docs'      },
       { k: 'popover',      path: '?path=/docs/components-overlay-popover--docs'      },
-      { k: 'dropdownMenu', path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { k: 'dropdownMenu', path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { k: 'card',         path: '?path=/docs/components-layout-card--docs'         },
     ].map(({ k, path }) => ({
       name: t(`related.items.${k}.name`),

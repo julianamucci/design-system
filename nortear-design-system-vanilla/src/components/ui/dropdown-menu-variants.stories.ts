@@ -10,8 +10,8 @@ import { waitForAnimationsDone } from '@/lib/wait-for-portal';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  tags: ['overlay'],
-  title: 'Components/Overlay/DropdownMenu/Variants',
+  tags: ['navigation'],
+  title: 'Components/Navigation/DropdownMenu/Variants',
   parameters: {
     design: figmaDesign('dropdownMenu'),
     actions: { disable: true },

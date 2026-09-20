@@ -19,8 +19,8 @@ import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  tags: ['overlay'],
-  title: 'Components/Overlay/ContextMenu/Compositions',
+  tags: ['navigation'],
+  title: 'Components/Navigation/ContextMenu/Compositions',
   parameters: {
     design: figmaDesign('dropdownMenu'),
     controls: { disable: true },

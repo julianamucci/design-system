@@ -10,9 +10,9 @@ import { dropdownMenuSource } from './dropdown-menu.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/DropdownMenu',
+  title: 'Components/Navigation/DropdownMenu',
   component: DropdownMenuStory,
-  tags: ['autodocs', 'overlay'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',

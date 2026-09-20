@@ -835,7 +835,7 @@ interface SelectItemProps {
     items={[
       { name: $tStore('related.items.combobox.name'),   description: $tStore('related.items.combobox.description'),   path: '?path=/docs/components-form-combobox--docs' },
       { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/components-form-radiogroup--docs' },
-      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { name: $tStore('related.items.form.name'),       description: $tStore('related.items.form.description'),       path: '?path=/docs/components-form-form--docs' },
     ]}
   />

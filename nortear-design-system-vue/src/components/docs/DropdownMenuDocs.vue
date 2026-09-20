@@ -316,7 +316,7 @@ useSeoEffect(computed(() => ({
   aiEntities: tContent('seo.aiEntities'),
   breadcrumb: [
     { name: 'Components', item: '/components' },
-    { name: 'Overlay', item: '/components/overlay' },
+    { name: tContent('category'), item: '/components/navigation' },
     { name: 'DropdownMenu' },
   ],
 })));
@@ -540,7 +540,7 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.contextMenu.name'), description: toPlainText(tContent('related.items.contextMenu.description')), path: '?path=/docs/components-overlay-contextmenu--docs' },
+  { name: tContent('related.items.contextMenu.name'), description: toPlainText(tContent('related.items.contextMenu.description')), path: '?path=/docs/components-navigation-contextmenu--docs' },
   { name: tContent('related.items.menubar.name'),     description: toPlainText(tContent('related.items.menubar.description')),     path: '?path=/docs/components-navigation-menubar--docs'     },
   { name: tContent('related.items.command.name'),     description: toPlainText(tContent('related.items.command.description')),     path: '?path=/docs/components-overlay-command--docs'     },
   { name: tContent('related.items.popover.name'),     description: toPlainText(tContent('related.items.popover.description')),     path: '?path=/docs/components-overlay-popover--docs'     },

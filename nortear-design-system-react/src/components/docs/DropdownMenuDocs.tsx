@@ -617,7 +617,7 @@ export function DropdownMenuDocs() {
     aiEntities: tContent("seo.aiEntities"),
     breadcrumb: [
       { name: "Components", item: "/components" },
-      { name: tContent("category"), item: "/components/overlay" },
+      { name: tContent("category"), item: "/components/navigation" },
       { name: tContent("title") },
     ],
   });
@@ -1062,7 +1062,7 @@ export function DropdownMenuDocs() {
           {
             name: tContent("related.items.contextMenu.name"),
             description: toPlainText(tContent("related.items.contextMenu.description")),
-            path: "?path=/docs/components-overlay-contextmenu--docs",
+            path: "?path=/docs/components-navigation-contextmenu--docs",
           },
           {
             name: tContent("related.items.menubar.name"),

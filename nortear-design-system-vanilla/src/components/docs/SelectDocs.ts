@@ -846,7 +846,7 @@ export type SelectOptions = {
           items: [
             { name: t('related.items.combobox.name'),     description: stripHtml(t('related.items.combobox.description')),     path: '?path=/docs/components-form-combobox--docs'     },
             { name: t('related.items.radioGroup.name'),   description: stripHtml(t('related.items.radioGroup.description')),   path: '?path=/docs/components-form-radiogroup--docs'   },
-            { name: t('related.items.dropdownMenu.name'), description: stripHtml(t('related.items.dropdownMenu.description')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+            { name: t('related.items.dropdownMenu.name'), description: stripHtml(t('related.items.dropdownMenu.description')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
             { name: t('related.items.form.name'),         description: stripHtml(t('related.items.form.description')),         path: '?path=/docs/components-form-form--docs'         },
           ],
         });

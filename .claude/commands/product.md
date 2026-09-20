@@ -59,7 +59,7 @@ As 5 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** 
 | Formulário | `nortear-design-system-vanilla/guidelines/06-form-components.md` |
 | Feedback | `docs/shared/guidelines/19-feedback.md` — a regra da categoria, uma vez para as cinco stacks |
 | Tabelas | `docs/shared/guidelines/20-tabelas.md` — a regra da categoria (Table, DataTable), uma vez para as cinco stacks |
-| Navegação | `docs/shared/guidelines/21-navegacao.md` — a regra da categoria (Breadcrumb, Menubar, NavigationMenu, Pagination, Stepper, Tabs), uma vez para as cinco stacks |
+| Navegação | `docs/shared/guidelines/21-navegacao.md` — a regra da categoria (Breadcrumb, ContextMenu, DropdownMenu, Menubar, NavigationMenu, Pagination, Stepper, Tabs), uma vez para as cinco stacks |
 | Display | `nortear-design-system-vanilla/guidelines/08-display-components.md` |
 | Disclosure | `nortear-design-system-vanilla/guidelines/09-disclosure-components.md` |
 | Overlay | `docs/shared/guidelines/18-overlay.md` — a regra da categoria, uma vez para as cinco stacks |

@@ -1246,7 +1246,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
           {
             name: "DropdownMenu",
             description: toPlainText(tContent("related.dropdownMenu")),
-            path: "?path=/docs/components-overlay-dropdownmenu--docs",
+            path: "?path=/docs/components-navigation-dropdownmenu--docs",
           },
         ]}
       />

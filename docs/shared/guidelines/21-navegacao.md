@@ -1,30 +1,50 @@
 # Navegação — as regras da categoria
 
-Vale para os seis componentes de navegação, nas cinco stacks: **Breadcrumb**,
-**Menubar**, **NavigationMenu**, **Pagination**, **Stepper** e **Tabs**. A lista não
-é escolha deste arquivo: é a categoria que o conteúdo compartilhado declara
-(`"category": "Navegação"` em `docs/shared/content/<slug>/translations.json`) e o
-grupo `Components/Navigation` que as cinco stacks usam no Storybook.
+Vale para os oito componentes de navegação, nas cinco stacks: **Breadcrumb**,
+**ContextMenu**, **DropdownMenu**, **Menubar**, **NavigationMenu**, **Pagination**,
+**Stepper** e **Tabs**. A lista não é escolha deste arquivo: é a categoria que o
+conteúdo compartilhado declara (`"category": "Navegação"` em
+`docs/shared/content/<slug>/translations.json`) e o grupo `Components/Navigation`
+que as cinco stacks usam no Storybook.
 
-Este arquivo guarda o que ATRAVESSA os seis. O que cada um É — contrato, decisões
+Este arquivo guarda o que ATRAVESSA os oito. O que cada um É — contrato, decisões
 com data e medição, tokens, peças das cinco stacks — está no PRD dele:
 
 | componente | PRD |
 |---|---|
 | Breadcrumb | [breadcrumb.md](../prd/breadcrumb.md) |
-| Menubar | [dropdown-menu.md](../prd/dropdown-menu.md) — PRD da FAMÍLIA de menus |
+| ContextMenu | [dropdown-menu.md](../prd/dropdown-menu.md) — PRD da FAMÍLIA de menus |
+| DropdownMenu | [dropdown-menu.md](../prd/dropdown-menu.md) — idem, e é o slug hospedeiro |
+| Menubar | [dropdown-menu.md](../prd/dropdown-menu.md) — idem |
 | NavigationMenu | [navigation-menu.md](../prd/navigation-menu.md) |
 | Pagination | [pagination.md](../prd/pagination.md) |
 | Stepper | [stepper.md](../prd/stepper.md) |
 | Tabs | [tabs.md](../prd/tabs.md) |
 
-**O Menubar não tem PRD próprio, e a classificação dele está em disputa.** O
-contrato mora no PRD da família de menus, que declara `prd-familia: context-menu
-menubar` e o trata como menu de COMANDOS da categoria Overlay
-([`18-overlay.md`](18-overlay.md)). O conteúdo compartilhado e o Storybook o põem em
-Navegação, e as guidelines de react e vue diziam "não usar para navegação entre
-páginas". As três leituras não cabem juntas; está no primeiro item de §O que está
-aberto.
+**A família de menus entrou nesta categoria em 2026-09-20, por decisão da dona.** Os
+três membros — DropdownMenu, ContextMenu e Menubar — estavam em Overlay, e o Menubar
+estava nas duas ao mesmo tempo: o conteúdo compartilhado e o Storybook o punham em
+Navegação desde antes, a [`18-overlay.md`](18-overlay.md) o arrolava entre os dez de
+overlay. Era o item 1 de §O que está aberto, e a decisão o fecha nos três, não só
+nele. O motivo dito pela dona: eles herdam quase tudo do Menubar, e manter os dois
+lados produzia anomalia sem fim — a última delas medida no item 30, que esta mesma
+decisão fecha.
+
+**Nada disso os tira da camada flutuante, e a mecânica dela continua na
+[`18-overlay.md`](18-overlay.md).** O painel dos três é superfície `--popover`, lê o
+degrau `--z-popover`, fica em fluxo dentro do invólucro da lib, tem cadeia de
+`transform-origin` por lib, devolve o foco ao gatilho, fecha por clique fora, nunca
+anuncia `aria-modal`, e usa o vocabulário de `reason` no fechamento. Essas regras
+valem para painel flutuante, não para categoria de componente: elas são as mesmas do
+Popover, do HoverCard e do Select, e o arquivo de overlay é a casa delas. Categoria e
+camada são eixos diferentes, e é justamente confundi-los que produziu a anomalia.
+
+**O que a filiação a Overlay NUNCA teve foi argumento escrito.** Medido em
+2026-09-20, lendo os dois arquivos inteiros: a `18-overlay.md` filia os três em
+quatro linhas de escrituração (`:3-5`, `:19`, `:88`, `:201`) e não justifica em
+nenhuma; o PRD da família não declara categoria em lugar nenhum — as 20 ocorrências
+de "overlay" nele são 18 do valor de `reason` e 2 de referência ao arquivo. Não havia
+tese a refutar: havia registro a corrigir.
 
 **O Pagination esteve na categoria Tabelas por um dia**, com a justificativa de que
 o único consumidor dele seria o rodapé de uma tabela. A justificativa não tinha sido
@@ -92,12 +112,22 @@ Catálogo de componente não fica em guideline nenhuma: vai para o PRD.
 | Trocar o painel visível dentro da MESMA página, sem mudar de endereço | Tabs |
 | Percorrer uma sequência de etapas com ordem | Stepper |
 | Percorrer uma lista longa por páginas | Pagination |
-| Barra de comandos de aplicação, no padrão de menu de desktop (Arquivo, Editar) | Menubar — ver §O que está aberto |
-| Um gatilho com uma lista de ações, sem sair da página | DropdownMenu — categoria Overlay, [`18-overlay.md`](18-overlay.md) |
+| Barra de comandos de aplicação, no padrão de menu de desktop (Arquivo, Editar) | Menubar |
+| Um gatilho com uma lista de ações, sem sair da página | DropdownMenu |
+| Ações sobre um alvo, por clique direito | ContextMenu — **sempre** com alternativa acessível: clique direito não é descobrível, e não existe no teclado sem tecla de menu de contexto |
 | Rodapé de página de uma tabela explorável | o rodapé do DataTable, não o Pagination — ver [`20-tabelas.md`](20-tabelas.md) |
+| Escolher uma opção que preenche um campo | Select ou Combobox, que são de formulário — menu não é campo |
+| Um painel com texto, campo ou conteúdo composto | Popover, [`18-overlay.md`](18-overlay.md) |
 
 **Tabs não é navegação entre páginas.** A aba troca o painel e mantém o endereço;
 destino que muda o endereço é link, e mora no NavigationMenu ou no Breadcrumb.
+
+**A pergunta que separa menu de Popover: a pessoa vai ESCOLHER ou vai COMPOR?** Se
+uma letra digitada ali dentro é atalho, é menu; se é texto, é popover. Pôr um
+`<input>` num menu quebra duas coisas de uma vez: `role="menu"` só admite `menuitem`
+e parentes, e a primeira letra digitada vira typeahead antes de chegar ao campo. É a
+D1 do PRD da família, e ela continua valendo depois da migração — o que muda é só
+onde a pergunta mora.
 
 ---
 
@@ -109,9 +139,16 @@ acessível vai na RAIZ do componente; envolvê-lo num `<nav aria-label>` de quem
 produz marco dentro de marco, e o leitor de tela anuncia duas regiões de navegação
 para uma.
 
-**Os outros três não são marco.** Tabs é `role="tablist"`, Stepper é lista ordenada,
-Menubar é `role="menubar"`. Nenhum deles vira região de navegação por estar nesta
-categoria.
+**Os outros cinco não são marco.** Tabs é `role="tablist"`, Stepper é lista ordenada,
+Menubar é `role="menubar"`, e o painel do DropdownMenu e do ContextMenu é
+`role="menu"`. Nenhum deles vira região de navegação por estar nesta categoria, e
+nenhum ganha `<nav>` por ter entrado nela: envolver um menu em `<nav>` anuncia uma
+região de navegação que não existe, e a lista de marcos passa a ter uma entrada por
+menu na tela.
+
+O que nomeia cada peça dos menus — gatilho, painel, grupo — é contrato de família e
+está no §2 e no §8 de [`dropdown-menu.md`](../prd/dropdown-menu.md); esta seção não
+repete, porque nome de peça de menu não foi medido nas cinco stacks nesta rodada.
 
 **Nome único por tela.** Duas regiões de navegação com o mesmo nome são o mesmo que
 nenhum nome, porque a lista de marcos não distingue uma da outra. Medido em
@@ -122,6 +159,98 @@ marco da Sidebar em [`01-acessibilidade.md`](01-acessibilidade.md) e
 
 ---
 
+## Estrutura: a categoria monta LISTA
+
+**Navegar é escolher entre vários, e o HTML tem elemento para "vários".** A faixa, a
+barra, o painel e a trilha são `<ul>`; onde a ORDEM faz parte do significado, `<ol>` —
+é o caso do Breadcrumb, que é um caminho, e do Stepper, que é uma sequência. Cada
+item é um `<li>`. `<div>` e `<span>` não carregam estrutura: eles não dizem quantos
+são, nem que um pertence ao outro.
+
+Isto é regra desde 2026-09-20, por decisão da dona, e o que a motivou foi medição, não
+gosto. Medido no DOM em 2026-09-19:
+
+| | fora da família de menus | dentro dela |
+|---|---|---|
+| vanilla, a referência | Breadcrumb, Pagination, NavigationMenu e Sidebar montam lista | DropdownMenu e ContextMenu montam; **Menubar não** |
+| as quatro stacks de lib | montam lista nos mesmos quatro | **nenhum dos três monta** |
+
+Ou seja: a referência divergia **de si mesma**, com os mesmos `role` e as mesmas
+classes `.nds-*`, e o Menubar era o único componente de navegação dela que não montava
+lista. O que muda, por stack, está nas pendências da §7 de
+[`dropdown-menu.md`](../prd/dropdown-menu.md).
+
+**O `role` não vem do elemento, e não é ele o ganho.** `role="menu"` num `<ul>`
+SUBSTITUI o papel de lista na árvore de acessibilidade — o leitor de tela anuncia um
+menu, não uma lista, e é isso que se quer. O ganho da lista é outro, e é triplo: o
+HTML passa a significar o mesmo que no resto da categoria, o CSS deixa de depender de
+qual `<div>` está onde, e o grupo ganha um lugar legal na árvore. Fora dos menus o
+`<li>` não leva `role` nenhum — medido em Breadcrumb, Pagination, Stepper e
+NavigationMenu, nas cinco stacks.
+
+**Grupo são DOIS níveis, e o de fora é invólucro.** `<ul>` não é filho válido de
+`<ul>`, então o grupo é um `<li role="presentation">` que carrega e um
+`<ul role="group">` que agrupa; o `role="presentation"` apaga o invólucro da árvore de
+acessibilidade para que os itens continuem sendo possuídos pelo menu, e
+`display: contents` o apaga do layout. É o que a referência já faz, com o motivo
+escrito em `dropdown-menu.ts:483-495`. Nenhuma das quatro libs oferece isso de
+fábrica: medido em 2026-09-20, `role="none"`/`role="presentation"` em peça de menu não
+existe em base-ui, reka-ui, bits-ui nem radix-ng. Esse `role` é nosso, nas cinco.
+
+**`list-style: none` se declara em CADA `<ul>`, nunca por herança.** Herança perde
+para regra casada: como o grupo do vanilla é `<ul>` aninhado, o UA casa
+`ul ul { list-style-type: circle }` no próprio elemento e vence o `list-style: none`
+que vinha do painel. Medido em 2026-09-19: o rótulo de grupo computava
+`list-style-type: circle` e GERAVA marcador, invisível porque o painel recorta com
+`overflow: hidden`. Corrigido declarando no grupo (`dropdown-menu.css:145-163`).
+Qualquer `<ul>` novo reabre isso.
+
+**O reset cobre metade, e a outra metade é de cada folha.** `reset.css:61-68` zera
+`margin-block` de `ul`/`ol`; o `padding` de lista fica de fora DE PROPÓSITO
+(`reset.css:55-59`), porque é ele que dá lugar ao marcador. Não há regra de `li` em
+lugar nenhum do reset. Então cada folha zera o seu `padding-inline-start` e o seu
+`list-style` — é o que o precedente faz, e ele é consistente: `breadcrumb.css:26-37`,
+`pagination.css:56` e `:59-60` (esta com `> li`, cinto e suspensório),
+`stepper.css:107-122` e `navigation-menu.css:49`.
+
+**O que esta regra NÃO alcança: o `<span>` de dentro do item.** O que embrulha rótulo
+e atalho continua `<span>` — é texto, não estrutura, e Breadcrumb e Pagination também
+embrulham texto em `<span>`. Tirá-lo foi medido na D20 do PRD da família: 964 call
+sites, e no Angular o item é diretiva NUA, sem template, que teria de virar componente
+para embrulhar o próprio texto. Decisão de 2026-09-20: fica, declarado. O que sai é o
+`<div>` que fingia ser estrutura.
+
+**A regra é cumprível nas cinco, e o bloqueio é nosso.** Medido em 2026-09-20 na
+fonte instalada: todas as quatro libs deixam trocar o elemento de toda peça que
+renderiza elemento — `render` no base-ui 1.7.0, `as`/`asChild` no reka-ui 2.10.4,
+snippet `child` no bits-ui 2.19.0, e as peças do radix-ng 1.1.2 são DIRETIVAS de
+seletor de atributo, sem template nenhum (zero componentes declarados no módulo de
+menu), então `<li rdxMenuItem>` aplica. Nenhuma peça de nenhuma lib recusa. Onde não
+fecha uniforme, e cada um é limite real:
+
+- no Angular, **36 seletores nossos estão pinados em `div[...]`**, e o modo de falha é
+  SILENCIOSO: `<li ndsDropdownMenuItem>` não aplicaria a diretiva, e o `ngc` não
+  reprova atributo estático desconhecido em elemento conhecido;
+- quatro `<div rdxMenuPopup>` estão cravados nos nossos templates, onde quem compõe
+  nem escreve;
+- `a[rdxMenuLinkItem]` TEM de ser `<a>`: ali a forma é `<li><a>`, e o `<li>` é
+  invólucro que a lib não conhece — é a única peça em que o desenho não fica igual;
+- a barra do Angular é `<nds-menubar>`, elemento customizado: não vira `<ul>` sem
+  trocar o seletor do componente;
+- no react o `Positioner` é um `div[role="presentation"]` intermediário que NÃO se
+  elimina (trocar, sim). Por isso nenhuma regra desta categoria pode exigir que o
+  painel seja filho direto de coisa alguma.
+
+**Tabs fica fora desta regra**, e de propósito: ele é `role="tablist"`, monta zero
+lista na referência, e ninguém pediu essa decisão. Está na §O que está aberto.
+
+**E não se herda o precedente errado**: o cabeçalho de `navigation-menu.css` publica
+`role="menubar"` e `role="menu"` na árvore dele, que o vanilla recusa de propósito e
+stack nenhuma emite (item 29). O precedente a seguir é a ESTRUTURA de lista — não a
+árvore que aquela folha documenta.
+
+---
+
 ## Estado atual: o vocabulário de `aria-current`
 
 | valor | quem usa | significa |
@@ -129,6 +258,7 @@ marco da Sidebar em [`01-acessibilidade.md`](01-acessibilidade.md) e
 | `page` | Breadcrumb (o último item), NavigationMenu, Pagination | este é o destino em que a pessoa está |
 | `step` | Stepper | esta é a etapa em que a pessoa está |
 | não se usa | Tabs | a aba ativa se anuncia por `aria-selected`, que é o estado do padrão de abas |
+| não se usa | DropdownMenu, ContextMenu, Menubar | item de menu não é lugar onde se está: o que ele tem é estado de marcação (`aria-checked`, nos papéis `menuitemcheckbox` e `menuitemradio`) e de abertura (`aria-expanded` no gatilho) |
 
 **`aria-current="true"` não entra na categoria.** Ele não diz de QUE é o estado atual.
 É o que os primitivos de stepper da reka-ui (2.10.4) e do Radix NG (1.1.2) escrevem —
@@ -151,6 +281,13 @@ Dois modelos, e o componente escolhe pelo que ele é, não por gosto:
   ativam —, e Tab SAI do widget. É o que faz
   a barra de menus não custar uma parada por menu. No Menubar isso é o contrato C2 do
   PRD da família.
+- **No painel de menu aberto, o teclado pertence à LISTA.** Setas cima/baixo andam
+  item a item, Home/End vão às pontas, letra digitada é typeahead com
+  `preventDefault`, setas direita/esquerda abrem e fecham submenu, `Escape` fecha e
+  devolve o foco — e **Tab FECHA o menu inteiro**, indo ao ponto de tabulação vizinho
+  do GATILHO, não do painel, que vive num portal no fim do `<body>`. São os contratos
+  C1 a C6 de [`dropdown-menu.md`](../prd/dropdown-menu.md), e a razão de o menu não
+  prender o foco: prender é contrato de diálogo, não de menu.
 - **Lista de destinos é uma parada por destino.** Breadcrumb e Pagination: cada link
   é alcançável por Tab, porque cada um é um lugar para onde ir.
 - **O NavigationMenu fica no meio, e é padrão de divulgação, não de menu.** O vanilla
@@ -197,15 +334,22 @@ uma ação que não acontece.
 
 ## Anel de foco na navegação
 
-**Não há um anel da categoria: há cinco formas em seis folhas.** Medido em
-2026-09-17:
+**Não há um anel da categoria: há cinco formas em sete folhas.** Medido em 2026-09-17,
+e a linha dos menus remedida em 2026-09-20, depois de a campanha da família mexer na
+folha da barra:
 
 | folha | anel de foco |
 |---|---|
 | `breadcrumb.css:57-60` | contorno translúcido, `--ring` a 50% |
 | `tabs.css:81` | sombra, `--ring` a 50% |
-| `menubar.css:130-132` e `navigation-menu.css:176-180` | contorno interno em `--accent-foreground` |
+| `dropdown-menu.css:281-286` (item, marcação, rádio e sub-gatilho), `menubar.css:153-155` (gatilho da barra) e `navigation-menu.css:176-180` | contorno INTERNO de 2px em `--accent-foreground`, com `outline-offset: -2px` |
 | `stepper.css:49` e `pagination.css:94` | 3px de `--ring` opaco |
+
+O anel dos menus é o único da categoria com motivo medido escrito na própria folha
+(`dropdown-menu.css:265-277`): não é `--ring` porque o anel é desenhado sobre o
+preenchimento de accent, e no escuro do tema default o teal do `--ring` e o accent não
+se separam; e é interno porque o painel tem `padding: 4px`, então um anel externo
+sairia recortado nas pontas.
 
 O utilitário `.nds-focus-ring` (`utilities.css:420-423`), que as guidelines de react e
 vue declaravam obrigatório, não é lido por nenhuma das seis. Qual é a forma certa é
@@ -257,9 +401,18 @@ guideline pede isso. O que existe, medido nas folhas:
 ## Movimento e elevação na navegação
 
 **Elevação**, pelo mapa de [`04-padroes-design-sistema.md`](04-padroes-design-sistema.md)
-§Qual degrau: Menubar e Tabs são relevo de controle, `xs`; o painel do NavigationMenu
-é flutuante interativo, `md`. Breadcrumb, Stepper e Pagination vivem no plano da
-página e não leem elevação.
+§Qual degrau: a BARRA do Menubar e o Tabs são relevo de controle, `xs`
+(`menubar.css:82`); o painel do NavigationMenu e o painel dos três menus são
+flutuante interativo, `md` (`dropdown-menu.css:91`). Breadcrumb, Stepper e Pagination
+vivem no plano da página e não leem elevação.
+
+A barra do Menubar é a única peça desta categoria que lê elevação sem flutuar — ela
+está no plano da página, e o `xs` nasceu para relevo, não para flutuação. Quem flutua
+na categoria é painel: o dos três menus e o do NavigationMenu.
+
+**Menu fecha instantâneo, sem animação de saída** (D5 do PRD da família): a animação
+de saída atrasa o retorno do foco ao gatilho, e o que se quer de um menu é que ele
+saia da frente.
 
 **Origem da animação do painel**: o `navigation-menu.css` é exceção declarada na
 regra de `transform-origin` do auditor, e o vanilla usa uma terceira forma de painel
@@ -280,7 +433,7 @@ em [`07-analytics.md`](07-analytics.md). O que é desta categoria:
 | `tab_change` | o Tabs, ao trocar de aba | `component`, `label`, `index`, `total`, `location` — ver a divergência abaixo |
 | `breadcrumb_ellipsis_open` | o Breadcrumb, ao abrir os níveis recolhidos | tipado nas cinco stacks |
 | `navigation_click` | quem escolhe um destino no Breadcrumb ou no NavigationMenu | tipado; o `label` é id estável, nunca o texto do link — ver §O que está aberto |
-| eventos de menu da barra | o Menubar | §9 de [`dropdown-menu.md`](../prd/dropdown-menu.md) |
+| eventos dos três menus | DropdownMenu, ContextMenu e Menubar | §9 de [`dropdown-menu.md`](../prd/dropdown-menu.md) |
 | `step_change` | o Stepper, ao trocar de etapa | `component: 'stepper'`, `step`, `total`, `location` — §9 de [`stepper.md`](../prd/stepper.md) |
 
 - **`pagination_change` não existe**, e `tab_change` não tem campos de origem e
@@ -292,6 +445,12 @@ em [`07-analytics.md`](07-analytics.md). O que é desta categoria:
   `location` do angular é `docs-demonstration`, contra `docs_demo` nas outras quatro.
   Texto visível é texto traduzido, que a regra do payload proíbe.
 - **Nunca se rastreia a página atual do Breadcrumb**: ela não é destino.
+- **Os três menus têm duas exceções, e as duas são de camada, não de categoria.** No
+  fechamento eles usam o vocabulário de `reason` dos painéis flutuantes
+  (`escape | overlay | api`), que está em [`18-overlay.md`](18-overlay.md) §Analytics;
+  e quem identifica não é `trigger_id`, é o campo `menu`. Nenhum dos três emite o
+  motivo `close-button`, porque menu não tem controle de fechar — o tipo carrega a
+  palavra de todo jeito, para o vocabulário ser um só no GA4.
 
 ---
 
@@ -306,7 +465,8 @@ Pagination. O que a categoria fixa:
 | nome acessível de prev/next | completa o alvo: "Ir para a próxima página" |
 | rótulo de aba | substantivo curto, sem ponto final — a aba nomeia um painel |
 | item de NavigationMenu e de Breadcrumb | o nome do destino, substantivo — o item leva a um lugar |
-| item de comando do Menubar | verbo, como os termos de ação de [`05-tom-de-voz.md`](05-tom-de-voz.md) ("Salvar", "Excluir") — o item faz algo |
+| item de comando dos três menus | verbo, como os termos de ação de [`05-tom-de-voz.md`](05-tom-de-voz.md) ("Salvar", "Excluir") — o item faz algo |
+| nome do menu no gatilho | diz o que o menu contém ou sobre o que ele age, nunca "Menu" nem "Opções" sozinho |
 | nome da região de navegação | diz QUAL navegação é, e é único na tela |
 
 ---
@@ -319,7 +479,9 @@ coberta que se anuncia inteira é o defeito que ela existe para evitar.
 
 | invariante | onde a regra está | portão | o que o portão NÃO cobre |
 |---|---|---|---|
-| Catálogo de componente mora no PRD, não na guideline | aqui, §Por que este arquivo existe | `catalogo_duplicado_com_prd` | ele exige `docs/shared/prd/<slug>.md` e **não lê `prd-familia`**: como o Menubar não tem PRD com o próprio nome, as seções `## Menubar` das guidelines de stack não são vistas por ele. E o regex é `^## <Título>$` exato, nível 2 |
+| Catálogo de componente mora no PRD, não na guideline | aqui, §Por que este arquivo existe | `catalogo_duplicado_com_prd` | ele exige `docs/shared/prd/<slug>.md` e **não lê `prd-familia`**: como Menubar e ContextMenu não têm PRD com o próprio nome, seções `## Menubar` e `## ContextMenu` nas guidelines de stack não são vistas por ele. As quatro seções `## Menubar` que existem hoje (falta no vanilla) são legítimas: levam "mecânica desta stack" no título. E o regex é `^## <Título>$` exato, nível 2 |
+| A categoria monta lista: `<ul>`/`<ol>` + `<li>`, e `<div>` não carrega estrutura | aqui, §Estrutura | **nenhum**, e isto é dívida declarada | portão nenhum lê o ELEMENTO que cada peça renderiza — nem o auditor, que não abre DOM, nem os builds, que não olham tag. Foi exatamente esse vão que deixou a referência divergir de si mesma por meses, com as duas árvores ASCII da anatomia publicando uma fábrica cada. O portão nasce junto com o conserto do markup, e está na §O que está aberto |
+| `list-style: none` declarado em cada `<ul>`, nunca por herança | aqui, §Estrutura | **nenhum** | a herança perde para `ul ul { list-style-type: circle }` do UA, e o marcador que isso gera fica recortado pelo `overflow: hidden` do painel — defeito silencioso, de cara correta, que nenhuma folha, compilador ou suíte reprova |
 | A regra de categoria não volta a ser copiada por stack | aqui | `guideline_de_stack_repete_categoria` | o mapa dele não tem entrada para esta categoria (§O que está aberto). Aqui a entrada CABE no formato — a categoria mora num arquivo só por stack, a `05` —, mas acrescentá-la é alterar portão |
 | Breadcrumb, NavigationMenu e Pagination não se envolvem em outro `<nav>`; nome único por tela | aqui, §Marco e nome | nenhum | nenhuma regra do auditor olha marco de componente; o `landmark-unique` do axe só roda nas stories |
 | `aria-current` com valor que diz de quê | aqui, §Estado atual | nenhum | o auditor só cita `aria-current` como estado de `play`; valor e presença não são conferidos |
@@ -335,17 +497,20 @@ coberta que se anuncia inteira é o defeito que ela existe para evitar.
 
 Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
 
-1. **Em que categoria mora o Menubar.** Conteúdo e Storybook dizem Navegação; o PRD
-   da família e a [`18-overlay.md`](18-overlay.md) o tratam como menu de comandos; e
-   as guidelines de react e vue diziam para não usá-lo em navegação entre páginas.
-   Decidir a categoria, e com ela se as seções `## Menubar` migram para o PRD da
-   família — que hoje não descreve nome acessível da barra nem uso como navegação.
+1. **FECHADO · 2026-09-20 — em que categoria mora o Menubar.** Decisão da dona: a
+   família de menus inteira é Navegação, não só ele. Está no cabeçalho deste arquivo,
+   com a fronteira do que continua na [`18-overlay.md`](18-overlay.md). As quatro
+   seções `## Menubar` das guidelines de stack FICAM onde estão: levam "mecânica desta
+   stack" no título, que é o que uma guideline de stack pode ter. O que o PRD da
+   família ainda não descreve — nome acessível da barra — segue pendência lá, não
+   aqui.
 2. **O nome padrão do Breadcrumb é `breadcrumb`, em inglês, nas cinco stacks.** A
    página é pt-BR, en e es; o nome não segue o idioma.
 3. **O nome padrão do NavigationMenu no vanilla colide com o da Sidebar** nos
    exemplos das guidelines de acessibilidade e de padrões ("Navegação principal").
-4. **Cinco formas de anel de foco em seis folhas**, duas delas translúcidas e
-   invisíveis ao portão que existe para pegá-las.
+4. **Cinco formas de anel de foco em sete folhas**, duas delas translúcidas e
+   invisíveis ao portão que existe para pegá-las. A forma dos menus é a única com
+   motivo medido escrito na folha — ver §Anel de foco na navegação.
 5. **O Tabs do vanilla só tem ativação automática.** As outras quatro publicam
    ativação manual (`activationMode`), que é o que se quer quando o painel carrega
    dado. A referência não tem o recurso que as outras têm.
@@ -429,8 +594,15 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
     `role="menu"` e `aria-haspopup`**, que o vanilla recusa de propósito e nenhuma
     stack emite. É a folha documentando o padrão que a categoria proíbe para
     navegação — ver §Teclado na navegação.
-30. **A categoria usa LISTA, e a família de menus é onde isso quebra — de forma
-    assimétrica.** Medido no DOM renderizado em 2026-09-19, durante a passagem
+30. **FECHADO · 2026-09-20 — a categoria usa LISTA, e a família de menus é onde isso
+    quebrava.** Decisão da dona: os menus passam a montar lista, e o `<span>` de
+    dentro do item fica. A regra está em §Estrutura, com a medição, os limites por lib
+    e o que ela não alcança. O conserto do markup é da revisão de cada membro, e as
+    pendências por stack estão na §7 de
+    [`dropdown-menu.md`](../prd/dropdown-menu.md). O texto da medição original fica
+    abaixo, porque é ele que justifica a regra.
+
+    Medido no DOM renderizado em 2026-09-19, durante a passagem
     `fix` da família de menus, e trazido para cá porque a pergunta é de categoria
     e não daquela família.
 
@@ -453,14 +625,15 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
     | vanilla menubar | `<div>` | `<div>` |
     | as quatro, nos três membros | `<div>` | `<div>` |
 
-    São duas perguntas, e a segunda é a que tem resposta fácil:
+    Eram duas perguntas, e as duas foram respondidas em 2026-09-20 no mesmo
+    sentido — a lista fica, e é o `<div>` que sai:
 
-    - **A referência diverge de si mesma**: duas fábricas montam lista e a
-      terceira não, com os mesmos `role` e as mesmas classes. Isso não depende de
-      lib nenhuma e é decidível aqui.
-    - **As quatro não montam lista na família de menus porque a lib headless
-      renderiza `<div role="menuitem">`**. Alinhá-las exigiria `asChild` em cada
-      peça. Alinhar o vanilla a `<div>` são duas fábricas.
+    - **A referência divergia de si mesma**: duas fábricas montavam lista e a
+      terceira não, com os mesmos `role` e as mesmas classes. Não dependia de lib
+      nenhuma, e é a metade mais barata do conserto: duas fábricas.
+    - **As quatro não montam lista porque a lib headless renderiza
+      `<div role="menuitem">`** — e as quatro DEIXAM trocar, medido em 2026-09-20
+      na fonte instalada (§Estrutura). Não é limite de lib; é trabalho por peça.
 
     **O que depende desta decisão, medido**: `list-style: none` é hoje inerte em
     4 das 5 stacks e em 2 dos 3 membros da quinta; e
@@ -474,6 +647,22 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
     outro assunto, para a anatomia publicada ser confrontada com o DOM. Detalhe
     completo na **D20** do [`dropdown-menu.md`](../prd/dropdown-menu.md).
 
-    Vale ler junto com o **item 1** desta lista: decidir em que categoria o
-    Menubar mora e decidir se ele monta lista são a mesma conversa — ele é, hoje,
-    o único componente de navegação da referência que não monta.
+    Era a mesma conversa do **item 1**, por dois lados, e fechou junto com ele: os
+    três menus são desta categoria, e esta categoria monta lista.
+31. **O markup dos menus ainda é `<div>` em 13 das 15 implementações.** A regra de
+    §Estrutura está escrita, e o código não a cumpre: só o dropdown e o context do
+    vanilla montam lista. O conserto é da revisão de cada membro da família, com o
+    escopo por stack medido nas pendências da §7 de
+    [`dropdown-menu.md`](../prd/dropdown-menu.md) — e ele mexe em DOM de três
+    componentes, então pede suíte de navegador nas cinco, que é autorização da dona.
+32. **Nenhum portão lê o ELEMENTO que uma peça renderiza**, e foi esse vão que
+    deixou a referência divergir de si mesma por meses. O auditor não abre DOM, e os
+    cinco builds não olham tag. Enquanto o portão não existir, a regra de §Estrutura
+    vale por instrução — que é exatamente a forma que esta casa já mediu não
+    funcionar. O portão nasce com o conserto do markup, e a forma provável é asserção
+    de `tagName` nas plays das cinco, porque só o navegador vê o que a lib renderiza.
+33. **Tabs monta ZERO lista na referência**, e é o outro componente da categoria fora
+    da regra de §Estrutura. Ele é `role="tablist"`, que não é lista — mas Menubar
+    também é `role="menubar"` e vai virar lista. A pergunta não foi feita nesta
+    rodada: decidir se a lista de abas é `<ul>` com `role="tablist"`, ou se o padrão
+    de abas fica declarado como exceção da categoria.

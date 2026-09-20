@@ -1,8 +1,24 @@
 # Overlay — as regras da categoria
 
-Vale para os dez componentes de overlay, nas cinco stacks: **Dialog, AlertDialog,
-Sheet, Drawer, Popover, HoverCard, Tooltip, DropdownMenu** (que também veste o
-**ContextMenu** e o **Menubar**) e **Command**.
+Vale para os sete componentes de overlay, nas cinco stacks: **Dialog, AlertDialog,
+Sheet, Drawer, Popover, HoverCard, Tooltip** e **Command**.
+
+**A família de menus saiu desta categoria em 2026-09-20**, por decisão da dona:
+DropdownMenu, ContextMenu e Menubar são de **Navegação**
+([`21-navegacao.md`](21-navegacao.md)). O Menubar já estava lá no conteúdo
+compartilhado e no Storybook, e a divergência entre as duas casas vinha produzindo
+anomalia a cada rodada. Este arquivo os filiava em quatro linhas de escrituração e em
+nenhuma linha de argumento.
+
+**Mas eles continuam sendo painel flutuante, e por isso continuam LENDO este
+arquivo.** Categoria e camada são eixos diferentes: a categoria diz o que o componente
+é para quem monta uma tela, a camada diz como um painel se comporta quando abre por
+cima. Tudo que este arquivo diz sobre superfície, camada `--z-*`, posicionamento,
+cadeia de `transform-origin`, retorno de foco ao gatilho, clique fora, ausência de
+`aria-modal` e vocabulário de `reason` no fechamento vale para os três menus como vale
+para o Popover — e as tabelas abaixo continuam nomeando-os onde eles são instância da
+regra. O que saiu daqui foi a regra de MENU: triagem, teclado da lista e estrutura,
+que agora moram na guideline de navegação e no PRD da família.
 
 Este arquivo guarda o que ATRAVESSA os componentes. O que cada um É — contrato,
 decisões com data e medição, tokens, peças das cinco stacks — está no PRD dele:
@@ -16,8 +32,14 @@ decisões com data e medição, tokens, peças das cinco stacks — está no PRD
 | Popover | [popover.md](../prd/popover.md) |
 | HoverCard | [hover-card.md](../prd/hover-card.md) |
 | Tooltip | [tooltip.md](../prd/tooltip.md) |
-| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](../prd/dropdown-menu.md) — o ContextMenu não tem folha própria; o Menubar tem uma que só posiciona a barra e o painel, e veste o miolo com as classes do DropdownMenu (D9) |
 | Command | [command.md](../prd/command.md) |
+
+**Os três menus, que leem este arquivo pela camada e não pela categoria**, estão em
+[dropdown-menu.md](../prd/dropdown-menu.md) — PRD da família. Duas peças de folha
+importam aqui: o ContextMenu não tem folha própria, e o Menubar tem uma que só
+posiciona a barra e o painel, vestindo o miolo com as classes do DropdownMenu (D9).
+Por isso `dropdown-menu.css` continua na lista de folhas que os portões desta
+categoria varrem.
 
 ## Por que este arquivo existe
 
@@ -54,16 +76,17 @@ de stack não é vista (ver a tabela de invariantes).
 | Confirmação de ação destrutiva — decisão obrigatória | AlertDialog |
 | Painel lateral | Sheet |
 | Painel deslizante com gesto, pensado para mobile | Drawer |
-| Lista de ações por clique explícito | DropdownMenu |
-| Ações contextuais por clique direito | ContextMenu, **sempre** com alternativa acessível — clique direito não é descobrível |
 | Conteúdo interativo contextual, ao lado da página | Popover |
 | Prévia informativa no hover e no foco | HoverCard — nunca o único caminho para a informação |
 | Texto explicativo curto, não interativo | Tooltip |
 | Busca rápida e paleta de comandos | Command |
 
-A pergunta que separa DropdownMenu de Popover: **a pessoa vai escolher ou vai
-compor?** Se uma letra digitada ali dentro é atalho, é menu; se é texto, é
-popover (D1 do `dropdown-menu.md`).
+**Se a dúvida é entre Popover e MENU, a pergunta é: a pessoa vai escolher ou vai
+compor?** Se uma letra digitada ali dentro é atalho, é menu; se é texto, é popover
+(D1 do `dropdown-menu.md`). O menu não é mais desta categoria — a triagem dele está
+em [`21-navegacao.md`](21-navegacao.md) §Qual componente de navegação —, mas a
+pergunta continua aqui porque é daqui que se chega a ela: quem está escolhendo um
+painel flutuante precisa saber quando NÃO é popover.
 
 **Dialog no desktop, Drawer no mobile** é uma recomendação de uso, não uma peça
 pronta — nenhuma stack tem essa composição. Quem a monta extrai o conteúdo para
@@ -122,7 +145,7 @@ no call site desfaz a garantia:
 | `--z-fixed` | 1030 | nenhum overlay — só o Sidebar |
 | `--z-modal-backdrop` | 1040 | véu do Dialog, do AlertDialog e do Sheet (que o Drawer reusa) |
 | `--z-modal` | 1050 | painel do Dialog, do AlertDialog, do Sheet e do Drawer |
-| `--z-popover` | 1060 | Popover, HoverCard, DropdownMenu e o painel do Menubar — e, fora desta categoria, Select, Combobox, NavigationMenu e Composer |
+| `--z-popover` | 1060 | Popover e HoverCard — e, fora desta categoria, os três menus (o painel do DropdownMenu, do ContextMenu e o da barra do Menubar), Select, Combobox, NavigationMenu e Composer. O degrau é da CAMADA, então ele não pergunta a categoria de quem o lê |
 | `--z-tooltip` | 1070 | Tooltip |
 | `--z-toast` | 1080 | Sonner |
 
@@ -140,10 +163,12 @@ Os dois atravessam mais que esta categoria, e moram na guideline do assunto:
 - **Elevação** sai do TIPO de superfície — flutuante interativo `md`, flutuante
   passivo `lg`, modal e drawer `xl` —, em
   [`04-padroes-design-sistema.md`](04-padroes-design-sistema.md) §Qual degrau. A
-  barra do Menubar é a única peça desta categoria fora dos três: ela não flutua,
-  e desde 2026-09-12 lê o degrau `xs`, que nasceu para relevo no plano da página
-  — antes era uma sombra cravada na folha, invisível ao portão, que só classifica
-  quem LÊ `var(--elevation-*)`. O Command não tem sombra: a elevação é do painel
+  barra do Menubar, que era a única peça fora dos três, saiu desta categoria com a
+  família de menus — ela não flutua, lê o degrau `xs` desde 2026-09-12, e o registro
+  disso passou para [`21-navegacao.md`](21-navegacao.md) §Movimento e elevação. Fica
+  aqui a lição de portão que ela deixou: antes era uma sombra cravada na folha,
+  invisível ao portão, que só classifica quem LÊ `var(--elevation-*)`.
+  O Command não tem sombra: a elevação é do painel
   que o hospeda.
 - **Movimento reduzido**: quem para o movimento é a camada de token, que zera a
   escada de `--duration-*` sob a preferência. Toda folha desta categoria que
@@ -155,12 +180,14 @@ Os dois atravessam mais que esta categoria, e moram na guideline do assunto:
   mecanismo, medido, na §8 do [`hover-card.md`](../prd/hover-card.md), onde a
   leitura errada pousou duas vezes.
 
-  **As guardas por folha são redundância, e três delas não seguram nada.**
+  **As guardas por folha são redundância, e duas delas não seguram nada.**
   `@media` não acrescenta especificidade, então guarda que mira a classe nua
   (0,1,0) perde para a animação declarada num seletor de atributo (0,2,0).
   Medido em 2026-09-15: o `animation: none` perde no Dialog
-  (`[data-state="open"]`, `[data-closed]`), no Sheet (`[data-side="…"]`) e no
-  DropdownMenu (`[data-state="open"]`). Eram quatro: a do Tooltip perdia para
+  (`[data-state="open"]`, `[data-closed]`) e no Sheet (`[data-side="…"]`). Eram
+  quatro, e a terceira era a do DropdownMenu — **consertada em 2026-09-17**, quando a
+  guarda passou a repetir os seletores de atributo (`dropdown-menu.css:480-486`), com
+  portão `guarda_de_movimento_inerte`. A do Tooltip perdia para
   `[data-ending-style]`, e saiu junto com a transição em 2026-09-16 — folha que
   não anima não precisa de guarda. Vencem as do AlertDialog e do Drawer, que
   repetem o seletor de atributo, e as do Command e do Menubar, que miram a mesma
@@ -178,9 +205,9 @@ reimplementa**. No vanilla, cada fábrica o implementa — ver a
 | tecla | o que faz |
 |---|---|
 | `Escape` | fecha o overlay do topo da pilha. No Tooltip o foco **fica** no gatilho; no AlertDialog fechar equivale a cancelar |
-| `Tab` / `Shift+Tab` | na família modal (Dialog, AlertDialog, Sheet, Drawer) o foco fica **preso** no painel. Menu e Popover não prendem, e nos dois o Tab para fora fecha o painel — mas o foco vai a lugares DIFERENTES: no menu, ao ponto de tabulação vizinho do gatilho (`dropdown-menu.md`); no Popover, de volta ao gatilho, nos dois sentidos (D11 do `popover.md`, decisão da dona em 2026-09-17). A diferença é de propósito, não de descuido |
-| setas | percorrem os itens do menu e o destaque do Command |
-| letra | no menu, typeahead; no Command, vira texto da busca, e o foco nunca sai do campo |
+| `Tab` / `Shift+Tab` | na família modal (Dialog, AlertDialog, Sheet, Drawer) o foco fica **preso** no painel. Popover não prende, e o Tab para fora fecha o painel, com o foco voltando ao gatilho nos dois sentidos (D11 do `popover.md`, decisão da dona em 2026-09-17). O menu também não prende, e o destino dele é OUTRO — o ponto de tabulação vizinho do gatilho: está em [`21-navegacao.md`](21-navegacao.md) §Teclado na navegação e no C2 de `dropdown-menu.md`. A diferença é de propósito, não de descuido |
+| setas | percorrem o destaque do Command. O teclado da lista de um menu aberto é de navegação, não desta categoria |
+| letra | no Command, vira texto da busca, e o foco nunca sai do campo. No menu é typeahead — ver a guideline de navegação |
 
 - **Ao fechar, o foco volta ao gatilho** — Dialog, AlertDialog, Sheet, Drawer,
   Popover e DropdownMenu (e o Menubar, ao gatilho da barra).
@@ -409,11 +436,13 @@ invariante de categoria.
    em stack nenhuma, enquanto a do Dialog e a do AlertDialog são asseridas nas
    cinco. No Drawer a play já tem o passo — só assere presença. É play, não regra
    de audit.
-2. **Quatro guardas de movimento reduzido inertes** (Dialog, Sheet, DropdownMenu,
-   Tooltip). Não há movimento sobrando, porque a camada de token alcança; a
-   decisão é se a guarda por folha sai — como saiu do Popover, pelo argumento de
-   que guarda inerte anuncia proteção que não dá — ou se ganha o seletor de
-   atributo, como a do AlertDialog e a do Drawer.
+2. **Duas guardas de movimento reduzido inertes** (Dialog e Sheet). Eram quatro: a do
+   Tooltip saiu com a transição em 2026-09-16, e a do DropdownMenu foi consertada em
+   2026-09-17, ganhando o seletor de atributo. Não há movimento sobrando, porque a
+   camada de token alcança; a decisão é se a guarda por folha sai — como saiu do
+   Popover, pelo argumento de que guarda inerte anuncia proteção que não dá — ou se
+   ganha o seletor de atributo, como fizeram o AlertDialog, o Drawer e agora o
+   DropdownMenu.
 3. **As cópias de `--card` nas guidelines de stack** (`01-regras-gerais.md` nas
    cinco, `03-sistema-design.md` em três) contradizem a §Superfície, e o portão
    de cópia só lê a `10-overlay-components.md`.

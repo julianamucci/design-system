@@ -366,7 +366,7 @@
       aiEntities: t('seo.aiEntities'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
-        { name: 'Overlay', item: '/components/overlay' },
+        { name: $tStore('category'), item: '/components/navigation' },
         { name: 'DropdownMenu' },
       ],
     });
@@ -1080,7 +1080,7 @@ interface DropdownMenuRadioGroupProps {
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
     items={[
-      { name: $tStore('related.items.contextMenu.name'), description: $tStore('related.items.contextMenu.description'), path: '?path=/docs/components-overlay-contextmenu--docs' },
+      { name: $tStore('related.items.contextMenu.name'), description: $tStore('related.items.contextMenu.description'), path: '?path=/docs/components-navigation-contextmenu--docs' },
       { name: $tStore('related.items.menubar.name'),     description: $tStore('related.items.menubar.description'),     path: '?path=/docs/components-navigation-menubar--docs'     },
       { name: $tStore('related.items.command.name'),     description: $tStore('related.items.command.description'),     path: '?path=/docs/components-overlay-command--docs'     },
       { name: $tStore('related.items.popover.name'),     description: $tStore('related.items.popover.description'),     path: '?path=/docs/components-overlay-popover--docs'     },

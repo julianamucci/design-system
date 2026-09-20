@@ -927,7 +927,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
             { name: 'Badge',        description: toPlainText(t('related.badge')),        path: '?path=/docs/components-feedback-badge--docs' },
             { name: 'Skeleton',     description: toPlainText(t('related.skeleton')),     path: '?path=/docs/components-feedback-skeleton--docs' },
             { name: 'Pagination',   description: toPlainText(t('related.pagination')),   path: '?path=/docs/components-navigation-pagination--docs' },
-            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
             { name: 'Avatar',       description: toPlainText(t('related.avatar')),       path: '?path=/docs/components-display-avatar--docs' },
           ],
         });

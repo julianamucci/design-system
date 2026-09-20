@@ -18,8 +18,8 @@ import { Button } from "./button";
 
 import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
-  title: "Components/Overlay/DropdownMenu/Variants",
-  tags: ["overlay"],
+  title: "Components/Navigation/DropdownMenu/Variants",
+  tags: ["navigation"],
   component: DropdownMenu,
   parameters: {
     design: figmaDesign("dropdownMenu"),

@@ -12,9 +12,9 @@ import {
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
-  title: 'Components/Overlay/DropdownMenu/Variants',
+  title: 'Components/Navigation/DropdownMenu/Variants',
   component: DropdownMenuStory,
-  tags: ['overlay'],
+  tags: ['navigation'],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
