@@ -628,6 +628,25 @@ para é a camada de TOKEN — a folha declara duração só por `var(--duration-
 mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
 segura, está por extenso em `hover-card.md` §8.
 
+**O guarda do VÉU ganhou `!important` em 2026-09-20, e o motivo não é do Sheet.**
+`sheet.css` também veste o **Drawer**, e lá o véu de react, vue e svelte
+continuava desvanecendo 0,5s sob a preferência: a `vaul` declara
+`[data-vaul-overlay][data-vaul-snap-points="false"]{animation-duration:.5s}` em
+(0,2,0), contra o nosso `.nds-sheet-overlay` em (0,1,0), e injeta a folha dela
+por `head.appendChild` depois da nossa. **Um degrau, e uma folha de terceiro.**
+
+O Sheet nunca teve o defeito — ele não carrega a `vaul` —, mas a regra é a mesma
+e por isso o `!important` aparece aqui. Medição, aritmética e o porquê de mais
+especificidade não resolver estão na **D17 do [`drawer.md`](drawer.md)** e no
+comentário da própria regra.
+
+**Esta é a TERCEIRA camada do mesmo defeito neste arquivo**: a guarda da classe
+nua perdendo para `[data-side]` (abaixo), a guarda inerte por token
+(`guarda_de_movimento_inerte`), e agora a guarda derrotada por CSS injetado em
+runtime. As três têm a mesma assinatura — declaração presente, com cara de
+correta, que não pinta nada —, e nenhum portão que leia a NOSSA folha pode ver a
+terceira.
+
 **E o bloco da própria folha passou a segurar em 2026-09-17.** As quatro entradas
 por lado são declaradas em `.nds-sheet-content[data-side="…"]`, (0,2,0), e a
 guarda mirava a classe nua, (0,1,0): perdia na cascata, e o painel deslizava pela

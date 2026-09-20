@@ -270,16 +270,33 @@ família medida em uma semana.
 
 **O que vale**: a entrada anima nas cinco, e **o movimento é asserção**. Não
 basta afirmar que o painel apareceu — foi exatamente isso que deixou o angular
-passar meses com uma entrada que parecia existir. A forma que as cinco usam:
-achar o painel por SELETOR (não pelo helper de portal, ver abaixo), afirmar
-`getAnimations().length > 0` no instante da abertura, amostrar a posição em laço
-de RELÓGIO e cobrar deslocamento significativo mais repouso no mínimo da série.
+passar meses com uma entrada que parecia existir.
 
 **Esperar o portal NÃO serve para medir geometria**: o helper gateia em opacidade
 > 0.9, e opacidade e transform correm na mesma curva — a 0,9 o painel ainda está
 a **38px** da borda (medido). Asserção de posição feita ali lê o caminho, não o
-destino. As cinco ganharam `waitForAnimationsDone`, que espera
-`getAnimations().finished` e é leitura pura.
+destino.
+
+> **PENDÊNCIA · 2026-09-20 — esta decisão foi escrita afirmando paridade que não
+> existia, e a Fase E a pegou no mesmo dia.** O texto dizia "a forma que as CINCO
+> usam" e "as CINCO ganharam `waitForAnimationsDone`". Medido:
+>
+> | | asserção de movimento | `waitForAnimationsDone` | espera nas `Left`/`Right` |
+> |---|---|---|---|
+> | react | ✓ | ✓ | `waitForAnimationsDone` |
+> | vue | ✓ | ✓ | **`waitFor` em volta de `getBoundingClientRect()`** |
+> | vanilla | ✓ (por `data-starting-style`, transição e não animação) | ✓ | `waitForAnimationsDone` |
+> | angular | ✓ (story própria, trilha quadro a quadro) | equivalente próprio | `waitForPousado` |
+> | **svelte** | **✗ nenhuma** | **✗ não existe** | **`waitFor` em volta de `getBoundingClientRect()`** |
+>
+> Duas stacks ficaram com `waitFor` em volta de leitura de layout, que é a forma
+> que a regra da casa PROÍBE — e os comentários do react e do vanilla, nas mesmas
+> linhas, dizem "espera de RELÓGIO, e nunca `waitFor`". A rodada endureceu a
+> asserção onde estava trabalhando e deixou as duas que não tocou com a forma
+> velha. É a terceira forma da regra de divergência, cometida por cinco agentes
+> em paralelo — e por mim, ao escrever "as cinco" sem contar.
+> **Fecha quando**: o svelte tem asserção de movimento, as cinco têm um esperador
+> de animação, e nenhuma `Left`/`Right` usa `waitFor` em volta da medida.
 
 **A SAÍDA fica fora desta decisão**, e o vanilla continua sem leitor de
 `[data-ending-style]`: adiar a remoção do painel até o `transitionend` mexe com o
@@ -310,9 +327,73 @@ com guarda de transição no WRAPPER — não na lib, não em patch.
 
 **O que vale**: um fechamento, um evento, com o motivo daquele caminho. E a
 asserção **CONTA as chamadas**: afirmar que o evento saiu é precisamente o que
-passava com o defeito de pé. As cinco afirmam contagem e motivo nos caminhos de
-arraste e de Escape — a agente do svelte estendeu ao Escape por conta própria,
-"para o contrato valer nos dois caminhos e não só onde o defeito apareceu".
+passava com o defeito de pé.
+
+> **PENDÊNCIA · 2026-09-20 — esta decisão também foi escrita afirmando paridade
+> que não existia.** O texto dizia "as CINCO afirmam contagem e motivo nos
+> caminhos de arraste e de Escape". Medido pela Fase E, no mesmo dia:
+>
+> | stack | arraste | Escape |
+> |---|---|---|
+> | vue | ✓ contagem + `overlay` | ✓ contagem + `escape` |
+> | svelte | ✓ | ✓ (estendido por conta própria, "para o contrato valer nos dois caminhos") |
+> | angular | ✓ `toEqual(['overlay'])` | ✗ o passo não coleta motivo |
+> | **react** | **✗ nenhum espião** | **✗** |
+> | **vanilla** | **✗ nenhum `onClose`** | parcial — conta `onOpenChange`, nunca o motivo |
+>
+> São duas e meia de cinco. E o dado que dói: **o defeito do svelte — dois
+> anúncios por uma dispensa — era invisível a tudo que o react e o vanilla
+> afirmam hoje.** O react tem teste de unidade do tradutor de motivo, que é outra
+> coisa: prova a função pura, não que um fechamento produz um anúncio.
+> **Fecha quando**: as cinco contam as chamadas e leem o motivo nos dois
+> caminhos, com dentes provados replantando um anúncio a mais.
+
+### D17 · O guarda de movimento reduzido perdia para a folha da LIB, por um degrau
+
+**Fixada em** 2026-09-20, sobre medição em navegador com a preferência emulada.
+
+O C6 promete que painel e véu param de animar sob `prefers-reduced-motion`, e a
+§8 repete. **O véu de react, vue e svelte continuava desvanecendo 0,5s.** Medido
+com `reduce` emulado por CDP, com a página confirmando
+`matchMedia(...).matches === true` antes de ler, e com controle positivo (a
+passagem sem emulação leu o que a cascata desprotegida prevê):
+
+    véu, com `reduce`   animation-name: fadeIn · duration: 0.5s · running
+    opacidade           0 → 0,270 → 0,656 → 0,806 → 0,900 → 0,945  (237ms)
+
+A aritmética é de UM degrau, e quem vence é uma folha de TERCEIRO:
+
+    nosso   .nds-sheet-overlay                                  (0,1,0)
+    vaul    [data-vaul-overlay][data-vaul-snap-points="false"]  (0,2,0)
+
+**E o painel escapava por acidente, não por desenho.** A `vaul` nomeia a
+animação dele em (0,4,0) e vence o nosso seletor; o que o salva é ela declarar a
+DURAÇÃO em `[data-vaul-drawer]`, que é (0,1,0) e perde. Duração zero, animação
+nomeada rodando por tempo nenhum. **Um bump que mova essa duração um degrau
+acima desfaz a proteção do painel sem nada ficar vermelho.**
+
+**O conserto é `!important` no guarda do véu**, não mais especificidade: para
+vencer seria preciso ≥ (0,4,0), e empatar não serve — a `vaul` injeta por
+`head.appendChild` na avaliação do módulo e aterrissa depois da nossa folha,
+então empate perde na ordem. Um `:not():not():not()` calibrado para a forma atual
+dos seletores dela voltaria a perder calado no dia em que ela acrescentasse um
+atributo.
+
+**Esta é a TERCEIRA camada do mesmo defeito neste arquivo**, e o comentário da
+regra registra as três: a guarda da classe nua perdendo para `[data-side]`
+(2026-09-17), a guarda que existia e era inerte por token
+(`guarda_de_movimento_inerte`), e agora a guarda derrotada por CSS de terceiro
+injetado em runtime.
+
+> **PENDÊNCIA · 2026-09-20 — o portão que veria isto não existe, e não pode
+> existir lendo a nossa folha.** O `guarda_de_movimento_inerte` lê
+> `docs/shared/styles/nds/*.css`, onde o guarda está presente e parece eficaz.
+> Quem o derrota é CSS injetado em runtime por uma dependência. O portão com
+> dentes é o que a sonda fez: abrir o painel com a preferência emulada por CDP e
+> ler `getComputedStyle` + `getAnimations()` no véu e no painel.
+> **Fecha quando**: existe asserção nas três stacks com `vaul` que abre o painel
+> sob `reduce` e cobra `animation-duration: 0s` no véu E no painel — a segunda
+> metade importa porque a proteção do painel é acidental e some num bump.
 
 ## 4. Anatomia
 

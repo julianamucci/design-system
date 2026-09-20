@@ -360,9 +360,52 @@
  * perdia para elas na cascata — `@media` não acrescenta especificidade. O
  * painel deslizava pela lateral inteira para quem pediu menos movimento, que é
  * exatamente o movimento grande que a preferência existe para evitar. Medido em
- * 2026-09-17; portão `guarda_de_movimento_inerte`. */
+ * 2026-09-17; portão `guarda_de_movimento_inerte`.
+ *
+ * **E em 2026-09-20 o mesmo defeito voltou pela terceira camada: uma folha de
+ * TERCEIRO.** O véu do Drawer em react, vue e svelte continuava desvanecendo
+ * 0,5s com a preferência ligada. Medido em navegador, com
+ * `prefers-reduced-motion: reduce` emulado por CDP e a página confirmando
+ * `matchMedia(...).matches === true` antes de ler:
+ *
+ *     véu, com `reduce`   animation-name: fadeIn · duration: 0.5s · running
+ *     opacidade           0 → 0,270 → 0,656 → 0,806 → 0,900 → 0,945  (237ms)
+ *
+ * A aritmética, e ela é de UM degrau:
+ *
+ *     nosso   .nds-sheet-overlay                                      (0,1,0)
+ *     vaul    [data-vaul-overlay][data-vaul-snap-points="false"]      (0,2,0)
+ *
+ * **O painel escapou por acidente, não por desenho.** A `vaul` nomeia a
+ * animação dele em (0,4,0) e VENCE o nosso seletor — o que o salva é ela
+ * declarar a DURAÇÃO em `[data-vaul-drawer]`, que é (0,1,0) e perde para
+ * `.nds-drawer-content:not([data-swiping])`. Duração zero, animação nomeada
+ * rodando por tempo nenhum. Um bump da `vaul` que mova essa duração um degrau
+ * acima desfaz a proteção do painel **sem nada ficar vermelho**.
+ *
+ * Por isso `!important`, e não mais especificidade: para vencer seria preciso
+ * ≥ (0,4,0), e EMPATAR não serve — a `vaul` faz `head.appendChild(style)` na
+ * avaliação do módulo e aterrissa depois da nossa folha, então empate perde na
+ * ordem. Um `:not():not():not()` calibrado para a forma atual dos seletores
+ * dela volta a perder calado no dia em que ela acrescentar um atributo, que é a
+ * mesma classe de mapa que envelhece em silêncio.
+ *
+ * Conferido que ela não vence por outra via: zero `@layer` dos dois lados,
+ * nenhum `!important` em regra `[data-vaul-overlay]`, e o caminho medido tem
+ * `data-vaul-snap-points="false"`. O `transition` entra junto porque com snap
+ * points ligados `[data-vaul-overlay][data-vaul-snap-points="true"]` declara
+ * `transition: opacity .5s` na mesma (0,2,0).
+ *
+ * **O portão `guarda_de_movimento_inerte` NÃO vê isto, e não verá lendo a nossa
+ * folha**: aqui a guarda está presente e parece eficaz. Quem a derrota é CSS
+ * injetado em runtime. O portão com dentes é o que a sonda fez — abrir o painel
+ * com a preferência emulada e ler `getComputedStyle` + `getAnimations()`. */
 @media (prefers-reduced-motion: reduce) {
-  .nds-sheet-overlay,
+  .nds-sheet-overlay {
+    animation: none !important;
+    transition: none !important;
+  }
+
   .nds-sheet-content {
     animation: none;
     transition: none;
