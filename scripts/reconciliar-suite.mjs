@@ -67,12 +67,21 @@ function normalize(file) {
   return file.replace(/\\/g, '/').toLowerCase();
 }
 
-function run(cwd, args) {
+/**
+ * `stream` manda a saída direto para o terminal em vez de capturá-la.
+ *
+ * A suíte SEMPRE transmite: capturar o stdout dela deixaria quem espera sem
+ * nada na tela por dez ou vinte minutos, que é o cenário em que esta casa já
+ * confundiu impasse com lentidão mais de uma vez. O relatório não vem do stdout
+ * de qualquer forma — vem do arquivo JSON.
+ */
+function run(cwd, args, { stream = false } = {}) {
   return spawnSync('npx', ['vitest', ...args], {
     cwd,
-    encoding: 'utf8',
     shell: true,
-    maxBuffer: 64 * 1024 * 1024,
+    ...(stream
+      ? { stdio: 'inherit' }
+      : { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }),
   });
 }
 
@@ -90,23 +99,56 @@ function main() {
   const project = projectArg ? projectArg.slice('--projeto='.length) : 'storybook';
   const filters = rest.filter((a) => a !== projectArg);
 
+  // `--shard` divide a RODADA e não a enumeração — medido: `list` o ignora,
+  // `run` o aplica. Foi exatamente assim que o plantio de "arquivo ausente"
+  // provou este portão, o que quer dizer que uma rodada fatiada de verdade
+  // seria acusada como defeito. Recusar é honesto; reconciliar um pedaço contra
+  // o todo não é.
+  if (filters.some((a) => a.startsWith('--shard'))) {
+    console.error('`--shard` fatia a rodada mas não a enumeração: a reconciliação');
+    console.error('acusaria como perdidos os arquivos do outro fatiamento. Rode as');
+    console.error('fatias com `vitest run` e reconcilie a rodada inteira à parte.');
+    return 2;
+  }
+
+  // `--watch` não termina, e sem fim não há relatório para reconciliar.
+  if (filters.some((a) => a === '--watch' || a === '-w')) {
+    console.error('`--watch` não produz relatório final — reconciliar exige rodada que fecha.');
+    return 2;
+  }
+
+  // Um `--reporter` próprio substituiria o relator JSON de que a reconciliação
+  // depende, e o portão passaria a não medir nada, calado.
+  if (filters.some((a) => a.startsWith('--reporter'))) {
+    console.error('`--reporter` é definido aqui (`default` + `json`): o JSON é a medição.');
+    return 2;
+  }
+
   const cwd = path.join(RAIZ, STACKS[stack]);
   const out = path.join(mkdtempSync(path.join(tmpdir(), 'reconciliar-')), 'report.json');
 
   console.log(`\n[1/2] enumerando o que DEVE rodar — ${stack}, projeto "${project}"`);
-  const listed = run(cwd, ['list', '--filesOnly', '--json', `--project=${project}`, ...filters]);
 
-  if (listed.status !== 0) {
+  // O JSON vai para ARQUIVO, nunca para o stdout. A primeira versão disto
+  // recortava a saída a partir do primeiro `[` — e funcionou em toda medição de
+  // máquina quente, porque ali o vitest só imprime o array. Na primeira rodada
+  // de CACHE FRIO, que é a condição para a qual o portão existe, o Vite imprime
+  // antes dele e o primeiro `[` passou a ser o de uma sequência de cor ANSI.
+  // O portão reprovou a si mesmo com exit 2 na estreia, o que é o desfecho certo
+  // para quem não consegue medir — mas o recorte de stdout era frágil pelo mesmo
+  // motivo que esta casa já catalogou: funcionava por acidente do ambiente.
+  const listOut = path.join(path.dirname(out), 'list.json');
+  const listed = run(cwd, ['list', '--filesOnly', `--json=${listOut}`, `--project=${project}`, ...filters]);
+
+  if (listed.status !== 0 || !existsSync(listOut)) {
     console.error('a enumeração falhou — sem ela não há com o que comparar:');
     console.error(listed.stderr || listed.stdout);
     return 2;
   }
 
-  // A saída traz avisos do Vite antes do JSON; o array começa no primeiro `[`.
-  const raw = listed.stdout.slice(listed.stdout.indexOf('['));
   let expected;
   try {
-    expected = JSON.parse(raw).map((entry) => normalize(entry.file));
+    expected = JSON.parse(readFileSync(listOut, 'utf8')).map((entry) => normalize(entry.file));
   } catch (err) {
     console.error(`a enumeração não devolveu JSON legível: ${err.message}`);
     return 2;
@@ -120,16 +162,18 @@ function main() {
   }
 
   console.log(`      ${expected.length} arquivo(s)\n\n[2/2] rodando a suíte`);
-  const suite = run(cwd, [
-    'run',
-    `--project=${project}`,
-    '--reporter=default',
-    '--reporter=json',
-    `--outputFile.json=${out}`,
-    ...filters,
-  ]);
-  process.stdout.write(suite.stdout);
-  if (suite.stderr) process.stderr.write(suite.stderr);
+  const suite = run(
+    cwd,
+    [
+      'run',
+      `--project=${project}`,
+      '--reporter=default',
+      '--reporter=json',
+      `--outputFile.json=${out}`,
+      ...filters,
+    ],
+    { stream: true },
+  );
 
   if (!existsSync(out)) {
     console.error('\nA SUÍTE NÃO ESCREVEU RELATÓRIO — ela morreu antes do fim.');
