@@ -77,12 +77,12 @@ const MENUS = [
  */
 function textLeft(el: HTMLElement): number {
   const range = el.ownerDocument.createRange()
-  const rotulo = Array.from(el.childNodes).find(
+  const labelNode = Array.from(el.childNodes).find(
     (n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? "").trim() !== ""
   )
-  if (rotulo) {
-    range.setStart(rotulo, 0)
-    range.setEnd(rotulo, (rotulo.textContent ?? "").length)
+  if (labelNode) {
+    range.setStart(labelNode, 0)
+    range.setEnd(labelNode, (labelNode.textContent ?? "").length)
   } else {
     range.selectNodeContents(el)
   }
@@ -140,7 +140,7 @@ const meta = {
     loopFocus: {
       control: "boolean",
       description:
-        "A seta dá a volta do último gatilho para o primeiro, e vice-versa.",
+        "A seta dá a volta do último gatilho para o firstItem, e vice-versa.",
       table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
     side: {
@@ -235,7 +235,7 @@ export const Playground: Story = {
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1)
     })
 
-    await step("Enter no gatilho abre o menu com foco no primeiro item", async () => {
+    await step("Enter no gatilho abre o menu com foco no firstItem item", async () => {
       // Idempotente: só digita com o menu fechado, então o replay parte do
       // mesmo estado da primeira rodada.
       if (file.getAttribute("aria-expanded") !== "true") {
@@ -407,7 +407,7 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
     })
 
-    await step("E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra", async () => {
+    await step("E o TEXTO do firstItem item alinha com o TEXTO do gatilho da barra", async () => {
       // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
       // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO — o
       // `alignOffset` do `MenubarContent`. As duas moram na Playground porque é
@@ -446,8 +446,8 @@ export const Playground: Story = {
         panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined))
       )
 
-      const primeiro = within(panel).getAllByRole("menuitem")[0]
-      const delta = textLeft(primeiro) - textLeft(segundo)
+      const firstItem = within(panel).getAllByRole("menuitem")[0]
+      const delta = textLeft(firstItem) - textLeft(segundo)
       await expect(
         Math.abs(delta),
         `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +

@@ -115,7 +115,7 @@ const meta: Meta<MenubarArgs> = {
     },
     loopFocus: {
       control: 'boolean',
-      description: 'A seta dá a volta do último menu para o primeiro, e vice-versa.',
+      description: 'A seta dá a volta do último menu para o firstItem, e vice-versa.',
     },
     // Função em `args` sem entrada aqui NÃO chega ao template no renderer
     // Angular — o `(openChange)` ficaria ligado a nada, sem erro nenhum.
@@ -216,7 +216,7 @@ export const Playground: Story = {
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
-    await step('Enter no gatilho abre o menu com foco no primeiro item', async () => {
+    await step('Enter no gatilho abre o menu com foco no firstItem item', async () => {
       // Teclado, e não clique: o item do contrato fala de Enter/Space/Seta-baixo,
       // e um passo que clicava deixava a declaração sem verificação nenhuma.
       // Idempotente: só digita com o menu fechado, então o replay parte do
@@ -375,7 +375,7 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
     });
 
-    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+    await step('E o TEXTO do firstItem item alinha com o TEXTO do gatilho da barra', async () => {
       // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
       // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO — o
       // `alignOffset` do painel da barra, que vale `-1` e é a BORDA do painel
@@ -408,18 +408,18 @@ export const Playground: Story = {
       await waitForAncorado(panel);
       await waitForPousado(panel);
 
-      const primeiro = within(panel).getAllByRole('menuitem')[0];
+      const firstItem = within(panel).getAllByRole('menuitem')[0];
       // O rótulo do item é nó de TEXTO solto no `<div>` — o `<span>` que existe
       // ali dentro é o do ATALHO, encostado à direita, e mirar nele mediria a
       // outra ponta da linha. O do gatilho também é nó de texto solto no
       // `<button>`. Um `Range` sobre o conteúdo mede a CAIXA DO TEXTO nos dois
       // casos, que é o que a caixa do elemento não dá: o gatilho tem
       // `padding-inline`, e ela não começa onde a letra começa.
-      const rotulo = [...primeiro.childNodes].find(
+      const labelNode = [...firstItem.childNodes].find(
         (no): no is Text => no.nodeType === Node.TEXT_NODE && (no.textContent ?? '').trim() !== '',
       );
-      await expect(rotulo, 'o item perdeu o nó de texto do rótulo').toBeDefined();
-      const delta = textLeft(rotulo!) - textLeft(segundo);
+      await expect(labelNode, 'o item perdeu o nó de texto do rótulo').toBeDefined();
+      const delta = textLeft(labelNode!) - textLeft(segundo);
       await expect(
         Math.abs(delta),
         `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +

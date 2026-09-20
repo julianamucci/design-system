@@ -90,12 +90,12 @@ const meta: Meta<MenubarArgs> = {
   argTypes: {
     loop: {
       control: 'boolean',
-      description: 'A seta dá a volta do último gatilho para o primeiro, e vice-versa.',
+      description: 'A seta dá a volta do último gatilho para o firstItem, e vice-versa.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
     defaultOpen: {
       control: 'boolean',
-      description: 'Abre o primeiro menu ao montar, sem roubar o foco da página.',
+      description: 'Abre o firstItem menu ao montar, sem roubar o foco da página.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     side: {
@@ -213,7 +213,7 @@ export const Playground: Story = {
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
-    await step('Enter no gatilho abre o menu com foco no primeiro item', async () => {
+    await step('Enter no gatilho abre o menu com foco no firstItem item', async () => {
       // Idempotente: só digita com o menu fechado, então o replay parte do
       // mesmo estado da primeira rodada.
       if (file.getAttribute('aria-expanded') !== 'true') {
@@ -443,7 +443,7 @@ export const Playground: Story = {
       await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
     });
 
-    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+    await step('E o TEXTO do firstItem item alinha com o TEXTO do gatilho da barra', async () => {
       // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
       // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO — o que as
       // outras quatro stacks chamam de `alignOffset` e esta resolve por folha
@@ -477,14 +477,14 @@ export const Playground: Story = {
       await waitForAncorado(panel);
       await waitForAnimationsDone(panel);
 
-      const primeiro = within(panel).getAllByRole('menuitem')[0];
+      const firstItem = within(panel).getAllByRole('menuitem')[0];
       // O rótulo do item mora num `<span>` próprio; o do gatilho é nó de texto
       // solto no `<button>`. Um `Range` sobre o conteúdo mede a CAIXA DO TEXTO
       // nos dois casos, que é o que a caixa do elemento não dá no gatilho — ele
       // tem `padding-inline`, ela não começa onde a letra começa.
-      const rotulo = primeiro.querySelector('span');
-      await expect(rotulo, 'o item perdeu o span de rótulo').not.toBeNull();
-      const delta = textLeft(rotulo!) - textLeft(segundo);
+      const labelNode = firstItem.querySelector('span');
+      await expect(labelNode, 'o item perdeu o span de rótulo').not.toBeNull();
+      const delta = textLeft(labelNode!) - textLeft(segundo);
       await expect(
         Math.abs(delta),
         `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +

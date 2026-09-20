@@ -472,7 +472,7 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
     fábrica do vanilla cada — corrigidas no mesmo dia —, e nenhuma asserção media
     TEXTO, só caixa de elemento. Foi preciso medir a posição de uma letra, para
     outro assunto, para a anatomia publicada ser confrontada com o DOM. Detalhe
-    completo na **D20** do [`prd/dropdown-menu.md`](../prd/dropdown-menu.md).
+    completo na **D20** do [`dropdown-menu.md`](../prd/dropdown-menu.md).
 
     Vale ler junto com o **item 1** desta lista: decidir em que categoria o
     Menubar mora e decidir se ele monta lista são a mesma conversa — ele é, hoje,

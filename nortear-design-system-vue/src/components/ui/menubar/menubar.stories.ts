@@ -79,7 +79,7 @@ const meta = {
     },
     loop: {
       control: 'boolean',
-      description: 'A seta dá a volta do último gatilho para o primeiro, e vice-versa.',
+      description: 'A seta dá a volta do último gatilho para o firstItem, e vice-versa.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
     side: {
@@ -224,7 +224,7 @@ export const Playground: Story = {
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
-    await step('Enter no gatilho abre o menu com foco no primeiro item', async () => {
+    await step('Enter no gatilho abre o menu com foco no firstItem item', async () => {
       // Idempotente: só digita com o menu fechado, então o replay parte do
       // mesmo estado da primeira rodada.
       if (file.getAttribute('aria-expanded') !== 'true') {
@@ -395,7 +395,7 @@ export const Playground: Story = {
       await expect(args['onUpdate:modelValue']).toHaveBeenLastCalledWith('', 'overlay');
     });
 
-    await step('E o TEXTO do primeiro item alinha com o TEXTO do gatilho da barra', async () => {
+    await step('E o TEXTO do firstItem item alinha com o TEXTO do gatilho da barra', async () => {
       // O par da asserção de ancoragem lá em cima. Aquela cobra o eixo do LADO
       // (o vão de 8px, `expectOndeDiz`); esta cobra o eixo CRUZADO, o
       // `alignOffset` que `MenubarContent` declara. As duas moram na Playground
@@ -432,8 +432,8 @@ export const Playground: Story = {
 
       // `textLeft` desce até o primeiro nó de texto: nesta stack o rótulo do
       // item é texto solto, e o `<span>` que existe dentro dele é o do ATALHO.
-      const primeiro = within(panel).getAllByRole('menuitem')[0];
-      const delta = textLeft(primeiro) - textLeft(segundo);
+      const firstItem = within(panel).getAllByRole('menuitem')[0];
+      const delta = textLeft(firstItem) - textLeft(segundo);
       await expect(
         Math.abs(delta),
         `texto do 1º item − texto do gatilho = ${delta.toFixed(2)} (esperado 0) · ` +
