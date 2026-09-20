@@ -746,6 +746,23 @@ stories → docs page.
 - **Cabeçalho e rodapé são sub-componentes** por causa do ponto de corte de 40rem
   (D7), que frame de Figma não expressa e prop nenhuma controla.
 
+> **PENDÊNCIA · 2026-09-20 — falha INTERMITENTE em
+> `svelte/.../sheet-variants.stories.ts`, e ela NÃO fecha como "não reproduz".**
+> Apareceu uma vez em cinco execuções da suíte do svelte durante a leva do véu.
+> A forma é de contenção: o vitest perdeu o texto da asserção e reportou só o
+> arquivo, que é a assinatura do impasse descrito no CLAUDE.md, e as outras
+> quatro rodadas fecharam limpas. **A agente que a viu se recusou a fechá-la, e
+> estava certa** — a regra da casa é explícita: intermitente fecha como
+> corrigida, ou fica aberta.
+>
+> O que ainda NÃO foi feito, e é o que a regra pede: medir em PAR na mesma
+> máquina (`git checkout HEAD~1 -- nortear-design-system-svelte`, rodar,
+> restaurar, rodar), com a máquina limpa — sem `storybook dev` ocioso e sem suíte
+> irmã, porque a memória livre é o que decide, não o número de agentes.
+> **Fecha quando**: ou existe causa nomeada e corrigida, ou o par prova que era
+> contenção de máquina e a prova está escrita aqui — nunca por ausência de
+> repetição.
+
 ## 11. Onde está a verdade
 
 | assunto | arquivo |
