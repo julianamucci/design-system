@@ -533,11 +533,20 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
     (`docs/shared/figma/design-links.ts`); NavigationMenu, Stepper e Tabs não têm, e
     o arquivo do Figma não tem página para eles.
 12. **A entrada desta categoria no `guideline_de_stack_repete_categoria` não foi
-    feita.** O formato do mapa comporta — a categoria mora inteira na `05` —, mas
-    alterar o mapa é alterar portão, o que pede prova com defeito replantado e
-    comparação regra a regra contra o HEAD, ou seja varredura `--all`, que é decisão
-    da dona. Os cabeçalhos deste arquivo levam "na navegação" ou "de navegação" para
-    não colidir com títulos legítimos de stack quando a entrada vier.
+    feita**, e a migração de 2026-09-20 aumentou o que está exposto. O formato do mapa
+    comporta — a categoria mora inteira na `05` —, mas alterar o mapa é alterar portão,
+    o que pede prova com defeito replantado e comparação regra a regra contra o HEAD,
+    ou seja varredura `--all`, que é decisão da dona. Os cabeçalhos deste arquivo levam
+    "na navegação" ou "de navegação" para não colidir com títulos legítimos de stack
+    quando a entrada vier.
+
+    O tamanho da exposição, medido em 2026-09-20: `CATEGORIA_COMPARTILHADA`
+    (`scripts/audit.mjs:9140`) tem **uma entrada só**, a de `18-overlay.md`. Esta
+    categoria passou de seis para oito componentes e é agora a maior do projeto, com
+    quatro seções de mecânica vivas nas `05-navigation-components.md`. É a mesma forma
+    do defeito que o comentário do próprio portão descreve — alguém acrescenta uma
+    seção à guideline da stack porque foi ali que procurou, e em dois meses são cinco
+    cópias de novo —, só do lado que o portão não olha.
 13. **`breadcrumb_ellipsis_open` é tipado nas cinco stacks e disparado em duas**
     (react e svelte). Disparar nas cinco ou tirar das tabelas — é a forma do
     `badge_click` da categoria Feedback, que foi removido. Medição na §9 de
