@@ -36,7 +36,7 @@ valer — e `—` é dívida declarada, não ausência de risco.
 | C3 | O foco fica preso: Tab e Shift+Tab circulam dentro do painel | `Playground` (seis Tabs e o foco continua dentro), nas cinco |
 | C4 | `Escape` fecha; com a dispensa desligada, não fecha | o caminho positivo: `Playground` passo 4, nas cinco. O negativo: `NotDismissible` em quatro — **o angular fecha com Escape** e a story dele não tem o passo (§7, inconsistência 1) |
 | C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `DragToDismiss`, nas cinco (arraste curto, arraste longo, Escape no mesmo painel, alça sem foco) |
-| C6 | O véu não anima nunca (D18); o painel anima a entrada e para sob `prefers-reduced-motion` | o véu: `Open` nas cinco (`animationName: 'none'` e `getAnimations()` vazio). O painel: `movimento_sem_guarda_eficaz`, que lê a folha, mais a varredura da folha INJETADA nas três com `vaul` — **nenhuma story liga a preferência**, e é a pendência do D17 |
+| C6 | O véu não anima nunca (D18); o painel anima a entrada e para sob `prefers-reduced-motion` | o véu: `Open` nas cinco (`animationName: 'none'` e `getAnimations()` vazio). O painel: `movimento_sem_guarda_eficaz`, que lê a folha, mais a varredura da folha INJETADA nas três com `vaul`, que vale nos dois modos de mídia de uma vez. **Nenhuma story liga a preferência**, e isso é exceção DECLARADA no D17, não lacuna |
 | C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `WithScroll`, nas cinco |
 | C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue e do angular; no DOM renderizado, — (pendência abaixo) |
 | C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `WithForm` lendo `button.form`, nas cinco |
@@ -404,13 +404,27 @@ injetado em runtime.
 > e a varredura é recursiva, porque a folha dela já guarda regras
 > `[data-vaul-drawer]` dentro de `@media (hover:hover)`.
 >
-> **O que CONTINUA aberto**: ligar `prefers-reduced-motion` por CDP numa story.
-> Nenhuma das cinco o faz, e as outras duas stacks (angular e vanilla), que
-> animam por transição própria e não têm lib injetando folha, seguem cobertas só
-> pelo portão que lê a folha.
-> **Fecha quando**: existe uma story, em qualquer stack, que emula `reduce`,
-> confirma `matchMedia(...).matches` antes de ler, abre o painel e cobra
-> `animation-duration: 0s` — com o controle positivo da passagem sem emulação.
+> **FECHADA · 2026-09-20 — a sonda por CDP NÃO será feita, e o motivo é que o
+> defeito que a pediu deixou de existir.** Decisão da dona, sobre esta análise.
+>
+> Ela nasceu quando a única forma de ver o defeito era abrir o navegador: quem
+> derrotava o guarda era CSS injetado em runtime, e ler a nossa folha mostrava
+> uma guarda presente e com cara de eficaz. Com o D18 esse caminho foi fechado na
+> raiz, e a asserção que entrou no lugar **cobre melhor**: ela lê a CAUSA — a
+> folha da lib não declara animação nenhuma — e por isso vale nos dois modos de
+> mídia de uma vez. Não sobrou `@media` para vencer.
+>
+> O que restaria seria angular e vanilla, que animam por transição própria e não
+> carregam lib que injete folha. As duas ficam com DUAS camadas independentes: o
+> bloco `@media` da folha, conferido por `guarda_de_movimento_inerte`, e o
+> zeramento da escada de `--duration-*` em `docs/shared/tokens/motion.css`. Uma
+> sonda por CDP seria a terceira, e emulação de mídia acopla o teste à máquina.
+>
+> **O risco que fica declarado**, porque exceção se declara com a premissa: as
+> duas camadas restantes são lidas ESTATICAMENTE, e essa forma de leitura já foi
+> derrotada três vezes neste repositório — por especificidade, por token e por
+> folha de terceiro. Se uma quarta camada aparecer, a sonda volta à mesa, e o
+> sinal de que isso aconteceu é um defeito de movimento que nenhum portão viu.
 
 ### D18 · O véu não anima em componente nenhum, e a entrada do painel passa a ser NOSSA
 

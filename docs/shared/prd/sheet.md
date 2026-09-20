@@ -755,13 +755,47 @@ stories → docs page.
 > estava certa** — a regra da casa é explícita: intermitente fecha como
 > corrigida, ou fica aberta.
 >
-> O que ainda NÃO foi feito, e é o que a regra pede: medir em PAR na mesma
-> máquina (`git checkout HEAD~1 -- nortear-design-system-svelte`, rodar,
-> restaurar, rodar), com a máquina limpa — sem `storybook dev` ocioso e sem suíte
-> irmã, porque a memória livre é o que decide, não o número de agentes.
-> **Fecha quando**: ou existe causa nomeada e corrigida, ou o par prova que era
-> contenção de máquina e a prova está escrita aqui — nunca por ausência de
-> repetição.
+> **ANÁLISE · 2026-09-20 — a causa tem nome, e não é do Sheet.** O relato da
+> agente traz a assinatura inteira, e ela é de uma família que esta casa já
+> documentou duas vezes:
+>
+> | evidência | leitura |
+> |---|---|
+> | a falha foi na **primeira rodada depois de forçar a reotimização de dependência** | otimizador frio |
+> | `tests 67.08s` contra ~30s nas quatro rodadas limpas | 2,2× — o custo de pré-empacotar do zero |
+> | o texto da asserção não existia para ser perdido | o arquivo MORREU, não reprovou |
+> | quatro rodadas seguintes limpas, inclusive uma de 12 arquivos | dependências já quentes |
+> | `sheet/` não importa `vaul-svelte` | independente do patch daquele dia |
+>
+> O mecanismo está escrito no `.storybook/main.ts` desta própria stack: um
+> subcaminho que o otimizador do Vite só DESCOBRE quando a story abre muda o
+> pré-empacotamento no meio da rodada, o Vite **recarrega a página**, e todo
+> arquivo em voo morre com `Vitest failed to find the current suite`. Foi o
+> incidente de 2026-09-01 no angular, onde **onze arquivos** caíram assim — um
+> deles o `docs-smoke`, com as 98 docs pages dentro.
+>
+> A mitigação existe e é igual nas cinco (`optimizeDeps.include` com os ícones do
+> lucide e `storybook/internal/core-events`) — conferido, não há divergência
+> entre stacks. Ela cobre os subcaminhos já conhecidos, não os futuros.
+>
+> **O que torna esta família cara não é a falha: é o SILÊNCIO.** Quando o arquivo
+> morre assim ele costuma ser contado como `(0 test)`, e a rodada fecha VERDE
+> medindo menos. O CLAUDE.md manda "contar ARQUIVOS, não só falhas" — e isso é
+> prática humana: **não existe portão**, conferido em `scripts/` e em
+> `docs/shared/testing/`. Aqui a agente teve sorte de ver vermelho.
+>
+> **Fecha quando**: existe portão que reconcilia os arquivos que a suíte
+> REPORTOU com os que existem no disco e reprova na divergência. Enquanto ele
+> não existe, "a suíte fechou verde" não é afirmação verificada sobre cobertura.
+> Fechar por ausência de repetição continua proibido.
+>
+> **NÃO é a causa, mas foi achado no caminho e é real**: `waitForPortal` usa
+> `findByRole` SINGULAR, que lança quando há mais de um elemento com o papel — e
+> o guarda de `data-state="closed"` logo abaixo fica **inalcançável** exatamente
+> no caso em que ele serviria, um painel saindo ao lado de outro entrando. As
+> cinco stacks têm a mesma forma, então endurecer é nas cinco. Hoje é latente: a
+> única story que põe dois painéis na tela (`SecondPanel`, em
+> `sheet-states.stories.ts`) desvia do helper de propósito, com o motivo escrito.
 
 ## 11. Onde está a verdade
 
