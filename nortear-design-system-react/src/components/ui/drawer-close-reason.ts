@@ -52,6 +52,33 @@ export function takeDrawerCloseReason(): DrawerCloseReason {
   return reason
 }
 
+/**
+ * Fechamento por CÓDIGO — o produtor de `api`, e o único que esta stack não
+ * tinha.
+ *
+ * Sem ele, um painel recolhido pelo programa chegava ao GA4 indistinguível de
+ * um clique no botão de saída do rodapé, porque motivo não anotado cai em
+ * `close-button` (ver `takeDrawerCloseReason`). "Desistiu" e "o sistema
+ * recolheu" viravam a mesma barra no relatório.
+ *
+ * A ordem importa e é o que esta função garante: a anotação entra ANTES de o
+ * estado mudar, porque quem consome o motivo é o `onOpenChange`, que corre
+ * síncrono dentro do fechamento.
+ *
+ * **Por que não há chamador nesta stack, e isso é medição.** O caminho
+ * programático aqui passa pela prop `open` controlada, e a lib de gaveta usa
+ * `useControllableState` (`vaul/dist/index.mjs:480,881`): mudança VINDA DE FORA
+ * do valor controlado não chama `onOpenChange` — ele só anuncia pedido interno.
+ * Ou seja, quem fecha por código nesta stack também é quem tem de contar o
+ * fechamento, e é para esse consumidor que este produtor existe. Mesma situação
+ * do `markProgrammatic` do svelte e do gesto `confirm` do vue, que também são
+ * produtores sem chamador (`drawer.md` §7, inconsistência 21).
+ */
+export function closeDrawerByApi(close: () => void): void {
+  markDrawerClose("api")
+  close()
+}
+
 /** Ouvintes para o `DrawerContent`: tecla de escape e clique no véu. */
 export const drawerCloseReasonWatch = {
   onEscapeKeyDown: () => markDrawerClose("escape"),

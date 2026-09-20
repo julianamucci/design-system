@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  closeDrawerByApi,
   drawerCloseReasonWatch,
   drawerDragWatch,
   markDrawerClose,
@@ -30,6 +31,28 @@ describe("drawerCloseReason", () => {
     markDrawerClose("escape");
     expect(takeDrawerCloseReason()).toBe("escape");
     expect(takeDrawerCloseReason()).toBe("close-button");
+  });
+
+  it("o fechamento por código informa api, e não se confunde com o botão de sair", () => {
+    // Sem este produtor, um painel recolhido pelo programa chegava ao relatório
+    // como `close-button` — "desistiu" e "o sistema recolheu" na mesma barra.
+    let fechou = false;
+    closeDrawerByApi(() => {
+      fechou = true;
+    });
+    expect(fechou).toBe(true);
+    expect(takeDrawerCloseReason()).toBe("api");
+  });
+
+  it("a anotação entra ANTES da mudança de estado", () => {
+    // A ordem é o contrato: quem consome o motivo é o `onOpenChange`, que corre
+    // síncrono dentro do fechamento. Anotado depois, ele chegaria tarde e o
+    // evento sairia com o default.
+    const vistos: string[] = [];
+    closeDrawerByApi(() => {
+      vistos.push(takeDrawerCloseReason());
+    });
+    expect(vistos).toEqual(["api"]);
   });
 
   it("os ouvintes do conteúdo anotam escape e véu", () => {

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { waitForAnimationsDone, waitForPortal } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerBody,
@@ -163,8 +163,20 @@ export const Left: Story = {
       await expect(panelEl).toHaveAttribute("data-direction", "left");
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName("Menu");
-      // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
-      await expect(panelEl.getBoundingClientRect().left).toBeLessThan(1);
+      // Ocupa a altura inteira, ENCOSTADA na borda — ao contrário de bottom/top.
+      //
+      // `Math.abs`, e a espera, os dois de propósito. A forma anterior era
+      // `left < 1`, e ela não tinha dentes: com o painel em `left: -384`, isto
+      // é INTEIRAMENTE fora da tela, `-384 < 1` continua verdadeiro. Ela só
+      // reprovaria um painel parado à direita de x=1 — estado que não acontece.
+      //
+      // A espera é `waitForAnimationsDone` e não `waitForPortal`: aquele gateia
+      // na OPACIDADE (> 0.9), e nesta stack a `vaul` roda `fadeIn` no véu e
+      // `slideFromLeft` no painel na MESMA curva de 500ms — a 0,9 de opacidade
+      // o painel ainda está longe da borda. Quem mede geometria espera a
+      // animação acabar.
+      await waitForAnimationsDone(panelEl);
+      await expect(Math.abs(panelEl.getBoundingClientRect().left)).toBeLessThan(2);
     });
   },
 };
@@ -188,6 +200,10 @@ export const Right: Story = {
       await expect(panelEl).toHaveAttribute("data-direction", "right");
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName("Filtros");
+      // A `Right` já media com `Math.abs` — o que lhe faltava era a ESPERA,
+      // pelo mesmo motivo da `Left`: o painel entra deslocado pela própria
+      // largura, e medir antes de a animação assentar lê o caminho.
+      await waitForAnimationsDone(panelEl);
       const box = panelEl.getBoundingClientRect();
       await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });

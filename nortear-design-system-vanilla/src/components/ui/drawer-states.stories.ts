@@ -101,6 +101,19 @@ export const Closed: Story = {
       await expect(trigger).toBeVisible();
       await expect(trigger).toBeEnabled();
     });
+
+    await step('E ele ANUNCIA o diálogo, sem apontar para painel nenhum', async () => {
+      // A fábrica não escrevia nenhum dos três, e as quatro libs escrevem:
+      // o botão se anunciava como botão comum, sem dizer que abre um diálogo.
+      const trigger = canvas.getByRole('button', { name: /abrir drawer/i });
+      await expect(trigger).toHaveAttribute('data-slot', 'drawer-trigger');
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // Fechado NÃO tem `aria-controls`: o alvo não existe, e referência
+      // pendurada é pior que atributo ausente — o leitor de tela anunciaria um
+      // painel que não está na árvore. É a regra das quatro libs.
+      await expect(trigger).not.toHaveAttribute('aria-controls');
+    });
   },
 };
 
@@ -138,6 +151,16 @@ export const Open: Story = {
       await expect(document.querySelector('[data-slot="drawer-overlay"]')).not.toBeNull();
     });
 
+    await step('Aberto, o gatilho aponta para o painel', async () => {
+      // A outra metade do anúncio: `aria-expanded` vira `true` e o
+      // `aria-controls` NASCE, apontando para o id do painel que acabou de
+      // existir. Comparar com `panel.id` (e não com uma string) é o que impede
+      // a asserção de passar com o atributo apontando para qualquer coisa.
+      await expect(panel.id).toBeTruthy();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-controls', panel.id);
+    });
+
     await step('O foco está dentro do painel', async () => {
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
@@ -145,6 +168,62 @@ export const Open: Story = {
         }
       });
       await expect(panel.contains(document.activeElement)).toBe(true);
+    });
+
+    // ── A entrada é animada ───────────────────────────────────────────────
+    //
+    // `Transitioning` é estado declarado no PRD (§6) e é contrato das cinco
+    // desde 2026-09-20. Esta stack era a que não o cumpria: o véu desvanecia
+    // pelo `nds-sheet-fade-in` do Sheet e o painel APARECIA no lugar —
+    // `getAnimations()` vazio, `top` idêntico em todos os quadros. Sem esta
+    // asserção o conserto seria invisível no dia em que alguém o desfizesse: a
+    // ausência de movimento não deixa vermelho em compilador, folha nem axe.
+    //
+    // ── O ponto cego, DECLARADO ──────────────────────────────────────────
+    //
+    // Esta asserção NÃO alcança o `void panelEl.offsetHeight` da fábrica. O
+    // motivo é do navegador, não do teste: qualquer leitura de layout força o
+    // recálculo de estilo, e a leitura síncrona de `getBoundingClientRect()`
+    // logo abaixo faz, sozinha, o mesmo flush que aquela linha faz em produção.
+    // Tirando a linha da fábrica, a animação some para quem usa e esta story
+    // continua verde — medir de outro jeito não resolve, porque TODA leitura
+    // flusha. Quem guarda aquela linha é o comentário dela, e é dívida
+    // conhecida, não esquecimento.
+    await step('A entrada desliza a partir da borda, e assenta no repouso', async () => {
+      // Fecha para medir uma abertura LIMPA. O que se mede é o começo, e ele
+      // acontece no mesmo turno síncrono de `open()` — depois de um clique
+      // assíncrono já teria passado.
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+
+      const gaveta = canvasElement.querySelector('[data-slot="drawer"]') as DrawerElement;
+      gaveta.open();
+
+      const entrando = document.querySelector<HTMLElement>('[data-slot="drawer-content"]')!;
+      await expect(entrando).not.toBeNull();
+      // Ainda no MESMO turno: o atributo que a folha lê está posto, e o painel
+      // de baixo nasce deslocado pela própria altura, abaixo do repouso.
+      await expect(entrando.hasAttribute('data-starting-style')).toBe(true);
+      const topoInicial = entrando.getBoundingClientRect().top;
+
+      // Laço de RELÓGIO, com leitura direta. `waitFor` aqui seria a armadilha
+      // já registrada nesta casa: a condição força layout, o observador
+      // reagenda, a própria tentativa alimenta a seguinte e a aba morre sem
+      // reportar. `setTimeout` não tem esse laço.
+      const amostras: number[] = [topoInicial];
+      for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, 16));
+        amostras.push(entrando.getBoundingClientRect().top);
+        if (!entrando.hasAttribute('data-starting-style') && atRest(entrando)) break;
+      }
+      const topoFinal = amostras[amostras.length - 1];
+
+      await expect(entrando.hasAttribute('data-starting-style')).toBe(false);
+      await expect(atRest(entrando)).toBe(true);
+      // SUBIU, e por uma distância de painel — não por um pixel de arredondamento.
+      await expect(topoInicial - topoFinal).toBeGreaterThan(8);
+      // E veio de fora para dentro, sem passar do ponto: o repouso é o mínimo.
+      await expect(Math.min(...amostras)).toBe(topoFinal);
     });
   },
 };

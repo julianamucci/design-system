@@ -65,9 +65,54 @@
 		autoFocus = true,
 		dismissible = true,
 		direction = "bottom",
+		onOpenChange,
 		open = $bindable(false),
 		...restProps
 	}: DrawerPrimitive.RootProps = $props();
+
+	/**
+	 * ─── Um fechamento anuncia UM `onOpenChange` ────────────────────────────
+	 *
+	 * O primitivo de baixo anuncia DUAS vezes quando o painel é dispensado pelo
+	 * ARRASTE, e só nesse caminho. O `closeDrawer()` da lib faz as duas coisas
+	 * no mesmo bloco síncrono:
+	 *
+	 *   handleOpenChange(false);   // anúncio 1
+	 *   opts.open.current = false; // o setter do box anuncia de novo → 2
+	 *
+	 * (`vaul-svelte/dist/use-drawer-root.svelte.js`, `closeDrawer` e o
+	 * `box.with(() => open, (o) => { open = o; rootState.handleOpenChange(o) })`
+	 * de `components/drawer/drawer.svelte`.) Escape, véu e botão passam por
+	 * `onDialogOpenChange`, que chama `closeDrawer(true)` — o ramo `fromWithin`
+	 * pula o primeiro anúncio — e por isso só esses três saem certos.
+	 *
+	 * O que o defeito produz a jusante não é ruído: quem consome anota o motivo
+	 * no gesto e o LÊ no anúncio (`close-reason.ts`, `takeReason()` zera a
+	 * anotação). O primeiro anúncio leva `overlay`, o segundo já encontra a
+	 * anotação vazia e cai no default `close-button`. No GA4 isso é uma dispensa
+	 * contada duas vezes, a segunda com o motivo de um botão que ninguém apertou.
+	 *
+	 * A guarda é de TRANSIÇÃO, e não de tempo: só passa adiante o valor que
+	 * difere do último valor já anunciado. Repetição no mesmo bloco síncrono morre
+	 * aqui; sequência de verdade (abre, fecha, abre) nunca é engolida.
+	 */
+	let announced = open;
+
+	function announceOpenChange(next: boolean): void {
+		if (next === announced) return;
+		announced = next;
+		onOpenChange?.(next);
+	}
+
+	/**
+	 * Mudança escrita de FORA (o dono do estado ligado) não passa pelo anúncio da
+	 * lib — o setter do box só roda quando é a lib que escreve. Sem esta
+	 * ressincronia, uma gaveta aberta por estado externo deixaria `announced` em
+	 * `false` e o fechamento seguinte seria engolido como repetição.
+	 */
+	$effect(() => {
+		announced = open;
+	});
 
 	/**
 	 * A saída explícita da gaveta não dispensável.
@@ -100,6 +145,7 @@
 	{autoFocus}
 	{dismissible}
 	{direction}
+	onOpenChange={announceOpenChange}
 	bind:open
 	{...restProps}
 />

@@ -198,6 +198,11 @@ export function drawerOpenSource(): string {
  *
  * Sem `DrawerTrigger`: quem abre é o botão de fora, e é isso que o modo
  * controlado torna possível.
+ *
+ * UM botão externo, e isso é medição: com o painel modal aberto a lib põe
+ * `pointer-events: none` no `body`, então um "Fechar externamente" ao lado do
+ * "Abrir" seria um botão que ninguém consegue clicar. Quem fecha na tela é a
+ * saída do rodapé, e o callback devolve o valor a quem é dono dele.
  */
 export function drawerControlledSource(): string {
   return jsxSnippet(
@@ -218,9 +223,8 @@ import { Button } from "@/components/ui/button";`,
   return (
     <div className="nds-stack" data-spacing="sm">
       <div className="nds-cluster" data-spacing="md">
-        <Button onClick={() => setAberto(true)}>Abrir externamente</Button>
-        <Button variant="outline" onClick={() => setAberto(false)}>
-          Fechar externamente
+        <Button aria-haspopup="dialog" onClick={() => setAberto(true)}>
+          Abrir externamente
         </Button>
       </div>
 
@@ -344,6 +348,12 @@ export function drawerWithConfirmSource(): string {
       'Remover anexo?',
       'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
     ),
+    // O corpo entrou junto com o da story, em 2026-09-20: o painel de
+    // confirmação do vanilla, que é a referência, tem corpo com texto, e o
+    // snippet mostra o painel que está na tela.
+    `<DrawerBody className="nds-text-body nds-text-muted-foreground">
+  O anexo sai desta mensagem e continua na biblioteca.
+</DrawerBody>`,
     `<DrawerFooter>
   <DrawerClose asChild>
     <Button variant="outline">Cancelar</Button>
@@ -352,7 +362,7 @@ export function drawerWithConfirmSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_NO_BODY, panel('', miolo, trigger('Remover anexo'), SAFE_EXIT_FOCUS));
+  return jsxSnippet(IMPORT, panel('', miolo, trigger('Remover anexo'), SAFE_EXIT_FOCUS));
 }
 
 /**

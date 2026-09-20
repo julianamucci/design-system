@@ -292,18 +292,49 @@ export function createDrawerDocs(): HTMLElement {
             wrap.dataset.justify = 'center';
             wrap.dataset.spacing = 'sm';
             wrap.style.flexWrap = 'wrap';
-            wrap.append(
-              buildDrawerDemo({
-                location: 'docs_demo',
-                triggerLabel: t('demonstration.labels.bottom'),
-                title: t('demonstration.labels.title'),
-                description: t('demonstration.labels.description'),
-                cancelLabel: t('demonstration.labels.cancel'),
-                actionLabel: t('demonstration.labels.confirm'),
-                bodyText: 'Conteúdo do drawer.',
-                side: 'bottom',
-              }),
-            );
+            // As QUATRO direções, como nas outras quatro stacks. Esta página
+            // montava uma gaveta só — a de baixo —, e o conteúdo compartilhado
+            // tem legenda para as quatro (`demonstration.labels.bottom|right|
+            // left|top`): a demonstração mostrava um quarto do componente e a
+            // comparação entre as cinco páginas deixava de responder.
+            //
+            // As chaves ficam ESCRITAS por extenso, e não montadas em template:
+            // o `demonstration_labels_divergent` procura a chave no texto do
+            // arquivo, e a interpolação o deixaria cego.
+            const directions = [
+              { key: 'bottom', caption: t('demonstration.labels.bottom'), name: t('variants.items.bottom') },
+              { key: 'right',  caption: t('demonstration.labels.right'),  name: t('variants.items.right')  },
+              { key: 'left',   caption: t('demonstration.labels.left'),   name: t('variants.items.left')   },
+              { key: 'top',    caption: t('demonstration.labels.top'),    name: t('variants.items.top')    },
+            ] as const;
+
+            for (const dir of directions) {
+              const column = document.createElement('div');
+              column.className = 'nds-stack';
+              column.dataset.spacing = 'xs';
+
+              // Quem anuncia a direção é a legenda e o rótulo do gatilho — o
+              // título e a descrição do painel são os mesmos nas quatro, porque
+              // o assunto da demonstração é a gaveta, não o texto dela.
+              const caption = document.createElement('p');
+              caption.className = 'nds-text-caption nds-text-muted-foreground';
+              caption.textContent = dir.caption;
+
+              column.append(
+                caption,
+                buildDrawerDemo({
+                  location: 'docs_demo',
+                  triggerLabel: dir.name,
+                  title: t('demonstration.labels.title'),
+                  description: t('demonstration.labels.description'),
+                  cancelLabel: t('demonstration.labels.cancel'),
+                  actionLabel: t('demonstration.labels.confirm'),
+                  bodyText: 'Conteúdo do drawer.',
+                  side: dir.key,
+                }),
+              );
+              wrap.append(column);
+            }
             return wrap;
           },
         });
@@ -372,13 +403,26 @@ export function createDrawerDocs(): HTMLElement {
                 actionLabel: t('demonstration.labels.confirm'),
                 bodyText: 'Com DrawerTitle visível.',
               }),
+              // O anti-exemplo MANTÉM o nome acessível, como no react e no vue.
+              // Montava `title: ''`, e a fábrica então não escrevia cabeçalho
+              // nem `aria-labelledby`: a página abria um diálogo modal ANÔNIMO
+              // para ensinar acessibilidade, e o axe da própria docs page o
+              // reprovaria. A lição fica no corpo do painel — o que se evita é o
+              // painel sem título nenhum, não o título que existe.
+              //
+              // Divergência declarada com react e vue: lá o título do
+              // anti-exemplo é `nds-sr-only`, porque quem compõe monta o
+              // `DrawerTitle` e escolhe a classe dele. Aqui o título é da
+              // fábrica e nasce visível; criar uma opção só para este exemplo
+              // seria API nova numa stack só.
               dontPreviewFactory: () => buildDrawerDemo({
                 location: 'docs_do_dont',
                 triggerLabel: 'Abrir',
-                title: '',
+                title: t('usage.uxWriting.table.title.good'),
+                description: t('usage.uxWriting.table.description.good'),
                 cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'OK',
-                bodyText: 'Sem DrawerTitle — leitor de tela não anuncia.',
+                bodyText: toPlainText(t('doDont.pair1.dont')),
               }),
             },
             {
@@ -757,17 +801,24 @@ const drawer = createDrawer({
         });
 
       case 'propriedades': {
+        // Copiada da ordem e dos tipos de `DrawerOptions` em
+        // `@/components/ui/drawer`. Publicava `trigger: HTMLElement` (a opção é
+        // opcional desde 2026-09-12) e `footer?: HTMLElement`, e escondia
+        // `titleLevel` e `bodyLabel` — documentação que contradiz a fábrica é
+        // pior que documentação ausente, porque tem aval.
         const interfaceCode = `// createDrawer(options)
 export type DrawerOptions = {
-  trigger: HTMLElement;
+  trigger?: HTMLElement;
   direction?: 'bottom' | 'top' | 'left' | 'right';
   title?: string;
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   content: HTMLElement;
   footer?: HTMLElement | HTMLElement[];
-  initialFocus?: HTMLElement;
+  bodyLabel?: string;
   dismissible?: boolean;
   modal?: boolean;
+  initialFocus?: HTMLElement;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: DrawerCloseReason) => void;
   class?: string;
@@ -800,11 +851,14 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
               title: 'createDrawer(options)',
               cols: propsCols,
               items: [
-                { name: 'trigger',      type: 'HTMLElement',                 defaultValue: '—',     required: 'Sim', description: 'Elemento que abre o drawer ao receber click.' },
+                { name: 'trigger',      type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Elemento que abre o drawer ao receber click. Recebe aria-haspopup, aria-expanded e, com o painel aberto, aria-controls. Sem ele a gaveta abre por open().' },
                 { name: 'title',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Título — fonte do aria-labelledby (recomendado, mesmo se sr-only).' },
+                { name: 'titleLevel',   type: '1 | 2 | 3 | 4 | 5 | 6',       defaultValue: '2',     required: 'Não', description: 'Nível do cabeçalho do título. O painel não sabe de que profundidade da página foi aberto, e salto de nível é violação de heading-order.' },
                 { name: 'description',  type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Descrição — fonte do aria-describedby.' },
                 { name: 'content',      type: 'HTMLElement',                 defaultValue: '—',     required: 'Sim', description: 'Body do drawer.' },
-                { name: 'footer',       type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Container das ações.' },
+                { name: 'footer',       type: 'HTMLElement | HTMLElement[]',  defaultValue: '—',     required: 'Não', description: 'Ações do rodapé, na ordem do DOM: secundário primeiro, primário depois. Quem empilha e alinha é a folha.' },
+                { name: 'bodyLabel',    type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Nome acessível do corpo que rola. O corpo entra na ordem de tabulação, e parada de teclado precisa de papel e nome — sem nome nenhum papel é emitido.' },
+                { name: 'initialFocus', type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Elemento que recebe o foco na abertura, no lugar do primeiro focável. Use onde a decisão é a tela, para o Enter por reflexo cair na saída segura.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange.description') },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
                 { name: 'onClose',      type: '(reason: DrawerCloseReason) => void', defaultValue: '—', required: 'Não', description: 'Chamado no fechamento com o caminho que o causou: escape, overlay, close-button ou api. Quem escuta separa a gaveta que a pessoa dispensou da que o programa recolheu — no analytics essas duas nunca foram a mesma coisa.' },

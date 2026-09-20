@@ -135,12 +135,38 @@ export const WithForm: Story = {
       await expect(inside.getByLabelText(label("demonstration.labels.fieldEmail"))).toBeInTheDocument();
     });
 
-    await step("O rodapé oferece confirmar e cancelar", async () => {
+    await step("O rodapé escreve o secundário ANTES do primário", async () => {
       const footer = panel.querySelector<HTMLElement>("[data-slot='drawer-footer']")!;
       await expect(footer).not.toBeNull();
       const names = within(footer).getAllByRole("button").map((b) => b.textContent?.trim());
-      await expect(names).toContain("Confirmar");
-      await expect(names).toContain(label("demonstration.labels.cancel"));
+      // `toContain` dizia que os dois estão lá e não dizia em que ordem — era o
+      // que as CINCO stacks afirmavam, e é a pendência do §2 do PRD do Drawer.
+      // A D1 fixa uma ordem só de DOM para os dois eixos: secundário primeiro,
+      // porque o `column-reverse` põe o primário em cima quando empilha e o
+      // `row` o põe à direita quando cabe lado a lado.
+      await expect(names).toEqual([label("demonstration.labels.cancel"), "Confirmar"]);
+    });
+
+    await step("E a folha põe o primário no lugar certo do eixo que estiver valendo", async () => {
+      // A outra metade da D1: a mesma ordem de DOM tem de RENDERIZAR o primário
+      // em cima (empilhado) ou à direita (lado a lado). Afirmar só o DOM
+      // passaria com a folha invertida, que é exatamente o defeito corrigido em
+      // 2026-09-07 — `flex-direction: column` puro, com o primário embaixo.
+      const footer = panel.querySelector<HTMLElement>("[data-slot='drawer-footer']")!;
+      const cancelar = within(footer).getByRole("button", {
+        name: label("demonstration.labels.cancel"),
+      });
+      const confirmar = within(footer).getByRole("button", { name: "Confirmar" });
+      const eixo = getComputedStyle(footer).flexDirection;
+      await expect(["row", "column-reverse"]).toContain(eixo);
+
+      const boxCancelar = cancelar.getBoundingClientRect();
+      const boxConfirmar = confirmar.getBoundingClientRect();
+      if (eixo === "row") {
+        await expect(boxConfirmar.left).toBeGreaterThan(boxCancelar.left);
+      } else {
+        await expect(boxConfirmar.top).toBeLessThan(boxCancelar.top);
+      }
     });
 
     await step("Confirmar submete o formulário do corpo", async () => {
@@ -203,6 +229,13 @@ export const WithConfirmation: Story = {
               O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
             </DrawerDescription>
           </DrawerHeader>
+          {/* O corpo existia no vanilla — que é a referência — e no svelte, e
+              faltava aqui, no vue e no angular: as cinco páginas mostravam dois
+              painéis de confirmação diferentes, e comparar deixava de responder
+              alguma coisa. O texto é o do vanilla. */}
+          <DrawerBody className="nds-text-body nds-text-muted-foreground">
+            O anexo sai desta mensagem e continua na biblioteca.
+          </DrawerBody>
           <DrawerFooter>
             <DrawerClose asChild>
               <Button variant="outline">{t("demonstration.labels.cancel")}</Button>

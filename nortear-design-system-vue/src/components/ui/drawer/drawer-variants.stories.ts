@@ -289,6 +289,22 @@ export const WithScroll: Story = {
       await expect(body).toHaveAccessibleName('Termos de serviço');
     });
 
+    await step('O foco de abertura é o CORPO, não o painel', async () => {
+      // A asserção que DISTINGUE. As plays das cinco stacks afirmavam só "o
+      // foco está dentro do painel", e isso é verdade nas duas formas: painel
+      // focado também contém o foco. Foi assim que esta stack passou a ser a
+      // única a focar o próprio painel sem nada ficar vermelho (§7 #3 do PRD).
+      //
+      // O corpo é o primeiro focável deste painel — `tabindex="0"` por WCAG
+      // 2.1.1 —, e quem chega nele por Tab já pode rolar. O painel tem
+      // `tabindex="-1"`: focá-lo não é errado, é só uma parada a mais antes de
+      // qualquer coisa útil, e uma parada que só esta stack cobrava.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(body);
+      });
+      await expect(document.activeElement).not.toBe(panel);
+    });
+
     await step('O rodapé continua visível com o corpo cheio', async () => {
       const boxFooter = footer.getBoundingClientRect();
       const boxPanel = panel.getBoundingClientRect();
@@ -331,11 +347,20 @@ export const HeadingH3: Story = {
             <DrawerBody class="nds-text-body nds-text-muted-foreground">
               Conteúdo do painel.
             </DrawerBody>
+            <!--
+              Saída única, como nas outras stacks. Era um PAR (cancelar mais a
+              ação primária) e o assunto desta story não é o rodapé: react,
+              vanilla e angular mostram um fechador só aqui, e o par a mais
+              punha uma diferença de exemplo onde a comparação entre as cinco
+              páginas deveria ser sobre o NÍVEL do cabeçalho.
+
+              O par continua onde ele é o assunto: a WithScroll, logo acima,
+              e as duas composições.
+            -->
             <DrawerFooter>
               <DrawerClose as-child>
                 <Button variant="outline">${L.cancel}</Button>
               </DrawerClose>
-              <Button>${L.confirm}</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

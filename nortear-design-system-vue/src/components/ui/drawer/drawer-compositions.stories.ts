@@ -128,12 +128,29 @@ export const WithForm: Story = {
       await expect(inside.getByLabelText(L.fieldEmail)).toBeInTheDocument();
     });
 
-    await step('O rodapé oferece confirmar e cancelar', async () => {
+    await step('O rodapé escreve o secundário ANTES do primário', async () => {
       const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
       await expect(footer).not.toBeNull();
       const names = within(footer).getAllByRole('button').map((b) => b.textContent?.trim());
-      await expect(names).toContain('Confirmar');
-      await expect(names).toContain(L.cancel);
+      // `toContain` dizia que os dois estão lá e não dizia em que ordem — era o
+      // que as CINCO stacks afirmavam, e é a pendência do §2 do PRD. A D1 fixa
+      // uma ordem só de DOM para os dois eixos: secundário primeiro, porque o
+      // `column-reverse` põe o primário em cima quando empilha e o `row` o põe
+      // à direita quando cabe lado a lado.
+      await expect(names).toEqual([L.cancel, 'Confirmar']);
+    });
+
+    await step('E é a folha que decide o eixo, não a marcação', async () => {
+      const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+      // A outra metade da D1: a mesma ordem de DOM tem de RENDERIZAR o primário
+      // em cima (empilhado) ou à direita (lado a lado). Afirmar só o DOM
+      // passaria com a folha invertida, que é exatamente o defeito corrigido em
+      // 2026-09-07 — `flex-direction: column` puro, primário embaixo.
+      //
+      // O ponto de corte é o da folha: `@media (min-width: 40rem)`, e 40rem são
+      // 640px na raiz de 16px.
+      const eixoEsperado = window.innerWidth >= 640 ? 'row' : 'column-reverse';
+      await expect(getComputedStyle(footer).flexDirection).toBe(eixoEsperado);
     });
 
     await step('Confirmar submete o formulário do corpo', async () => {
@@ -177,6 +194,15 @@ export const WithConfirmation: Story = {
               <DrawerTitle>Remover anexo?</DrawerTitle>
               <DrawerDescription>O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
             </DrawerHeader>
+            <!--
+              O corpo existe: o vanilla (referência) e o svelte o renderizam, e
+              esta stack, o react e o angular não. Divergência de EXEMPLO — as
+              cinco páginas mostram o mesmo painel, ou comparar uma com a outra
+              deixa de responder alguma coisa.
+            -->
+            <DrawerBody class="nds-text-body nds-text-muted-foreground">
+              O anexo sai desta mensagem e continua na biblioteca.
+            </DrawerBody>
             <DrawerFooter>
               <DrawerClose as-child>
                 <Button variant="outline">${L.cancel}</Button>
@@ -205,13 +231,16 @@ export const WithConfirmation: Story = {
     });
 
     await step('O foco abre no cancelar, não na ação destrutiva', async () => {
-      // O ELEMENTO, não a mera presença de foco: o padrão desta stack é focar o
-      // PAINEL, e painel focado também tem foco dentro — é justamente o que esta
-      // story recusa.
+      // O ELEMENTO, não a mera presença de foco: o padrão é o PRIMEIRO focável,
+      // que neste painel é o corpo rolável — e corpo focado também tem foco
+      // dentro do painel. É justamente o que esta story recusa: aqui a decisão
+      // É a tela, e o Enter por reflexo tem de cair na saída segura.
+      const body = panel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
       const cancelar = inside.getByRole('button', { name: L.cancel });
       const destrutivo = inside.getByRole('button', { name: /^Remover$/i });
       await waitFor(() => expect(cancelar).toHaveFocus());
       await expect(destrutivo).not.toHaveFocus();
+      await expect(body).not.toHaveFocus();
     });
   },
 };

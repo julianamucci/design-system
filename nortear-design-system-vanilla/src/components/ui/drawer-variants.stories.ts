@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
+import { waitForAnimationsDone } from '@/lib/wait-for-portal';
 import { createDrawer, type DrawerDirection } from './drawer';
 import { drawerHeadingH3Source, drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
@@ -191,8 +192,20 @@ export const Left: Story = {
       await expect(panel).toHaveAttribute('data-direction', 'left');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Menu');
-      // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
-      await expect(panel.getBoundingClientRect().left).toBeLessThan(1);
+      // Ocupa a altura inteira, ENCOSTADA na borda — ao contrário de bottom/top.
+      //
+      // `Math.abs`, e a espera, os dois de propósito. A forma anterior era
+      // `left < 1`, e ela não tinha dentes: com o painel em `left: -384`, isto
+      // é INTEIRAMENTE fora da tela, `-384 < 1` continua verdadeiro. Só
+      // reprovaria um painel parado à direita de x=1 — que não é o defeito que
+      // esta story existe para pegar.
+      //
+      // A espera é `waitForAnimationsDone` e não `waitForPortal`: aquele gateia
+      // na OPACIDADE (> 0.9), e opacidade e transform compartilham a mesma
+      // curva — a 0,9 de opacidade o painel ainda está a ~38px da borda. Quem
+      // mede geometria espera a animação ACABAR. Leitura pura, sem tocar o DOM.
+      await waitForAnimationsDone(panel);
+      await expect(Math.abs(panel.getBoundingClientRect().left)).toBeLessThan(2);
     });
   },
 };
@@ -226,6 +239,10 @@ export const Right: Story = {
       await expect(panel).toHaveAttribute('data-direction', 'right');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Filtros');
+      // Mesma espera da `Left`, e pelo mesmo motivo: o painel entra deslocado
+      // pela própria largura, e medir antes de a animação acabar lê o caminho,
+      // não o destino.
+      await waitForAnimationsDone(panel);
       const box = panel.getBoundingClientRect();
       await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });

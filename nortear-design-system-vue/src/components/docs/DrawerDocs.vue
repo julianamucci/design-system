@@ -279,6 +279,32 @@ const codeImportBasic = `import {
   DrawerTrigger,
 } from "@/components/ui/drawer";`;
 
+/**
+ * Segundo bloco da Importação — a composição mínima.
+ *
+ * Existe em svelte, vanilla e angular, e faltava aqui: o bloco de import
+ * sozinho lista nove peças e não diz como elas se encaixam, que é justamente a
+ * pergunta de quem chega nesta seção. O `as-child` do gatilho e do fechador não
+ * é enfeite — sem ele o design system renderizaria um botão DENTRO de outro.
+ */
+const codeImportUsage = `<Drawer direction="bottom">
+  <DrawerTrigger as-child>
+    <Button variant="outline">Abrir</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Editar perfil</DrawerTitle>
+      <DrawerDescription>Atualize seus dados.</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+      <Button>Salvar</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+
 // ─── Exemplo por direção — uma fonte só para a prévia e para o snippet ───────
 //
 // As duas superfícies leem as MESMAS chaves: o rótulo curto nomeia o painel, o
@@ -865,6 +891,8 @@ const a11yCritCols = computed(() => ({
     <!-- ── Importação ───────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      :secondary-code="codeImportUsage"
+      component-slug="drawer"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
@@ -1225,20 +1253,28 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
     <DocsRelated
+      component-slug="drawer"
       :items="relatedItems"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
     <DocsNotes
+      component-slug="drawer"
       :items="noteItems"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
+    <!--
+      As colunas saem do vocabulário compartilhado, como no vanilla (a
+      referência), no angular e no svelte. Estavam CRAVADAS em pt-BR: a página
+      inteira trocava de idioma e esta tabela seguia dizendo "Evento / Quando
+      dispara / Payload" em inglês e em espanhol.
+    -->
     <DocsAnalytics
       :cols="{
-        event: 'Evento',
-        trigger: 'Quando dispara',
-        payload: 'Payload',
+        event: tNav('common.event'),
+        trigger: tNav('common.eventTrigger'),
+        payload: tNav('common.payload'),
       }"
       :items="analyticsItems"
     />

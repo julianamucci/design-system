@@ -120,11 +120,15 @@ describe('transform da story de nível do título', () => {
     // `h2` é o padrão do primitivo: quem não pede nível não escreve prop
     // nenhuma, e o snippet não ensina a repetir o padrão.
     expect(drawerBaixoSource()).toContain('<DrawerTitle>Detalhes do pedido</DrawerTitle>');
-    // Fora o nível, é a forma canônica: gatilho, corpo e o par de ações. O
+    // Fora o nível, é a forma canônica: gatilho, corpo e a saída do rodapé. O
     // assunto é a tag, não uma composição nova a comparar linha a linha.
     expect(output).toContain('<DrawerTrigger as-child>');
     expect(output).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');
-    expect(output).toContain('<Button>Salvar alterações</Button>');
+    // Saída ÚNICA, como na story e como em react, vanilla e angular. Era um par
+    // com `Salvar alterações`, e o par punha no snippet uma diferença de
+    // exemplo que não é o assunto desta story.
+    expect(output).toContain('<Button variant="outline">Cancelar</Button>');
+    expect(output).not.toContain('Salvar alterações');
     // A direção padrão continua sendo a que não se escreve.
     expect(output).not.toContain('direction=');
   });
@@ -145,12 +149,16 @@ describe('transforms das stories de estado', () => {
     expect(output).not.toContain('DrawerTrigger');
   });
 
-  it('o controlado liga o par prop+evento e põe os botões do lado de fora', () => {
+  it('o controlado liga o par prop+evento e põe UM botão do lado de fora', () => {
     const output = drawerControlledSource();
     expect(output).toContain('const aberto = ref(false)');
     expect(output).toContain('<Drawer :open="aberto" @update:open="aberto = $event">');
     expect(output).toContain('<Button @click="aberto = true">Abrir via estado externo</Button>');
     expect(output).not.toContain('DrawerTrigger');
+    // O segundo botão externo saiu, aqui e na story: com o painel modal aberto
+    // o `body` fica em `pointer-events: none`, e ele era um botão na tela que
+    // ninguém conseguia clicar. Snippet que ensina isso ensina errado.
+    expect(output).not.toContain('Fechar via estado externo');
   });
 
   it('sem dispensa por gesto, a saída explícita do rodapé continua no snippet', () => {
@@ -201,10 +209,15 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('<Button type="button" variant="outline">Cancelar</Button>');
   });
 
-  it('a confirmação marca a ação principal e dispensa o corpo', () => {
+  it('a confirmação marca a ação principal e traz o corpo do exemplo', () => {
     const output = drawerWithConfirmSource();
     expect(output).toContain('<Button variant="destructive">Remover</Button>');
-    expect(output).not.toContain('DrawerBody');
+    // O corpo existe, como na story e como no vanilla (referência) e no svelte.
+    // Este caso cobrava o CONTRÁRIO — `not.toContain('DrawerBody')` —, e era um
+    // teste verde guardando a divergência de exemplo (§7 #15 do PRD).
+    expect(output).toContain('O anexo sai desta mensagem e continua na biblioteca.');
+    // A decisão É a tela: o foco entra na saída segura, não no corpo.
+    expect(output).toContain('<DrawerContent initial-focus="close">');
     // A consequência está escrita, não subentendida.
     expect(output).toContain('Você pode adicioná-lo novamente depois.');
   });

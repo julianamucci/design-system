@@ -107,6 +107,23 @@ export async function waitForPortal(
   );
 }
 
+/**
+ * Espera as animações do elemento ACABAREM — não "quase".
+ *
+ * `waitForPortal` gateia em OPACIDADE (> 0.9), e isso não serve a quem mede
+ * geometria: nesta stack a `vaul` roda entrada de 500ms com
+ * `cubic-bezier(.32,.72,0,1)` no transform e `fadeIn` no véu, e as duas curvas
+ * correm juntas — quando a opacidade chega a 0,9 o painel ainda está a dezenas
+ * de pixels da borda. Asserção de posição feita ali lê o CAMINHO, não o destino.
+ *
+ * Leitura pura: `getAnimations()` não toca o DOM, então isto é seguro dentro ou
+ * fora de `waitFor`. `finished` rejeita quando a animação é cancelada (o painel
+ * fechou no meio), e aí não há o que esperar — daí o `catch`.
+ */
+export async function waitForAnimationsDone(el: Element): Promise<void> {
+  await Promise.all(el.getAnimations().map((a) => a.finished.catch(() => undefined)));
+}
+
 /** Aguarda portal fechar (útil pra testar Escape, click outside, etc.) */
 export async function waitForPortalGone(
   role: "tooltip" | "dialog" | "alertdialog" | "listbox" | "menu",

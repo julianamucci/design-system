@@ -18,6 +18,14 @@ export type DrawerArgs = {
   description: string;
   actionLabel: string;
   cancelLabel: string;
+  /**
+   * Rodapé: par cancelar + ação, ou saída única.
+   *
+   * As stories de direção e a de nível de cabeçalho renderizam a saída sozinha,
+   * como nas outras quatro stacks — e o snippet mostra o painel que está na
+   * tela, não um parente dele.
+   */
+  footer: 'pair' | 'close';
 };
 
 const IMPORT_BASE = `import {
@@ -63,8 +71,12 @@ type Frame = {
   description: string;
   /** Corpo entre o cabeçalho e o rodapé, já indentado em 4 espaços. */
   body?: string;
-  actionLabel: string;
+  actionLabel?: string;
   cancelLabel: string;
+  /** Ver a nota de `footer` em `DrawerArgs`. */
+  footer?: 'pair' | 'close';
+  /** A ação primária se anuncia destrutiva — só onde ela de fato destrói. */
+  destructiveAction?: boolean;
   /**
    * Painel de confirmação: o foco entra no fechador do rodapé, a saída segura.
    * Só onde a decisão É a tela — no painel de formulário o padrão fica.
@@ -138,6 +150,8 @@ function panel({
   body = '',
   actionLabel,
   cancelLabel,
+  footer = 'pair',
+  destructiveAction = false,
   focusOnSafeExit = false,
   formId,
 }: Frame): string {
@@ -150,7 +164,13 @@ function panel({
   const contentProps = focusOnSafeExit
     ? ' bind:ref={panelEl} onOpenAutoFocus={focusSafeExit}'
     : '';
-  const acaoProps = formId ? ` type="submit" form="${formId}"` : '';
+  const acaoProps = attrs(
+    destructiveAction ? 'variant="destructive"' : '',
+    formId ? `type="submit" form="${formId}"` : '',
+  );
+  // A ação primária só entra no rodapé de par. Onde a story renderiza a saída
+  // sozinha, o snippet renderiza a saída sozinha — ele é o que se copia.
+  const primaryAction = footer === 'close' ? '' : `\n      <Button${acaoProps}>${actionLabel}</Button>`;
 
   return svelteSnippet(
     `${importTick}${imports}
@@ -172,8 +192,7 @@ let open = $state(${isOpen});${focusOnSafeExit ? `\n${FOCUS_SCRIPT}` : ''}`,
         {#snippet child({ props })}
           <Button variant="outline" {...props}>${cancelLabel}</Button>
         {/snippet}
-      </DrawerClose>
-      <Button${acaoProps}>${actionLabel}</Button>
+      </DrawerClose>${primaryAction}
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -192,6 +211,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
     description = 'Atualize seus dados pessoais e foto.',
     actionLabel = 'Confirmar',
     cancelLabel = 'Cancelar',
+    footer = 'pair',
   } = ctx?.args ?? {};
 
   return panel({
@@ -203,6 +223,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
     description,
     actionLabel,
     cancelLabel,
+    footer,
   });
 }
 
@@ -215,16 +236,23 @@ export function drawerHeadingH3Source(): string {
   return panel({
     isOpen: true,
     titleLevel: 3,
+    // Saída única no rodapé, como a story e como react, vanilla e angular: o
+    // assunto é o nível do cabeçalho, e um par de ações aqui daria ao exemplo
+    // uma segunda lição que ele não ensina.
+    footer: 'close',
     triggerLabel: 'Editar perfil',
     title: 'Editar perfil',
     description: 'Atualize seus dados.',
-    actionLabel: 'Salvar alterações',
     cancelLabel: 'Cancelar',
   });
 }
 
 /**
- * Composição com formulário curto no corpo, em painel lateral.
+ * Composição com formulário curto no corpo.
+ *
+ * Direção padrão — a mesma das outras quatro stacks. A direção não é o assunto
+ * desta composição, e escolher outra aqui só faria as cinco páginas divergirem
+ * no exemplo.
  *
  * Quem confirma é o ENVIO do formulário, e o elo é o par id ↔ `form`: ver a
  * nota de `formId` em `Frame`. Sem ele o botão fica inerte e o Enter num campo
@@ -238,7 +266,6 @@ export function drawerWithFormSource(): string {
   return panel({
     imports: IMPORT_WITH_FIELDS,
     isOpen: true,
-    direction: 'right',
     triggerLabel: 'Editar dados',
     title: 'Editar dados pessoais',
     description: 'Atualize seu nome e e-mail.',
@@ -283,6 +310,8 @@ export function drawerWithConfirmSource(): string {
     body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita depois.</p>
     </DrawerBody>`,
+    // A ação que remove se anuncia destrutiva, como nas outras quatro stacks.
+    destructiveAction: true,
     actionLabel: 'Remover',
     cancelLabel: 'Cancelar',
   });

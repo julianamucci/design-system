@@ -5,7 +5,7 @@ import { NDS_DRAWER } from './drawer';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPousado } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
@@ -134,6 +134,9 @@ export const WithForm: Story = {
   }),
   play: async ({ step }) => {
     const panel = await waitForPortal('dialog');
+    // A entrada anima; medir geometria de rodapé antes de assentar leria o
+    // painel no meio do caminho. Espera de relógio, leitura pura.
+    await waitForPousado(panel);
     const inside = within(panel);
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
@@ -147,10 +150,29 @@ export const WithForm: Story = {
     });
 
     await step('O rodapé oferece cancelar e confirmar, nessa ordem de leitura', async () => {
-      const buttons = inside.getAllByRole('button');
-      const names = buttons.map((b) => b.textContent?.trim());
-      await expect(names).toContain(LABEL.close());
-      await expect(names).toContain(LABEL.confirmar());
+      // O RODAPÉ, e não o painel inteiro. A asserção anterior contava os botões
+      // de tudo que está montado — gatilho e o que mais houvesse — e por isso
+      // continuaria passando com o rodapé vazio, desde que os nomes
+      // aparecessem em qualquer lugar do painel.
+      const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+      await expect(footer).not.toBeNull();
+      const buttons = within(footer).getAllByRole('button');
+      await expect(buttons).toHaveLength(2);
+
+      // A ORDEM no DOM é contrato (D1 do PRD), e nenhuma das cinco stacks a
+      // afirmava. Escreve-se o SECUNDÁRIO primeiro porque uma ordem serve os
+      // dois eixos: `column-reverse` põe o primário em cima quando empilha, e
+      // `row` + `justify-end` o põe à direita quando cabe lado a lado. Inverter
+      // a marcação para "consertar" um dos eixos quebra o outro — e é por isso
+      // que a segunda metade desta asserção lê o eixo computado.
+      await expect(buttons[0]).toHaveAccessibleName(LABEL.close());
+      await expect(buttons[1]).toHaveAccessibleName(LABEL.confirmar());
+
+      // O eixo depende do ponto de corte de 40rem da folha, então o esperado sai
+      // da largura real da janela — cravar um dos dois valores daria uma
+      // asserção que passa por acaso na largura da suíte.
+      const axis = getComputedStyle(footer).flexDirection;
+      await expect(axis).toBe(window.innerWidth >= 640 ? 'row' : 'column-reverse');
     });
 
     await step('A ação primária submete o formulário do corpo', async () => {
@@ -238,9 +260,15 @@ export const WithConfirmation: Story = {
   }),
   play: async ({ step }) => {
     const panel = await waitForPortal('dialog');
+    await waitForPousado(panel);
     const inside = within(panel);
 
     await step('A consequência está escrita, não subentendida', async () => {
+      // Nome E descrição: as outras quatro stacks afirmam os dois, e sozinha a
+      // descrição não prova que o painel tem de onde tirar nome.
+      await expect(panel).toHaveAccessibleName(
+        stripHtml(t('variants.compositions.withConfirmation.name')),
+      );
       await expect(panel).toHaveAccessibleDescription(LABEL.warning());
     });
 

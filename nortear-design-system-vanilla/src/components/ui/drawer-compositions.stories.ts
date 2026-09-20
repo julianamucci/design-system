@@ -112,12 +112,36 @@ export const WithForm: Story = {
       await expect(inside.getByLabelText(/E-mail/i)).toBeInTheDocument();
     });
 
-    await step('O rodapé oferece confirmar e cancelar', async () => {
+    await step('O rodapé oferece confirmar e cancelar, NESSA ordem no DOM', async () => {
       const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
       await expect(footer).not.toBeNull();
       const names = within(footer).getAllByRole('button').map((b) => b.textContent?.trim());
-      await expect(names).toContain('Confirmar');
-      await expect(names).toContain('Cancelar');
+      // `toContain` diz que os dois estão lá e não diz em que ordem — era o que
+      // as CINCO stacks afirmavam, e é a pendência do §2 do PRD do Drawer. A
+      // D1 fixa uma ordem só de DOM para os dois eixos: secundário primeiro,
+      // porque o `column-reverse` põe o primário em cima quando empilha e o
+      // `row` o põe à direita quando cabe lado a lado.
+      await expect(names).toEqual(['Cancelar', 'Confirmar']);
+    });
+
+    await step('E a folha põe o primário no lugar certo do eixo que estiver valendo', async () => {
+      // A outra metade da D1: a mesma ordem de DOM tem de RENDERIZAR o primário
+      // em cima (empilhado) ou à direita (lado a lado). Afirmar só o DOM
+      // passaria com a folha invertida, que é exatamente o defeito corrigido em
+      // 2026-09-07 — `flex-direction: column` puro, primário embaixo.
+      const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+      const cancelar = within(footer).getByRole('button', { name: 'Cancelar' });
+      const confirmar = within(footer).getByRole('button', { name: 'Confirmar' });
+      const eixo = getComputedStyle(footer).flexDirection;
+      await expect(['row', 'column-reverse']).toContain(eixo);
+
+      const boxCancelar = cancelar.getBoundingClientRect();
+      const boxConfirmar = confirmar.getBoundingClientRect();
+      if (eixo === 'row') {
+        await expect(boxConfirmar.left).toBeGreaterThan(boxCancelar.left);
+      } else {
+        await expect(boxConfirmar.top).toBeLessThan(boxCancelar.top);
+      }
     });
 
     await step('Confirmar submete o formulário do corpo', async () => {
@@ -202,6 +226,16 @@ export const WithConfirmation: Story = {
     await step('O foco abre no cancelar, que é a saída segura', async () => {
       const cancelar = inside.getByRole('button', { name: /^Cancelar$/i });
       await expect(cancelar).toHaveFocus();
+      // E a ação que CONSUMA não tem o foco. Era a metade que faltava aqui e
+      // que as outras quatro stacks já afirmavam (§7 inconsistência 15 do PRD).
+      //
+      // Honestidade sobre o que ela acrescenta: num DOM com um foco só, ela
+      // SEGUE da linha acima, e um defeito plantado reprova as duas juntas. O
+      // que ela acrescenta é o contrato ESCRITO — a D12 é "o Enter por reflexo
+      // cai na saída segura, nunca na ação que consuma", e essa segunda metade
+      // não estava dita em lugar nenhum desta stack.
+      const destrutivo = inside.getByRole('button', { name: /^Remover$/i });
+      await expect(destrutivo).not.toHaveFocus();
     });
 
     await step('Sem formulário no corpo, a ação não promete envio', async () => {

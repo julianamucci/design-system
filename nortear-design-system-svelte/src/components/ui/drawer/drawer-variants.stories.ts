@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import {
   drawerHeadingH3Source,
@@ -45,14 +45,22 @@ type Story = StoryObj;
 // helper compartilhado esconderia da leitura o único contrato que cada uma
 // destas quatro stories verifica.
 
+// ─── O rodapé destas stories é uma saída SÓ ────────────────────────────────
+//
+// `footer: 'close'` e `cancelLabel: 'Fechar'`: o que muda entre as quatro
+// direções é a prop `direction`, e o rodapé é cenário. As outras quatro stacks
+// renderizam um `Fechar` sozinho aqui; um par cancelar/confirmar nesta e um
+// botão nas demais fazia a comparação das cinco páginas deixar de responder o
+// que ela existe para responder.
+
 export const Bottom: Story = {
   args: {
     direction: 'bottom',
     defaultOpen: true,
+    footer: 'close',
     title: 'Detalhes do pedido',
     description: 'Pedido #4287 confirmado em 15 de março.',
-    actionLabel: 'Aplicar',
-    cancelLabel: 'Cancelar',
+    cancelLabel: 'Fechar',
   },
   parameters: {
     covers: ['accessibility.item6', 'visual.item1'],
@@ -81,10 +89,10 @@ export const Top: Story = {
   args: {
     direction: 'top',
     defaultOpen: true,
+    footer: 'close',
     title: 'Nova versão disponível',
     description: 'Atualize agora para acessar as novidades.',
-    actionLabel: 'Ver detalhes',
-    cancelLabel: 'Dispensar',
+    cancelLabel: 'Fechar',
   },
   parameters: {
     covers: ['visual.item4'],
@@ -111,10 +119,10 @@ export const Left: Story = {
   args: {
     direction: 'left',
     defaultOpen: true,
+    footer: 'close',
     title: 'Menu',
     description: 'Navegue pelas seções do app.',
-    actionLabel: 'Confirmar',
-    cancelLabel: 'Cancelar',
+    cancelLabel: 'Fechar',
   },
   parameters: {
     covers: ['visual.item3'],
@@ -132,7 +140,19 @@ export const Left: Story = {
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Menu');
       // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
-      await expect(panel.getBoundingClientRect().left).toBeLessThan(1);
+      //
+      // `Math.abs` e `waitFor`, os dois de propósito. A forma antiga era
+      // `left < 1`, e −384 também é menor que 1: ela passava justamente no
+      // estado que deveria reprovar — o painel INTEIRAMENTE fora da tela,
+      // deslocado pela própria largura no começo da entrada. Medido nesta
+      // stack: em t=2ms o painel está em `left 0`, em t=3ms salta para −384 e
+      // só então desliza. O `waitForPortal` gateia na opacidade, e o painel se
+      // move por transform: quem espera a POSIÇÃO é esta espera.
+      //
+      // Leitura pura dentro do `waitFor` — nada aqui mexe no DOM.
+      await waitFor(async () => {
+        await expect(Math.abs(panel.getBoundingClientRect().left)).toBeLessThan(2);
+      });
     });
   },
 };
@@ -141,10 +161,10 @@ export const Right: Story = {
   args: {
     direction: 'right',
     defaultOpen: true,
+    footer: 'close',
     title: 'Filtros',
     description: 'Refine sua busca por categoria, preço e disponibilidade.',
-    actionLabel: 'Salvar',
-    cancelLabel: 'Cancelar',
+    cancelLabel: 'Fechar',
   },
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
@@ -161,8 +181,13 @@ export const Right: Story = {
       await expect(panel).toHaveAttribute('data-direction', 'right');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Filtros');
-      const box = panel.getBoundingClientRect();
-      await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
+      // Mesma espera da `Left`, pelo mesmo motivo: o painel chega deslocado da
+      // própria largura para FORA da borda e só depois desliza para dentro.
+      // Sem a espera, a medida podia cair no meio da entrada.
+      await waitFor(async () => {
+        const box = panel.getBoundingClientRect();
+        await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
+      });
     });
   },
 };
@@ -234,10 +259,12 @@ export const HeadingH3: Story = {
     direction: 'bottom',
     defaultOpen: true,
     titleLevel: 3,
+    // Saída única, como em react, vanilla e angular: o assunto desta story é o
+    // NÍVEL do cabeçalho, e o rodapé é cenário.
+    footer: 'close',
     triggerLabel: t('demonstration.labels.trigger'),
     title: t('demonstration.labels.title'),
     description: t('demonstration.labels.description'),
-    actionLabel: t('demonstration.labels.confirm'),
     cancelLabel: t('demonstration.labels.cancel'),
   },
   parameters: {

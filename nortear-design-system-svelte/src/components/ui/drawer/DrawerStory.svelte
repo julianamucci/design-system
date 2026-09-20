@@ -10,6 +10,8 @@
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
+    createDrawerCloseWatch,
+    type DrawerCloseReason,
   } from './index';
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
@@ -34,8 +36,32 @@
      * primitivo — é o que todas as outras stories deste andaime exercitam.
      */
     titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    /**
+     * Rodapé do painel.
+     *
+     * `pair` é o par cancelar + ação primária; `close` é a saída única, que é o
+     * que as outras quatro stacks renderizam nas stories de direção e de nível
+     * de cabeçalho. O exemplo tem de ser o mesmo nas cinco.
+     */
+    footer?: 'pair' | 'close';
+    /**
+     * Estado comandado de FORA, sem `DrawerTrigger` interno.
+     *
+     * É o que a story `Controlled` existe para demonstrar, e é a forma das
+     * outras quatro stacks: um botão da página escreve o estado ligado, e o
+     * painel não tem gatilho próprio nenhum.
+     */
+    externalControl?: boolean;
     onAction?: () => void;
     onCancel?: () => void;
+    /**
+     * Espelho da fiação de analytics da docs page — ver `drawerWatch` em
+     * `DrawerDocs.svelte`. Não é enfeite de andaime: é o que permite a uma story
+     * CONTAR quantos `drawer_close` um fechamento produz, que é justamente o
+     * defeito que nenhuma asserção de "o evento saiu" enxerga.
+     */
+    onOpenEvent?: () => void;
+    onCloseEvent?: (reason: DrawerCloseReason) => void;
   }
 
   // `defaultOpen` não existe no primitivo desta stack: a prop era passada,
@@ -55,9 +81,32 @@
     cancelLabel = 'Cancelar',
     variant = 'default',
     titleLevel,
+    footer = 'pair',
+    externalControl = false,
     onAction,
     onCancel,
+    onOpenEvent,
+    onCloseEvent,
   }: Props = $props();
+
+  /**
+   * Fiação de analytics igual à da docs page: uma instância de observação para o
+   * painel, o motivo anotado no gesto e LIDO no anúncio de fechamento.
+   *
+   * `reset()` na abertura e `takeReason()` no fechamento são o par que o
+   * `close-reason.ts` publica; repeti-lo aqui é o que faz a story medir o mesmo
+   * caminho que o produto percorre, e não uma sonda com forma própria.
+   */
+  const closeWatch = createDrawerCloseWatch();
+
+  function handleOpenChange(isOpen: boolean): void {
+    if (isOpen) {
+      closeWatch.reset();
+      onOpenEvent?.();
+      return;
+    }
+    onCloseEvent?.(closeWatch.takeReason());
+  }
 
   /**
    * Id do `<form>` da variante de formulário, e o elo da ação primária com ele.
@@ -108,14 +157,31 @@
 </script>
 
 <div style="contain: layout">
-  {#key `${direction}-${defaultOpen}-${dismissible}-${variant}`}
-      <Drawer bind:open {direction} {dismissible}>
-        <DrawerTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>{triggerLabel}</Button>
-          {/snippet}
-        </DrawerTrigger>
+  {#key `${direction}-${defaultOpen}-${dismissible}-${variant}-${externalControl}-${footer}`}
+      {#if externalControl}
+        <!--
+          O botão fica FORA da raiz: quem comanda o painel é a página, e é essa
+          a única forma em que a story prova o estado externo.
+
+          UM botão, como no vanilla (a referência) e no angular. Um segundo, de
+          fechar, seria inalcançável: com o painel modal aberto o `body` fica em
+          `pointer-events: none` e o clique de fora não chega nele. A saída é a
+          do rodapé, que está dentro do painel.
+        -->
+        <div class="nds-cluster" data-spacing="md">
+          <Button onclick={() => (open = true)}>{triggerLabel}</Button>
+        </div>
+      {/if}
+      <Drawer bind:open {direction} {dismissible} onOpenChange={handleOpenChange} {...closeWatch.drag}>
+        {#if !externalControl}
+          <DrawerTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>{triggerLabel}</Button>
+            {/snippet}
+          </DrawerTrigger>
+        {/if}
         <DrawerContent
+          {...closeWatch.listeners}
           bind:ref={panelEl}
           onOpenAutoFocus={variant === 'withConfirmation' ? focusSafeExit : undefined}
         >
@@ -198,13 +264,21 @@
               </Button>
               {/snippet}
             </DrawerClose>
-            <Button
-              type={isFormVariant ? 'submit' : 'button'}
-              form={isFormVariant ? FORM_ID : undefined}
-              onclick={onAction}
-            >
-              {actionLabel}
-            </Button>
+            {#if footer === 'pair'}
+              <!--
+                A ação principal da confirmação é DESTRUTIVA, como nas outras
+                quatro stacks: a variante é o que separa "remover" de "salvar"
+                antes de a pessoa ler o rótulo.
+              -->
+              <Button
+                variant={variant === 'withConfirmation' ? 'destructive' : 'default'}
+                type={isFormVariant ? 'submit' : 'button'}
+                form={isFormVariant ? FORM_ID : undefined}
+                onclick={onAction}
+              >
+                {actionLabel}
+              </Button>
+            {/if}
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

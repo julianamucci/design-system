@@ -33,26 +33,34 @@ const props = withDefaults(
       /**
        * Onde o foco entra na abertura.
        *
-       * `panel` é o padrão, e é o certo para o painel que serve a uma edição: o
-       * leitor de tela anuncia o diálogo antes de qualquer campo, e quem só quer
-       * editar não paga um Tab a mais.
+       * `first` é o padrão: o PRIMEIRO focável de dentro do painel — que é o
+       * corpo rolável quando ele existe, porque o corpo carrega `tabindex="0"`
+       * por WCAG 2.1.1. É o que as outras quatro stacks fazem (a referência
+       * escreve `getFocusable(panelEl)[0]`, e nas três com lib headless o foco
+       * automático do diálogo cai no primeiro tabbable), e foi por isso que
+       * mudou: até 2026-09-20 esta stack focava o PRÓPRIO painel e era a única
+       * das cinco a fazê-lo.
        *
        * `close` é para o painel cuja decisão É a tela — a confirmação. Ali o
        * foco vai para o fechador do rodapé, que é a saída segura, como o
        * AlertDialog faz: o Enter por reflexo não pode cair na ação que consuma.
        *
+       * Em qualquer dos dois, o painel é o ÚLTIMO recurso: sem nada focável
+       * dentro, um diálogo modal aberto com o foco do lado de fora é pior que
+       * um Tab a mais.
+       *
        * Isto é prop, e não um gancho da lib, porque a lib desta stack CANCELA o
        * foco automático do diálogo (ver o bloco de `moveFocusInside` abaixo) e
        * não repassa o evento — quem escolhe o alvo aqui é este componente.
        */
-      initialFocus?: 'panel' | 'close'
+      initialFocus?: 'first' | 'close'
     }
   >(),
   {
     forceMount: undefined,
     disableOutsidePointerEvents: undefined,
     asChild: undefined,
-    initialFocus: 'panel',
+    initialFocus: 'first',
   },
 )
 const emits = defineEmits<DialogContentEmits>()
@@ -104,15 +112,40 @@ const direction = useDrawerDirection()
  * quatro stacks levam o foco para dentro, e a referência do projeto é uma
  * delas. Então o foco é movido aqui, uma vez por abertura.
  *
- * O alvo padrão é o próprio painel (o primitivo já lhe dá `tabindex="-1"`), e
- * não o primeiro focável: focar direto um campo faria o leitor de tela anunciar
- * o campo sem antes anunciar o nome do diálogo.
+ * O alvo padrão é o PRIMEIRO FOCÁVEL de dentro do painel, e não o painel.
+ *
+ * Era o painel (o primitivo já lhe dá `tabindex="-1"`), com o argumento de que
+ * o leitor de tela anunciaria o diálogo antes de qualquer campo. O argumento
+ * não estava errado; o problema é que ele valia numa stack só. Medido em
+ * 2026-09-20: vanilla foca `getFocusable(panelEl)[0]`, e react, svelte e
+ * angular deixam o foco automático da lib cair no primeiro tabbable — que é o
+ * corpo rolável quando ele existe, porque o corpo carrega `tabindex="0"` por
+ * WCAG 2.1.1. Quatro contra uma, e a referência entre as quatro: um mesmo
+ * painel anunciava duas coisas diferentes conforme a stack que o renderizava.
  *
  * Com `initial-focus="close"` o alvo passa a ser o fechador do rodapé — só no
- * painel cuja decisão É a tela. Se ele não estiver lá, o painel continua sendo
- * o alvo: um diálogo aberto sem foco dentro é pior que um Tab a mais.
+ * painel cuja decisão É a tela. Se ele não estiver lá, cai no primeiro focável;
+ * e sem nenhum focável, no próprio painel: um diálogo aberto sem foco dentro é
+ * pior que um Tab a mais.
  */
 const panel = ref<{ $el?: unknown } | null>(null)
+
+/**
+ * Os focáveis de dentro do painel, na ordem do documento.
+ *
+ * Mesma lista da fábrica do vanilla (`getFocusable`), que é a referência. O
+ * filtro de `aria-hidden` é acréscimo desta stack: a lib cerca o conteúdo com
+ * âncoras de foco de 1px (`<span tabindex="0" aria-hidden="true">`) e uma
+ * âncora não é destino de foco inicial — é o mecanismo que devolve o Tab ao
+ * limite do painel.
+ */
+function focusableIn(el: HTMLElement): HTMLElement[] {
+  return Array.from(
+    el.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((node) => !node.closest('[hidden]') && !node.closest('[aria-hidden="true"]'))
+}
 
 async function moveFocusInside(instancia: { $el?: unknown }) {
   // Acompanha alguns quadros em vez de agir num instante só, porque a abertura
@@ -137,10 +170,11 @@ async function moveFocusInside(instancia: { $el?: unknown }) {
     if (!el.isConnected) return
     if (el.getAttribute('data-state') !== 'open') continue
     if (el.contains(document.activeElement)) return
+    const focusables = focusableIn(el)
     const target =
       props.initialFocus === 'close'
-        ? (el.querySelector<HTMLElement>('[data-slot="drawer-close"]') ?? el)
-        : el
+        ? (el.querySelector<HTMLElement>('[data-slot="drawer-close"]') ?? focusables[0] ?? el)
+        : (focusables[0] ?? el)
     target.focus()
   }
 }

@@ -153,9 +153,10 @@ describe('drawerPlaygroundSource', () => {
  * calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde 28
  * exports saíram do alcance e a suíte seguiu verde medindo menos.
  *
- * CATORZE stories, treze construtores: `States/DragToDismiss` reusa o do
- * Playground, e a exclusão está declarada no cabeçalho de `drawer.source.ts` e
- * cobrada no caso `reuso declarado` no fim deste arquivo.
+ * QUINZE stories, treze construtores: `States/DragToDismiss` e
+ * `States/EntryAnimation` reusam o do Playground, e as exclusões estão
+ * declaradas no cabeçalho de `drawer.source.ts` e cobradas nos casos de
+ * `reuso declarado`, no fim deste arquivo.
  */
 const CONSTRUCTORS: Array<{
   name: string;
@@ -575,5 +576,21 @@ describe('reuso declarado', () => {
     // ensinaria API inexistente.
     expect(code).not.toContain('swipe');
     expect(code).not.toContain('drag');
+  });
+
+  it('States/EntryAnimation também é servida pelo construtor do Playground', () => {
+    // A entrada não liga prop nenhuma: ela é da folha compartilhada mais o
+    // instante em que o marcador de partida entra no DOM. O painel que a story
+    // mede é o canônico, e é preciso que ele NASÇA FECHADO — um snippet com
+    // `defaultOpen` faria a story medir uma entrada que o leitor não veria ao
+    // copiar o código.
+    const code = drawerPlaygroundSource();
+    expect(code).toContain('<nds-drawer>');
+    expect(code).not.toContain('defaultOpen');
+    // Nem atributo de transição no snippet: `data-starting-style` é escrito
+    // pelo componente, e publicá-lo ensinaria markup que quem consome não
+    // escreve.
+    expect(code).not.toContain('data-starting-style');
+    expect(code).not.toContain('data-ending-style');
   });
 });

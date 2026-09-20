@@ -108,6 +108,21 @@ export const Closed: Story = {
       await expect(trigger).toHaveAttribute("data-slot", "drawer-trigger");
       await expect(trigger).toBeEnabled();
     });
+
+    await step("E ele ANUNCIA o diálogo, sem apontar para painel nenhum", async () => {
+      // O gatilho fechado promete um diálogo e diz que ele não está aberto. Sem
+      // isto, o botão se anuncia como botão comum e quem usa leitor de tela só
+      // descobre o que ele faz depois de apertar.
+      const trigger = canvas.getByRole("button", { name: /Abrir/i });
+      await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+      // Fechado NÃO tem `aria-controls`, e isso é medição, não suposição: a
+      // lib escreve `aria-controls={open ? contentId : undefined}`. O alvo não
+      // existe enquanto o painel não monta, e referência pendurada é pior que
+      // atributo ausente — o leitor de tela anunciaria um painel fora da
+      // árvore. A story `Open` afirma a outra metade.
+      await expect(trigger).not.toHaveAttribute("aria-controls");
+    });
   },
 };
 
@@ -147,8 +162,14 @@ export const Open: Story = {
       </div>
     );
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const panel = await waitForPortal("dialog");
+    // O gatilho é consultado por SELETOR, e não por papel: com o painel aberto a
+    // lib põe `aria-hidden` no resto da página, e consulta por papel não enxerga
+    // nada ali.
+    const trigger = canvasElement.querySelector<HTMLElement>(
+      "[data-slot='drawer-trigger']",
+    )!;
 
     await step("Monta já aberto, com o contrato de markup completo", async () => {
       await expect(panel).toBeVisible();
@@ -159,6 +180,17 @@ export const Open: Story = {
       await expect(document.querySelector("[data-slot='drawer-overlay']")).not.toBeNull();
     });
 
+    await step("Aberto, o gatilho aponta para o painel", async () => {
+      // A outra metade do anúncio que a `Closed` começa: `aria-expanded` vira
+      // `true` e o `aria-controls` NASCE, apontando para o id do painel que
+      // acabou de existir. Comparar com `panel.id` — e nunca com uma string —
+      // é o que impede a asserção de passar com o atributo apontando para
+      // qualquer coisa.
+      await expect(panel.id).toBeTruthy();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      await expect(trigger).toHaveAttribute("aria-controls", panel.id);
+    });
+
     await step("O foco está dentro do painel", async () => {
       await waitFor(() => {
         if (!panel.contains(document.activeElement)) {
@@ -166,6 +198,58 @@ export const Open: Story = {
         }
       });
       await expect(panel.contains(document.activeElement)).toBe(true);
+    });
+
+    // ── A entrada é animada ───────────────────────────────────────────────
+    //
+    // `Transitioning` é estado declarado no PRD (§6) e virou contrato das cinco
+    // stacks em 2026-09-20. Nesta stack a entrada já existia — a `vaul` injeta
+    // `slideFromBottom`, 500ms, `cubic-bezier(.32,.72,0,1)` — e NENHUMA story a
+    // afirmava. Contrato sem asserção foi o que deixou outra stack passar meses
+    // com a entrada inerte sem ninguém notar: ausência de movimento não deixa
+    // vermelho em compilador, folha nem axe.
+    await step("A entrada desliza a partir da borda, e assenta no repouso", async () => {
+      // Fecha para medir uma abertura LIMPA — a play já rodou os passos acima
+      // com o painel montado, e a animação de entrada daquele já terminou.
+      await userEvent.keyboard("{Escape}");
+      await waitForPortalGone("dialog");
+
+      await userEvent.click(trigger);
+      // Consulta por SELETOR e não `waitForPortal`: aquele espera a opacidade
+      // passar de 0,9, e a 0,9 metade do trajeto já foi. O que se mede aqui é o
+      // COMEÇO.
+      const prazo = Date.now() + 2000;
+      let entrando = document.querySelector<HTMLElement>("[data-slot='drawer-content']");
+      while (!entrando && Date.now() < prazo) {
+        await new Promise((r) => setTimeout(r, 4));
+        entrando = document.querySelector<HTMLElement>("[data-slot='drawer-content']");
+      }
+      await expect(entrando).not.toBeNull();
+      // Há animação EM CURSO neste instante: é a prova de que o painel não
+      // apareceu pronto no lugar.
+      await expect(entrando!.getAnimations().length).toBeGreaterThan(0);
+      const topoInicial = entrando!.getBoundingClientRect().top;
+
+      // Laço de RELÓGIO, com leitura direta. `waitFor` aqui seria a armadilha já
+      // registrada nesta casa: a condição força layout, o observador de mutação
+      // reagenda, a própria tentativa alimenta a seguinte e a aba morre sem
+      // reportar. `setTimeout` não tem esse laço.
+      const amostras: number[] = [topoInicial];
+      for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, 16));
+        amostras.push(entrando!.getBoundingClientRect().top);
+        if (entrando!.getAnimations().length === 0) break;
+      }
+      const topoFinal = amostras[amostras.length - 1];
+
+      await expect(entrando!.getAnimations().length).toBe(0);
+      // SUBIU, e por uma distância de painel — não por um pixel de
+      // arredondamento. Medido nesta máquina: 900 → 737.
+      await expect(topoInicial - topoFinal).toBeGreaterThan(8);
+      // E veio de fora para dentro, sem passar do ponto: o repouso é o MÍNIMO da
+      // série. A curva da lib não tem sobressalto, e se ganhasse um, isto
+      // reprovaria.
+      await expect(topoFinal - Math.min(...amostras)).toBeLessThan(0.5);
     });
   },
 };
@@ -190,9 +274,22 @@ export const Controlled: Story = {
       return (
         <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
           <div className="nds-cluster" data-spacing="md">
-            <Button onClick={() => setOpen(true)}>Abrir externamente</Button>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Fechar externamente
+            {/*
+              UM botão externo, como no vanilla — que é a referência — e no
+              angular. Havia um segundo, "Fechar externamente", e ele era um
+              botão INALCANÇÁVEL: com o painel modal aberto a lib põe
+              `pointer-events: none` no `body` (o `DismissableLayer` do diálogo
+              por baixo da `vaul`), e só o painel volta a receber ponteiro.
+              Quem quisesse clicá-lo não conseguia, e nenhuma asserção o
+              tocava — a docs page ensinava um caminho que não existe.
+
+              O fechamento por fora não some do contrato: ele continua sendo
+              `open={false}`, e quem o exercita na tela é a saída do rodapé, que
+              devolve o valor pelo callback (passo 3). `data-open` é o espelho
+              desse callback, e é ele que prova que a volta aconteceu.
+            */}
+            <Button data-open={String(open)} aria-haspopup="dialog" onClick={() => setOpen(true)}>
+              Abrir externamente
             </Button>
           </div>
           <Drawer open={open} onOpenChange={setOpen}>
@@ -215,15 +312,22 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+
+    // Saneamento por ESCAPE, e não por um botão externo: com o painel aberto o
+    // `body` está em `pointer-events: none` e nenhum clique fora do painel
+    // chega. É a mesma forma do vanilla e do angular.
+    if (within(document.body).queryAllByRole("dialog").length > 0) {
+      await userEvent.keyboard("{Escape}");
+      await waitForPortalGone("dialog");
+    }
+    // O botão é consultado DEPOIS do saneamento: com o painel aberto a lib põe
+    // `aria-hidden` no resto da página e a consulta por papel não o enxerga.
     const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
-    const closeBtn = canvas.getByRole("button", { name: /Fechar externamente/i });
 
     await step("Sem gatilho interno, o painel nasce fechado", async () => {
-      if (within(document.body).queryAllByRole("dialog").length > 0) {
-        await userEvent.click(closeBtn);
-        await waitForPortalGone("dialog");
-      }
       await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
+      // O espelho do callback concorda com a tela.
+      await expect(openBtn).toHaveAttribute("data-open", "false");
     });
 
     await step("O estado externo abre o painel", async () => {
@@ -231,6 +335,7 @@ export const Controlled: Story = {
       const panel = await waitForPortal("dialog");
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
+      await expect(openBtn).toHaveAttribute("data-open", "true");
     });
 
     await step("Fechar por dentro devolve o valor a quem é dono dele", async () => {
@@ -240,8 +345,9 @@ export const Controlled: Story = {
       );
       await waitForPortalGone("dialog");
       // Se o callback não tivesse chegado, `open` continuaria true e o painel
-      // reabriria no render seguinte.
+      // reabriria no render seguinte — e o espelho continuaria em `true`.
       await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
+      await expect(openBtn).toHaveAttribute("data-open", "false");
     });
   },
 };

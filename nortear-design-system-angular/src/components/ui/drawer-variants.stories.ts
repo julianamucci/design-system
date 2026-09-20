@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NDS_DRAWER, type DrawerDirection } from './drawer';
 import { NdsButton } from './button';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPousado } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
@@ -58,12 +58,24 @@ const LABEL = {
   close: () => t('usage.uxWriting.table.close.good'),
 };
 
+/**
+ * O título do painel de cada direção — o MESMO valor que o `render` escreve.
+ *
+ * Existe para a asserção poder cobrar o nome acessível COM VALOR. As quatro
+ * plays afirmavam `toHaveAccessibleName()` sem argumento, e nome sem valor passa
+ * com qualquer nome — inclusive com o nome errado, que é o defeito que o
+ * `aria-labelledby` deste componente pode ter (§7, inconsistência 12).
+ */
+function directionTitle(direction: DrawerDirection): string {
+  return stripHtml(t(`demonstration.labels.${direction}`));
+}
+
 /** Mesmo painel nas quatro direções — o que muda é `direction` e o título. */
 function panel(direction: DrawerDirection) {
   return () => ({
     props: {
       direction,
-      panelTitle: stripHtml(t(`demonstration.labels.${direction}`)),
+      panelTitle: directionTitle(direction),
       panelDescription: LABEL.description(),
       triggerLabel: LABEL.trigger(),
       closeLabel: LABEL.close(),
@@ -110,9 +122,13 @@ export const Bottom: Story = {
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
       const panelEl = await waitForPortal('dialog');
+      // A entrada ANIMA (200ms de transform + opacity). Assentar antes de medir
+      // ou fotografar é o que separa esta story de uma foto do painel no meio do
+      // caminho — e é espera de RELÓGIO com leitura pura, nunca `waitFor`.
+      await waitForPousado(panelEl);
       await expect(panelEl).toHaveAttribute('data-direction', 'bottom');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      await expect(panelEl).toHaveAccessibleName(directionTitle('bottom'));
 
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
@@ -138,9 +154,10 @@ export const Top: Story = {
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
       const panelEl = await waitForPortal('dialog');
+      await waitForPousado(panelEl);
       await expect(panelEl).toHaveAttribute('data-direction', 'top');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      await expect(panelEl).toHaveAccessibleName(directionTitle('top'));
 
       const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('none');
@@ -166,9 +183,20 @@ export const Left: Story = {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-direction', 'left');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
-      await expect(panelEl).toHaveAccessibleName();
-      // Ocupa a altura inteira, ao contrário de bottom/top.
-      await expect(panelEl.getBoundingClientRect().left).toBeLessThan(1);
+      await expect(panelEl).toHaveAccessibleName(directionTitle('left'));
+
+      // `Math.abs` e a espera, os dois de propósito — e a asserção anterior
+      // (`left < 1`) não tinha dentes: o painel ENTRA deslocado pela própria
+      // largura, então `left` vale −384 durante a transição, e −384 < 1 é
+      // verdade com o painel INTEIRO fora da tela. Era a forma que passava
+      // exatamente no estado que ela deveria reprovar.
+      //
+      // `waitForPousado` e não `waitFor`: espera de relógio, leitura pura,
+      // e ela exige que a caixa REPITA o mesmo valor — um `waitFor` fecharia no
+      // primeiro quadro em que a tolerância coubesse, que é o que deixou a
+      // asserção fraca em primeiro lugar.
+      await waitForPousado(panelEl);
+      await expect(Math.abs(panelEl.getBoundingClientRect().left)).toBeLessThan(2);
     });
   },
 };
@@ -191,7 +219,10 @@ export const Right: Story = {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-direction', 'right');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
-      await expect(panelEl).toHaveAccessibleName();
+      await expect(panelEl).toHaveAccessibleName(directionTitle('right'));
+      // Mesma espera de relógio da `Left`: aqui o painel chega 384px além da
+      // borda direita e só depois desliza para dentro.
+      await waitForPousado(panelEl);
       const box = panelEl.getBoundingClientRect();
       await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });
@@ -246,6 +277,7 @@ export const WithScroll: Story = {
   }),
   play: async ({ step }) => {
     const panelEl = await waitForPortal('dialog');
+    await waitForPousado(panelEl);
     const body = panelEl.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
     const footer = panelEl.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
 
@@ -328,6 +360,7 @@ export const HeadingH3: Story = {
       // `data-slot`: no Angular o host binding da diretiva disputa o atributo, e
       // a classe é o que existe em todas as stacks.
       const p = await waitForPortal('dialog');
+      await waitForPousado(p);
       const id = p.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
       const heading = document.getElementById(id!);

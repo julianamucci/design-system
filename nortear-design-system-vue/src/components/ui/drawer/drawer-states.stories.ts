@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor, fn } from 'storybook/test';
 import {
   Drawer,
   DrawerClose,
@@ -13,6 +13,12 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import {
+  createDrawerCloseWatch,
+  createDrawerDragWatch,
+  drawerCloseReason,
+  type DrawerCloseGesture,
+} from './drawer.close-reason';
 import {
   drawerOpenSource,
   drawerControlledSource,
@@ -116,6 +122,13 @@ export const Closed: Story = {
       await expect(trigger).toBeVisible();
       await expect(trigger).toHaveAttribute('data-slot', 'drawer-trigger');
       await expect(trigger).toBeEnabled();
+      // Metade fechada do anúncio: o gatilho diz que existe um diálogo atrás
+      // dele e que ele NÃO está aberto. O `aria-controls` não existe aqui — a
+      // lib o escreve só com o painel montado, e referência pendurada é pior
+      // que atributo ausente. A `Open` afirma a outra metade.
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).not.toHaveAttribute('aria-controls');
     });
   },
 };
@@ -138,6 +151,16 @@ export const Open: Story = {
     template: `
       <div style="contain: layout">
         <Drawer :default-open="true">
+          <!--
+            O gatilho existe para as DUAS metades do anúncio do painel: com ele
+            na tela dá para afirmar o \`aria-controls\` apontando para o id real
+            do painel aberto, e dá para fechar e reabrir uma vez, que é o que
+            uma medida limpa da entrada animada pede. As outras quatro stacks
+            têm o gatilho aqui.
+          -->
+          <DrawerTrigger as-child>
+            <Button variant="outline">Abrir</Button>
+          </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>${L.title}</DrawerTitle>
@@ -154,8 +177,12 @@ export const Open: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const panel = await waitForPortal('dialog');
+    // O gatilho é consultado por SELETOR, e não por papel: com o painel aberto
+    // a lib põe `aria-hidden` no resto da página, e consulta por papel não
+    // enxerga nada ali.
+    const trigger = canvasElement.querySelector<HTMLElement>('[data-slot="drawer-trigger"]')!;
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
       await expect(panel).toBeVisible();
@@ -166,13 +193,81 @@ export const Open: Story = {
       await expect(document.querySelector('[data-slot="drawer-overlay"]')).not.toBeNull();
     });
 
-    await step('O foco está dentro do painel', async () => {
-      await waitFor(() => {
-        if (!panel.contains(document.activeElement)) {
-          throw new Error('o foco não entrou no painel');
-        }
-      });
-      await expect(panel.contains(document.activeElement)).toBe(true);
+    await step('Aberto, o gatilho aponta para o painel', async () => {
+      // A outra metade do anúncio que a `Closed` começa: `aria-expanded` vira
+      // `true` e o `aria-controls` NASCE — a lib escreve
+      // `aria-controls={open ? contentId : undefined}`, então fechado ele não
+      // existe, e referência pendurada seria pior que atributo ausente.
+      //
+      // Comparar com `panel.id`, e NUNCA com uma string: contra literal a
+      // asserção passaria com o atributo apontando para um id que o documento
+      // não tem.
+      await expect(panel.id).toBeTruthy();
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-controls', panel.id);
+    });
+
+    await step('O foco de abertura é o PRIMEIRO FOCÁVEL, não o painel', async () => {
+      // `panel.contains(activeElement)` era tudo o que as cinco plays
+      // afirmavam, e passa nas duas formas — foi por isso que esta stack ficou
+      // sendo a única a focar o próprio painel sem nada reprovar (§7 #3). Aqui
+      // o primeiro focável de dentro é a saída do rodapé.
+      const cancelar = within(panel).getByRole('button', { name: L.cancel });
+      await waitFor(() => expect(cancelar).toHaveFocus());
+      await expect(document.activeElement).not.toBe(panel);
+    });
+
+    // ── A entrada é animada ───────────────────────────────────────────────
+    //
+    // `Transitioning` é estado declarado no PRD (§6) e virou contrato das cinco
+    // stacks em 2026-09-20. Nesta stack a entrada já existia — a `vaul` injeta
+    // a folha com `slideFromBottom` —, e NENHUMA story a afirmava. Contrato sem
+    // asserção foi o que deixou outra stack passar meses com a entrada inerte
+    // sem ninguém notar: ausência de movimento não deixa vermelho em
+    // compilador, folha nem axe.
+    await step('A entrada desliza a partir da borda, e assenta no repouso', async () => {
+      // Fecha para medir uma abertura LIMPA — a animação do painel que a play
+      // encontrou montado já terminou há muito.
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+
+      await userEvent.click(trigger);
+      // Consulta por SELETOR e não `waitForPortal`: aquele gateia na opacidade
+      // passar de 0,9, e a 0,9 metade do trajeto já foi. O que se mede aqui é
+      // o COMEÇO.
+      const prazo = Date.now() + 2000;
+      let entrando = document.querySelector<HTMLElement>('[data-slot="drawer-content"]');
+      while (!entrando && Date.now() < prazo) {
+        await new Promise((r) => setTimeout(r, 4));
+        entrando = document.querySelector<HTMLElement>('[data-slot="drawer-content"]');
+      }
+      await expect(entrando).not.toBeNull();
+      // Há animação EM CURSO neste instante: é a prova de que o painel não
+      // apareceu pronto no lugar.
+      await expect(entrando!.getAnimations().length).toBeGreaterThan(0);
+      const topoInicial = entrando!.getBoundingClientRect().top;
+
+      // Laço de RELÓGIO, com leitura direta. `waitFor` aqui seria a armadilha
+      // já registrada nesta casa: a condição força layout, o observador de
+      // mutação reagenda, a própria tentativa alimenta a seguinte e a aba morre
+      // sem reportar. `setTimeout` não tem esse laço.
+      const amostras: number[] = [topoInicial];
+      for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, 16));
+        amostras.push(entrando!.getBoundingClientRect().top);
+        if (entrando!.getAnimations().length === 0) break;
+      }
+      const topoFinal = amostras[amostras.length - 1];
+
+      await expect(entrando!.getAnimations().length).toBe(0);
+      // SUBIU, e por uma distância de painel — não por um pixel de
+      // arredondamento.
+      await expect(topoInicial - topoFinal).toBeGreaterThan(8);
+      // E veio de fora para dentro, sem passar do ponto: o repouso é o MÍNIMO
+      // da série. A curva da lib não tem sobressalto, e se ganhasse um, isto
+      // reprovaria.
+      await expect(topoFinal - Math.min(...amostras)).toBeLessThan(0.5);
     });
   },
 };
@@ -198,10 +293,19 @@ export const Controlled: Story = {
     },
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
-        <div class="nds-cluster" data-spacing="md">
-          <Button @click="open = true">Abrir via estado externo</Button>
-          <Button variant="outline" @click="open = false">Fechar via estado externo</Button>
-        </div>
+        <!--
+          UM botão externo, como no vanilla (a referência) e no angular.
+          O par tinha um "Fechar via estado externo" que a tela mostrava e
+          ninguém conseguia usar: com o painel modal de pé, o \`body\` fica em
+          \`pointer-events: none\` e o clique nele reprova com "the element has
+          pointer-events: none". Botão visível, inerte e sem asserção nenhuma
+          por cima é exemplo que ensina errado — e esta story é o que a docs
+          page publica.
+
+          O fechamento pelo lado de fora continua provado: é o \`update:open\`
+          do último passo que devolve o valor ao dono do estado.
+        -->
+        <Button @click="open = true">Abrir via estado externo</Button>
         <Drawer :open="open" @update:open="(v) => open = v">
           <DrawerContent>
             <DrawerHeader>
@@ -221,11 +325,15 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const openBtn = canvas.getByRole('button', { name: /Abrir via estado externo/i });
-    const closeBtn = canvas.getByRole('button', { name: /Fechar via estado externo/i });
 
     await step('Sem gatilho interno, o painel nasce fechado', async () => {
+      // A play é reexecutável no painel Interactions, e a rodada anterior pode
+      // ter deixado o painel aberto. A precondição se restabelece por ESCAPE, e
+      // não por um botão de fora: com o painel modal aberto o `body` está em
+      // `pointer-events: none`, e o clique lá fora reprova antes de fechar
+      // coisa nenhuma. Mesma guarda do angular.
       if (within(document.body).queryAllByRole('dialog').length > 0) {
-        await userEvent.click(closeBtn);
+        await userEvent.keyboard('{Escape}');
         await waitForPortalGone('dialog');
       }
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
@@ -387,6 +495,15 @@ function atRest(panel: HTMLElement): boolean {
   return t === 'none' || t === 'matrix(1, 0, 0, 1, 0, 0)';
 }
 
+/**
+ * Espelho da fiação de analytics da docs page: um motivo por fechamento.
+ *
+ * Módulo, e não `args`: o meta desta arquivo é `satisfies Meta<typeof Drawer>`
+ * e o espião não é prop do componente. A play o zera antes de cada gesto, e é
+ * com ele que os passos CONTAM quantos fechamentos um gesto produz.
+ */
+const closeEvents = fn();
+
 export const DragToDismiss: Story = {
   parameters: {
     covers: ['functional.item8', 'functional.item9', 'accessibility.item8'],
@@ -403,13 +520,36 @@ export const DragToDismiss: Story = {
   },
   render: () => ({
     components: sharedComponents,
+    setup() {
+      // A MESMA fiação da docs page: quem vê o gesto ANOTA, quem vê a mudança
+      // de estado lê a anotação e a traduz. Sem ela a story mediria "o painel
+      // fechou" e não "o painel anunciou UM fechamento, com o motivo dele".
+      let pendingGesture: DrawerCloseGesture | null = null;
+      const note = (gesture: DrawerCloseGesture | null) => {
+        pendingGesture = gesture;
+      };
+      const closeWatch = createDrawerCloseWatch(note);
+      const dragWatch = createDrawerDragWatch(note);
+      const onOpen = (open: boolean) => {
+        if (open) {
+          pendingGesture = null;
+          return;
+        }
+        closeEvents(drawerCloseReason(pendingGesture));
+        pendingGesture = null;
+      };
+      return { closeWatch, dragWatch, onOpen };
+    },
     template: `
       <div style="contain: layout">
-        <Drawer>
+        <Drawer
+          v-bind="dragWatch"
+          @update:open="onOpen"
+        >
           <DrawerTrigger as-child>
             <Button variant="outline">Abrir</Button>
           </DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent v-bind="closeWatch">
             <DrawerHeader>
               <DrawerTitle>Arraste para dispensar</DrawerTitle>
               <DrawerDescription>Puxe o panel para baixo, ou use Escape.</DrawerDescription>
@@ -470,6 +610,10 @@ export const DragToDismiss: Story = {
       const y = box.top + 10;
       const target = Math.max(box.height * 0.6, 80);
 
+      // A contagem começa do zero DEPOIS da abertura: a play é reexecutável no
+      // painel Interactions, e o espião guarda as chamadas da rodada anterior.
+      closeEvents.mockClear();
+
       pointer(panel, 'pointerdown', x, y);
       await nextFrame();
       for (const fraction of [0.25, 0.5, 0.75, 1]) {
@@ -483,15 +627,42 @@ export const DragToDismiss: Story = {
       await expect(document.activeElement).toBe(trigger);
     });
 
+    // ─── UM fechamento, UM `drawer_close` ──────────────────────────────────
+    //
+    // Contrato escrito, e é o que o "o evento saiu" não enxerga: uma stack
+    // irmã anunciava DUAS vezes na dispensa por arraste, e o segundo anúncio
+    // chegava sem motivo anotado, caindo no default `close-button`. No GA4 é a
+    // mesma dispensa contada duas vezes, a segunda dizendo que alguém apertou
+    // um botão que aquele painel não tem.
+    //
+    // A asserção é de CONTAGEM e de VALOR, nessa ordem: contar sozinho não
+    // pega o motivo errado, e ler o motivo sozinho não pega o evento a mais —
+    // o primeiro anúncio sempre chegou certo.
+    //
+    // Espera de RELÓGIO, e não `waitFor`: um eco chega no mesmo quadro ou no
+    // seguinte, e um `waitFor` aqui só provaria "chegou pelo menos um", que é
+    // o que passa com o defeito de pé.
+    await step('O arraste que dispensa emite UM fechamento, com motivo de véu', async () => {
+      await wait(400);
+      await expect(closeEvents.mock.calls).toHaveLength(1);
+      await expect(closeEvents.mock.calls[0][0]).toBe('overlay');
+    });
+
     await step('Nada depende do arraste: Escape fecha o mesmo panel', async () => {
       // É esta a asserção da WCAG 2.5.7. O gesto só dispensa, e dispensar tem
       // caminho sem trajeto de pointer — este passo prova que o caminho existe
       // e leva ao mesmo lugar.
       const panel = await openPanel();
       await expect(panel).toBeVisible();
+      closeEvents.mockClear();
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // O mesmo contrato pelo caminho de teclado: um fechamento, um evento, e
+      // o motivo é o da tecla.
+      await wait(400);
+      await expect(closeEvents.mock.calls).toHaveLength(1);
+      await expect(closeEvents.mock.calls[0][0]).toBe('escape');
     });
 
     await step('A alça não é parada de teclado', async () => {

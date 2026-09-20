@@ -311,10 +311,11 @@
   const codeLeft = `<Drawer direction="left">...</Drawer>`;
   const codeRight = `<Drawer direction="right">...</Drawer>`;
 
+  // Sem `defaultOpen`: a prop não existe no primitivo desta stack, e interface
+  // publicada é contrato — o estado inicial entra pelo mesmo `open` ligável.
   const interfaceCode = `// Drawer (Root)
 interface DrawerProps {
   open?: boolean;
-  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   direction?: 'bottom' | 'top' | 'left' | 'right';
   modal?: boolean;
@@ -552,6 +553,19 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
+            <!--
+              O anti-exemplo MANTÉM o nome acessível, com o título oculto.
+              Um painel realmente sem `DrawerTitle` é diálogo sem nome: o leitor
+              de tela anuncia "diálogo" e mais nada, o axe desta própria página
+              reprova, e o conteúdo compartilhado (`doDont.pair1.do`) diz que o
+              título sr-only é a forma CORRETA. O que se evita é o painel sem
+              título NENHUM — não o título visualmente oculto —, e a lição fica
+              na legenda do par, não num defeito de a11y plantado na página que
+              ensina a evitá-lo.
+            -->
+            <DrawerTitle class="nds-sr-only">
+              {$tStore('usage.uxWriting.table.title.good')}
+            </DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
@@ -951,7 +965,12 @@ interface TriggerProps {
         items: [
           { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: $tStore('props.table.open.description')         },
           { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: $tStore('props.table.onOpenChange.description') },
-          { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: $tStore('props.table.defaultOpen.description')  },
+          // `defaultOpen` NÃO entra: o primitivo desta stack não a aceita. A
+          // ausência da prop é divergência de API e se registra no PRD; o que é
+          // DEFEITO é a tabela publicar o que o componente ignora — quem
+          // copiasse daqui escreveria uma prop silenciosamente descartada, e o
+          // painel nasceria fechado sem nada denunciar. O estado inicial desta
+          // stack sai do mesmo `open` ligável, que é a primeira linha.
           { name: 'direction',    type: $tStore('props.table.direction.type'),    defaultValue: $tStore('props.table.direction.default'),    required: $tStore('props.table.direction.required'),    description: $tStore('props.table.direction.description')    },
           { name: 'modal',        type: $tStore('props.table.modal.type'),        defaultValue: $tStore('props.table.modal.default'),        required: $tStore('props.table.modal.required'),        description: $tStore('props.table.modal.description')        },
           { name: 'dismissible',  type: $tStore('props.table.dismissible.type'),  defaultValue: $tStore('props.table.dismissible.default'),  required: $tStore('props.table.dismissible.required'),  description: $tStore('props.table.dismissible.description')  },
@@ -1014,11 +1033,17 @@ interface TriggerProps {
   />
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
+  <!--
+    As colunas saem do vocabulário compartilhado, como no vanilla e no angular.
+    Cravadas, elas não traduziam: a página em inglês e a em espanhol liam
+    'Evento' e 'Payload' — e 'Trigger' ficava em inglês no meio de duas palavras
+    em português, nos três idiomas.
+  -->
   <DocsAnalytics
     cols={{
-      event: 'Evento',
-      trigger: 'Trigger',
-      payload: 'Payload',
+      event: $tNavStore('common.event'),
+      trigger: $tNavStore('common.eventTrigger'),
+      payload: $tNavStore('common.payload'),
     }}
     items={[
       { event: 'drawer_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'drawer', location, trigger_id }" },

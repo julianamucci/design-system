@@ -41,8 +41,16 @@ valer — e `—` é dívida declarada, não ausência de risco.
 | C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue e do angular; no DOM renderizado, — (pendência abaixo) |
 | C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `WithForm` lendo `button.form`, nas cinco |
 
-> **PENDÊNCIA · 2026-09-15** — a ordem do rodapé não é afirmada no DOM renderizado em stack nenhuma: as cinco `WithForm` afirmam só `toContain`, e a do angular se chama "nessa ordem de leitura" (`drawer-compositions.stories.ts:149`) sem afirmar ordem. É o item aberto 1 da `18-overlay.md`, e continua aberto.
-> **Fecha quando**: uma story das cinco stacks afirmar o secundário antes do primário no DOM do rodapé e o `flex-direction` computado de `.nds-drawer-footer`.
+**FECHADA · 2026-09-20.** As cinco `WithForm` afirmam a ordem RENDERIZADA do
+rodapé — `toEqual(['Cancelar', 'Confirmar'])` sobre o DOM — mais a outra metade:
+o `flex-direction` computado de `.nds-drawer-footer` conferido contra o ponto de
+corte de 40rem, e a posição do primário (à direita em `row`, em cima em
+`column-reverse`). Dentes provados nas cinco invertendo os dois botões.
+
+O que a pendência media era uma lacuna de MÉTODO, não de ordem: as cinco já
+renderizavam certo, e as cinco afirmavam com `toContain`, que passa com qualquer
+ordem. A do angular chegava a se chamar "nessa ordem de leitura" sem afirmar
+ordem nenhuma — nome de passo prometendo o que a asserção não cobra.
 
 ## 3. Decisões fixadas
 
@@ -224,6 +232,87 @@ o Enter num campo não disparava nada — mesmo defeito de teclado que um
 **Por que o markup sozinho não denuncia**: é válido. Foram doze superfícies em
 cinco stacks — story, snippet do painel Code e docs page. O portão hoje é a
 `WithForm` das cinco lendo `button.form` (C9).
+
+### D15 · A entrada do painel ANIMA nas cinco — e duas delas só pareciam animar
+
+**Fixada em** 2026-09-20, por decisão da dona, sobre medição em navegador.
+
+**O que havia**: três stacks animavam pela folha que a `vaul` injeta, e a §6 já
+listava `Transitioning`. Mas a §7 #4 dizia "o vanilla não anima; o angular anima
+pelas regras da folha", e **metade disso era falso**:
+
+| stack | antes | mecanismo |
+|---|---|---|
+| react, vue, svelte | anima (painel 900→737) | folha que a `vaul` injeta |
+| vanilla | **painel não anima**; só o véu | a fábrica não escrevia marcador nenhum |
+| angular | **INERTE** | ver abaixo |
+
+**A entrada do angular era a mais instrutiva.** O `data-starting-style` ESTAVA no
+DOM nos dois primeiros quadros — e o `transform` computado **já era identidade**.
+Havia atributo e não havia estado de partida de onde interpolar: o painel nascia
+em repouso e fazia uma oscilação de 2px (bottom) / 5px (left) antes de assentar.
+Medido quadro a quadro, com o painel de 163,5px:
+
+    antes    0:0px* 1:0px* 2:0px 3:0px … 23:0px        (* = marcador presente)
+    depois   0:164px* 1:164px* … 6:161 7:154 … 17:0px
+
+A causa é de ordem, não de CSS: o marcador do `@radix-ng` chega por **host
+binding**, ou seja numa passada de atualização, e o `requestAnimationFrame` que o
+remove pode chegar antes de o navegador ter computado qualquer estilo com ele. O
+conserto põe o marcador como **atributo ESTÁTICO de host** — escrito na criação
+do elemento, antes da inserção e do paint. Aplicado ao painel E ao véu, que tem a
+mesma regra no `sheet.css` e teria o mesmo defeito.
+
+**E a folha já tinha tudo.** No vanilla não foi preciso CSS novo: as quatro
+regras `[data-starting-style]`/`[data-ending-style]` de `drawer.css` existiam e
+**ninguém as puxava**. Declaração inerte à espera de leitor, a terceira desta
+família medida em uma semana.
+
+**O que vale**: a entrada anima nas cinco, e **o movimento é asserção**. Não
+basta afirmar que o painel apareceu — foi exatamente isso que deixou o angular
+passar meses com uma entrada que parecia existir. A forma que as cinco usam:
+achar o painel por SELETOR (não pelo helper de portal, ver abaixo), afirmar
+`getAnimations().length > 0` no instante da abertura, amostrar a posição em laço
+de RELÓGIO e cobrar deslocamento significativo mais repouso no mínimo da série.
+
+**Esperar o portal NÃO serve para medir geometria**: o helper gateia em opacidade
+> 0.9, e opacidade e transform correm na mesma curva — a 0,9 o painel ainda está
+a **38px** da borda (medido). Asserção de posição feita ali lê o caminho, não o
+destino. As cinco ganharam `waitForAnimationsDone`, que espera
+`getAnimations().finished` e é leitura pura.
+
+**A SAÍDA fica fora desta decisão**, e o vanilla continua sem leitor de
+`[data-ending-style]`: adiar a remoção do painel até o `transitionend` mexe com o
+helper de portal fechado, com o `ListenerCleanup` e com o `destroy()`. Tarefa
+própria, registrada aqui para não virar linha de mensagem de commit.
+
+### D16 · Um fechamento emite UM `drawer_close`
+
+**Fixada em** 2026-09-20, por decisão da dona, sobre medição.
+
+**Por que precisou existir**: o svelte emitia **DOIS** `onOpenChange(false)` por
+dispensa de arraste — o primeiro com `reason: 'overlay'`, o segundo caindo no
+default **`close-button`**. No GA4 isso é uma dispensa contada duas vezes, com o
+motivo errado na segunda, envenenando a série de `reason` com um botão que
+ninguém apertou.
+
+**A causa estava na fonte da lib**, e explica por que só o arraste duplicava —
+`vaul-svelte`, `closeDrawer(fromWithin)`:
+
+    if (!fromWithin) {
+        handleOpenChange(false);   // anúncio 1
+        opts.open.current = false; // o setter do box anuncia de novo → 2
+    }
+
+Escape, véu e botão do rodapé chegam por `closeDrawer(true)` e pulam o primeiro
+anúncio. O segundo encontra a anotação já consumida e cai no default. Consertado
+com guarda de transição no WRAPPER — não na lib, não em patch.
+
+**O que vale**: um fechamento, um evento, com o motivo daquele caminho. E a
+asserção **CONTA as chamadas**: afirmar que o evento saiu é precisamente o que
+passava com o defeito de pé. As cinco afirmam contagem e motivo nos caminhos de
+arraste e de Escape — a agente do svelte estendeu ao Escape por conta própria,
+"para o contrato valer nos dois caminhos e não só onde o defeito apareceu".
 
 ## 4. Anatomia
 
@@ -605,11 +694,54 @@ nesta data: nenhuma das divergências abaixo é vista por portão.
     svelte e vanilla não afirmam. As cinco têm `drawer.source.test.ts`. A linha
     "no Vue" da tabela de invariantes da `18-overlay.md` está menor que o código.
 
-> **PENDÊNCIA · 2026-09-15** — as 28 inconsistências acima estão abertas; nenhum portão as vê.
-> **Fecha quando**: cada item estiver corrigido nas stacks que divergem ou reescrito aqui como divergência de API registrada, com a premissa conferida.
+**PASSAGEM DE 2026-09-20 — o que a lista era, e o que a medição fez com ela.**
 
-> **PENDÊNCIA · 2026-09-15** — o arraste que dispensa não emite `drawer_close` no angular (inconsistência 2).
-> **Fecha quando**: `dismissBySwipe` fechar por um caminho que emite `onOpenChange` com motivo, e o painel dispensado por arraste na docs page do angular registrar `drawer_close` com `reason: 'overlay'`.
+A §7 declara de si mesma que foi medida **sem suíte de navegador**. Sete itens
+comportamentais foram medidos em navegador antes de qualquer conserto, e o
+resultado justifica a cautela: **seis confirmados, um derrubado** (#4, a entrada
+do angular), e **dois defeitos que a lista não previa** — o evento duplo do
+svelte (D16) e o véu do vanilla que anima enquanto o painel não animava.
+
+Corrigidos e fora da lista: **1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 15, 19, 20, 22,
+23, 25, 26, 27** e a metade de #6 e #18 que era defeito. Continuam registrados
+como divergência de API, com a premissa conferida: **7** (`defaultOpen`), **16**
+(alvo de foco inicial), **21** (nomes dos sinais), **14** e **8** (mecânica de
+stack).
+
+**Cinco afirmações da própria §7 caíram na medição, e vale saber a forma de
+cada uma:**
+
+- **#11 generalizava**: "só o vue mede `Math.abs(...)`" — o `Right` do react e o
+  do vanilla **já** mediam; faltava-lhes só a espera. A asserção fraca era do
+  `Left`, não do par. Eu mandei consertar os dois, e duas agentes mediram antes.
+- **#5 listava três atributos como se fossem escritos juntos**: `aria-controls`
+  **só existe com o painel aberto** (confirmado na fonte das quatro libs). As
+  stories passaram a afirmar as duas metades separadamente.
+- **#21 dizia que o react "não tem caminho que produza `api`"** — tinha a
+  capacidade; faltava um PRODUTOR nomeado.
+- **#23 dizia que o vue não passa `componentSlug` a seção nenhuma** — passava a
+  três, em HEAD, sem modificação.
+- **#12 dizia "um `Fechar` nas outras quatro"**, e isso só vale para as quatro
+  direções: na `HeadingH3` a maioria é um botão, na `WithScroll` é o par — e ali
+  o vue e o vanilla, que é a referência, é que estão certos. Alinhar nos dois
+  sentidos teria criado divergência nova.
+
+**O que continua aberto desta lista**: #17 e #24, que são cromo, e a segunda
+metade de #25 (coluna de gatilho e linha extra). E o portão que a pendência
+original pedia — nenhum ainda vê estas divergências — continua sem existir: o
+que as pegou foi medição, não regra.
+
+**FECHADA · 2026-09-20 — o arraste que dispensa não emitia `drawer_close` no
+angular.** `dismissBySwipe` passou a fechar por `close('swipe')` do primitivo, em
+vez de escrever o model direto: o `close()` emite `onOpenChange` com motivo, e o
+`case 'swipe'` de `drawerCloseReason` — que existia e nunca era alcançado — passa
+a devolver `overlay`, como nas outras quatro. A `DragToDismiss` coleta os motivos
+anunciados e afirma `toEqual(['overlay'])`; replantando o `open.set(false)`,
+reprova com `expected [] to deeply equal [ 'overlay' ]`.
+
+A medição acrescentou o que a dedução não via: **existia um output que disparava**
+(`openChange`, do `model`), sem motivo. Era atalho disponível e errado — o
+contrato pede o motivo, não só o fechamento.
 
 ## 8. Acessibilidade
 
@@ -696,8 +828,14 @@ anotar ali chegaria depois do evento. Arraste curto, que volta ao repouso, é
 anunciado com `open = true` e limpa a anotação; sem isso o próximo fechamento por
 botão herdaria um motivo que não é dele.
 
-> **PENDÊNCIA · 2026-09-15** — `dialog_confirm` é disparado só pelo angular, e o conteúdo compartilhado (`analytics.description`) publica dois eventos. A palavra já é tipada em `AnalyticsEvents` pela família do Dialog, então nenhum portão de tipo vê a assimetria.
-> **Fecha quando**: as cinco docs pages concordarem — ou as cinco disparam `dialog_confirm` nas Composições e `analytics.description` o lista, ou o angular deixa de disparar.
+**FECHADA · 2026-09-20 — pelo lado que era maioria.** O angular deixou de
+disparar `dialog_confirm`, e o método que o emitia saiu junto. As cinco docs
+pages agora concordam com o `analytics.description` do conteúdo compartilhado,
+que lista `drawer_open` e `drawer_close` e mais nada.
+
+A palavra continua tipada em `AnalyticsEvents` pela família do Dialog, e é por
+isso que nenhum portão de tipo via a assimetria: o evento era válido, só não era
+do drawer.
 
 > **FECHADA · 2026-09-08** — as duas pendências registradas em 2026-09-07: a prosa de analytics pedia o título traduzido (`2f64c9b2d`), e o par `drawer_open`/`drawer_close` era disparado só pelo angular. Hoje as cinco disparam o par.
 

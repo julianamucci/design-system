@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createDrawer, type DrawerDirection, type DrawerElement } from './drawer';
 import { drawerSource } from './drawer.source';
@@ -21,6 +21,7 @@ type DrawerArgs = {
   defaultOpen: boolean;
   dismissible: boolean;
   modal: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 const meta: Meta<DrawerArgs> = {
@@ -78,6 +79,14 @@ const meta: Meta<DrawerArgs> = {
       description: 'Bloqueia interação com o resto da página quando aberto.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
+    // `control: false` de propósito: é espião de callback, não parâmetro. Sem a
+    // entrada aqui ele ficaria fora da aba API Reference (regra
+    // `arg_without_argtype`) e a aba Actions nasceria vazia.
+    onOpenChange: {
+      control: false,
+      description: 'Chamado a cada abertura e fechamento, com o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
+    },
   },
   args: {
     triggerLabel: 'Abrir drawer',
@@ -89,6 +98,7 @@ const meta: Meta<DrawerArgs> = {
     defaultOpen: false,
     dismissible: true,
     modal: true,
+    onOpenChange: fn(),
   },
 };
 
@@ -120,6 +130,7 @@ function buildDrawerEl(args: DrawerArgs): HTMLElement {
     footer,
     dismissible: args.dismissible,
     modal: args.modal,
+    onOpenChange: args.onOpenChange,
   });
 }
 
@@ -163,10 +174,23 @@ export const Playground: Story = {
       await waitForPortalGone('dialog');
     };
 
+    // O espião de `onOpenChange` — as outras stacks cobram o callback e esta
+    // não cobrava nada: a gaveta podia parar de avisar a mudança de estado a
+    // quem é dono dele e todos os passos abaixo continuariam verdes, porque
+    // todos olham só a tela.
+    //
+    // A contagem é RELATIVA (`antes + 1`), e não absoluta: o painel Interactions
+    // reexecuta a play no mesmo DOM, e o `close()` de saneamento logo abaixo já
+    // soma uma chamada quando a rodada anterior deixou a gaveta aberta.
+    const espiao = args.onOpenChange as unknown as ReturnType<typeof fn>;
+
     await close();
 
     await step('1. Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
+      const antes = espiao.mock.calls.length;
       const panel = await open();
+      await expect(espiao.mock.calls.length).toBe(antes + 1);
+      await expect(espiao).toHaveBeenLastCalledWith(true);
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAttribute('role', 'dialog');
       await expect(panel).toHaveAttribute('aria-modal', 'true');
@@ -194,7 +218,12 @@ export const Playground: Story = {
     });
 
     await step('4. Escape fecha e devolve o foco ao gatilho', async () => {
+      const antes = espiao.mock.calls.length;
       await close();
+      // Um fechamento, UM aviso — e com o estado novo. É a outra metade do
+      // contrato do callback: a abertura avisa `true`, a saída avisa `false`.
+      await expect(espiao.mock.calls.length).toBe(antes + 1);
+      await expect(espiao).toHaveBeenLastCalledWith(false);
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');

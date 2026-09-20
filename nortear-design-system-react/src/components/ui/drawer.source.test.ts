@@ -114,6 +114,16 @@ describe('estados', () => {
     expect(output).not.toContain('<DrawerTrigger');
   });
 
+  it('o modo controlado ensina UM botão externo, e não um que ninguém clica', () => {
+    // Com o painel modal aberto a lib põe `pointer-events: none` no `body`: um
+    // "Fechar externamente" ao lado do "Abrir" fica inalcançável enquanto o
+    // painel está na tela, e o snippet ensinaria um caminho que não existe.
+    const output = drawerControlledSource();
+    expect(output).not.toContain('Fechar externamente');
+    expect(output).not.toContain('setAberto(false)');
+    expect(output).toContain('onClick={() => setAberto(true)}');
+  });
+
   it('sem dispensa por gesto, a saída explícita é obrigatória', () => {
     const output = drawerNotDispensavelSource();
     expect(output).toContain('<Drawer dismissible={false}>');
@@ -148,6 +158,17 @@ describe('composições', () => {
     const output = drawerWithConfirmSource();
     expect(output).toContain('<Button variant="destructive">Remover</Button>');
     expect(output).toContain('<Button variant="outline">Cancelar</Button>');
+  });
+
+  it('a confirmação tem corpo, como a story e como a referência', () => {
+    // As cinco stacks renderizam o MESMO painel de confirmação. O corpo existia
+    // só em vanilla e svelte; sem esta guarda, o snippet do react podia voltar
+    // a ensinar um painel que a página não mostra.
+    const output = drawerWithConfirmSource();
+    expect(output).toContain('<DrawerBody className="nds-text-body nds-text-muted-foreground">');
+    expect(output).toContain('O anexo sai desta mensagem e continua na biblioteca.');
+    expect(output).toContain('  DrawerBody,');
+    expect(output.indexOf('<DrawerFooter>')).toBeGreaterThan(output.indexOf('</DrawerBody>'));
   });
 
   it('a rolagem mora no corpo, e o rodapé fica fora dele', () => {

@@ -123,13 +123,17 @@ export type DrawerOptions = {
    * `open()` público (que esta fábrica já tinha), gaveta sem gatilho é caso
    * legítimo, e o botão invisível deixa de ser ensinado como padrão.
    *
-   * O que a ausência do gatilho NÃO muda, e foi conferido antes de afrouxar o
-   * tipo: esta fábrica não escreve `aria-haspopup`, `aria-expanded` nem
-   * `aria-controls` no gatilho — ao contrário do Sheet e do Dialog, ela nunca os
-   * escreveu, então não há atributo órfão quando não há gatilho. E a devolução
-   * de foco não passa por aqui: quem fecha devolve o foco a `previousFocus`, que
-   * é o `document.activeElement` lido na abertura — com a gaveta comandada de
-   * fora, é o botão de fora que o recebe de volta, sem nada a declarar.
+   * O que a ausência do gatilho NÃO muda: desde 2026-09-20 esta fábrica
+   * escreve `aria-haspopup`, `aria-expanded` e `aria-controls` no gatilho, como
+   * as quatro libs — mas TODOS os três são escritos no ramo `if (trigger)`, e
+   * `aria-controls` sai no fechamento. Sem gatilho não há onde escrever, e
+   * portanto não há atributo órfão; quem anuncia o papel passa a ser quem montou
+   * o botão externo, e a `Controlled` desta stack mostra exatamente isso.
+   *
+   * E a devolução de foco não passa por aqui: quem fecha devolve o foco a
+   * `previousFocus`, que é o `document.activeElement` lido na abertura — com a
+   * gaveta comandada de fora, é o botão de fora que o recebe de volta, sem nada
+   * a declarar.
    */
   trigger?: HTMLElement;
   /** Borda de entrada. Só em `bottom` a alça aparece. */
@@ -244,6 +248,14 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
   const id = ++_drawerCounter;
   const titleId = `drawer-title-${id}`;
   const descId = `drawer-desc-${id}`;
+  /**
+   * Id do painel, que existe para o `aria-controls` do gatilho ter a que apontar.
+   *
+   * Nasce com a fábrica e não com a abertura: o painel é um nó novo a cada
+   * `open()`, e um id gerado lá dentro mudaria a cada ciclo — quem tivesse lido
+   * o atributo antes ficaria com uma referência morta.
+   */
+  const panelId = `drawer-panel-${id}`;
 
   let overlayEl: HTMLElement | null = null;
   let panelEl: HTMLElement | null = null;
@@ -268,7 +280,28 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'drawer';
-  if (trigger) wrapper.appendChild(trigger);
+  if (trigger) {
+    /*
+     * O gatilho ANUNCIA o diálogo — medido nas quatro libs em 2026-09-19, no
+     * navegador: `radix-ng`, `reka-ui`, `bits-ui` e `@radix-ui/react-dialog`
+     * escrevem os três atributos, e esta fábrica não escrevia nenhum. O painel
+     * chegava sem aviso para quem navega por leitor de tela: o botão se
+     * anunciava como botão comum, sem dizer que abre um diálogo nem que ele já
+     * está aberto.
+     *
+     * `aria-controls` NÃO entra aqui: ele aponta para um nó que só existe com o
+     * painel montado, e referência pendurada é pior que atributo ausente (o
+     * leitor de tela anuncia um alvo que não está na árvore). É a mesma regra
+     * das quatro libs — ele aparece na abertura e sai no fechamento.
+     *
+     * `data-slot="drawer-trigger"` é o nome da peça, igual ao das outras quatro
+     * stacks; aqui o botão vinha sem `data-slot` nenhum.
+     */
+    trigger.dataset.slot = 'drawer-trigger';
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute('aria-expanded', 'false');
+    wrapper.appendChild(trigger);
+  }
 
   function isOpen(): boolean {
     return panelEl !== null;
@@ -293,6 +326,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
 
     panelEl = document.createElement('div');
     panelEl.className = cn('nds-drawer-content', options.class);
+    panelEl.id = panelId;
     panelEl.dataset.slot = 'drawer-content';
     panelEl.dataset.state = 'open';
     // O atributo que TODA regra de posição, borda e canto do painel lê no CSS
@@ -382,8 +416,51 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
       if (alvo) closeWithReason('close-button');
     });
 
+    /*
+     * ─── Entrada animada ──────────────────────────────────────────────────
+     *
+     * O painel entra deslizando a partir da borda da sua direção. É contrato
+     * das CINCO stacks (decisão da dona, 2026-09-20), e esta era a única que
+     * não o cumpria: o véu já desvanecia pelo `nds-sheet-fade-in` do Sheet, e o
+     * painel aparecia no lugar, sem uma animação sequer — medido no navegador,
+     * `getAnimations()` vazio e `top` idêntico em todos os quadros.
+     *
+     * As regras já existiam e ninguém as puxava: `drawer.css` publica
+     * `[data-starting-style]`/`[data-ending-style]` com `opacity: 0` mais o
+     * `translate` de cada direção, e a transição de `transform`/`opacity` está
+     * em `.nds-drawer-content:not([data-swiping])`. O que faltava era o
+     * ATRIBUTO — as quatro stacks com lib o recebem da lib.
+     *
+     * Por que o `offsetHeight` no meio: transição nasce da DIFERENÇA entre dois
+     * recálculos de estilo. Pôr e tirar o atributo sem um flush entre os dois
+     * deixa o navegador ver um estado só, e o painel volta a aparecer no lugar
+     * — o defeito consertado, silencioso e com cara de correto. A leitura de
+     * layout é o que força esse primeiro recálculo, com o painel já no
+     * documento (fora dele não há layout a calcular).
+     *
+     * E o `requestAnimationFrame` é o quadro seguinte, onde o atributo sai e a
+     * interpolação começa. Até lá o painel fica legível para quem mede: a story
+     * `Open` lê `data-starting-style` no MESMO turno síncrono de `open()`.
+     *
+     * Sob `prefers-reduced-motion` nada disso anima — o bloco no fim da folha
+     * zera a transição, e o painel salta para o repouso no quadro seguinte.
+     */
+    panelEl.dataset.startingStyle = '';
+
     document.body.appendChild(overlayEl);
     document.body.appendChild(panelEl);
+
+    void panelEl.offsetHeight;
+    const enteringPanel = panelEl;
+    requestAnimationFrame(() => {
+      // O painel pode já ter sido fechado antes do quadro chegar; tirar o
+      // atributo de um nó solto é inócuo, e a guarda seria ruído.
+      delete enteringPanel.dataset.startingStyle;
+    });
+
+    // O gatilho passa a apontar para o painel — e só agora, que ele existe.
+    trigger?.setAttribute('aria-expanded', 'true');
+    trigger?.setAttribute('aria-controls', panelId);
 
     if (modal) {
       lockBodyScroll();
@@ -428,6 +505,10 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     panelEl?.remove();
     overlayEl = null;
     panelEl = null;
+    // O alvo do `aria-controls` saiu do documento junto: manter o atributo
+    // deixaria o gatilho apontando para um id que não existe mais.
+    trigger?.setAttribute('aria-expanded', 'false');
+    trigger?.removeAttribute('aria-controls');
     document.removeEventListener('keydown', handleKeydown);
     // Guardado por `scrollLocked`, e não por `modal`: `destroy()` chama o
     // fechamento mesmo sem nada montado, e uma solta a mais liberaria a trava

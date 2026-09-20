@@ -263,6 +263,28 @@ export function DrawerDocs() {
   DrawerClose,
 } from "@/components/ui/drawer";`;
 
+  // Segundo bloco: a COMPOSIÇÃO mínima, como no svelte, no vanilla e no angular.
+  // O bloco de import sozinho diz de onde as peças vêm e não diz como elas se
+  // encaixam — e o encaixe é o que esta seção precisa ensinar, porque o painel
+  // só nomeia a si mesmo se o título estiver dentro do cabeçalho certo.
+  const codeImportUsage = `<Drawer direction="bottom">
+  <DrawerTrigger asChild>
+    <Button variant="outline">Abrir</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Editar perfil</DrawerTitle>
+      <DrawerDescription>Atualize seus dados.</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose asChild>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+      <Button>Salvar</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+
   const structureCode = tContent("anatomy.structureCode");
 
   const interfaceCode = `// Drawer (vaul)
@@ -275,12 +297,16 @@ interface DrawerProps {
   dismissible?: boolean;
 }`;
 
-  // ─── Locale-aware column labels ─────────────────────────────────────────────
-
+  // ─── Rótulos de coluna da tabela de analytics ───────────────────────────────
+  //
+  // Vêm do vocabulário compartilhado do chrome (`tNav`), como no vanilla — que é
+  // a referência — e no angular. Era um ternário por locale escrito aqui: três
+  // traduções cravadas numa docs page, fora do dicionário que as outras seções
+  // desta mesma página já leem, e que um idioma novo não alcançaria.
   const analyticsCols = {
-    event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    payload: "Payload",
+    event: tNav("common.event"),
+    trigger: tNav("common.eventTrigger"),
+    payload: tNav("common.payload"),
   };
 
   // ─── Exemplo por direção — uma fonte só para a prévia e para o snippet ─────
@@ -590,7 +616,7 @@ interface DrawerProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport code={codeImport} secondaryCode={codeImportUsage} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions

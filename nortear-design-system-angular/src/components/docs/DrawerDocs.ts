@@ -31,7 +31,6 @@ import {
   NdsDocsWhenToUse,
   NdsDocsDoDont,
   NdsDocsImport,
-  NdsDocsVariants,
   NdsDocsCompositions,
   NdsDocsStates,
   NdsDocsProps,
@@ -79,19 +78,19 @@ import {
 const AJUSTES_ANGULAR: TranslationOverrides = {
   'pt-BR': {
     'props.table.dismissible.description':
-      'Desliga o fechamento por clique fora e por perda de foco. Escape continua fechando — painel modal que engole Escape é armadilha de teclado.',
+      'Desliga a dispensa: clique fora, perda de foco e Escape deixam de fechar. A saída explícita do rodapé passa a ser o único caminho, e por isso é obrigatória aqui.',
     'props.table.panelClass.description':
       'Classes do design system aplicadas ao painel. Existe porque o painel é construído dentro do portal: não há elemento onde quem consome pudesse escrever a classe.',
   },
   en: {
     'props.table.dismissible.description':
-      'Turns off closing by outside click and focus loss. Escape still closes — a modal panel that swallows Escape is a keyboard trap.',
+      'Turns dismissal off: outside click, focus loss and Escape no longer close. The explicit footer exit becomes the only way out, which is why it is mandatory here.',
     'props.table.panelClass.description':
       'Design system classes applied to the panel. It exists because the panel is built inside the portal: there is no element where the consumer could write the class.',
   },
   es: {
     'props.table.dismissible.description':
-      'Apaga el cierre por clic fuera y por pérdida de foco. Escape sigue cerrando — un panel modal que se traga Escape es una trampa de teclado.',
+      'Apaga el descarte: clic fuera, pérdida de foco y Escape dejan de cerrar. La salida explícita del pie pasa a ser el único camino, y por eso es obligatoria aquí.',
     'props.table.panelClass.description':
       'Clases del design system aplicadas al panel. Existe porque el panel se construye dentro del portal: no hay elemento donde quien consume pudiera escribir la clase.',
   },
@@ -343,7 +342,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
   imports: [
     ...NDS_DRAWER, NdsButton, NdsInput, NdsLabel,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
-    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
+    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
     NdsDocsAccessibility, NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics,
     NdsDocsTestes,
@@ -352,7 +351,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     <!-- ─── Do & Don't ─────────────────────────────────────────────────── -->
 
     <ng-template #tplDoDont1Do>
-      <nds-drawer>
+      <nds-drawer (onOpenChange)="onPanelChange('bottom', 'docs_do_dont', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.trigger.good') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -373,7 +372,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
            mau exemplo, é armadilha — quem usa leitor de tela ficaria sem saber
            onde entrou. A falha demonstrada é a mesma família: título que não
            nomeia o painel. -->
-      <nds-drawer>
+      <nds-drawer (onOpenChange)="onPanelChange('bottom', 'docs_do_dont', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.trigger.bad') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -387,7 +386,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <nds-drawer>
+      <nds-drawer (onOpenChange)="onPanelChange('bottom', 'docs_do_dont', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.trigger.good') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -414,7 +413,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     <!-- ─── Variantes: as quatro direções + corpo rolável ──────────────── -->
 
     <ng-template #tplVarBottom>
-      <nds-drawer direction="bottom">
+      <nds-drawer direction="bottom" (onOpenChange)="onPanelChange('bottom', 'docs_variantes', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.bottom') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -429,7 +428,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     </ng-template>
 
     <ng-template #tplVarTop>
-      <nds-drawer direction="top">
+      <nds-drawer direction="top" (onOpenChange)="onPanelChange('top', 'docs_variantes', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.top') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -444,7 +443,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     </ng-template>
 
     <ng-template #tplVarLeft>
-      <nds-drawer direction="left">
+      <nds-drawer direction="left" (onOpenChange)="onPanelChange('left', 'docs_variantes', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.left') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -459,7 +458,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     </ng-template>
 
     <ng-template #tplVarRight>
-      <nds-drawer direction="right">
+      <nds-drawer direction="right" (onOpenChange)="onPanelChange('right', 'docs_variantes', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.right') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -474,7 +473,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     </ng-template>
 
     <ng-template #tplVarScroll>
-      <nds-drawer>
+      <nds-drawer (onOpenChange)="onPanelChange('bottom', 'docs_variantes', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.withScroll.name') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -496,7 +495,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     <!-- ─── Composições ────────────────────────────────────────────────── -->
 
     <ng-template #tplCompFormulario>
-      <nds-drawer>
+      <nds-drawer (onOpenChange)="onPanelChange('bottom', 'docs_composicoes', $event)">
         <button ndsDrawerTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.trigger') }}
         </button>
@@ -548,12 +547,15 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
             <button ndsDrawerClose ndsButton variant="outline">
               {{ t('demonstration.labels.cancel') }}
             </button>
-            <button
-              ndsButton
-              type="submit"
-              form="docs-drawer-form"
-              (click)="aoConfirmar('composicoes', 'docs_composicoes')"
-            >
+            <!--
+              Sem dialog_confirm: o vocabulário de analytics do Drawer tem
+              DOIS eventos — drawer_open e drawer_close —, e é o que o
+              analytics.description do conteúdo compartilhado publica. Esta era
+              a única das cinco docs pages a disparar um terceiro, e a palavra já
+              ser tipada pela família do Dialog fazia com que nenhum portão de
+              tipo visse a assimetria.
+            -->
+            <button ndsButton type="submit" form="docs-drawer-form">
               {{ t('demonstration.labels.confirm') }}
             </button>
           </div>
@@ -564,7 +566,10 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
     <ng-template #tplCompConfirmacao>
       <!-- A decisão É a tela: o foco entra na saída segura, e não no primeiro
            tabbável. Ver o método logo abaixo. -->
-      <nds-drawer (openAutoFocus)="focusSafeExit($event)">
+      <nds-drawer
+        (openAutoFocus)="focusSafeExit($event)"
+        (onOpenChange)="onPanelChange('bottom', 'docs_composicoes', $event)"
+      >
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('demonstration.labels.destroy') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -576,11 +581,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
             <button ndsDrawerClose ndsButton variant="outline">
               {{ t('demonstration.labels.cancel') }}
             </button>
-            <button
-              ndsButton
-              variant="destructive"
-              (click)="aoConfirmar('destrutiva', 'docs_composicoes')"
-            >
+            <button ndsButton variant="destructive">
               {{ t('demonstration.labels.destroy') }}
             </button>
           </div>
@@ -613,7 +614,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
 
                 <nds-drawer
                   [direction]="d.key"
-                  (onOpenChange)="onPanelChange(d.key, $event)"
+                  (onOpenChange)="onPanelChange(d.key, 'docs_demo', $event)"
                 >
                   <button ndsDrawerTrigger ndsButton variant="outline">
                     {{ d.name }}
@@ -668,8 +669,16 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
           language="ts"
         />
 
-        <nds-docs-variants
+        <!--
+          A seção Variantes reusa o CONTAINER de composições, como as outras
+          quatro stacks: ele é o mesmo nds-docs-variants por baixo, com a
+          linha "Quando usar" a mais quando o item a traz. Usar o container de
+          baixo aqui fazia esta página ser a única em que uma variante não teria
+          onde publicar essa linha.
+        -->
+        <nds-docs-compositions
           [items]="variantItems()"
+          [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="drawer"
           id="variantes"
           language="html"
@@ -800,41 +809,34 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Abertura e fechamento dos painéis da demonstração.
+   * Abertura e fechamento de TODO painel vivo desta página.
    *
    * O evento nasce AQUI, na camada de produto — o primitivo de UI não importa
    * `@/lib/analytics`. O payload leva valores estáveis — a direção no
    * `trigger_id`, e o motivo —, nunca o texto traduzido, que viraria três
    * valores distintos no GA4.
+   *
+   * `location` é PARÂMETRO, e não constante: até 2026-09-20 só a Demonstração
+   * tinha ouvinte, e os painéis de Do & Dont, Variantes e Composições — que são
+   * tão vivos quanto ela, e tão clicáveis — abriam e fechavam sem registrar
+   * nada. Cravar `docs_demo` aqui dentro seria o erro simétrico: `location`
+   * responde de ONDE saiu a interação, e com um valor só ele deixa de cruzar
+   * com `section_id` e `data-track-id` no GA4.
    */
-  protected onPanelChange(direction: DrawerDirection, evento: RdxDialogOpenChange): void {
+  protected onPanelChange(
+    direction: DrawerDirection,
+    location: string,
+    evento: RdxDialogOpenChange,
+  ): void {
     if (evento.open) {
-      track('drawer_open', { component: 'drawer', trigger_id: direction, location: 'docs_demo' });
+      track('drawer_open', { component: 'drawer', trigger_id: direction, location });
       return;
     }
     track('drawer_close', {
       component: 'drawer',
       trigger_id: direction,
       reason: drawerCloseReason(evento.reason),
-      location: 'docs_demo',
-    });
-  }
-
-  /**
-   * Ação primária do rodapé das composições.
-   *
-   * A seção vem do TEMPLATE, e não de uma constante aqui: `location` responde de
-   * onde saiu o clique, e as três chamadas desta página mandavam `docs_demo` —
-   * inclusive esta, que nasce nas Composições. Componente vivo fora da
-   * Demonstração é clique tão real quanto o de dentro dela, e com um valor só
-   * `location`, `section_id` e `data-track-id` deixam de cruzar no GA4.
-   */
-  protected aoConfirmar(qual: string, secao: string): void {
-    track('dialog_confirm', {
-      component: 'drawer',
-      action: 'confirm',
-      trigger_id: qual,
-      location: secao,
+      location,
     });
   }
 
@@ -1063,7 +1065,8 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
           },
           {
             // O conteúdo compartilhado chama de `dismissible`; aqui a prop é o
-            // seu inverso e não alcança o Escape — ver a descrição ajustada.
+            // seu INVERSO, e só isso — o comportamento que ela desliga é o
+            // mesmo das outras stacks. Ver a descrição ajustada.
             name: 'disablePointerDismissal',
             type: t('props.table.dismissible.type'),
             defaultValue: 'false',
@@ -1180,8 +1183,14 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     // O conteúdo compartilhado do Drawer não tem tabela de eventos, só a
-    // descrição — e é ela que diz quais são e o que carregam. Os dois primeiros
-    // saem desta página de verdade, pelos painéis da demonstração.
+    // descrição — e é ela que diz quais são e o que carregam. Os dois saem desta
+    // página de verdade, por TODO painel vivo dela: demonstração, do & don't,
+    // variantes e composições.
+    //
+    // São DOIS, e não três. Havia uma linha `docs_page_view` aqui que nenhuma
+    // das outras quatro stacks publica: é evento da INFRAESTRUTURA de docs, que
+    // toda página dispara e nenhuma tabela de componente documenta — listá-lo
+    // aqui dizia que ele é do Drawer.
     return [
       {
         event: 'drawer_open',
@@ -1192,11 +1201,6 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
         event: 'drawer_close',
         trigger: toPlainText(t('accessibility.keyboard.escape')),
         payload: 'component, trigger_id, reason, location',
-      },
-      {
-        event: 'docs_page_view',
-        trigger: toPlainText(t('analytics.description')),
-        payload: 'component_name, locale, page_title',
       },
     ];
   });

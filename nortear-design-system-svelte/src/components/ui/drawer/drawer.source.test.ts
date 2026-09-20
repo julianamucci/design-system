@@ -75,6 +75,18 @@ describe('drawerSource', () => {
     expect(drawerSource('', { args: { defaultOpen: true } })).not.toContain('defaultOpen');
   });
 
+  it('o rodapé de saída única não escreve ação primária nenhuma', () => {
+    // É o rodapé das stories de direção, e o que as outras quatro stacks
+    // renderizam ali. O snippet é o que se copia: publicar um par onde a tela
+    // mostra um botão só ensinaria um painel que não existe.
+    const output = drawerSource('', { args: { footer: 'close', cancelLabel: 'Fechar' } });
+    expect(output).toContain('<Button variant="outline" {...props}>Fechar</Button>');
+    expect(output).not.toContain('<Button>Confirmar</Button>');
+    expect(output.match(/<Button/g)).toHaveLength(2); // gatilho + saída
+    // E o padrão continua sendo o par: a saída única é pedida, nunca herdada.
+    expect(drawerSource()).toContain('<Button>Confirmar</Button>');
+  });
+
   it('os textos do painel acompanham os controls', () => {
     const output = drawerSource('', {
       args: {
@@ -94,9 +106,11 @@ describe('drawerSource', () => {
 });
 
 describe('transforms das stories de composição', () => {
-  it('a composição com formulário abre à direita e rotula os dois campos', () => {
+  it('a composição com formulário abre na direção padrão e rotula os dois campos', () => {
     const output = drawerWithFormSource();
-    expect(output).toContain('direction="right"');
+    // Em BAIXO, como nas outras quatro stacks — e por isso sem `direction`
+    // escrito: valor padrão não se escreve num exemplo que alguém copia.
+    expect(output).not.toContain('direction=');
     expect(output).toContain('<Label for="drawer-nome">Nome</Label>');
     expect(output).toContain('<Label for="drawer-email">E-mail</Label>');
     expect(output).toContain('from "@/components/ui/input"');
@@ -110,6 +124,20 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('id="drawer-form"');
     expect(output).toContain('<Button type="submit" form="drawer-form">Confirmar</Button>');
     expect(output).not.toContain('<Button>Confirmar</Button>');
+  });
+
+  it('a ação que remove se anuncia destrutiva, e só ela', () => {
+    // O contraste entre a saída e a consequência é o que a composição ensina;
+    // sem a variante, o exemplo mostra duas ações de mesmo peso.
+    const output = drawerWithConfirmSource();
+    expect(output).toContain('<Button variant="destructive">Remover</Button>');
+    expect(output.match(/variant="destructive"/g)).toHaveLength(1);
+    // A variante é do BOTÃO, e nunca a classe crua da folha.
+    expect(output).not.toContain('nds-button-destructive');
+    // E não vaza para as outras composições, que não destroem nada.
+    expect(drawerWithFormSource()).not.toContain('destructive');
+    expect(drawerWithScrollSource()).not.toContain('destructive');
+    expect(drawerSource()).not.toContain('destructive');
   });
 
   it('o elo só existe onde existe formulário — a confirmação não o herda', () => {
@@ -145,10 +173,10 @@ describe('transforms das stories de composição', () => {
     ).toBe(drawerSource('', {
         args: {
           open: true,
+          footer: 'close',
           triggerLabel: 'Editar perfil',
           title: 'Editar perfil',
           description: 'Atualize seus dados.',
-          actionLabel: 'Salvar alterações',
           cancelLabel: 'Cancelar',
         },
       }));
@@ -156,7 +184,7 @@ describe('transforms das stories de composição', () => {
   it('a confirmação usa o corpo do painel para a mensagem curta', () => {
     const output = drawerWithConfirmSource();
     expect(output).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');
-    expect(output).toContain('<Button>Remover</Button>');
+    expect(output).toContain('>Remover</Button>');
   });
 
   it('o corpo rolável não leva altura cravada — quem rola é o corpo', () => {

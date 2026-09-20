@@ -7,6 +7,7 @@ import {
   Renderer2,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   computed,
   contentChild,
   effect,
@@ -466,6 +467,65 @@ export class NdsDrawerSwipe {
 }
 
 /**
+ * O estado de PARTIDA da entrada, escrito antes do primeiro quadro.
+ *
+ * ─── O defeito que esta diretiva conserta, medido em navegador ──────────────
+ *
+ * Até 2026-09-20 a entrada desta stack era INERTE. O painel nascia em repouso e
+ * dava uma oscilação de poucos pixels antes de assentar; a saída animava de
+ * verdade (200 ms de `transform`+`opacity`), e por isso a leitura de fora era
+ * "o angular anima pelas regras da folha" — metade verdadeira. Nenhum portão
+ * via: a foto do Chromatic é a mesma, o `ngc` não abre folha de estilo e nenhuma
+ * asserção media posição no meio da transição.
+ *
+ * A causa é de ORDEM, não de CSS. Uma transição só interpola quando o navegador
+ * já COMPUTOU o estilo de partida: para um elemento recém-inserido, a primeira
+ * computação vira o próprio estado final, e não há de onde sair. O
+ * `data-starting-style` do primitivo chega por *host binding*, isto é, na passada
+ * de atualização — e o `requestAnimationFrame` que o remove pode chegar antes de
+ * o navegador ter computado qualquer estilo com ele no lugar. Resultado: o
+ * painel vai de nada a repouso, sem trajeto.
+ *
+ * ─── Por que ATRIBUTO ESTÁTICO, e não mais um binding ────────────────────────
+ *
+ * Atributo estático de host é escrito na CRIAÇÃO do elemento, junto com a tag —
+ * antes da inserção e antes do primeiro paint. É o único momento cedo o
+ * bastante. E ele não briga com o primitivo: o host binding dele escreve o MESMO
+ * valor (`""`) enquanto a transição está começando, e é ele quem o REMOVE no
+ * quadro certo, que é exatamente o disparo que se quer. Escrever
+ * `[attr.data-starting-style]` no template não resolveria nada — no Angular o
+ * host binding da diretiva vence o atributo do template.
+ *
+ * A leitura forçada no `afterNextRender` fecha a brecha que sobra: ela obriga o
+ * navegador a computar o estilo com o marcador no lugar, na mesma tarefa em que
+ * o painel entrou. Sem ela, a correção dependeria de detalhes do agendador do
+ * primitivo; com ela, o estado de partida existe por construção.
+ *
+ * Vale para o PAINEL e para o VÉU — os dois entram pelo mesmo caminho e têm
+ * regra de `[data-starting-style]` (o véu em `sheet.css`, o painel em
+ * `drawer.css`). Consertar só um deixaria a gaveta deslizando sobre um véu que
+ * pisca.
+ */
+@Directive({
+  selector: '[ndsDrawerEnter]',
+  standalone: true,
+  host: {
+    'data-starting-style': '',
+  },
+})
+class NdsDrawerEnter {
+  constructor() {
+    const el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    afterNextRender(() => {
+      // Leitura pura e única, e é ela que faz o navegador COMPUTAR o estilo de
+      // partida. `getBoundingClientRect` força layout, e layout exige estilo
+      // resolvido — é a forma barata de dizer "considere este estado agora".
+      el.getBoundingClientRect();
+    });
+  }
+}
+
+/**
  * Raiz do Drawer.
  *
  * `direction` mora AQUI, e não no conteúdo, porque é assim que o conteúdo
@@ -477,11 +537,21 @@ export class NdsDrawerSwipe {
  * modo não-controlado. `modal` fica exposto porque decide três coisas de uma vez
  * (foco preso, rolagem travada, ponteiro bloqueado fora).
  *
- * `disablePointerDismissal` é o mais perto que o primitivo chega do
- * `dismissible` que o conteúdo compartilhado descreve — e a diferença é
- * deliberada: ele desliga o fechamento por clique fora e por perda de foco, mas
- * Escape continua fechando. Um painel modal que engole Escape é armadilha de
- * teclado (WCAG 2.1.2), então o caminho por teclado nunca sai.
+ * `disablePointerDismissal` é o NOME que o primitivo dá ao `dismissible` que o
+ * conteúdo compartilhado descreve — invertido, e essa inversão de nome é
+ * divergência de API de framework, registrada no PRD. O COMPORTAMENTO não é
+ * divergência: com ele ligado, nem ponteiro nem Escape fecham, como nas outras
+ * quatro stacks.
+ *
+ * **O que mudou em 2026-09-20, e por que o argumento anterior caiu.** Até então
+ * o Escape fechava aqui e não fechava nas outras quatro, com a justificativa de
+ * que painel modal que engole Escape é armadilha de teclado (WCAG 2.1.2). A
+ * justificativa não se aplica a este componente: o rodapé tem saída explícita —
+ * e ela é obrigatória justamente onde a dispensa por ponteiro está desligada —,
+ * então não há ninguém preso. O que existia era uma stack a mais fazendo
+ * diferente, que é a forma de defeito que este repositório mede. O primitivo não
+ * oferece desligar o Escape por input, mas oferece o `escapeKeyDown`
+ * PREVINÍVEL, e é por ele que o alinhamento passa.
  *
  * `triggerId` / `defaultTriggerId` / `handle` ficam FORA da lista: servem ao
  * caso de gatilho destacado, que este design system não documenta.
@@ -492,7 +562,14 @@ export class NdsDrawerSwipe {
   changeDetection: ChangeDetectionStrategy.OnPush,
   // O visual inteiro vem de @shared/styles/nds/sheet.css, que é global.
   encapsulation: ViewEncapsulation.None,
-  imports: [NgTemplateOutlet, RdxDialogPortal, RdxDialogBackdrop, RdxDialogPopup, NdsDrawerSwipe],
+  imports: [
+    NgTemplateOutlet,
+    RdxDialogPortal,
+    RdxDialogBackdrop,
+    RdxDialogPopup,
+    NdsDrawerSwipe,
+    NdsDrawerEnter,
+  ],
   hostDirectives: [
     {
       directive: RdxDialogRoot,
@@ -514,6 +591,7 @@ export class NdsDrawerSwipe {
              são reusados. -->
         <div
           rdxDialogBackdrop
+          ndsDrawerEnter
           class="nds-sheet-overlay"
           data-slot="drawer-overlay"
           [attr.data-state]="state()"
@@ -521,6 +599,7 @@ export class NdsDrawerSwipe {
 
         <div
           rdxDialogPopup
+          ndsDrawerEnter
           [class]="resolvedPanelClass()"
           data-slot="drawer-content"
           [attr.data-direction]="direction()"
@@ -528,6 +607,7 @@ export class NdsDrawerSwipe {
           [ndsDrawerSwipe]="direction()"
           [ndsDrawerSwipeDismissible]="swipeEnabled()"
           (swipeDismiss)="dismissBySwipe()"
+          (escapeKeyDown)="blockEscapeWhenNotDismissible($event)"
           (openAutoFocus)="openAutoFocus.emit($event)"
         >
           <!-- Alça: pura afordância. O CSS só a mostra na direção de baixo, e
@@ -585,25 +665,48 @@ export class NdsDrawer {
    *
    * Sai de `disablePointerDismissal`, que é o input que o conteúdo compartilhado
    * documenta como `dismissible` — e a leitura é a certa: arrastar é gesto de
-   * PONTEIRO, exatamente o que aquele input desliga. Escape continua fechando de
-   * qualquer forma, porque diálogo modal que engole Escape é armadilha de
-   * teclado (WCAG 2.1.2).
+   * PONTEIRO, exatamente o que aquele input desliga. Desde 2026-09-20 o mesmo
+   * input também desliga o Escape (ver `blockEscapeWhenNotDismissible`), de modo
+   * que ele cobre a dispensa inteira, como o `dismissible` das outras stacks.
    */
   protected readonly swipeEnabled = computed(() => !this.root.disablePointerDismissal());
 
   /**
    * Soltar o painel para fora da tela fecha.
    *
-   * Fecha pelo model do primitivo, e não por um caminho próprio: assim o
-   * fechamento passa pelo mesmo desmonte, pela mesma devolução de foco ao
-   * gatilho e pela mesma transição de saída que Escape e véu já usam. O motivo
-   * que chega em `onOpenChange` é o de fechamento por código — `drawerCloseReason`
-   * o traduz para `'action'`. É divergência de API de framework em relação à
-   * stack de referência, que informa `'overlay'`: registrada, não "alinhada",
-   * porque aqui o vocabulário do motivo é do primitivo, não nosso.
+   * Fecha pelo `close()` do primitivo, e NÃO escrevendo no model: os dois
+   * desmontam o painel, mas só o `close()` ANUNCIA o fechamento — é ele que
+   * emite `onOpenChange` com um motivo. Escrevendo `open.set(false)` direto, o
+   * único sinal era o output do model, sem motivo nenhum, e a docs page (que
+   * escuta `onOpenChange`) não chegava a ver o fechamento: o `drawer_close` do
+   * arraste simplesmente não nascia.
+   *
+   * O motivo informado é `'swipe'`, que é a palavra do primitivo para este
+   * gesto, e `drawerCloseReason` a traduz para o `'overlay'` do vocabulário do
+   * design system — o mesmo que as outras quatro stacks anotam no arraste.
+   * Aquele `case 'swipe'` existia desde sempre e nunca era alcançado.
    */
   protected dismissBySwipe(): void {
-    this.root.open.set(false);
+    this.root.close('swipe');
+  }
+
+  /**
+   * Escape com a dispensa desligada: não fecha, como nas outras quatro stacks.
+   *
+   * O primitivo não tem input para desligar o Escape — ele sempre dismissa por
+   * teclado —, mas publica o `escapeKeyDown` como evento PREVINÍVEL: o motor de
+   * dispensa só fecha `if (!event.defaultPrevented)`. É por aí que o
+   * comportamento se alinha sem tocar na lib nem inventar um segundo input.
+   *
+   * Não é armadilha de teclado: o rodapé de um painel não dispensável tem saída
+   * explícita, e é justamente o caso em que ela deixa de ser cortesia. Quem
+   * afirma isso é a `NotDismissible`, que cobra o Escape inerte e o botão do
+   * rodapé fechando de verdade, no mesmo painel.
+   */
+  protected blockEscapeWhenNotDismissible(event: KeyboardEvent): void {
+    if (this.root.disablePointerDismissal()) {
+      event.preventDefault();
+    }
   }
 
   constructor() {

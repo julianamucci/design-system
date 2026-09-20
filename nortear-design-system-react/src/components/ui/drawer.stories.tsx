@@ -215,6 +215,29 @@ export const Playground: Story = {
       await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
 
+    await step("6. O clique no véu fecha e devolve o foco ao gatilho", async () => {
+      // O gesto de dispensa mais comum do componente, e o CAMINHO POSITIVO dele
+      // não era coberto aqui: a `NotDismissible` prova que o véu não fecha
+      // quando a dispensa está desligada, e nenhuma story provava que ele fecha
+      // quando está ligada. As duas metades juntas é que dizem que a prop faz
+      // alguma coisa.
+      const panel = await open(trigger);
+      const overlay = document.querySelector<HTMLElement>("[data-slot='drawer-overlay']");
+      await expect(overlay).not.toBeNull();
+      // `pointerEventsCheck: 0` porque o véu fica sob o painel na pilha de
+      // empilhamento e a checagem do userEvent recusaria o alvo; quem fecha é o
+      // `pointerdown` de fora do painel, que é o que este clique entrega.
+      await userEvent.click(overlay!, { pointerEventsCheck: 0 });
+      await waitForPortalGone("dialog");
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
+      await expect(panel.isConnected).toBe(false);
+      await waitFor(() => {
+        if (document.activeElement !== trigger) {
+          throw new Error("o foco não voltou ao gatilho");
+        }
+      });
+    });
+
     // Termina fechado: a próxima rodada da play precisa do mesmo ponto de
     // partida desta, e é este estado que o Chromatic fotografa.
     await close();

@@ -36,7 +36,11 @@ type Story = StoryObj;
 
 export const WithForm: Story = {
   args: {
-    direction: 'right',
+    // Em BAIXO, como nas outras quatro stacks. A direção não é o assunto desta
+    // composição — o assunto é o formulário no corpo e o par de ações no rodapé
+    // —, e abrir de um lado aqui e de outro lá tira das cinco páginas a única
+    // coisa que compará-las responde.
+    direction: 'bottom',
     defaultOpen: true,
     variant: 'withForm',
     title: 'Editar dados pessoais',
@@ -67,12 +71,23 @@ export const WithForm: Story = {
       await expect(inside.getByLabelText(/E-mail/i)).toBeInTheDocument();
     });
 
-    await step('O rodapé oferece confirmar e cancelar', async () => {
+    await step('O rodapé escreve o secundário ANTES do primário', async () => {
       const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
       await expect(footer).not.toBeNull();
       const names = within(footer).getAllByRole('button').map((b) => b.textContent?.trim());
-      await expect(names).toContain('Confirmar');
-      await expect(names).toContain('Cancelar');
+      // `toContain` não afirmava ordem nenhuma, e a ordem é o contrato (D1 do
+      // PRD): uma só marcação serve aos dois eixos, e é a FOLHA que escolhe o
+      // eixo. Invertida, o empilhamento põe o primário embaixo.
+      await expect(names).toEqual(['Cancelar', 'Confirmar']);
+    });
+
+    await step('E é a folha que decide o eixo, não a marcação', async () => {
+      const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+      // `column-reverse` empilhado põe o primário EM CIMA; `row` a partir de
+      // 40rem o põe à direita. A mesma ordem de DOM serve aos dois — é por isso
+      // que inverter a marcação para "arrumar" um eixo quebra o outro.
+      const expectedAxis = window.innerWidth >= 640 ? 'row' : 'column-reverse';
+      await expect(getComputedStyle(footer).flexDirection).toBe(expectedAxis);
     });
 
     await step('Confirmar submete o formulário do corpo', async () => {
@@ -116,7 +131,12 @@ export const WithConfirmation: Story = {
     await step('Cancelar continua sendo a saída de menor risco', async () => {
       const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
-      await expect(inside.getByRole('button', { name: /^Remover$/i })).toBeVisible();
+      const destructiveAction = inside.getByRole('button', { name: /^Remover$/i });
+      await expect(destructiveAction).toBeVisible();
+      // A ação que remove se ANUNCIA como destrutiva, como nas outras quatro
+      // stacks: o contraste entre as duas é o que separa a saída da consequência
+      // antes de a pessoa ler o rótulo.
+      await expect(destructiveAction).toHaveClass('nds-button-destructive');
     });
 
     await step('O foco abre no cancelar, não na ação principal', async () => {

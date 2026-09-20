@@ -55,10 +55,12 @@
  *  · `direction` só aparece quando difere de `bottom`, e `modal` só quando está
  *    desligado: documentação que repete valor padrão ensina ruído.
  *
- * UMA STORY NÃO GANHA CONSTRUTOR PRÓPRIO, e a exclusão se declara aqui:
- * `States/DragToDismiss` reusa `drawerPlaygroundSource`. O gesto de arraste não
- * liga prop nenhuma — ele vem do motor de pointer que o componente já monta —,
- * e o template daquela story é exatamente o drawer canônico, fechado, com
+ * DUAS STORIES NÃO GANHAM CONSTRUTOR PRÓPRIO, e as exclusões se declaram aqui:
+ * `States/DragToDismiss` e `States/EntryAnimation` reusam
+ * `drawerPlaygroundSource`. As duas medem COMPORTAMENTO que não liga prop
+ * nenhuma — o arraste vem do motor de pointer que o componente já monta, e a
+ * entrada vem da folha mais o instante em que o marcador de partida entra no
+ * DOM —, e o template das duas é exatamente o drawer canônico, fechado, com
  * gatilho, cabeçalho e rodapé. Um construtor próprio seria uma segunda cópia do
  * mesmo texto, com a chance de as duas divergirem; o `drawer.source.test.ts`
  * cobra a igualdade, para que a reutilização continue verdadeira.
@@ -429,13 +431,17 @@ ${indent(inner, 2)}
 }
 
 /**
- * Sem dispensa por ponteiro: clique fora e perda de foco deixam de fechar.
+ * Com a dispensa desligada nada dispensa: clique fora, perda de foco e Escape
+ * deixam de fechar.
  *
- * Escape CONTINUA fechando, e é diferença deliberada deste stack — o primitivo
- * não oferece desligar o teclado, e um painel modal que engole Escape é
- * armadilha de teclado (WCAG 2.1.2). Com o descarte por ponteiro desligado, o
- * botão do rodapé deixa de ser cortesia: é a saída que sobra junto com Escape,
- * e um snippet sem ele ensinaria a prender quem usa ponteiro.
+ * O nome do input é do primitivo e está invertido em relação ao `dismissible`
+ * que o conteúdo compartilhado descreve — isso é divergência de API, registrada.
+ * O COMPORTAMENTO é o das outras quatro stacks desde 2026-09-20: o primitivo não
+ * tem input para desligar o Escape, mas publica o `escapeKeyDown` previnível, e
+ * é por ele que o componente alinha.
+ *
+ * Por isso o botão do rodapé deixa de ser cortesia aqui: é a ÚNICA saída, e um
+ * snippet sem ele ensinaria a montar uma armadilha de teclado (WCAG 2.1.2).
  */
 export function drawerNotDismissibleSource(): string {
   return example({

@@ -59,6 +59,10 @@ export const Closed: Story = {
       const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
       await expect(trigger).toBeVisible();
       await expect(trigger).toBeEnabled();
+      // O gatilho se NOMEIA no contrato de markup, como nas outras stacks: sem
+      // o slot, estilo e busca caem no `data-slot="button"` genérico e a peça
+      // some de quem procura pelo componente.
+      await expect(trigger).toHaveAttribute('data-slot', 'drawer-trigger');
     });
   },
 };
@@ -81,7 +85,8 @@ export const Open: Story = {
       },
     },
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const panel = await waitForPortal('dialog');
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
@@ -91,6 +96,13 @@ export const Open: Story = {
       await expect(panel).toHaveAttribute('data-slot', 'drawer-content');
       await expect(panel).toHaveAccessibleName('Editar perfil');
       await expect(document.querySelector('[data-slot="drawer-overlay"]')).not.toBeNull();
+      // O gatilho continua nomeado com o painel aberto — mesma asserção das
+      // outras stacks, e é ela que prova que o slot não se perde na fusão de
+      // props do snippet `child`.
+      await expect(canvas.getByRole('button', { name: /Editar perfil/i })).toHaveAttribute(
+        'data-slot',
+        'drawer-trigger',
+      );
     });
 
     await step('O foco está dentro do painel', async () => {
@@ -107,12 +119,22 @@ export const Open: Story = {
 export const Controlled: Story = {
   args: {
     open: false,
+    // Sem `DrawerTrigger` interno: quem comanda o painel é o botão da PÁGINA,
+    // que é o que esta story existe para demonstrar — e é a forma das outras
+    // quatro stacks. Abrir pelo gatilho de dentro e chamar o rótulo de "estado
+    // externo" era demonstrar o oposto.
+    //
+    // Um botão externo só, como no vanilla (a referência) e no angular. React e
+    // vue põem um segundo botão de FECHAR ao lado, e ele é inalcançável: com o
+    // painel modal aberto o `body` fica em `pointer-events: none`, então quem
+    // está na tela não chega nele. Medido aqui em 2026-09-20 — o passo que o
+    // clicava reprovou com "the element has `pointer-events: none`".
+    externalControl: true,
+    footer: 'close',
     triggerLabel: 'Abrir via estado externo',
     title: 'Controlado pelo pai',
     description: 'Este drawer é comandado por estado externo.',
-    actionLabel: 'Confirmar',
     cancelLabel: 'Cancelar',
-    onAction: fn(),
     onCancel: fn(),
   },
   parameters: {
@@ -126,18 +148,23 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
+    const openButton = canvas.getByRole('button', { name: /Abrir via estado externo/i });
 
-    await step('O painel nasce fechado', async () => {
+    await step('Sem gatilho interno, o painel nasce fechado', async () => {
+      // A precondição se restabelece por ESCAPE, e não pelo botão da página:
+      // com o painel modal aberto o `body` está em `pointer-events: none` e o
+      // clique de fora não chega. É a mesma guarda do angular.
       if (within(document.body).queryAllByRole('dialog').length > 0) {
         await userEvent.keyboard('{Escape}');
         await waitForPortalGone('dialog');
       }
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // O painel não tem gatilho próprio: o botão da tela é da página.
+      await expect(canvasElement.querySelector('[data-slot="drawer-trigger"]')).toBeNull();
     });
 
-    await step('O estado ligado abre o painel', async () => {
-      await userEvent.click(trigger);
+    await step('O estado externo abre o painel', async () => {
+      await userEvent.click(openButton);
       const panel = await waitForPortal('dialog');
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAccessibleName('Controlado pelo pai');
@@ -294,6 +321,11 @@ export const DragToDismiss: Story = {
     triggerLabel: 'Abrir drawer',
     title: 'Arraste para dispensar',
     description: 'Puxe o panel para baixo, ou use Escape.',
+    // Espelho da fiação de analytics da docs page — o andaime monta o mesmo
+    // `createDrawerCloseWatch()` e o mesmo par reset/takeReason. É com ele que
+    // os passos abaixo CONTAM quantos fechamentos um gesto produz.
+    onOpenEvent: fn(),
+    onCloseEvent: fn(),
   },
   parameters: {
     covers: ['functional.item8', 'functional.item9', 'accessibility.item8'],
@@ -307,9 +339,10 @@ export const DragToDismiss: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
+    const closeEvents = args.onCloseEvent as ReturnType<typeof fn>;
 
     async function openPanel(): Promise<HTMLElement> {
       if (within(document.body).queryAllByRole('dialog').length === 0) {
@@ -353,6 +386,10 @@ export const DragToDismiss: Story = {
       const y = box.top + 10;
       const target = Math.max(box.height * 0.6, 80);
 
+      // A contagem começa do zero DEPOIS da abertura: a play é reexecutável no
+      // painel Interactions, e o espião guarda as chamadas da rodada anterior.
+      closeEvents.mockClear();
+
       pointer(panel, 'pointerdown', x, y);
       await nextFrame();
       for (const fraction of [0.25, 0.5, 0.75, 1]) {
@@ -366,15 +403,43 @@ export const DragToDismiss: Story = {
       await expect(document.activeElement).toBe(trigger);
     });
 
+    // ─── UM fechamento, UM `drawer_close` ──────────────────────────────────
+    //
+    // Este passo é o que o "o evento saiu" não enxerga, e foi ele que faltou:
+    // a dispensa por ARRASTE anunciava DUAS vezes, e a segunda chegava sem
+    // motivo anotado, caindo no default `close-button`. No GA4 é a mesma
+    // dispensa contada duas vezes, a segunda dizendo que alguém apertou um
+    // botão que não existe naquele painel.
+    //
+    // A asserção é de CONTAGEM e de VALOR, nessa ordem: contar sozinho não
+    // pega o motivo errado, e ler o motivo sozinho não pega o evento a mais —
+    // o primeiro anúncio sempre chegou certo.
+    //
+    // Espera de RELÓGIO, e não `waitFor`: o segundo anúncio, quando existia,
+    // era síncrono com o primeiro, mas a folga cobre também qualquer eco que
+    // chegue no quadro seguinte. Um `waitFor` aqui só provaria "chegou pelo
+    // menos um", que é o que já passava com o defeito de pé.
+    await step('O arraste que dispensa emite UM fechamento, com motivo de véu', async () => {
+      await wait(400);
+      await expect(closeEvents.mock.calls).toHaveLength(1);
+      await expect(closeEvents.mock.calls[0][0]).toBe('overlay');
+    });
+
     await step('Nada depende do arraste: Escape fecha o mesmo panel', async () => {
       // É esta a asserção da WCAG 2.5.7. O gesto só dispensa, e dispensar tem
       // caminho sem trajeto de pointer — este passo prova que o caminho existe
       // e leva ao mesmo lugar.
       const panel = await openPanel();
       await expect(panel).toBeVisible();
+      closeEvents.mockClear();
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      // O mesmo contrato pelo caminho de teclado: um fechamento, um evento, e o
+      // motivo é o da tecla.
+      await wait(400);
+      await expect(closeEvents.mock.calls).toHaveLength(1);
+      await expect(closeEvents.mock.calls[0][0]).toBe('escape');
     });
 
     await step('A alça não é parada de teclado', async () => {

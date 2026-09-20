@@ -252,7 +252,10 @@ export function drawerHeadingH3Source(): string {
       body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do painel.
     </DrawerBody>`,
-      footer: footer('Salvar alterações', 'Cancelar'),
+      // Saída única, como na story e como nas outras stacks: o assunto aqui é a
+      // TAG do título, e um par de ações punha no snippet uma diferença que não
+      // é o assunto.
+      footer: outputFooter('Cancelar'),
     }),
   );
 }
@@ -307,10 +310,7 @@ import { ref } from 'vue'
 
 const aberto = ref(false)`,
     `<div class="nds-stack" data-spacing="sm">
-  <div class="nds-cluster" data-spacing="md">
-    <Button @click="aberto = true">Abrir via estado externo</Button>
-    <Button variant="outline" @click="aberto = false">Fechar via estado externo</Button>
-  </div>
+  <Button @click="aberto = true">Abrir via estado externo</Button>
   <Drawer :open="aberto" @update:open="aberto = $event">
     <DrawerContent>
       <DrawerHeader>
@@ -400,12 +400,15 @@ export function drawerWithFormSource(): string {
  */
 export function drawerWithConfirmSource(): string {
   return vueSnippet(
-    importing(PARTS_NO_BODY),
+    importing(PARTS_COMPLETAS),
     drawer({
       trigger: 'Remover anexo',
       title: 'Remover anexo?',
       description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
       contentProps: ' initial-focus="close"',
+      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      O anexo sai desta mensagem e continua na biblioteca.
+    </DrawerBody>`,
       footer: footer('Remover', 'Cancelar', true),
     }),
   );
