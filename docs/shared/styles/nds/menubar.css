@@ -3,19 +3,42 @@
  * Barra horizontal de menus suspensos (ex.: macOS / aplicativos desktop).
  * Cada gatilho abre um painel ancorado ao lado indicado por `data-side`.
  *
- *   <div class="nds-menubar" role="menubar">
- *     <div class="nds-menubar-menu">
+ * ¹ <div class="nds-menubar" role="menubar">
+ * ²   <div class="nds-menubar-menu">
  *       <button class="nds-menubar-trigger" role="menuitem"
- *               aria-haspopup="menu" aria-expanded="false" data-state="closed">File</button>
- *       <div class="nds-menubar-panel nds-dropdown-menu-content" role="menu"
- *            data-side="bottom" data-align="start">
- *         <div class="nds-dropdown-menu-item" role="menuitem">
- *           <span>New</span>
- *           <span class="nds-dropdown-menu-shortcut">Ctrl+N</span>
+ * ³             aria-haspopup="menu" aria-expanded="false" data-state="closed">File</button>
+ *       ⁴ <div class="nds-menubar-panel nds-dropdown-menu-content" role="menu"
+ *              data-side="bottom" data-align="start">
+ *           <div class="nds-dropdown-menu-item" role="menuitem" data-slot="menubar-item">
+ *     ⁵       New                 <span>New</span> no vanilla
+ *             <span class="nds-dropdown-menu-shortcut" data-slot="menubar-shortcut">Ctrl+N</span>
+ *           </div>
+ *           <div class="nds-dropdown-menu-separator" role="separator"
+ *                aria-orientation="horizontal"></div>
  *         </div>
- *         <div class="nds-dropdown-menu-separator" role="separator"></div>
- *       </div>
  *     </div>
+ *
+ * **Medida no DOM das cinco em 2026-09-19.** A versão anterior reproduzia o
+ * markup do `createMenubar` do vanilla e era lida como se valesse nas cinco.
+ * As notas dizem onde não vale:
+ *
+ *   ¹ a BARRA é `<div class="nds-menubar">` em quatro; o angular renderiza
+ *     `<nds-menubar class="nds-menubar">`, elemento customizado.
+ *   ² o invólucro `.nds-menubar-menu` existe no vanilla e no angular (lá como
+ *     `<nds-menubar-menu>`); em react, vue e svelte NÃO EXISTE — o gatilho é
+ *     filho direto da barra.
+ *   ³ `data-state` no gatilho: quatro escrevem; o react não (usa
+ *     `data-popup-open`/`data-pressed`). É por isso que o realce do gatilho
+ *     aberto casa os dois marcadores — ver a D4 do PRD.
+ *   ⁴ `.nds-menubar-panel` existe SÓ no vanilla; nas quatro o painel leva só
+ *     `.nds-dropdown-menu-content`. E só no vanilla ele é filho do invólucro:
+ *     react e angular o põem num `.nds-dropdown-menu-positioner`, vue e svelte
+ *     num `div` sem classe da própria lib. É a razão de a ancoragem por FOLHA
+ *     desta arquivo alcançar uma stack só (D9, D19).
+ *   ⁵ o rótulo do item vai embrulhado num `<span>` sem classe só no vanilla;
+ *     nas quatro é nó de texto direto. Ver a D20 do PRD.
+ *
+ * A linha do ITEM e a do ATALHO são as únicas verdadeiras nas cinco.
  *   </div>
  *
  * O MIOLO DO PAINEL NÃO MORA AQUI. Item, rótulo, separador, atalho, marcação,

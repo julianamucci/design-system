@@ -683,10 +683,71 @@ pela referência antes de as outras quatro escreverem a delas.
 outras). É a segunda confirmação da lição da D15 — medir cada painel em vez de
 deduzir do irmão —, desta vez DENTRO de uma lib só. Deduzir teria errado 1px.
 
-> **PENDÊNCIA · 2026-09-19 — a árvore canônica da folha descreve o que UMA das cinco faz.** `menubar.css:12-15` declara o rótulo do item dentro de um `<span>` próprio. Medido nas cinco ao escrever a asserção da D19: **só o vanilla embrulha**; react, vue, svelte e angular põem o rótulo como nó de TEXTO SOLTO, e o único `<span>` dentro do item é o do atalho — `querySelector('span')` mediria `"Ctrl+Z"` nas quatro. Nenhuma lib impõe a forma: bits (`menu-item.svelte`) e radix-ng renderizam os filhos sem embrulhar, e no react e no vue o rótulo vai solto no JSX/template. A folha **não estiliza** esse span, então nada quebra hoje em nenhuma direção. Decisão da dona: **as quatro embrulham**, pela regra da casa (em divergência de markup, alinham ao vanilla) e porque é o `<span>` que torna possível truncar o rótulo com reticências sem afetar o atalho, que precisa de elemento próprio.
-> **Fecha quando**: as quatro stacks embrulham o rótulo do item de menu num `<span>` nos TRÊS membros da família, e uma asserção cobra a forma — sem ela, a próxima story nasce com texto solto de novo.
->
-> **Como isto apareceu é a lição.** A divergência é antiga, não quebra nada, não aparece em build nem em suíte, e ninguém a viu porque **nenhuma asserção media TEXTO** — todas mediam caixa de elemento. Foi preciso ir medir a posição de uma letra, para outro assunto, para a anatomia publicada ser confrontada com o DOM. É a forma exata do que o Check 14 mediu em 16 de 51 componentes: a anatomia publicando elemento inexistente, com as cinco concordando entre si e o documento dizendo outra coisa.
+### D20 · A anatomia publicada era a de UMA fábrica, e as duas folhas mentiam
+
+**Fixada em** 2026-09-19, por decisão da dona, sobre medição do DOM renderizado
+dos três membros nas cinco stacks.
+
+**Como apareceu, e é a lição.** A asserção da D19 precisou medir a posição de uma
+LETRA. Para isso teve de achar o rótulo do item — e aí apareceu que
+`menubar.css` publicava `<span>New</span>` e que **só o vanilla embrulha**. Ao ir
+corrigir, a outra folha da mesma família publicava `<li>` com texto solto. As
+duas árvores estavam certas: **cada uma reproduzia linha a linha um membro
+diferente do vanilla**, e nenhuma descrevia as quatro stacks de lib.
+
+O cruzamento é o retrato do problema: **cada árvore acertava o `<span>` para a
+stack que ela NÃO descrevia.** A do menubar mostrava `<span>` — verdade no
+vanilla, falso nas quatro. A do dropdown mostrava texto solto — verdade nas
+quatro, falso justamente no vanilla, que é o markup que ela copiava.
+
+Nada disto quebra build, suíte ou tela. Sobreviveu porque **nenhuma asserção
+media TEXTO** — todas mediam caixa de elemento. É a forma exata do que o Check 14
+mediu em 16 de 51 componentes: anatomia publicando elemento inexistente, com as
+cinco de acordo entre si e o documento dizendo outra coisa.
+
+**O que vale**: as duas árvores passam a descrever o contrato COMUM, com o
+elemento entre colchetes e nota por stack onde diverge. `role`, classe e
+`data-slot` são o contrato; o elemento que os carrega, não.
+
+**O `<span>` do rótulo fica sendo do vanilla, declarado.** A decisão inicial foi
+"as quatro embrulham", e **mudou quando o custo foi medido**: o `<span>` existe
+no vanilla porque a fábrica recebe `label` como DADO e o constrói; nas quatro o
+item recebe filhos por COMPOSIÇÃO, e o atalho é um deles. Embrulhar exigiria 964
+call sites, ou o componente embrulhar só filho de texto — e no angular o item é
+diretiva NUA sem template, que teria de virar componente. A folha não estiliza
+esse `<span>` e nada depende dele. É divergência de API de framework, que pela
+regra da casa não tem fonte de verdade: registra-se, não se alinha.
+
+**O que a medição achou de quebra, e não era o assunto:**
+
+- **`list-style: none` é INERTE em 4 das 5 stacks**, e em 2 dos 3 membros da
+  única onde trabalha. Ela só faz algo no dropdown e no context do vanilla, onde
+  impede o separador `<li>` de ganhar marcador. Os ITENS nunca dependeram dela em
+  stack nenhuma: `.nds-dropdown-menu-item` é `display: flex`, e flex não gera
+  marcador.
+- **E ela tinha um buraco real**: o grupo do vanilla é um `<ul>` ANINHADO, e o UA
+  casa `ul ul { list-style-type: circle }` no próprio elemento — herança perde
+  para regra casada. Medido: o `li.nds-dropdown-menu-label` computava
+  `list-style-type: circle` e **gerava marcador**, provavelmente recortado pelo
+  `overflow` do painel, o que explica ninguém ter visto. Corrigido pondo
+  `list-style: none` no próprio grupo.
+- **`.nds-dropdown-menu-group { display: contents }` também só alcança o
+  vanilla**: nas quatro o grupo é `div[role=group]` **sem classe nenhuma**.
+- **`role="presentation"` no rótulo de grupo**: vanilla e react escrevem; vue,
+  svelte e angular não.
+- **O invólucro `.nds-menubar-menu`** existe no vanilla e no angular; em react,
+  vue e svelte o gatilho é filho direto da barra.
+- **A barra do angular é `<nds-menubar>`**, elemento customizado, não `div`.
+- **O atalho é a ÚNICA peça idêntica nas cinco**, nos três membros — e a árvore
+  do dropdown nem o mostrava.
+
+**Um achado de grep que a medição DERRUBOU**, e vale como método: um `grep`
+tinha encontrado `<ul role="menu">` no angular, e eu quase o registrei. Não
+existe — os `<ul>` daquela stack são do `navigation-menu`, que é outro
+componente, e as outras duas ocorrências são TEXTO PUBLICADO: a própria árvore
+ASCII e um comentário dizendo que *o vanilla* monta `ul`/`li`. Pergunta de DOM
+não se responde com grep de fonte, e três achados falsos desta passagem vieram
+por esse caminho.
 
 ### D15-A · O vão do submenu era `0` e `−4` (histórico)
 

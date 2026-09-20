@@ -8,16 +8,37 @@
  * a mesma afirmação que o C1 do `prd/dropdown-menu.md` carregava; o quadro por
  * membro e por stack está lá.
  *
- *   <ul class="nds-dropdown-menu-content" role="menu" id="dropdown-menu-1">
- *     <li class="nds-dropdown-menu-group" role="presentation">
- *       <ul class="nds-dropdown-menu-group" role="group" aria-labelledby="lbl-1">
- *         <li class="nds-dropdown-menu-label" id="lbl-1">Conta</li>
- *         <li class="nds-dropdown-menu-item" role="menuitem">Perfil</li>
- *       </ul>
- *     </li>
- *     <li class="nds-dropdown-menu-separator" role="separator"></li>
- *     <li class="nds-dropdown-menu-item" role="menuitem">Sair</li>
- *   </ul>
+ * **A árvore abaixo foi MEDIDA no DOM das cinco stacks em 2026-09-19**, nos três
+ * membros, com o menu aberto. A anterior reproduzia linha a linha o markup do
+ * `createDropdownMenu` do vanilla e era apresentada como se valesse nas cinco —
+ * seis das nove linhas dela eram falsas fora daquela fábrica. O `[elemento]` de
+ * cada linha diz quem renderiza o quê; o que NÃO está entre colchetes é igual
+ * nas cinco.
+ *
+ *   <div|ul class="nds-dropdown-menu-content" role="menu" id="dropdown-menu-1">
+ *     ¹ <div|li class="nds-dropdown-menu-group" role="presentation">    ² só vanilla
+ *     ¹   <div|ul class="nds-dropdown-menu-group" role="group" aria-labelledby="lbl-1">
+ *     ¹     <div|li class="nds-dropdown-menu-label" role="presentation" id="lbl-1">Conta</div>
+ *             <div|li class="nds-dropdown-menu-item" role="menuitem" data-slot="…-item">
+ *     ³         Perfil            ⁴ <span>Perfil</span> no vanilla
+ *     ⁵         <span class="nds-dropdown-menu-shortcut" data-slot="…-shortcut">Ctrl+P</span>
+ *             </div>
+ *           </div>
+ *         </div>
+ *     <div|li class="nds-dropdown-menu-separator" role="separator" aria-orientation="horizontal">
+ *     <div|li class="nds-dropdown-menu-item" role="menuitem" data-slot="…-item">Sair</div>
+ *   </div>
+ *
+ *   ¹ `ul`/`li` SÓ no `createDropdownMenu` e no `createContextMenu` do vanilla.
+ *     Nas outras quatro, e no `createMenubar` do próprio vanilla, tudo é `div`.
+ *   ² o grupo do vanilla tem DOIS níveis (portador + lista); as quatro têm um
+ *     `div[role=group]` **sem classe nenhuma** — a regra `.nds-dropdown-menu-group`
+ *     não alcança nada fora do vanilla.
+ *   ³ `role="presentation"` no rótulo: vanilla e react escrevem; vue, svelte e
+ *     angular não.
+ *   ⁴ o rótulo do item vai EMBRULHADO num `<span>` sem classe só no vanilla, nos
+ *     três membros; nas quatro é nó de texto direto. Ver a D20 do PRD.
+ *   ⁵ o atalho é a ÚNICA peça idêntica nas cinco, nos três membros.
  *
  * O rótulo NOMEIA o grupo, e é por isso que ele não fica solto dentro do
  * conteúdo: um `<li>` de rótulo entre itens é texto que o leitor de tela
@@ -121,8 +142,25 @@
  * por ser mecânico, mas deixava a mecânica fora da folha. As quatro stacks de
  * lib recebem o agrupamento pronto do headless e não precisam da classe; ela
  * está aqui para que precisem da mesma se um dia deixarem de receber. */
+/* O `list-style: none` é do GRUPO, e não só do painel — herança não bastava.
+ *
+ * Medido no DOM em 2026-09-19: o `list-style: none` de `.nds-dropdown-menu-content`
+ * chega ao miolo por HERANÇA, e herança perde para regra CASADA. O grupo do
+ * vanilla é um `<ul>` aninhado, então o UA casa `ul ul { list-style-type: circle }`
+ * no próprio elemento e vence. Resultado medido no `WithLabel` e no
+ * `CompleteComposition`: o `li.nds-dropdown-menu-label` computava
+ * `list-style-type: circle` e GERAVA MARCADOR — provavelmente recortado pelo
+ * `overflow` do painel, o que explica ninguém ter visto.
+ *
+ * Vale só onde o grupo é `<ul>` (vanilla dropdown e context). Nas quatro stacks
+ * de lib o grupo é `div[role=group]` SEM CLASSE, então nem esta regra nem o
+ * `display: contents` abaixo o alcançam — ver a nota da anatomia no topo.
+ *
+ * É a mesma família da guarda de movimento inerte: declaração com cara de ativa
+ * que não pinta nada, e do outro lado um caso real que ela não cobria. */
 .nds-dropdown-menu-group {
   display: contents;
+  list-style: none;
 }
 
 /* ── Label (não-interativo) ──────────────────────────────────────────────── */
