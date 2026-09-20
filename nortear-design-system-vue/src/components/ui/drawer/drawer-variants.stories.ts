@@ -103,6 +103,42 @@ function panel(direction: string, title: string, description: string) {
 // helper compartilhado esconderia da leitura o único contrato que cada uma
 // destas quatro stories verifica.
 
+/*
+ * ── QUEM ANIMA A ENTRADA DO PAINEL ──────────────────────────────────────────
+ *
+ * As quatro stories abaixo afirmam isto cada uma por si, pelo motivo da nota
+ * acima. A explicação fica aqui uma vez, e elas a referenciam.
+ *
+ * ── Por que dá para medir aqui, com `default-open` ──────────────────────────
+ *
+ * Porque nesta stack `default-open` NÃO desliga a animação. A folha que a lib
+ * injeta traz `[data-vaul-animate=false]{animation:none!important}`, mas medido
+ * em 2026-09-20 na fonte instalada da `vaul-vue@0.4.1`: a string `animate`
+ * aparece UMA vez no `dist/index.js` inteiro, e é dentro dessa própria regra de
+ * CSS. **Nada em runtime escreve o atributo** — não existe `shouldAnimate` no
+ * pacote. A regra é letra morta aqui, e o painel anima na montagem. Conferido
+ * na sonda: `data-vaul-animate` vinha `null` e o painel montava com
+ * `nds-sheet-slide-in-bottom` a 0,2s, com uma animação em curso.
+ *
+ * ── Por que a asserção é de NOME e de DURAÇÃO, e não de movimento ───────────
+ *
+ * Até 2026-09-20 quem animava era a `vaul-vue`, que nomeava `slideFromBottom` em
+ * (0,4,0) — um degrau acima da regra de `drawer.css`, que ficava inerte. A
+ * animação da lib saiu por `patch-package` (`patches/vaul-vue+0.4.1.patch`). Um
+ * bump que a devolva deixa o painel deslizando IGUAL, e só o nome denuncia a
+ * troca de dono; a duração vem junto porque é a que sai de token — 200ms de
+ * `--duration-base` contra os 500ms fixos da lib.
+ *
+ * Lê estilo COMPUTADO, e não `getAnimations()`: `animation-name` computado não
+ * se apaga quando a animação termina, então a asserção não depende de a play
+ * chegar dentro dos 200ms. Quem mede a animação EM CURSO é a `Open` de
+ * `drawer-states`, que fecha e reabre para fotografar o começo.
+ *
+ * E as quatro direções precisam de asserção PRÓPRIA porque são quatro REGRAS
+ * distintas em `drawer.css`: uma delas podendo errar o nome da keyframe sem que
+ * as outras três acusem nada.
+ */
+
 export const Bottom: Story = {
   parameters: {
     covers: ['accessibility.item6', 'visual.item1'],
@@ -124,6 +160,13 @@ export const Bottom: Story = {
       // outras. Contraste e cor do painel são verificados pelo axe da story.
       const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('block');
+    });
+
+    // Ver a nota "QUEM ANIMA A ENTRADA DO PAINEL", acima.
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const computado = window.getComputedStyle(await waitForPortal('dialog'));
+      await expect(computado.animationName).toBe('nds-sheet-slide-in-bottom');
+      await expect(computado.animationDuration).toBe('0.2s');
     });
   },
 };
@@ -150,6 +193,13 @@ export const Top: Story = {
       await expect(panelEl).toHaveAccessibleName('Nova versão disponível');
       const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('none');
+    });
+
+    // Ver a nota "QUEM ANIMA A ENTRADA DO PAINEL", acima.
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const computado = window.getComputedStyle(await waitForPortal('dialog'));
+      await expect(computado.animationName).toBe('nds-sheet-slide-in-top');
+      await expect(computado.animationDuration).toBe('0.2s');
     });
   },
 };
@@ -184,6 +234,13 @@ export const Left: Story = {
         await expect(Math.abs(panelEl.getBoundingClientRect().left)).toBeLessThan(2);
       });
     });
+
+    // Ver a nota "QUEM ANIMA A ENTRADA DO PAINEL", acima.
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const computado = window.getComputedStyle(await waitForPortal('dialog'));
+      await expect(computado.animationName).toBe('nds-sheet-slide-in-left');
+      await expect(computado.animationDuration).toBe('0.2s');
+    });
   },
 };
 
@@ -212,6 +269,13 @@ export const Right: Story = {
         const box = panelEl.getBoundingClientRect();
         await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
       });
+    });
+
+    // Ver a nota "QUEM ANIMA A ENTRADA DO PAINEL", acima.
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const computado = window.getComputedStyle(await waitForPortal('dialog'));
+      await expect(computado.animationName).toBe('nds-sheet-slide-in-right');
+      await expect(computado.animationDuration).toBe('0.2s');
     });
   },
 };

@@ -348,6 +348,47 @@
   transform: translateX(100%);
 }
 
+/* A ENTRADA do painel nas três stacks com `vaul` — e por que ela mora aqui.
+ *
+ * Angular e vanilla animam por TRANSIÇÃO, disparada pelos `[data-starting-style]`
+ * acima. As três com `vaul` não emitem esse marcador: nelas quem animava era a
+ * folha que a lib INJETA, com `animation-name: slideFrom*`.
+ *
+ * Isso era frágil de um jeito que só apareceu quando alguém mediu. Sob
+ * `prefers-reduced-motion` o painel parava — mas não porque o nosso guarda
+ * vencia: a `vaul` NOMEIA a animação em (0,4,0) e ganha do nosso seletor. O que
+ * salvava era ela declarar a DURAÇÃO em `[data-vaul-drawer]`, que é (0,1,0) e
+ * perde para `.nds-drawer-content:not([data-swiping])`. Duração zero, animação
+ * nomeada rodando por tempo nenhum. **Um bump que movesse essa duração um
+ * degrau acima desfazia a proteção sem nada ficar vermelho.**
+ *
+ * Decisão da dona, 2026-09-20: a animação da lib sai por `patch-package`, e a
+ * entrada passa a ser NOSSA — nossa keyframe, nossa duração por token, nosso
+ * guarda. A fragilidade deixa de existir em vez de ser vencida.
+ *
+ * O seletor leva `[data-vaul-drawer]` de propósito: ele é o discriminador exato
+ * das três stacks onde a lib está, e impede que angular e vanilla ganhem a
+ * keyframe ALÉM da transição que já têm — que seria animar duas vezes.
+ *
+ * As keyframes são as do Sheet, reusadas: `drawer.css` já consome peças de
+ * `sheet.css` por decisão registrada no docblock do topo, e um segundo jogo de
+ * deslizes idênticos seria a duplicação que o calendar pagou caro. */
+.nds-drawer-content[data-vaul-drawer][data-direction="bottom"] {
+  animation: nds-sheet-slide-in-bottom var(--duration-base) var(--ease-entrance);
+}
+
+.nds-drawer-content[data-vaul-drawer][data-direction="top"] {
+  animation: nds-sheet-slide-in-top var(--duration-base) var(--ease-entrance);
+}
+
+.nds-drawer-content[data-vaul-drawer][data-direction="left"] {
+  animation: nds-sheet-slide-in-left var(--duration-base) var(--ease-entrance);
+}
+
+.nds-drawer-content[data-vaul-drawer][data-direction="right"] {
+  animation: nds-sheet-slide-in-right var(--duration-base) var(--ease-entrance);
+}
+
 /* Reduced motion do Drawer.
  *
  * O que isto faz com o ARRASTE: a volta ao repouso, que é a única parte animada
@@ -362,6 +403,19 @@
 @media (prefers-reduced-motion: reduce) {
   .nds-drawer-content,
   .nds-drawer-content:not([data-swiping]) {
+    animation: none;
+    transition: none;
+  }
+
+  /* As quatro entradas com `vaul` são (0,3,0) e venceriam a guarda acima, que é
+   * (0,2,0) — `@media` não acrescenta especificidade. É a MESMA armadilha que
+   * `sheet.css` registra ter caído em 2026-09-17, quando a guarda da classe nua
+   * perdeu para `[data-side]` e o painel deslizava a lateral inteira para quem
+   * pediu menos movimento. Repetir os seletores é o que a mantém eficaz. */
+  .nds-drawer-content[data-vaul-drawer][data-direction="bottom"],
+  .nds-drawer-content[data-vaul-drawer][data-direction="top"],
+  .nds-drawer-content[data-vaul-drawer][data-direction="left"],
+  .nds-drawer-content[data-vaul-drawer][data-direction="right"] {
     animation: none;
     transition: none;
   }

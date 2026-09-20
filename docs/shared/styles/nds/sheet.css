@@ -298,14 +298,19 @@
  * data-ending-style (as keyframes acima cobrem só a montagem).
  */
 
-.nds-sheet-overlay {
-  transition: opacity var(--duration-base) ease-in-out;
-}
-
-.nds-sheet-overlay[data-starting-style],
-.nds-sheet-overlay[data-ending-style] {
-  opacity: 0;
-}
+/* O véu NÃO tem transição, e este é o SEGUNDO caminho por que ele animava.
+ *
+ * O primeiro era a keyframe, removida acima. Esta transição, com o
+ * `[data-starting-style]` abaixo, era o outro — e ficou de pé no commit que
+ * tirou a keyframe. Não era inerte: base-ui (react), bits-ui (svelte) e
+ * radix-ng (angular) EMITEM o atributo, então nessas três o véu continuava
+ * desvanecendo, agora por transição em vez de animação.
+ *
+ * Duas agentes o acharam de forma independente no mesmo dia, as duas medindo o
+ * DRAWER — onde ele é inerte, porque a `vaul` não emite o atributo — e as duas
+ * tiveram o cuidado de dizer que NÃO haviam medido o Sheet, em vez de
+ * generalizar a inércia. É a diferença entre "não reproduz aqui" e "não
+ * existe". */
 
 .nds-sheet-content {
   transition: transform var(--duration-base) ease-in-out, opacity var(--duration-base) ease-in-out;
@@ -322,10 +327,11 @@
  * A ENTRADA fica: `[data-starting-style]` cobre a montagem, e as `@keyframes`
  * acima valem para quem não usa o atributo.
  *
- * E o VÉU fica animado nos dois sentidos, de propósito: `.nds-sheet-overlay` é
- * declarado aqui e consumido pelo `drawer.css`, que não tem regra própria, e
- * pelo Sidebar em modo móvel. Tirar a saída dele alcançaria três componentes
- * para resolver um. */
+ * **E o VÉU deixou de animar em 2026-09-20**, por decisão da dona, nos quatro
+ * componentes que o têm. Até essa data este parágrafo dizia o contrário — que
+ * ele "fica animado nos dois sentidos, de propósito", porque tirar a saída dele
+ * "alcançaria três componentes para resolver um". O argumento era bom e a
+ * decisão o inverteu: alcançar os três passou a ser o objetivo, não o custo. */
 .nds-sheet-content[data-starting-style] {
   opacity: 0;
 }
@@ -368,50 +374,43 @@
  * exatamente o movimento grande que a preferência existe para evitar. Medido em
  * 2026-09-17; portão `guarda_de_movimento_inerte`.
  *
- * **E em 2026-09-20 o mesmo defeito voltou pela terceira camada: uma folha de
- * TERCEIRO.** O véu do Drawer em react, vue e svelte continuava desvanecendo
- * 0,5s com a preferência ligada. Medido em navegador, com
- * `prefers-reduced-motion: reduce` emulado por CDP e a página confirmando
- * `matchMedia(...).matches === true` antes de ler:
+ * **E em 2026-09-20 o mesmo defeito voltou pela terceira camada — uma folha de
+ * TERCEIRO — e foi RESOLVIDO na raiz, não na cascata.** O véu do Drawer em
+ * react, vue e svelte continuava desvanecendo 0,5s com a preferência ligada,
+ * porque a folha que a `vaul` injeta declarava a duração dele em (0,2,0) contra
+ * o (0,1,0) daqui, e aterrissa DEPOIS da nossa (`head.appendChild` na avaliação
+ * do módulo, então empate de especificidade também perderia).
  *
- *     véu, com `reduce`   animation-name: fadeIn · duration: 0.5s · running
- *     opacidade           0 → 0,270 → 0,656 → 0,806 → 0,900 → 0,945  (237ms)
+ * O conserto não foi vencer a disputa. Foram duas decisões da dona:
  *
- * A aritmética, e ela é de UM degrau:
+ *   1. **o véu não anima em componente nenhum** — as regras saíram daqui, de
+ *      `dialog.css` e de `alert-dialog.css`, com os keyframes órfãos, e a
+ *      transição de `[data-starting-style]` saiu junto (ela era o SEGUNDO
+ *      caminho, e não era inerte: base-ui, bits-ui e radix-ng emitem o atributo);
+ *   2. **a animação da lib sai por `patch-package`** — os três patches de
+ *      `vaul`, `vaul-vue` e `vaul-svelte` tiram as 8 regras de painel e as 3 de
+ *      véu da folha injetada, e a entrada do painel passa a ser nossa, em
+ *      `drawer.css`, com duração por token.
  *
- *     nosso   .nds-sheet-overlay                                      (0,1,0)
- *     vaul    [data-vaul-overlay][data-vaul-snap-points="false"]      (0,2,0)
+ * Por isso NÃO há `!important` aqui: ele chegou a existir entre os dois passos,
+ * como ponte, e saiu quando o segundo entrou. O que restou nesta regra é guarda
+ * de regressão para o painel, que é quem ainda anima.
  *
- * **O painel escapou por acidente, não por desenho.** A `vaul` nomeia a
- * animação dele em (0,4,0) e VENCE o nosso seletor — o que o salva é ela
- * declarar a DURAÇÃO em `[data-vaul-drawer]`, que é (0,1,0) e perde para
- * `.nds-drawer-content:not([data-swiping])`. Duração zero, animação nomeada
- * rodando por tempo nenhum. Um bump da `vaul` que mova essa duração um degrau
- * acima desfaz a proteção do painel **sem nada ficar vermelho**.
+ * **E a fragilidade que ninguém via foi o motivo de ir à raiz.** O painel
+ * parava sob a preferência por ACIDENTE: a `vaul` nomeia a animação dele em
+ * (0,4,0) e vence qualquer seletor nosso — o que o salvava era ela declarar a
+ * DURAÇÃO num seletor fraco. Um bump que a movesse um degrau acima desfazia a
+ * proteção **sem nada ficar vermelho**. Com a animação dela removida e a nossa
+ * no lugar, não há acidente de que depender.
  *
- * Por isso `!important`, e não mais especificidade: para vencer seria preciso
- * ≥ (0,4,0), e EMPATAR não serve — a `vaul` faz `head.appendChild(style)` na
- * avaliação do módulo e aterrissa depois da nossa folha, então empate perde na
- * ordem. Um `:not():not():not()` calibrado para a forma atual dos seletores
- * dela volta a perder calado no dia em que ela acrescentar um atributo, que é a
- * mesma classe de mapa que envelhece em silêncio.
- *
- * Conferido que ela não vence por outra via: zero `@layer` dos dois lados,
- * nenhum `!important` em regra `[data-vaul-overlay]`, e o caminho medido tem
- * `data-vaul-snap-points="false"`. O `transition` entra junto porque com snap
- * points ligados `[data-vaul-overlay][data-vaul-snap-points="true"]` declara
- * `transition: opacity .5s` na mesma (0,2,0).
- *
- * **O portão `guarda_de_movimento_inerte` NÃO vê isto, e não verá lendo a nossa
- * folha**: aqui a guarda está presente e parece eficaz. Quem a derrota é CSS
- * injetado em runtime. O portão com dentes é o que a sonda fez — abrir o painel
- * com a preferência emulada e ler `getComputedStyle` + `getAnimations()`. */
+ * **O portão `guarda_de_movimento_inerte` não via nada disto**, e não veria
+ * lendo a nossa folha: aqui a guarda estava presente e parecia eficaz. Quem a
+ * derrotava era CSS injetado em runtime. Quem vê é a asserção que as três
+ * stacks ganharam — abrir o painel com a preferência emulada e ler
+ * `getComputedStyle` mais a folha injetada, que reprova se a lib voltar a
+ * declarar animação. */
 @media (prefers-reduced-motion: reduce) {
-  .nds-sheet-overlay {
-    animation: none !important;
-    transition: none !important;
-  }
-
+  .nds-sheet-overlay,
   .nds-sheet-content {
     animation: none;
     transition: none;

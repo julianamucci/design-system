@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import {
   drawerHeadingH3Source,
@@ -45,6 +45,66 @@ type Story = StoryObj;
 // helper compartilhado esconderia da leitura o único contrato que cada uma
 // destas quatro stories verifica.
 
+/** Espera as animações do elemento terminarem, sem mexer no DOM. */
+async function waitForAnimationsDone(el: HTMLElement): Promise<void> {
+  await Promise.allSettled(el.getAnimations().map((a) => a.finished));
+}
+
+/**
+ * Fecha e REABRE o painel, devolvendo o elemento no começo da entrada.
+ *
+ * Só a mecânica mora aqui; as `expect()` ficam em cada story, pelo motivo da
+ * nota acima sobre `play_without_assertion`.
+ *
+ * ── Por que reabrir, e não medir a montagem ─────────────────────────────────
+ *
+ * Porque com o painel já aberto na montagem a lib escreve
+ * `data-vaul-animate="false"` — ela nasce com `shouldAnimate = !open` — e a
+ * folha dela traz `[data-vaul-animate=false]{animation:none!important}`, que
+ * com `!important` apaga QUALQUER animação, inclusive a nossa. Nesta stack o
+ * atributo vira `true` no `requestAnimationFrame` seguinte à montagem, então a
+ * janela em que a entrada é observável na montagem é de um quadro e depende de
+ * quando a `play` começa. Reabrir troca essa corrida por um ponto de partida
+ * determinado.
+ *
+ * Portanto estas quatro stories fotografam um painel em repouso — o que é o
+ * correto para a FOTO —, e a entrada é medida à parte, depois de reabrir.
+ */
+async function reopenToMeasureEntry(canvasElement: HTMLElement): Promise<HTMLElement | null> {
+  await userEvent.keyboard('{Escape}');
+  await waitForPortalGone('dialog');
+  await userEvent.click(within(canvasElement).getByRole('button', { name: /Abrir drawer/i }));
+
+  // Consulta por SELETOR e não `waitForPortal`: aquele gateia na opacidade, e o
+  // que se mede aqui é o COMEÇO da entrada. Laço de RELÓGIO com leitura pura —
+  // `waitFor` que reagenda por mutação é a armadilha registrada no CLAUDE.md.
+  const deadline = Date.now() + 2000;
+  let entering = document.querySelector<HTMLElement>('[data-slot="drawer-content"]');
+  while (!entering && Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, 4));
+    entering = document.querySelector<HTMLElement>('[data-slot="drawer-content"]');
+  }
+  return entering;
+}
+
+// ─── A entrada do painel é a NOSSA keyframe, não a da lib ──────────────────
+//
+// Até 2026-09-20 quem animava aqui era a `vaul-svelte`: ela injeta a folha dela
+// (bloco `<style global>` em `dist/components/drawer/drawer.svelte`) e nomeava
+// `slideFrom*` em (0,4,0), um degrau acima da regra de `drawer.css`, que ficava
+// inerte. A animação da lib saiu por `patch-package`
+// (`patches/vaul-svelte+1.0.0-next.7.patch`), e a nossa regra passou a valer.
+//
+// A asserção é de NOME, e é ela que tem dentes: um bump que devolva a folha da
+// lib deixa o painel deslizando igual, e só o NOME denuncia a troca de dono. A
+// duração vem junto porque é a que sai de token — 200ms de `--duration-base`,
+// contra os 500ms fixos que a lib usava.
+//
+// As quatro direções repetem o bloco em vez de chamar um helper, pelo mesmo
+// motivo da nota acima: `play_without_assertion` conta `expect()` DENTRO do
+// bloco, e são quatro REGRAS distintas em `drawer.css` — uma delas podendo
+// errar o nome da keyframe sem que as outras três acusem nada.
+
 // ─── O rodapé destas stories é uma saída SÓ ────────────────────────────────
 //
 // `footer: 'close'` e `cancelLabel: 'Fechar'`: o que muda entre as quatro
@@ -71,7 +131,7 @@ export const Bottom: Story = {
       },
     },
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
       const panel = await waitForPortal('dialog');
       await expect(panel).toHaveAttribute('data-direction', 'bottom');
@@ -81,6 +141,17 @@ export const Bottom: Story = {
       // outras. Contraste e cor do painel são verificados pelo axe da story.
       const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('block');
+    });
+
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe('nds-sheet-slide-in-bottom');
+      await expect(computed.animationDuration).toBe('0.2s');
+      // Deixa assentado: a foto do Chromatic é do painel em repouso.
+      await waitForAnimationsDone(entering!);
     });
   },
 };
@@ -103,7 +174,7 @@ export const Top: Story = {
       },
     },
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
       const panel = await waitForPortal('dialog');
       await expect(panel).toHaveAttribute('data-direction', 'top');
@@ -111,6 +182,17 @@ export const Top: Story = {
       await expect(panel).toHaveAccessibleName('Nova versão disponível');
       const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('none');
+    });
+
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe('nds-sheet-slide-in-top');
+      await expect(computed.animationDuration).toBe('0.2s');
+      // Deixa assentado: a foto do Chromatic é do painel em repouso.
+      await waitForAnimationsDone(entering!);
     });
   },
 };
@@ -133,7 +215,7 @@ export const Left: Story = {
       },
     },
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step('O painel encosta na borda esquerda', async () => {
       const panel = await waitForPortal('dialog');
       await expect(panel).toHaveAttribute('data-direction', 'left');
@@ -153,6 +235,17 @@ export const Left: Story = {
       await waitFor(async () => {
         await expect(Math.abs(panel.getBoundingClientRect().left)).toBeLessThan(2);
       });
+    });
+
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe('nds-sheet-slide-in-left');
+      await expect(computed.animationDuration).toBe('0.2s');
+      // Deixa assentado: a foto do Chromatic é do painel em repouso.
+      await waitForAnimationsDone(entering!);
     });
   },
 };
@@ -175,7 +268,7 @@ export const Right: Story = {
       },
     },
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step('O painel encosta na borda direita', async () => {
       const panel = await waitForPortal('dialog');
       await expect(panel).toHaveAttribute('data-direction', 'right');
@@ -188,6 +281,17 @@ export const Right: Story = {
         const box = panel.getBoundingClientRect();
         await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
       });
+    });
+
+    await step('A entrada é a keyframe do design system, não a da lib', async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe('nds-sheet-slide-in-right');
+      await expect(computed.animationDuration).toBe('0.2s');
+      // Deixa assentado: a foto do Chromatic é do painel em repouso.
+      await waitForAnimationsDone(entering!);
     });
   },
 };

@@ -1,0 +1,77 @@
+diff --git a/node_modules/vaul-svelte/dist/components/drawer/drawer.svelte b/node_modules/vaul-svelte/dist/components/drawer/drawer.svelte
+index 740a6e5..1e4862f 100644
+--- a/node_modules/vaul-svelte/dist/components/drawer/drawer.svelte
++++ b/node_modules/vaul-svelte/dist/components/drawer/drawer.svelte
+@@ -93,53 +93,8 @@
+ 	:global([data-vaul-drawer]) {
+ 		touch-action: none;
+ 		will-change: transform;
++		/* `transition` FICA: é a volta elástica do arraste, não a entrada. */
+ 		transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+-		animation-duration: 0.5s;
+-		animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+-	}
+-
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="bottom"][data-state="open"]
+-		) {
+-		animation-name: slideFromBottom;
+-	}
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="bottom"][data-state="closed"]
+-		) {
+-		animation-name: slideToBottom;
+-	}
+-
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="top"][data-state="open"]
+-		) {
+-		animation-name: slideFromTop;
+-	}
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="top"][data-state="closed"]
+-		) {
+-		animation-name: slideToTop;
+-	}
+-
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="left"][data-state="open"]
+-		) {
+-		animation-name: slideFromLeft;
+-	}
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="left"][data-state="closed"]
+-		) {
+-		animation-name: slideToLeft;
+-	}
+-
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="right"][data-state="open"]
+-		) {
+-		animation-name: slideFromRight;
+-	}
+-	:global(
+-			[data-vaul-drawer][data-vaul-snap-points="false"][data-vaul-drawer-direction="right"][data-state="closed"]
+-		) {
+-		animation-name: slideToRight;
+ 	}
+ 
+ 	:global([data-vaul-drawer][data-vaul-snap-points="true"][data-vaul-drawer-direction="bottom"]) {
+@@ -182,17 +137,6 @@
+ 		transform: translate3d(var(--snap-point-height, 0), 0, 0);
+ 	}
+ 
+-	:global([data-vaul-overlay][data-vaul-snap-points="false"]) {
+-		animation-duration: 0.5s;
+-		animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+-	}
+-	:global([data-vaul-overlay][data-vaul-snap-points="false"][data-state="open"]) {
+-		animation-name: fadeIn;
+-	}
+-	:global([data-vaul-overlay][data-state="closed"]) {
+-		animation-name: fadeOut;
+-	}
+-
+ 	:global([data-vaul-animate="false"]) {
+ 		animation: none !important;
+ 	}

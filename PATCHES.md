@@ -1085,6 +1085,168 @@ npx patch-package <pkg>       # regenera o .patch
 > 2026-09-14, nos patches do sonner. O `✔` do `patch-package` e o
 > `patches-aplicados.test.ts` provam `node_modules`, não o cache.
 
+### react/drawer — a `vaul` para de animar véu e painel {#react-vaul-sem-animacao}
+
+- **Patch:** `nortear-design-system-react/patches/vaul+1.1.2.patch`
+- **Arquivos patcheados:** `node_modules/vaul/dist/index.mjs` e `dist/index.js` (a string do `__insertCSS`) e `node_modules/vaul/style.css` (a folha publicada, que ninguém importa hoje — patcheada para não divergir da injetada)
+- **Versão upstream:** `vaul@1.1.2`
+- **Categoria:** a11y
+- **Data:** 2026-09-20
+
+**Antes → depois:** saem `animation-duration` e `animation-timing-function` da
+regra base `[data-vaul-drawer]`, as **8** regras `animation-name: slideFrom*` /
+`slideTo*` (0,4,0), e as **3** regras de véu (duração + `fadeIn` + `fadeOut`).
+Saldo na folha injetada: zero `animation-name`, zero `animation-duration`.
+
+**Fica de pé, de propósito:** as `@keyframes` (órfãs), o
+`[data-vaul-animate=false]{animation:none!important}` (interno da lib) e as
+regras de snap points — e, crucialmente, o `transition: transform .5s` da regra
+base, que é a volta elástica do arraste.
+
+**Motivo:** o véu não anima em componente nenhum (decisão da dona, 2026-09-20).
+A lib injeta a folha dela em runtime — `head.appendChild` na avaliação do módulo,
+aterrissando DEPOIS da nossa — e declarava a duração do véu em (0,2,0) contra o
+(0,1,0) de `.nds-sheet-overlay`: o véu desvanecia 0,5s **inclusive sob
+`prefers-reduced-motion`**, contra o que o C6 do `prd/drawer.md` promete.
+
+E o PAINEL só parava por ACIDENTE: a lib nomeia a animação dele em (0,4,0) e
+vence qualquer seletor nosso — o que o salvava era ela declarar a duração num
+seletor fraco. Um bump que a movesse um degrau acima desfazia a proteção **sem
+nada ficar vermelho**.
+
+Wrapper não resolve: é cascata de folha de terceiro. Especificidade também não —
+para vencer seria preciso ≥ (0,4,0), e empatar perde na ordem de injeção. A dona
+recusou `!important`; o patch tira a causa, e a entrada do painel passa a ser
+nossa, em `docs/shared/styles/nds/drawer.css`, com duração por token.
+
+**O véu NÃO pode ser removido como elemento** — é ele que trava a rolagem, e isso
+está escrito na própria lib: *"Overlay is the component that is locking scroll,
+removing it will unlock the scroll without having to dig into Radix's Dialog
+library"*.
+
+**Verificação após bump:** `npx patch-package` tem de imprimir `vaul@1.1.2 ✔`, e o
+número no nome do arquivo muda junto com a versão. O hunk é conferido em
+`node_modules` por `src/lib/patches-aplicados.test.ts`, que descobre o patch
+sozinho (a lista é o diretório).
+
+**E invalide `node_modules/.cache/storybook` antes de crer em resultado de
+navegador**: o `✔` prova `node_modules`, não o que o navegador carrega. Medido
+neste patch — cópias pré-empacotadas em `sb-vitest/deps` e `sb-vite/deps`
+continuaram servindo o CSS antigo depois do `✔`. O `patches-aplicados.test.ts`
+tem o mesmo ponto cego. As stories `Bottom/Top/Left/Right` (`drawer-variants`) e `Open` (`drawer-states`) reprovam nomeando `slideFrom*` ou
+`fadeIn` se a animação da lib voltar.
+
+**Nota desta stack:** as quatro stories de direção usam `defaultOpen`, e a `vaul`
+calcula `shouldAnimate = useRef(!defaultOpen)` — um `useRef`, que não
+re-renderiza. O painel delas **nunca animou**, nem antes do patch: o
+`data-vaul-animate="false"` ficava para sempre e o `!important` interno apagava
+também a nossa regra. A entrada só se mede **reabrindo**. O comentário da story
+`Left` afirmava que a lib rodava `slideFromLeft` ali, e isso era falso.
+
+### vue/drawer — a `vaul-vue` para de animar véu e painel {#vue-vaul-vue-sem-animacao}
+
+- **Patch:** `nortear-design-system-vue/patches/vaul-vue+0.4.1.patch`
+- **Arquivos patcheados:** `node_modules/vaul-vue/dist/index.js` e `dist/index.umd.cjs` — os dois carregam a MESMA string CSS, byte a byte; não há `style.css` neste pacote
+- **Versão upstream:** `vaul-vue@0.4.1`
+- **Categoria:** a11y
+- **Data:** 2026-09-20
+
+**Antes → depois:** os mesmos três recortes do react. Saldo: zero
+`animation-name`, zero `animation-duration`.
+
+**Motivo:** o véu não anima em componente nenhum (decisão da dona, 2026-09-20).
+A lib injeta a folha dela em runtime — `head.appendChild` na avaliação do módulo,
+aterrissando DEPOIS da nossa — e declarava a duração do véu em (0,2,0) contra o
+(0,1,0) de `.nds-sheet-overlay`: o véu desvanecia 0,5s **inclusive sob
+`prefers-reduced-motion`**, contra o que o C6 do `prd/drawer.md` promete.
+
+E o PAINEL só parava por ACIDENTE: a lib nomeia a animação dele em (0,4,0) e
+vence qualquer seletor nosso — o que o salvava era ela declarar a duração num
+seletor fraco. Um bump que a movesse um degrau acima desfazia a proteção **sem
+nada ficar vermelho**.
+
+Wrapper não resolve: é cascata de folha de terceiro. Especificidade também não —
+para vencer seria preciso ≥ (0,4,0), e empatar perde na ordem de injeção. A dona
+recusou `!important`; o patch tira a causa, e a entrada do painel passa a ser
+nossa, em `docs/shared/styles/nds/drawer.css`, com duração por token.
+
+**O véu NÃO pode ser removido como elemento** — é ele que trava a rolagem, e isso
+está escrito na própria lib: *"Overlay is the component that is locking scroll,
+removing it will unlock the scroll without having to dig into Radix's Dialog
+library"*.
+
+**Verificação após bump:** `npx patch-package` tem de imprimir `vaul-vue@0.4.1 ✔`, e o
+número no nome do arquivo muda junto com a versão. O hunk é conferido em
+`node_modules` por `src/lib/patches-aplicados.test.ts`, que descobre o patch
+sozinho (a lista é o diretório).
+
+**E invalide `node_modules/.cache/storybook` antes de crer em resultado de
+navegador**: o `✔` prova `node_modules`, não o que o navegador carrega. Medido
+neste patch — cópias pré-empacotadas em `sb-vitest/deps` e `sb-vite/deps`
+continuaram servindo o CSS antigo depois do `✔`. O `patches-aplicados.test.ts`
+tem o mesmo ponto cego. As stories `Bottom/Top/Left/Right` (`drawer-variants`) e `Open` (`drawer-states`) reprovam nomeando `slideFrom*` ou
+`fadeIn` se a animação da lib voltar.
+
+**Duas notas desta stack, medidas:** a `vaul-vue@0.4.1` **não tem
+`shouldAnimate`** — a palavra `animate` aparece uma vez no `dist` inteiro, e é
+dentro da própria regra CSS, que é letra morta aqui. Então `defaultOpen` NÃO
+desliga a animação, ao contrário do react, e a entrada se mede na montagem. E os
+seletores divergem: a lib usa `data-vaul-drawer-direction`, a nossa folha lê
+`data-direction` (renomeado em 2026-09-08).
+
+### svelte/drawer — a `vaul-svelte` para de animar véu e painel {#svelte-vaul-svelte-sem-animacao}
+
+- **Patch:** `nortear-design-system-svelte/patches/vaul-svelte+1.0.0-next.7.patch`
+- **Arquivo patcheado:** `node_modules/vaul-svelte/dist/components/drawer/drawer.svelte` — o bloco `<style global>` com seletores `:global()`, compilado pelo `vite-plugin-svelte` do consumidor
+- **Versão upstream:** `vaul-svelte@1.0.0-next.7`
+- **Categoria:** a11y
+- **Data:** 2026-09-20
+
+**Antes → depois:** os mesmos três recortes. Aqui é UM arquivo e dois hunks,
+onde o react precisou de três arquivos — a estrutura da lib é outra, embora os
+NOMES dos seletores sejam idênticos.
+
+**Motivo:** o véu não anima em componente nenhum (decisão da dona, 2026-09-20).
+A lib injeta a folha dela em runtime — `head.appendChild` na avaliação do módulo,
+aterrissando DEPOIS da nossa — e declarava a duração do véu em (0,2,0) contra o
+(0,1,0) de `.nds-sheet-overlay`: o véu desvanecia 0,5s **inclusive sob
+`prefers-reduced-motion`**, contra o que o C6 do `prd/drawer.md` promete.
+
+E o PAINEL só parava por ACIDENTE: a lib nomeia a animação dele em (0,4,0) e
+vence qualquer seletor nosso — o que o salvava era ela declarar a duração num
+seletor fraco. Um bump que a movesse um degrau acima desfazia a proteção **sem
+nada ficar vermelho**.
+
+Wrapper não resolve: é cascata de folha de terceiro. Especificidade também não —
+para vencer seria preciso ≥ (0,4,0), e empatar perde na ordem de injeção. A dona
+recusou `!important`; o patch tira a causa, e a entrada do painel passa a ser
+nossa, em `docs/shared/styles/nds/drawer.css`, com duração por token.
+
+**O véu NÃO pode ser removido como elemento** — é ele que trava a rolagem, e isso
+está escrito na própria lib: *"Overlay is the component that is locking scroll,
+removing it will unlock the scroll without having to dig into Radix's Dialog
+library"*.
+
+**Verificação após bump:** `npx patch-package` tem de imprimir `vaul-svelte@1.0.0-next.7 ✔`, e o
+número no nome do arquivo muda junto com a versão. O hunk é conferido em
+`node_modules` por `src/lib/patches-aplicados.test.ts`, que descobre o patch
+sozinho (a lista é o diretório).
+
+**E invalide `node_modules/.cache/storybook` antes de crer em resultado de
+navegador**: o `✔` prova `node_modules`, não o que o navegador carrega. Medido
+neste patch — cópias pré-empacotadas em `sb-vitest/deps` e `sb-vite/deps`
+continuaram servindo o CSS antigo depois do `✔`. O `patches-aplicados.test.ts`
+tem o mesmo ponto cego. As stories `Bottom/Top/Left/Right` (`drawer-variants`) e `Open` (`drawer-states`) reprovam nomeando `slideFrom*` ou
+`fadeIn` se a animação da lib voltar.
+
+**Nota desta stack, e ela contradiz a do react:** aqui `shouldAnimate` é
+`$state` com um `$effect` que o põe `true` dentro de um
+`requestAnimationFrame` — e isso **re-renderiza**. Medido com `defaultOpen: true`:
+no início da play `data-vaul-animate="false"` e `animation-name: none`; a +400ms,
+`"true"` e `nds-sheet-slide-in-bottom` a 0.2s. O painel anima um quadro depois da
+montagem, o que é observável mas racy — a story mede reabrindo, por determinismo.
+Mesma lib, três comportamentos nas três stacks.
+
 ### react/sonner — Toast `<li>` tabIndex 0 → -1 {#react-sonner-toast-tabindex}
 
 - **Patch:** `nortear-design-system-react/patches/sonner+2.0.8.patch`

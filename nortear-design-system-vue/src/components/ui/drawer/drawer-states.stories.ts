@@ -246,6 +246,17 @@ export const Open: Story = {
       // Há animação EM CURSO neste instante: é a prova de que o painel não
       // apareceu pronto no lugar.
       await expect(entrando!.getAnimations().length).toBeGreaterThan(0);
+      // E ela é a NOSSA. Até 2026-09-20 quem animava aqui era a `vaul-vue`, com
+      // `slideFromBottom` nomeado em (0,4,0) — um degrau acima da regra de
+      // `drawer.css`, que ficava inerte. A animação da lib saiu por
+      // `patch-package` (`patches/vaul-vue+0.4.1.patch`), e esta asserção é o
+      // que impede um bump de devolvê-la sem nada ficar vermelho: o movimento
+      // continuaria acontecendo, e só o NOME denuncia a troca de dono. A
+      // duração vem junto porque é a que sai de token — 200ms de
+      // `--duration-base`, contra os 500ms fixos que a lib usava.
+      const enteringStyle = window.getComputedStyle(entrando!);
+      await expect(enteringStyle.animationName).toBe('nds-sheet-slide-in-bottom');
+      await expect(enteringStyle.animationDuration).toBe('0.2s');
       const topoInicial = entrando!.getBoundingClientRect().top;
 
       // Laço de RELÓGIO, com leitura direta. `waitFor` aqui seria a armadilha
@@ -265,9 +276,80 @@ export const Open: Story = {
       // arredondamento.
       await expect(topoInicial - topoFinal).toBeGreaterThan(8);
       // E veio de fora para dentro, sem passar do ponto: o repouso é o MÍNIMO
-      // da série. A curva da lib não tem sobressalto, e se ganhasse um, isto
+      // da série. A curva não tem sobressalto, e se ganhasse um, isto
       // reprovaria.
       await expect(topoFinal - Math.min(...amostras)).toBeLessThan(0.5);
+    });
+
+    // ── O VÉU NÃO ANIMA ───────────────────────────────────────────────────
+    //
+    // Decisão da dona, 2026-09-20, e vale para os quatro componentes com véu.
+    //
+    // Aqui ela custa uma asserção de forma incomum, e o motivo é medido: quem
+    // animava o véu não era a nossa folha, era a que a `vaul-vue` injeta em
+    // runtime (`head.appendChild` na avaliação do módulo). Ela nomeava `fadeIn`
+    // e declarava a duração em `[data-vaul-overlay][data-vaul-snap-points=false]`,
+    // que é (0,2,0) contra o (0,1,0) do nosso `.nds-sheet-overlay` — então o véu
+    // continuava desvanecendo 0,5s INCLUSIVE sob `prefers-reduced-motion`. A
+    // dona recusou `!important` e escolheu patch da lib
+    // (`patches/vaul-vue+0.4.1.patch`).
+    await step('O véu não anima, e a sheet da lib não tem mais o que animar', async () => {
+      const veu = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
+      await expect(veu).not.toBeNull();
+      await expect(window.getComputedStyle(veu!).animationName).toBe('none');
+      await expect(veu!.getAnimations()).toHaveLength(0);
+    });
+
+    // A asserção acima lê o RESULTADO da cascata, neste modo de mídia. Esta lê a
+    // CAUSA, e é a que vale nos dois modos de uma vez: se a folha injetada não
+    // declara animação nenhuma para o véu nem para o painel, não existe modo de
+    // mídia em que a lib volte a animá-los — não há o que uma `@media` deixe de
+    // vencer. É também o que um bump derruba primeiro, e ruidosamente, em vez do
+    // silêncio que o defeito original teve.
+    //
+    // Varre as folhas SEM `href`: a da `vaul-vue` é injetada como `<style>`, e
+    // as nossas chegam por import do `preview.ts`. `cssRules` de folha de mesma
+    // origem é legível; a guarda de `try` existe para não confundir uma folha
+    // de terceiro bloqueada com uma regra encontrada.
+    await step('A sheet injetada pela lib não declara animação de véu nem de painel', async () => {
+      // Recursivo de propósito: `@media (hover: hover)` e `@media (pointer: fine)`
+      // já guardam regras `[data-vaul-drawer]` na folha da lib, e um portão que
+      // só lê o nível de cima não veria uma animação reaparecer dentro de um
+      // bloco desses.
+      const planas: CSSStyleRule[] = [];
+      const achatar = (rules: CSSRuleList) => {
+        for (const rule of Array.from(rules)) {
+          if (rule instanceof CSSStyleRule) planas.push(rule);
+          else if ('cssRules' in rule) achatar((rule as CSSGroupingRule).cssRules);
+        }
+      };
+      for (const sheet of Array.from(document.styleSheets)) {
+        try {
+          achatar(sheet.cssRules);
+        } catch {
+          continue;
+        }
+      }
+
+      const declaracoes: string[] = [];
+      for (const rule of planas) {
+        // Só as regras DA LIB. As nossas quatro entradas também nomeiam
+        // `[data-vaul-drawer]` — é o discriminador que `drawer.css` usa para
+        // alcançar exatamente as stacks onde a lib está —, e são justamente as
+        // que DEVEM declarar animação. O que as separa é a classe do design
+        // system no seletor.
+        if (rule.selectorText.includes('.nds-')) continue;
+        if (!/\[data-vaul-(overlay|drawer)\]/.test(rule.selectorText)) continue;
+        for (const prop of ['animation-name', 'animation-duration', 'animation']) {
+          const value = rule.style.getPropertyValue(prop);
+          if (value) declaracoes.push(`${rule.selectorText} { ${prop}: ${value} }`);
+        }
+      }
+      // A única sobrevivente permitida é a guarda da própria lib
+      // (`[data-vaul-animate=false]{animation:none!important}`), que DESLIGA
+      // animação em vez de ligar — e ela não casa com os seletores acima.
+      // Qualquer outra entrada aqui é a animação da lib de volta.
+      await expect(declaracoes).toEqual([]);
     });
   },
 };
@@ -281,7 +363,7 @@ export const Controlled: Story = {
       source: { transform: drawerControlledSource },
       description: {
         story:
-          'Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.',
+          'Estado do lado de fora: o componente não decide nada sozinho — abre quando o value ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.',
       },
     },
   },
@@ -303,7 +385,7 @@ export const Controlled: Story = {
           page publica.
 
           O fechamento pelo lado de fora continua provado: é o \`update:open\`
-          do último passo que devolve o valor ao dono do estado.
+          do último passo que devolve o value ao dono do estado.
         -->
         <Button @click="open = true">Abrir via estado externo</Button>
         <Drawer :open="open" @update:open="(v) => open = v">
@@ -346,7 +428,7 @@ export const Controlled: Story = {
       await expect(panel).toHaveAccessibleName('Controlado pelo pai');
     });
 
-    await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
+    await step('Fechar por dentro devolve o value a quem é dono dele', async () => {
       const panel = await waitForPortal('dialog');
       await userEvent.click(within(panel).getByRole('button', { name: L.cancel }));
       await waitForPortalGone('dialog');

@@ -47,7 +47,9 @@ lá usa como alvo.
 >
 > **Nasceu de um defeito, e a simplificação é o conserto**: o véu do Drawer em react, vue e svelte desvanecia 0,5s sob `prefers-reduced-motion`, porque a folha que a `vaul` injeta declara a duração dele um degrau de especificidade acima do nosso guarda (medido; ver a D17 de [`drawer.md`](drawer.md)). Véu que não anima não tem guarda a perder — a decisão apaga a categoria do problema em vez de vencer a disputa de cascata.
 >
-> As linhas de §5 e §6 abaixo descrevem o estado ANTERIOR e ficam como histórico.
+> **Eram DOIS caminhos, e o segundo sobreviveu ao commit que tirou o primeiro**: a `animation` com o keyframe, e a `transition: opacity` com `[data-starting-style]`. A segunda não era inerte — base-ui, bits-ui e radix-ng emitem o atributo —, então nessas três o véu continuou desvanecendo por transição até ser removida também. Duas agentes a acharam de forma independente no mesmo dia, as duas medindo o DRAWER (onde ela É inerte, porque a `vaul` não emite o atributo) e as duas com o cuidado de dizer que não haviam medido o Sheet.
+>
+> §5, §6, §7 #5 e §8 abaixo estão ATUALIZADOS para esta decisão — e o §8 registra o `!important` que existiu por algumas horas entre os dois passos e saiu. Ver a D18 de [`drawer.md`](drawer.md).
 
 ## 2. Contrato de comportamento
 
@@ -238,10 +240,18 @@ base-ui, radix-ng e bits-ui o escrevem; a `reka-ui` instalada não o tem em
 `dist/`; o vanilla remove o nó na hora. No máximo três das cinco animavam, e a
 referência não era uma delas.
 
-**O VÉU continua animado nos dois sentidos, e isso é medição, não descuido**:
-`.nds-sheet-overlay` é declarado nesta folha e consumido pelo `drawer.css`, que
-não tem regra própria, e pelo Sidebar em modo móvel (§1). Tirar a saída dele
-consertaria um componente e mexeria em três.
+**O VÉU não anima, em sentido nenhum, desde 2026-09-20** — decisão da dona, nos
+quatro componentes que o têm. Até essa data este parágrafo dizia o contrário:
+que ele ficava animado de propósito, porque `.nds-sheet-overlay` é declarado
+nesta folha e consumido pelo `drawer.css` e pelo Sidebar móvel (§1), e mexer nele
+"consertaria um componente e mexeria em três". **O argumento estava certo e a
+decisão o inverteu**: alcançar os três passou a ser o objetivo, não o custo.
+
+Saíram as duas declarações, porque eram DOIS caminhos independentes: a
+`animation: nds-sheet-fade-in` (com o keyframe, que ficou órfão) e a
+`transition: opacity` com `[data-starting-style]`. A segunda sobreviveu algumas
+horas à primeira, e **não era inerte** — base-ui, bits-ui e radix-ng emitem o
+atributo, então nessas três o véu continuava desvanecendo, agora por transição.
 
 ## 6. Estados
 
@@ -466,8 +476,10 @@ era verdade — o primeiro ainda estava lá —, e a asserção media DOM velho.
    `[data-ending-style]`, que base-ui, radix-ng e bits-ui escrevem e a `reka-ui`
    instalada não tem em `dist/`; o vanilla remove o nó na hora. Três das cinco
    animavam, a referência não. Por decisão da dona a regra saiu de `sheet.css`,
-   com o motivo escrito no lugar dela — e **só nas regras do `.nds-sheet-content`**:
-   o véu ficou animado porque `drawer.css` e o Sidebar móvel o consomem (§5).
+   com o motivo escrito no lugar dela — na época **só nas regras do
+   `.nds-sheet-content`**, porque o véu ficava animado por ser consumido pelo
+   `drawer.css` e pelo Sidebar móvel. Em 2026-09-20 a dona estendeu ao véu, e
+   **ele não anima mais em sentido nenhum** (§5).
 6. **`modal`.** Prop em react (`sheet.tsx:26-31`, com `'trap-focus'`), vue
    (`SheetContent.vue:71-72`) e angular (`sheet.ts:194`); ausente em svelte
    (sempre modal, `sheet-content.svelte:12-13`) e vanilla. Só a docs page do
@@ -635,17 +647,20 @@ para é a camada de TOKEN — a folha declara duração só por `var(--duration-
 mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
 segura, está por extenso em `hover-card.md` §8.
 
-**O guarda do VÉU ganhou `!important` em 2026-09-20, e o motivo não é do Sheet.**
-`sheet.css` também veste o **Drawer**, e lá o véu de react, vue e svelte
-continuava desvanecendo 0,5s sob a preferência: a `vaul` declara
+**O guarda do VÉU chegou a ganhar `!important` em 2026-09-20 — e ele SAIU no
+mesmo dia.** O motivo nunca foi do Sheet: `sheet.css` também veste o **Drawer**,
+e lá o véu de react, vue e svelte desvanecia 0,5s sob a preferência, porque a
+`vaul` declara
 `[data-vaul-overlay][data-vaul-snap-points="false"]{animation-duration:.5s}` em
 (0,2,0), contra o nosso `.nds-sheet-overlay` em (0,1,0), e injeta a folha dela
 por `head.appendChild` depois da nossa. **Um degrau, e uma folha de terceiro.**
 
-O Sheet nunca teve o defeito — ele não carrega a `vaul` —, mas a regra é a mesma
-e por isso o `!important` aparece aqui. Medição, aritmética e o porquê de mais
-especificidade não resolver estão na **D17 do [`drawer.md`](drawer.md)** e no
-comentário da própria regra.
+A dona recusou o `!important` e mandou resolver a fragilidade na raiz: a
+animação da lib saiu por `patch-package`, e o véu deixou de animar em qualquer
+componente (§5). **Não há `!important` em `sheet.css`** — a única ocorrência da
+palavra no arquivo é a prosa do comentário que explica por que ela não está lá.
+Medição, aritmética e o desenho novo estão nas **D17 e D18 do
+[`drawer.md`](drawer.md)** e em `PATCHES.md`.
 
 **Esta é a TERCEIRA camada do mesmo defeito neste arquivo**: a guarda da classe
 nua perdendo para `[data-side]` (abaixo), a guarda inerte por token
@@ -658,9 +673,10 @@ terceira.
 por lado são declaradas em `.nds-sheet-content[data-side="…"]`, (0,2,0), e a
 guarda mirava a classe nua, (0,1,0): perdia na cascata, e o painel deslizava pela
 lateral inteira para quem pediu menos movimento — que é exatamente o movimento
-grande que a preferência existe para evitar. A metade que já servia (o véu e as
-duas transições, declarados na classe nua) continua onde estava. Portão:
-`guarda_de_movimento_inerte`.
+grande que a preferência existe para evitar. A metade que já servia (as duas
+transições declaradas na classe nua) continua onde estava; o véu segue na lista
+de seletores da guarda por regressão, já que ele não anima mais por regra
+nenhuma. Portão: `guarda_de_movimento_inerte`.
 
 ## 9. Analytics
 

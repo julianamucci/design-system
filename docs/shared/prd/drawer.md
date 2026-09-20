@@ -36,7 +36,7 @@ valer — e `—` é dívida declarada, não ausência de risco.
 | C3 | O foco fica preso: Tab e Shift+Tab circulam dentro do painel | `Playground` (seis Tabs e o foco continua dentro), nas cinco |
 | C4 | `Escape` fecha; com a dispensa desligada, não fecha | o caminho positivo: `Playground` passo 4, nas cinco. O negativo: `NotDismissible` em quatro — **o angular fecha com Escape** e a story dele não tem o passo (§7, inconsistência 1) |
 | C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `DragToDismiss`, nas cinco (arraste curto, arraste longo, Escape no mesmo painel, alça sem foco) |
-| C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `movimento_sem_guarda_eficaz`, que lê a folha; nenhuma story liga a preferência |
+| C6 | O véu não anima nunca (D18); o painel anima a entrada e para sob `prefers-reduced-motion` | o véu: `Open` nas cinco (`animationName: 'none'` e `getAnimations()` vazio). O painel: `movimento_sem_guarda_eficaz`, que lê a folha, mais a varredura da folha INJETADA nas três com `vaul` — **nenhuma story liga a preferência**, e é a pendência do D17 |
 | C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `WithScroll`, nas cinco |
 | C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue e do angular; no DOM renderizado, — (pendência abaixo) |
 | C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `WithForm` lendo `button.form`, nas cinco |
@@ -372,12 +372,15 @@ DURAÇÃO em `[data-vaul-drawer]`, que é (0,1,0) e perde. Duração zero, anima
 nomeada rodando por tempo nenhum. **Um bump que mova essa duração um degrau
 acima desfaz a proteção do painel sem nada ficar vermelho.**
 
-**O conserto é `!important` no guarda do véu**, não mais especificidade: para
-vencer seria preciso ≥ (0,4,0), e empatar não serve — a `vaul` injeta por
-`head.appendChild` na avaliação do módulo e aterrissa depois da nossa folha,
-então empate perde na ordem. Um `:not():not():not()` calibrado para a forma atual
-dos seletores dela voltaria a perder calado no dia em que ela acrescentasse um
-atributo.
+**O conserto NÃO podia ser especificidade**: para vencer seria preciso ≥ (0,4,0),
+e empatar não serve — a `vaul` injeta por `head.appendChild` na avaliação do
+módulo e aterrissa depois da nossa folha, então empate perde na ordem. Um
+`:not():not():not()` calibrado para a forma atual dos seletores dela voltaria a
+perder calado no dia em que ela acrescentasse um atributo.
+
+O que esta decisão registra é o DIAGNÓSTICO. O conserto foi `!important` por
+algumas horas, como ponte, e a dona o recusou no mesmo dia: **o D18 o substitui,
+e não há `!important` em nenhuma das quatro folhas.**
 
 **Esta é a TERCEIRA camada do mesmo defeito neste arquivo**, e o comentário da
 regra registra as três: a guarda da classe nua perdendo para `[data-side]`
@@ -391,9 +394,63 @@ injetado em runtime.
 > Quem o derrota é CSS injetado em runtime por uma dependência. O portão com
 > dentes é o que a sonda fez: abrir o painel com a preferência emulada por CDP e
 > ler `getComputedStyle` + `getAnimations()` no véu e no painel.
-> **Fecha quando**: existe asserção nas três stacks com `vaul` que abre o painel
-> sob `reduce` e cobra `animation-duration: 0s` no véu E no painel — a segunda
-> metade importa porque a proteção do painel é acidental e some num bump.
+>
+> **PARCIALMENTE FECHADA no mesmo dia, pelo D18, e por um caminho melhor.** As
+> três stacks com `vaul` ganharam asserção que lê a CAUSA em vez do resultado:
+> varrem as folhas injetadas e cobram que nenhuma regra `[data-vaul-overlay]` /
+> `[data-vaul-drawer]` **sem classe `.nds-`** declare `animation-name`,
+> `animation-duration` ou `animation`. Ela vale nos dois modos de mídia de uma
+> vez — se a lib não declara animação, não existe `@media` que ela possa vencer —
+> e a varredura é recursiva, porque a folha dela já guarda regras
+> `[data-vaul-drawer]` dentro de `@media (hover:hover)`.
+>
+> **O que CONTINUA aberto**: ligar `prefers-reduced-motion` por CDP numa story.
+> Nenhuma das cinco o faz, e as outras duas stacks (angular e vanilla), que
+> animam por transição própria e não têm lib injetando folha, seguem cobertas só
+> pelo portão que lê a folha.
+> **Fecha quando**: existe uma story, em qualquer stack, que emula `reduce`,
+> confirma `matchMedia(...).matches` antes de ler, abre o painel e cobra
+> `animation-duration: 0s` — com o controle positivo da passagem sem emulação.
+
+### D18 · O véu não anima em componente nenhum, e a entrada do painel passa a ser NOSSA
+
+**Fixada em** 2026-09-20, por decisão da dona, sobre a medição do D17.
+
+Enunciado da decisão, em duas metades:
+
+1. **remova toda a animação de véu, de todos os componentes** — Drawer, Sheet,
+   Dialog e AlertDialog. Saíram as regras de `animation`, os `@keyframes`
+   órfãos, e também a `transition: opacity` com `[data-starting-style]`, que era
+   um SEGUNDO caminho e não era inerte: base-ui, bits-ui e radix-ng emitem o
+   atributo;
+2. **mantenha só o painel com a animação de entrada, e resolva a fragilidade
+   dele sem `!important`.**
+
+A segunda metade é a que muda o desenho. Vencer a folha da lib na cascata era
+impossível sem `!important` (D17), então a causa saiu: **três patches de
+`patch-package`** removem da folha injetada as 8 regras `slideFrom*`/`slideTo*`
+e as 3 de véu — `vaul+1.1.2.patch` (react), `vaul-vue+0.4.1.patch` (vue) e
+`vaul-svelte+1.0.0-next.7.patch` (svelte), descritos em `PATCHES.md`. A entrada
+do painel passa a ser declarada em `drawer.css`, com as keyframes do Sheet e
+duração por `var(--duration-base)` — 200ms em vez dos 500ms fixos da lib.
+
+**O que fica de pé nos patches, de propósito:** o `transition: transform .5s` da
+regra base, que é a volta elástica do arraste, a guarda interna
+`[data-vaul-animate=false]` e as regras de snap points. **E o véu NÃO é removido
+como elemento** — é ele que trava a rolagem, e a própria lib diz isso em
+comentário.
+
+**A fragilidade deixou de existir em vez de ser vencida.** Sob
+`prefers-reduced-motion` o painel parava por acidente (D17): a lib nomeava a
+animação em (0,4,0) e ganhava, e o que o salvava era ela declarar a duração num
+seletor fraco. Hoje quem anima é a nossa regra, e o guarda do fim de `drawer.css`
+repete os quatro seletores `[data-vaul-drawer][data-direction]` — eles são
+(0,3,0) e venceriam a guarda de (0,2,0), porque **`@media` não acrescenta
+especificidade**, que é a mesma armadilha registrada três vezes em `sheet.css`.
+
+**Saldo medido**: `!important` em `sheet.css`, `drawer.css`, `dialog.css` e
+`alert-dialog.css` — zero. A única ocorrência da palavra é a prosa do comentário
+que explica por que ela não está lá.
 
 ## 4. Anatomia
 
@@ -845,15 +902,22 @@ angular, pela fábrica no vanilla.
 - animação própria acrescentada por quem consome precisa parar sob
   `prefers-reduced-motion`: o painel e o véu já param, o extra não.
 
-**Movimento reduzido** — o C6 afirma que painel e véu param, e DUAS camadas
-seguram, como no `alert-dialog.md` §8:
+**Movimento reduzido** — desde o D18 o C6 tem duas metades diferentes: o véu não
+anima em modo nenhum, e o painel anima a entrada e para sob a preferência. Para
+o painel, TRÊS camadas seguram — as duas do `alert-dialog.md` §8 mais uma que
+este componente precisou ter:
 
 - **a de token**: a folha declara duração só por `var(--duration-base)`, e
   `docs/shared/tokens/motion.css` zera a escada inteira sob a preferência;
 - **a da própria folha**: o bloco `@media (prefers-reduced-motion: reduce)` no
   FIM de `drawer.css` zera `animation` e `transition` de `.nds-drawer-content` e
   de `.nds-drawer-content:not([data-swiping])`. Ele vem depois das regras de
-  transição, com os mesmos seletores, e por isso vence.
+  transição, com os mesmos seletores, e por isso vence. **E repete os quatro
+  seletores `[data-vaul-drawer][data-direction]` da entrada**, que são (0,3,0) e
+  venceriam a guarda de (0,2,0) — `@media` não acrescenta especificidade;
+- **a da lib, removida na raiz**: nenhuma das duas acima alcançava CSS injetado
+  em runtime, e era ele quem animava nas três stacks com `vaul`. Os patches o
+  tiraram (D17, D18).
 
 Sob a preferência, a volta ao repouso depois do arraste é instantânea; o
 acompanhamento do ponteiro continua (é a posição do dedo, não animação); e a
@@ -861,8 +925,8 @@ resistência elástica ao puxar além do aberto é desligada pelo motor de ponte
 (`drawerSwipeTranslate` com `reducedMotion`), não pelo CSS — nas stacks com
 `vaul`, a lib não tem esse corte.
 
-O véu é do Sheet e a folha de lá o desliga — é a única metade do C6 que não mora
-neste arquivo.
+O véu é do Sheet, e desde o D18 a folha de lá não o anima em modo nenhum — é a
+única metade do C6 que não mora neste arquivo.
 
 ## 9. Analytics
 
@@ -945,6 +1009,7 @@ Ordem: folha → primitivo → alça → cabeçalho, corpo e rodapé → motor d
 | regra do par de botões | `docs/shared/guidelines/02-alinhamento-botoes.md` — **o texto canônico**; a seção homônima da `04-padroes-design-sistema.md` só aponta para lá |
 | regra do gesto (constantes e as três decisões) | `docs/shared/primitives/drawer-swipe.ts` |
 | fiação do gesto, por stack | `ui/drawer-swipe.ts` no vanilla · diretiva `NdsDrawerSwipe` no angular · a `vaul` nas outras três |
+| o que foi REMOVIDO da `vaul` e por quê | `PATCHES.md`, âncoras `#react-vaul-sem-animacao`, `#vue-vaul-vue-sem-animacao` e `#svelte-vaul-svelte-sem-animacao` — a folha que a lib injeta não anima mais véu nem painel (D18) |
 | motivo do fechamento, por stack | ver §9 |
 | texto, props, critérios de teste | `docs/shared/content/drawer/translations.json` |
 | desenho e anotações | Figma, página `Drawer` (conjunto `698:116`) |

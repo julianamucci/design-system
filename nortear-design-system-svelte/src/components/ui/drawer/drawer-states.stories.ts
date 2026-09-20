@@ -113,6 +113,77 @@ export const Open: Story = {
       });
       await expect(panel.contains(document.activeElement)).toBe(true);
     });
+
+    // ── O VÉU NÃO ANIMA ───────────────────────────────────────────────────
+    //
+    // Decisão da dona, 2026-09-20, e vale para os quatro componentes com véu.
+    //
+    // Aqui ela custa uma asserção de forma incomum, e o motivo é medido: quem
+    // animava o véu não era a nossa folha, era a que a `vaul-svelte` injeta
+    // (bloco `<style global>` em `dist/components/drawer/drawer.svelte`, que o
+    // vite-plugin-svelte compila junto com o consumidor). Ela nomeava `fadeIn`
+    // e declarava a duração em
+    // `[data-vaul-overlay][data-vaul-snap-points="false"]`, que é (0,2,0)
+    // contra o (0,1,0) do nosso `.nds-sheet-overlay` — então o véu continuava
+    // desvanecendo 0,5s INCLUSIVE sob `prefers-reduced-motion`. A dona recusou
+    // `!important` e escolheu patch da lib
+    // (`patches/vaul-svelte+1.0.0-next.7.patch`).
+    await step('O véu não anima, e a folha da lib não tem mais o que animar', async () => {
+      const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
+      await expect(overlay).not.toBeNull();
+      await expect(window.getComputedStyle(overlay!).animationName).toBe('none');
+      await expect(overlay!.getAnimations()).toHaveLength(0);
+    });
+
+    // A asserção acima lê o RESULTADO da cascata, neste modo de mídia. Esta lê a
+    // CAUSA, e é a que vale nos dois modos de uma vez: se a folha injetada não
+    // declara animação nenhuma para o véu nem para o painel, não existe modo de
+    // mídia em que a lib volte a animá-los — não há o que uma `@media` deixe de
+    // vencer. É também o que um bump derruba primeiro, e ruidosamente, em vez do
+    // silêncio que o defeito original teve.
+    //
+    // Varre as folhas de mesma origem; a guarda de `try` existe para não
+    // confundir uma folha de terceiro bloqueada com uma regra encontrada.
+    await step('A folha injetada pela lib não declara animação de véu nem de painel', async () => {
+      // Recursivo de propósito: `@media (hover:hover)` e `@media (pointer:fine)`
+      // já guardam regras `[data-vaul-drawer]` na folha da lib, e um portão que
+      // só lê o nível de cima não veria uma animação reaparecer dentro de um
+      // bloco desses.
+      const flatRules: CSSStyleRule[] = [];
+      const flatten = (rules: CSSRuleList) => {
+        for (const rule of Array.from(rules)) {
+          if (rule instanceof CSSStyleRule) flatRules.push(rule);
+          else if ('cssRules' in rule) flatten((rule as CSSGroupingRule).cssRules);
+        }
+      };
+      for (const sheet of Array.from(document.styleSheets)) {
+        try {
+          flatten(sheet.cssRules);
+        } catch {
+          continue;
+        }
+      }
+
+      const declarations: string[] = [];
+      for (const rule of flatRules) {
+        // Só as regras DA LIB. As nossas quatro entradas também nomeiam
+        // `[data-vaul-drawer]` — é o discriminador que `drawer.css` usa para
+        // alcançar exatamente as stacks onde a lib está —, e são justamente as
+        // que DEVEM declarar animação. O que as separa é a classe do design
+        // system no seletor.
+        if (rule.selectorText.includes('.nds-')) continue;
+        if (!/\[data-vaul-(overlay|drawer)\]/.test(rule.selectorText)) continue;
+        for (const prop of ['animation-name', 'animation-duration', 'animation']) {
+          const value = rule.style.getPropertyValue(prop);
+          if (value) declarations.push(`${rule.selectorText} { ${prop}: ${value} }`);
+        }
+      }
+      // A única sobrevivente permitida é a guarda da própria lib
+      // (`[data-vaul-animate=false]{animation:none!important}`), que DESLIGA
+      // animação em vez de ligar — e ela não casa com os seletores acima.
+      // Qualquer outra entrada aqui é a animação da lib de volta.
+      await expect(declarations).toEqual([]);
+    });
   },
 };
 

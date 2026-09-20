@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
-import { waitForAnimationsDone, waitForPortal } from "@/lib/wait-for-portal";
+import { expect, userEvent, within } from "storybook/test";
+import { waitForAnimationsDone, waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerBody,
@@ -94,6 +94,46 @@ function panel(
 // helper compartilhado esconderia da leitura o único contrato que cada uma
 // destas quatro stories verifica.
 
+/**
+ * Fecha e REABRE o painel, devolvendo o elemento no começo da entrada.
+ *
+ * Só a mecânica mora aqui; as `expect()` ficam em cada story, pelo motivo da
+ * nota acima.
+ *
+ * ── Por que reabrir, e não medir a montagem ─────────────────────────────────
+ *
+ * Porque com `defaultOpen` o painel NÃO ANIMA, e isso é desenho da lib, não
+ * defeito nosso. Medido em 2026-09-20 nas quatro direções: `animation-name`
+ * computado vinha `none`.
+ *
+ * A mecânica, lida na fonte instalada: a lib nasce com
+ * `shouldAnimate = useRef(!defaultOpen)` e escreve `data-vaul-animate` a partir
+ * desse ref, tanto no véu quanto no painel. A folha dela traz
+ * `[data-vaul-animate=false]{animation:none!important}` — com `!important`, que
+ * apaga QUALQUER animação, inclusive a nossa. O ref vira `true` no quadro
+ * seguinte à montagem, mas mexer num ref não re-renderiza: o atributo só troca
+ * quando o painel volta a renderizar, e uma reabertura é o que garante isso.
+ *
+ * Portanto estas quatro stories fotografam um painel que chegou sem deslizar —
+ * o que é o correto para a FOTO, e é também por que a entrada precisa ser
+ * medida à parte. Quem mede a entrada mede-a depois de reabrir.
+ */
+async function reopenToMeasureEntry(canvasElement: HTMLElement): Promise<HTMLElement | null> {
+  await userEvent.keyboard("{Escape}");
+  await waitForPortalGone("dialog");
+  await userEvent.click(within(canvasElement).getByRole("button", { name: /^Abrir$/i }));
+
+  // Consulta por SELETOR e não `waitForPortal`: aquele espera a opacidade passar
+  // de 0,9, e a 0,9 metade do trajeto já foi. O que se mede aqui é o COMEÇO.
+  const deadline = Date.now() + 2000;
+  let entering = document.querySelector<HTMLElement>("[data-slot='drawer-content']");
+  while (!entering && Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, 4));
+    entering = document.querySelector<HTMLElement>("[data-slot='drawer-content']");
+  }
+  return entering;
+}
+
 export const Bottom: Story = {
   parameters: {
     covers: ["accessibility.item6", "visual.item1"],
@@ -105,7 +145,7 @@ export const Bottom: Story = {
     },
   },
   render: panel("bottom", "Detalhes do pedido", "Pedido #4287 confirmado em 15 de março."),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step("O painel encosta na base e mostra a alça", async () => {
       const panelEl = await waitForPortal("dialog");
       await expect(panelEl).toHaveAttribute("data-direction", "bottom");
@@ -115,6 +155,28 @@ export const Bottom: Story = {
       // outras. Contraste e cor do painel são verificados pelo axe da story.
       const thumb = panelEl.querySelector<HTMLElement>(".nds-drawer-handle")!;
       await expect(window.getComputedStyle(thumb).display).toBe("block");
+    });
+
+    // ── Quem anima a entrada é a NOSSA folha ──────────────────────────────
+    //
+    // Até 2026-09-20 era a `vaul`: ela injeta a folha dela em runtime e nomeava
+    // `slideFromBottom` em (0,4,0), um degrau acima do nosso seletor. A
+    // animação da lib saiu por `patch-package` (`patches/vaul+1.1.2.patch`), e
+    // a regra de `drawer.css` — inerte enquanto perdia — passou a valer.
+    //
+    // A asserção é de NOME, e é ela que tem dentes: um bump que devolva a folha
+    // da lib deixa o painel deslizando igual, e só o nome denuncia a troca de
+    // dono. A duração vem junto porque é a que sai de token — 200ms de
+    // `--duration-base`, contra os 500ms fixos que a lib usava.
+    await step("A entrada é a keyframe do design system, não a da lib", async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe("nds-sheet-slide-in-bottom");
+      await expect(computed.animationDuration).toBe("0.2s");
+      // Deixa assentado: a foto do Chromatic é do painel em repouso.
+      await waitForAnimationsDone(entering!);
     });
   },
 };
@@ -132,7 +194,7 @@ export const Top: Story = {
     },
   },
   render: panel("top", "Nova versão disponível", "Atualize agora para acessar as novidades."),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step("O painel encosta no topo e esconde a alça", async () => {
       const panelEl = await waitForPortal("dialog");
       await expect(panelEl).toHaveAttribute("data-direction", "top");
@@ -140,6 +202,20 @@ export const Top: Story = {
       await expect(panelEl).toHaveAccessibleName("Nova versão disponível");
       const thumb = panelEl.querySelector<HTMLElement>(".nds-drawer-handle")!;
       await expect(window.getComputedStyle(thumb).display).toBe("none");
+    });
+
+    // Mesma prova da `Bottom` — ver a nota longa lá. As quatro direções
+    // precisam de asserção própria porque são quatro REGRAS distintas em
+    // `drawer.css`: uma delas podendo errar o nome da keyframe sem que as
+    // outras três acusem nada.
+    await step("A entrada é a keyframe do design system, não a da lib", async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe("nds-sheet-slide-in-top");
+      await expect(computed.animationDuration).toBe("0.2s");
+      await waitForAnimationsDone(entering!);
     });
   },
 };
@@ -157,7 +233,7 @@ export const Left: Story = {
     },
   },
   render: panel("left", "Menu", "Navegue pelas seções do app."),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step("O painel encosta na borda esquerda", async () => {
       const panelEl = await waitForPortal("dialog");
       await expect(panelEl).toHaveAttribute("data-direction", "left");
@@ -170,13 +246,31 @@ export const Left: Story = {
       // é INTEIRAMENTE fora da tela, `-384 < 1` continua verdadeiro. Ela só
       // reprovaria um painel parado à direita de x=1 — estado que não acontece.
       //
-      // A espera é `waitForAnimationsDone` e não `waitForPortal`: aquele gateia
-      // na OPACIDADE (> 0.9), e nesta stack a `vaul` roda `fadeIn` no véu e
-      // `slideFromLeft` no painel na MESMA curva de 500ms — a 0,9 de opacidade
-      // o painel ainda está longe da borda. Quem mede geometria espera a
-      // animação acabar.
+      // A espera continua, e agora por um motivo mais modesto do que o que
+      // estava escrito aqui.
+      //
+      // A nota anterior dizia "a `vaul` roda `fadeIn` no véu e `slideFromLeft`
+      // no painel na MESMA curva de 500ms". As duas metades morreram em
+      // 2026-09-20: o véu não anima mais em componente nenhum, e a animação da
+      // lib saiu por patch. E a parte sobre ESTA story já era falsa antes
+      // disso — medido: com `defaultOpen` a lib escreve
+      // `data-vaul-animate="false"` e a folha dela zera a animação com
+      // `!important`, então o painel aqui nunca deslizou. A espera fica como
+      // guarda barata para quem medir geometria depois de uma mudança; a
+      // ENTRADA é medida no passo seguinte, que reabre o painel.
       await waitForAnimationsDone(panelEl);
       await expect(Math.abs(panelEl.getBoundingClientRect().left)).toBeLessThan(2);
+    });
+
+    // Mesma prova da `Bottom` — ver a nota longa lá.
+    await step("A entrada é a keyframe do design system, não a da lib", async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe("nds-sheet-slide-in-left");
+      await expect(computed.animationDuration).toBe("0.2s");
+      await waitForAnimationsDone(entering!);
     });
   },
 };
@@ -194,7 +288,7 @@ export const Right: Story = {
     },
   },
   render: panel("right", "Filtros", "Refine sua busca por categoria, preço e disponibilidade."),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step("O painel encosta na borda direita", async () => {
       const panelEl = await waitForPortal("dialog");
       await expect(panelEl).toHaveAttribute("data-direction", "right");
@@ -206,6 +300,17 @@ export const Right: Story = {
       await waitForAnimationsDone(panelEl);
       const box = panelEl.getBoundingClientRect();
       await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
+    });
+
+    // Mesma prova da `Bottom` — ver a nota longa lá.
+    await step("A entrada é a keyframe do design system, não a da lib", async () => {
+      const entering = await reopenToMeasureEntry(canvasElement);
+      await expect(entering).not.toBeNull();
+      await expect(entering!.getAnimations().length).toBeGreaterThan(0);
+      const computed = window.getComputedStyle(entering!);
+      await expect(computed.animationName).toBe("nds-sheet-slide-in-right");
+      await expect(computed.animationDuration).toBe("0.2s");
+      await waitForAnimationsDone(entering!);
     });
   },
 };
