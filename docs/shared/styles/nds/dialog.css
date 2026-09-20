@@ -29,9 +29,10 @@
  *
  * ─── Dialog × AlertDialog ───────────────────────────────────────────────────
  *
- * As duas folhas são irmãs: alert-dialog.css reusa as keyframes
- * nds-dialog-fade-in / nds-dialog-fade-out declaradas aqui. O que as separa é
- * o que fecha o painel, e isso é decisão, não estilo:
+ * As duas folhas são irmãs. Até 2026-09-20 a alert-dialog.css reusava as
+ * keyframes de fade do véu declaradas aqui; as duas saíram quando o véu deixou
+ * de animar. O que separa as folhas é o que fecha o painel, e isso é decisão,
+ * não estilo:
  *
  *   · papel: role="dialog" aqui, role="alertdialog" lá;
  *   · véu: aqui o clique no véu FECHA; lá não fecha — a decisão é crítica e
@@ -56,7 +57,8 @@
   z-index: var(--z-modal-backdrop);
   isolation: isolate;
   background-color: hsl(var(--overlay) / 0.8);
-  /* entrada instantânea — anima só a saída (evita corrida de opacity:0 com toBeVisible) */
+  /* O véu NÃO anima, nem entrada nem saída — decisão da dona, 2026-09-20.
+   * Ver a nota em `sheet.css`, na regra de `.nds-sheet-overlay`. */
 }
 
 /* ── Content panel ───────────────────────────────────────────────────────── */
@@ -201,15 +203,10 @@
 }
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
-@keyframes nds-dialog-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes nds-dialog-fade-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
+/* `nds-dialog-fade-in` e `-fade-out` foram REMOVIDAS em 2026-09-20: o véu não
+ * anima mais, nos quatro componentes que o têm — e estas duas eram consumidas
+ * só pelos véus daqui e do AlertDialog. Ver a nota em `sheet.css`, na regra de
+ * `.nds-sheet-overlay`. */
 
 @keyframes nds-dialog-zoom-in {
   from { opacity: 0; transform: scale(0.95); }
@@ -227,18 +224,12 @@
  * o elemento ainda montado. Reaproveita as keyframes acima nesses attrs.
  */
 
-.nds-dialog-overlay[data-open],
-.nds-dialog-overlay[data-state="open"] {
-  animation: nds-dialog-fade-in var(--duration-base) var(--ease-entrance);
-}
+/* O VÉU NÃO ANIMA — decisão da dona, 2026-09-20, nos quatro componentes com véu.
+ * O que anima é o PAINEL. Ver a nota em `sheet.css`, na regra de `.nds-sheet-overlay`. */
 
 .nds-dialog-content[data-open],
 .nds-dialog-content[data-state="open"] {
   animation: nds-dialog-zoom-in var(--duration-base) var(--ease-entrance);
-}
-
-.nds-dialog-overlay[data-closed] {
-  animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
 }
 
 .nds-dialog-content[data-closed] {

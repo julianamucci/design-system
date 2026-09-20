@@ -1,7 +1,7 @@
 /*
  * ─── nds-alert-dialog ──────────────────────────────────────────────────────
- * Consome keyframes de DUAS folhas vizinhas: o véu usa `nds-dialog-fade-in/out`
- * (dialog.css) e o painel usa `nds-animate-in/out` (utilities.css).
+ * O PAINEL consome `nds-animate-in/out` (utilities.css). O VÉU não anima
+ * desde 2026-09-20 — ver a nota em `sheet.css`, na regra de `.nds-sheet-overlay`.
  *
  * Estrutura (portal — root é body):
  *   <div class="nds-alert-dialog-overlay" />
@@ -20,9 +20,10 @@
  *
  * ─── Dialog × AlertDialog ───────────────────────────────────────────────────
  *
- * As duas folhas são irmãs: o véu consome as keyframes de fade de dialog.css
- * (nds-dialog-fade-in / -fade-out), declaradas lá. O que as separa não é
- * estilo, é decisão — e está escrito nos dois docblocks:
+ * As duas folhas são irmãs. Até 2026-09-20 o parentesco também era de
+ * keyframes — o véu daqui consumia as de fade de dialog.css —, e as duas foram
+ * removidas quando o véu deixou de animar. O que separa as folhas não é estilo,
+ * é decisão, e está escrito nos dois docblocks:
  *
  *   · papel: role="alertdialog" aqui, role="dialog" lá;
  *   · Sem overlay-click-to-close: a decisão é crítica e exige escolha
@@ -155,16 +156,8 @@
  * compõe com o `translate: -50% -50%` da centralização porque `translate` e
  * `transform` são propriedades distintas — não se sobrescrevem.
  */
-.nds-alert-dialog-overlay[data-open],
-.nds-alert-dialog-overlay[data-state="open"] {
-  animation: nds-dialog-fade-in var(--duration-spring) var(--ease-spring);
-}
-
-.nds-alert-dialog-overlay[data-closed],
-.nds-alert-dialog-overlay[data-ending-style],
-.nds-alert-dialog-overlay[data-state="closed"] {
-  animation: nds-dialog-fade-out var(--duration-base) var(--ease-exit);
-}
+/* O VÉU NÃO ANIMA — decisão da dona, 2026-09-20, nos quatro componentes com véu.
+ * O que anima é o PAINEL. Ver a nota em `sheet.css`, na regra de `.nds-sheet-overlay`. */
 
 .nds-alert-dialog-content[data-open],
 .nds-alert-dialog-content[data-state="open"] {

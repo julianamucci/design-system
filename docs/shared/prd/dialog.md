@@ -23,6 +23,13 @@ foco, trava a rolagem e se anuncia como diálogo modal.
 As duas folhas — esta e a do AlertDialog — são irmãs de verdade: `alert-dialog.css`
 reusa as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas aqui.
 
+
+> **2026-09-20 — o VÉU NÃO ANIMA MAIS, por decisão da dona, nos quatro componentes que o têm.** O que anima é o PAINEL, que é quem entra; o véu aparece com ele. Saíram as regras de animação de véu de `sheet.css`, `dialog.css` e `alert-dialog.css`, e com elas os keyframes `nds-sheet-fade-in`, `nds-dialog-fade-in` e `nds-dialog-fade-out`, que ficaram órfãos.
+>
+> **Nasceu de um defeito, e a simplificação é o conserto**: o véu do Drawer em react, vue e svelte desvanecia 0,5s sob `prefers-reduced-motion`, porque a folha que a `vaul` injeta declara a duração dele um degrau de especificidade acima do nosso guarda (medido; ver a D17 de [`drawer.md`](drawer.md)). Véu que não anima não tem guarda a perder — a decisão apaga a categoria do problema em vez de vencer a disputa de cascata.
+>
+> As linhas de §5, §6 e o docblock abaixo descrevem o estado ANTERIOR e ficam como histórico.
+
 ## 2. Contrato de comportamento
 
 A coluna "texto" é a chave de `docs/shared/content/dialog/translations.json` que

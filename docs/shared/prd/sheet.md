@@ -42,6 +42,13 @@ largura do painel é custom property e o default mora em `:root` (D2): o
 `.nds-sidebar-mobile` é exatamente o override do mesmo elemento que a medição de
 lá usa como alvo.
 
+
+> **2026-09-20 — o VÉU NÃO ANIMA MAIS, por decisão da dona, nos quatro componentes que o têm.** O que anima é o PAINEL, que é quem entra; o véu aparece com ele. Saíram as regras de animação de véu de `sheet.css`, `dialog.css` e `alert-dialog.css`, e com elas os keyframes `nds-sheet-fade-in`, `nds-dialog-fade-in` e `nds-dialog-fade-out`, que ficaram órfãos.
+>
+> **Nasceu de um defeito, e a simplificação é o conserto**: o véu do Drawer em react, vue e svelte desvanecia 0,5s sob `prefers-reduced-motion`, porque a folha que a `vaul` injeta declara a duração dele um degrau de especificidade acima do nosso guarda (medido; ver a D17 de [`drawer.md`](drawer.md)). Véu que não anima não tem guarda a perder — a decisão apaga a categoria do problema em vez de vencer a disputa de cascata.
+>
+> As linhas de §5 e §6 abaixo descrevem o estado ANTERIOR e ficam como histórico.
+
 ## 2. Contrato de comportamento
 
 Cada linha é verificável. A coluna do portão diz quem reprova se ela deixar de

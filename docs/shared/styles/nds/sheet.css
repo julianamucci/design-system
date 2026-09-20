@@ -91,7 +91,15 @@
   inset: 0;
   z-index: var(--z-modal-backdrop);
   background-color: hsl(var(--overlay) / 0.8);
-  animation: nds-sheet-fade-in var(--duration-base) var(--ease-entrance);
+  /* O VÉU NÃO ANIMA — decisão da dona, 2026-09-20, e vale para os quatro
+   * componentes que têm véu (Sheet, Drawer, Sidebar por esta folha; Dialog e
+   * AlertDialog pelas suas). O que anima é o PAINEL, que é quem entra; o véu
+   * aparece com ele.
+   *
+   * Nasceu de um defeito: o véu do Drawer em react, vue e svelte continuava
+   * desvanecendo 0,5s sob `prefers-reduced-motion`, porque a folha da `vaul`
+   * declara a duração dele um degrau de especificidade acima do nosso guarda.
+   * Véu que não anima não tem guarda a perder. */
 }
 
 /* ── Content panel ───────────────────────────────────────────────────────── */
@@ -261,10 +269,8 @@
 }
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
-@keyframes nds-sheet-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+/* `nds-sheet-fade-in` foi REMOVIDA em 2026-09-20: o véu não anima mais, nos
+ * quatro componentes que o têm. Ver a nota em `.nds-sheet-overlay`. */
 
 @keyframes nds-sheet-slide-in-right {
   from { transform: translateX(100%); }
