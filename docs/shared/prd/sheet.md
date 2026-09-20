@@ -784,9 +784,21 @@ stories → docs page.
 > prática humana: **não existe portão**, conferido em `scripts/` e em
 > `docs/shared/testing/`. Aqui a agente teve sorte de ver vermelho.
 >
-> **Fecha quando**: existe portão que reconcilia os arquivos que a suíte
-> REPORTOU com os que existem no disco e reprova na divergência. Enquanto ele
-> não existe, "a suíte fechou verde" não é afirmação verificada sobre cobertura.
+> **O portão foi construído em 2026-09-20**:
+> `node scripts/reconciliar-suite.mjs <stack> [filtros]`. Ele pergunta ao próprio
+> vitest o que deveria rodar e reprova se um arquivo sumiu do relatório ou voltou
+> com zero teste. Provado plantando as duas pontas; no plantio de arquivo ausente
+> a suíte fechou VERDE medindo metade.
+>
+> **Ainda assim esta pendência NÃO fecha**, e a distinção importa: o portão torna
+> a família RUIDOSA, não a extingue. O que extingue é declarar o subcaminho que o
+> otimizador descobre tarde em `optimizeDeps.include` — e ele não foi
+> identificado, porque só aparece com o cache frio.
+> **Fecha quando**: uma rodada de cache frio (apagar
+> `node_modules/.cache/storybook` do svelte) corre sob o
+> `reconciliar-suite.mjs`, e o subcaminho que o Vite anunciar como
+> `new dependencies optimized` entra no `optimizeDeps.include` do
+> `.storybook/main.ts`. A rodada é barata e o portão é o instrumento dela.
 > Fechar por ausência de repetição continua proibido.
 >
 > **NÃO é a causa, mas foi achado no caminho e é real**: `waitForPortal` usa

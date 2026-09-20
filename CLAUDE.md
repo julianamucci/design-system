@@ -67,6 +67,7 @@ node scripts/audit-translation-literals.mjs --only plataforma  # texto preso a n
 node scripts/audit-translation-literals.mjs --only soltos      # snippet preso em override de stack
 node scripts/audit.mjs --gerar-baseline-pt        # catraca de identificador em português: regenera SÓ depois de pagar dívida
 node scripts/audit.mjs --gerar-baseline-transform # catraca do painel Code (story que herda o snippet do meta), mesma regra
+node scripts/reconciliar-suite.mjs <stack> [filtros]  # a suíte mediu tudo o que dizia? (portão: reprova arquivo que sumiu ou voltou com 0 teste)
 node scripts/paridade-nome-acessivel.mjs <slug>   # nome acessível igual nas 5? (instrumento, não portão)
 node scripts/tabela-tokens.mjs <slug>            # tabela de tokens × folha CSS, nos dois sentidos (instrumento)
 npm run core:pack                                # empacota docs/shared como @nortear/ds-core
@@ -330,6 +331,18 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
      salvou a rodada do svelte. `2 failed | 137 passed (383)` parece duas falhas
      e é um terço da stack medida. Compare o total reportado com o que existe no
      disco antes de acreditar em qualquer sumário.
+
+     **Desde 2026-09-20 isto é PORTÃO, não vigilância humana**:
+     `node scripts/reconciliar-suite.mjs <stack> [filtros]` pergunta ao próprio
+     vitest o que deveria rodar (`vitest list --filesOnly`, que resolve por glob
+     e não abre navegador, então não pode ser truncado pelo mesmo acidente que
+     trunca a rodada), roda a suíte e reprova se algum arquivo sumiu do relatório
+     ou voltou com zero teste. Ele nasceu porque a prática humana não sobreviveu
+     a três ocorrências: os onze arquivos do angular em 2026-09-01 (um deles o
+     `docs-smoke` inteiro), os 244 do svelte em 2026-09-13, e o
+     `sheet-variants.stories.ts` de 2026-09-20. Provado plantando as duas
+     pontas — e no plantio de arquivo ausente **a suíte fechou VERDE** medindo
+     metade, que é o ponto.
   2. **O que pesa não é só a suíte.** Naquele instante havia dois `storybook dev`
      ociosos desde a manhã (~1,2 GB) que ninguém contava, e `limpar-orfaos.mjs`
      não mexe neles de propósito. Antes de lançar, meça a memória livre — não o
