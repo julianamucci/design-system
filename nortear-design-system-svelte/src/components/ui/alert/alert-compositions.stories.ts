@@ -52,11 +52,25 @@ export const WithIcon: Story = {
     },
   }),
 
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = await canvas.findByRole('alert');
-    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-    await expect(canvas.getByText('Informação')).toBeVisible();
+
+    await step('O ícone é filho DIRETO do alert e é decorativo', async () => {
+      // `functional.item3`, que esta story declara cobrir, é literalmente
+      // "renderizar com ícone filho direto" — e é `.nds-alert:has(> svg)` que
+      // abre a coluna do ícone. `querySelector('svg')` casava qualquer
+      // descendente (o X do botão de fechar, por exemplo): a asserção passava
+      // com um wrapper no meio, que colapsaria o layout de duas colunas.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg');
+      await expect(icon).not.toBeNull();
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon!.parentElement).toBe(alert);
+    });
+
+    await step('O texto acompanha o ícone', async () => {
+      await expect(canvas.getByText('Informação')).toBeVisible();
+    });
   },
 };
 

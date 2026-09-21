@@ -93,10 +93,28 @@ export const Destructive: Story = {
     },
   }),
 
-  play: async ({ canvasElement }) => {
-    const alert = await within(canvasElement).findByRole('alert');
-    await expect(alert).toHaveClass('nds-alert-destructive');
-    await expect(within(canvasElement).getByText('Erro ao salvar')).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+
+    await step('A variante escolhida chega ao DOM', async () => {
+      await expect(alert).toHaveClass('nds-alert-destructive');
+      await expect(canvas.getByText('Erro ao salvar')).toBeVisible();
+    });
+
+    await step('Só o ícone recebe a cor da variante', async () => {
+      // Regra dos contêineres coloridos, e a folha a cumpre nas cinco
+      // variantes: a cor semântica pinta fundo, borda e ÍCONE (não-textual,
+      // limite de 3:1). O título é 14px semibold — pela WCAG não é texto
+      // grande, o limite dele é 4.5:1 — e fica em `--foreground` junto com o
+      // texto corrido. Afirmar só classe e texto deixava isso sem medição.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg')!;
+      const title = alert.querySelector<HTMLElement>('[data-slot="alert-title"]')!;
+      const description = alert.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
+      await expect(getComputedStyle(description).color).not.toBe(getComputedStyle(icon).color);
+      await expect(getComputedStyle(title).color).not.toBe(getComputedStyle(icon).color);
+      await expect(getComputedStyle(title).color).toBe(getComputedStyle(description).color);
+    });
   },
 };
 

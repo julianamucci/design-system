@@ -377,10 +377,14 @@ interface AlertDescriptionProps {
       />
 
       {#snippet doPair1()}
+        <!-- Prévia da variante `default`: ícone informativo e texto de
+             atualização. Com "Erro ao salvar" e o ícone de erro, o exemplo do
+             "faça" mostrava justamente o desalinho entre variante e conteúdo
+             que o par ensina a evitar. -->
         <Alert role="note">
-          <AlertCircle aria-hidden="true" />
-          <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
-          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
+          <Info aria-hidden="true" />
+          <AlertTitle as="h3">{$tStore('demonstration.labels.defaultTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.defaultDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet dontPair1()}
@@ -406,11 +410,13 @@ interface AlertDescriptionProps {
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withIcon')}
         secondaryCode={codeImportWithIcon}
+        componentSlug="alert"
       />
 
       <!-- ── Variantes ──────────────────────────────────────────────── -->
       <DocsCompositions
         id="variantes"
+        note={$tStore('variants.note')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="alert"
         items={[
@@ -425,35 +431,35 @@ interface AlertDescriptionProps {
       />
 
       {#snippet variantDefault()}
-        <Alert role="note" class="nds-w-full">
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantDestructive()}
-        <Alert role="note" variant="destructive" class="nds-w-full">
+        <Alert role="note" variant="destructive">
           <AlertCircle aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantSuccess()}
-        <Alert role="note" variant="success" class="nds-w-full">
+        <Alert role="note" variant="success">
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWarning()}
-        <Alert role="note" variant="warning" class="nds-w-full">
+        <Alert role="note" variant="warning">
           <TriangleAlert aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantInfo()}
-        <Alert role="note" variant="info" class="nds-w-full">
+        <Alert role="note" variant="info">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
@@ -462,7 +468,6 @@ interface AlertDescriptionProps {
       {#snippet variantDismissible()}
         <Alert role="note"
           dismissible
-          class="nds-w-full"
           onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'dismissible', location: 'docs_variantes' })}
         >
           <Info aria-hidden="true" />
@@ -471,7 +476,7 @@ interface AlertDescriptionProps {
         </Alert>
       {/snippet}
       {#snippet variantWithoutTitle()}
-        <Alert role="note" class="nds-w-full">
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
@@ -516,14 +521,14 @@ interface AlertDescriptionProps {
       />
 
       {#snippet compWithIcon()}
-        <Alert role="note" class="nds-w-full">
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet compWithAction()}
-        <Alert role="note" class="nds-w-full">
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.sessionTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.sessionDesc')}</AlertDescription>
@@ -533,7 +538,7 @@ interface AlertDescriptionProps {
         </Alert>
       {/snippet}
       {#snippet compWithActionAndDismiss()}
-        <Alert role="note" class="nds-w-full" dismissible>
+        <Alert role="note" dismissible>
           <Info aria-hidden="true" />
           <AlertTitle as="h4">{$tStore('demonstration.labels.sessionTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.sessionDesc')}</AlertDescription>
@@ -674,6 +679,7 @@ interface AlertDescriptionProps {
           { name: 'Badge',       description: $tStore('related.badge'),       path: '?path=/docs/components-feedback-badge--docs'       },
           { name: 'Progress',    description: $tStore('related.progress'),    path: '?path=/docs/components-feedback-progress--docs'    },
         ]}
+        componentSlug="alert"
       />
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
@@ -683,6 +689,7 @@ interface AlertDescriptionProps {
           { title: '', content: $tStore('notes.tip2') },
           { title: '', content: $tStore('notes.tip3') },
         ]}
+        componentSlug="alert"
       />
 
       <!-- ── Analytics ─────────────────────────────────────────────── -->
@@ -704,6 +711,7 @@ interface AlertDescriptionProps {
       <DocsTestes
         functional={{
           title: $tStore('testes.functional.title'),
+          description: $tStore('testes.functional.description'),
           cols: {
             action: $tNavStore('common.userAction'),
             result: $tNavStore('common.expectedResult'),
@@ -717,6 +725,7 @@ interface AlertDescriptionProps {
         }}
         accessibility={{
           title: $tStore('testes.accessibility.title'),
+          description: $tStore('testes.accessibility.description'),
           cols: {
             criterion: $tNavStore('common.criterion'),
             level: 'WCAG',
@@ -730,6 +739,7 @@ interface AlertDescriptionProps {
         }}
         visual={{
           title: $tStore('testes.visual.title'),
+          description: $tStore('testes.visual.description'),
           cols: {
             story: $tNavStore('common.storyState'),
             priority: $tNavStore('common.priority'),

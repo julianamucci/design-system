@@ -6,7 +6,36 @@ import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertDocs from '@/components/docs/AlertDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { alertSource } from './alert.source';
+import { alertSource, type AlertVariantName } from './alert.source';
+
+/** Ícones que o `AlertStory` conhece — o `icon` dele é deste conjunto. */
+type AlertIconName = 'info' | 'error' | 'success' | 'warning';
+
+/**
+ * O ícone que acompanha cada variante — o MESMO mapa que o painel Code aplica
+ * (`VARIANT_ICON`, em `alert.source.ts`).
+ *
+ * As duas pontas escolhem pela mesma regra de propósito: com o mapa só de um
+ * lado, o painel prometia um ícone e a tela mostrava o informativo em toda
+ * variante que não fosse `destructive`.
+ */
+function variantIcon(variant: AlertVariantName): AlertIconName {
+  if (variant === 'destructive') return 'error';
+  if (variant === 'default' || variant === 'info') return 'info';
+  return variant;
+}
+
+/**
+ * A classe que o `@lucide/svelte` carimba em cada ícone (`lucide-<nome>`). É por
+ * ela que a play prova qual ícone chegou à tela — o SVG não traz outro sinal de
+ * identidade.
+ */
+const LUCIDE_CLASS: Record<AlertIconName, string> = {
+  info: 'lucide-info',
+  error: 'lucide-circle-alert',
+  success: 'lucide-circle-check-big',
+  warning: 'lucide-triangle-alert',
+};
 
 const meta: Meta = {
   title: 'Components/Feedback/Alert',
@@ -38,6 +67,16 @@ const meta: Meta = {
         'Semântica de anúncio para leitores de tela. alert (padrão) interrompe e anuncia na hora — use só para mensagem urgente que surge em tempo de execução. status anuncia sem interromper. note não anuncia: é o certo para conteúdo estático já presente ao carregar a página.',
       table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
     },
+    title: {
+      control: 'text',
+      description: 'Texto do título. Arg da story — o conteúdo entra pelo AlertTitle.',
+      table: { type: { summary: 'string' } },
+    },
+    description: {
+      control: 'text',
+      description: 'Texto da descrição. Arg da story — o conteúdo entra pelo AlertDescription.',
+      table: { type: { summary: 'string' } },
+    },
     dismissible: {
       control: 'boolean',
       description: 'Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.',
@@ -67,6 +106,8 @@ const meta: Meta = {
   args: {
     variant: 'default',
     role: 'alert',
+    title: 'Atenção',
+    description: 'Suas alterações serão aplicadas na próxima sessão.',
     dismissible: false,
     onDismiss: fn(),
   },
@@ -87,9 +128,11 @@ export const Playground: Story = {
     props: {
       variant: args.variant,
       role: args.role,
-      title: 'Atenção',
-      description: 'Suas alterações serão aplicadas na próxima sessão.',
+      title: args.title,
+      description: args.description,
       showIcon: true,
+      // O ícone acompanha a variante — mesma regra do painel Code.
+      icon: variantIcon((args.variant ?? 'default') as AlertVariantName),
       dismissible: args.dismissible,
       onDismiss: args.onDismiss,
     },
@@ -99,6 +142,11 @@ export const Playground: Story = {
     // O control `role` troca a semântica da raiz — as buscas seguem o arg para
     // a story continuar verde em qualquer configuração do painel.
     const role = args.role ?? 'alert';
+    const variant = (args.variant ?? 'default') as AlertVariantName;
+    // Título e descrição também são controls: as buscas leem o arg, não um
+    // texto cravado que o painel passaria a contradizer.
+    const title = String(args.title ?? '');
+    const description = String(args.description ?? '');
 
     await step('Elemento alert está presente no DOM', async () => {
       const alert = canvas.getByRole(role);
@@ -114,21 +162,19 @@ export const Playground: Story = {
     });
 
     await step('AlertTitle é renderizado corretamente', async () => {
-      await waitFor(() => expect(canvas.getByText('Atenção')).toBeVisible());
+      await waitFor(() => expect(canvas.getByText(title)).toBeVisible());
     });
 
     // A story escreve `as="h4"` e o painel Code mostra o mesmo: o nível é
     // ENSINADO, não herdado do default `h5` do primitivo.
     await step('AlertTitle renderiza no nível que a story declara', async () => {
-      const title = canvas.getByText('Atenção');
-      await expect(title.tagName).toBe('H4');
-      await expect(title).toHaveClass('nds-alert-title');
+      const titleElement = canvas.getByText(title);
+      await expect(titleElement.tagName).toBe('H4');
+      await expect(titleElement).toHaveClass('nds-alert-title');
     });
 
     await step('AlertDescription é renderizado corretamente', async () => {
-      await waitFor(() =>
-        expect(canvas.getByText(/Suas alterações serão aplicadas/)).toBeVisible(),
-      );
+      await waitFor(() => expect(canvas.getByText(description)).toBeVisible());
     });
 
     await step('A semântica de anúncio escolhida chega ao DOM', async () => {
@@ -137,7 +183,6 @@ export const Playground: Story = {
 
     await step('A variante aplica as classes do design system', async () => {
       const alert = canvas.getByRole(role);
-      const variant = args.variant ?? 'default';
       await expect(alert).toHaveAttribute('data-slot', 'alert');
       await expect(alert).toHaveClass('nds-alert');
       if (variant === 'default') {
@@ -157,6 +202,22 @@ export const Playground: Story = {
       await expect(icon).toHaveAttribute('aria-hidden', 'true');
       // A folha dimensiona o ícone pelo seletor de filho; a utilitária duplicaria a regra.
       await expect(icon).not.toHaveClass('nds-icon');
+    });
+
+    await step('O ícone acompanha a variante escolhida', async () => {
+      // `accessibility.item4` — critério que esta story declara cobrir — pede
+      // ícone e texto correspondentes por variante. Sem o vínculo, o Playground
+      // exibia o informativo em TODA variante: a story que enuncia o critério
+      // mostrava o contrário dele.
+      const icon = canvas.getByRole(role).querySelector(':scope > svg');
+      const expected = variantIcon(variant);
+      await expect(icon).toHaveClass(LUCIDE_CLASS[expected]);
+      // E nenhum dos outros três — senão a asserção acima passaria com um SVG
+      // que acumulasse classes.
+      for (const [name, className] of Object.entries(LUCIDE_CLASS)) {
+        if (name === expected) continue;
+        await expect(icon).not.toHaveClass(className);
+      }
     });
   },
 };

@@ -13,12 +13,39 @@ import { attrsMultilinha, svelteSnippet } from '@/lib/story-source';
 export type AlertArgs = {
   variant: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   role: 'alert' | 'status' | 'note';
+  /** Texto do título — string vazia publica a composição sem título. */
+  title: string;
+  description: string;
   dismissible: boolean;
 };
 
+export type AlertVariantName = AlertArgs['variant'];
+
 const IMPORT_BASE = `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";`;
 const IMPORT_INFO = `import Info from "@lucide/svelte/icons/info";`;
+const IMPORT_ERROR = `import AlertCircle from "@lucide/svelte/icons/circle-alert";`;
 const IMPORT_SUCCESS = `import CheckCircle2 from "@lucide/svelte/icons/circle-check-big";`;
+const IMPORT_WARNING = `import TriangleAlert from "@lucide/svelte/icons/triangle-alert";`;
+
+const TITLE_DEFAULT = 'Atenção';
+const DESCRIPTION_DEFAULT = 'Suas alterações serão aplicadas na próxima sessão.';
+
+/**
+ * O ícone que acompanha cada variante, com o import que ele exige. `default` não
+ * tem cor semântica, então recebe o informativo; `destructive` é a única cujo
+ * nome de variante e nome de ícone não coincidem.
+ *
+ * O MESMO mapa é aplicado no render do Playground (`variantIcon`, em
+ * `alert.stories.ts`). Com ele só de um lado, o painel prometia um ícone e a
+ * tela mostrava outro.
+ */
+const VARIANT_ICON: Record<AlertVariantName, { component: string; importLine: string }> = {
+  default: { component: 'Info', importLine: IMPORT_INFO },
+  destructive: { component: 'AlertCircle', importLine: IMPORT_ERROR },
+  success: { component: 'CheckCircle2', importLine: IMPORT_SUCCESS },
+  warning: { component: 'TriangleAlert', importLine: IMPORT_WARNING },
+  info: { component: 'Info', importLine: IMPORT_INFO },
+};
 const IMPORT_WITH_ACTION = `import {
   Alert,
   AlertAction,
@@ -43,7 +70,14 @@ const DISMISS_HANDLER = `function handleDismiss() {
  * entra como atributo.
  */
 export function alertSource(_generated?: string, ctx?: { args?: Partial<AlertArgs> }): string {
-  const { variant = 'default', role = 'alert', dismissible = false } = ctx?.args ?? {};
+  const {
+    variant = 'default',
+    role = 'alert',
+    dismissible = false,
+    title = TITLE_DEFAULT,
+    description = DESCRIPTION_DEFAULT,
+  } = ctx?.args ?? {};
+  const icon = VARIANT_ICON[variant] ?? VARIANT_ICON.default;
   const props = attrsMultilinha([
     variant === 'default' ? '' : `variant="${variant}"`,
     role === 'alert' ? '' : `role="${role}"`,
@@ -51,13 +85,19 @@ export function alertSource(_generated?: string, ctx?: { args?: Partial<AlertArg
     dismissible ? 'onDismiss={handleDismiss}' : '',
   ]);
 
+  // O nível do heading entra SEMPRE que há título: o painel ensina o nível em
+  // vez de deixar quem copia herdar o default `h5` do primitivo sem saber.
+  const body = [
+    `  <${icon.component} aria-hidden="true" />`,
+    title ? `  <AlertTitle as="h4">${title}</AlertTitle>` : '',
+    description ? `  <AlertDescription>${description}</AlertDescription>` : '',
+  ].filter(Boolean);
+
   return svelteSnippet(
     `${IMPORT_BASE}
-${IMPORT_INFO}${dismissible ? `\n\n${DISMISS_HANDLER}` : ''}`,
+${icon.importLine}${dismissible ? `\n\n${DISMISS_HANDLER}` : ''}`,
     `<Alert${props}>
-  <Info aria-hidden="true" />
-  <AlertTitle as="h4">Atenção</AlertTitle>
-  <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
+${body.join('\n')}
 </Alert>`,
   );
 }
@@ -66,7 +106,7 @@ ${IMPORT_INFO}${dismissible ? `\n\n${DISMISS_HANDLER}` : ''}`,
 export function alertDestructiveSource(): string {
   return svelteSnippet(
     `${IMPORT_BASE}
-import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
+${IMPORT_ERROR}`,
     `<Alert variant="destructive">
   <AlertCircle aria-hidden="true" />
   <AlertTitle as="h4">Erro ao salvar</AlertTitle>
@@ -94,7 +134,7 @@ ${IMPORT_SUCCESS}`,
 export function alertWarningSource(): string {
   return svelteSnippet(
     `${IMPORT_BASE}
-import TriangleAlert from "@lucide/svelte/icons/triangle-alert";`,
+${IMPORT_WARNING}`,
     `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
   <AlertTitle as="h4">Assinatura expirando</AlertTitle>
@@ -240,7 +280,7 @@ export function alertNoAnnouncementSource(): string {
   return svelteSnippet(
     `${IMPORT_BASE}
 ${IMPORT_INFO}
-import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
+${IMPORT_ERROR}`,
     `<div class="nds-stack" data-spacing="md">
   <Alert role="note">
     <Info aria-hidden="true" />

@@ -115,6 +115,43 @@ describe('alertSource', () => {
     expect(alertSource('', { args: { role: 'note' } })).toContain('role="note"');
   });
 
+  // O mapa vive nas DUAS pontas — aqui e no render do Playground
+  // (`variantIcon`, em `alert.stories.ts`). Com ele só de um lado, o painel
+  // prometia um ícone e a tela mostrava o informativo em toda variante que não
+  // fosse `destructive`.
+  it('o ícone do snippet acompanha a variante escolhida no control', () => {
+    const expected = {
+      default: ['Info', 'icons/info'],
+      destructive: ['AlertCircle', 'icons/circle-alert'],
+      success: ['CheckCircle2', 'icons/circle-check-big'],
+      warning: ['TriangleAlert', 'icons/triangle-alert'],
+      info: ['Info', 'icons/info'],
+    } as const;
+
+    for (const [variant, [component, importPath]] of Object.entries(expected)) {
+      const output = alertSource('', { args: { variant: variant as keyof typeof expected } });
+      expect(output, variant).toContain(`<${component} aria-hidden="true" />`);
+      expect(output, variant).toContain(importPath);
+      // E só UM ícone: o import errado sobrando é a forma que o defeito tinha.
+      expect(output.match(/^\s*<[A-Z]\w* aria-hidden="true" \/>$/gm), variant).toHaveLength(1);
+    }
+  });
+
+  it('os controls de título e descrição chegam ao snippet', () => {
+    const output = alertSource('', {
+      args: { title: 'Sessão expirada', description: 'Entre de novo para continuar.' },
+    });
+    expect(output).toContain('<AlertTitle as="h4">Sessão expirada</AlertTitle>');
+    expect(output).toContain('<AlertDescription>Entre de novo para continuar.</AlertDescription>');
+    expect(output).not.toContain('Atenção');
+  });
+
+  it('título vazio publica a composição sem AlertTitle', () => {
+    const output = alertSource('', { args: { title: '' } });
+    expect(output).not.toContain('<AlertTitle');
+    expect(output).toContain('<AlertDescription>');
+  });
+
   it('o control de fechar traz a prop e o callback declarado juntos', () => {
     expect(alertSource('', { args: { dismissible: false } })).not.toContain('dismissible');
     const output = alertSource('', { args: { dismissible: true } });
