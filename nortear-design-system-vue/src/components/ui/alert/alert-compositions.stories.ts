@@ -46,11 +46,23 @@ export const WithIcon: Story = {
       </Alert>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = canvas.getByRole('alert');
-    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-    await expect(canvas.getByText('Informação')).toBeVisible();
+
+    await step('O ícone é filho DIRETO e decorativo', async () => {
+      // `functional.item3` é literalmente "renderizar com ícone filho direto",
+      // e é `.nds-alert > svg` que abre a coluna do ícone. `querySelector('svg')`
+      // casava qualquer descendente — o X do botão de fechar passaria por ícone
+      // da composição, e a story declarava o critério sem poder reprová-lo.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg');
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon?.parentElement).toBe(alert);
+    });
+
+    await step('O título da composição é visível', async () => {
+      await expect(canvas.getByText('Informação')).toBeVisible();
+    });
   },
 };
 

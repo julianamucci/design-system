@@ -6,6 +6,7 @@
  * então este é o único lugar em que elas têm guarda.
  */
 import {
+  asCode,
   attr,
   attrBool,
   attrs,
@@ -14,11 +15,54 @@ import {
   type SourceTransform,
 } from '@/lib/story-source';
 
+export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
+
 export type AlertArgs = {
-  variant: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  variant: AlertVariant;
   role: 'alert' | 'status' | 'note';
   dismissible: boolean;
+  /** Texto do título. String vazia mostra a composição sem título. */
+  title: string;
+  description: string;
+  /** Documentados na aba API Reference; o Playground usa os padrões do componente. */
+  class?: string;
+  dismissLabel?: string;
+  onDismiss?: () => void;
 };
+
+const TITLE_DEFAULT = 'Atenção';
+const DESCRIPTION_DEFAULT = 'Suas alterações serão aplicadas na próxima sessão.';
+
+/**
+ * O ícone que acompanha cada variante. `default` não tem cor semântica, então
+ * recebe o informativo; `destructive` é a única cujo nome de variante e nome de
+ * ícone não coincidem.
+ *
+ * O MESMO mapa vive na story (`VARIANT_ICON`, em `alert.stories.ts`): as duas
+ * pontas escolhem o ícone pela mesma regra de propósito. Com o mapa só de um
+ * lado, o painel prometia `CheckCircle2` enquanto a tela mostrava o informativo
+ * em toda variante.
+ */
+const VARIANT_ICON: Record<AlertVariant, string> = {
+  default: 'Info',
+  destructive: 'AlertCircle',
+  success: 'CheckCircle2',
+  warning: 'TriangleAlert',
+  info: 'Info',
+};
+
+function variantIconName(variant: unknown): string {
+  return VARIANT_ICON[(asCode(variant) ?? 'default') as AlertVariant] ?? VARIANT_ICON.default;
+}
+
+/**
+ * Texto vindo de control: string vence, inclusive a VAZIA — é ela que mostra a
+ * composição sem título. Qualquer outra coisa (o espião de ação, um objeto) cai
+ * no padrão, pela mesma razão que `asCode` existe.
+ */
+function contentText(value: unknown, defaultValue: string): string {
+  return typeof value === 'string' ? value : defaultValue;
+}
 
 const IMPORT = `import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'`;
 
@@ -71,18 +115,25 @@ function body(iconName: string | null, title: string, description: string): stri
  *
  * `role` fica de fora quando é o padrão: `alert` já é live region assertiva, e
  * repeti-lo sugeriria que a semântica precisa ser pedida.
+ *
+ * Ícone, título e descrição seguem os controls: é a mesma composição que o
+ * render do Playground monta, e o painel só ensina o que a tela mostra.
  */
 export const alertSource: SourceTransform<AlertArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
+  const iconName = variantIconName(args.variant);
+  const title = contentText(args.title, TITLE_DEFAULT);
+  // Sem título, o subcomponente some do import junto com a marcação.
+  const importLine = title ? IMPORT : IMPORT.replace(', AlertTitle', '');
   return vueSnippet(
-    `${IMPORT}\n${importIcon('Info')}`,
+    `${importLine}\n${importIcon(iconName)}`,
     alertBlock(
       [
         attr('variant', args.variant, 'default'),
         attr('role', args.role, 'alert'),
         attrBool('dismissible', args.dismissible, false),
       ],
-      body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
+      body(iconName, title, contentText(args.description, DESCRIPTION_DEFAULT)),
     ),
   );
 };

@@ -19,6 +19,7 @@ import {
   alertWithActionAndDismissSource,
   alertWithActionSource,
   alertWithIconSource,
+  type AlertVariant,
 } from './alert.source';
 
 const ALL = [
@@ -111,6 +112,42 @@ import { Info } from 'lucide-vue-next'
       args: { variant: 'destructive', role: 'note', dismissible: true },
     });
     expect(output).toContain('<Alert variant="destructive" role="note" dismissible>');
+  });
+
+  // O painel e o render do Playground escolhem o ícone pela MESMA regra de
+  // propósito. Com o mapa só de um lado, o painel prometia `CheckCircle2`
+  // enquanto a tela mostrava o informativo em toda variante que não fosse
+  // `destructive` — e `accessibility.item4`, que a story declara cobrir, diz
+  // justamente que ícone e texto se correspondem.
+  it('o ícone acompanha a variante, no import e na marcação', () => {
+    const cases: Array<[AlertVariant, string]> = [
+      ['default', 'Info'],
+      ['destructive', 'AlertCircle'],
+      ['success', 'CheckCircle2'],
+      ['warning', 'TriangleAlert'],
+      ['info', 'Info'],
+    ];
+    for (const [variant, iconName] of cases) {
+      const output = alertSource('', { args: { variant } });
+      expect(output, `variante ${variant}`).toContain(
+        `import { ${iconName} } from 'lucide-vue-next'`,
+      );
+      expect(output, `variante ${variant}`).toContain(`<${iconName} aria-hidden="true" />`);
+    }
+  });
+
+  it('título e descrição saem dos controls', () => {
+    const output = alertSource('', {
+      args: { title: 'Sessão expira em 5 minutos', description: 'Salve seu trabalho.' },
+    });
+    expect(output).toContain('<AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>');
+    expect(output).toContain('<AlertDescription>Salve seu trabalho.</AlertDescription>');
+  });
+
+  it('título vazio tira o subcomponente da marcação e do import', () => {
+    const output = alertSource('', { args: { title: '' } });
+    expect(output).not.toContain('AlertTitle');
+    expect(output).toContain(`import { Alert, AlertDescription } from '@/components/ui/alert'`);
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {

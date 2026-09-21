@@ -292,15 +292,6 @@ const propCols = computed(() => ({
   description: tContent('props.table.description'),
 }));
 
-const alertPropItems = computed(() => [
-  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: tNav('common.no'), description: toPlainText(tContent('props.table.variant'))  },
-  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: tNav('common.no'), description: toPlainText(tContent('props.table.role'))                  },
-  { name: 'class',   type: 'string',                    defaultValue: '—',         required: tNav('common.no'), description: toPlainText(tContent('props.table.className'))             },
-  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: tNav('common.no'), description: toPlainText(tContent('props.table.dismissible'))  },
-  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: tNav('common.no'), description: toPlainText(tContent('props.table.onDismiss'))    },
-  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: tNav('common.no'), description: toPlainText(tContent('props.table.dismissLabel')) },
-]);
-
 const slotPropItem = computed(() => (
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: tNav('common.yes'), description: tContent('props.table.children') }
 ));
@@ -308,6 +299,19 @@ const slotPropItem = computed(() => (
 const classPropItem = computed(() => (
   { name: 'class', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.className')) }
 ));
+
+const alertPropItems = computed(() => [
+  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: tNav('common.no'), description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: tNav('common.no'), description: toPlainText(tContent('props.table.role'))                  },
+  { name: 'class',   type: 'string',                    defaultValue: '—',         required: tNav('common.no'), description: toPlainText(tContent('props.table.className'))             },
+  // O conteúdo é linha de tabela como qualquer outra: é o slot que recebe
+  // ícone, título, descrição e ação, e sem ele a tabela da raiz descrevia uma
+  // peça a menos que as de AlertTitle e AlertDescription.
+  slotPropItem.value,
+  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: tNav('common.no'), description: toPlainText(tContent('props.table.dismissible'))  },
+  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: tNav('common.no'), description: toPlainText(tContent('props.table.onDismiss'))    },
+  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: tNav('common.no'), description: toPlainText(tContent('props.table.dismissLabel')) },
+]);
 
 const alertTitlePropItems = computed(() => [
   { name: 'as', type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: tNav('common.no'), description: toPlainText(tContent('props.table.titleAs')) },
@@ -534,13 +538,16 @@ const visualTestItems = computed(() =>
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- A prévia é da variante `default`: o ícone é o informativo e a mensagem
+           é de atualização disponível. "Erro ao salvar" com `AlertCircle` num
+           alerta sem cor semântica ensinava o desalinho que o par condena. -->
       <template #do-preview-0>
         <Alert role="note">
-          <AlertCircle aria-hidden="true" />
+          <Info aria-hidden="true" />
           <AlertTitle as="h3">
-            {{ tContent('demonstration.labels.errorTitle') }}
+            {{ tContent('demonstration.labels.defaultTitle') }}
           </AlertTitle>
-          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+          <AlertDescription>{{ tContent('demonstration.labels.defaultDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #dont-preview-0>
@@ -579,6 +586,7 @@ const visualTestItems = computed(() =>
       :code="codeImportBasic"
       :secondary-description="tContent('import.withIcon')"
       :secondary-code="codeImportWithIcon"
+      component-slug="alert"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -586,13 +594,11 @@ const visualTestItems = computed(() =>
       id="variantes"
       :use-when-label="tNav('common.useWhen')"
       component-slug="alert"
+      :note="tContent('variants.note')"
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Alert
-          role="note"
-          class="nds-w-full"
-        >
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">
             {{ tContent('demonstration.labels.infoTitle') }}
@@ -604,7 +610,6 @@ const visualTestItems = computed(() =>
         <Alert
           role="note"
           variant="destructive"
-          class="nds-w-full"
         >
           <AlertCircle aria-hidden="true" />
           <AlertTitle as="h4">
@@ -617,7 +622,6 @@ const visualTestItems = computed(() =>
         <Alert
           role="note"
           variant="success"
-          class="nds-w-full"
         >
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle as="h4">
@@ -630,7 +634,6 @@ const visualTestItems = computed(() =>
         <Alert
           role="note"
           variant="warning"
-          class="nds-w-full"
         >
           <TriangleAlert aria-hidden="true" />
           <AlertTitle as="h4">
@@ -643,7 +646,6 @@ const visualTestItems = computed(() =>
         <Alert
           role="note"
           variant="info"
-          class="nds-w-full"
         >
           <Info aria-hidden="true" />
           <AlertTitle as="h4">
@@ -656,7 +658,6 @@ const visualTestItems = computed(() =>
         <Alert
           role="note"
           dismissible
-          class="nds-w-full"
           @dismiss="onVariantDismiss"
         >
           <Info aria-hidden="true" />
@@ -667,10 +668,7 @@ const visualTestItems = computed(() =>
         </Alert>
       </template>
       <template #variant-preview-6>
-        <Alert
-          role="note"
-          class="nds-w-full"
-        >
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
@@ -684,10 +682,7 @@ const visualTestItems = computed(() =>
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Alert
-          role="note"
-          class="nds-w-full"
-        >
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">
             {{ tContent('demonstration.labels.infoTitle') }}
@@ -696,10 +691,7 @@ const visualTestItems = computed(() =>
         </Alert>
       </template>
       <template #variant-preview-1>
-        <Alert
-          role="note"
-          class="nds-w-full"
-        >
+        <Alert role="note">
           <Info aria-hidden="true" />
           <AlertTitle as="h4">
             {{ tContent('demonstration.labels.sessionTitle') }}
@@ -719,7 +711,6 @@ const visualTestItems = computed(() =>
         <Alert
           role="note"
           dismissible
-          class="nds-w-full"
         >
           <Info aria-hidden="true" />
           <AlertTitle as="h4">
@@ -777,11 +768,13 @@ const visualTestItems = computed(() =>
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="alert"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="alert"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
@@ -794,16 +787,19 @@ const visualTestItems = computed(() =>
     <DocsTestes
       :functional="{
         title: tContent('testes.functional.title'),
+        description: tContent('testes.functional.description'),
         cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
         items: functionalTestItems,
       }"
       :accessibility="{
         title: tContent('testes.accessibility.title'),
+        description: tContent('testes.accessibility.description'),
         cols: a11yCritCols,
         items: a11yTestItems,
       }"
       :visual="{
         title: tContent('testes.visual.title'),
+        description: tContent('testes.visual.description'),
         cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
         items: visualTestItems,
       }"
