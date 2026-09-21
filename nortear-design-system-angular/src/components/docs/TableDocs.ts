@@ -52,6 +52,7 @@ import {
   NdsDocsDoDont,
   NdsDocsImport,
   NdsDocsVariants,
+  NdsDocsCompositions,
   NdsDocsStates,
   NdsDocsProps,
   NdsDocsTokens,
@@ -353,7 +354,7 @@ const LINHAS_DEMO: {
     NdsTableFooter, NdsTableRow, NdsTableHead, NdsTableCell,
     NdsBadge, NdsButton, NdsButtonIcon, NdsCheckbox, NdsInput, NdsLabel,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
-    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
+    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants, NdsDocsCompositions,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
@@ -816,8 +817,11 @@ const LINHAS_DEMO: {
           language="html"
         />
 
-        <nds-docs-variants
+        <!-- nds-docs-compositions: é o NdsDocsVariants com a linha "Quando usar:"
+             mesclada na descrição, e ele repassa o language. -->
+        <nds-docs-compositions
           id="composicoes"
+          [useWhenLabel]="useWhenLabel()"
           [items]="compositionItems()"
           componentSlug="table"
           language="html"
@@ -1080,6 +1084,12 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
+  /** Rótulo da linha "Quando usar:" que o container mescla na descrição. */
+  protected readonly useWhenLabel = computed(() => {
+    dict();
+    return tNav('common.useWhen');
+  });
+
   protected readonly compositionItems = computed(() => {
     dict();
     return [
@@ -1089,10 +1099,8 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       { key: 'withPagination',    code: CODE_COMP_PAGINATION, tpl: this.tplCompPaginacao() },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),
-      description: withQuandoUsar(
-        t(`variants.compositions.${key}.description`),
-        t(`variants.compositions.${key}.use`),
-      ),
+      description: t(`variants.compositions.${key}.description`),
+      useWhen: t(`variants.compositions.${key}.use`),
       code,
       trackId: key,
       preview: tpl,
@@ -1382,16 +1390,6 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
 /** "R$ 250,00" → 250. Ordenar as strings colocaria "R$ 50,00" depois de "R$ 450,00". */
 function valueNumerico(value: string): number {
   return Number(value.replace(/[^\d,]/g, '').replace(',', '.'));
-}
-
-/**
- * Junta descrição e "quando usar" na forma que o container de variantes espera.
- *
- * O `NdsDocsCompositions` faria isto sozinho, mas ele não repassa `language`
- * para o `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
- */
-function withQuandoUsar(description: string, quandoUsar: string): string {
-  return `${description}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
 const priorityKeyMap: Record<string, string> = {

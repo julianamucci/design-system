@@ -41,6 +41,7 @@ import {
   NdsDocsDoDont,
   NdsDocsImport,
   NdsDocsVariants,
+  NdsDocsCompositions,
   NdsDocsStates,
   NdsDocsProps,
   NdsDocsTokens,
@@ -422,7 +423,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
   imports: [
     NdsChart, NdsCard, NdsCardHeader, NdsCardTitle, NdsCardDescription, NdsCardContent,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
-    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
+    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants, NdsDocsCompositions,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
@@ -695,8 +696,11 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
           language="html"
         />
 
-        <nds-docs-variants
+        <!-- nds-docs-compositions: é o NdsDocsVariants com a linha "Quando usar:"
+             mesclada na descrição, e ele repassa o language. -->
+        <nds-docs-compositions
           id="composicoes"
+          [useWhenLabel]="useWhenLabel()"
           [items]="compositionItems()"
           componentSlug="chart"
           language="html"
@@ -916,15 +920,19 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
+  /** Rótulo da linha "Quando usar:" que o container mescla na descrição. */
+  protected readonly useWhenLabel = computed(() => {
+    dict();
+    return tNav('common.useWhen');
+  });
+
   protected readonly compositionItems = computed(() => {
     dict();
     return [{ key: 'inCard', code: CODE_IN_CARD, tpl: this.tplCompInCard() }].map(
       ({ key, code, tpl }) => ({
         name: t(`variants.compositions.${key}.name`),
-        description: withQuandoUsar(
-          t(`variants.compositions.${key}.description`),
-          t(`variants.compositions.${key}.use`),
-        ),
+        description: t(`variants.compositions.${key}.description`),
+        useWhen: t(`variants.compositions.${key}.use`),
         code,
         trackId: key,
         preview: tpl,
@@ -1222,16 +1230,6 @@ function valueOuField(base: string, field: string): string {
   const key = `${base}.${field}`;
   const ofField = t(key);
   return ofField === key ? '' : ofField;
-}
-
-/**
- * Junta descrição e "quando usar" na forma que o container de variantes espera.
- *
- * `NdsDocsCompositions` faria isto sozinho, mas não repassa `language` para o
- * `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
- */
-function withQuandoUsar(description: string, quandoUsar: string): string {
-  return `${description}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
 /**
