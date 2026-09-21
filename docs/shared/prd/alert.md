@@ -57,11 +57,41 @@ risco.
 | C9 | O botão de fechar é o ÚLTIMO filho — o leitor de tela lê a mensagem antes da ação de descartá-la, e o Tab chega nele por último | asserção `lastElementChild` na play de `Dismissible`, nas cinco |
 | C10 | A raiz não é focável e não tem `tabindex`; o Tab vai direto ao controle interno | asserção na play de `Compositions/WithAction` |
 | C11 | Fechar duas vezes durante a saída dispara o callback uma vez só — a guarda de reentrância é medida com um segundo clique de propósito | segundo `click()` na play de `Dismissible`, nas cinco |
-| C12 | Animação de DESCENDENTE não encerra a entrada nem a saída do alerta (`animationend` borbulha) | `AnimationEvent` disparado no botão, na play de `Dismissible` |
+| C12 | Animação de DESCENDENTE não encerra a entrada nem a saída do alerta (`animationend` borbulha) | `AnimationEvent` disparado no botão, na play de `Dismissible`. O que REPROVA se a guarda cair é o `toHaveClass('nds-animate-in')` logo depois — ver a exceção declarada abaixo |
 | C13 | Alerta montado em tempo de execução é anunciado pelo PAPEL da própria raiz — nenhum `aria-live` em volta dele | `testes.functional.item6` (`States/DynamicInsertion`: antes da ação não há alerta; depois dela há `role="alert"` e nenhum ancestral com `aria-live`) |
 | C14 | `dismissible` e `AlertAction` convivem: a ação anda para a esquerda do X, sem sobrepor, e o texto não passa por baixo dela | `testes.functional.item8` + `testes.visual.item6` (`Compositions/WithActionAndDismiss`, pela `measureActionDismiss` da sonda; ver D10) |
 | C15 | Nenhuma altura fixa: a caixa cresce com `padding-block` + `line-height` | — (inspeção da folha; nenhum portão mede ausência de `height` aqui) |
 | C16 | Alerta fechado some da tela mesmo quando o nó continua no DOM — `.nds-alert[hidden]` vence o `display: grid` da raiz | play de `Dismissible` no angular, único que fecha por `hidden` (§7) |
+
+> **EXCEÇÃO DE PORTÃO DECLARADA · 2026-09-21 — as duas últimas asserções do
+> `Dismissible` são INVARIANTE e paridade, não portão independente.**
+>
+> Em 2026-09-21 a rodada portou para vanilla, react, vue e svelte as duas linhas
+> que só o angular tinha, logo depois do segundo `animationend`:
+>
+> ```
+> await expect(alerta).toBeInTheDocument();
+> await expect(onDismiss).not.toHaveBeenCalled();
+> ```
+>
+> Elas descrevem o C12 corretamente e a paridade valia a pena. **O que elas NÃO
+> fazem é reprovar sozinhas**, e a premissa foi verificada nas quatro: o listener
+> de entrada se AUTOREMOVE (`finalizar` tira o próprio ouvinte antes de chamar o
+> `feito`), então um segundo `animationend` não tem a quem chegar — não existe
+> caminho de código que remova o nó ou chame o callback ali. E o defeito que elas
+> mirariam, perder a guarda `event.target !== el`, reprova **três asserções
+> antes**, no `toHaveClass('nds-animate-in')` que segue o `animationend` plantado
+> no botão.
+>
+> No react há ainda um segundo motivo: o andaime `RemountingDismissibleAlert`
+> troca a `key` a cada `onDismiss`, então qualquer dispensa espúria remonta e o
+> defeito muda de forma antes de chegar aqui.
+>
+> **Fica escrito para não ser redescoberto**: quem apertar essas duas linhas
+> achando que são portão vai apertar o lugar errado. O portão do C12 é o
+> `toHaveClass`, e é ele que tem de sobreviver a qualquer refatoração da play.
+> Premissa a reconferir num bump de lib ou numa mudança do ciclo de animação: *o
+> listener de entrada continua se autoremovendo?*
 
 ## 3. Decisões fixadas
 
