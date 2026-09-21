@@ -429,7 +429,7 @@ import { Label } from "@/components/ui/label";`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="switch"
         code={codeImportBasic}
         secondaryCode={codeImportWithLabel}
       />
@@ -739,7 +739,7 @@ import { Label } from "@/components/ui/label";`;
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="switch"
         items={[
           {
             name: tContent("related.items.checkbox.name"),
@@ -765,7 +765,7 @@ import { Label } from "@/components/ui/label";`;
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="switch"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

@@ -616,7 +616,7 @@ interface DrawerProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} secondaryCode={codeImportUsage} />
+      <DocsImport componentSlug="drawer" code={codeImport} secondaryCode={codeImportUsage} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions

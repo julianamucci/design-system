@@ -319,7 +319,7 @@ export function AgentStatusDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="agent-status"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -410,7 +410,7 @@ export function AgentStatusDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="agent-status"
         items={[
           { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/components-conversational-chatthread--docs" },
           { name: tContent("related.items.composer.name"),   description: toPlainText(tContent("related.items.composer.description")),   path: "?path=/docs/components-conversational-composer--docs"   },

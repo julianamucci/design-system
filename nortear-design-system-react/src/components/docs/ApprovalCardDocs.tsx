@@ -343,7 +343,7 @@ export function ApprovalCardDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="approval-card"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withActions")}
@@ -432,7 +432,7 @@ export function ApprovalCardDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="approval-card"
         items={[
           { name: tContent("related.items.toolGroup.name"),   description: toPlainText(tContent("related.items.toolGroup.description")),   path: "?path=/docs/components-conversational-toolgroup--docs"  },
           { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/components-conversational-chatthread--docs" },

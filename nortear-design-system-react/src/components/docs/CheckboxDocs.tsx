@@ -438,7 +438,7 @@ export function CheckboxDocs() {
           />
 
           {/* ── Importação ────────────────────────────────────────────── */}
-          <DocsImport
+          <DocsImport componentSlug="checkbox"
             description={tContent("import.react")}
             code={codeImportBasic}
           />
@@ -787,7 +787,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
           />
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
-          <DocsRelated
+          <DocsRelated componentSlug="checkbox"
             items={[
               {
                 name: "Switch",
@@ -813,7 +813,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
           />
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
-          <DocsNotes
+          <DocsNotes componentSlug="checkbox"
             items={[
               { title: "", content: tContent("notes.tip1") },
               { title: "", content: tContent("notes.tip2") },

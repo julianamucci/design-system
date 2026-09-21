@@ -337,7 +337,7 @@ export function ComposerDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withRunning")}
@@ -435,7 +435,7 @@ export function ComposerDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer"
         items={[
           { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/components-conversational-chatthread--docs" },
           { name: tContent("related.items.textarea.name"),   description: toPlainText(tContent("related.items.textarea.description")),   path: "?path=/docs/components-form-textarea--docs" },

@@ -587,7 +587,7 @@ interface HoverCardContentProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="hover-card" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions

@@ -486,7 +486,7 @@ function Textarea({
       />
 
       {/* ── Importação ──────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="textarea"
         code={codeImportBasic}
       />
 
@@ -824,7 +824,7 @@ function Textarea({
       />
 
       {/* ── Relacionados ────────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="textarea"
         items={[
           {
             name: tContent("related.items.input.name"),
@@ -850,7 +850,7 @@ function Textarea({
       />
 
       {/* ── Notas ───────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="textarea"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

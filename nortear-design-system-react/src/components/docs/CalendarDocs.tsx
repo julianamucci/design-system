@@ -453,7 +453,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="calendar"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withLocale")}
@@ -682,7 +682,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="calendar"
         items={[
           {
             name: "Popover",
@@ -703,7 +703,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="calendar"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

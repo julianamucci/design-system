@@ -480,7 +480,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="collapsible"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withButton")}
@@ -913,7 +913,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="collapsible"
         items={[
           {
             name: "Accordion",
@@ -939,7 +939,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="collapsible"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

@@ -333,7 +333,7 @@ export function ToolGroupDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="tool-group"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -423,7 +423,7 @@ export function ToolGroupDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="tool-group"
         items={[
           { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/components-conversational-chatthread--docs" },
           { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/components-conversational-agentstatus--docs" },

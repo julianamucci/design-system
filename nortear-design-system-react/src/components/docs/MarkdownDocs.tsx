@@ -260,7 +260,7 @@ export function MarkdownDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="markdown"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withStreaming")}
@@ -377,7 +377,7 @@ export function MarkdownDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="markdown"
         items={[
           { name: tContent("related.items.codeBlock.name"), description: toPlainText(tContent("related.items.codeBlock.description")), path: "?path=/docs/components-display-codeblock--docs" },
           { name: tContent("related.items.editor.name"),    description: toPlainText(tContent("related.items.editor.description")),    path: "?path=/docs/components-form-editor--docs" },

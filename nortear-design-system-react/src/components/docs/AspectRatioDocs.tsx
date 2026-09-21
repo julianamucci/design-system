@@ -397,7 +397,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="aspect-ratio"
         code={codeImportBasic}
         secondaryCode={codeImportWithFallback}
       />
@@ -568,7 +568,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="aspect-ratio"
         items={[
           {
             name: "Card",
@@ -589,7 +589,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="aspect-ratio"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

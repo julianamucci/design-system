@@ -545,7 +545,7 @@ interface RadioGroupItemProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="radio-group" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants

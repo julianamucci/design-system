@@ -415,7 +415,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="avatar"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withIcon")}
@@ -707,7 +707,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="avatar"
         items={[
           {
             name: "Badge",
@@ -733,7 +733,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="avatar"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

@@ -357,7 +357,7 @@ export function QuotaBannerDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="quota-banner"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -446,7 +446,7 @@ export function QuotaBannerDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="quota-banner"
         items={[
           { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/components-conversational-contextdisplay--docs" },
           { name: tContent("related.items.costMeter.name"),      description: toPlainText(tContent("related.items.costMeter.description")),      path: "?path=/docs/components-conversational-costmeter--docs" },

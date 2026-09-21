@@ -327,7 +327,7 @@ export function ComposerModelPickerDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer-model-picker"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withUnavailable")}
@@ -425,7 +425,7 @@ export function ComposerModelPickerDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer-model-picker"
         items={[
           { name: tContent("related.items.composer.name"),               description: toPlainText(tContent("related.items.composer.description")),               path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.composerTriggerPopover.name"), description: toPlainText(tContent("related.items.composerTriggerPopover.description")), path: "?path=/docs/components-conversational-composertriggerpopover--docs" },

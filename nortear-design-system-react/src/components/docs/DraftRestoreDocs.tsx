@@ -315,7 +315,7 @@ export function DraftRestoreDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="draft-restore"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withTimestamp")}
@@ -415,7 +415,7 @@ export function DraftRestoreDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="draft-restore"
         items={[
           { name: tContent("related.items.composer.name"),    description: toPlainText(tContent("related.items.composer.description")),    path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.alert.name"),       description: toPlainText(tContent("related.items.alert.description")),       path: "?path=/docs/components-feedback-alert--docs" },

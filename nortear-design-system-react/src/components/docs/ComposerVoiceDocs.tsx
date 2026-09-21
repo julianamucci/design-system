@@ -323,7 +323,7 @@ export function ComposerVoiceDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer-voice"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLevel")}
@@ -423,7 +423,7 @@ export function ComposerVoiceDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer-voice"
         items={[
           { name: tContent("related.items.composer.name"),            description: toPlainText(tContent("related.items.composer.description")),            path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.composerAttachments.name"), description: toPlainText(tContent("related.items.composerAttachments.description")), path: "?path=/docs/components-conversational-composerattachments--docs" },

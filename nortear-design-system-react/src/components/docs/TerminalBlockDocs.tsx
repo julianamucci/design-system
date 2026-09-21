@@ -399,7 +399,7 @@ export function TerminalBlockDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="terminal-block"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -490,7 +490,7 @@ export function TerminalBlockDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="terminal-block"
         items={[
           { name: tContent("related.items.codeBlock.name"),   description: toPlainText(tContent("related.items.codeBlock.description")),   path: "?path=/docs/components-display-codeblock--docs"           },
           { name: tContent("related.items.agentStatus.name"), description: toPlainText(tContent("related.items.agentStatus.description")), path: "?path=/docs/components-conversational-agentstatus--docs" },

@@ -490,7 +490,7 @@ interface InputOTPProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="input-otp" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants

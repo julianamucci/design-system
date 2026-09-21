@@ -516,7 +516,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
       />
 
       {/* ── Importação ──────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="input"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withGroup")}
@@ -872,7 +872,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
       />
 
       {/* ── Relacionados ────────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="input"
         items={[
           {
             name: "Textarea",
@@ -903,7 +903,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
       />
 
       {/* ── Notas ───────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="input"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

@@ -562,7 +562,7 @@ interface SelectContentProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="select" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants

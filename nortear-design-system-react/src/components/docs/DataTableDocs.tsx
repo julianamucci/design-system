@@ -533,7 +533,7 @@ type DataTableColumnMeta = {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="data-table"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withMeta")}
@@ -806,7 +806,7 @@ type DataTableColumnMeta = {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="data-table"
         items={[
           { name: "Table",         description: toPlainText(tContent("related.table")),         path: "?path=/docs/components-tables-table--docs" },
           { name: "Chart",         description: toPlainText(tContent("related.chart")),         path: "?path=/docs/components-display-chart--docs" },
@@ -818,7 +818,7 @@ type DataTableColumnMeta = {
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="data-table"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

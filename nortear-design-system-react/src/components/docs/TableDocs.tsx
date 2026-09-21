@@ -573,7 +573,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
       />
 
       {/* ── Importação ───────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="table"
         code={codeImport}
       />
 

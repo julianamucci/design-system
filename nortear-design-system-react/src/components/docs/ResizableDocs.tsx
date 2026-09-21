@@ -543,7 +543,7 @@ interface PanelResizeHandleProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImportBasic} />
+      <DocsImport componentSlug="resizable" code={codeImportBasic} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
@@ -825,7 +825,7 @@ interface PanelResizeHandleProps {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="resizable"
         items={[
           {
             name: tContent("related.items.scrollArea.name"),
@@ -851,7 +851,7 @@ interface PanelResizeHandleProps {
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="resizable"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

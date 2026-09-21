@@ -326,7 +326,7 @@ export function ComposerQuoteDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer-quote"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.fromThread")}
@@ -425,7 +425,7 @@ export function ComposerQuoteDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer-quote"
         items={[
           { name: tContent("related.items.composer.name"),    description: toPlainText(tContent("related.items.composer.description")),    path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/components-conversational-chatthread--docs" },

@@ -438,7 +438,7 @@ export function ComputerUseDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="computer-use"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -522,7 +522,7 @@ export function ComputerUseDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="computer-use"
         items={[
           { name: tContent("related.items.agentStatus.name"),   description: toPlainText(tContent("related.items.agentStatus.description")),   path: "?path=/docs/components-conversational-agentstatus--docs"   },
           { name: tContent("related.items.toolGroup.name"),     description: toPlainText(tContent("related.items.toolGroup.description")),     path: "?path=/docs/components-conversational-toolgroup--docs"     },

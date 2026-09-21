@@ -313,7 +313,7 @@ export function ComposerContextDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer-context"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withAutomatic")}
@@ -413,7 +413,7 @@ export function ComposerContextDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer-context"
         items={[
           { name: tContent("related.items.composer.name"),            description: toPlainText(tContent("related.items.composer.description")),            path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.composerAttachments.name"), description: toPlainText(tContent("related.items.composerAttachments.description")), path: "?path=/docs/components-conversational-composerattachments--docs" },

@@ -417,7 +417,7 @@ import { Bold } from "lucide-react";`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="toggle"
         code={codeImportBasic}
         secondaryCode={codeImportWithIcon}
       />
@@ -727,7 +727,7 @@ import { Bold } from "lucide-react";`;
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="toggle"
         items={[
           {
             name: tContent("related.items.toggleGroup.name"),
@@ -753,7 +753,7 @@ import { Bold } from "lucide-react";`;
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="toggle"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

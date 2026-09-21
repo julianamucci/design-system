@@ -470,7 +470,7 @@ interface ScrollBarProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImportBasic} />
+      <DocsImport componentSlug="scroll-area" code={codeImportBasic} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
@@ -709,7 +709,7 @@ interface ScrollBarProps {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="scroll-area"
         items={[
           {
             name: tContent("related.items.resizable.name"),
@@ -735,7 +735,7 @@ interface ScrollBarProps {
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="scroll-area"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

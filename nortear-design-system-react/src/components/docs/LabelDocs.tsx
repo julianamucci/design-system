@@ -285,7 +285,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="label"
         code={codeImportBasic}
       />
 
@@ -443,7 +443,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="label"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

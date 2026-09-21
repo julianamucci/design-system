@@ -784,7 +784,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         ]}
       />
 
-      <DocsImport
+      <DocsImport componentSlug="dialog"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withScroll")}
@@ -1315,7 +1315,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         ]}
       />
 
-      <DocsRelated
+      <DocsRelated componentSlug="dialog"
         items={[
           { name: "AlertDialog", description: toPlainText(tContent("related.alertDialog")), path: "?path=/docs/components-overlay-alertdialog--docs" },
           { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/components-overlay-sheet--docs" },
@@ -1325,7 +1325,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         ]}
       />
 
-      <DocsNotes
+      <DocsNotes componentSlug="dialog"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

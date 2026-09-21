@@ -330,7 +330,7 @@ export function MessageTimingDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="message-timing"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -415,7 +415,7 @@ export function MessageTimingDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="message-timing"
         items={[
           { name: tContent("related.items.agentStatus.name"),    description: toPlainText(tContent("related.items.agentStatus.description")),    path: "?path=/docs/components-conversational-agentstatus--docs"    },
           { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/components-conversational-contextdisplay--docs" },

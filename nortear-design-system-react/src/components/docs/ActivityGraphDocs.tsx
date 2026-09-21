@@ -466,7 +466,7 @@ export function ActivityGraphDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="activity-graph"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -553,7 +553,7 @@ export function ActivityGraphDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="activity-graph"
         items={[
           { name: tContent("related.items.chart.name"),          description: toPlainText(tContent("related.items.chart.description")),          path: "?path=/docs/components-display-chart--docs"                 },
           { name: tContent("related.items.calendar.name"),       description: toPlainText(tContent("related.items.calendar.description")),       path: "?path=/docs/components-form-calendar--docs"                 },

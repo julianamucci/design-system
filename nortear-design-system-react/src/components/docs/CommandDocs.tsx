@@ -797,7 +797,7 @@ interface CommandDialogProps
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="command"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withDialog")}
@@ -1140,7 +1140,7 @@ interface CommandDialogProps
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="command"
         items={[
           {
             name: "Select",
@@ -1161,7 +1161,7 @@ interface CommandDialogProps
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="command"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

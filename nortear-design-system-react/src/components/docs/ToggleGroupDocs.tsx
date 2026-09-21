@@ -481,7 +481,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="toggle-group"
         code={codeImportBasic}
         secondaryCode={codeImportWithIcons}
       />
@@ -788,7 +788,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="toggle-group"
         items={[
           {
             name: tContent("related.items.toggle.name"),
@@ -814,7 +814,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="toggle-group"
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },

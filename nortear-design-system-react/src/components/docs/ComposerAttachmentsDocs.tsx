@@ -319,7 +319,7 @@ export function ComposerAttachmentsDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer-attachments"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withProgress")}
@@ -419,7 +419,7 @@ export function ComposerAttachmentsDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer-attachments"
         items={[
           { name: tContent("related.items.composer.name"),   description: toPlainText(tContent("related.items.composer.description")),   path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.progress.name"),   description: toPlainText(tContent("related.items.progress.description")),   path: "?path=/docs/components-feedback-progress--docs" },

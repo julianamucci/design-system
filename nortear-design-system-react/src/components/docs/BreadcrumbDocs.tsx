@@ -609,7 +609,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="breadcrumb"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withEllipsis")}
@@ -816,7 +816,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="breadcrumb"
         items={[
           {
             name: "NavigationMenu",
@@ -842,7 +842,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="breadcrumb"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

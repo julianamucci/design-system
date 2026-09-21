@@ -313,7 +313,7 @@ export function ChatThreadDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="chat-thread"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withStreaming")}
@@ -414,7 +414,7 @@ export function ChatThreadDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="chat-thread"
         items={[
           { name: tContent("related.items.markdown.name"), description: toPlainText(tContent("related.items.markdown.description")), path: "?path=/docs/components-conversational-markdown--docs" },
           { name: tContent("related.items.avatar.name"),   description: toPlainText(tContent("related.items.avatar.description")),   path: "?path=/docs/components-display-avatar--docs" },

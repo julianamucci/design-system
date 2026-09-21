@@ -349,7 +349,7 @@ import { Plus } from "lucide-react";`;
           />
 
           {/* ── Importação ────────────────────────────────────────────── */}
-          <DocsImport
+          <DocsImport componentSlug="button"
             description={tContent("import.basic")}
             code={codeImportBasic}
             secondaryDescription={tContent("import.withIcon")}
@@ -701,7 +701,7 @@ import { Plus } from "lucide-react";`;
           />
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
-          <DocsRelated
+          <DocsRelated componentSlug="button"
             items={[
               {
                 name: "Toggle",
@@ -732,7 +732,7 @@ import { Plus } from "lucide-react";`;
           />
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
-          <DocsNotes
+          <DocsNotes componentSlug="button"
             items={[
               { title: "", content: tContent("notes.tip1") },
               { title: "", content: tContent("notes.tip2") },

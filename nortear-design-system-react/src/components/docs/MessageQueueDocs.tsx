@@ -319,7 +319,7 @@ export function MessageQueueDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="message-queue"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.aboveField")}
@@ -419,7 +419,7 @@ export function MessageQueueDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="message-queue"
         items={[
           { name: tContent("related.items.composer.name"),      description: toPlainText(tContent("related.items.composer.description")),      path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.composerQuote.name"), description: toPlainText(tContent("related.items.composerQuote.description")), path: "?path=/docs/components-conversational-composerquote--docs" },

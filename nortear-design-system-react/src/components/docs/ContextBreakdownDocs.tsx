@@ -318,7 +318,7 @@ export function ContextBreakdownDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="context-breakdown"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -410,7 +410,7 @@ export function ContextBreakdownDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="context-breakdown"
         items={[
           { name: tContent("related.items.contextDisplay.name"), description: toPlainText(tContent("related.items.contextDisplay.description")), path: "?path=/docs/components-conversational-contextdisplay--docs" },
           { name: tContent("related.items.chatThread.name"),     description: toPlainText(tContent("related.items.chatThread.description")),     path: "?path=/docs/components-conversational-chatthread--docs"     },

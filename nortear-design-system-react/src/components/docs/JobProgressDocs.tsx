@@ -378,7 +378,7 @@ export function JobProgressDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="job-progress"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -474,7 +474,7 @@ export function JobProgressDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="job-progress"
         items={[
           { name: tContent("related.items.agentStatus.name"),     description: toPlainText(tContent("related.items.agentStatus.description")),     path: "?path=/docs/components-conversational-agentstatus--docs"     },
           { name: tContent("related.items.agentPlan.name"),       description: toPlainText(tContent("related.items.agentPlan.description")),       path: "?path=/docs/components-conversational-agentplan--docs"       },

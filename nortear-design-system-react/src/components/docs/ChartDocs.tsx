@@ -558,7 +558,7 @@ declare function buildRadarOption(o: {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="chart"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withBuilders")}

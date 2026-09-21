@@ -536,7 +536,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         ]}
       />
 
-      <DocsImport
+      <DocsImport componentSlug="alert-dialog"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withTrigger")}
@@ -724,7 +724,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         ]}
       />
 
-      <DocsRelated
+      <DocsRelated componentSlug="alert-dialog"
         items={[
           { name: "Dialog",  description: toPlainText(tContent("related.dialog")),  path: "?path=/docs/components-overlay-dialog--docs" },
           { name: "Sonner",  description: toPlainText(tContent("related.sonner")),  path: "?path=/docs/components-feedback-sonner--docs" },
@@ -733,7 +733,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         ]}
       />
 
-      <DocsNotes
+      <DocsNotes componentSlug="alert-dialog"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

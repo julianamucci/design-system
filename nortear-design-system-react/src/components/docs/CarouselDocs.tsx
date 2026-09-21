@@ -549,7 +549,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="carousel"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withPlugin")}

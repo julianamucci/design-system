@@ -331,7 +331,7 @@ export function CostMeterDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="cost-meter"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -411,7 +411,7 @@ export function CostMeterDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="cost-meter"
         items={[
           { name: tContent("related.items.contextDisplay.name"),   description: toPlainText(tContent("related.items.contextDisplay.description")),   path: "?path=/docs/components-conversational-contextdisplay--docs" },
           { name: tContent("related.items.contextBreakdown.name"), description: toPlainText(tContent("related.items.contextBreakdown.description")), path: "?path=/docs/components-conversational-contextbreakdown--docs" },

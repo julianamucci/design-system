@@ -339,7 +339,7 @@ export function ComposerTriggerPopoverDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="composer-trigger-popover"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withCommands")}
@@ -457,7 +457,7 @@ export function ComposerTriggerPopoverDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="composer-trigger-popover"
         items={[
           { name: tContent("related.items.composer.name"), description: toPlainText(tContent("related.items.composer.description")), path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.combobox.name"), description: toPlainText(tContent("related.items.combobox.description")), path: "?path=/docs/components-form-combobox--docs" },

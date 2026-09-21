@@ -1153,7 +1153,7 @@ export function ContextMenuDocs() {
       />
 
       {/* ── Relacionados ───────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="context-menu"
         items={[
           {
             name: "DropdownMenu",
@@ -1184,7 +1184,7 @@ export function ContextMenuDocs() {
       />
 
       {/* ── Notas ──────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="context-menu"
         items={stringsFromDict(tContent, "notes", "tip").map((content) => ({
           title: "",
           content,

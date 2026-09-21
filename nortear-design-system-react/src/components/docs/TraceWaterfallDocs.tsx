@@ -483,7 +483,7 @@ export function TraceWaterfallDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="trace-waterfall"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -575,7 +575,7 @@ export function TraceWaterfallDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="trace-waterfall"
         items={[
           { name: tContent("related.items.flowGraph.name"),     description: toPlainText(tContent("related.items.flowGraph.description")),     path: "?path=/docs/components-conversational-flowgraph--docs"     },
           { name: tContent("related.items.agentPlan.name"),     description: toPlainText(tContent("related.items.agentPlan.description")),     path: "?path=/docs/components-conversational-agentplan--docs"     },

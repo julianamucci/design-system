@@ -420,7 +420,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
           />
 
           {/* ── Importação ────────────────────────────────────────────── */}
-          <DocsImport
+          <DocsImport componentSlug="accordion"
             description={tContent("import.note")}
             code={codeImport}
           />
@@ -882,7 +882,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
           />
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
-          <DocsRelated
+          <DocsRelated componentSlug="accordion"
             items={[
               {
                 name: tContent("related.collapsible.name"),
@@ -903,7 +903,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
           />
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
-          <DocsNotes
+          <DocsNotes componentSlug="accordion"
             items={[
               { title: "", content: tContent("notes.item1") },
               { title: "", content: tContent("notes.item2") },

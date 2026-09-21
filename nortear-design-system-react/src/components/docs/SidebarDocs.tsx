@@ -822,7 +822,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="sidebar"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withSubcomponents")}
@@ -1276,7 +1276,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="sidebar"
         items={[
           {
             name: "NavigationMenu",
@@ -1317,7 +1317,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="sidebar"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

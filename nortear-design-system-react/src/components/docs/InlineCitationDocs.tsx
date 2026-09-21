@@ -419,7 +419,7 @@ export function InlineCitationDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="inline-citation"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -509,7 +509,7 @@ export function InlineCitationDocs() {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="inline-citation"
         items={[
           { name: tContent("related.items.chatThread.name"), description: toPlainText(tContent("related.items.chatThread.description")), path: "?path=/docs/components-conversational-chatthread--docs" },
           { name: tContent("related.items.hoverCard.name"),  description: toPlainText(tContent("related.items.hoverCard.description")),  path: "?path=/docs/components-overlay-hovercard--docs"        },

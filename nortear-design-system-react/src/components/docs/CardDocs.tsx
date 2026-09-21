@@ -539,7 +539,7 @@ interface CardProps extends React.ComponentProps<"div"> {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="card"
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.full")}
@@ -836,7 +836,7 @@ interface CardProps extends React.ComponentProps<"div"> {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="card"
         items={[
           { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/components-layout-separator--docs" },
           { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/components-disclosure-accordion--docs" },
@@ -848,7 +848,7 @@ interface CardProps extends React.ComponentProps<"div"> {
       />
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
-      <DocsNotes
+      <DocsNotes componentSlug="card"
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },

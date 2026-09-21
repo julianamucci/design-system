@@ -907,7 +907,7 @@ export function MenubarDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="menubar" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       {/* Seis barras vivas, e o código de cada card sai da lista que monta a

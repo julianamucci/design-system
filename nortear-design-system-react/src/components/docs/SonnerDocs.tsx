@@ -450,7 +450,7 @@ interface ToasterProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport
+      <DocsImport componentSlug="sonner"
         code={codeImport}
       />
 
@@ -709,7 +709,7 @@ interface ToasterProps {
       />
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
-      <DocsRelated
+      <DocsRelated componentSlug="sonner"
         items={[
           {
             name: "Alert",

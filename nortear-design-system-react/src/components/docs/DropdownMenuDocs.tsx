@@ -834,7 +834,7 @@ export function DropdownMenuDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="dropdown-menu" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       {/* Os seis cards são menus VIVOS, e o código de cada um sai da lista que
