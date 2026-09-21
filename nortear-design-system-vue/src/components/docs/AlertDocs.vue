@@ -57,9 +57,11 @@ const localeContent = computed(
       string,
       {
         anatomy?: Record<string, unknown>;
+        accessibility?: Record<string, unknown>;
         testes?: Record<string, Record<string, unknown>>;
         usage?: {
           guidelines?: Record<string, unknown>;
+          scenarios?: Record<string, unknown>;
           do?: Record<string, unknown>;
           dont?: Record<string, unknown>;
         };
@@ -252,9 +254,9 @@ const anatomyItems = computed(() =>
   itemIndexes(localeContent.value?.anatomy).map((i) => tContent(`anatomy.item${i}`)),
 );
 
-// Mesmo teto latente da anatomia, nas três listas de "Quando usar": hoje 4/4/3
-// casam com o dicionário, e é exatamente assim que a lista cravada some sem
-// avisar — item novo no conteúdo simplesmente não chega à tela.
+// Mesmo teto latente da anatomia, nas listas de "Quando usar": hoje elas casam
+// com o dicionário, e é exatamente assim que a lista cravada some sem avisar —
+// item novo no conteúdo simplesmente não chega à tela.
 const usageGuidelineItems = computed(() =>
   itemIndexes(localeContent.value?.usage?.guidelines).map((i) => tContent(`usage.guidelines.item${i}`)),
 );
@@ -265,6 +267,16 @@ const usageDoItems = computed(() =>
 
 const usageDontItems = computed(() =>
   itemIndexes(localeContent.value?.usage?.dont).map((i) => tContent(`usage.dont.item${i}`)),
+);
+
+// A tabela de cenários tinha o mesmo teto cravado das listas acima: quatro
+// linhas escritas à mão no template, que um `item5` no conteúdo não alcançaria.
+const usageScenarioItems = computed(() =>
+  itemIndexes(localeContent.value?.usage?.scenarios).map((i) => ({
+    s: tContent(`usage.scenarios.item${i}.s`),
+    u: tContent(`usage.scenarios.item${i}.u`),
+    a: tContent(`usage.scenarios.item${i}.a`),
+  })),
 );
 
 const variantItems = computed(() => [
@@ -398,10 +410,11 @@ const tokenRows = computed(() => [
   { token: '--alert-glow',   value: 'hsl(var(--border))',               description: tContent('tokens.table.alertGlow')         },
 ]);
 
-const accessibilityItems = computed(() => [
-  tContent('accessibility.item1'), tContent('accessibility.item2'),
-  tContent('accessibility.item3'), tContent('accessibility.item4'), tContent('accessibility.item5'),
-]);
+// Mesmo teto cravado: a sexta regra de acessibilidade escrita no conteúdo não
+// chegaria à página, e nenhum portão reprovaria a omissão.
+const accessibilityItems = computed(() =>
+  itemIndexes(localeContent.value?.accessibility).map((i) => tContent(`accessibility.item${i}`)),
+);
 
 const keyboardItems = computed(() => [
   { key: 'Tab',   description: tContent('accessibility.keyboard.tab')        },
@@ -555,12 +568,7 @@ const visualTestItems = computed(() =>
       :scenarios="{
         title: tContent('usage.scenarios.title'),
         cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
-        items: [
-          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-        ],
+        items: usageScenarioItems,
       }"
       :ux-writing="{
         title: tContent('usage.uxWriting.title'),

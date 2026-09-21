@@ -42,32 +42,33 @@ const priorityKeyMap: Record<string, string> = {
 
 type TestGroup = keyof (typeof alertTranslations)["pt-BR"]["testes"];
 
+/** Recorte do dicionário de um locale: só os grupos de onde saem listas. */
+type AlertDict = {
+  anatomy?: Record<string, unknown>;
+  accessibility?: Record<string, unknown>;
+  testes?: Record<string, Record<string, unknown>>;
+  usage?: {
+    guidelines?: Record<string, unknown>;
+    do?: Record<string, unknown>;
+    dont?: Record<string, unknown>;
+    scenarios?: Record<string, unknown>;
+  };
+};
+
 /**
  * Índices `itemN` de um grupo do dicionário, em ordem. Lista literal no chamador
  * é o que deixava a página renderizar 7 de 8 quando o conteúdo ganhava item —
  * aconteceu com `functional.item8`, com `visual.item6` e de novo com
  * `anatomy.item5`/`item6`. Derivando, o dicionário cresce e a página acompanha.
+ *
+ * O grupo é opcional de propósito: grupo ausente devolve `[]`, como nas outras
+ * quatro stacks. Acessar a propriedade direto fazia esta ser a única que QUEBRA.
  */
-const itemIndexes = (group: Record<string, unknown>): number[] =>
-  Object.keys(group)
+const itemIndexes = (group: Record<string, unknown> | undefined): number[] =>
+  Object.keys(group ?? {})
     .filter((key) => /^item\d+$/.test(key))
     .map((key) => Number(key.slice("item".length)))
     .sort((a, b) => a - b);
-
-const testItemIndexes = (group: TestGroup): number[] =>
-  itemIndexes(alertTranslations["pt-BR"].testes[group]);
-
-/** Anatomia: mesma regra. O container aceita `items` de qualquer tamanho. */
-const anatomyItemIndexes = itemIndexes(alertTranslations["pt-BR"].anatomy);
-
-/**
- * Quando usar: as três listas de item solto (`guidelines`, `do`, `dont`) seguem
- * a mesma regra da anatomia. Hoje as contagens batem com o dicionário; cravá-las
- * é o teto latente que já engoliu item em `anatomy` sem nada reprovar.
- */
-const guidelineItemIndexes = itemIndexes(alertTranslations["pt-BR"].usage.guidelines);
-const doItemIndexes = itemIndexes(alertTranslations["pt-BR"].usage.do);
-const dontItemIndexes = itemIndexes(alertTranslations["pt-BR"].usage.dont);
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -129,6 +130,25 @@ export function AlertDocs() {
         .filter(([key]) => key !== "title")
         .map(([, value]) => value),
     [locale],
+  );
+
+  // As listas saem do dicionário do LOCALE VIGENTE, não de um `pt-BR` fixo:
+  // derivar de um idioma e renderizar outro reintroduz o mesmo teto cravado em
+  // `en` e `es`, onde ninguém o vê enquanto as contagens coincidem.
+  const dict = useMemo(
+    () => (alertTranslations as unknown as Record<string, AlertDict>)[locale] ?? {},
+    [locale],
+  );
+
+  const anatomyItemIndexes = useMemo(() => itemIndexes(dict.anatomy), [dict]);
+  const guidelineItemIndexes = useMemo(() => itemIndexes(dict.usage?.guidelines), [dict]);
+  const doItemIndexes = useMemo(() => itemIndexes(dict.usage?.do), [dict]);
+  const dontItemIndexes = useMemo(() => itemIndexes(dict.usage?.dont), [dict]);
+  const scenarioItemIndexes = useMemo(() => itemIndexes(dict.usage?.scenarios), [dict]);
+  const accessibilityItemIndexes = useMemo(() => itemIndexes(dict.accessibility), [dict]);
+  const testItemIndexes = useCallback(
+    (group: TestGroup): number[] => itemIndexes(dict.testes?.[group]),
+    [dict],
   );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
@@ -335,12 +355,11 @@ interface AlertActionProps extends React.ComponentProps<"div"> {}`;
                 use: tContent("usage.scenarios.cols.use"),
                 alternative: tContent("usage.scenarios.cols.alternative"),
               },
-              items: [
-                { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-                { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-                { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-                { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
-              ],
+              items: scenarioItemIndexes.map((i) => ({
+                s: tContent(`usage.scenarios.item${i}.s`),
+                u: tContent(`usage.scenarios.item${i}.u`),
+                a: tContent(`usage.scenarios.item${i}.a`),
+              })),
             }}
             uxWriting={{
               title: tContent("usage.uxWriting.title"),
@@ -843,13 +862,7 @@ interface AlertActionProps extends React.ComponentProps<"div"> {}`;
             screenReaderTitle={tNav("common.screenReader")}
             screenReaderItems={screenReaderItems}
             summary={tContent("accessibility.summary")}
-            items={[
-              tContent("accessibility.item1"),
-              tContent("accessibility.item2"),
-              tContent("accessibility.item3"),
-              tContent("accessibility.item4"),
-              tContent("accessibility.item5"),
-            ]}
+            items={accessibilityItemIndexes.map((i) => tContent(`accessibility.item${i}`))}
             keyboardTitle={tContent("accessibility.keyboardTitle")}
             keyboardItems={[
               { key: "Tab",   description: tContent("accessibility.keyboard.tab") },

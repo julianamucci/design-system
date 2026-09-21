@@ -117,10 +117,13 @@ export const WithoutIcon: Story = {
       await expect(canvas.getByRole('alert')).toBeVisible();
     });
 
-    await step('Sem SVG filho direto no alert', async () => {
+    await step('Nenhum SVG em toda a subárvore do alert', async () => {
+      // Para afirmar AUSÊNCIA o seletor tem de varrer a subárvore inteira:
+      // `:scope > svg` passaria com um ícone dentro de qualquer wrapper, que é
+      // exatamente a regressão que esta story existe para pegar. O aperto a
+      // filho direto só cabe quando se afirma PRESENÇA (compositions/WithIcon).
       const alert = canvas.getByRole('alert');
-      const svg = alert.querySelector(':scope > svg');
-      await expect(svg).toBeNull();
+      await expect(alert.querySelector('svg')).toBeNull();
     });
   },
 };
