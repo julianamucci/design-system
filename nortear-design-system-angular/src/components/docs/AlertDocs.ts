@@ -583,15 +583,15 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly anatomyItems = computed(() => {
-    dict();
-    return [1, 2, 3, 4].map((i) => t(`anatomy.item${i}`));
+    const d = dict();
+    return itemIndexes(d, 'anatomy').map((i) => t(`anatomy.item${i}`));
   });
 
   protected readonly guidelines = computed(() => {
-    dict();
+    const d = dict();
     return {
       title: t('usage.guidelines.title'),
-      items: [1, 2, 3, 4].map((i) => t(`usage.guidelines.item${i}`)),
+      items: itemIndexes(d, 'usage.guidelines').map((i) => t(`usage.guidelines.item${i}`)),
     };
   });
 
@@ -628,13 +628,19 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly usageDo = computed(() => {
-    dict();
-    return { title: t('usage.do.title'), items: [1, 2, 3, 4].map((i) => t(`usage.do.item${i}`)) };
+    const d = dict();
+    return {
+      title: t('usage.do.title'),
+      items: itemIndexes(d, 'usage.do').map((i) => t(`usage.do.item${i}`)),
+    };
   });
 
   protected readonly usageDont = computed(() => {
-    dict();
-    return { title: t('usage.dont.title'), items: [1, 2, 3].map((i) => t(`usage.dont.item${i}`)) };
+    const d = dict();
+    return {
+      title: t('usage.dont.title'),
+      items: itemIndexes(d, 'usage.dont').map((i) => t(`usage.dont.item${i}`)),
+    };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -773,6 +779,14 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
         items: [
           { name: 'class',      type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
           { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: not, description: toPlainText(t('props.table.children')) },
+        ],
+      },
+      {
+        title: t('props.alertActionTitle'),
+        cols,
+        items: [
+          { name: 'class',      type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: not, description: toPlainText(t('props.table.alertAction')) },
         ],
       },
     ];
@@ -969,6 +983,22 @@ const priorityKeyMap: Record<string, string> = {
 
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
+}
+
+/**
+ * Índices `item1…itemN` que o dicionário de fato publica sob `base`, para
+ * chave de texto SOLTO (`anatomy.item5`), sem sub-campos.
+ *
+ * Lista cravada no chamador dá teto ao conteúdo compartilhado: a página só
+ * mostra o que o `.map()` alcança, e quem acrescenta a chave na
+ * `translations.json` não tem como saber que ela ficou invisível. Já aconteceu
+ * três vezes — `anatomy.item5`/`item6`, `functional.item8` e `visual.item6`.
+ * Quem manda no fim da lista é o dicionário.
+ */
+function itemIndexes(d: Record<string, string>, base: string): number[] {
+  const out: number[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) out.push(i);
+  return out;
 }
 
 function itemsFromDict<K extends string>(

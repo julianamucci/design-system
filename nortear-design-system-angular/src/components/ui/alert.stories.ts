@@ -188,18 +188,23 @@ export const Playground: Story = {
       await waitFor(() => expect(canvas.getByRole(args.role)).toBeVisible());
     });
 
-    await step('Título e descrição são renderizados', async () => {
-      await waitFor(() => expect(canvas.getByText(args.title)).toBeVisible());
-      await waitFor(() => expect(canvas.getByText(args.description)).toBeVisible());
-    });
+    // O control `title` pode ser esvaziado no painel, e aí não há texto a
+    // procurar: sem a guarda o Playground reprova numa configuração legítima
+    // do painel — e é o que separava esta story das outras.
+    if (args.title) {
+      await step('O título é o heading que quem escreve escolheu', async () => {
+        await waitFor(() => expect(canvas.getByText(args.title)).toBeVisible());
+        // Aqui o nível é do ELEMENTO, não de uma prop: `<h4 ndsAlertTitle>`. A
+        // story abre num card `h3`, então o título do alerta desce um degrau — e
+        // o snippet do painel Code escreve exatamente esta tag.
+        const title = canvas.getByText(args.title);
+        await expect(title.tagName).toBe('H4');
+        await expect(title).toHaveClass('nds-alert-title');
+      });
+    }
 
-    await step('O título é o heading que quem escreve escolheu', async () => {
-      // Aqui o nível é do ELEMENTO, não de uma prop: `<h4 ndsAlertTitle>`. A
-      // story abre num card `h3`, então o título do alerta desce um degrau — e
-      // o snippet do painel Code escreve exatamente esta tag.
-      const title = canvas.getByText(args.title);
-      await expect(title.tagName).toBe('H4');
-      await expect(title).toHaveClass('nds-alert-title');
+    await step('A descrição é renderizada', async () => {
+      await waitFor(() => expect(canvas.getByText(args.description)).toBeVisible());
     });
 
     await step('A variante aplica as classes do design system', async () => {
