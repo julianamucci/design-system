@@ -57,6 +57,7 @@ export const Complete: Story = {
 
     await step('Ícone, título e descrição juntos', async () => {
       const alerta = canvas.getByRole('alert');
+      await expect(alerta).toBeInTheDocument();
       await expect(alerta.querySelector(':scope > svg')).toBeTruthy();
       await expect(canvas.getByText('Atenção')).toBeVisible();
       await expect(canvas.getByText(/próxima sessão/)).toBeVisible();
@@ -93,9 +94,14 @@ export const WithoutTitle: Story = {
       await expect(canvas.getByRole('alert')).toBeVisible();
     });
 
-    await step('Nenhum heading no DOM', async () => {
+    await step('Nenhum heading no DOM, em nenhum nível', async () => {
       const alerta = canvas.getByRole('alert');
       await expect(alerta.querySelector('[data-slot="alert-title"]')).toBeNull();
+      // Braço por PAPEL, além do slot e da tag: é ele que enxerga o heading
+      // VAZIO — um `<h4>` sem texto tem a tag e o slot certos, e só a consulta
+      // por `heading` o acusa. Sem ele, um título incondicional no Playground
+      // passaria enquanto esta story afirmava o contrário.
+      await expect(within(alerta).queryByRole('heading')).toBeNull();
       await expect(alerta.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
     });
 
@@ -161,6 +167,10 @@ export const WithoutAnnouncement: Story = {
     await step('role="note" não é live region', async () => {
       const noteAlert = canvas.getByText('Nota de implementação').closest('.nds-alert');
       await expect(noteAlert).toHaveAttribute('role', 'note');
+      // O contrato é "`note` NÃO é live region": afirmar só o `role` prova
+      // metade, porque um `aria-live` acrescentado à raiz voltaria a anunciar
+      // sem mudar o papel.
+      await expect(noteAlert).not.toHaveAttribute('aria-live');
     });
 
     await step('Sem `role`, o default continua alert', async () => {

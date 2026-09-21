@@ -750,6 +750,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
+    const yes = tNav('common.yes');
     return [
       {
         title: t('props.alertTitle'),
@@ -786,7 +787,10 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           { name: 'class',      type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: not, description: toPlainText(t('props.table.alertAction')) },
+          // Obrigatório, como nas outras quatro: o slot de ação nasce VAZIO e
+          // sem conteúdo não existe ação nenhuma — a coluna não pode dizer o
+          // oposto da referência só nesta stack.
+          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: yes, description: toPlainText(t('props.table.alertAction')) },
         ],
       },
     ];
@@ -986,6 +990,31 @@ function priorityLabel(raw: string): string {
 }
 
 /**
+ * Índices `itemN` que o dicionário de fato publica sob `base`, VARRENDO as
+ * chaves em vez de contar de 1 até o primeiro buraco.
+ *
+ * O `for` sequencial parava no primeiro índice ausente: um dicionário com
+ * `item1…item4, item6` rendia quatro itens, e o `item6` sumia da página sem
+ * uma palavra — o mesmo teto que a lista cravada no chamador dava, de volta
+ * pela porta dos fundos. As outras quatro stacks varrem por regex; aqui o
+ * dicionário é achatado em caminhos com ponto, então a regex é sobre o caminho.
+ *
+ * `suffix` é o campo que identifica a linha: `''` para texto solto
+ * (`anatomy.item5`) e o primeiro campo para linha com sub-campos
+ * (`testes.functional.item3.action`).
+ */
+function indexesUnder(d: Record<string, string>, base: string, suffix: string): number[] {
+  const escaped = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const tail = suffix ? `\\.${suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` : '';
+  const pattern = new RegExp(`^${escaped}\\.item(\\d+)${tail}$`);
+  return Object.keys(d)
+    .map((key) => pattern.exec(key))
+    .filter((match): match is RegExpExecArray => match !== null)
+    .map((match) => Number(match[1]))
+    .sort((a, b) => a - b);
+}
+
+/**
  * Índices `item1…itemN` que o dicionário de fato publica sob `base`, para
  * chave de texto SOLTO (`anatomy.item5`), sem sub-campos.
  *
@@ -996,22 +1025,18 @@ function priorityLabel(raw: string): string {
  * Quem manda no fim da lista é o dicionário.
  */
 function itemIndexes(d: Record<string, string>, base: string): number[] {
-  const out: number[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) out.push(i);
-  return out;
+  return indexesUnder(d, base, '');
 }
 
+/** Linhas com sub-campos. Mesma varredura — o buraco não pode dar teto aqui também. */
 function itemsFromDict<K extends string>(
   d: Record<string, string>,
   base: string,
   fields: readonly K[],
 ): Record<K, string>[] {
-  const rows: Record<K, string>[] = [];
-  for (let i = 1; ; i++) {
-    if (d[`${base}.item${i}.${fields[0]}`] === undefined) break;
+  return indexesUnder(d, base, fields[0]).map((i) => {
     const row = {} as Record<K, string>;
     for (const f of fields) row[f] = d[`${base}.item${i}.${f}`] ?? '';
-    rows.push(row);
-  }
-  return rows;
+    return row;
+  });
 }

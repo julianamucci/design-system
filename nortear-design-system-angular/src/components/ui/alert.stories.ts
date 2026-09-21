@@ -152,6 +152,12 @@ export const Playground: Story = {
     // `iconKind` é derivado aqui, e não cravado no template: o critério de
     // acessibilidade que esta story declara (`accessibility.item4`) diz que cada
     // variante tem ícone correspondente, e era a story que o contrariava.
+    //
+    // O `@if (title)` é do TEMPLATE, como nas outras quatro stacks: com o
+    // control `title` esvaziado no painel, um `<h4>` incondicional renderiza
+    // heading VAZIO (axe `empty-heading`) e contradiz o que `states/WithoutTitle`
+    // afirma. A guarda equivalente na play esconde o defeito em vez de corrigir
+    // — ela pula o passo exatamente na configuração em que ele aparece.
     props: { ...args, iconKind: variantIcon(args.variant) },
     template: `
       <div
@@ -163,7 +169,9 @@ export const Playground: Story = {
         (dismiss)="onDismiss()"
       >
         <svg ndsAlertIcon [kind]="iconKind"></svg>
-        <h4 ndsAlertTitle>{{ title }}</h4>
+        @if (title) {
+          <h4 ndsAlertTitle>{{ title }}</h4>
+        }
         <section ndsAlertDescription>{{ description }}</section>
       </div>
     `,
@@ -174,7 +182,11 @@ export const Playground: Story = {
     await step('A semântica de anúncio escolhida chega ao DOM', async () => {
       // O `role` é input E atributo: sem AOT o input cairia no default em
       // silêncio, e a story continuaria verde por acaso (o default é 'alert').
-      const alerta = canvasElement.querySelector<HTMLElement>('[data-slot="alert"]')!;
+      // A busca é pelo PAPEL, como nas outras quatro: com o input caído no
+      // default, `getByRole('note')` não acha nada — uma consulta por
+      // `[data-slot="alert"]` acharia o elemento e só depois compararia.
+      const alerta = canvas.getByRole(args.role);
+      await expect(alerta).toBeInTheDocument();
       await expect(alerta).toHaveAttribute('role', args.role);
     });
 

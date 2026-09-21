@@ -72,6 +72,13 @@ export const WithIcon: Story = {
       await expect(icon.parentElement).toBe(alerta);
     });
 
+    await step('O título acompanha o ícone', async () => {
+      // O passo abaixo mede GEOMETRIA; este mede que há texto visível ao lado
+      // do ícone. Sem ele a story afirmava só a posição relativa, e é a
+      // asserção que as outras quatro fazem.
+      await expect(canvas.getByText('Informação')).toBeVisible();
+    });
+
     await step('O ícone é alinhado à esquerda do texto', async () => {
       const icon = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
       const title = canvas.getByText('Informação');
