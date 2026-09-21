@@ -2,11 +2,14 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
+import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide';
 import {
   NdsAlert,
   NdsAlertTitle,
   NdsAlertDescription,
   NdsAlertIcon,
+  type AlertIconKind,
+  type AlertVariant,
 } from './alert';
 import { alertPlaygroundSource, type AlertArgs } from './alert.source';
 import { NdsAlertDocs } from '@/components/docs/AlertDocs';
@@ -54,7 +57,9 @@ const meta: Meta<AlertArgs> = {
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     dismissLabel: {
-      control: 'text',
+      // Sem control, como nas outras quatro: o default do componente já cobre o
+      // Playground, e o rótulo é conteúdo de acessibilidade, não configuração.
+      control: false,
       description: 'Rótulo acessível (aria-label) do botão de fechar.',
       table: { type: { summary: 'string' }, defaultValue: { summary: "'Fechar alerta'" } },
     },
@@ -67,6 +72,11 @@ const meta: Meta<AlertArgs> = {
       control: false,
       description: 'Handler do output (dismiss) — disparado uma vez, ao fechar.',
       table: { type: { summary: '() => void' } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais no elemento raiz.',
+      table: { type: { summary: 'string' } },
     },
   },
   args: {
@@ -83,13 +93,66 @@ const meta: Meta<AlertArgs> = {
 export default meta;
 type Story = StoryObj<AlertArgs>;
 
+/**
+ * O ícone que acompanha cada variante — o MESMO mapa que o painel Code aplica
+ * (`variantIcon`, em `alert.source.ts`).
+ *
+ * As duas pontas escolhem o ícone pela mesma regra de propósito: com o mapa só
+ * de um lado, o painel prometia `kind="success"` enquanto a tela mostrava o
+ * informativo em toda variante que não fosse `destructive`.
+ */
+function variantIcon(variant: AlertVariant): AlertIconKind {
+  if (variant === 'destructive') return 'error';
+  if (variant === 'default') return 'info';
+  return variant;
+}
+
+/**
+ * O desenho de cada `kind`, da MESMA fonte que o `NdsAlertIcon` monta (`lucide`).
+ *
+ * Sem ele não há o que afirmar: o ícone é um `<svg>` sem atributo que diga qual
+ * é, então uma asserção de presença passa com o `kind` cravado no template — que
+ * foi exatamente o defeito. Comparar o desenho rendido com o desenho esperado
+ * para a variante ESCOLHIDA no control é o que dá dentes ao vínculo.
+ */
+const ICON_NODES: Record<AlertIconKind, [string, Record<string, string>][]> = {
+  info: Info as unknown as [string, Record<string, string>][],
+  error: AlertCircle as unknown as [string, Record<string, string>][],
+  success: CheckCircle2 as unknown as [string, Record<string, string>][],
+  warning: TriangleAlert as unknown as [string, Record<string, string>][],
+};
+
+/** Assinatura do desenho esperado para um `kind`. */
+function expectedIconSignature(kind: AlertIconKind): string {
+  return ICON_NODES[kind]
+    .map(([tag, attrs]) =>
+      [tag, ...Object.entries(attrs).map(([k, v]) => `${k}=${v}`)].join(' '),
+    )
+    .join('|');
+}
+
+/** Assinatura do desenho que o DOM de fato tem. */
+function renderedIconSignature(svg: SVGSVGElement): string {
+  return [...svg.children]
+    .map((node) =>
+      [
+        node.tagName,
+        ...[...node.attributes].map((a) => `${a.name}=${a.value}`),
+      ].join(' '),
+    )
+    .join('|');
+}
+
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: alertPlaygroundSource } },
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
   },
   render: (args) => ({
-    props: { ...args },
+    // `iconKind` é derivado aqui, e não cravado no template: o critério de
+    // acessibilidade que esta story declara (`accessibility.item4`) diz que cada
+    // variante tem ícone correspondente, e era a story que o contrariava.
+    props: { ...args, iconKind: variantIcon(args.variant) },
     template: `
       <div
         ndsAlert
@@ -99,7 +162,7 @@ export const Playground: Story = {
         [dismissLabel]="dismissLabel"
         (dismiss)="onDismiss()"
       >
-        <svg ndsAlertIcon kind="info"></svg>
+        <svg ndsAlertIcon [kind]="iconKind"></svg>
         <h4 ndsAlertTitle>{{ title }}</h4>
         <section ndsAlertDescription>{{ description }}</section>
       </div>
@@ -161,6 +224,17 @@ export const Playground: Story = {
       await expect(icon).toHaveAttribute('aria-hidden', 'true');
       // Sem `.nds-icon`: é `.nds-alert > svg` que dimensiona o ícone.
       await expect(icon).not.toHaveClass('nds-icon');
+    });
+
+    await step('O ícone desenhado é o da variante escolhida', async () => {
+      // O vínculo é o mesmo que o painel Code aplica: `variantIcon`. Sem esta
+      // asserção, um `kind` cravado no template passa — os quatro desenhos do
+      // lucide são distinguíveis só pelos nós, e é neles que se mede.
+      const alerta = canvas.getByRole(args.role);
+      const icon = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
+      await expect(renderedIconSignature(icon)).toBe(
+        expectedIconSignature(variantIcon(args.variant)),
+      );
     });
   },
 };

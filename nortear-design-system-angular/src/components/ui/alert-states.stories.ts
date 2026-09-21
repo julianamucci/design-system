@@ -33,6 +33,8 @@ const meta: Meta = {
     layout: 'padded',
     design: figmaDesign('alert'),
     controls: { disable: true },
+    // Painel Actions desligado, como nas outras quatro stacks.
+    actions: { disable: true },
   },
 };
 

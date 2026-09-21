@@ -38,7 +38,7 @@ import {
   NdsDocsWhenToUse,
   NdsDocsDoDont,
   NdsDocsImport,
-  NdsDocsVariants,
+  NdsDocsCompositions,
   NdsDocsStates,
   NdsDocsProps,
   NdsDocsTokens,
@@ -238,7 +238,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     NdsAlert, NdsAlertTitle, NdsAlertDescription, NdsAlertAction, NdsAlertIcon,
     NdsButton,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
-    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
+    NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsCompositions,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
@@ -248,26 +248,29 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
          role="note" em todo preview: são alertas ESTÁTICOS, já presentes ao
          carregar — alert/status só no que surge em tempo de execução. -->
     <ng-template #tplDoDont1Do>
-      <div ndsAlert role="note" class="nds-w-full">
-        <svg ndsAlertIcon kind="error"></svg>
-        <h3 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h3>
-        <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
+      <!-- Variante default: o ícone é o INFORMATIVO e o texto é o da versão
+           nova. "Erro ao salvar" sem a variante destructive era o desalinho que
+           o par 1 justamente ensina a evitar. -->
+      <div ndsAlert role="note">
+        <svg ndsAlertIcon kind="info"></svg>
+        <h3 ndsAlertTitle>{{ t('demonstration.labels.defaultTitle') }}</h3>
+        <section ndsAlertDescription>{{ t('demonstration.labels.defaultDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <div ndsAlert role="note" class="nds-w-full">
+      <div ndsAlert role="note">
         <section ndsAlertDescription>{{ t('demonstration.labels.savedLabel') }}</section>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <div ndsAlert role="note" variant="destructive" class="nds-w-full">
+      <div ndsAlert role="note" variant="destructive">
         <svg ndsAlertIcon kind="error"></svg>
         <h3 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h3>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <div ndsAlert role="note" variant="destructive" class="nds-w-full">
+      <div ndsAlert role="note" variant="destructive">
         <h3 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h3>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
@@ -276,35 +279,35 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     <!-- ── Previews das variantes ────────────────────────────────────────────
          h4 aqui: o card da seção já abre um h3 com o nome da variante. -->
     <ng-template #tplVarDefault>
-      <div ndsAlert role="note" class="nds-w-full">
+      <div ndsAlert role="note">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarDestructive>
-      <div ndsAlert role="note" variant="destructive" class="nds-w-full">
+      <div ndsAlert role="note" variant="destructive">
         <svg ndsAlertIcon kind="error"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.errorTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.errorDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarSuccess>
-      <div ndsAlert role="note" variant="success" class="nds-w-full">
+      <div ndsAlert role="note" variant="success">
         <svg ndsAlertIcon kind="success"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.successTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.successDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarWarning>
-      <div ndsAlert role="note" variant="warning" class="nds-w-full">
+      <div ndsAlert role="note" variant="warning">
         <svg ndsAlertIcon kind="warning"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.warningTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.warningDesc') }}</section>
       </div>
     </ng-template>
     <ng-template #tplVarInfo>
-      <div ndsAlert role="note" variant="info" class="nds-w-full">
+      <div ndsAlert role="note" variant="info">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
@@ -319,7 +322,6 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
           ndsAlert
           role="note"
           dismissible
-          class="nds-w-full"
           (dismiss)="handleDismiss('dismissible', 'docs_variantes')"
         >
           <svg ndsAlertIcon kind="info"></svg>
@@ -329,7 +331,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
       }
     </ng-template>
     <ng-template #tplVarWithoutTitle>
-      <div ndsAlert role="note" class="nds-w-full">
+      <div ndsAlert role="note">
         <svg ndsAlertIcon kind="info"></svg>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
       </div>
@@ -337,7 +339,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
 
     <!-- ── Previews das composições ─────────────────────────────────────── -->
     <ng-template #tplCompIcon>
-      <div ndsAlert role="note" class="nds-w-full">
+      <div ndsAlert role="note">
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.infoTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.infoDesc') }}</section>
@@ -347,7 +349,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
       <!-- Slot ndsAlertAction, não um botão dentro da descrição:
            a classe .nds-alert-action é a coluna à direita do texto, que é o
            "alinhado à direita" que o conteúdo descreve. -->
-      <div ndsAlert role="note" variant="warning" class="nds-w-full">
+      <div ndsAlert role="note" variant="warning">
         <svg ndsAlertIcon kind="warning"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.warningTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.warningDesc') }}</section>
@@ -361,7 +363,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
     <ng-template #tplCompActionDismiss>
       <!-- Ação E fechar: a ação é a terceira coluna do grid e o X segue na
            calha dele. Estático como os outros previews (role="note"). -->
-      <div ndsAlert role="note" dismissible class="nds-w-full">
+      <div ndsAlert role="note" dismissible>
         <svg ndsAlertIcon kind="info"></svg>
         <h4 ndsAlertTitle>{{ t('demonstration.labels.sessionTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.sessionDesc') }}</section>
@@ -456,16 +458,21 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
           language="ts"
         />
 
-        <nds-docs-variants
+        <!-- nds-docs-compositions nas duas seções, como nas outras quatro
+             stacks: é o NdsDocsVariants com a linha "Quando usar:" mesclada
+             na descrição, e ele repassa o language. -->
+        <nds-docs-compositions
           id="variantes"
           [note]="t('variants.note')"
+          [useWhenLabel]="useWhenLabel()"
           [items]="variantItems()"
           componentSlug="alert"
           language="html"
         />
 
-        <nds-docs-variants
+        <nds-docs-compositions
           id="composicoes"
+          [useWhenLabel]="useWhenLabel()"
           [items]="compositionItems()"
           componentSlug="alert"
           language="html"
@@ -642,6 +649,12 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
+  /** Rótulo da linha "Quando usar:" que o container mescla na descrição. */
+  protected readonly useWhenLabel = computed(() => {
+    dict();
+    return tNav('common.useWhen');
+  });
+
   protected readonly variantItems = computed(() => {
     dict();
     const byVariant: Record<ChaveDeVariante, { tpl: TemplateRef<unknown>; code: string }> = {
@@ -664,10 +677,8 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       ...base,
       {
         name: t('variants.items.dismissible.name'),
-        description: withQuandoUsar(
-          t('variants.items.dismissible.description'),
-          t('variants.items.dismissible.use'),
-        ),
+        description: t('variants.items.dismissible.description'),
+        useWhen: t('variants.items.dismissible.use'),
         code: CODE_DISMISSIBLE,
         trackId: 'dismissible',
         preview: this.tplVarDismissible(),
@@ -690,10 +701,8 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       { key: 'withActionAndDismiss', code: CODE_WITH_ACTION_AND_DISMISS, tpl: this.tplCompActionDismiss() },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),
-      description: withQuandoUsar(
-        t(`variants.compositions.${key}.description`),
-        t(`variants.compositions.${key}.use`),
-      ),
+      description: t(`variants.compositions.${key}.description`),
+      useWhen: t(`variants.compositions.${key}.use`),
       code,
       trackId: key,
       preview: tpl,
@@ -950,16 +959,6 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.observer?.disconnect();
   }
-}
-
-/**
- * Junta descrição e "quando usar" na forma que o container de variantes espera.
- *
- * O `NdsDocsCompositions` faria isto sozinho, mas ele não repassa `language`
- * para o `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
- */
-function withQuandoUsar(description: string, quandoUsar: string): string {
-  return `${description}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
 const priorityKeyMap: Record<string, string> = {

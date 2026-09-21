@@ -14,12 +14,24 @@ discordavam entre si e ficaram para trás juntas — e o portão
 
 ---
 
-## Diretiva por atributo, e o que isso decide
+## Seletor de atributo, e o que isso decide
 
-As peças desta categoria são `@Directive` em seletor de ATRIBUTO
-(`div[ndsAlert]`, `[ndsAlertTitle]`, `span[ndsBadgeCounter]`), e não
-`@Component` — quando não há markup a montar nem nada a projetar, o componente só
-acrescentaria um elemento embrulhando o que já existe.
+As peças desta categoria vivem num seletor de ATRIBUTO sobre o elemento nativo
+(`div[ndsAlert]`, `[ndsAlertTitle]`, `span[ndsBadgeCounter]`): quem escreve
+escolhe a tag, e nenhuma delas acrescenta um elemento embrulhando o que já
+existe — é o que mantém ícone, título e descrição como FILHOS DIRETOS, que é o
+que a folha `.nds-alert` posiciona.
+
+**O que decide entre `@Directive` e `@Component` é haver markup a montar**, não o
+tipo de seletor:
+
+- `[ndsAlertTitle]`, `[ndsAlertDescription]`, `[ndsAlertAction]` e
+  `svg[ndsAlertIcon]` são `@Directive` — só aplicam classe, `data-slot` e
+  atributos no elemento que você escreveu.
+- `div[ndsAlert]` é `@Component`, com `template` e `<ng-content />`, porque tem
+  markup próprio a montar: o botão de fechar, que vem DEPOIS do conteúdo
+  projetado para o leitor de tela anunciar a mensagem antes da ação de
+  descartá-la. Sem template não haveria onde declará-lo.
 
 Três consequências que só existem aqui:
 
@@ -34,8 +46,8 @@ Três consequências que só existem aqui:
   exceção**: a lib liga o MESMO `aria-valuetext`, e host binding só reescreve
   quando o próprio valor muda — então a diretiva o escreve depois do render, com
   `afterRenderEffect`, e o texto de quem compõe não perde para o da lib.
-- **Fechar o Alert não remove o nó.** A diretiva escreve `hidden` no host e emite o
-  `output`; tirar o elemento da árvore é de quem consome, porque o nó é do template
+- **Fechar o Alert não remove o nó.** O componente escreve `hidden` no host e emite
+  o `output`; tirar o elemento da árvore é de quem consome, porque o nó é do template
   dele. Nas outras quatro o wrapper desmonta a peça.
 
 ## Estilo global, não encapsulado

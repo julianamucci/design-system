@@ -35,6 +35,10 @@ const meta: Meta = {
     layout: 'padded',
     design: figmaDesign('alert'),
     controls: { disable: true },
+    // `Dismissible` e `DismissibleByKeyboard` levam `args.onDismiss = fn()`, e
+    // sem isto o painel Actions enche só aqui — nas outras quatro stacks ele
+    // fica vazio, e o painel é parte do que se compara entre elas.
+    actions: { disable: true },
   },
 };
 
@@ -344,7 +348,14 @@ export const Dismissible: Story = {
       await expect(getComputedStyle(alerta).display).toBe('none');
       await expect(alerta).not.toBeVisible();
       alerta.hidden = false;
-      await expect(alerta).toBeVisible();
+      // waitFor, e não asserção seca: o nó aqui é o REMONTADO pelo `@for` e
+      // ainda carrega `.nds-animate-in` (o fallback de 450ms não expirou).
+      // Tirar e devolver o elemento à árvore de renderização REINICIA a
+      // animação de entrada, cujo quadro 0 é `opacity: 0` — e `toBeVisible`
+      // reprova em opacidade zero. Leitura PURA dentro do waitFor: ele só
+      // consulta estilo computado, não mexe no DOM. Mesma forma do step do
+      // botão de fechar, dois acima.
+      await waitFor(() => expect(alerta).toBeVisible());
     });
   },
 };

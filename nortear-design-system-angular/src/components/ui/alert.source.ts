@@ -27,6 +27,8 @@ export type AlertArgs = {
   title: string;
   description: string;
   onDismiss?: () => void;
+  /** Documentada na aba API Reference; o Playground não a encaminha. */
+  class?: string;
 };
 
 /** Opções de UM alerta no template. */
@@ -211,11 +213,12 @@ export function alertPlaygroundSource(
     title = TITLE_DEFAULT,
     description = DESCRIPTION_DEFAULT,
   } = ctx.args ?? {};
-  // O Playground mostra o ícone informativo em qualquer variante, como a story.
+  // O ícone acompanha a VARIANTE (`icon` omitido cai em `variantIcon`), como a
+  // story: são as duas pontas do mesmo mapa. Com o informativo cravado aqui, o
+  // painel prometia `kind="info"` enquanto a tela mostrava outro desenho.
   return singleAlertExample({
     variant: typeof variant === 'string' ? variant : 'default',
     role: typeof role === 'string' ? role : 'alert',
-    icon: 'info',
     title,
     description,
     dismissible: dismissible === true,

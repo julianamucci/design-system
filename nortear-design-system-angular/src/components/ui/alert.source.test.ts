@@ -74,6 +74,9 @@ describe('alertPlaygroundSource', () => {
     });
     expect(code).toContain('<div ndsAlert variant="destructive" role="note">');
     expect(code).toContain('<h4 ndsAlertTitle>Erro</h4>');
+    // O ícone segue a variante, como a story: com o informativo cravado, o
+    // painel ensinava um desenho que a tela não mostrava.
+    expect(code).toContain('<svg ndsAlertIcon kind="error"></svg>');
   });
 
   it('com dismissible, ensina o @if sobre o (dismiss) e declara o signal', () => {
