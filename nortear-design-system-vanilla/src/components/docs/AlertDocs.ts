@@ -89,13 +89,23 @@ function anatomyItemIndexes(): number[] {
 }
 
 /**
- * Índices dos itens de `usage.<grupo>` — diretrizes, faça e não faça. Mesmo teto
- * latente da anatomia: hoje as três listas alcançam tudo que o dicionário tem,
- * e é exatamente assim que a anatomia parecia antes de crescer.
+ * Índices dos itens de `usage.<grupo>` — diretrizes, cenários, faça e não faça.
+ * Mesmo teto latente da anatomia: hoje as quatro listas alcançam tudo que o
+ * dicionário tem, e é exatamente assim que a anatomia parecia antes de crescer.
  */
-function usageItemIndexes(group: 'guidelines' | 'do' | 'dont'): number[] {
+function usageItemIndexes(group: 'guidelines' | 'scenarios' | 'do' | 'dont'): number[] {
   const content = (alertTranslations as unknown as Record<string, { usage?: Record<string, Record<string, unknown>> }>)[getLocale()];
   return itemIndexes(content?.usage?.[group]);
+}
+
+/**
+ * Índices dos itens de `accessibility` — o grupo mistura `itemN` com chaves
+ * nomeadas (`summary`, `keyboard`, `screenReader`), e o filtro de `itemIndexes`
+ * já as ignora. Era a última lista cravada da página.
+ */
+function accessibilityItemIndexes(): number[] {
+  const content = (alertTranslations as unknown as Record<string, { accessibility?: Record<string, unknown> }>)[getLocale()];
+  return itemIndexes(content?.accessibility);
 }
 
 /** Literal de snippet a partir de uma chave do dicionário — o código mostrado acompanha o idioma e o preview. */
@@ -307,7 +317,7 @@ export function createAlertDocs(): HTMLElement {
               use: t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: usageItemIndexes('scenarios').map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
               a: t(`usage.scenarios.item${i}.a`),
@@ -659,13 +669,7 @@ export interface AlertActionOptions {
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
           summary: t('accessibility.summary'),
-          items: [
-            t('accessibility.item1'),
-            t('accessibility.item2'),
-            t('accessibility.item3'),
-            t('accessibility.item4'),
-            t('accessibility.item5'),
-          ],
+          items: accessibilityItemIndexes().map(i => t(`accessibility.item${i}`)),
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
             { key: 'Tab',   description: t('accessibility.keyboard.tab') },

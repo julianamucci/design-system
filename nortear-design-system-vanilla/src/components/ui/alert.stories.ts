@@ -210,13 +210,13 @@ export const Playground: Story = {
       const alert = canvas.getByRole(role);
       await expect(alert).toHaveAttribute('data-slot', 'alert');
       await expect(alert).toHaveClass('nds-alert');
-      if (variant === 'default') {
-        // Default é só a classe base: nenhum modificador de variante.
-        for (const other of ['destructive', 'success', 'warning', 'info']) {
-          await expect(alert).not.toHaveClass(`nds-alert-${other}`);
-        }
-      } else {
-        await expect(alert).toHaveClass(`nds-alert-${variant}`);
+      // Exclusividade em TODA variante, não só na default: afirmar apenas a
+      // presença do modificador escolhido deixa passar um alerta que carrega
+      // `nds-alert-success` E `nds-alert-destructive` ao mesmo tempo. A default
+      // é o caso em que nenhum modificador casa, e cai no mesmo laço.
+      for (const modifier of ['destructive', 'success', 'warning', 'info']) {
+        if (modifier === variant) await expect(alert).toHaveClass(`nds-alert-${modifier}`);
+        else await expect(alert).not.toHaveClass(`nds-alert-${modifier}`);
       }
     });
 

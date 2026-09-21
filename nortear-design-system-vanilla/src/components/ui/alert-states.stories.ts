@@ -98,10 +98,14 @@ export const WithoutIcon: Story = {
       await expect(canvas.getByRole('alert')).toBeVisible();
     });
 
-    await step('Sem SVG filho direto no alert', async () => {
+    await step('Sem SVG nenhum dentro do alert, em nenhuma profundidade', async () => {
+      // Busca LARGA de propósito. Para afirmar AUSÊNCIA, apertar o seletor
+      // afrouxa a asserção: `:scope > svg` fica cega a um ícone embrulhado em
+      // `<span>`, que é o defeito que esta story existe para reprovar. O aperto
+      // só é correto quando se afirma PRESENÇA de filho direto — é o caso de
+      // `compositions/WithIcon`, onde é a coluna do ícone que está em jogo.
       const alert = canvas.getByRole('alert');
-      const svg = alert.querySelector(':scope > svg');
-      await expect(svg).toBeNull();
+      await expect(alert.querySelector('svg')).toBeNull();
     });
   },
 };
