@@ -41,7 +41,9 @@
         "vue": "<Alert role=\"status\">                    <!-- Container — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nível pela hierarquia -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
         "svelte": "<Alert role=\"status\">                    <!-- Container — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nível pela hierarquia -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
         "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });        // Container — role por prop (alert | status | note)\nalert.appendChild(createAlertIcon('info'));                            // Ícone (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título', as: 'h4' }));  // Título (opcional) — nível pela hierarquia\nalert.appendChild(createAlertDescription({ text: 'Descrição' }));      // Descrição"
-      }
+      },
+      "item5": "<strong>AlertAction (opcional)</strong> — controle da ação que resolve o alerta. Ocupa a terceira coluna, ao lado do texto, e a largura acompanha o rótulo. Use um verbo: <code>Salvar agora</code>, <code>Tentar de novo</code>.",
+      "item6": "<strong>Botão de fechar (opcional)</strong> — aparece com <code>dismissible</code> e é sempre o ÚLTIMO filho, para o leitor de tela anunciar a mensagem antes da ação de descartá-la. Convive com o AlertAction."
     },
     "usage": {
       "guidelines": {
@@ -227,7 +229,8 @@
         "dismissible": "Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.",
         "onDismiss": "Callback de fechamento — disparado quando o usuário aciona o botão de fechar.",
         "dismissLabel": "Rótulo acessível do botão de fechar.",
-        "titleAs": "Nível do heading do título (h1–h6). Passe o nível que preserva a hierarquia da página onde o Alert está — o padrão h5 pula níveis sob seções h2/h3 e falha o axe (heading-order)."
+        "titleAs": "Nível do heading do título (h1–h6). Passe o nível que preserva a hierarquia da página onde o Alert está — o padrão h5 pula níveis sob seções h2/h3 e falha o axe (heading-order).",
+        "alertAction": "Conteúdo da ação. A coluna mede o botão que estiver lá, em qualquer idioma ou tamanho de fonte — não há largura reservada."
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para ajustes de layout. A variante visual vem sempre da prop de variante; para mudar cores num tema, redefina as vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) de forma escopada — nunca cores hardcoded."
@@ -238,7 +241,7 @@
         "class": "Aplicação no tema",
         "part": "Parte do componente",
         "background": "Fundo (variante default)",
-        "foreground": "Título e texto corrido de todas as variantes",
+        "foreground": "Título e texto corrido, nas cinco variantes. A folha chega até ele por indireção: --alert-fg no default, e o par --foreground de cada variante semântica. Os temas resolvem todos para o mesmo valor, e trocar um só é o ponto de extensão para projetos derivados.",
         "border": "Borda padrão",
         "destructiveBorder": "Borda (variante destructive)",
         "destructiveText": "Ícone (variante destructive)",
@@ -452,7 +455,9 @@
         "vue": "<Alert role=\"status\">                    <!-- Container — role by prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Title (optional) — level by hierarchy -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
         "svelte": "<Alert role=\"status\">                    <!-- Container — role by prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Title (optional) — level by hierarchy -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
         "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });        // Container — role by prop (alert | status | note)\nalert.appendChild(createAlertIcon('info'));                            // Icon (optional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Title', as: 'h4' }));  // Title (optional) — level by hierarchy\nalert.appendChild(createAlertDescription({ text: 'Description' }));      // Description"
-      }
+      },
+      "item5": "<strong>AlertAction (optional)</strong> — the control that resolves the alert. It takes the third column, next to the text, and its width follows the label. Use a verb: <code>Save now</code>, <code>Try again</code>.",
+      "item6": "<strong>Close button (optional)</strong> — appears with <code>dismissible</code> and is always the LAST child, so screen readers announce the message before the action that discards it. It coexists with AlertAction."
     },
     "usage": {
       "guidelines": {
@@ -638,7 +643,8 @@
         "dismissible": "Shows the close button in the top-right corner. Closing removes the alert from the screen.",
         "onDismiss": "Dismiss callback — fired when the user activates the close button.",
         "dismissLabel": "Accessible label of the close button.",
-        "titleAs": "Heading level of the title (h1–h6). Pass the level that preserves the hierarchy of the page hosting the Alert — the h5 default skips levels under h2/h3 sections and fails axe (heading-order)."
+        "titleAs": "Heading level of the title (h1–h6). Pass the level that preserves the hierarchy of the page hosting the Alert — the h5 default skips levels under h2/h3 sections and fails axe (heading-order).",
+        "alertAction": "The action content. The column measures whatever button is there, in any language or font size — no reserved width."
       },
       "extensibilityTitle": "Extensibility",
       "extensibility": "<code>className</code> — every subcomponent accepts <code>className</code> for layout adjustments. The visual variant always comes from the variant prop; to change colours in a theme, redefine the internal vars (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) in a scoped way — never hardcoded colours."
@@ -649,7 +655,7 @@
         "class": "Theme application",
         "part": "Component Part",
         "background": "Background (default variant)",
-        "foreground": "Title and body text of every variant",
+        "foreground": "Title and body copy, in all five variants. The sheet reaches it indirectly: --alert-fg on default, and each semantic variant own --foreground pair. Themes resolve them all to the same value, and overriding one is the extension point for derived projects.",
         "border": "Default border",
         "destructiveBorder": "Border (destructive variant)",
         "destructiveText": "Icon (destructive variant)",
@@ -811,7 +817,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Variantes — Dismissible",
+          "story": "Variants — Dismissible",
           "priority": "medium"
         },
         "item6": {
@@ -863,7 +869,9 @@
         "vue": "<Alert role=\"status\">                    <!-- Contenedor — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícono (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nivel por jerarquía -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
         "svelte": "<Alert role=\"status\">                    <!-- Contenedor — role por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícono (opcional, aria-hidden) -->\n  <AlertTitle as=\"h4\">…</AlertTitle>    <!-- Título (opcional) — nivel por jerarquía -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
         "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });        // Contenedor — role por prop (alert | status | note)\nalert.appendChild(createAlertIcon('info'));                            // Ícono (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título', as: 'h4' }));  // Título (opcional) — nivel por jerarquía\nalert.appendChild(createAlertDescription({ text: 'Descripción' }));      // Descripción"
-      }
+      },
+      "item5": "<strong>AlertAction (opcional)</strong> — el control que resuelve la alerta. Ocupa la tercera columna, junto al texto, y su ancho sigue a la etiqueta. Use un verbo: <code>Guardar ahora</code>, <code>Intentar de nuevo</code>.",
+      "item6": "<strong>Botón de cerrar (opcional)</strong> — aparece con <code>dismissible</code> y es siempre el ÚLTIMO hijo, para que el lector de pantalla anuncie el mensaje antes de la acción que lo descarta. Convive con AlertAction."
     },
     "usage": {
       "guidelines": {
@@ -1049,7 +1057,8 @@
         "dismissible": "Muestra el botón de cierre en la esquina superior derecha. Cerrar quita el alert de la pantalla.",
         "onDismiss": "Callback de cierre — disparado cuando el usuario activa el botón de cierre.",
         "dismissLabel": "Etiqueta accesible del botón de cierre.",
-        "titleAs": "Nivel del heading del título (h1–h6). Pasa el nivel que preserva la jerarquía de la página donde está el Alert — el h5 por defecto salta niveles bajo secciones h2/h3 y falla axe (heading-order)."
+        "titleAs": "Nivel del heading del título (h1–h6). Pasa el nivel que preserva la jerarquía de la página donde está el Alert — el h5 por defecto salta niveles bajo secciones h2/h3 y falla axe (heading-order).",
+        "alertAction": "Contenido de la acción. La columna mide el botón que esté allí, en cualquier idioma o tamaño de fuente — no hay ancho reservado."
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para ajustes de layout. La variante visual viene siempre de la prop de variante; para cambiar colores en un tema, redefina las vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) con alcance — nunca colores hardcoded."
@@ -1060,7 +1069,7 @@
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "background": "Fondo (variante default)",
-        "foreground": "Título y texto corrido de todas las variantes",
+        "foreground": "Título y texto corrido, en las cinco variantes. La hoja llega a él por indirección: --alert-fg en default, y el par --foreground de cada variante semántica. Los temas los resuelven todos al mismo valor, y cambiar uno solo es el punto de extensión para proyectos derivados.",
         "border": "Borde predeterminado",
         "destructiveBorder": "Borde (variante destructive)",
         "destructiveText": "Ícono (variante destructive)",

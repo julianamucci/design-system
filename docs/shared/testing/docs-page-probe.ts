@@ -25,7 +25,9 @@
  *
  * Escrevi este colhedor por suposição antes de abrir o `DocsVariants`, e cada
  * suposição estava errada: o cartão é um `Card` (`[data-slot="card"]`), e não um
- * `<article>`; o título do cartão é um `<p>` semibold, e não um `<h3>`; e o
+ * `<article>`; o título do cartão era um `<p>` semibold, e não um `<h3>` (isso
+ * valia quando escrevi — desde 2026-09-15 as cinco usam `<h3>`, e o seletor
+ * `:is(h3,p)` abaixo explica por que a forma antiga fica aceita); e o
  * `data-track-id` não fica no cartão — fica no BOTÃO de copiar, no formato
  * `{slug}:code:{trackId ?? name}`. Sonda com seletor suposto devolve `null` em
  * tudo e vira relatório de divergência que não existe.
@@ -98,9 +100,19 @@ function medirCartoes(secao: Element | null): CartaoMedido[] {
     (c) => !c.parentElement?.closest('[data-slot="card"]'),
   );
   return diretos.map((c) => ({
-    // `:is(h3,p)` porque as cinco DIVERGEM aqui, e a divergência é o achado:
-    // vanilla e angular montam o título como `<h3>`, react, vue e svelte como
-    // `<p>` semibold — mesmas classes, tag diferente.
+    // `:is(h3,p)` é HERANÇA, e o texto abaixo descrevia um mundo que acabou.
+    //
+    // Até 2026-09-15 as cinco divergiam — vanilla e angular montavam o título do
+    // cartão como `<h3>`, react, vue e svelte como `<p>` semibold, mesmas
+    // classes e tag diferente —, e era essa divergência que o `:is()` existia
+    // para atravessar. A D4 do `prd/alert.md` registra o fechamento, e a medição
+    // de 2026-09-21 confirmou: `<h3 class="nds-text-body nds-font-semibold">` nos
+    // CINCO `DocsVariants`.
+    //
+    // O `p` fica no seletor de propósito, e não por inércia: a sonda é
+    // compartilhada por todos os componentes, e tirá-lo trocaria "colhe o título"
+    // por "devolve null" no dia em que alguém reintroduzisse a forma antiga —
+    // que é o caso em que se quer LER o defeito, não perder a leitura.
     //
     // E o fallback antigo (`?? querySelector('p')`) era pior que erro nenhum:
     // onde o `<h3>` não casava, ele pegava o parágrafo de DESCRIÇÃO e devolvia

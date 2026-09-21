@@ -539,6 +539,21 @@ cinco páginas, e o mesmo tipo nos cinco `analytics.ts`; `role="note"` e título
 "Com ícone" saindo numa linha só na docs page do svelte (`AlertDocs.svelte:489`),
 contra o mesmo exemplo indentado nas outras quatro; foi reindentado.
 
+> **CORRIGIDO em 2026-09-21: aquele "Nenhuma" envelheceu, e a medição de hoje
+> achou ONZE.** Vale menos pelo número e mais pela forma — é a afirmação sobre o
+> VIZINHO que nada que toque o vizinho revisita, e esta seção nomeia o próprio
+> escopo ("as cinco docs pages e os cinco `analytics.ts`"), que é exatamente onde
+> a maioria estava. Duas delas não eram cosméticas: `componentSlug` não passado a
+> três containers em quatro stacks deixa os `CodeBlock` de importação **sem
+> `data-track`**, então a mesma página emite conjuntos de eventos diferentes
+> conforme a stack; e o Playground de quatro stacks mostra o ícone informativo em
+> qualquer variante, na única story que declara cobrir "cada variante deve ter
+> ícone e texto correspondentes".
+>
+> A lista fechada está na rodada de 2026-09-21; o que foi corrigido consta dos
+> commits daquele dia. **Uma linha de fechamento como aquela não é conclusão, é
+> data de validade** — quem a reler depois de mexer em docs page tem de remedir.
+
 ## 8. Acessibilidade
 
 **Atributos.** Raiz: `role` com um dos três valores (D1) e nada mais — nenhuma das
