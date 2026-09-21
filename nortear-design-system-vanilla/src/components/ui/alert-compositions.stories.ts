@@ -57,8 +57,17 @@ export const WithIcon: Story = {
       await expect(icon.parentElement).toBe(alert);
     });
 
-    await step('O título acompanha o ícone', async () => {
-      await expect(canvas.getByText('Informação')).toBeVisible();
+    await step('O ícone fica à esquerda do texto', async () => {
+      // A asserção anterior prova a ESTRUTURA (`:scope > svg`); esta prova o
+      // RESULTADO dela, que é a coluna aberta por `.nds-alert:has(> svg)` em
+      // `alert.css`. Sem grid, o ícone empilha acima do título e a estrutura
+      // segue correta — o defeito visível passaria em silêncio.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg')!;
+      const title = canvas.getByText('Informação');
+      await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(
+        title.getBoundingClientRect().left,
+      );
+      await expect(title).toBeVisible();
     });
   },
 };

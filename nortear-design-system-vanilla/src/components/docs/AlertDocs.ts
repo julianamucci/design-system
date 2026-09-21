@@ -88,6 +88,16 @@ function anatomyItemIndexes(): number[] {
   return itemIndexes(content?.anatomy);
 }
 
+/**
+ * Índices dos itens de `usage.<grupo>` — diretrizes, faça e não faça. Mesmo teto
+ * latente da anatomia: hoje as três listas alcançam tudo que o dicionário tem,
+ * e é exatamente assim que a anatomia parecia antes de crescer.
+ */
+function usageItemIndexes(group: 'guidelines' | 'do' | 'dont'): number[] {
+  const content = (alertTranslations as unknown as Record<string, { usage?: Record<string, Record<string, unknown>> }>)[getLocale()];
+  return itemIndexes(content?.usage?.[group]);
+}
+
 /** Literal de snippet a partir de uma chave do dicionário — o código mostrado acompanha o idioma e o preview. */
 function quoted(key: string): string {
   return text(stripHtml(t(key)));
@@ -288,12 +298,7 @@ export function createAlertDocs(): HTMLElement {
         return createDocsWhenToUse({
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [
-              t('usage.guidelines.item1'),
-              t('usage.guidelines.item2'),
-              t('usage.guidelines.item3'),
-              t('usage.guidelines.item4'),
-            ],
+            items: usageItemIndexes('guidelines').map(i => t(`usage.guidelines.item${i}`)),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -325,20 +330,11 @@ export function createAlertDocs(): HTMLElement {
           },
           do: {
             title: t('usage.do.title'),
-            items: [
-              t('usage.do.item1'),
-              t('usage.do.item2'),
-              t('usage.do.item3'),
-              t('usage.do.item4'),
-            ],
+            items: usageItemIndexes('do').map(i => t(`usage.do.item${i}`)),
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [
-              t('usage.dont.item1'),
-              t('usage.dont.item2'),
-              t('usage.dont.item3'),
-            ],
+            items: usageItemIndexes('dont').map(i => t(`usage.dont.item${i}`)),
           },
         });
 
