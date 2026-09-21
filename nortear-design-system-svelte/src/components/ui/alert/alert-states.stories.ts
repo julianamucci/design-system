@@ -88,6 +88,10 @@ export const WithoutTitle: Story = {
     await step('Nenhum heading no DOM', async () => {
       const alert = canvas.getByRole('alert');
       await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
+      // O braço por PAPEL, além do braço por tag: um `<h4>` renderizado VAZIO
+      // some da consulta por papel mas continua casando o seletor de tag — e o
+      // inverso também vale, para um papel `heading` posto por atributo.
+      await expect(within(alert).queryByRole('heading')).toBeNull();
       await expect(alert.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
     });
   },
@@ -137,6 +141,9 @@ export const WithoutAnnouncement: Story = {
     await step('role="note" não é live region', async () => {
       const note = canvas.getByText('Nota de implementação').closest('.nds-alert');
       await expect(note).toHaveAttribute('role', 'note');
+      // O contrato é "`note` NÃO é live region": afirmar só o papel prova
+      // metade, e um `aria-live` acrescentado por engano continuaria anunciando.
+      await expect(note).not.toHaveAttribute('aria-live');
     });
 
     await step('Sem `role`, o default continua alert', async () => {

@@ -87,6 +87,20 @@
     return itemIndexes(dict);
   }
 
+  /**
+   * Quando usar / Do / Don't: mesma regra outra vez. Hoje o dicionário tem
+   * 4/4/3 e a lista cravada alcançava exatamente isso — ou seja, o teto está
+   * latente, não visível. É a mesma forma que já engoliu um critério funcional,
+   * `visual.item6` e dois itens de anatomia antes de alguém reparar.
+   */
+  function usageItemIndexes(group: 'guidelines' | 'do' | 'dont'): number[] {
+    const dict = (alertTranslations as unknown as Record<
+      string,
+      { usage?: Record<string, Record<string, unknown>> }
+    >)[$locale]?.usage?.[group] ?? {};
+    return itemIndexes(dict);
+  }
+
   // ─── Active section ──────────────────────────────────────────────────────────
 
   const NAV_GROUPS = $derived.by(() => {
@@ -246,7 +260,13 @@ interface AlertDescriptionProps {
   children?: Snippet;
 }
 
-// AlertTitle / AlertDescription aceitam atributos HTML nativos via spread`;
+// AlertAction — o slot da ação; o botão entra como conteúdo.
+interface AlertActionProps {
+  class?: string;
+  children?: Snippet;
+}
+
+// AlertTitle / AlertDescription / AlertAction aceitam atributos HTML nativos via spread`;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -311,12 +331,7 @@ interface AlertDescriptionProps {
       <DocsWhenToUse
         guidelines={{
           title: $tStore('usage.guidelines.title'),
-          items: [
-            $tStore('usage.guidelines.item1'),
-            $tStore('usage.guidelines.item2'),
-            $tStore('usage.guidelines.item3'),
-            $tStore('usage.guidelines.item4'),
-          ],
+          items: usageItemIndexes('guidelines').map((i) => $tStore(`usage.guidelines.item${i}`)),
         }}
         scenarios={{
           title: $tStore('usage.scenarios.title'),
@@ -349,20 +364,11 @@ interface AlertDescriptionProps {
         }}
         do={{
           title: $tStore('usage.do.title'),
-          items: [
-            $tStore('usage.do.item1'),
-            $tStore('usage.do.item2'),
-            $tStore('usage.do.item3'),
-            $tStore('usage.do.item4'),
-          ],
+          items: usageItemIndexes('do').map((i) => $tStore(`usage.do.item${i}`)),
         }}
         dont={{
           title: $tStore('usage.dont.title'),
-          items: [
-            $tStore('usage.dont.item1'),
-            $tStore('usage.dont.item2'),
-            $tStore('usage.dont.item3'),
-          ],
+          items: usageItemIndexes('dont').map((i) => $tStore(`usage.dont.item${i}`)),
         }}
       />
 
@@ -641,8 +647,8 @@ interface AlertDescriptionProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.alertAction')) },
               { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'),  description: toPlainText($tStore('props.table.className')) },
+              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.alertAction')) },
             ],
           },
         ]}

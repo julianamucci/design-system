@@ -317,9 +317,11 @@ export const DismissibleByKeyboard: Story = {
 
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    // Sobe do step para o escopo da play: é contra ESTE nó que o step seguinte
+    // compara o remontado, e a identidade é o que prova a remontagem.
+    const alertOriginal = await canvas.findByRole('alert');
 
     await step('Enter no botão focado remove o alert e dispara o callback uma única vez', async () => {
-      const alertOriginal = await canvas.findByRole('alert');
       const dismissButton = within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' });
       // waitFor: o alert entra animado (.nds-animate-in) — medir o botão no
       // meio da animação é racy, e no headless ela fica presa no quadro zero
@@ -334,8 +336,14 @@ export const DismissibleByKeyboard: Story = {
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
 
-    await step('Um alert novo volta ao canvas — a story não fica vazia', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+    await step('O alert que volta ao canvas é OUTRO nó, não o original', async () => {
+      // "Existe um alert visível" passa com o original nunca tendo saído — a
+      // asserção que enxerga a remontagem é a identidade do nó.
+      await waitFor(() => {
+        const remounted = canvas.getByRole('alert');
+        expect(remounted).not.toBe(alertOriginal);
+        expect(remounted).toBeVisible();
+      });
     });
   },
 };

@@ -68,8 +68,17 @@ export const WithIcon: Story = {
       await expect(icon!.parentElement).toBe(alert);
     });
 
-    await step('O texto acompanha o ícone', async () => {
-      await expect(canvas.getByText('Informação')).toBeVisible();
+    await step('O ícone fica à esquerda do texto', async () => {
+      // A consequência VISÍVEL de `.nds-alert:has(> svg)` é a coluna do ícone
+      // abrindo antes do texto. Sem esta medida, o `:scope > svg` acima aprova
+      // um ícone bem parentado e mal colocado — por exemplo com a coluna
+      // colapsada e o SVG empilhado sobre o título.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg')!;
+      const title = canvas.getByText('Informação');
+      await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(
+        title.getBoundingClientRect().left,
+      );
+      await expect(title).toBeVisible();
     });
   },
 };
