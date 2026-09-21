@@ -42,11 +42,29 @@ export const WithIcon: Story = {
       <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>
     </Alert>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = canvas.getByRole("alert");
-    await expect(alert.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
-    await expect(canvas.getByText("Informação")).toBeVisible();
+
+    await step("O ícone é filho DIRETO e decorativo", async () => {
+      // `functional.item3` é "renderizar com ícone filho direto", e é
+      // `.nds-alert:has(> svg)` que abre a coluna do ícone: um `querySelector`
+      // sem escopo casa qualquer descendente — inclusive o X do botão de
+      // fechar — e aprovaria o layout colapsado.
+      const icon = alert.querySelector(":scope > svg");
+      await expect(icon).not.toBeNull();
+      await expect(icon?.parentElement).toBe(alert);
+      await expect(icon).toHaveAttribute("aria-hidden", "true");
+    });
+
+    await step("O ícone fica à esquerda do texto", async () => {
+      const icon = alert.querySelector(":scope > svg")!;
+      const title = canvas.getByText("Informação");
+      await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(
+        title.getBoundingClientRect().left,
+      );
+      await expect(title).toBeVisible();
+    });
   },
 };
 

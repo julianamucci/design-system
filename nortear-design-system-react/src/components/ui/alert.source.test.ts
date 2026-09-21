@@ -81,6 +81,38 @@ describe('alertSource', () => {
     expect(output).toContain('<Alert>');
   });
 
+  it('o ícone do painel acompanha a variante — cor sozinha não comunica', () => {
+    // O Playground mapeia variante → ícone no `render`; cravar `Info` aqui
+    // publicava um alerta de erro com o ícone informativo, que é o oposto do
+    // critério de acessibilidade que a própria story declara cobrir.
+    const expected = [
+      ['default', 'Info'],
+      ['destructive', 'AlertCircle'],
+      ['success', 'CheckCircle2'],
+      ['warning', 'TriangleAlert'],
+      ['info', 'Info'],
+    ] as const;
+    for (const [variant, icon] of expected) {
+      const output = alertSource(undefined, { args: { variant } });
+      expect(output).toContain(`import { ${icon} } from "lucide-react";`);
+      expect(output).toContain(`<${icon} aria-hidden="true" />`);
+    }
+  });
+
+  it('título e descrição saem dos controls, com o padrão da story como recuo', () => {
+    const output = alertSource(undefined, {
+      args: { title: 'Sessão expirada', description: 'Entre de novo para continuar.' },
+    });
+    expect(output).toContain('<AlertTitle as="h4">Sessão expirada</AlertTitle>');
+    expect(output).toContain('<AlertDescription>Entre de novo para continuar.</AlertDescription>');
+
+    const withDefaults = alertSource();
+    expect(withDefaults).toContain('<AlertTitle as="h4">Atenção</AlertTitle>');
+    expect(withDefaults).toContain(
+      '<AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>',
+    );
+  });
+
   it('o espião de control não vira código no painel', () => {
     const spy = () => 'CORPO_DO_MOCK';
     const output = alertSource(undefined, {

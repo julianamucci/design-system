@@ -22,10 +22,50 @@ export type AlertArgs = {
   variant: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   role: 'alert' | 'status' | 'note';
   dismissible: boolean;
+  title: string;
+  description: string;
 };
 
 const VARIANTS = ['default', 'destructive', 'success', 'warning', 'info'] as const;
 const ROLES = ['alert', 'status', 'note'] as const;
+
+const TITLE_DEFAULT = 'Atenção';
+const DESCRIPTION_DEFAULT = 'Suas alterações serão aplicadas na próxima sessão.';
+
+/**
+ * O ícone que acompanha cada variante — o MESMO mapa que o Playground aplica
+ * (`variantIcon`, em `alert.stories.tsx`).
+ *
+ * As duas pontas escolhem o ícone pela mesma regra de propósito: com o mapa só
+ * de um lado, o painel prometia `<CheckCircle2 />` enquanto a tela mostrava o
+ * informativo em toda variante que não fosse a default. `default` não tem cor
+ * semântica, então recebe o informativo; `destructive` é a única cujo nome de
+ * variante e nome de ícone não coincidem.
+ */
+const VARIANT_ICON: Record<(typeof VARIANTS)[number], string> = {
+  default: 'Info',
+  destructive: 'AlertCircle',
+  success: 'CheckCircle2',
+  warning: 'TriangleAlert',
+  info: 'Info',
+};
+
+/**
+ * O control chega cru: valor fora da união (ou o espião de função que o
+ * Storybook entrega) tem de cair na default, ou o painel inventaria uma tag sem
+ * origem nenhuma.
+ */
+function variantIcon(value: unknown): string {
+  const known = (VARIANTS as readonly unknown[]).includes(value)
+    ? (value as (typeof VARIANTS)[number])
+    : 'default';
+  return VARIANT_ICON[known];
+}
+
+/** Texto de control só entra no snippet se for texto mesmo. */
+function textArg(value: unknown, fallback: string): string {
+  return typeof value === 'string' && value.trim() !== '' ? value : fallback;
+}
 
 const IMPORT = 'import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";';
 const IMPORT_WITH_ACTION =
@@ -92,19 +132,28 @@ function variant(
  * leitor de tela. Ele só aparece no snippet quando o control escolhe outro
  * valor, porque escrever `role="alert"` sugeriria que a escolha é opcional
  * quando na verdade é ela que define se o conteúdo interrompe ou não.
+ *
+ * O ícone NÃO é fixo: ele sai do mapa de variante, igual ao que o `render` do
+ * Playground monta. Cravar `Info` aqui publicava um alerta de erro com o ícone
+ * informativo — o contrário do que o critério de acessibilidade pede.
  */
 export const alertSource: SourceTransform<AlertArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
+  const icon = variantIcon(args.variant);
   const attrs = attrsMultilinha([
     propOption('variant', args.variant, VARIANTS, 'default'),
     propOption('role', args.role, ROLES, 'alert'),
     propBool('dismissible', args.dismissible),
   ]);
   return jsxSnippet(
-    header(['Info']),
+    header([icon]),
     alertBlock(
       attrs,
-      body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
+      body(
+        icon,
+        textArg(args.title, TITLE_DEFAULT),
+        textArg(args.description, DESCRIPTION_DEFAULT),
+      ),
     ),
   );
 };

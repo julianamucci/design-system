@@ -394,11 +394,14 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 // DocsDoDont só abre o h2 da seção: o título do alerta fica em h3.
+                // A prévia é da variante `default`, então o par ícone + texto é o
+                // informativo: "Erro ao salvar" com o ícone `info` ensinava
+                // exatamente o desalinho que o par ao lado condena.
                 doPreview: (
                   <Alert role="note">
                     <Info aria-hidden="true" />
-                    <AlertTitle as="h3">{tContent("demonstration.labels.errorTitle")}</AlertTitle>
-                    <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.defaultTitle")}</AlertTitle>
+                    <AlertDescription>{tContent("demonstration.labels.defaultDesc")}</AlertDescription>
                   </Alert>
                 ),
                 dontPreview: (
@@ -437,11 +440,13 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
             code={codeImportBasic}
             secondaryDescription={tContent("import.withIcon")}
             secondaryCode={codeImportWithIcon}
+            componentSlug="alert"
           />
 
           {/* ── Variantes ─────────────────────────────────────────────── */}
           <DocsCompositions
             id="variantes"
+            note={tContent("variants.note")}
             useWhenLabel={tNav("common.useWhen")}
             componentSlug="alert"
             items={[
@@ -450,7 +455,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 description: tContent("variants.items.default"),
                 code: codeDefault,
                 preview: (
-                  <Alert role="note" className="nds-w-full">
+                  <Alert role="note">
                     <Info aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
@@ -462,7 +467,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 description: stripHtml(tContent("variants.items.destructive")),
                 code: codeDestructive,
                 preview: (
-                  <Alert role="note" variant="destructive" className="nds-w-full">
+                  <Alert role="note" variant="destructive">
                     <AlertCircle aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
@@ -474,7 +479,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 description: stripHtml(tContent("variants.items.success")),
                 code: codeSuccess,
                 preview: (
-                  <Alert role="note" variant="success" className="nds-w-full">
+                  <Alert role="note" variant="success">
                     <CheckCircle2 aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.successTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
@@ -486,7 +491,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 description: stripHtml(tContent("variants.items.warning")),
                 code: codeWarning,
                 preview: (
-                  <Alert role="note" variant="warning" className="nds-w-full">
+                  <Alert role="note" variant="warning">
                     <TriangleAlert aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
@@ -498,7 +503,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 description: stripHtml(tContent("variants.items.info")),
                 code: codeInfo,
                 preview: (
-                  <Alert role="note" variant="info" className="nds-w-full">
+                  <Alert role="note" variant="info">
                     <Info aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
@@ -514,7 +519,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 preview: (
                   // Alert dismissible real — fechar remove o preview e dispara a
                   // primeira emissão real de alert_dismiss (payload tipado em analytics.ts).
-                  <Alert role="note" dismissible className="nds-w-full"
+                  <Alert role="note" dismissible
                     onDismiss={() =>
                       track("alert_dismiss", {
                         component: "alert",
@@ -535,7 +540,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 description: tContent("states.withoutTitle.behavior"),
                 code: codeWithoutTitle,
                 preview: (
-                  <Alert role="note" className="nds-w-full">
+                  <Alert role="note">
                     <Info aria-hidden="true" />
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
@@ -556,7 +561,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 useWhen: tContent("variants.compositions.withIcon.use"),
                 code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h4">Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
                 preview: (
-                  <Alert role="note" className="nds-w-full">
+                  <Alert role="note">
                     <Info aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
@@ -573,7 +578,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 // baixo — divergia da story e do "alinhado à direita" do texto.
                 code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
                 preview: (
-                  <Alert role="note" className="nds-w-full">
+                  <Alert role="note">
                     <Info aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.sessionTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.sessionDesc")}</AlertDescription>
@@ -592,7 +597,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                 useWhen: tContent("variants.compositions.withActionAndDismiss.use"),
                 code: `<Alert dismissible onDismiss={handleDismiss}>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h4">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
                 preview: (
-                  <Alert role="note" dismissible className="nds-w-full">
+                  <Alert role="note" dismissible>
                     <Info aria-hidden="true" />
                     <AlertTitle as="h4">{tContent("demonstration.labels.sessionTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.sessionDesc")}</AlertDescription>
@@ -826,6 +831,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
           <DocsRelated
+            componentSlug="alert"
             items={[
               {
                 name: "Sonner",
@@ -852,6 +858,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
           <DocsNotes
+            componentSlug="alert"
             items={[
               { title: "", content: tContent("notes.tip1") },
               { title: "", content: tContent("notes.tip2") },
@@ -894,6 +901,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
           <DocsTestes
             functional={{
               title: tContent("testes.functional.title"),
+              description: tContent("testes.functional.description"),
               cols: {
                 action: tNav("common.userAction"),
                 result: tNav("common.expectedResult"),
@@ -907,6 +915,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
             }}
             accessibility={{
               title: tContent("testes.accessibility.title"),
+              description: tContent("testes.accessibility.description"),
               cols: {
                 criterion: tNav("common.criterion"),
                 level: "WCAG",
@@ -920,6 +929,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
             }}
             visual={{
               title: tContent("testes.visual.title"),
+              description: tContent("testes.visual.description"),
               cols: {
                 story: tNav("common.storyState"),
                 priority: tNav("common.priority"),
