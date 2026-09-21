@@ -413,7 +413,7 @@ toast.promise(promise, {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="sonner"
     code={codeImport}
     secondaryDescription={undefined}
     secondaryCode={codeSetup}
@@ -536,7 +536,7 @@ toast.promise(promise, {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="sonner"
     items={[
       { name: 'Alert',        description: $tStore('related.alert'),        path: '?path=/docs/components-feedback-alert--docs'        },
       { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/components-overlay-alertdialog--docs'  },
@@ -546,7 +546,7 @@ toast.promise(promise, {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="sonner"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

@@ -348,7 +348,7 @@ declare function isRetryScheduled(state: ConnectionState): boolean;`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="connection-state"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -453,7 +453,7 @@ declare function isRetryScheduled(state: ConnectionState): boolean;`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="connection-state"
     items={[
       { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
       { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs'  },

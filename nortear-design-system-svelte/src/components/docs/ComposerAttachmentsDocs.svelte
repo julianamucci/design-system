@@ -305,7 +305,7 @@ interface Attachment {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer-attachments"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withProgress')}
@@ -405,7 +405,7 @@ interface Attachment {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer-attachments"
     items={[
       { name: $tStore('related.items.composer.name'),   description: toPlainText($tStore('related.items.composer.description')),   path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.progress.name'),   description: toPlainText($tStore('related.items.progress.description')),   path: '?path=/docs/components-feedback-progress--docs' },

@@ -407,7 +407,7 @@ interface CollapsibleContentProps {
   {/snippet}
 
   <!-- ── Importação ────────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="collapsible"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withButton')}
@@ -763,7 +763,7 @@ interface CollapsibleContentProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="collapsible"
     items={[
       { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/components-disclosure-accordion--docs' },
       { name: 'Sheet',     description: $tStore('related.sheet'),     path: '?path=/docs/components-overlay-sheet--docs'     },
@@ -773,7 +773,7 @@ interface CollapsibleContentProps {
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="collapsible"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

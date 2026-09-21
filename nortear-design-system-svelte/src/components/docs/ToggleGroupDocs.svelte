@@ -714,7 +714,7 @@ interface ToggleGroupItemProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="toggle-group"
     items={[
       { name: $tStore('related.items.toggle.name'),      description: $tStore('related.items.toggle.description'),      path: '?path=/docs/components-form-toggle--docs' },
       { name: $tStore('related.items.tabs.name'),        description: $tStore('related.items.tabs.description'),        path: '?path=/docs/components-navigation-tabs--docs' },
@@ -724,7 +724,7 @@ interface ToggleGroupItemProps {
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="toggle-group"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

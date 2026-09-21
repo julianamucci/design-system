@@ -588,7 +588,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="sidebar"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withSubcomponents')}
@@ -1248,7 +1248,7 @@ interface SidebarMenuButtonProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="sidebar"
     items={[
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/components-navigation-tabs--docs'           },
@@ -1261,7 +1261,7 @@ interface SidebarMenuButtonProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="sidebar"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

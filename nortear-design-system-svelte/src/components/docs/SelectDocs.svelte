@@ -831,7 +831,7 @@ interface SelectItemProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="select"
     items={[
       { name: $tStore('related.items.combobox.name'),   description: $tStore('related.items.combobox.description'),   path: '?path=/docs/components-form-combobox--docs' },
       { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/components-form-radiogroup--docs' },
@@ -841,7 +841,7 @@ interface SelectItemProps {
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="select"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

@@ -338,7 +338,7 @@ interface AvatarFallbackProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="avatar"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withIcon')}
@@ -517,7 +517,7 @@ interface AvatarFallbackProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="avatar"
     items={[
       { name: 'Badge',        description: $tStore('related.badge'),        path: '?path=/docs/components-feedback-badge--docs'        },
       { name: 'AspectRatio',  description: $tStore('related.aspectRatio'),  path: '?path=/docs/components-layout-aspectratio--docs'  },
@@ -527,7 +527,7 @@ interface AvatarFallbackProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="avatar"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

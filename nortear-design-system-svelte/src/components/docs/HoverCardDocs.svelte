@@ -457,7 +457,7 @@ interface HoverCardContentProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="hover-card"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -822,7 +822,7 @@ interface HoverCardContentProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="hover-card"
     items={[
       { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
       { name: $tStore('related.items.popover.name'),      description: $tStore('related.items.popover.description'),      path: '?path=/docs/components-overlay-popover--docs'      },
@@ -832,7 +832,7 @@ interface HoverCardContentProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="hover-card"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

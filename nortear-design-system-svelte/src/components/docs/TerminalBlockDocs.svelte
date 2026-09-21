@@ -436,7 +436,7 @@ declare function isRunFinished(status: RunStatus): boolean;`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="terminal-block"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -541,7 +541,7 @@ declare function isRunFinished(status: RunStatus): boolean;`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="terminal-block"
     items={[
       { name: $tStore('related.items.codeBlock.name'),   description: toPlainText($tStore('related.items.codeBlock.description')),   path: '?path=/docs/components-display-codeblock--docs'           },
       { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },

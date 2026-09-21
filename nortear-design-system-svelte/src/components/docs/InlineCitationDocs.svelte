@@ -367,7 +367,7 @@ interface InlineCitationCommands {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="inline-citation"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -506,7 +506,7 @@ interface InlineCitationCommands {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="inline-citation"
     items={[
       { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
       { name: $tStore('related.items.hoverCard.name'),  description: toPlainText($tStore('related.items.hoverCard.description')),  path: '?path=/docs/components-overlay-hovercard--docs'        },

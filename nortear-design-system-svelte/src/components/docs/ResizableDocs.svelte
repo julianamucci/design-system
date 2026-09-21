@@ -409,7 +409,7 @@ interface HandleProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="resizable"
     code={codeImportBasic}
     secondaryCode={codeImportAliased}
   />
@@ -592,7 +592,7 @@ interface HandleProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="resizable"
     items={[
       { name: $tStore('related.items.scrollArea.name'),  description: $tStore('related.items.scrollArea.description'),  path: '?path=/docs/components-layout-scrollarea--docs'   },
       { name: $tStore('related.items.sheet.name'),       description: $tStore('related.items.sheet.description'),       path: '?path=/docs/components-overlay-sheet--docs'        },
@@ -602,7 +602,7 @@ interface HandleProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="resizable"
     items={[
       { title: '', content: stripHtml($tStore('notes.item1')) },
       { title: '', content: stripHtml($tStore('notes.item2')) },

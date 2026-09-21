@@ -304,7 +304,7 @@
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="separator"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -409,7 +409,7 @@
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="separator"
     items={[
       { name: $tStore('related.items.card.name'),           description: $tStore('related.items.card.description'),           path: '?path=/docs/components-layout-card--docs'           },
       { name: $tStore('related.items.sheet.name'),          description: $tStore('related.items.sheet.description'),          path: '?path=/docs/components-overlay-sheet--docs'          },
@@ -419,7 +419,7 @@
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="separator"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

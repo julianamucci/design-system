@@ -330,7 +330,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="alert-dialog"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withTrigger')}
@@ -473,7 +473,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="alert-dialog"
     items={[
       { name: 'Dialog', description: $tStore('related.dialog'), path: '?path=/docs/components-overlay-dialog--docs' },
       { name: 'Sonner', description: $tStore('related.sonner'), path: '?path=/docs/components-feedback-sonner--docs' },
@@ -483,7 +483,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="alert-dialog"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

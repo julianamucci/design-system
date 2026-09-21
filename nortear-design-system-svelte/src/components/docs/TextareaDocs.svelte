@@ -352,7 +352,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="textarea"
     code={codeImportBasic}
   />
 
@@ -578,7 +578,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="textarea"
     items={[
       { name: $tStore('related.items.input.name'),    description: $tStore('related.items.input.description'),    path: '?path=/docs/components-form-input--docs'    },
       { name: $tStore('related.items.label.name'),    description: $tStore('related.items.label.description'),    path: '?path=/docs/components-form-label--docs'    },
@@ -588,7 +588,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="textarea"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

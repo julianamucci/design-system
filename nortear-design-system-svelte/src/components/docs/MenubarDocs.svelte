@@ -888,7 +888,7 @@ interface MenubarRadioGroupProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="menubar"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -1109,7 +1109,7 @@ interface MenubarRadioGroupProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="menubar"
     items={[
       { name: $tStore('related.items.navigationMenu.name'), description: $tStore('related.items.navigationMenu.description'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: $tStore('related.items.dropdownMenu.name'),   description: $tStore('related.items.dropdownMenu.description'),   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
@@ -1119,7 +1119,7 @@ interface MenubarRadioGroupProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="menubar"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

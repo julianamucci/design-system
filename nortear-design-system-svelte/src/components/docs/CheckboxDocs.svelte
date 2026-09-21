@@ -649,7 +649,7 @@ import { Label } from "@/components/ui/label";`;
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="checkbox"
     items={[
       { name: 'Switch',      description: toPlainText($tStore('related.switch')),      path: '?path=/docs/components-form-switch--docs' },
       { name: 'RadioGroup',  description: toPlainText($tStore('related.radioGroup')),  path: '?path=/docs/components-form-radiogroup--docs' },
@@ -659,7 +659,7 @@ import { Label } from "@/components/ui/label";`;
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="checkbox"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

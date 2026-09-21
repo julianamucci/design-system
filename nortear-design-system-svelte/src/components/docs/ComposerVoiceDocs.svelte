@@ -327,7 +327,7 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer-voice"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLevel')}
@@ -427,7 +427,7 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer-voice"
     items={[
       { name: $tStore('related.items.composer.name'),            description: toPlainText($tStore('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.composerAttachments.name'), description: toPlainText($tStore('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },

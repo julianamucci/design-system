@@ -929,7 +929,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="dropdown-menu"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -1078,7 +1078,7 @@ interface DropdownMenuRadioGroupProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="dropdown-menu"
     items={[
       { name: $tStore('related.items.contextMenu.name'), description: $tStore('related.items.contextMenu.description'), path: '?path=/docs/components-navigation-contextmenu--docs' },
       { name: $tStore('related.items.menubar.name'),     description: $tStore('related.items.menubar.description'),     path: '?path=/docs/components-navigation-menubar--docs'     },
@@ -1089,7 +1089,7 @@ interface DropdownMenuRadioGroupProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="dropdown-menu"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

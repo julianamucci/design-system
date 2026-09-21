@@ -306,7 +306,7 @@ const columns: DataTableColumn<Invoice>[] = [
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="data-table"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withMeta')}
@@ -492,7 +492,7 @@ const columns: DataTableColumn<Invoice>[] = [
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="data-table"
     items={[
       { name: 'Table',        description: $tStore('related.table'),        path: '?path=/docs/components-tables-table--docs'        },
       { name: 'Chart',        description: $tStore('related.chart'),        path: '?path=/docs/components-display-chart--docs'        },
@@ -504,7 +504,7 @@ const columns: DataTableColumn<Invoice>[] = [
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="data-table"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

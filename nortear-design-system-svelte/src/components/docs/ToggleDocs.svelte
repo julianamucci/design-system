@@ -611,7 +611,7 @@ interface ToggleProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="toggle"
     items={[
       { name: $tStore('related.items.toggleGroup.name'), description: $tStore('related.items.toggleGroup.description'), path: '?path=/docs/components-form-togglegroup--docs' },
       { name: $tStore('related.items.switch.name'),      description: $tStore('related.items.switch.description'),      path: '?path=/docs/components-form-switch--docs' },
@@ -621,7 +621,7 @@ interface ToggleProps {
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="toggle"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

@@ -304,7 +304,7 @@ export interface MessageTimingLabels {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="message-timing"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -428,7 +428,7 @@ export interface MessageTimingLabels {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="message-timing"
     items={[
       { name: $tStore('related.items.agentStatus.name'),    description: toPlainText($tStore('related.items.agentStatus.description')),    path: '?path=/docs/components-conversational-agentstatus--docs'    },
       { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },

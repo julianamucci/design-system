@@ -506,7 +506,7 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="activity-graph"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -629,7 +629,7 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="activity-graph"
     items={[
       { name: $tStore('related.items.chart.name'),          description: toPlainText($tStore('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                 },
       { name: $tStore('related.items.calendar.name'),       description: toPlainText($tStore('related.items.calendar.description')),       path: '?path=/docs/components-form-calendar--docs'                 },

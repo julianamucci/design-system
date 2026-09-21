@@ -434,7 +434,7 @@ type AccordionProps = {
       {/snippet}
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
-      <DocsImport
+      <DocsImport componentSlug="accordion"
         description={$tStore('import.note')}
         code={codeImport}
       />
@@ -832,7 +832,7 @@ type AccordionProps = {
       />
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
-      <DocsRelated
+      <DocsRelated componentSlug="accordion"
         items={[
           { name: $tStore('related.collapsible.name'), description: $tStore('related.collapsible.description'), path: `?path=/docs/${$tStore('related.collapsible.href')}` },
           { name: $tStore('related.tabs.name'),        description: $tStore('related.tabs.description'),        path: `?path=/docs/${$tStore('related.tabs.href')}`        },
@@ -841,7 +841,7 @@ type AccordionProps = {
       />
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
-      <DocsNotes
+      <DocsNotes componentSlug="accordion"
         items={[
           { title: '', content: $tStore('notes.item1') },
           { title: '', content: $tStore('notes.item2') },

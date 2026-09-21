@@ -333,7 +333,7 @@ interface ComposerQuoteLabels {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer-quote"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.fromThread')}
@@ -432,7 +432,7 @@ interface ComposerQuoteLabels {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer-quote"
     items={[
       { name: $tStore('related.items.composer.name'),    description: toPlainText($tStore('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },

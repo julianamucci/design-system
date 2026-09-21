@@ -401,7 +401,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="navigation-menu"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -707,7 +707,7 @@ interface NavigationMenuLinkProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="navigation-menu"
     items={[
       { name: $tStore('related.items.menubar.name'),    description: $tStore('related.items.menubar.description'),    path: '?path=/docs/components-navigation-menubar--docs'    },
       { name: $tStore('related.items.sidebar.name'),    description: $tStore('related.items.sidebar.description'),    path: '?path=/docs/components-layout-sidebar--docs'    },
@@ -717,7 +717,7 @@ interface NavigationMenuLinkProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="navigation-menu"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

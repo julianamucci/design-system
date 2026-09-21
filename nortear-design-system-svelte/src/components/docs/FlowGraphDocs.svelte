@@ -462,7 +462,7 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="flow-graph"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -602,7 +602,7 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="flow-graph"
     items={[
       { name: $tStore('related.items.agentPlan.name'),   description: toPlainText($tStore('related.items.agentPlan.description')),   path: '?path=/docs/components-conversational-agentplan--docs'   },
       { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'   },

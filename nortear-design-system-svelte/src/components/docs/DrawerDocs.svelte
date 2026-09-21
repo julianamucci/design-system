@@ -616,7 +616,7 @@ interface TriggerProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="drawer"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -1018,7 +1018,7 @@ interface TriggerProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="drawer"
     items={[
       { name: $tStore('related.items.sheet.name'),       description: $tStore('related.items.sheet.description'),       path: '?path=/docs/components-overlay-sheet--docs'       },
       { name: $tStore('related.items.dialog.name'),      description: $tStore('related.items.dialog.description'),      path: '?path=/docs/components-overlay-dialog--docs'      },
@@ -1028,7 +1028,7 @@ interface TriggerProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="drawer"
     items={numberedItems($tStore, 'notes').map((content) => ({ title: '', content }))}
   />
 

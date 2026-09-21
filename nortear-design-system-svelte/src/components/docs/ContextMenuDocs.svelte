@@ -736,7 +736,7 @@ interface ContextMenuLabelProps {
   {/snippet}
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="context-menu"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withCheckbox')}
@@ -1082,7 +1082,7 @@ interface ContextMenuLabelProps {
 
   <!-- ── Relacionados ─────────────────────────────────────────────────── -->
   <!-- A descrição é TEXTO no container: sem `toPlainText`, tag vira texto. -->
-  <DocsRelated
+  <DocsRelated componentSlug="context-menu"
     items={[
       { name: 'DropdownMenu', description: toPlainText($tStore('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
       { name: 'Menubar',      description: toPlainText($tStore('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'      },
@@ -1093,7 +1093,7 @@ interface ContextMenuLabelProps {
   />
 
   <!-- ── Notas ────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="context-menu"
     items={stringsFromDict($tStore, 'notes', 'tip').map((content) => ({ title: '', content }))}
   />
 

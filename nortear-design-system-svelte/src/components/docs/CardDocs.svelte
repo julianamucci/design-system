@@ -423,7 +423,7 @@ interface CardPartProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="card"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.full')}
@@ -673,7 +673,7 @@ interface CardPartProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="card"
     items={[
       { name: 'Separator', description: $tStore('related.separator'), path: '?path=/docs/components-layout-separator--docs' },
       { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/components-disclosure-accordion--docs' },
@@ -685,7 +685,7 @@ interface CardPartProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="card"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

@@ -329,7 +329,7 @@
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="approval-card"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withActions')}
@@ -435,7 +435,7 @@
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="approval-card"
     items={[
       { name: $tStore('related.items.toolGroup.name'),   description: toPlainText($tStore('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'  },
       { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },

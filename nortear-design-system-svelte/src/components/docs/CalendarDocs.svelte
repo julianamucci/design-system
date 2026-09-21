@@ -387,7 +387,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="calendar"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withLocale')}
@@ -569,7 +569,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="calendar"
     items={[
       { name: 'Popover',  description: $tStore('related.popover'),  path: '?path=/docs/components-overlay-popover--docs'  },
       { name: 'Form',     description: toPlainText($tStore('related.form')),     path: '?path=/docs/components-form-form--docs'     },
@@ -578,7 +578,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="calendar"
     items={[
       { title: '', content: 'Na stack Svelte (bits-ui), o <code>locale</code> é uma <strong>string BCP-47</strong> (ex: <code>"pt-BR"</code>) — não o objeto <code>Locale</code> do <code>date-fns</code> que o React utiliza.' },
       { title: '', content: 'Valores são instâncias de <code>DateValue</code> do <code>@internationalized/date</code> — use <code>CalendarDate</code> para criar e <code>.toString()</code> para serializar como ISO (YYYY-MM-DD).' },

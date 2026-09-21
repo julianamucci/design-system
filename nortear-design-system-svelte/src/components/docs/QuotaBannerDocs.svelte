@@ -349,7 +349,7 @@ export interface QuotaBannerLabels {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="quota-banner"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -480,7 +480,7 @@ export interface QuotaBannerLabels {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="quota-banner"
     items={[
       { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
       { name: $tStore('related.items.costMeter.name'),      description: toPlainText($tStore('related.items.costMeter.description')),      path: '?path=/docs/components-conversational-costmeter--docs'      },

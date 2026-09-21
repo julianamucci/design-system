@@ -318,7 +318,7 @@ interface QueuedMessage {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="message-queue"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.aboveField')}
@@ -418,7 +418,7 @@ interface QueuedMessage {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="message-queue"
     items={[
       { name: $tStore('related.items.composer.name'),      description: toPlainText($tStore('related.items.composer.description')),      path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.composerQuote.name'), description: toPlainText($tStore('related.items.composerQuote.description')), path: '?path=/docs/components-conversational-composerquote--docs' },

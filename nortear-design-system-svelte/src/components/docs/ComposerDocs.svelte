@@ -306,7 +306,7 @@
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withRunning')}
@@ -419,7 +419,7 @@
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer"
     items={[
       { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
       { name: $tStore('related.items.textarea.name'),   description: toPlainText($tStore('related.items.textarea.description')),   path: '?path=/docs/components-form-textarea--docs' },

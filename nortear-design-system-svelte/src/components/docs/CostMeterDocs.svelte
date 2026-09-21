@@ -312,7 +312,7 @@ export interface CostMeterLabels {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="cost-meter"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -440,7 +440,7 @@ export interface CostMeterLabels {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="cost-meter"
     items={[
       { name: $tStore('related.items.contextDisplay.name'),   description: toPlainText($tStore('related.items.contextDisplay.description')),   path: '?path=/docs/components-conversational-contextdisplay--docs'   },
       { name: $tStore('related.items.contextBreakdown.name'), description: toPlainText($tStore('related.items.contextBreakdown.description')), path: '?path=/docs/components-conversational-contextbreakdown--docs' },

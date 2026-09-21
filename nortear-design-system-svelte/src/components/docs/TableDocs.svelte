@@ -508,7 +508,7 @@ interface TableRowProps {
       {/snippet}
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
-      <DocsImport
+      <DocsImport componentSlug="table"
         code={codeImport}
       />
 
@@ -1041,7 +1041,7 @@ interface TableRowProps {
       />
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
-      <DocsRelated
+      <DocsRelated componentSlug="table"
         items={[
           { name: 'Avatar',        description: $tStore('related.avatar'),       path: '?path=/docs/components-display-avatar--docs'       },
           { name: 'Badge',         description: $tStore('related.badge'),        path: '?path=/docs/components-feedback-badge--docs'        },
@@ -1052,7 +1052,7 @@ interface TableRowProps {
       />
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
-      <DocsNotes
+      <DocsNotes componentSlug="table"
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },

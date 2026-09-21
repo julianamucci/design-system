@@ -454,7 +454,7 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="trace-waterfall"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -583,7 +583,7 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="trace-waterfall"
     items={[
       { name: $tStore('related.items.flowGraph.name'),     description: toPlainText($tStore('related.items.flowGraph.description')),     path: '?path=/docs/components-conversational-flowgraph--docs'     },
       { name: $tStore('related.items.agentPlan.name'),     description: toPlainText($tStore('related.items.agentPlan.description')),     path: '?path=/docs/components-conversational-agentplan--docs'     },

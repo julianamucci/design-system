@@ -299,7 +299,7 @@ interface ContextSlice {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="context-breakdown"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -407,7 +407,7 @@ interface ContextSlice {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="context-breakdown"
     items={[
       { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
       { name: $tStore('related.items.chatThread.name'),     description: toPlainText($tStore('related.items.chatThread.description')),     path: '?path=/docs/components-conversational-chatthread--docs'     },

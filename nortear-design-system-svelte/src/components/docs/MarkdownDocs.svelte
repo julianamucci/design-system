@@ -256,7 +256,7 @@
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="markdown"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withStreaming')}
@@ -360,7 +360,7 @@
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="markdown"
     items={[
       { name: $tStore('related.items.codeBlock.name'), description: toPlainText($tStore('related.items.codeBlock.description')), path: '?path=/docs/components-display-codeblock--docs' },
       { name: $tStore('related.items.editor.name'),    description: toPlainText($tStore('related.items.editor.description')),    path: '?path=/docs/components-form-editor--docs' },

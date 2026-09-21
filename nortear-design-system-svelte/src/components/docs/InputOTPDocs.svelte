@@ -423,7 +423,7 @@ interface InputOTPProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="input-otp"
     code={codeImport}
   />
 
@@ -687,7 +687,7 @@ interface InputOTPProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="input-otp"
     items={[
       { name: $tStore('related.items.input.name'),  description: $tStore('related.items.input.description'),  path: '?path=/docs/components-form-input--docs'  },
       { name: $tStore('related.items.form.name'),   description: $tStore('related.items.form.description'),   path: '?path=/docs/components-form-form--docs'   },
@@ -697,7 +697,7 @@ interface InputOTPProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="input-otp"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

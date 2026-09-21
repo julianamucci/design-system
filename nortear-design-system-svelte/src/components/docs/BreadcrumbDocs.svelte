@@ -484,7 +484,7 @@ interface BreadcrumbEllipsisProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="breadcrumb"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withEllipsis')}
@@ -752,7 +752,7 @@ interface BreadcrumbEllipsisProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="breadcrumb"
     items={[
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: 'Stepper',        description: $tStore('related.stepper'),        path: '?path=/docs/components-navigation-stepper--docs'        },
@@ -762,7 +762,7 @@ interface BreadcrumbEllipsisProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="breadcrumb"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

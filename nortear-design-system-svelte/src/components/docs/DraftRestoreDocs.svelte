@@ -333,7 +333,7 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="draft-restore"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withTimestamp')}
@@ -433,7 +433,7 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="draft-restore"
     items={[
       { name: $tStore('related.items.composer.name'),    description: toPlainText($tStore('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.alert.name'),       description: toPlainText($tStore('related.items.alert.description')),       path: '?path=/docs/components-feedback-alert--docs' },

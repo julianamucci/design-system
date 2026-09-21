@@ -306,7 +306,7 @@ interface ContextItem {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer-context"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withAutomatic')}
@@ -406,7 +406,7 @@ interface ContextItem {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer-context"
     items={[
       { name: $tStore('related.items.composer.name'),            description: toPlainText($tStore('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.composerAttachments.name'), description: toPlainText($tStore('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },

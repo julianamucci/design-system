@@ -456,7 +456,7 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="computer-use"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -578,7 +578,7 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="computer-use"
     items={[
       { name: $tStore('related.items.agentStatus.name'),   description: toPlainText($tStore('related.items.agentStatus.description')),   path: '?path=/docs/components-conversational-agentstatus--docs'   },
       { name: $tStore('related.items.toolGroup.name'),     description: toPlainText($tStore('related.items.toolGroup.description')),     path: '?path=/docs/components-conversational-toolgroup--docs'     },

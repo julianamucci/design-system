@@ -377,7 +377,7 @@ interface ScrollAreaRootProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport code={codeImportBasic} />
+  <DocsImport componentSlug="scroll-area" code={codeImportBasic} />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
@@ -526,7 +526,7 @@ interface ScrollAreaRootProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="scroll-area"
     items={[
       { name: $tStore('related.items.resizable.name'), description: $tStore('related.items.resizable.description'), path: '?path=/docs/components-layout-resizable--docs' },
       { name: $tStore('related.items.sheet.name'),     description: $tStore('related.items.sheet.description'),     path: '?path=/docs/components-overlay-sheet--docs'     },
@@ -536,7 +536,7 @@ interface ScrollAreaRootProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="scroll-area"
     items={[
       { title: '', content: stripHtml($tStore('notes.item1')) },
       { title: '', content: stripHtml($tStore('notes.item2')) },

@@ -554,7 +554,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="popover"
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -1005,7 +1005,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="popover"
     items={[
       { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
       { name: $tStore('related.items.dropdownMenu.name'), description: $tStore('related.items.dropdownMenu.description'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
@@ -1015,7 +1015,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="popover"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

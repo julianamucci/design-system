@@ -332,7 +332,7 @@ export interface ModelOption {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer-model-picker"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withUnavailable')}
@@ -433,7 +433,7 @@ export interface ModelOption {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer-model-picker"
     items={[
       { name: $tStore('related.items.composer.name'),               description: toPlainText($tStore('related.items.composer.description')),               path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.composerTriggerPopover.name'), description: toPlainText($tStore('related.items.composerTriggerPopover.description')), path: '?path=/docs/components-conversational-composertriggerpopover--docs' },

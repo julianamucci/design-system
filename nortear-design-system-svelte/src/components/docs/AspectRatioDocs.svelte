@@ -309,7 +309,7 @@
       {/snippet}
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
-      <DocsImport
+      <DocsImport componentSlug="aspect-ratio"
         code={codeImportBasic}
         secondaryCode={codeImportWithImage}
       />
@@ -435,7 +435,7 @@
       />
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
-      <DocsRelated
+      <DocsRelated componentSlug="aspect-ratio"
         items={[
           { name: 'Avatar',     description: $tStore('related.avatar'),   path: '?path=/docs/components-display-avatar--docs'     },
           { name: 'Card',       description: $tStore('related.card'),     path: '?path=/docs/components-layout-card--docs'       },
@@ -445,7 +445,7 @@
       />
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
-      <DocsNotes
+      <DocsNotes componentSlug="aspect-ratio"
         items={[
           { title: '', content: $tStore('notes.item1') },
           { title: '', content: $tStore('notes.item2') },

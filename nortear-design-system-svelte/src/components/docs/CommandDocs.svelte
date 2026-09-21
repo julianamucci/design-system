@@ -575,7 +575,7 @@ interface CommandLoadingProps {
   {/snippet}
 
   <!-- ── Importação ───────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="command"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withDialog')}
@@ -815,7 +815,7 @@ interface CommandLoadingProps {
   />
 
   <!-- ── Relacionados ─────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="command"
     items={[
       { name: 'Select',        description: $tStore('related.select'),       path: '?path=/docs/components-form-select--docs'       },
       { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
@@ -824,7 +824,7 @@ interface CommandLoadingProps {
   />
 
   <!-- ── Notas ────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="command"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

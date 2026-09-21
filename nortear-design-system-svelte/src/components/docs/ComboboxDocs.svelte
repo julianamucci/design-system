@@ -1022,7 +1022,7 @@ interface ComboboxChipProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="combobox"
     items={[
       { name: $tStore('related.items.select.name'),  description: $tStore('related.items.select.description'),  path: '?path=/docs/components-form-select--docs' },
       { name: $tStore('related.items.command.name'), description: $tStore('related.items.command.description'), path: '?path=/docs/components-overlay-command--docs' },

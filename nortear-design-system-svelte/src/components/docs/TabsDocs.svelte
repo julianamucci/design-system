@@ -372,7 +372,7 @@ interface TabsContentProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="tabs"
     code={codeImport}
   />
 
@@ -617,7 +617,7 @@ interface TabsContentProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="tabs"
     items={[
       { name: $tStore('related.items.stepper.name'),     description: $tStore('related.items.stepper.description'),     path: '?path=/docs/components-navigation-stepper--docs'      },
       { name: $tStore('related.items.accordion.name'),   description: $tStore('related.items.accordion.description'),   path: '?path=/docs/components-disclosure-accordion--docs'    },
@@ -627,7 +627,7 @@ interface TabsContentProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="tabs"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

@@ -380,7 +380,7 @@ interface InputProps extends HTMLInputAttributes {
       {/snippet}
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
-      <DocsImport
+      <DocsImport componentSlug="input"
         description={$tStore('import.basic')}
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withGroup')}
@@ -594,7 +594,7 @@ interface InputProps extends HTMLInputAttributes {
       />
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
-      <DocsRelated
+      <DocsRelated componentSlug="input"
         items={[
           { name: 'Textarea',  description: $tStore('related.textarea'),  path: '?path=/docs/components-form-textarea--docs'  },
           { name: 'InputOTP',  description: $tStore('related.inputOTP'),  path: '?path=/docs/components-form-inputotp--docs'  },
@@ -605,7 +605,7 @@ interface InputProps extends HTMLInputAttributes {
       />
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
-      <DocsNotes
+      <DocsNotes componentSlug="input"
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },

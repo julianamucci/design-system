@@ -655,7 +655,7 @@ interface SwitchProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="switch"
     items={[
       { name: $tStore('related.items.checkbox.name'),   description: $tStore('related.items.checkbox.description'),   path: '?path=/docs/components-form-checkbox--docs' },
       { name: $tStore('related.items.toggle.name'),     description: $tStore('related.items.toggle.description'),     path: '?path=/docs/components-form-toggle--docs' },
@@ -665,7 +665,7 @@ interface SwitchProps {
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="switch"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

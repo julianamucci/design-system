@@ -515,7 +515,7 @@ declare function buildRadarOption(o: {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="chart"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryCode={codeImportSecondary}
@@ -795,7 +795,7 @@ declare function buildRadarOption(o: {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="chart"
     items={[
       { name: 'Table',     description: $tStore('related.table'),     path: '?path=/docs/components-tables-table--docs'     },
       { name: 'Card',      description: $tStore('related.card'),      path: '?path=/docs/components-layout-card--docs'      },
@@ -804,7 +804,7 @@ declare function buildRadarOption(o: {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="chart"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

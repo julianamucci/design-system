@@ -625,7 +625,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="dialog"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withScroll')}
@@ -1057,7 +1057,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="dialog"
     items={[
       { name: 'AlertDialog', description: toPlainText($tStore('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
       { name: 'Sheet',       description: $tStore('related.sheet'),                  path: '?path=/docs/components-overlay-sheet--docs'       },
@@ -1068,7 +1068,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="dialog"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

@@ -703,7 +703,7 @@ interface RadioGroupItemProps {
   />
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="radio-group"
     items={[
       { name: $tStore('related.items.checkbox.name'), description: $tStore('related.items.checkbox.description'), path: '?path=/docs/components-form-checkbox--docs' },
       { name: $tStore('related.items.switch.name'),   description: $tStore('related.items.switch.description'),   path: '?path=/docs/components-form-switch--docs' },
@@ -713,7 +713,7 @@ interface RadioGroupItemProps {
   />
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="radio-group"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

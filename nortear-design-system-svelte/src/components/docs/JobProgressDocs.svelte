@@ -363,7 +363,7 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="job-progress"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -468,7 +468,7 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="job-progress"
     items={[
       { name: $tStore('related.items.agentStatus.name'),     description: toPlainText($tStore('related.items.agentStatus.description')),     path: '?path=/docs/components-conversational-agentstatus--docs'     },
       { name: $tStore('related.items.agentPlan.name'),       description: toPlainText($tStore('related.items.agentPlan.description')),       path: '?path=/docs/components-conversational-agentplan--docs'       },

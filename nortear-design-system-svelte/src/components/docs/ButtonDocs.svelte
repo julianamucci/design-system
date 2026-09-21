@@ -326,7 +326,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {/snippet}
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
-      <DocsImport
+      <DocsImport componentSlug="button"
         description={$tStore('import.basic')}
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withIcon')}
@@ -581,7 +581,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       />
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
-      <DocsRelated
+      <DocsRelated componentSlug="button"
         items={[
           { name: 'Toggle',      description: toPlainText($tStore('related.toggle')),     path: '?path=/docs/components-form-toggle--docs' },
           { name: 'Switch',      description: $tStore('related.switch'),                path: '?path=/docs/components-form-switch--docs' },
@@ -592,7 +592,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       />
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
-      <DocsNotes
+      <DocsNotes componentSlug="button"
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },

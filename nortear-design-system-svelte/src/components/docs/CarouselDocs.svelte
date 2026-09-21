@@ -547,7 +547,7 @@ interface CarouselNavProps extends ButtonProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="carousel"
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withPlugin')}
@@ -894,7 +894,7 @@ interface CarouselNavProps extends ButtonProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="carousel"
     items={[
       { name: 'Tabs',       description: $tStore('related.tabs'),       path: '?path=/docs/components-navigation-tabs--docs'       },
       { name: 'ScrollArea', description: $tStore('related.scrollArea'), path: '?path=/docs/components-layout-scrollarea--docs' },
@@ -904,7 +904,7 @@ interface CarouselNavProps extends ButtonProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="carousel"
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },

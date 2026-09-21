@@ -287,7 +287,7 @@
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="chat-thread"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withStreaming')}
@@ -403,7 +403,7 @@
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="chat-thread"
     items={[
       { name: $tStore('related.items.markdown.name'), description: toPlainText($tStore('related.items.markdown.description')), path: '?path=/docs/components-conversational-markdown--docs' },
       { name: $tStore('related.items.avatar.name'),   description: toPlainText($tStore('related.items.avatar.description')),   path: '?path=/docs/components-display-avatar--docs' },

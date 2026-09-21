@@ -409,7 +409,7 @@ interface SliderProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport code={codeImport} />
+  <DocsImport componentSlug="slider" code={codeImport} />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
@@ -611,7 +611,7 @@ interface SliderProps {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="slider"
     items={[
       { name: $tStore('related.items.input.name'),      description: $tStore('related.items.input.description'),      path: '?path=/docs/components-form-input--docs'      },
       { name: $tStore('related.items.switch.name'),     description: $tStore('related.items.switch.description'),     path: '?path=/docs/components-form-switch--docs'     },
@@ -621,7 +621,7 @@ interface SliderProps {
   />
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
-  <DocsNotes
+  <DocsNotes componentSlug="slider"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },

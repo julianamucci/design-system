@@ -294,7 +294,7 @@ interface TriggerPopoverLabels {
   />
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
+  <DocsImport componentSlug="composer-trigger-popover"
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withCommands')}
@@ -421,7 +421,7 @@ interface TriggerPopoverLabels {
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
-  <DocsRelated
+  <DocsRelated componentSlug="composer-trigger-popover"
     items={[
       { name: $tStore('related.items.composer.name'), description: toPlainText($tStore('related.items.composer.description')), path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.combobox.name'), description: toPlainText($tStore('related.items.combobox.description')), path: '?path=/docs/components-form-combobox--docs' },
