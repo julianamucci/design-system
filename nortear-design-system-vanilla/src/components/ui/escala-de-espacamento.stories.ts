@@ -95,6 +95,7 @@ function cenario(): HTMLElement {
     <div class="nds-alert">
       <div class="nds-alert-title">Aviso</div>
       <button type="button" class="nds-alert-action">Desfazer</button>
+      <button type="button" class="nds-alert-dismiss" aria-label="Fechar"></button>
     </div>
     <nav class="nds-pagination"><a class="nds-pagination-link" href="#">2</a></nav>
     <div class="nds-input-otp"><div class="nds-input-otp-slot">7</div></div>
@@ -132,8 +133,20 @@ const TARGETS: EspacoTarget[] = [
     esperado: { condensado: 16, default: 20, confortavel: 25 } },
   { name: 'dropdown item recuado · degrau 7', selector: '.nds-dropdown-menu-item[data-inset]', prop: 'padding-left',
     esperado: { condensado: 22.4, default: 28, confortavel: 35 } },
-  { name: 'alert com ação · degrau 18', selector: '.nds-alert', prop: 'padding-inline-end',
-    esperado: { condensado: 57.6, default: 72, confortavel: 90 } },
+  // Até 2026-09-20 esta linha era `alert com ação · degrau 18`, esperando
+  // 57,6/72/90 — a calha FIXA que a folha reservava para a ação. Ela media 16px
+  // e reprovava, **e estava vermelha desde 2026-09-15**: naquele dia a ação
+  // virou coluna `auto` do grid (`117260014`) e a calha deixou de existir. O
+  // `tokens.css` registrou a mudança na hora, na nota do `--spacing-18`; esta
+  // linha não, e ninguém viu porque filtro por slug não alcança story de QA —
+  // só varredura completa da stack.
+  //
+  // Retargetada em vez de removida: o que RESERVA espaço hoje é a calha do
+  // botão de fechar, e ela é degrau de escala como a outra era. O fixture ganhou
+  // o `.nds-alert-dismiss` para que o seletor tenha o que casar.
+  { name: 'alert com fechar · degrau 10', selector: '.nds-alert:has(.nds-alert-dismiss)',
+    prop: 'padding-inline-end',
+    esperado: { condensado: 32, default: 40, confortavel: 50 } },
 
   // ── Literal PURO, que a varredura de fallbacks não alcançava ─────────────
   // O `168a61bb` varreu `var(--x, literal)`; este era `0.125rem` sozinho, sem
