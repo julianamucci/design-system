@@ -530,6 +530,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withCommands')"
       :secondary-code="tContent('import.withCommandsCode')"
+      component-slug="composer-trigger-popover"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -599,6 +600,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="composer-trigger-popover"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

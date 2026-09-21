@@ -447,6 +447,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withStreaming')"
       :secondary-code="tContent('import.withStreamingCode')"
+      component-slug="markdown"
     />
 
     <!-- ── Listas brancas ─────────────────────────────────────────── -->
@@ -517,6 +518,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="markdown"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

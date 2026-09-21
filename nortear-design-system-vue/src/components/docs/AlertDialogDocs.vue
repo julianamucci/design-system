@@ -607,6 +607,7 @@ const a11yCritCols = computed(() => ({
       :code="codeImportBasic"
       :secondary-description="tContent('import.withTrigger')"
       :secondary-code="codeImportWithTrigger"
+      component-slug="alert-dialog"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
@@ -688,11 +689,13 @@ const a11yCritCols = computed(() => ({
     <!-- ── Relacionados ─────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="alert-dialog"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="alert-dialog"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->

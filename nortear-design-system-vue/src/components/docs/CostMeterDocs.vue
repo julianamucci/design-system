@@ -519,6 +519,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withLabels')"
       :secondary-code="tContent('import.withLabelsCode')"
+      component-slug="cost-meter"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -566,6 +567,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="cost-meter"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

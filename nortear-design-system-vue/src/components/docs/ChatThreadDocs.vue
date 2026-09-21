@@ -504,6 +504,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withStreaming')"
       :secondary-code="tContent('import.withStreamingCode')"
+      component-slug="chat-thread"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -580,6 +581,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="chat-thread"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

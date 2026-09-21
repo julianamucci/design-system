@@ -641,6 +641,7 @@ const visualTestItems = computed(() => [
     <DocsImport
       :description="tContent('import.vue')"
       :code="codeImportBasic"
+      component-slug="checkbox"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
@@ -924,11 +925,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="checkbox"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="checkbox"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->

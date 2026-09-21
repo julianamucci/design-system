@@ -583,6 +583,7 @@ const testesVisual = computed(() => ({
       :code="codeImportBasic"
       :secondary-description="tContent('import.withIcon')"
       :secondary-code="codeImportWithIcon"
+      component-slug="avatar"
     />
 
     <!-- ── Variantes (composições) ─────────────────────────────────── -->
@@ -705,11 +706,13 @@ const testesVisual = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="avatar"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="avatar"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

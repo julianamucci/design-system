@@ -744,6 +744,7 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withButton')"
       :secondary-code="codeImportWithButton"
+      component-slug="collapsible"
     />
 
     <!-- ── Variantes (Modos) ──────────────────────────────────────── -->
@@ -981,11 +982,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="collapsible"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="collapsible"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

@@ -512,6 +512,7 @@ const visualTestItems = computed(() => [
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      component-slug="aspect-ratio"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -641,11 +642,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="aspect-ratio"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="aspect-ratio"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

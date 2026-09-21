@@ -538,6 +538,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.aboveField')"
       :secondary-code="tContent('import.aboveFieldCode')"
+      component-slug="message-queue"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -585,6 +586,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="message-queue"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

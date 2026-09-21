@@ -531,6 +531,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withLabels')"
       :secondary-code="tContent('import.withLabelsCode')"
+      component-slug="agent-plan"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -578,6 +579,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="agent-plan"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

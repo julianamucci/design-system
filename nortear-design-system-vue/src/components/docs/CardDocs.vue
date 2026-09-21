@@ -637,6 +637,7 @@ const visualTestItems = computed(() =>
       :code="codeImportBasic"
       :secondary-description="tContent('import.full')"
       :secondary-code="codeImportFull"
+      component-slug="card"
     />
 
     <!-- ── Variantes (Tamanhos e Composições) ─────────────────────── -->
@@ -783,11 +784,13 @@ const visualTestItems = computed(() =>
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="card"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="card"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

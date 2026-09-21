@@ -624,6 +624,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withLabels')"
       :secondary-code="tContent('import.withLabelsCode')"
+      component-slug="job-progress"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -671,6 +672,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="job-progress"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

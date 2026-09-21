@@ -554,6 +554,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <DocsImport
       :description="tContent('import.note')"
       :code="codeImport"
+      component-slug="accordion"
     />
 
     <!-- ── Modos de Operação ──────────────────────────────────────── -->
@@ -846,11 +847,13 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="accordion"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="accordion"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

@@ -981,6 +981,7 @@ const visualTestItems = computed(() => [
 
     <DocsImport
       :code="codeImport"
+      component-slug="combobox"
     />
 
     <!--

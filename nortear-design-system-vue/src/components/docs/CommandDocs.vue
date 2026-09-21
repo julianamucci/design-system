@@ -771,6 +771,7 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withDialog')"
       :secondary-code="codeImportWithDialog"
+      component-slug="command"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -923,11 +924,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="command"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="command"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

@@ -627,6 +627,7 @@ const visualTestItems = computed(() => [
     <DocsImport
       :code="codeImport"
       :secondary-code="codeSetup"
+      component-slug="sonner"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -748,11 +749,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="sonner"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="sonner"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

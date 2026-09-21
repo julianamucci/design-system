@@ -993,6 +993,7 @@ const variantLayout     = ref(LAYOUT_INITIAL);
       :code="codeImportBasic"
       :secondary-description="tContent('import.withCheckbox')"
       :secondary-code="codeImportWithCheckbox"
+      component-slug="context-menu"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────────────── -->
@@ -1271,11 +1272,13 @@ const variantLayout     = ref(LAYOUT_INITIAL);
     <!-- ── Relacionados ─────────────────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="context-menu"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="context-menu"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────────────────── -->

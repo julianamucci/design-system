@@ -656,6 +656,7 @@ function handleTabChange(value: string) {
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
       :code="codeImport"
+      component-slug="tabs"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -978,11 +979,13 @@ function handleTabChange(value: string) {
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="tabs"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="tabs"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

@@ -556,6 +556,7 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withMeta')"
       :secondary-code="codeImportWithMeta"
+      component-slug="data-table"
     />
 
     <!-- ── Recursos ──────────────────────────────────────────────── -->
@@ -612,11 +613,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ──────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="data-table"
     />
 
     <!-- ── Notas ─────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="data-table"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->

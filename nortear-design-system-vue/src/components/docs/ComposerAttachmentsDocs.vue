@@ -532,6 +532,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withProgress')"
       :secondary-code="tContent('import.withProgressCode')"
+      component-slug="composer-attachments"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -579,6 +580,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="composer-attachments"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

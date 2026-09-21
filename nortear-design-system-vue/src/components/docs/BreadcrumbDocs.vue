@@ -658,6 +658,7 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withEllipsis')"
       :secondary-code="codeImportWithEllipsis"
+      component-slug="breadcrumb"
     />
 
     <!-- ── Variantes (Configurações Disponíveis) ───────────────────── -->
@@ -819,11 +820,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="breadcrumb"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="breadcrumb"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

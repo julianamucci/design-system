@@ -507,6 +507,7 @@ function handleDemoClick(variant: string) {
       :code="codeImportBasic"
       :secondary-description="tContent('import.withIcon')"
       :secondary-code="codeImportWithIcon"
+      component-slug="button"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -668,11 +669,13 @@ function handleDemoClick(variant: string) {
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="button"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="button"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

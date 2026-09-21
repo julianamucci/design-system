@@ -553,6 +553,7 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withLocale')"
       :secondary-code="codeImportWithLocale"
+      component-slug="calendar"
     />
 
     <!-- ── Variantes (Modos e Layouts) ────────────────────────────── -->
@@ -666,11 +667,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="calendar"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="calendar"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->

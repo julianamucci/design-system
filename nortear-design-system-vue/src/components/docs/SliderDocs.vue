@@ -699,6 +699,7 @@ const visualTestItems = computed(() => [
     <!-- ── Importação ───────────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      component-slug="slider"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
@@ -929,11 +930,13 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="slider"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="slider"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->

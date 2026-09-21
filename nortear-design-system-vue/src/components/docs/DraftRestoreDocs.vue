@@ -541,6 +541,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withTimestamp')"
       :secondary-code="tContent('import.withTimestampCode')"
+      component-slug="draft-restore"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -588,6 +589,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="draft-restore"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

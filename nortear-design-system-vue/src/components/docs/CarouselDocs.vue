@@ -724,6 +724,7 @@ function onDemoInit(payload: any) {
       :code="codeImportBasic"
       :secondary-description="tContent('import.withPlugin')"
       :secondary-code="codeImportWithPlugin"
+      component-slug="carousel"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->

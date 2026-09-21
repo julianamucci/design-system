@@ -528,6 +528,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withLevel')"
       :secondary-code="tContent('import.withLevelCode')"
+      component-slug="composer-voice"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -575,6 +576,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="composer-voice"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

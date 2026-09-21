@@ -719,6 +719,7 @@ const visualTestItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withBuilders')"
       :secondary-code="codeImportSecondary"
+      component-slug="chart"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->

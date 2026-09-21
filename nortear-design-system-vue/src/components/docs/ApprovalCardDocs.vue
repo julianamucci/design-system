@@ -569,6 +569,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withActions')"
       :secondary-code="tContent('import.withActionsCode')"
+      component-slug="approval-card"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -616,6 +617,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="approval-card"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

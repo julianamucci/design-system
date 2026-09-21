@@ -719,6 +719,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Importação ───────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      component-slug="hover-card"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
@@ -1014,11 +1015,13 @@ const a11yCritCols = computed(() => ({
     <!-- ── Relacionados ─────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="hover-card"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="hover-card"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->

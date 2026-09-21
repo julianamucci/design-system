@@ -537,6 +537,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withRunning')"
       :secondary-code="tContent('import.withRunningCode')"
+      component-slug="composer"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -604,6 +605,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="composer"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

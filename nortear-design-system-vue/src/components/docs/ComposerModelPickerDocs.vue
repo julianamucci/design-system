@@ -557,6 +557,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withUnavailable')"
       :secondary-code="tContent('import.withUnavailableCode')"
+      component-slug="composer-model-picker"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -604,6 +605,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="composer-model-picker"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->

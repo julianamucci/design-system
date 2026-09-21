@@ -842,6 +842,7 @@ const compositionItems = computed(() => [
       :code="codeImportBasic"
       :secondary-description="tContent('import.withSubcomponents')"
       :secondary-code="codeImportWithSubcomponents"
+      component-slug="sidebar"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────────── -->
@@ -1557,11 +1558,13 @@ const compositionItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="sidebar"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="sidebar"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────────── -->

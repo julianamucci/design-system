@@ -704,6 +704,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Importação ───────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      component-slug="pagination"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
@@ -937,11 +938,13 @@ const a11yCritCols = computed(() => ({
     <!-- ── Relacionados ─────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="pagination"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="pagination"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->

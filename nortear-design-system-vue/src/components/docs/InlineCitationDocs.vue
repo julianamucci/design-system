@@ -610,6 +610,7 @@ const visualTests = computed(() => ({
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withLabels')"
       :secondary-code="tContent('import.withLabelsCode')"
+      component-slug="inline-citation"
     />
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -657,6 +658,7 @@ const visualTests = computed(() => ({
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="inline-citation"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
