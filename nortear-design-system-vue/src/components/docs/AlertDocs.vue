@@ -49,6 +49,28 @@ const screenReaderItems = computed(() =>
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// O dicionário do locale vigente, para as listas que se derivam do conteúdo em
+// vez de repetir os índices à mão.
+const localeContent = computed(
+  () =>
+    (alertTranslations as unknown as Record<
+      string,
+      {
+        anatomy?: Record<string, unknown>;
+        testes?: Record<string, Record<string, unknown>>;
+      }
+    >)[locale.value],
+);
+
+// Índices das chaves `itemN` de um dicionário, em ordem numérica.
+function itemIndexes(dict: Record<string, unknown> | undefined): number[] {
+  return Object.keys(dict ?? {})
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((n): n is string => n !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
+}
+
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
   medium: 'common.medium',
@@ -212,12 +234,13 @@ interface AlertTitleProps {
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
-const anatomyItems = computed(() => [
-  tContent('anatomy.item1'),
-  tContent('anatomy.item2'),
-  tContent('anatomy.item3'),
-  tContent('anatomy.item4'),
-]);
+// Os itens saem das chaves `itemN` do dicionário do locale vigente: item novo no
+// conteúdo aparece na página sem ninguém lembrar de estender uma lista à mão.
+// Lista cravada já perdeu `functional.item8` e `visual.item6` antes de perder
+// `anatomy.item5` (AlertAction) e `anatomy.item6` (botão de fechar).
+const anatomyItems = computed(() =>
+  itemIndexes(localeContent.value?.anatomy).map((i) => tContent(`anatomy.item${i}`)),
+);
 
 const variantItems = computed(() => [
   { name: 'default',     description: tContent('variants.items.default'),                code: codeDefault      },
@@ -324,6 +347,13 @@ const alertDescriptionPropItems = computed(() => [
   slotPropItem.value,
 ]);
 
+// A descrição do slot é a de `props.table.alertAction` — o que entra aqui é o
+// controle que resolve o alerta, não o conteúdo do Alert de `table.children`.
+const alertActionPropItems = computed(() => [
+  classPropItem.value,
+  { name: 'default slot', type: 'VNode', defaultValue: '—', required: tNav('common.yes'), description: toPlainText(tContent('props.table.alertAction')) },
+]);
+
 const tokenRows = computed(() => [
   { token: '--muted',        value: 'hsl(var(--muted))',                description: tContent('tokens.table.background')        },
   { token: '--foreground',   value: 'hsl(var(--foreground))',           description: tContent('tokens.table.foreground')        },
@@ -380,18 +410,8 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-// Os itens saem das chaves `itemN` do dicionário do locale vigente: item novo no
-// conteúdo aparece na página sem ninguém lembrar de estender uma lista à mão.
 function testItemIndexes(group: 'functional' | 'accessibility' | 'visual'): number[] {
-  const testes = (alertTranslations as unknown as Record<
-    string,
-    { testes?: Record<string, Record<string, unknown>> }
-  >)[locale.value]?.testes;
-  return Object.keys(testes?.[group] ?? {})
-    .map((key) => /^item(\d+)$/.exec(key)?.[1])
-    .filter((n): n is string => n !== undefined)
-    .map(Number)
-    .sort((a, b) => a - b);
+  return itemIndexes(localeContent.value?.testes?.[group]);
 }
 
 const functionalTestItems = computed(() =>
@@ -741,6 +761,7 @@ const visualTestItems = computed(() =>
         { title: tContent('props.alertTitle'), cols: propCols, items: alertPropItems },
         { title: tContent('props.alertTitleTitle'), cols: propCols, items: alertTitlePropItems },
         { title: tContent('props.alertDescTitle'), cols: propCols, items: alertDescriptionPropItems },
+        { title: tContent('props.alertActionTitle'), cols: propCols, items: alertActionPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"

@@ -254,6 +254,10 @@ export const Dismissible: Story = {
       await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
       alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
       await expect(alert).not.toHaveClass('nds-animate-in');
+      // E o que a guarda de `event.target` protege não é só a classe: o alert
+      // segue na tela e o emit continua sem ter disparado.
+      await expect(alert).toBeInTheDocument();
+      await expect(dismissSpy).not.toHaveBeenCalled();
     });
 
     await step('Botão de fechar é visível e acessível por rótulo', async () => {

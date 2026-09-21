@@ -186,7 +186,9 @@ export const Playground: Story = {
       // Aqui o que se mede é que o `as` chega ao DOM: sem ele o título voltaria a
       // ser H5 e o painel Code estaria ensinando o que a story não faz.
       await step('O nível pedido em `as` é o que chega ao DOM', async () => {
-        await expect(canvas.getByText(args.title).tagName).toBe('H4');
+        const heading = canvas.getByText(args.title);
+        await expect(heading.tagName).toBe('H4');
+        await expect(heading).toHaveClass('nds-alert-title');
       });
     }
 
@@ -196,6 +198,7 @@ export const Playground: Story = {
 
     await step('A variante escolhida aplica as classes corretas', async () => {
       const alert = canvas.getByRole(role);
+      await expect(alert).toHaveAttribute('data-slot', 'alert');
       await expect(alert).toHaveClass('nds-alert');
       for (const modifier of MODIFIERS) {
         if (modifier === `nds-alert-${variant}`) {
@@ -219,7 +222,15 @@ export const Playground: Story = {
     // Playground mostrava o contrário dele.
     await step('O ícone acompanha a variante escolhida', async () => {
       const icon = canvas.getByRole(role).querySelector(':scope > svg');
-      await expect(icon).toHaveClass(VARIANT_ICON_CLASS[variant]);
+      const expected = VARIANT_ICON_CLASS[variant];
+      await expect(icon).toHaveClass(expected);
+      // E nenhum dos outros. Sem o braço negativo, um `<svg>` que ACUMULASSE as
+      // classes passaria por "mostra o ícone da variante" sem tê-lo trocado —
+      // a mesma armadilha que o comentário do mapa acima descreve, resolvida lá
+      // e não aqui.
+      for (const other of Object.values(VARIANT_ICON_CLASS)) {
+        if (other !== expected) await expect(icon).not.toHaveClass(other);
+      }
     });
   },
 };
