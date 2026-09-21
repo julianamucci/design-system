@@ -233,7 +233,8 @@
         "alertAction": "Conteúdo da ação. A coluna mede o botão que estiver lá, em qualquer idioma ou tamanho de fonte — não há largura reservada."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para ajustes de layout. A variante visual vem sempre da prop de variante; para mudar cores num tema, redefina as vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) de forma escopada — nunca cores hardcoded."
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para ajustes de layout. A variante visual vem sempre da prop de variante; para mudar cores num tema, redefina as vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) de forma escopada — nunca cores hardcoded.",
+      "alertActionTitle": "AlertAction"
     },
     "tokens": {
       "table": {
@@ -241,7 +242,7 @@
         "class": "Aplicação no tema",
         "part": "Parte do componente",
         "background": "Fundo (variante default)",
-        "foreground": "Título e texto corrido, nas cinco variantes. A folha chega até ele por indireção: --alert-fg no default, e o par --foreground de cada variante semântica. Os temas resolvem todos para o mesmo valor, e trocar um só é o ponto de extensão para projetos derivados.",
+        "foreground": "Texto corrido da descrição. Cada variante semântica troca este tom pelo par da própria variante, que neste projeto pinta a mesma cor — a indireção é o ponto de extensão para projetos derivados. Título e ícone chegam por outro caminho, o --alert-fg, que lê --card-foreground.",
         "border": "Borda padrão",
         "destructiveBorder": "Borda (variante destructive)",
         "destructiveText": "Ícone (variante destructive)",
@@ -647,7 +648,8 @@
         "alertAction": "The action content. The column measures whatever button is there, in any language or font size — no reserved width."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — every subcomponent accepts <code>className</code> for layout adjustments. The visual variant always comes from the variant prop; to change colours in a theme, redefine the internal vars (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) in a scoped way — never hardcoded colours."
+      "extensibility": "<code>className</code> — every subcomponent accepts <code>className</code> for layout adjustments. The visual variant always comes from the variant prop; to change colours in a theme, redefine the internal vars (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) in a scoped way — never hardcoded colours.",
+      "alertActionTitle": "AlertAction"
     },
     "tokens": {
       "table": {
@@ -655,7 +657,7 @@
         "class": "Theme application",
         "part": "Component Part",
         "background": "Background (default variant)",
-        "foreground": "Title and body copy, in all five variants. The sheet reaches it indirectly: --alert-fg on default, and each semantic variant own --foreground pair. Themes resolve them all to the same value, and overriding one is the extension point for derived projects.",
+        "foreground": "Body copy in the description. Each semantic variant swaps this tone for its own pair, which paints the same colour in this project — the indirection is the extension point for derived projects. Title and icon come through a different path, --alert-fg, which reads --card-foreground.",
         "border": "Default border",
         "destructiveBorder": "Border (destructive variant)",
         "destructiveText": "Icon (destructive variant)",
@@ -1061,7 +1063,8 @@
         "alertAction": "Contenido de la acción. La columna mide el botón que esté allí, en cualquier idioma o tamaño de fuente — no hay ancho reservado."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para ajustes de layout. La variante visual viene siempre de la prop de variante; para cambiar colores en un tema, redefina las vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) con alcance — nunca colores hardcoded."
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para ajustes de layout. La variante visual viene siempre de la prop de variante; para cambiar colores en un tema, redefina las vars internas (<code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-body-fg</code>) con alcance — nunca colores hardcoded.",
+      "alertActionTitle": "AlertAction"
     },
     "tokens": {
       "table": {
@@ -1069,7 +1072,7 @@
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "background": "Fondo (variante default)",
-        "foreground": "Título y texto corrido, en las cinco variantes. La hoja llega a él por indirección: --alert-fg en default, y el par --foreground de cada variante semántica. Los temas los resuelven todos al mismo valor, y cambiar uno solo es el punto de extensión para proyectos derivados.",
+        "foreground": "Texto corrido de la descripción. Cada variante semántica cambia este tono por el par de la propia variante, que en este proyecto pinta el mismo color — la indirección es el punto de extensión para proyectos derivados. Título e ícono llegan por otro camino, --alert-fg, que lee --card-foreground.",
         "border": "Borde predeterminado",
         "destructiveBorder": "Borde (variante destructive)",
         "destructiveText": "Ícono (variante destructive)",

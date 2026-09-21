@@ -368,6 +368,22 @@ diz mais isso.
 **Onde a cor semântica pinta de fato, por variante**: fundo, borda e ícone. Nunca
 título nem texto corrido — nas cinco variantes, nos três temas, nos dois modos.
 
+> **2026-09-21 — a tabela acima é a fonte, e o conteúdo compartilhado divergia
+> dela.** A linha `tokens.table.foreground` de
+> `docs/shared/content/alert/translations.json` dizia que `--foreground` chega
+> "por indireção: `--alert-fg` no default, e o par de cada variante semântica".
+> São DOIS caminhos, não um: `--alert-fg` lê `--card-foreground` e vale para
+> ícone e título, enquanto o texto corrido tem `--alert-body-fg`, que é quem lê
+> `--foreground` e quem as semânticas trocam. O título do `default` não chega a
+> `--foreground` por via nenhuma.
+>
+> Na tela nunca houve erro — `--card-foreground` vale `--foreground` nos três
+> temas e nos dois modos. O dano seria de quem consome o mapa: um projeto
+> derivado que mova `--card-foreground` seguindo aquela frase quebra o título do
+> `default`. A linha foi reescrita contra esta tabela. **Quando o conteúdo
+> compartilhado descreve token, esta seção é a fonte, e a frase de lá tem de ser
+> conferida contra ela — não contra a memória de quem escreve.**
+
 **Alfas, porque são o que de fato muda entre modos e variantes**:
 `--alert-bg-alpha` é 0.1 no claro, 0.2 no escuro e **0.32 no `destructive`
 escuro**; `--alert-border-alpha` é 0.3 e **0.42 no `destructive` escuro**. Ver D5
