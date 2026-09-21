@@ -161,17 +161,22 @@ export const Playground: Story = {
       await waitFor(() => expect(canvas.getByRole(role)).toBeVisible());
     });
 
-    await step('AlertTitle é renderizado corretamente', async () => {
-      await waitFor(() => expect(canvas.getByText(title)).toBeVisible());
-    });
+    // `title` é control e pode ser esvaziado no painel — sem a guarda, o
+    // Playground reprovava justamente na configuração que o componente
+    // documenta como válida (descrição autoexplicativa, sem título).
+    if (title) {
+      await step('AlertTitle é renderizado corretamente', async () => {
+        await waitFor(() => expect(canvas.getByText(title)).toBeVisible());
+      });
 
-    // A story escreve `as="h4"` e o painel Code mostra o mesmo: o nível é
-    // ENSINADO, não herdado do default `h5` do primitivo.
-    await step('AlertTitle renderiza no nível que a story declara', async () => {
-      const titleElement = canvas.getByText(title);
-      await expect(titleElement.tagName).toBe('H4');
-      await expect(titleElement).toHaveClass('nds-alert-title');
-    });
+      // A story escreve `as="h4"` e o painel Code mostra o mesmo: o nível é
+      // ENSINADO, não herdado do default `h5` do primitivo.
+      await step('AlertTitle renderiza no nível que a story declara', async () => {
+        const titleElement = canvas.getByText(title);
+        await expect(titleElement.tagName).toBe('H4');
+        await expect(titleElement).toHaveClass('nds-alert-title');
+      });
+    }
 
     await step('AlertDescription é renderizado corretamente', async () => {
       await waitFor(() => expect(canvas.getByText(description)).toBeVisible());

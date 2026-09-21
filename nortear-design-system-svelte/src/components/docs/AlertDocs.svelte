@@ -56,18 +56,35 @@
     return cleanup;
   });
 
-  // ─── Testes: quantos itens existem é do dicionário ──────────────────────────
+  // ─── Quantos itens existem é do dicionário ──────────────────────────────────
   //
   // A contagem sai do conteúdo e não de um intervalo cravado: com a lista
   // escrita à mão a página renderizou 7 de 8 critérios funcionais quando o
-  // conteúdo ganhou um item, e ninguém viu.
+  // conteúdo ganhou um item, e ninguém viu. Aconteceu de novo com
+  // `visual.item6` e com `anatomy.item5`/`item6` — o teto é sempre do
+  // chamador, porque o container aceita `items` de qualquer tamanho.
+  function itemIndexes(group: Record<string, unknown>): number[] {
+    return Object.keys(group)
+      .filter((key) => /^item\d+$/.test(key))
+      .map((key) => Number(key.slice('item'.length)))
+      .sort((a, b) => a - b);
+  }
+
   function testCount(group: 'functional' | 'accessibility' | 'visual'): number[] {
     const dict = (alertTranslations as unknown as Record<
       string,
       { testes?: Record<string, Record<string, unknown>> }
     >)[$locale]?.testes?.[group] ?? {};
-    const count = Object.keys(dict).filter((key) => /^item\d+$/.test(key)).length;
-    return Array.from({ length: count }, (_, index) => index + 1);
+    return itemIndexes(dict);
+  }
+
+  /** Anatomia: mesma regra. AlertAction e o botão de fechar entraram por aqui. */
+  function anatomyItemIndexes(): number[] {
+    const dict = (alertTranslations as unknown as Record<
+      string,
+      { anatomy?: Record<string, unknown> }
+    >)[$locale]?.anatomy ?? {};
+    return itemIndexes(dict);
   }
 
   // ─── Active section ──────────────────────────────────────────────────────────
@@ -285,12 +302,7 @@ interface AlertDescriptionProps {
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        items={[
-          $tStore('anatomy.item1'),
-          $tStore('anatomy.item2'),
-          $tStore('anatomy.item3'),
-          $tStore('anatomy.item4'),
-        ]}
+        items={anatomyItemIndexes().map((i) => $tStore(`anatomy.item${i}`))}
         structureLabel={$tStore('anatomy.structureLabel')}
         structureCode={$tStore('anatomy.structureCode')}
       />
@@ -614,6 +626,23 @@ interface AlertDescriptionProps {
             items: [
               { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
               { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.className')) },
+            ],
+          },
+          {
+            // Quarto subcomponente: o slot da ação. O dicionário já trazia
+            // `props.alertActionTitle` e `props.table.alertAction`, e nenhuma
+            // docs page publicava a tabela — a linha ficava órfã.
+            title: $tStore('props.alertActionTitle'),
+            cols: {
+              prop: $tStore('props.table.prop'),
+              type: $tStore('props.table.type'),
+              default: $tStore('props.table.default'),
+              required: $tStore('props.table.required'),
+              description: $tStore('props.table.description'),
+            },
+            items: [
+              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.alertAction')) },
+              { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'),  description: toPlainText($tStore('props.table.className')) },
             ],
           },
         ]}
