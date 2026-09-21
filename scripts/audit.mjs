@@ -1507,6 +1507,42 @@ function auditDocsItemTrackId() {
 
 const PAGE_EXT = { react: 'tsx', vue: 'vue', svelte: 'svelte', vanilla: 'ts', angular: 'ts' };
 
+/**
+ * Fim da chamada de um container, ignorando aspas e contando profundidade.
+ *
+ * Existe porque `indexOf` do marcador de fechamento erra sempre que o
+ * marcador aparece DENTRO de um valor — e aí o portão que usa a janela acusa
+ * ausência de uma prop que está logo depois do corte.
+ */
+function fimDaChamada(texto, fecha) {
+  const ABRE = { '{': '}', '(': ')', '[': ']' };
+  const FECHA = { '}': '{', ')': '(', ']': '[' };
+  let aspas = null;
+  let profundidade = 0;
+
+  for (let k = 0; k < texto.length; k++) {
+    const c = texto[k];
+
+    if (aspas) {
+      if (c === aspas && texto[k - 1] !== String.fromCharCode(92)) aspas = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') { aspas = c; continue; }
+
+    if (ABRE[c]) { profundidade++; continue; }
+    if (FECHA[c]) {
+      profundidade--;
+      // O fechamento do vanilla é `})`: ele se dá quando o objeto de opções
+      // fecha, com a chamada voltando a zero.
+      if (profundidade <= 0 && texto.startsWith(fecha, k)) return k + fecha.length;
+      continue;
+    }
+
+    if (profundidade === 0 && texto.startsWith(fecha, k)) return k + fecha.length;
+  }
+  return texto.length;
+}
+
 function auditAnalyticsInfra() {
   const violations = [];
 
@@ -1563,6 +1599,77 @@ function auditAnalyticsInfra() {
         file: relative(ROOT, file), rule: 'page_untracked',
         message: 'página chama useSeoEffect/applySeo mas não monta o observer de cliques (usar DocsPageLayout ou mountDocsTracking direto)',
       });
+    }
+
+    // 4. Os três containers que RECEBEM o slug por prop precisam recebê-lo.
+    //
+    //    O `DocsPageLayout` deriva o slug do `?id=` do iframe e por isso não
+    //    precisa da prop (regra 1). Estes três não derivam nada: sem ela o
+    //    `track()` devolve `{}`, e os `CodeBlock` saem SEM `data-track` e SEM
+    //    `data-track-id` — o `docs_code_copy` daqueles snippets nunca dispara.
+    //    A página RENDERIZA igual; o que muda é o conjunto de eventos que ela
+    //    emite, e isso não aparece em tela nenhuma.
+    //
+    //    Medido em 2026-09-21, na passagem do alert: quatro stacks omitiam, o
+    //    angular não, e quem viu foi o cross-stack — nenhum portão olhava.
+    //    Varredura do mesmo dia: 30 páginas de 114 em react, vue e angular, 16
+    //    em svelte e vanilla.
+    //
+    //    **A forma da chamada muda por stack, e o mapa foi conferido contra a
+    //    fonte, não suposto**: markup em react/vue/svelte, elemento custom no
+    //    angular, fábrica no vanilla. Mapa derivado de palpite é o que esta casa
+    //    chama de mapa que envelhece em silêncio.
+    const CONSUMIDORES_DE_SLUG = stack === 'vanilla'
+      ? [['createDocsImport(', '})'], ['createDocsRelated(', '})'], ['createDocsNotes(', '})']]
+      : stack === 'angular'
+        ? [['<nds-docs-import', '>'], ['<nds-docs-related', '>'], ['<nds-docs-notes', '>']]
+        : [['<DocsImport', '>'], ['<DocsRelated', '>'], ['<DocsNotes', '>']];
+
+    const slugsConhecidos = new Set(slugsDoConteudo());
+
+    for (const file of globStack(stack, 'components/docs', null)) {
+      const norm = file.split(String.fromCharCode(92)).join('/');
+      if (/\.(stories|test|spec)\./.test(norm) || norm.endsWith('.mdx')) continue;
+      if (norm.includes('/shared/sections/')) continue;
+      const nome = basename(file);
+      if (!/Docs\.(tsx|vue|svelte|ts)$/.test(nome)) continue;
+      const content = readFile(file);
+      if (!content) continue;
+
+      // O slug sai do nome do arquivo e é CONFERIDO contra o conteúdo
+      // compartilhado: sem par, o achado vai para `_infra` em vez de inventar
+      // um dono que não existe.
+      const derivado = nome
+        .replace(/Docs\.(tsx|vue|svelte|ts)$/, '')
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .toLowerCase();
+      const slugDaPagina = slugsConhecidos.has(derivado) ? derivado : '_infra';
+
+      for (const [abre, fecha] of CONSUMIDORES_DE_SLUG) {
+        let i = content.indexOf(abre);
+        while (i !== -1) {
+          // Janela limitada ao próprio fechamento da chamada: sem o corte, um
+          // `componentSlug` do container SEGUINTE contaria por este.
+          //
+          // O corte NÃO é `indexOf(fecha)`, e a diferença importa: um valor de
+          // atributo que contenha o caractere de fechamento — `code={a > b}`,
+          // uma string com `}` — cortaria a janela cedo e o portão acusaria
+          // falta onde a prop existe, logo adiante. Falso positivo é ruidoso e
+          // manda gente investigar o que está certo; pior, obriga a uma
+          // convenção posicional que ninguém escreveu. O scanner ignora o que
+          // está dentro de aspas e só aceita o fechamento em profundidade zero.
+          const resto = content.slice(i, i + 2000);
+          const janela = resto.slice(0, fimDaChamada(resto, fecha));
+          if (!/componentSlug|component-slug/.test(janela)) {
+            violations.push({
+              category: 'analytics', severity: 'medium', slug: slugDaPagina, stack,
+              file: relative(ROOT, file), rule: 'slug_de_rastreio_ausente',
+              message: `${abre.replace(/[<(]/g, '')} sem componentSlug — os CodeBlock dele saem sem data-track e o docs_code_copy nunca dispara`,
+            });
+          }
+          i = content.indexOf(abre, i + abre.length);
+        }
+      }
     }
   }
 
