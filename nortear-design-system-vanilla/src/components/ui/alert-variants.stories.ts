@@ -274,11 +274,15 @@ export const Dismissible: Story = {
       await expect(alert).toHaveClass('nds-animate-in');
 
       // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
-      // não tem mais nada a limpar.
+      // não tem mais nada a limpar: nem volta a classe, nem fecha o alerta.
       alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
       await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
       alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
       await expect(alert).not.toHaveClass('nds-animate-in');
+      // A guarda não pode ter confundido fim de ENTRADA com fim de SAÍDA: o
+      // alerta segue na tela e o callback de fechamento não foi chamado.
+      await expect(alert).toBeInTheDocument();
+      await expect(onDismissClick).not.toHaveBeenCalled();
     });
 
     await step('X visível, acessível por rótulo e registrado na raiz', async () => {

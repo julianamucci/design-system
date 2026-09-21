@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
+import { Info, AlertCircle, CheckCircle2, TriangleAlert } from 'lucide';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertIconType, type AlertVariant, type AlertRole } from './alert';
 import { alertSource } from './alert.source';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
@@ -107,6 +108,38 @@ function variantIcon(variant: AlertVariant): AlertIconType {
   return variant;
 }
 
+type LucideNodes = [string, Record<string, string>][];
+
+/**
+ * O desenho de cada tipo de ícone, da MESMA fonte que `createAlertIcon` monta
+ * (`lucide`).
+ *
+ * Sem ele não há o que afirmar: o ícone é um `<svg>` sem classe nem atributo
+ * que diga qual é, então asserção de presença passa com o ícone ERRADO — e o
+ * teste de texto de fonte também, porque ele casa a chamada e não o resultado.
+ * Os quatro desenhos só se distinguem pelos nós, e é neles que se mede.
+ */
+const ICON_NODES: Record<AlertIconType, LucideNodes> = {
+  info:    Info as unknown as LucideNodes,
+  error:   AlertCircle as unknown as LucideNodes,
+  success: CheckCircle2 as unknown as LucideNodes,
+  warning: TriangleAlert as unknown as LucideNodes,
+};
+
+/** Assinatura do desenho esperado para um tipo de ícone. */
+function expectedIconSignature(type: AlertIconType): string {
+  return ICON_NODES[type]
+    .map(([tag, attrs]) => [tag, ...Object.entries(attrs).map(([k, v]) => `${k}=${v}`)].join(' '))
+    .join('|');
+}
+
+/** Assinatura do desenho que o DOM de fato tem. */
+function renderedIconSignature(svg: SVGSVGElement): string {
+  return [...svg.children]
+    .map((node) => [node.tagName, ...[...node.attributes].map((a) => `${a.name}=${a.value}`)].join(' '))
+    .join('|');
+}
+
 function buildAlert(args: AlertArgs): HTMLElement {
   const alert = createAlert({
     variant: args.variant,
@@ -192,6 +225,16 @@ export const Playground: Story = {
       const icon = canvas.getByRole(role).querySelector(':scope > svg');
       await expect(icon).toHaveAttribute('aria-hidden', 'true');
       await expect(icon).not.toHaveClass('nds-icon');
+    });
+
+    await step('O ícone desenhado é o da variante escolhida', async () => {
+      // `accessibility.item4` — "cada variante deve ter ícone e texto
+      // correspondentes" — é declarado por ESTA story, e o mapa `variantIcon`
+      // estava nas duas pontas (render e painel Code) sem nada que o medisse:
+      // voltar a cravar um ícone fixo passava em tudo. A asserção segue o mapa,
+      // então agora reprova aqui.
+      const icon = canvas.getByRole(role).querySelector<SVGSVGElement>(':scope > svg')!;
+      await expect(renderedIconSignature(icon)).toBe(expectedIconSignature(variantIcon(variant)));
     });
   },
 };

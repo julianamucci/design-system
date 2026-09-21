@@ -59,17 +59,33 @@ function priorityLabel(raw: string): string {
 }
 
 /**
- * Índices dos itens de `testes.<grupo>` DERIVADOS do dicionário: um intervalo
- * cravado para antes do último item quando o conteúdo cresce (foi assim que
- * `functional.item8` e `visual.item6` ficaram de fora da página).
+ * Índices `itemN` presentes num grupo do dicionário, em ordem numérica. É o
+ * lado que DERIVA o teto da lista, e é o que toda seção numerada consome: um
+ * intervalo cravado fica para antes do último item quando o conteúdo cresce
+ * (foi assim que `functional.item8` e `visual.item6` ficaram de fora da página).
  */
-function testItemIndexes(group: 'functional' | 'accessibility' | 'visual'): number[] {
-  const content = (alertTranslations as unknown as Record<string, { testes?: Record<string, Record<string, unknown>> }>)[getLocale()];
-  return Object.keys(content?.testes?.[group] ?? {})
+function itemIndexes(group: Record<string, unknown> | undefined): number[] {
+  return Object.keys(group ?? {})
     .map((key) => /^item(\d+)$/.exec(key))
     .filter((match): match is RegExpExecArray => match !== null)
     .map((match) => Number(match[1]))
     .sort((a, b) => a - b);
+}
+
+/** Índices dos itens de `testes.<grupo>`. */
+function testItemIndexes(group: 'functional' | 'accessibility' | 'visual'): number[] {
+  const content = (alertTranslations as unknown as Record<string, { testes?: Record<string, Record<string, unknown>> }>)[getLocale()];
+  return itemIndexes(content?.testes?.[group]);
+}
+
+/**
+ * Índices dos itens de `anatomy`. Mesma lição, e a anatomia é justamente o
+ * grupo que cresceu: quando o dicionário ganhou o AlertAction e o botão de
+ * fechar, a lista cravada de quatro deixou os dois novos invisíveis na página.
+ */
+function anatomyItemIndexes(): number[] {
+  const content = (alertTranslations as unknown as Record<string, { anatomy?: Record<string, unknown> }>)[getLocale()];
+  return itemIndexes(content?.anatomy);
 }
 
 /** Literal de snippet a partir de uma chave do dicionário — o código mostrado acompanha o idioma e o preview. */
@@ -263,7 +279,7 @@ export function createAlertDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
+          items: anatomyItemIndexes().map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -544,6 +560,12 @@ export interface AlertTitleOptions {
   text?: string;
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';  // nível do heading — default 'h5'
   className?: string;
+}
+
+// createAlertAction(options) — devolve o container VAZIO do slot de ação;
+// o botão entra por appendChild.
+export interface AlertActionOptions {
+  className?: string;
 }`;
 
         const propsCols = {
@@ -583,6 +605,20 @@ export interface AlertTitleOptions {
               items: [
                 { name: 'text',      type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.table.children') },
                 { name: 'className', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.className')) },
+              ],
+            },
+            {
+              // Quarto subcomponente: o slot da ação. O dicionário já trazia
+              // `props.alertActionTitle` e `props.table.alertAction`, e nenhuma
+              // docs page publicava a tabela — a linha ficava órfã.
+              title: t('props.alertActionTitle'),
+              cols: propsCols,
+              items: [
+                { name: 'className', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.className')) },
+                // A fábrica devolve o container VAZIO: aqui o conteúdo não é
+                // uma option, é o filho anexado — e é assim que a seção
+                // Composições e o painel Code o mostram.
+                { name: 'appendChild', type: '(node: Node) => Node', defaultValue: '—', required: tNav('common.yes'), description: toPlainText(t('props.table.alertAction')) },
               ],
             },
           ],
