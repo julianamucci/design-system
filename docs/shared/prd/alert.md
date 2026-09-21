@@ -448,6 +448,30 @@ compartilhado chama a coluna de "Configuração" de propósito.
 | Sem anúncio | `role="note"` | sai da árvore de live regions; continua visível e legível |
 | Inserção dinâmica | montado depois do carregamento | é o caso legítimo de `alert` ou `status`; o papel da raiz já anuncia, sem `aria-live` em volta (C13) |
 | Entrando | só no `dismissible`, na montagem | `.nds-animate-in`: opacidade 0→1 e `scale(0.95)`→1, em `--duration-spring` com `--ease-spring` |
+
+> **EXCEÇÃO DE ASSERÇÃO DECLARADA · 2026-09-21 — as três linhas de GRID desta
+> tabela são medidas só no angular, e isso é decisão, não esquecimento.**
+>
+> `Complete` (o ícone ganha a coluna 1), `WithoutTitle` (a descrição ocupa a
+> coluna do conteúdo) e `compositions/WithoutIcon` (a coluna do ícone fica com
+> largura zero) leem `gridTemplateColumns` computado. As outras quatro afirmam
+> a estrutura e não o resultado.
+>
+> **Por que não foi portado.** A Fase E da terceira leva propôs portar, e a
+> medição da mesma rodada desaconselhou: duas agentes descobriram,
+> independentemente, que o plantio óbvio de asserção geométrica no alert **não
+> reprova** — a folha fixa `.nds-alert > svg` na coluna 1, então mover o ícone
+> no DOM não o move na tela. Asserção geométrica escrita às pressas em quatro
+> stacks é candidata a portão sem dentes, e esta passagem já gastou uma rodada
+> inteira com a forma 3 da regra de divergência.
+>
+> **A premissa, para reconferir**: as cinco vestem a MESMA folha
+> (`alert.css`), e é ela que decide as colunas. Enquanto isso valer, uma
+> medição de grid basta para provar a regra — o que as outras quatro perdem é
+> a prova de que a folha chegou até elas, não a prova da regra.
+>
+> **Fecha quando**: ou as quatro ganham a mesma medição, com dentes provados
+> por plantio que REPROVE, ou a folha deixa de ser única e esta premissa cai.
 | Saindo | o X foi acionado | `.nds-animate-out` (`--duration-base`, `--ease-exit`, `forwards`); no fim o nó sai — ver §7 para o que o Angular faz aqui |
 | Fechado | a saída terminou | o alerta não está mais na tela e o callback já disparou, uma vez só |
 
