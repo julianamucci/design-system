@@ -60,6 +60,17 @@ export const WithIcon: Story = {
       await expect(icon?.parentElement).toBe(alert);
     });
 
+    await step('O ícone fica à esquerda do texto', async () => {
+      // A consequência VISÍVEL de `.nds-alert:has(> svg)` é a coluna do ícone.
+      // Sem medir a caixa, a coluna podia deixar de abrir — ícone e texto
+      // empilhados — com todas as asserções de slot e de classe intactas.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg')!;
+      const title = canvas.getByText('Informação');
+      await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(
+        title.getBoundingClientRect().left,
+      );
+    });
+
     await step('O título da composição é visível', async () => {
       await expect(canvas.getByText('Informação')).toBeVisible();
     });

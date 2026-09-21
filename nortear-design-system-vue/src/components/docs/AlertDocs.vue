@@ -58,6 +58,11 @@ const localeContent = computed(
       {
         anatomy?: Record<string, unknown>;
         testes?: Record<string, Record<string, unknown>>;
+        usage?: {
+          guidelines?: Record<string, unknown>;
+          do?: Record<string, unknown>;
+          dont?: Record<string, unknown>;
+        };
       }
     >)[locale.value],
 );
@@ -230,7 +235,12 @@ interface AlertTitleProps {
   class?: string;
 }
 
-// AlertTitle / AlertDescription aceitam atributos HTML nativos`;
+// AlertAction — container do slot de ação; o botão entra pelo slot padrão
+interface AlertActionProps {
+  class?: string;
+}
+
+// AlertTitle / AlertDescription / AlertAction aceitam atributos HTML nativos`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -240,6 +250,21 @@ interface AlertTitleProps {
 // `anatomy.item5` (AlertAction) e `anatomy.item6` (botão de fechar).
 const anatomyItems = computed(() =>
   itemIndexes(localeContent.value?.anatomy).map((i) => tContent(`anatomy.item${i}`)),
+);
+
+// Mesmo teto latente da anatomia, nas três listas de "Quando usar": hoje 4/4/3
+// casam com o dicionário, e é exatamente assim que a lista cravada some sem
+// avisar — item novo no conteúdo simplesmente não chega à tela.
+const usageGuidelineItems = computed(() =>
+  itemIndexes(localeContent.value?.usage?.guidelines).map((i) => tContent(`usage.guidelines.item${i}`)),
+);
+
+const usageDoItems = computed(() =>
+  itemIndexes(localeContent.value?.usage?.do).map((i) => tContent(`usage.do.item${i}`)),
+);
+
+const usageDontItems = computed(() =>
+  itemIndexes(localeContent.value?.usage?.dont).map((i) => tContent(`usage.dont.item${i}`)),
 );
 
 const variantItems = computed(() => [
@@ -525,7 +550,7 @@ const visualTestItems = computed(() =>
     <DocsWhenToUse
       :guidelines="{
         title: tContent('usage.guidelines.title'),
-        items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
+        items: usageGuidelineItems,
       }"
       :scenarios="{
         title: tContent('usage.scenarios.title'),
@@ -547,8 +572,8 @@ const visualTestItems = computed(() =>
           { element: tContent('usage.uxWriting.table.warning.name'), rules: tContent('usage.uxWriting.table.warning.format'), do: tContent('usage.uxWriting.table.warning.good'), dont: tContent('usage.uxWriting.table.warning.bad') },
         ],
       }"
-      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
-      :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')] }"
+      :do="{ title: tContent('usage.do.title'), items: usageDoItems }"
+      :dont="{ title: tContent('usage.dont.title'), items: usageDontItems }"
     />
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->

@@ -86,6 +86,10 @@ export const WithoutTitle: Story = {
       // `h5` passaria com um título renderizado em outro nível.
       const alert = canvas.getByRole('alert');
       await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
+      // Por PAPEL, além da tag: um heading vazio some da busca por texto mas
+      // continua existindo para o leitor de tela, e a busca por tag não diz se
+      // o papel chegou.
+      await expect(within(alert).queryByRole('heading')).toBeNull();
       await expect(alert.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
     });
   },
@@ -153,9 +157,13 @@ export const WithoutAnnouncement: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('role="note" chega na raiz do alert', async () => {
+    await step('role="note" não é live region', async () => {
       const note = canvas.getByText('Nota de implementação').closest('.nds-alert');
       await expect(note).toHaveAttribute('role', 'note');
+      // Metade do contrato é o papel; a outra é NÃO anunciar. Um `aria-live`
+      // deixado na raiz ressuscitaria o anúncio com `role="note"` no lugar, e a
+      // asserção de papel sozinha aprovaria.
+      await expect(note).not.toHaveAttribute('aria-live');
     });
 
     await step('Sem `role`, o default continua alert', async () => {

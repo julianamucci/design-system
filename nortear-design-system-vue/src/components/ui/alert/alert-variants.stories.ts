@@ -334,8 +334,11 @@ export const DismissibleByKeyboard: Story = {
     dismissKeyboardSpy.mockClear();
     const canvas = within(canvasElement);
 
+    // Fora dos steps: o segundo compara contra ESTE nó, e capturá-lo dentro do
+    // primeiro o deixaria fora do alcance da comparação.
+    const alertOriginal = canvas.getByRole('alert');
+
     await step('Enter no botão focado remove o alert original e dispara o emit uma única vez', async () => {
-      const alertOriginal = canvas.getByRole('alert');
       const closeButton = within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' });
       closeButton.focus();
       await expect(closeButton).toHaveFocus();
@@ -347,7 +350,14 @@ export const DismissibleByKeyboard: Story = {
     });
 
     await step('Um alert novo assume o lugar — o canvas nunca fica vazio', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+      await waitFor(async () => {
+        // OUTRO nó, e não "um alert visível": se o `:key` não remontasse, o
+        // original nunca teria saído e a asserção de visibilidade passaria
+        // medindo justamente o alert que o Enter deveria ter fechado.
+        const remontado = canvas.getByRole('alert');
+        await expect(remontado).not.toBe(alertOriginal);
+        await expect(remontado).toBeVisible();
+      });
     });
   },
 };
