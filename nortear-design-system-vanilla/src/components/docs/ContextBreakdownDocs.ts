@@ -279,6 +279,7 @@ export function createContextBreakdownDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'context-breakdown',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -402,6 +403,7 @@ interface ContextSlice {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'context-breakdown',
           items: [
             { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
             { name: t('related.items.chatThread.name'),     description: toPlainText(t('related.items.chatThread.description')),     path: '?path=/docs/components-conversational-chatthread--docs'     },

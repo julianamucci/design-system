@@ -460,6 +460,7 @@ export function createCardDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'card',
           description: t('import.basic'),
           code: `import {
   createCard,
@@ -729,6 +730,7 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'card',
           items: [
             { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/components-layout-separator--docs' },
             { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/components-disclosure-accordion--docs' },
@@ -741,6 +743,7 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'card',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

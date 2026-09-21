@@ -310,6 +310,7 @@ export function createTerminalBlockDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'terminal-block',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -425,6 +426,7 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'terminal-block',
           items: [
             { name: t('related.items.codeBlock.name'),   description: toPlainText(t('related.items.codeBlock.description')),   path: '?path=/docs/components-display-codeblock--docs'           },
             { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },

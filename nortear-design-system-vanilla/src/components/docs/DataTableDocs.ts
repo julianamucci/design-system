@@ -361,6 +361,7 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'data-table',
           description: t('import.basic'),
           code: `import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';`,
           secondaryDescription: t('import.withMeta'),
@@ -602,6 +603,7 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'data-table',
           items: [
             { name: 'Table',        description: toPlainText(t('related.table')),        path: '?path=/docs/components-tables-table--docs' },
             { name: 'Chart',        description: toPlainText(t('related.chart')),        path: '?path=/docs/components-display-chart--docs' },
@@ -614,6 +616,7 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'data-table',
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: t(`notes.tip${i}`) })),
         });
 

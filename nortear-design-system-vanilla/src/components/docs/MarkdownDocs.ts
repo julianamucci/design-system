@@ -287,6 +287,7 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'markdown',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withStreaming'),
@@ -416,6 +417,7 @@ export interface MarkdownOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'markdown',
           items: [
             { name: t('related.items.codeBlock.name'), description: toPlainText(t('related.items.codeBlock.description')), path: '?path=/docs/components-display-codeblock--docs' },
             { name: t('related.items.editor.name'),    description: toPlainText(t('related.items.editor.description')),    path: '?path=/docs/components-form-editor--docs' },

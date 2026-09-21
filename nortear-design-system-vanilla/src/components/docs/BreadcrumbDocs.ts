@@ -433,6 +433,7 @@ export function createBreadcrumbDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'breadcrumb',
           description: t('import.basic'),
           code: `import {
   createBreadcrumb,
@@ -703,6 +704,7 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'breadcrumb',
           items: [
             { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/components-navigation-stepper--docs' },
@@ -713,6 +715,7 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'breadcrumb',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

@@ -343,6 +343,7 @@ export function createFormDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'form',
           description: t('import.basic'),
           code: `import { createFormField, createFieldset } from '@/components/ui/form';`,
         });
@@ -566,6 +567,7 @@ export type FieldsetOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'form',
           items: [
             { name: 'Input',    description: toPlainText(t('related.input')),    path: '?path=/docs/components-form-input--docs' },
             { name: 'Textarea', description: toPlainText(t('related.textarea')), path: '?path=/docs/components-form-textarea--docs' },
@@ -577,6 +579,7 @@ export type FieldsetOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'form',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

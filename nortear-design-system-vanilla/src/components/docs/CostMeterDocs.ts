@@ -277,6 +277,7 @@ export function createCostMeterDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'cost-meter',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -398,6 +399,7 @@ export interface CostMeterLabels {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'cost-meter',
           items: [
             { name: t('related.items.contextDisplay.name'),   description: toPlainText(t('related.items.contextDisplay.description')),   path: '?path=/docs/components-conversational-contextdisplay--docs'   },
             { name: t('related.items.contextBreakdown.name'), description: toPlainText(t('related.items.contextBreakdown.description')), path: '?path=/docs/components-conversational-contextbreakdown--docs' },

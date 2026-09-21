@@ -415,6 +415,7 @@ export function createTextareaDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'textarea',
           description: 'Importação do factory custom (Nortear):',
           code: `import { createTextarea, type TextareaOptions } from '@/components/ui/textarea';`,
           secondaryDescription: 'Uso básico com label + contador acessível:',
@@ -925,6 +926,7 @@ export type TextareaOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'textarea',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

@@ -345,6 +345,7 @@ export function createButtonDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'button',
           description: t('import.basic'),
           code: `import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.withIcon'),
@@ -696,6 +697,7 @@ export interface ButtonOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'button',
           items: [
             { name: 'Toggle',      description: toPlainText(t('related.toggle')),      path: '?path=/docs/components-form-toggle--docs' },
             { name: 'Switch',      description: toPlainText(t('related.switch')),                 path: '?path=/docs/components-form-switch--docs' },
@@ -707,6 +709,7 @@ export interface ButtonOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'button',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

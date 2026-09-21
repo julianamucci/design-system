@@ -285,6 +285,7 @@ export function createQuotaBannerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'quota-banner',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -421,6 +422,7 @@ export interface QuotaBannerLabels {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'quota-banner',
           items: [
             { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
             { name: t('related.items.costMeter.name'),      description: toPlainText(t('related.items.costMeter.description')),      path: '?path=/docs/components-conversational-costmeter--docs'      },

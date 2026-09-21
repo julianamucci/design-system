@@ -306,6 +306,7 @@ export function createDraftRestoreDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'draft-restore',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withTimestamp'),
@@ -413,6 +414,7 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'draft-restore',
           items: [
             { name: t('related.items.composer.name'),    description: toPlainText(t('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.alert.name'),       description: toPlainText(t('related.items.alert.description')),       path: '?path=/docs/components-feedback-alert--docs' },

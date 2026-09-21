@@ -292,6 +292,7 @@ export function createMessageQueueDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'message-queue',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.aboveField'),
@@ -403,6 +404,7 @@ export interface QueuedMessage {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'message-queue',
           items: [
             { name: t('related.items.composer.name'),      description: toPlainText(t('related.items.composer.description')),      path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.composerQuote.name'), description: toPlainText(t('related.items.composerQuote.description')), path: '?path=/docs/components-conversational-composerquote--docs' },

@@ -510,6 +510,7 @@ export function createSelectDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'select',
           description: 'Importação da fábrica:',
           code: `import { createSelect, type SelectOptions, type SelectItem } from '@/components/ui/select';`,
           secondaryDescription: 'Uso básico:',
@@ -843,6 +844,7 @@ export type SelectOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'select',
           items: [
             { name: t('related.items.combobox.name'),     description: stripHtml(t('related.items.combobox.description')),     path: '?path=/docs/components-form-combobox--docs'     },
             { name: t('related.items.radioGroup.name'),   description: stripHtml(t('related.items.radioGroup.description')),   path: '?path=/docs/components-form-radiogroup--docs'   },
@@ -853,6 +855,7 @@ export type SelectOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'select',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2') + ' A raiz aceita <code>destroy()</code>, e ele também dispara sozinho quando a raiz sai do documento — sem isso o painel em portal sobreviveria por cima da tela seguinte, junto com o ouvinte de clique-fora.') },

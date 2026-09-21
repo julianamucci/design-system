@@ -291,6 +291,7 @@ export function createApprovalCardDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'approval-card',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withActions'),
@@ -403,6 +404,7 @@ export function createApprovalCardDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'approval-card',
           items: [
             { name: t('related.items.toolGroup.name'),   description: toPlainText(t('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'  },
             { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },

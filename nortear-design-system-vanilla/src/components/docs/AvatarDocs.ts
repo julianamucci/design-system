@@ -378,6 +378,7 @@ export function createAvatarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'avatar',
           description: t('import.basic'),
           code: `import { createAvatar, createAvatarRoot, createAvatarImage, createAvatarFallback } from '@/components/ui/avatar';`,
           secondaryDescription: t('import.withIcon'),
@@ -578,6 +579,7 @@ export interface AvatarFallbackOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'avatar',
           items: [
             { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/components-feedback-badge--docs' },
             { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -588,6 +590,7 @@ export interface AvatarFallbackOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'avatar',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

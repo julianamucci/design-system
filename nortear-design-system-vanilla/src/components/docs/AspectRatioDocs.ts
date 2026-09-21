@@ -353,6 +353,7 @@ export function createAspectRatioDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'aspect-ratio',
           description: t('description'),
           code: `import { createAspectRatio } from '@/components/ui/aspect-ratio';`,
           secondaryDescription: stripHtml(t('variants.items.sixteenNine')),
@@ -512,6 +513,7 @@ export interface AspectRatioOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'aspect-ratio',
           items: [
             { name: 'Card',       description: toPlainText(t('related.card')),       path: '?path=/docs/components-layout-card--docs' },
             { name: 'Avatar',     description: toPlainText(t('related.avatar')),     path: '?path=/docs/components-display-avatar--docs' },
@@ -521,6 +523,7 @@ export interface AspectRatioOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'aspect-ratio',
           items: [
             { title: '', content: t('notes.item1') },
             { title: '', content: t('notes.item2') },

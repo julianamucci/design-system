@@ -568,6 +568,7 @@ export function createPopoverDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'popover',
           code: `import {
   createPopover,
   createPopoverHeader,
@@ -1286,6 +1287,7 @@ salvar.addEventListener('click', () => popover.close());`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'popover',
           items: [
             { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
             { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/components-navigation-dropdownmenu--docs' },
@@ -1296,6 +1298,7 @@ salvar.addEventListener('click', () => popover.close());`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'popover',
           items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

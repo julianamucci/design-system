@@ -388,6 +388,7 @@ export function createInputDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'input',
           description: t('import.basic'),
           code: `import { createInput } from '@/components/ui/input';`,
         });
@@ -733,6 +734,7 @@ export type InputOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'input',
           items: [
             { name: 'Textarea',  description: toPlainText(t('related.textarea')),  path: '?path=/docs/components-form-textarea--docs' },
             { name: 'InputOTP',  description: toPlainText(t('related.inputOTP')),  path: '?path=/docs/components-form-inputotp--docs' },
@@ -744,6 +746,7 @@ export type InputOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'input',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

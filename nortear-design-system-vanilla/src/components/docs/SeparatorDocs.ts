@@ -437,6 +437,7 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'separator',
           code: `import { createSeparator } from '@/components/ui/separator';`,
         });
 
@@ -589,6 +590,7 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'separator',
           items: [
             { name: t('related.items.card.name'),           description: toPlainText(t('related.items.card.description')),           path: '?path=/docs/components-layout-card--docs' },
             { name: t('related.items.sheet.name'),          description: toPlainText(t('related.items.sheet.description')),          path: '?path=/docs/components-overlay-sheet--docs' },
@@ -599,6 +601,7 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'separator',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

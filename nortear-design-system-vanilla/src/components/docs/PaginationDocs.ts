@@ -343,6 +343,7 @@ export function createPaginationDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'pagination',
           code: `import { createPagination } from '@/components/ui/pagination';`,
           secondaryDescription: 'Com endereços reais, para a página ser compartilhável e indexável:',
           secondaryCode: `const nav = createPagination({
@@ -635,6 +636,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'pagination',
           items: [
             { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/components-navigation-breadcrumb--docs' },
             { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs'       },
@@ -644,6 +646,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'pagination',
           items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

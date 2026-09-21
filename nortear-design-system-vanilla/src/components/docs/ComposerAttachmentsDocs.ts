@@ -290,6 +290,7 @@ export function createComposerAttachmentsDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'composer-attachments',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withProgress'),
@@ -405,6 +406,7 @@ export interface Attachment {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'composer-attachments',
           items: [
             { name: t('related.items.composer.name'),   description: toPlainText(t('related.items.composer.description')),   path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.progress.name'),   description: toPlainText(t('related.items.progress.description')),   path: '?path=/docs/components-feedback-progress--docs' },

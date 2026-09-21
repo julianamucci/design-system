@@ -398,6 +398,7 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Importação ─────────────────────────────────────────────────────
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'collapsible',
           description: t('import.basic'),
           code: `import { createCollapsible } from '@/components/ui/collapsible';`,
         });
@@ -696,6 +697,7 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Relacionados ───────────────────────────────────────────────────
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'collapsible',
           items: [
             { name: 'Accordion',  description: toPlainText(t('related.accordion')), path: '?path=/docs/components-disclosure-accordion--docs'  },
             { name: 'Sheet',      description: toPlainText(t('related.sheet')),     path: '?path=/docs/components-overlay-sheet--docs'      },
@@ -707,6 +709,7 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Notas ──────────────────────────────────────────────────────────
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'collapsible',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },

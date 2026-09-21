@@ -763,6 +763,7 @@ export function createDropdownMenuDocs(): HTMLElement {
       // explica é a tabela de Propriedades, nos três idiomas.
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'dropdown-menu',
           code: `import { createDropdownMenu } from '@/components/ui/dropdown-menu';
 import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.factoryOptions'),
@@ -991,6 +992,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'dropdown-menu',
           items: [
             { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/components-navigation-contextmenu--docs' },
             { name: t('related.items.menubar.name'),     description: toPlainText(t('related.items.menubar.description')),     path: '?path=/docs/components-navigation-menubar--docs'     },
@@ -1002,6 +1004,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'dropdown-menu',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

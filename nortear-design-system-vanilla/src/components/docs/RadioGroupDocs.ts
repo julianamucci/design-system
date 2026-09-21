@@ -375,6 +375,7 @@ export function createRadioGroupDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'radio-group',
           description: 'Importação do factory custom (Nortear):',
           code: `import { createRadioGroup, type RadioGroupOptions, type RadioGroupItem } from '@/components/ui/radio-group';`,
           secondaryDescription: 'Uso básico:',
@@ -684,6 +685,7 @@ export type RadioGroupOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'radio-group',
           items: [
             { name: t('related.items.checkbox.name'), description: stripHtml(t('related.items.checkbox.description')), path: '?path=/docs/components-form-checkbox--docs' },
             { name: t('related.items.switch.name'),   description: stripHtml(t('related.items.switch.description')),   path: '?path=/docs/components-form-switch--docs'   },
@@ -694,6 +696,7 @@ export type RadioGroupOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'radio-group',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

@@ -348,6 +348,7 @@ export function createCarouselDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'carousel',
           description: t('import.basic'),
           code: `import { createCarousel } from '@/components/ui/carousel';`,
           secondaryDescription: t('import.withPlugin'),
@@ -801,6 +802,7 @@ export type CarouselOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'carousel',
           items: [
             { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/components-navigation-tabs--docs' },
             { name: 'ScrollArea', description: toPlainText(t('related.scrollArea')), path: '?path=/docs/components-layout-scrollarea--docs' },
@@ -811,6 +813,7 @@ export type CarouselOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'carousel',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

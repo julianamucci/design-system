@@ -313,6 +313,7 @@ export function createInputOTPDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'input-otp',
           code: `import { createInputOTP } from '@/components/ui/input-otp';`,
         });
 
@@ -665,6 +666,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'input-otp',
           items: [
             { name: t('related.items.input.name'),  description: toPlainText(t('related.items.input.description')),  path: '?path=/docs/components-form-input--docs'  },
             { name: t('related.items.form.name'),   description: toPlainText(t('related.items.form.description')),   path: '?path=/docs/components-form-form--docs'   },
@@ -675,6 +677,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'input-otp',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

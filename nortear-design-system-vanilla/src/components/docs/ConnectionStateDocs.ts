@@ -300,6 +300,7 @@ export function createConnectionStateDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'connection-state',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -414,6 +415,7 @@ declare function isRetryScheduled(state: ConnectionState): boolean;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'connection-state',
           items: [
             { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
             { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs'  },

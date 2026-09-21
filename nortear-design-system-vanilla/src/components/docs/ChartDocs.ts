@@ -452,6 +452,7 @@ export function createChartDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'chart',
           description: t('import.vanilla'),
           code: `import { createChart } from '@/components/ui/chart';`,
           secondaryDescription: t('import.withBuilders'),
@@ -970,6 +971,7 @@ export interface ChartOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'chart',
           items: [
             { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/components-tables-table--docs' },
             { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/components-layout-card--docs' },
@@ -979,6 +981,7 @@ export interface ChartOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'chart',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

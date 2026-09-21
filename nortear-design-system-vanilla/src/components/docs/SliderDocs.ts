@@ -427,6 +427,7 @@ export function createSliderDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'slider',
           description: 'Importação da fábrica:',
           code: `import {
   createSlider,
@@ -807,6 +808,7 @@ export function createSlider(options: SliderRangeOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'slider',
           items: [
             { name: t('related.items.input.name'),      description: stripHtml(t('related.items.input.description')),      path: '?path=/docs/components-form-input--docs'      },
             { name: t('related.items.switch.name'),     description: stripHtml(t('related.items.switch.description')),     path: '?path=/docs/components-form-switch--docs'     },
@@ -817,6 +819,7 @@ export function createSlider(options: SliderRangeOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'slider',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

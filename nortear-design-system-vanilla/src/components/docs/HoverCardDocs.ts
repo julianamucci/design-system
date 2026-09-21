@@ -525,6 +525,7 @@ export function createHoverCardDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'hover-card',
           code: `import { createHoverCard } from '@/components/ui/hover-card';`,
         });
 
@@ -829,6 +830,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'hover-card',
           items: [
             { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
             { name: t('related.items.popover.name'),      description: toPlainText(t('related.items.popover.description')),      path: '?path=/docs/components-overlay-popover--docs'      },
@@ -839,6 +841,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'hover-card',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

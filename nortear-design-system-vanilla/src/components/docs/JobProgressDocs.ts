@@ -308,6 +308,7 @@ export function createJobProgressDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'job-progress',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -426,6 +427,7 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'job-progress',
           items: [
             { name: t('related.items.agentStatus.name'),     description: toPlainText(t('related.items.agentStatus.description')),     path: '?path=/docs/components-conversational-agentstatus--docs'     },
             { name: t('related.items.agentPlan.name'),       description: toPlainText(t('related.items.agentPlan.description')),       path: '?path=/docs/components-conversational-agentplan--docs'       },

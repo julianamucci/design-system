@@ -420,6 +420,7 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'scroll-area',
           description: t('description'),
           code: `import { createScrollArea } from '@/components/ui/scroll-area';`,
           secondaryDescription: stripHtml(t('anatomy.structureLabel')),
@@ -610,6 +611,7 @@ export interface ScrollAreaOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'scroll-area',
           items: [
             { name: stripHtml(t('related.items.resizable.name')), description: stripHtml(t('related.items.resizable.description')), path: '?path=/docs/components-layout-resizable--docs' },
             { name: stripHtml(t('related.items.sheet.name')),     description: stripHtml(t('related.items.sheet.description')),     path: '?path=/docs/components-overlay-sheet--docs' },
@@ -620,6 +622,7 @@ export interface ScrollAreaOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'scroll-area',
           items: [
             { title: '', content: t('notes.item1') },
             { title: '', content: t('notes.item2') },

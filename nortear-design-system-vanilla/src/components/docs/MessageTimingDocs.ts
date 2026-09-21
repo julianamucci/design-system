@@ -290,6 +290,7 @@ export function createMessageTimingDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'message-timing',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -412,6 +413,7 @@ export interface MessageTimingLabels {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'message-timing',
           items: [
             { name: t('related.items.agentStatus.name'),    description: toPlainText(t('related.items.agentStatus.description')),    path: '?path=/docs/components-conversational-agentstatus--docs'    },
             { name: t('related.items.contextDisplay.name'), description: toPlainText(t('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },

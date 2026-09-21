@@ -741,6 +741,7 @@ export function createMenubarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'menubar',
           code: `import { createMenubar } from '@/components/ui/menubar';`,
         });
 
@@ -962,6 +963,7 @@ export function createMenubar(
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'menubar',
           items: [
             { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/components-navigation-dropdownmenu--docs'   },
@@ -972,6 +974,7 @@ export function createMenubar(
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'menubar',
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

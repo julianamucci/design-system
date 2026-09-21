@@ -290,6 +290,7 @@ export function createAgentStatusDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'agent-status',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -403,6 +404,7 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'agent-status',
           items: [
             { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
             { name: t('related.items.composer.name'),   description: toPlainText(t('related.items.composer.description')),   path: '?path=/docs/components-conversational-composer--docs'   },

@@ -371,6 +371,7 @@ export function createTabsDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'tabs',
           description: stripHtml(t('description')),
           code: `import { createTabs, type TabsItemDef } from '@/components/ui/tabs';`,
         });
@@ -744,6 +745,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'tabs',
           items: [
             { name: t('related.items.stepper.name'),     description: toPlainText(t('related.items.stepper.description')),     path: '?path=/docs/components-navigation-stepper--docs' },
             { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/components-disclosure-accordion--docs' },
@@ -754,6 +756,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'tabs',
           items: [
             { title: '', content: t('notes.item1') },
             { title: '', content: t('notes.item2') },

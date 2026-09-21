@@ -324,6 +324,7 @@ export function createTraceWaterfallDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'trace-waterfall',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -465,6 +466,7 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'trace-waterfall',
           items: [
             { name: t('related.items.flowGraph.name'),     description: toPlainText(t('related.items.flowGraph.description')),     path: '?path=/docs/components-conversational-flowgraph--docs'     },
             { name: t('related.items.agentPlan.name'),     description: toPlainText(t('related.items.agentPlan.description')),     path: '?path=/docs/components-conversational-agentplan--docs'     },

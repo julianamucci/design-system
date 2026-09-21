@@ -727,6 +727,7 @@ export function createContextMenuDocs(): HTMLElement {
       // explicava os tipos de item saiu — quem explica é o texto da seção.
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'context-menu',
           description: t('import.basic'),
           code: `import { createContextMenu } from '@/components/ui/context-menu';`,
           secondaryDescription: t('import.withCheckbox'),
@@ -1019,6 +1020,7 @@ export type ContextMenuOptions = {
       // ── 11. Relacionados ─────────────────────────────────────────────────
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'context-menu',
           items: [
             { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs'  },
             { name: 'Menubar',      description: toPlainText(t('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'       },
@@ -1035,6 +1037,7 @@ export type ContextMenuOptions = {
         // compartilhado não chegava a esta página, nos três idiomas, sem erro
         // nem aviso — e uma nota removida deixaria um item vazio.
         return createDocsNotes({
+          componentSlug: 'context-menu',
           items: stringsFromDict(t, 'notes', 'tip').map((content) => ({ title: '', content })),
         });
 

@@ -329,6 +329,7 @@ export function createNavigationMenuDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'navigation-menu',
           code: `import { createNavigationMenu } from '@/components/ui/navigation-menu';`,
           secondaryDescription: 'Espera do ponteiro, painel controlado e página atual:',
           secondaryCode: `let aberto = '';
@@ -785,6 +786,7 @@ export function createNavigationMenu(
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'navigation-menu',
           items: [
             { name: t('related.items.menubar.name'),    description: toPlainText(t('related.items.menubar.description')),    path: '?path=/docs/components-navigation-menubar--docs'    },
             { name: t('related.items.sidebar.name'),    description: toPlainText(t('related.items.sidebar.description')),    path: '?path=/docs/components-layout-sidebar--docs'    },
@@ -795,6 +797,7 @@ export function createNavigationMenu(
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'navigation-menu',
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

@@ -493,6 +493,7 @@ export function createDialogDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'dialog',
           description: t('import.basic'),
           code: `import { createDialog } from '@/components/ui/dialog';
 import { createButton } from '@/components/ui/button';`,
@@ -1086,6 +1087,7 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'dialog',
           items: [
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
             { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/components-overlay-sheet--docs'       },
@@ -1097,6 +1099,7 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'dialog',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

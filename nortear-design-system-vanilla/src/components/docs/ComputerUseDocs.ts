@@ -311,6 +311,7 @@ export function createComputerUseDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'computer-use',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -435,6 +436,7 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'computer-use',
           items: [
             { name: t('related.items.agentStatus.name'),   description: toPlainText(t('related.items.agentStatus.description')),   path: '?path=/docs/components-conversational-agentstatus--docs'   },
             { name: t('related.items.toolGroup.name'),     description: toPlainText(t('related.items.toolGroup.description')),     path: '?path=/docs/components-conversational-toolgroup--docs'     },

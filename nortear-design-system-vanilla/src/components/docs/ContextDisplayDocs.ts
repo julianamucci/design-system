@@ -301,6 +301,7 @@ export function createContextDisplayDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'context-display',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -441,6 +442,7 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'context-display',
           items: [
             { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
             { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs'  },

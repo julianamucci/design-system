@@ -308,6 +308,7 @@ export function createComposerModelPickerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'composer-model-picker',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withUnavailable'),
@@ -423,6 +424,7 @@ export interface ModelOption {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'composer-model-picker',
           items: [
             { name: t('related.items.composer.name'),               description: toPlainText(t('related.items.composer.description')),               path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.composerTriggerPopover.name'), description: toPlainText(t('related.items.composerTriggerPopover.description')), path: '?path=/docs/components-conversational-composertriggerpopover--docs' },

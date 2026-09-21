@@ -481,6 +481,7 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'toggle-group',
           description: 'Importação do factory custom (Nortear):',
           code: `import { createToggleGroup, type ToggleGroupItem } from '@/components/ui/toggle-group';`,
           secondaryDescription: 'Uso básico (icon-only — aria-label OBRIGATÓRIO no grupo e em cada item):',
@@ -946,6 +947,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'toggle-group',
           items: [
             { name: t('related.items.toggle.name'),     description: stripHtml(t('related.items.toggle.description')),     path: '?path=/docs/components-form-toggle--docs'     },
             { name: t('related.items.tabs.name'),       description: stripHtml(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs'       },
@@ -956,6 +958,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'toggle-group',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

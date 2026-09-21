@@ -288,6 +288,7 @@ export function createComposerContextDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'composer-context',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withAutomatic'),
@@ -402,6 +403,7 @@ export interface ContextItem {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'composer-context',
           items: [
             { name: t('related.items.composer.name'),            description: toPlainText(t('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.composerAttachments.name'), description: toPlainText(t('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },

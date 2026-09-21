@@ -383,6 +383,7 @@ export function createTableDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'table',
           code: `import {\n  createTable,\n  createTableHeader,\n  createTableBody,\n  createTableFooter,\n  createTableRow,\n  createTableHead,\n  createTableCell,\n  createTableCaption,\n} from '@/components/ui/table';`,
         });
 
@@ -923,6 +924,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'table',
           items: [
             { name: 'Badge',        description: toPlainText(t('related.badge')),        path: '?path=/docs/components-feedback-badge--docs' },
             { name: 'Skeleton',     description: toPlainText(t('related.skeleton')),     path: '?path=/docs/components-feedback-skeleton--docs' },
@@ -934,6 +936,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'table',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },

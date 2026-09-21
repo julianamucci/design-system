@@ -333,6 +333,7 @@ export function createActivityGraphDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'activity-graph',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -465,6 +466,7 @@ interface ActivityDay {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'activity-graph',
           items: [
             { name: t('related.items.chart.name'),          description: toPlainText(t('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                 },
             { name: t('related.items.calendar.name'),       description: toPlainText(t('related.items.calendar.description')),       path: '?path=/docs/components-form-calendar--docs'                 },

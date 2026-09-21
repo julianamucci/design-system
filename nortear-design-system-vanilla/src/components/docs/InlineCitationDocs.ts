@@ -346,6 +346,7 @@ export function createInlineCitationDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'inline-citation',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -482,6 +483,7 @@ export type InlineCitationElement = HTMLElement & {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'inline-citation',
           items: [
             { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
             { name: t('related.items.hoverCard.name'), description: toPlainText(t('related.items.hoverCard.description')), path: '?path=/docs/components-overlay-hovercard--docs'       },

@@ -305,6 +305,7 @@ export function createComposerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'composer',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withRunning'),
@@ -427,6 +428,7 @@ export interface ComposerOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'composer',
           items: [
             { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
             { name: t('related.items.textarea.name'),   description: toPlainText(t('related.items.textarea.description')),   path: '?path=/docs/components-form-textarea--docs' },

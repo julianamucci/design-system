@@ -363,6 +363,7 @@ export function createCheckboxDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'checkbox',
           description: t('import.vanilla'),
           code: `import { createCheckbox, type CheckboxOptions } from '@/components/ui/checkbox';`,
           secondaryDescription: 'Uso básico:',
@@ -775,6 +776,7 @@ export type CheckboxOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'checkbox',
           items: [
             { name: 'Switch',     description: toPlainText(t('related.switch')),     path: '?path=/docs/components-form-switch--docs'      },
             { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/components-form-radiogroup--docs'  },
@@ -785,6 +787,7 @@ export type CheckboxOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'checkbox',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

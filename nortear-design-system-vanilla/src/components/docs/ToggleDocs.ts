@@ -401,6 +401,7 @@ export function createToggleDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'toggle',
           description: 'Importação do factory custom (Nortear):',
           code: `import { createToggle, type ToggleOptions } from '@/components/ui/toggle';`,
           secondaryDescription: 'Uso básico (icon-only — aria-label OBRIGATÓRIO):',
@@ -782,6 +783,7 @@ export type ToggleOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'toggle',
           items: [
             { name: t('related.items.toggleGroup.name'), description: stripHtml(t('related.items.toggleGroup.description')), path: '?path=/docs/components-form-togglegroup--docs' },
             { name: t('related.items.switch.name'),      description: stripHtml(t('related.items.switch.description')),      path: '?path=/docs/components-form-switch--docs'      },
@@ -792,6 +794,7 @@ export type ToggleOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'toggle',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

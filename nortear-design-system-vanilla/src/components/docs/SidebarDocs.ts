@@ -470,6 +470,7 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'sidebar',
           description: t('import.basic'),
           code: `import { createSidebar, createSidebarProvider } from '@/components/ui/sidebar';`,
           secondaryDescription: t('import.withSubcomponents'),
@@ -1137,6 +1138,7 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'sidebar',
           items: [
             { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: 'Tabs',           description: toPlainText(t('related.tabs')),           path: '?path=/docs/components-navigation-tabs--docs'           },
@@ -1151,6 +1153,7 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'sidebar',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.tip${i}`)) })),
         });
 

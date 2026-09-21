@@ -309,6 +309,7 @@ export function createCalendarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'calendar',
           description: t('import.basic'),
           code: `import { createCalendar } from '@/components/ui/calendar';`,
           secondaryDescription: t('import.withLocale'),
@@ -614,6 +615,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'calendar',
           items: [
             { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/components-overlay-popover--docs' },
             { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/components-form-form--docs' },
@@ -623,6 +625,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'calendar',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

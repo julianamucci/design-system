@@ -287,6 +287,7 @@ export function createComposerQuoteDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'composer-quote',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.fromThread'),
@@ -396,6 +397,7 @@ export interface ComposerQuoteLabels {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'composer-quote',
           items: [
             { name: t('related.items.composer.name'),    description: toPlainText(t('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },

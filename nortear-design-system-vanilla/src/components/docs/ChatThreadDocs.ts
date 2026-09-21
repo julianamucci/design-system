@@ -293,6 +293,7 @@ export function createChatThreadDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'chat-thread',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withStreaming'),
@@ -408,6 +409,7 @@ export interface ChatThreadOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'chat-thread',
           items: [
             { name: t('related.items.markdown.name'), description: toPlainText(t('related.items.markdown.description')), path: '?path=/docs/components-conversational-markdown--docs' },
             { name: t('related.items.avatar.name'),   description: toPlainText(t('related.items.avatar.description')),   path: '?path=/docs/components-display-avatar--docs' },

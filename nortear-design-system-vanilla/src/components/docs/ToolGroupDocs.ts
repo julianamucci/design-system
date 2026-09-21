@@ -299,6 +299,7 @@ export function createToolGroupDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'tool-group',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -417,6 +418,7 @@ interface ChatToolCall {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'tool-group',
           items: [
             { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs' },
             { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },

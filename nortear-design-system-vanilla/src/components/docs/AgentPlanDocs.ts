@@ -285,6 +285,7 @@ export function createAgentPlanDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'agent-plan',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -396,6 +397,7 @@ interface PlanStep {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'agent-plan',
           items: [
             { name: t('related.items.agentStatus.name'), description: toPlainText(t('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
             { name: t('related.items.chatThread.name'),  description: toPlainText(t('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs'  },

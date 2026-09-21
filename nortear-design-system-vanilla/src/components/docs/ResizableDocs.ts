@@ -372,6 +372,7 @@ export function createResizableDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'resizable',
           code: `import { createResizablePanel } from '@/components/ui/resizable';`,
         });
 
@@ -574,6 +575,7 @@ export function createResizablePanel(
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'resizable',
           items: [
             { name: t('related.items.scrollArea.name'),  description: toPlainText(t('related.items.scrollArea.description')),  path: '?path=/docs/components-layout-scrollarea--docs'  },
             { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/components-overlay-sheet--docs'       },
@@ -584,6 +586,7 @@ export function createResizablePanel(
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'resizable',
           items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 

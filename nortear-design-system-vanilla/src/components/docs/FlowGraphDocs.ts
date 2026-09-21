@@ -320,6 +320,7 @@ export function createFlowGraphDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'flow-graph',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -457,6 +458,7 @@ type ToolCallState = 'pending' | 'running' | 'done' | 'failed';`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'flow-graph',
           items: [
             { name: t('related.items.agentPlan.name'),   description: toPlainText(t('related.items.agentPlan.description')),   path: '?path=/docs/components-conversational-agentplan--docs'   },
             { name: t('related.items.toolGroup.name'),   description: toPlainText(t('related.items.toolGroup.description')),   path: '?path=/docs/components-conversational-toolgroup--docs'   },

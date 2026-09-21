@@ -555,6 +555,7 @@ export function createCommandDocs(): HTMLElement {
       // ─── 5. Importação ─────────────────────────────────────────────────
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'command',
           description: t('import.basic'),
           code: `import { createCommand } from '@/components/ui/command';`,
           secondaryDescription: t('import.withDialog'),
@@ -900,6 +901,7 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 11. Relacionados ──────────────────────────────────────────────
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'command',
           items: [
             { name: 'Select',       description: toPlainText(t('related.select')),       path: '?path=/docs/components-form-select--docs'        },
             { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-navigation-dropdownmenu--docs'  },
@@ -910,6 +912,7 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 12. Notas ─────────────────────────────────────────────────────
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'command',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

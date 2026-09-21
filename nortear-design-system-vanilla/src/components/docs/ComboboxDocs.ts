@@ -1059,6 +1059,7 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'combobox',
           items: [
             { name: t('related.items.select.name'),  description: stripHtml(t('related.items.select.description')),  path: '?path=/docs/components-form-select--docs'  },
             { name: t('related.items.command.name'), description: stripHtml(t('related.items.command.description')), path: '?path=/docs/components-overlay-command--docs' },
@@ -1069,6 +1070,7 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'combobox',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

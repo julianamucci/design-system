@@ -314,6 +314,7 @@ export function createLabelDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'label',
           code: `import { createLabel } from '@/components/ui/label';`,
         });
 
@@ -427,6 +428,7 @@ export function createLabelDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'label',
           items: [
             { name: 'Input',      description: toPlainText(t('related.input')),      path: '?path=/docs/components-form-input--docs' },
             { name: 'FormField',  description: toPlainText(t('related.formField')),  path: '?path=/docs/components-form-form--docs' },
@@ -437,6 +439,7 @@ export function createLabelDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'label',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },

@@ -307,6 +307,7 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'accordion',
           description: t('import.note'),
           code: `import { createAccordion } from '@/components/ui/accordion';`,
         });
@@ -701,6 +702,7 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'accordion',
           items: [
             { name: t('related.collapsible.name'), description: toPlainText(t('related.collapsible.description')), path: `?path=/docs/${t('related.collapsible.href')}` },
             { name: t('related.tabs.name'),        description: toPlainText(t('related.tabs.description')),        path: `?path=/docs/${t('related.tabs.href')}`        },
@@ -710,6 +712,7 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'accordion',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 

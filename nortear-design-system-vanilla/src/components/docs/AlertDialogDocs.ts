@@ -439,6 +439,7 @@ export function createAlertDialogDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'alert-dialog',
           description: t('import.basic'),
           code: `import { createAlertDialog } from '@/components/ui/alert-dialog';
 import { createButton } from '@/components/ui/button';`,
@@ -670,6 +671,7 @@ export interface AlertDialogMediaOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'alert-dialog',
           items: [
             { name: 'Dialog', description: toPlainText(t('related.dialog')), path: '?path=/docs/components-overlay-dialog--docs' },
             { name: 'Sonner', description: toPlainText(t('related.sonner')), path: '?path=/docs/components-feedback-sonner--docs' },
@@ -680,6 +682,7 @@ export interface AlertDialogMediaOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'alert-dialog',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },

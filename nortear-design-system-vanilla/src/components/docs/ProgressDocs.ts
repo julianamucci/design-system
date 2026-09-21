@@ -435,6 +435,7 @@ export function createProgressDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'progress',
           code: `import { createProgress } from '@/components/ui/progress';`,
         });
 
@@ -610,6 +611,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'progress',
           items: [
             { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/components-feedback-skeleton--docs' },
             { name: t('related.items.alert.name'),    description: toPlainText(t('related.items.alert.description')),    path: '?path=/docs/components-feedback-alert--docs' },
@@ -619,6 +621,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'progress',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

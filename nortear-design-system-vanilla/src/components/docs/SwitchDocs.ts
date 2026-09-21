@@ -395,6 +395,7 @@ export function createSwitchDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'switch',
           description: 'Importação do factory custom (Nortear):',
           code: `import { createSwitch, type SwitchOptions } from '@/components/ui/switch';`,
           secondaryDescription: 'Uso básico:',
@@ -801,6 +802,7 @@ export type SwitchOptions = {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'switch',
           items: [
             { name: t('related.items.checkbox.name'),   description: stripHtml(t('related.items.checkbox.description')),   path: '?path=/docs/components-form-checkbox--docs'    },
             { name: t('related.items.toggle.name'),     description: stripHtml(t('related.items.toggle.description')),     path: '?path=/docs/components-form-toggle--docs'      },
@@ -811,6 +813,7 @@ export type SwitchOptions = {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'switch',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },

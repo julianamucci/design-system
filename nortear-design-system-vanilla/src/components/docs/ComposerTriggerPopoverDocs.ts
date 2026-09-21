@@ -299,6 +299,7 @@ export function createComposerTriggerPopoverDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'composer-trigger-popover',
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withCommands'),
@@ -427,6 +428,7 @@ export interface TriggerPopoverLabels {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'composer-trigger-popover',
           items: [
             { name: t('related.items.composer.name'), description: toPlainText(t('related.items.composer.description')), path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.combobox.name'), description: toPlainText(t('related.items.combobox.description')), path: '?path=/docs/components-form-combobox--docs' },

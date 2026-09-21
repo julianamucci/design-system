@@ -392,6 +392,7 @@ export function createSonnerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'sonner',
           code: `import { toast, createSonnerToaster } from '@/components/ui/sonner';\n\n// Setup (uma vez no root da aplicação)\ndocument.body.appendChild(\n  createSonnerToaster({ position: 'top-right', richColors: true })\n);\n\n// Disparar toasts\ntoast('Código copiado.');\ntoast.success('Alterações salvas.');\ntoast.error('Não foi possível salvar.');\ntoast.promise(asyncFn(), {\n  loading: 'Enviando arquivo...',\n  success: 'Arquivo enviado com sucesso.',\n  error: 'Erro ao enviar. Tente novamente.',\n});`,
         });
 
@@ -569,6 +570,7 @@ export interface ToastOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'sonner',
           items: [
             { name: 'Alert',       description: toPlainText(t('related.alert')),       path: '?path=/docs/components-feedback-alert--docs'       },
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
@@ -579,6 +581,7 @@ export interface ToastOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'sonner',
           items: [1, 2, 3, 4, 5].map(i => ({
             title:   '',
             content: DOMPurify.sanitize(t(`notes.item${i}`)),

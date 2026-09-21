@@ -454,6 +454,7 @@ export function createDrawerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'drawer',
           code: `import { createDrawer } from '@/components/ui/drawer';
 import { createButton } from '@/components/ui/button';`,
           secondaryDescription: 'Abrir e fechar por código:',
@@ -911,6 +912,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'drawer',
           items: [
             { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/components-overlay-sheet--docs'       },
             { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/components-overlay-dialog--docs'      },
@@ -921,6 +923,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'drawer',
           items: numberedItems('notes').map(item => ({ title: '', content: DOMPurify.sanitize(item) })),
         });
 
