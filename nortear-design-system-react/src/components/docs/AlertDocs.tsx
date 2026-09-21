@@ -43,15 +43,22 @@ const priorityKeyMap: Record<string, string> = {
 type TestGroup = keyof (typeof alertTranslations)["pt-BR"]["testes"];
 
 /**
- * Índices dos itens de um grupo de testes, DERIVADOS do dicionário. Lista
- * literal era o que deixava a página renderizar 7 de 8 quando o conteúdo ganhava
- * item: o dicionário cresce e a página acompanha sozinha.
+ * Índices `itemN` de um grupo do dicionário, em ordem. Lista literal no chamador
+ * é o que deixava a página renderizar 7 de 8 quando o conteúdo ganhava item —
+ * aconteceu com `functional.item8`, com `visual.item6` e de novo com
+ * `anatomy.item5`/`item6`. Derivando, o dicionário cresce e a página acompanha.
  */
-const testItemIndexes = (group: TestGroup): number[] =>
-  Object.keys(alertTranslations["pt-BR"].testes[group])
+const itemIndexes = (group: Record<string, unknown>): number[] =>
+  Object.keys(group)
     .filter((key) => /^item\d+$/.test(key))
     .map((key) => Number(key.slice("item".length)))
     .sort((a, b) => a - b);
+
+const testItemIndexes = (group: TestGroup): number[] =>
+  itemIndexes(alertTranslations["pt-BR"].testes[group]);
+
+/** Anatomia: mesma regra. O container aceita `items` de qualquer tamanho. */
+const anatomyItemIndexes = itemIndexes(alertTranslations["pt-BR"].anatomy);
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -298,12 +305,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
 
           {/* ── Anatomia ──────────────────────────────────────────────── */}
           <DocsAnatomy
-            items={[
-              tContent("anatomy.item1"),
-              tContent("anatomy.item2"),
-              tContent("anatomy.item3"),
-              tContent("anatomy.item4"),
-            ]}
+            items={anatomyItemIndexes.map((i) => tContent(`anatomy.item${i}`))}
             structureLabel={tContent("anatomy.structureLabel")}
             structureCode={tContent("anatomy.structureCode")}
           />
@@ -771,6 +773,35 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
                     defaultValue: "—",
                     required: tNav("common.yes"),
                     description: tContent("props.table.children"),
+                  },
+                ],
+              },
+              {
+                // Quarto subcomponente: o slot da ação. O dicionário já trazia
+                // `props.alertActionTitle` e `props.table.alertAction`, e nenhuma
+                // docs page publicava a tabela — a linha ficava órfã.
+                title: tContent("props.alertActionTitle"),
+                cols: {
+                  prop: tContent("props.table.prop"),
+                  type: tContent("props.table.type"),
+                  default: tContent("props.table.default"),
+                  required: tContent("props.table.required"),
+                  description: tContent("props.table.description"),
+                },
+                items: [
+                  {
+                    name: "className",
+                    type: "string",
+                    defaultValue: "—",
+                    required: tNav("common.no"),
+                    description: toPlainText(tContent("props.table.className")),
+                  },
+                  {
+                    name: "children",
+                    type: "React.ReactNode",
+                    defaultValue: "—",
+                    required: tNav("common.yes"),
+                    description: toPlainText(tContent("props.table.alertAction")),
                   },
                 ],
               },

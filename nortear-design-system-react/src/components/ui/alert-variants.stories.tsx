@@ -266,6 +266,10 @@ export const Dismissible: Story = {
       await waitFor(() => expect(alert).not.toHaveClass("nds-animate-in"));
       alert.dispatchEvent(new AnimationEvent("animationend", { bubbles: true }));
       await expect(alert).not.toHaveClass("nds-animate-in");
+      // O segundo evento não pode ir além de não ter o que limpar: a guarda de
+      // `event.target` também não fecha o alerta nem dispara o callback.
+      await expect(alert).toBeInTheDocument();
+      await expect(onDismiss).not.toHaveBeenCalled();
     });
 
     await step("Botão de fechar visível e acessível por rótulo", async () => {
