@@ -79,11 +79,27 @@ export const Destructive: Story = {
     return alert;
   },
 
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = canvas.getByRole('alert');
-    await expect(alert).toHaveClass('nds-alert-destructive');
-    await expect(canvas.getByText('Erro ao salvar')).toBeVisible();
+
+    await step('A variante escolhida chega ao DOM', async () => {
+      await expect(alert).toHaveClass('nds-alert-destructive');
+      await expect(canvas.getByText('Erro ao salvar')).toBeVisible();
+    });
+
+    await step('Só o ícone recebe a cor da variante', async () => {
+      // Regra dos containers coloridos, e a folha a cumpre nas cinco variantes:
+      // a cor semântica pinta fundo, borda e ÍCONE (não-textual, 3:1). O título
+      // é 14px semibold — pela WCAG não é texto grande, o limite dele é 4.5:1 —
+      // e fica em `--foreground` junto com o texto corrido.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg')!;
+      const title = alert.querySelector<HTMLElement>('[data-slot="alert-title"]')!;
+      const description = alert.querySelector<HTMLElement>('[data-slot="alert-description"]')!;
+      await expect(getComputedStyle(description).color).not.toBe(getComputedStyle(icon).color);
+      await expect(getComputedStyle(title).color).not.toBe(getComputedStyle(icon).color);
+      await expect(getComputedStyle(title).color).toBe(getComputedStyle(description).color);
+    });
   },
 };
 
@@ -347,7 +363,11 @@ export const DismissibleByKeyboard: Story = {
 
     await step('Enter no X focado remove o alert original, dispara o callback uma vez e a demo remonta', async () => {
       const alertOriginal = canvas.getByRole('alert');
-      within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' }).focus();
+      const close = within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' });
+      close.focus();
+      // Sem esta asserção, foco que não pousou deixa o `{Enter}` cair no body e
+      // o step passa a depender só do `waitFor` de remoção.
+      await expect(close).toHaveFocus();
       await userEvent.keyboard('{Enter}');
 
       // waitFor: a saída é animada (.nds-animate-out) e o nó só é removido

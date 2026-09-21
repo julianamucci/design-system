@@ -43,11 +43,23 @@ export const WithIcon: Story = {
     return alert;
   },
 
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alert = canvas.getByRole('alert');
-    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-    await expect(canvas.getByText('Informação')).toBeVisible();
+
+    await step('O ícone é filho direto e decorativo', async () => {
+      // Filho DIRETO porque é `.nds-alert:has(> svg)` que abre a coluna do
+      // ícone; `aria-hidden` porque o texto já descreve o estado (WCAG 1.4.1).
+      // `querySelector('svg')` casaria qualquer descendente e passaria com o
+      // ícone aninhado, que é justamente o defeito que quebra em silêncio.
+      const icon = alert.querySelector<SVGSVGElement>(':scope > svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon.parentElement).toBe(alert);
+    });
+
+    await step('O título acompanha o ícone', async () => {
+      await expect(canvas.getByText('Informação')).toBeVisible();
+    });
   },
 };
 

@@ -335,8 +335,11 @@ export function createAlertDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               // `h3`: o container de Do & Don't só tem o `h2` da seção.
+              // A prévia é da variante `default`: o ícone é `info` e o texto tem
+              // de ser o neutro. "Erro ao salvar" numa `default` contradizia o
+              // próprio par, que ensina a casar variante e mensagem.
               doPreviewFactory: () =>
-                buildAlert('default', '', 'info', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc', { titleAs: 'h3' }),
+                buildAlert('default', '', 'info', 'demonstration.labels.defaultTitle', 'demonstration.labels.defaultDesc', { titleAs: 'h3' }),
               dontPreviewFactory: () =>
                 buildAlert('default', '', null, null, 'demonstration.labels.savedLabel', { titleAs: 'h3' }),
             },
@@ -355,6 +358,7 @@ export function createAlertDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'alert',
           description: t('import.basic'),
           code: `import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from '@/components/ui/alert';`,
           secondaryDescription: t('import.withIcon'),
@@ -382,6 +386,10 @@ export function createAlertDocs(): HTMLElement {
           `alert.appendChild(createAlertDescription({ text: ${quoted('demonstration.labels.infoDesc')} }));`;
         return createDocsCompositions({
           id: 'variantes',
+          // Enuncia a regra de contraste da categoria (título e texto corrido em
+          // `--foreground`); sem ela a seção mostra as cinco variantes sem dizer
+          // por que só o ícone recebe a cor semântica.
+          note: t('variants.note'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'alert',
           items: [
@@ -389,31 +397,31 @@ export function createAlertDocs(): HTMLElement {
               name: 'default',
               description: stripHtml(t('variants.items.default')),
               code: codeDefault,
-              previewFactory: () => buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+              previewFactory: () => buildAlert('default', '','info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
               name: 'destructive',
               description: stripHtml(t('variants.items.destructive')),
               code: codeDestructive,
-              previewFactory: () => buildAlert('destructive', 'nds-w-full', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
+              previewFactory: () => buildAlert('destructive', '','error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
             },
             {
               name: 'success',
               description: stripHtml(t('variants.items.success')),
               code: codeSuccess,
-              previewFactory: () => buildAlert('success', 'nds-w-full', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+              previewFactory: () => buildAlert('success', '','success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
             },
             {
               name: 'warning',
               description: stripHtml(t('variants.items.warning')),
               code: codeWarning,
-              previewFactory: () => buildAlert('warning', 'nds-w-full', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+              previewFactory: () => buildAlert('warning', '','warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
             },
             {
               name: 'info',
               description: stripHtml(t('variants.items.info')),
               code: codeInfo,
-              previewFactory: () => buildAlert('info', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+              previewFactory: () => buildAlert('info', '','info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
               name: stripHtml(t('variants.items.dismissible.name')),
@@ -424,7 +432,7 @@ export function createAlertDocs(): HTMLElement {
               // Primeira emissão real do alert_dismiss: o primitivo não importa
               // analytics — o evento é fiado aqui, no consumidor, via callback.
               previewFactory: () =>
-                buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc', {
+                buildAlert('default', '','info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc', {
                   dismissible: true,
                   onDismiss: () => track('alert_dismiss', {
                     component: 'alert',
@@ -438,7 +446,7 @@ export function createAlertDocs(): HTMLElement {
               name: t('states.withoutTitle.label'),
               description: t('states.withoutTitle.behavior'),
               code: codeWithoutTitle,
-              previewFactory: () => buildAlert('default', 'nds-w-full', 'info', null, 'demonstration.labels.infoDesc'),
+              previewFactory: () => buildAlert('default', '','info', null, 'demonstration.labels.infoDesc'),
             },
           ],
         });
@@ -468,7 +476,7 @@ export function createAlertDocs(): HTMLElement {
                 `alert.appendChild(createAlertIcon('info'));\n` +
                 `alert.appendChild(createAlertTitle({ text: ${quoted('demonstration.labels.infoTitle')}, as: 'h4' }));\n` +
                 `alert.appendChild(createAlertDescription({ text: ${quoted('demonstration.labels.infoDesc')} }));`,
-              previewFactory: () => buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+              previewFactory: () => buildAlert('default', '','info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
               trackId: 'withAction',
@@ -480,7 +488,7 @@ export function createAlertDocs(): HTMLElement {
               // baixo — divergia da story e do "alinhado à direita" do texto.
               code: actionCode(false),
               previewFactory: () =>
-                buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.sessionTitle', 'demonstration.labels.sessionDesc', {
+                buildAlert('default', '','info', 'demonstration.labels.sessionTitle', 'demonstration.labels.sessionDesc', {
                   actionKey: 'demonstration.labels.saveNow',
                 }),
             },
@@ -493,7 +501,7 @@ export function createAlertDocs(): HTMLElement {
               useWhen: t('variants.compositions.withActionAndDismiss.use'),
               code: actionCode(true),
               previewFactory: () =>
-                buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.sessionTitle', 'demonstration.labels.sessionDesc', {
+                buildAlert('default', '','info', 'demonstration.labels.sessionTitle', 'demonstration.labels.sessionDesc', {
                   dismissible: true,
                   actionKey: 'demonstration.labels.saveNow',
                 }),
@@ -636,6 +644,7 @@ export interface AlertTitleOptions {
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'alert',
           items: [
             { name: 'Sonner',      description: toPlainText(t('related.sonner')),      path: '?path=/docs/components-feedback-sonner--docs' },
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
@@ -646,6 +655,7 @@ export interface AlertTitleOptions {
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'alert',
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -672,6 +682,7 @@ export interface AlertTitleOptions {
         return createDocsTestes({
           functional: {
             title: t('testes.functional.title'),
+            description: t('testes.functional.description'),
             cols: {
               action: tNav('common.userAction'),
               result: tNav('common.expectedResult'),
@@ -685,6 +696,7 @@ export interface AlertTitleOptions {
           },
           accessibility: {
             title: t('testes.accessibility.title'),
+            description: t('testes.accessibility.description'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: testItemIndexes('accessibility').map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
@@ -694,6 +706,7 @@ export interface AlertTitleOptions {
           },
           visual: {
             title: t('testes.visual.title'),
+            description: t('testes.visual.description'),
             cols: {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
