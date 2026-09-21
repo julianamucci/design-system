@@ -154,7 +154,7 @@ Fase C (serial):
   node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json  (re-scan pós-dev)
 
 Fase C2 (serial — PORTÃO, bloqueia o avanço):
-  npm test -- <slug>   em cada uma das 5 stacks
+  node scripts/reconciliar-suite.mjs <stack> <slug>   em cada uma das 5
   Falha em qualquer stack → não avance. Corrija (dev-skill da stack) e repita.
 
 Fase D (até 5 agents em PARALELO):
@@ -280,7 +280,7 @@ Fase C (até 5 agents em PARALELO — FIX-MODE, com a lista da Fase B em mãos):
 
 Fase D (serial — PORTÃO, bloqueia o avanço):
   node scripts/audit.mjs <slug> --json     (re-scan pós-fix)
-  npm test -- <slug>   nas stacks tocadas
+  node scripts/reconciliar-suite.mjs <stack> <slug>   nas stacks tocadas
   mudou `*.source.ts`? → também a varredura `source-snippets.test.ts` da
                         stack (projeto unit): o filtro por slug NÃO a alcança
   Falha → corrige e repete. Item aplicado sem re-verificação não conta.
@@ -311,6 +311,33 @@ acontecido ou nunca veio. Três consequências:
 - **a guarda do PRD e o portão `contrato_de_familia_sem_teste` leem a mesma
   declaração** (`<!-- prd-familia: … -->`): mexer num membro cobra o PRD, e cada
   linha do §2 aponta o item de `testes.*` que a verifica em cada membro.
+
+**Por que o portão de suíte é o `reconciliar-suite.mjs` e não o `npx vitest run`
+cru.** Porque "verde" responde se o que RODOU passou, e não se rodou. As três
+ocorrências desta casa têm a mesma assinatura — a contagem encolhe e nada fica
+vermelho: onze arquivos do angular mortos por recarga de página em 2026-09-01
+(um deles o `docs-smoke`, com as 98 docs pages dentro), 244 arquivos do svelte
+que nunca reportaram em 2026-09-13 sob um sumário que dizia `2 failed | 137
+passed (383)`, e o `sheet-variants.stories.ts` de 2026-09-20. O CLAUDE.md manda
+"conte ARQUIVOS, não só falhas" desde a primeira, e isso era prática humana, que
+não sobreviveu às outras duas.
+
+O reconciliador pergunta ao próprio vitest o que deveria rodar
+(`vitest list --filesOnly`, que resolve por glob e não abre navegador, então não
+pode ser truncado pelo mesmo acidente que trunca a rodada) e reprova se um
+arquivo sumiu do relatório ou voltou com zero teste. **Custo medido: 8s para
+enumerar os 385 arquivos do svelte**, contra suíte de seis a dezoito minutos.
+
+Ele cobre os DOIS projetos por default, como o `npm test` da stack — que é
+`vitest run` seco. A primeira versão fixava `--project=storybook` e teria medido
+321 dos 385, calada; foi a varredura completa que a desmascarou. E ele **não**
+dispara o `pretest`, que roda `limpar-orfaos.mjs` e encerra processo de teste
+alheio: por isso é o caminho seguro quando há agentes irmãs medindo.
+
+Ele recusa `--shard`, `--watch` e `--reporter` — as três quebram a medição, e
+recusar é melhor que medir errado calado. E ele compara ARQUIVOS, não testes:
+arquivo que reporte 3 das 12 stories passa aqui, e quem pega isso é o
+`contract_divergent` mais a leitura humana.
 
 **Por que cross-stack roda DUAS vezes, e por que a primeira é no começo.** Em
 `audit` ele vem por último, e está certo: sem correção acontecendo, medir antes

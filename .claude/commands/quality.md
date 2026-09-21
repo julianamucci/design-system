@@ -446,8 +446,13 @@ O que ele cobra em toda página: chave de tradução renderizada como texto,
 `undefined`/`NaN` impressos, bloco de código vazio, contêiner de exemplo vazio ou
 fora do centro, salto na hierarquia de títulos, tabela de contrato sem linhas.
 
-Ao mexer em docs page, **rode `npx vitest run docs-smoke`** na stack — é mais
-barato que a suíte do componente e pega o que o olho pegaria. Ao criar seção nova
+Ao mexer em docs page, **rode
+`node scripts/reconciliar-suite.mjs <stack> docs-smoke`** — é mais barato que a
+suíte do componente e pega o que o olho pegaria. O reconciliador em vez do
+`npx vitest run` cru não é preciosismo aqui: `docs-smoke.stories.ts` é UM arquivo
+com as 98 docs pages dentro, e em 2026-09-01 ele morreu no meio de uma rodada e
+foi contado como `(0 test)` — a fumaça inteira deixou de rodar e o sumário não
+disse nada. É o caso em que um arquivo ausente esconde o máximo. Ao criar seção nova
 que renderiza exemplo, marque o contêiner com `data-docs-preview="<nome>"`: é a
 âncora que o contrato usa, e sem ela a seção nasce fora da verificação — foi o
 que aconteceu com o Do & Don't, que ficou sem centralizar nas cinco stacks ao

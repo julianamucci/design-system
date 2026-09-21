@@ -95,9 +95,19 @@ function main() {
 
   // `--projeto` é nosso, não do vitest: ele não pode vazar para a linha de
   // comando dele.
+  //
+  // **O default é TODOS os projetos, e isso foi um conserto.** A primeira versão
+  // fixava `--project=storybook`, e a varredura completa do svelte a desmascarou:
+  // 321 arquivos e 1097 testes, contra os 385 arquivos que o `npm test` da stack
+  // roda — ele é `vitest run` seco, e alcança também o projeto `unit`, com 64
+  // arquivos de teste de nó. Um portão que substitui o `npm test` medindo MENOS
+  // que ele, e calado, é exatamente o defeito que este arquivo existe para pegar:
+  // a regra da casa chama isso de "portão que FILTRA exclui em silêncio", e foi
+  // assim que 28 exports saíram da varredura de snippets sem nada reprovar.
   const projectArg = rest.find((a) => a.startsWith('--projeto='));
-  const project = projectArg ? projectArg.slice('--projeto='.length) : 'storybook';
+  const project = projectArg ? projectArg.slice('--projeto='.length) : null;
   const filters = rest.filter((a) => a !== projectArg);
+  const projectFlag = project ? [`--project=${project}`] : [];
 
   // `--shard` divide a RODADA e não a enumeração — medido: `list` o ignora,
   // `run` o aplica. Foi exatamente assim que o plantio de "arquivo ausente"
@@ -127,7 +137,7 @@ function main() {
   const cwd = path.join(RAIZ, STACKS[stack]);
   const out = path.join(mkdtempSync(path.join(tmpdir(), 'reconciliar-')), 'report.json');
 
-  console.log(`\n[1/2] enumerando o que DEVE rodar — ${stack}, projeto "${project}"`);
+  console.log(`\n[1/2] enumerando o que DEVE rodar — ${stack}, projeto "${project ?? 'todos'}"`);
 
   // O JSON vai para ARQUIVO, nunca para o stdout. A primeira versão disto
   // recortava a saída a partir do primeiro `[` — e funcionou em toda medição de
@@ -138,7 +148,7 @@ function main() {
   // para quem não consegue medir — mas o recorte de stdout era frágil pelo mesmo
   // motivo que esta casa já catalogou: funcionava por acidente do ambiente.
   const listOut = path.join(path.dirname(out), 'list.json');
-  const listed = run(cwd, ['list', '--filesOnly', `--json=${listOut}`, `--project=${project}`, ...filters]);
+  const listed = run(cwd, ['list', '--filesOnly', `--json=${listOut}`, ...projectFlag, ...filters]);
 
   if (listed.status !== 0 || !existsSync(listOut)) {
     console.error('a enumeração falhou — sem ela não há com o que comparar:');
@@ -148,7 +158,12 @@ function main() {
 
   let expected;
   try {
-    expected = JSON.parse(readFileSync(listOut, 'utf8')).map((entry) => normalize(entry.file));
+    // Conjunto, não lista: sem `--project` a enumeração cobre os dois projetos,
+    // e um arquivo alcançado pelos dois viria duas vezes — o relatório o traz
+    // uma só, e a diferença seria acusada como perda que não houve.
+    expected = [
+      ...new Set(JSON.parse(readFileSync(listOut, 'utf8')).map((entry) => normalize(entry.file))),
+    ];
   } catch (err) {
     console.error(`a enumeração não devolveu JSON legível: ${err.message}`);
     return 2;
@@ -166,7 +181,7 @@ function main() {
     cwd,
     [
       'run',
-      `--project=${project}`,
+      ...projectFlag,
       '--reporter=default',
       '--reporter=json',
       `--outputFile.json=${out}`,
