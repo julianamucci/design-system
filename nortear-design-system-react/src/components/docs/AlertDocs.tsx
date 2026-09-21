@@ -60,6 +60,15 @@ const testItemIndexes = (group: TestGroup): number[] =>
 /** Anatomia: mesma regra. O container aceita `items` de qualquer tamanho. */
 const anatomyItemIndexes = itemIndexes(alertTranslations["pt-BR"].anatomy);
 
+/**
+ * Quando usar: as três listas de item solto (`guidelines`, `do`, `dont`) seguem
+ * a mesma regra da anatomia. Hoje as contagens batem com o dicionário; cravá-las
+ * é o teto latente que já engoliu item em `anatomy` sem nada reprovar.
+ */
+const guidelineItemIndexes = itemIndexes(alertTranslations["pt-BR"].usage.guidelines);
+const doItemIndexes = itemIndexes(alertTranslations["pt-BR"].usage.do);
+const dontItemIndexes = itemIndexes(alertTranslations["pt-BR"].usage.dont);
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -237,7 +246,10 @@ interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 }
 
 // AlertDescription — renderiza <section>
-interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
+interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}
+
+// AlertAction — o slot da coluna à direita do texto; o botão entra como filho.
+interface AlertActionProps extends React.ComponentProps<"div"> {}`;
 
   return (
     <DocsPageLayout
@@ -314,12 +326,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
           <DocsWhenToUse
             guidelines={{
               title: tContent("usage.guidelines.title"),
-              items: [
-                tContent("usage.guidelines.item1"),
-                tContent("usage.guidelines.item2"),
-                tContent("usage.guidelines.item3"),
-                tContent("usage.guidelines.item4"),
-              ],
+              items: guidelineItemIndexes.map((i) => tContent(`usage.guidelines.item${i}`)),
             }}
             scenarios={{
               title: tContent("usage.scenarios.title"),
@@ -372,20 +379,11 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLElement> {}`;
             }}
             do={{
               title: tContent("usage.do.title"),
-              items: [
-                tContent("usage.do.item1"),
-                tContent("usage.do.item2"),
-                tContent("usage.do.item3"),
-                tContent("usage.do.item4"),
-              ],
+              items: doItemIndexes.map((i) => tContent(`usage.do.item${i}`)),
             }}
             dont={{
               title: tContent("usage.dont.title"),
-              items: [
-                tContent("usage.dont.item1"),
-                tContent("usage.dont.item2"),
-                tContent("usage.dont.item3"),
-              ],
+              items: dontItemIndexes.map((i) => tContent(`usage.dont.item${i}`)),
             }}
           />
 

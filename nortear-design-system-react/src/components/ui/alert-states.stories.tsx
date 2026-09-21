@@ -82,6 +82,9 @@ export const WithoutTitle: Story = {
     await step("Nenhum título e nenhum heading no DOM", async () => {
       const alert = canvas.getByRole("alert");
       await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
+      // Por PAPEL, e não só por tag: `<h4></h4>` vazio some da árvore de
+      // acessibilidade e passaria pelo seletor de tag sem ser visto.
+      await expect(within(alert).queryByRole("heading")).toBeNull();
       await expect(alert.querySelector("h1, h2, h3, h4, h5, h6")).toBeNull();
     });
   },
@@ -144,6 +147,9 @@ export const WithoutAnnouncement: Story = {
     await step('role="note" não é live region', async () => {
       const noteAlert = canvas.getByText("Nota de implementação").closest('[data-slot="alert"]');
       await expect(noteAlert).toHaveAttribute("role", "note");
+      // O contrato tem duas metades: `note` não é live region. Sem esta, um
+      // `aria-live` acrescentado à raiz continuaria anunciando e nada reprovaria.
+      await expect(noteAlert).not.toHaveAttribute("aria-live");
     });
 
     await step("Sem a prop, o default continua alert", async () => {
