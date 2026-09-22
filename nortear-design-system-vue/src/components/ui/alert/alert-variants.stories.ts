@@ -33,6 +33,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Os quatro modificadores de variante, na mesma forma que o `Playground` usa: a
+// default se prova por AUSÊNCIA, e ausência de um só deles não é exclusividade.
+const MODIFIERS = [
+  'nds-alert-destructive',
+  'nds-alert-success',
+  'nds-alert-warning',
+  'nds-alert-info',
+];
+
 export const Default: Story = {
   parameters: {
     covers: ['functional.item1', 'accessibility.item3', 'visual.item2'],
@@ -57,7 +66,12 @@ export const Default: Story = {
 
     await step('A variante default não recebe classe de modificador', async () => {
       await expect(alert).toHaveClass('nds-alert');
-      await expect(alert).not.toHaveClass('nds-alert-destructive');
+      // Contra os QUATRO: conferir só a `destructive` deixava passar um default
+      // que carregasse `nds-alert-success` — a variante errada pintada, e a
+      // asserção verde.
+      for (const modifier of MODIFIERS) {
+        await expect(alert).not.toHaveClass(modifier);
+      }
       await expect(canvas.getByText('Atenção')).toBeVisible();
     });
 

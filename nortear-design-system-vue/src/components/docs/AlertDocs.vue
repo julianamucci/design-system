@@ -58,6 +58,7 @@ const localeContent = computed(
       {
         anatomy?: Record<string, unknown>;
         accessibility?: Record<string, unknown>;
+        notes?: Record<string, unknown>;
         testes?: Record<string, Record<string, unknown>>;
         usage?: {
           guidelines?: Record<string, unknown>;
@@ -69,10 +70,12 @@ const localeContent = computed(
     >)[locale.value],
 );
 
-// Índices das chaves `itemN` de um dicionário, em ordem numérica.
-function itemIndexes(dict: Record<string, unknown> | undefined): number[] {
+// Índices das chaves numeradas de um dicionário, em ordem numérica. O prefixo é
+// parâmetro porque nem todo grupo do conteúdo usa `itemN`: as notas publicam
+// `tipN`, e o teto cravado seria o mesmo se a função só soubesse um prefixo.
+function itemIndexes(dict: Record<string, unknown> | undefined, prefix = 'item'): number[] {
   return Object.keys(dict ?? {})
-    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .map((key) => new RegExp(`^${prefix}(\\d+)$`).exec(key)?.[1])
     .filter((n): n is string => n !== undefined)
     .map(Number)
     .sort((a, b) => a - b);
@@ -429,11 +432,15 @@ const relatedItems = computed(() => [
   { name: 'Progress',    description: toPlainText(tContent('related.progress')),    path: '?path=/docs/components-feedback-progress--docs'    },
 ]);
 
-const noteItems = computed(() => [
-  { title: '', content: tContent('notes.tip1') },
-  { title: '', content: tContent('notes.tip2') },
-  { title: '', content: tContent('notes.tip3') },
-]);
+// Mesmo teto cravado das demais listas: uma quarta nota escrita no conteúdo
+// compartilhado não chegaria à página, e nenhum portão reprovaria a omissão.
+// Aqui a chave é `tipN`, não `itemN` — daí o prefixo explícito.
+const noteItems = computed(() =>
+  itemIndexes(localeContent.value?.notes, 'tip').map((i) => ({
+    title: '',
+    content: tContent(`notes.tip${i}`),
+  })),
+);
 
 const analyticsItems = computed(() => [
   { event: tContent('analytics.table.dismiss'),       trigger: toPlainText(tContent('analytics.table.dismissTrigger')),       payload: tContent('analytics.table.dismissPayload')       },
