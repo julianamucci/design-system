@@ -194,11 +194,14 @@ export const Open: Story = {
       await expect(dialog).toHaveTextContent(L.description);
     });
 
-    await step('Foco inicial no Cancelar', async () => {
+    await step('Foco inicial em Cancelar, não na ação destrutiva', async () => {
       const dialog = await waitForPortal('alertdialog');
-      await waitFor(() =>
-        expect(within(dialog).getByRole('button', { name: CANCEL_NAME })).toHaveFocus(),
-      );
+      const cancel = within(dialog).getByRole('button', { name: CANCEL_NAME });
+      const action = within(dialog).getByRole('button', { name: ACTION_NAME });
+      // O foco entra no painel depois da animação de abertura — daí o waitFor.
+      await waitFor(() => expect(cancel).toHaveFocus());
+      // A metade negativa: só a positiva deixaria passar um painel que foca os dois.
+      await expect(action).not.toHaveFocus();
     });
   },
 };
