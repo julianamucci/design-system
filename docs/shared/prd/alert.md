@@ -532,7 +532,20 @@ Extraído dos exports e dos seletores do código.
 | vue | `Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`, mais `alertVariants` e o tipo `AlertVariants` do índice |
 | svelte | `Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`, mais `alertVariants` e `AlertVariant`; o índice também reexporta as formas curtas `Root`, `Title`, `Description`, `Action` |
 | vanilla | `createAlert`, `createAlertTitle`, `createAlertDescription`, `createAlertAction`, `createAlertIcon`, e os tipos `AlertVariant`, `AlertRole`, `AlertIconType` |
-| angular | `div[ndsAlert]`, `h1..h6[ndsAlertTitle]`, `[ndsAlertDescription]`, `div[ndsAlertAction]`, `svg[ndsAlertIcon]` |
+| angular | `div[ndsAlert]`, `h1..h6[ndsAlertTitle]`, `[ndsAlertDescription]`, `div[ndsAlertAction]`, `svg[ndsAlertIcon]`, mais `ALERT_MODIFIER_CLASSNAMES` |
+
+**`ALERT_MODIFIER_CLASSNAMES` não é peça de UI, e existe por causa de uma
+asserção.** É a lista das quatro classes modificadoras (`default` é a AUSÊNCIA
+das quatro e não entra), derivada do mapa `VARIANT_CLASSNAME` em vez de repetida
+à mão. Quem a consome são as stories que provam EXCLUSIVIDADE — afirmar só a
+classe escolhida deixa passar um alerta com dois modificadores ao mesmo tempo, e
+era o que as cinco faziam na `variants/Default` até 2026-09-22.
+
+Derivar em vez de cravar é o ponto: variante nova entra na varredura sozinha, e
+lista cravada na story envelheceria em silêncio. As outras quatro stacks provam a
+mesma exclusividade com a lista escrita na própria story — divergência de forma,
+registrada e não alinhada, porque só o angular tem o mapa num módulo importável
+pela story.
 
 **Duas das cinco entregam uma peça de ÍCONE, e as três de framework não.** O
 Vanilla tem `createAlertIcon(type)` e o Angular tem `svg[ndsAlertIcon]` com
