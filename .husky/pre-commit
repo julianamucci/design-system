@@ -68,6 +68,35 @@ if [ "$PRD_SKIP" != "1" ]; then
       | grep -E "^(docs/shared/styles/nds/(${SLUGS})\.css|docs/shared/content/(${SLUGS})/|nortear-design-system-[a-z]+/src/components/ui/(${SLUGS})[./-])" \
       | grep -vE '\.(stories|fixtures|source|test|spec)\.' || true)
 
+    # Slug que é PREFIXO de outro casava o VIZINHO. O padrão aceita `-` e `/`
+    # depois do slug — precisa aceitar, porque `dialog-close-reason.ts` é peça
+    # legítima de `dialog` —, e com isso `alert` pegava todo arquivo de
+    # `alert-dialog`.
+    #
+    # Medido em 2026-09-22: travou QUATRO stacks numa passagem do AlertDialog.
+    # Cada commit pedia também o PRD do Alert, que não tem relação nenhuma com a
+    # mudança, e **não havia forma honesta de satisfazer a guarda** — só
+    # `PRD_SKIP=1`, que é exceção da dona e não se presume. Quatro agentes
+    # pararam e relataram, corretamente, e dezessete arquivos de trabalho pronto
+    # ficaram parados.
+    #
+    # O `filesForSlug` do `audit.mjs` já tinha resolvido isto — exige `.` ou um
+    # sufixo de sub-story conhecido depois do slug, e o comentário de lá diz
+    # `alert` pegava AlertDialogDocs. A lição existia na casa e não tinha
+    # chegado ao hook.
+    #
+    # O filtro é GERAL, não um remendo para o par de hoje: o que casa um slug
+    # mais LONGO pertence a ele, não a este. Hoje o único par é
+    # `alert` ⊂ `alert-dialog`; amanhã pode nascer `input` ⊂ `input-otp` ou
+    # `toggle` ⊂ `toggle-group` sem ninguém reparar.
+    MAIS_LONGOS=$(ls docs/shared/prd/*.md 2>/dev/null | sed 's#.*/##;s#\.md$##' \
+      | grep -E "^${SLUG}-" | paste -sd'|' - || true)
+
+    if [ -n "$MAIS_LONGOS" ] && [ -n "$DESCRITOS" ]; then
+      DESCRITOS=$(printf '%s' "$DESCRITOS" \
+        | grep -vE "(docs/shared/styles/nds/(${MAIS_LONGOS})\.css|docs/shared/content/(${MAIS_LONGOS})/|/ui/(${MAIS_LONGOS})[./-])" || true)
+    fi
+
     if [ -n "$DESCRITOS" ]; then
       LISTA=$(printf '%s' "$DESCRITOS" | sed 's/^/      /')
       PRD_PENDENTES="$PRD_PENDENTES\n  \033[1m$SLUG\033[0m — $PRD não entrou, e estes entraram:\n$LISTA\n"
