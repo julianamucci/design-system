@@ -61,7 +61,11 @@ export const Default: Story = {
 
     await step('A variante default não recebe classe de modificador', async () => {
       await expect(alert).toHaveClass('nds-alert');
-      await expect(alert).not.toHaveClass('nds-alert-destructive');
+      // Os QUATRO modificadores, como no Playground: negar só o `destructive`
+      // deixava passar um alerta default que carregasse `nds-alert-success`.
+      for (const modifier of ['destructive', 'success', 'warning', 'info']) {
+        await expect(alert).not.toHaveClass(`nds-alert-${modifier}`);
+      }
       await expect(canvas.getByText('Atenção')).toBeVisible();
     });
 

@@ -63,10 +63,14 @@
   // conteúdo ganhou um item, e ninguém viu. Aconteceu de novo com
   // `visual.item6` e com `anatomy.item5`/`item6` — o teto é sempre do
   // chamador, porque o container aceita `items` de qualquer tamanho.
-  function itemIndexes(group: Record<string, unknown>): number[] {
+  // O prefixo é parâmetro porque nem todo grupo se chama `itemN`: as notas
+  // publicam `tipN`, e enquanto o filtro era `^item\d+$` cravado a lista de
+  // notas continuou escrita à mão — mesmo teto, só que invisível.
+  function itemIndexes(group: Record<string, unknown>, prefix = 'item'): number[] {
+    const pattern = new RegExp(`^${prefix}\\d+$`);
     return Object.keys(group)
-      .filter((key) => /^item\d+$/.test(key))
-      .map((key) => Number(key.slice('item'.length)))
+      .filter((key) => pattern.test(key))
+      .map((key) => Number(key.slice(prefix.length)))
       .sort((a, b) => a - b);
   }
 
@@ -101,7 +105,21 @@
     return itemIndexes(dict);
   }
 
-  /** Acessibilidade: mesma regra, último teto cravado da página. */
+  /**
+   * Notas: mesma regra, prefixo `tip` em vez de `item`. Esta era a última
+   * lista cravada da página — a leva anterior deu `accessibility` por último e
+   * errou, porque o filtro só enxergava `itemN`. Um `tip4` no dicionário não
+   * chegava à tela e nenhum portão reprovava.
+   */
+  function notesTipIndexes(): number[] {
+    const dict = (alertTranslations as unknown as Record<
+      string,
+      { notes?: Record<string, unknown> }
+    >)[$locale]?.notes ?? {};
+    return itemIndexes(dict, 'tip');
+  }
+
+  /** Acessibilidade: mesma regra, penúltimo teto cravado da página. */
   function accessibilityItemIndexes(): number[] {
     const dict = (alertTranslations as unknown as Record<
       string,
@@ -721,11 +739,7 @@ interface AlertActionProps {
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        items={[
-          { title: '', content: $tStore('notes.tip1') },
-          { title: '', content: $tStore('notes.tip2') },
-          { title: '', content: $tStore('notes.tip3') },
-        ]}
+        items={notesTipIndexes().map((i) => ({ title: '', content: $tStore(`notes.tip${i}`) }))}
         componentSlug="alert"
       />
 
