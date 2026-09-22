@@ -143,6 +143,14 @@ function renderedIconSignature(svg: SVGSVGElement): string {
     .join('|');
 }
 
+/** Os modificadores de variante, e só eles: a default é a ausência dos quatro. */
+const MODIFIERS = [
+  'nds-alert-destructive',
+  'nds-alert-success',
+  'nds-alert-warning',
+  'nds-alert-info',
+];
+
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: alertPlaygroundSource } },
@@ -223,13 +231,17 @@ export const Playground: Story = {
       const alerta = canvas.getByRole(args.role);
       await expect(alerta).toHaveAttribute('data-slot', 'alert');
       await expect(alerta).toHaveClass('nds-alert');
-      if (args.variant === 'default') {
-        // Default é só a classe base: nenhum modificador de variante.
-        for (const other of ['destructive', 'success', 'warning', 'info']) {
-          await expect(alerta).not.toHaveClass(`nds-alert-${other}`);
+      // A varredura é sobre os QUATRO modificadores em toda variante, como nas
+      // outras quatro stacks: afirmar só a presença do modificador escolhido
+      // deixa passar um alerta com dois modificadores ao mesmo tempo, e a
+      // exclusividade é justamente o que a variante promete. A default não
+      // recebe modificador nenhum, o que este mesmo laço já cobre.
+      for (const modifier of MODIFIERS) {
+        if (modifier === `nds-alert-${args.variant}`) {
+          await expect(alerta).toHaveClass(modifier);
+        } else {
+          await expect(alerta).not.toHaveClass(modifier);
         }
-      } else {
-        await expect(alerta).toHaveClass(`nds-alert-${args.variant}`);
       }
     });
 

@@ -832,8 +832,10 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly a11yItems = computed(() => {
-    dict();
-    return [1, 2, 3, 4, 5].map((i) => t(`accessibility.item${i}`));
+    const d = dict();
+    // Quem manda no fim da lista é o dicionário: lista cravada aqui daria teto
+    // ao conteúdo compartilhado, que é o defeito que já custou a anatomia.
+    return itemIndexes(d, 'accessibility').map((i) => t(`accessibility.item${i}`));
   });
 
   protected readonly keyboardItems = computed(() => {
