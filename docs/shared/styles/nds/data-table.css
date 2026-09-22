@@ -1,8 +1,19 @@
 /*
  * ─── nds-data-table ─────────────────────────────────────────────────────────
- * DataTable: tabela avançada sobre TanStack Table v8.
+ * DataTable: tabela avançada sobre TanStack Table **9** — o instalado é
+ * `^9.1.2` nas quatro stacks que usam o motor. Esta linha disse "v8" até
+ * 2026-09-22, e a leitura errada tem custo prático: quem procurar
+ * `getPaginationRowModel` não acha, porque no 9 o modelo paginado é recurso
+ * registrado. O angular não usa lib de tabela — reimplementa o motor em
+ * signals (D1 do PRD).
  * Reusa .nds-table como base; adiciona toolbar, filtros, paginação, resize,
- * pin e virtualização. Todos os valores seguem o grid de 8.
+ * pin e virtualização.
+ *
+ * **As medidas seguem o grid de 8, com SEIS exceções declaradas na própria
+ * regra.** Até 2026-09-22 este docblock prometia que todas seguiam, e a
+ * folha carregava as seis — a guideline do vanilla ainda endurece a promessa
+ * ("off-grid são bugs"). Os literais são defensáveis; a afirmação de que não
+ * existem não era. Cada um agora diz por que existe, no lugar onde está.
  *
  * Tokens: --background, --foreground, --muted, --muted-foreground, --border,
  *         --input, --primary, --ring, --radius, --spacing-*
@@ -26,6 +37,11 @@
 .nds-data-table-search {
   position: relative;
   flex: 1;
+  /* Fora do grid de 8, e de propósito: são limites de LINHA DE TEXTO, não
+   * espaçamento. 24rem é a largura em que o campo para de crescer antes de
+   * empurrar o botão de colunas para fora; 12rem é onde ele ainda mostra um
+   * termo de busca inteiro. Medida de legibilidade não pertence à escada de
+   * espaço. */
   max-width: 24rem;
   min-width: 12rem;
 }
@@ -48,10 +64,17 @@
   margin-left: auto;
 }
 
+/* Uma declaração só por classe. Havia duas — esta e outra, 300 linhas
+ * abaixo, só com `margin-left: auto` —, porque duas stacks emitem o nó de
+ * embrulho `-columns-wrap` e três não. Quem tem o embrulho recebe a margem
+ * dele; quem não tem, recebe daqui, e nos dois casos o botão vai para a
+ * ponta da toolbar. A margem aqui é inerte para quem tem embrulho: o botão é
+ * `inline-flex` e margem automática não desloca elemento em linha. */
 .nds-data-table-columns-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-2);
+  margin-left: auto;
 }
 
 .nds-data-table-columns-menu {
@@ -59,11 +82,16 @@
   right: 0;
   top: calc(100% + var(--spacing-1));
   z-index: var(--z-dropdown);
+  /* Fora do grid de 8: é a largura mínima em que o nome de coluna mais longo
+   * cabe ao lado da caixa de marcação, sem quebrar. Medida de conteúdo. */
   min-width: 16rem;
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.1);
+  /* Era literal (`0 8px 24px -4px rgba(0,0,0,0.1)`) e por isso NÃO mudava no
+   * tema escuro — a escada muda, e o menu suspenso ficava com sombra de tema
+   * claro sobre fundo escuro. */
+  box-shadow: var(--elevation-md);
   padding: var(--spacing-2);
 }
 
@@ -151,7 +179,7 @@
   padding-inline: var(--spacing-2);
   text-align: left;
   vertical-align: middle;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--muted-foreground));
 }
 
@@ -176,7 +204,7 @@
   font: inherit;
   color: inherit;
   text-align: left;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium, 500);
   cursor: pointer;
   border-radius: var(--radius-sm);
 }
@@ -188,6 +216,20 @@
 .nds-data-table-sort-btn:focus-visible {
   outline: 2px solid hsl(var(--ring) / 0.5);
   outline-offset: 2px;
+}
+
+/* Coluna numérica: o cabeçalho alinha à direita JUNTO com a célula.
+ *
+ * `20-tabelas.md` manda alinhar nos dois, e até 2026-09-22 nenhuma das cinco
+ * stacks alinhava o cabeçalho. Escrever `.nds-text-right` no `<th>` resolve a
+ * coluna comum — o texto de `-th-label` herda o alinhamento — e NÃO resolve a
+ * ordenável: ali o conteúdo do `<th>` é um botão com `flex: 1`, que preenche a
+ * linha e empacota rótulo e seta no início. `text-align` não move item de
+ * flex, então a classe ficava inerte exatamente na coluna que mais aparece.
+ *
+ * O seletor é (0,2,0) e vence o `-sort-btn` sozinho, que é (0,1,0). */
+.nds-data-table-th.nds-text-right .nds-data-table-sort-btn {
+  justify-content: flex-end;
 }
 
 .nds-data-table-td {
@@ -233,6 +275,8 @@
   right: 0;
   top: 0;
   height: 100%;
+  /* Fora do grid de 8: é a ÁREA DE AGARRE da alça de redimensionar, e o que
+   * a dimensiona é o ponteiro, não a escada de espaço. */
   width: 4px;
   cursor: col-resize;
   user-select: none;
@@ -288,7 +332,11 @@
 
 /* ── Empty state ───────────────────────────────────────────────────────── */
 .nds-data-table-empty {
-  height: var(--spacing-24);
+  /* `block-size` e não `height`: numa célula ele se comporta como MÍNIMO,
+   * então a mensagem de duas linhas cabe em vez de vazar. É o que
+   * `.nds-table-empty` já fazia, e a divergência entre as duas regras para o
+   * mesmo conceito era pendência desde 2026-09-16 (D11). */
+  block-size: var(--spacing-24);
   text-align: center;
   color: hsl(var(--muted-foreground));
 }
@@ -342,12 +390,9 @@
 }
 
 /* ── Composite (React/TanStack com primitivos compostos) ───────────────── */
-.nds-data-table-columns-btn {
-  margin-left: auto;
-}
-
 /* Menu de colunas via dropdown em portal (não o absoluto da vanilla) */
 .nds-data-table-columns-menu-content {
+  /* Mesma medida de conteúdo do `-columns-menu` acima, pela mesma razão. */
   width: 16rem;
 }
 
@@ -378,6 +423,8 @@
 
 /* ── Icon classes used inside data-table SVGs ─────────────────────────── */
 .nds-dt-icon {
+  /* Fora do grid de 8, como o ícone do badge: ícone não tem texto para
+   * crescer, e 14px é o que acompanha o `--text-control` de 14px ao lado. */
   width: 0.875rem;
   height: 0.875rem;
   flex-shrink: 0;

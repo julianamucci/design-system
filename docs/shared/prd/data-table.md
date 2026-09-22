@@ -609,11 +609,18 @@ aqui é visto pelos 18 achados do auditor**, salvo onde a linha diz o contrário
     começa por "Sem lib de tabela: ordenação, filtro e paginação vivem no
     componente" e não passa flag nenhuma daquelas. O defeito é do comentário.
 15. **A demonstração só fala o idioma da página em duas stacks** (item V8):
-    vanilla e angular passam as doze chaves de `demonstration.labels` ao
+    vanilla e angular passam as chaves de `demonstration.labels` ao
     componente; react, vue e svelte passam só o placeholder da busca, então o
     rodapé da demonstração fica em pt-BR fixo em `en` e `es`. 2 de 5. O portão
     `demonstration_labels_divergent` reporta o contrário — aponta vanilla e
     angular como os divergentes, porque a maioria é quem passa menos.
+
+    **Correção de 2026-09-22**: este item dizia "as doze chaves", e eram
+    DEZOITO na data em que foi escrito. Contagem escrita por extenso no meio
+    de um texto envelhece em silêncio — ninguém relê um numeral para
+    conferir. Depois desta passagem são vinte e quatro: entraram cinco de
+    método de pagamento (os valores estavam cravados em pt-BR nas CINCO) e
+    uma de legenda (a demonstração não tinha nome acessível em nenhuma).
 16. **Os previews da docs page não têm nome acessível em quatro stacks** (item
     V7). O angular passa `caption` nos onze previews em `ng-template` e na
     demonstração, e ainda compõe um sufixo por
@@ -816,7 +823,7 @@ corpo → rodapé → stories → docs page.
 | geometria, classes, camadas | `docs/shared/styles/nds/data-table.css` (397 linhas) |
 | a grade que este componente veste | `docs/shared/styles/nds/table.css` |
 | texto, props, tokens, critérios de teste | `docs/shared/content/data-table/translations.json` (313 folhas, 3 idiomas) |
-| medição cross-stack | `docs/shared/testing/data-table-probe.ts` — `measureScroll`, `measureTable`, `reportProbe` |
+| medição de rolagem | `docs/shared/testing/data-table-probe.ts` — `measureScroll`, e só ele |
 | referência de markup e comportamento | `nortear-design-system-vanilla/src/components/ui/data-table.ts` |
 | portões determinísticos | `node scripts/audit.mjs data-table --json` |
 | regra de CATEGORIA (display) | `nortear-design-system-<stack>/guidelines/08-display-components.md`, seção `## DataTable` |
@@ -845,97 +852,119 @@ fazem o certo** (item 15 da §7). O `identificador_pt` é o mesmo `const estilo`
 classes inexistentes do Vue, nem a ausência de `caption` nos previews de quatro
 stacks, nem as 21 chaves de rótulo copiadas quatro vezes.
 
-> **PENDÊNCIA · 2026-09-16** — a folha diz "TanStack Table v8" e o instalado é
-> `^9.1.2` nas quatro stacks que usam o motor (D2). Estreitada em 2026-09-17: as
-> quatro guidelines de stack que diziam o mesmo foram corrigidas na migração do
-> catálogo, e o que resta é o docblock de `data-table.css`. A leitura
-> errada tem custo prático: quem procurar `getPaginationRowModel` não acha, porque
-> no 9 o modelo paginado é recurso registrado.
-> **Fecha quando**: o docblock de `data-table.css` e as quatro guidelines
-> disserem 9, ou uma regra do auditor comparar a versão citada no texto com a do
-> `package.json`.
+> **REMEDIÇÃO DE 2026-09-22 — as doze pendências de 2026-09-16, uma por uma.**
+>
+> Antes de corrigir qualquer coisa, a passagem remediu as doze contra o HEAD.
+> **Nenhuma tinha caído sozinha em seis dias, e uma tinha PIORADO** — a do
+> comentário vencido do angular, que passou a descrever uma chave que a página
+> nem lia mais. Vale como calibragem: pendência escrita e não endereçada não
+> decai, e às vezes apodrece.
 
-> **PENDÊNCIA · 2026-09-16** — o docblock da folha afirma "Todos os valores
-> seguem o grid de 8" e a folha carrega seis medidas fora da escada (`24rem`,
-> `12rem`, `16rem` duas vezes, `4px`, `0.875rem`). A guideline do vanilla endurece
-> a promessa ("off-grid são bugs"). Os literais são defensáveis; a afirmação de
-> que não existem não é.
-> **Fecha quando**: cada literal estiver declarado como exceção na própria regra
-> (como `badge.css` faz com os 12px do ícone), ou o docblock parar de prometer o
-> que a folha não cumpre.
+> **FECHADA · 2026-09-22 — a folha dizia "TanStack Table v8".** O docblock de
+> `data-table.css` diz **9**, e registra por que a leitura errada custava: quem
+> procura `getPaginationRowModel` não acha, porque no 9 o modelo paginado é
+> recurso registrado. As quatro guidelines já tinham sido corrigidas em
+> 2026-09-17; era só a folha que faltava.
 
-> **PENDÊNCIA · 2026-09-16** — `.nds-data-table-empty` usa `height` e
-> `.nds-table-empty` usa `block-size` para o MESMO conceito, e o comentário do
-> primitivo explica por que `block-size` é o certo numa célula: ele se comporta
-> como mínimo, então a mensagem de duas linhas caberia (D11).
-> **Fecha quando**: a regra do DataTable usar `block-size`, ou a divergência
-> estar declarada com a medição que a justifique.
+> **FECHADA · 2026-09-22 — "todos os valores seguem o grid de 8" era falso, e a
+> folha carregava seis exceções.** Cada uma agora se declara NA PRÓPRIA REGRA,
+> como `badge.css` faz com os 12px do ícone: os limites do campo de busca
+> (24rem/12rem) são medida de linha de texto; a largura do menu de colunas
+> (16rem, em dois pontos) é medida de conteúdo; os 4px da alça de resize são
+> área de agarre do ponteiro; os 14px do ícone acompanham o `--text-control` ao
+> lado. O docblock parou de prometer o que a folha não cumpre.
 
-> **PENDÊNCIA · 2026-09-16** — dois pesos literais (`font-weight: 500` em
-> `.nds-data-table-th` e `.nds-data-table-sort-btn`) onde `table.css` usa
-> `var(--font-weight-medium, 500)` para a mesma coisa, e uma sombra literal
-> (`0 8px 24px -4px rgba(0,0,0,0.1)`) onde o projeto tem a escada `--elevation-*`
-> em dois modos. A sombra literal não muda no tema escuro; as da escada mudam.
-> **Fecha quando**: as três lerem token, ou `prd_token_sem_lastro` passar a
-> cobrar o caminho inverso (valor literal onde existe token equivalente).
+> **FECHADA · 2026-09-22 — `height` numa célula virou `block-size`.** É o que
+> `.nds-table-empty` já fazia, e o motivo está agora escrito na regra: numa
+> célula `block-size` se comporta como MÍNIMO, então a mensagem de duas linhas
+> cabe em vez de vazar (D11).
 
-> **PENDÊNCIA · 2026-09-16** — `.nds-data-table-columns-btn` é declarada duas
-> vezes na mesma folha (linhas 51 e 345) e `margin-left: auto` aparece nela e na
-> `-columns-wrap`, porque duas stacks emitem o nó de embrulho e três não.
-> **Fecha quando**: as cinco emitirem a mesma árvore de toolbar e a folha tiver
-> uma declaração só por classe.
+> **FECHADA · 2026-09-22 — dois pesos e uma sombra literais.** Os pesos leem
+> `var(--font-weight-medium, 500)`, como `table.css` já fazia. A sombra leu
+> `var(--elevation-md)` e a folha entrou na classificação da escada.
+>
+> **E o portão tinha uma exceção de premissa FALSA**, que era o que segurava a
+> sombra: `SOMBRA_CRAVADA_DECLARADA` isentava o data-table como "sombra de
+> rolagem do cabeçalho fixo", e `position: sticky` não aparece nesta folha uma
+> vez sequer. A exceção saiu. Exceção com premissa que ninguém confere é como
+> portão sem dentes: parece cobertura e não é.
 
-> **PENDÊNCIA · 2026-09-16** — react e svelte publicam 8 dos 9 itens funcionais e
-> 4 dos 6 de acessibilidade, e o item que some é o `functional.item9`, que é o
-> contrato C11. O portão `lista_mais_curta_que_o_conteudo` só vê o svelte, porque
-> no react a lista é um `.map` sobre intervalo literal.
-> **Fecha quando**: as cinco páginas derivarem as listas do dicionário (como o
-> angular já faz) **e** a regra passar a enxergar a forma `[1,2,…].map`.
+> **FECHADA PELA METADE · 2026-09-22 — `-columns-btn` declarada duas vezes.**
+> A folha tem **uma declaração por classe**, com a margem automática dentro
+> dela e o motivo escrito: duas stacks emitem o nó de embrulho `-columns-wrap`
+> e três não, e a margem é inerte para quem tem embrulho, porque o botão é
+> `inline-flex` e margem automática não desloca elemento em linha.
+>
+> **A outra metade NÃO fechou, e fica declarada**: as cinco continuam sem
+> emitir a mesma árvore de toolbar. Alinhar o embrulho é mudança de markup nas
+> cinco e não coube nesta passagem.
 
-> **PENDÊNCIA · 2026-09-16** — nenhuma tabela dos previews de react, vue, svelte
-> e vanilla recebe `caption`, então a demonstração e os dez previews de cada
-> página chegam ao leitor de tela como "tabela, 6 colunas". As cinco páginas
-> publicam `testes.accessibility.item6`, que promete o contrário, e as cinco
-> stories o medem.
-> **Fecha quando**: os previews das quatro passarem `caption` com sufixo próprio,
-> como o angular faz, ou uma regra cobrar nome acessível em tabela de preview.
+> **FECHADA · 2026-09-22 — listas de teste mais curtas que o conteúdo.** react e
+> svelte publicavam 8 dos 9 itens funcionais e 4 dos 6 de acessibilidade, e o
+> que sumia era o `functional.item9`, que é o contrato C11. As cinco páginas
+> agora **derivam os índices do dicionário**, como o angular já fazia — ninguém
+> conta à mão, e por isso a próxima chave nova aparece sozinha.
 
-> **PENDÊNCIA · 2026-09-16** — a docs page do Vue emite `font-medium tabular-nums`
-> na célula de dinheiro, e as duas classes não existem no CSS compartilhado
-> (resíduo da era Tailwind); a do React resolve o mesmo com `fontVariantNumeric`
-> em `style` inline, que a regra da casa proíbe e o portão
-> `inline_style_design_value` não pegou.
-> **Fecha quando**: as cinco usarem `.nds-font-medium` e `.nds-tabular-nums`, e
-> `unknown_class_reference` passar a varrer as docs pages desta família.
+> **FECHADA · 2026-09-22 — os previews não tinham nome acessível.** A
+> demonstração e os previews das cinco recebem `caption`, com a fórmula
+> idêntica `${demonstration.labels.caption} — ${sufixo}` e um sufixo por
+> preview, no molde que o angular já usava (meia dúzia de tabelas com o mesmo
+> nome é, na lista de tabelas, meia dúzia de tabelas sem nome).
+>
+> A chave base `demonstration.labels.caption` nasceu nesta passagem. E como o
+> `regionLabel` lê a legenda, a camada que rola ganhou nome junto — o que fecha
+> também a metade que `20-tabelas.md` cobrava e que nenhuma das cinco cumpria.
 
-> **PENDÊNCIA · 2026-09-16** — as 21 chaves de `DataTableLabels` e seus valores
-> padrão em pt-BR estão copiados palavra por palavra em quatro stacks, e o
-> comentário do svelte já declara que o contrato é o mesmo nas quatro. É catálogo
-> de rótulo — regra pura, sem `HTMLElement` —, que é o que `docs/shared/primitives/`
-> publica e o que o Flutter consome.
-> **Fecha quando**: a dona decidir se o catálogo vira módulo compartilhado; se
-> sim, as quatro passam a importá-lo e o angular continua com os moldes (D8).
+> **FECHADA · 2026-09-22 — duas classes que não existiam e um style inline.** O
+> vue emitia `font-medium tabular-nums`, resíduo da era Tailwind sem regra por
+> trás — não pintavam nada —, e o react resolvia o mesmo com `fontVariantNumeric`
+> em `style` inline. As duas pontas agora usam `.nds-font-medium` e
+> `.nds-tabular-nums`.
 
-> **PENDÊNCIA · 2026-09-16** — `docs/shared/figma/design-links.ts` não tem entrada
-> para `data-table` e nenhuma das stories declara `figmaDesign`. O maior
-> componente do sistema não está ligado ao desenho.
-> **Fecha quando**: houver entrada no mapa e as stories a declararem, ou a
-> ausência estar registrada como decisão.
+> **FECHADA · 2026-09-22 — as 21 chaves de rótulo copiadas em quatro stacks.**
+> Decisão da dona: viraram `docs/shared/primitives/data-table-labels.ts`, e as
+> quatro passaram a importar. O **angular segue com os moldes** dele (D8) —
+> divergência de API de framework, registrada e não "alinhada".
+>
+> A premissa foi CONFERIDA antes de unificar, e não assumida: as quatro cópias
+> eram idênticas a menos do estilo de aspas, e cada agente confirmou zero
+> divergência ao apagar a sua. A do vanilla era a mais escondida — vivia dentro
+> de `ui/data-table.ts`, sem nome de arquivo que a anunciasse.
 
-> **PENDÊNCIA · 2026-09-16** — o rodapé de paginação do DataTable não usa o
-> componente Pagination do design system: são duas paginações, com markup
-> (`<nav><ul>` contra `div` de Buttons), semântica (`aria-current="page"` contra
-> nomes de botão) e folhas diferentes. O conteúdo compartilhado já orienta o
-> leitor a escolher entre elas, mas a categoria "tabelas" tem dois componentes que
-> paginam.
-> **Fecha quando**: a dona decidir se o rodapé passa a compor Pagination, ou se a
-> separação fica declarada como decisão nos dois PRDs.
+> **PENDÊNCIA · 2026-09-16, REMEDIDA E DE PÉ em 2026-09-22** — o DataTable
+> continua sem entrada em `docs/shared/figma/design-links.ts` e sem
+> `figmaDesign` em story nenhuma. O maior componente do sistema é o que não tem
+> component set.
+>
+> **Não a fechei registrando "a ausência é decisão"**, que era a segunda saída
+> escrita aqui: ninguém decidiu isso, e dar nome de decisão a uma lacuna é a
+> forma mais cara de fechá-la — some do radar sem ninguém ter escolhido nada.
+> **Fecha quando**: uma rodada de `/figma-sync-component data-table` criar o
+> component set e as stories declararem `figmaDesign`. Está no `FIXES-NEEDED.md`.
 
-> **PENDÊNCIA · 2026-09-16** — o comentário de `angular/docs/DataTableDocs.ts:220-227`
-> descreve um `anatomy.structureCode.angular` que já foi corrigido: ele afirma que
-> a chave anuncia `@tanstack/angular-table` e passa flags de pin e resize, e hoje
-> a chave começa por "Sem lib de tabela". O comentário é o que envelheceu.
-> **Fecha quando**: o comentário for reescrito ou removido.
+> **DECIDIDA E AGENDADA · 2026-09-22 — o rodapé de paginação passa a compor o
+> componente Pagination.** A dona decidiu, e escolheu entre três formas a que
+> **preserva a tela**: o `Pagination` cresce, o `DataTable` não se mexe.
+>
+> O que a rodada própria precisa fazer, já medido: `Pagination` ganha
+> `showFirstLast` e `showPages`, mais um eixo de APARÊNCIA — sem ele a tela
+> mudaria, porque `.nds-pagination-icon` é 36×36 transparente e o rodapé de hoje
+> usa botão `outline`, com borda. O eixo mora no `Pagination`, não num seletor
+> descendente em `data-table.css`: aparência é decisão do componente, não do
+> vizinho que o hospeda.
+>
+> **Ponto aberto por decisão da dona**: o `Pagination` renderiza `<a href="#">`
+> sem rota, e o rodapé da tabela nunca tem rota (confirmado: zero
+> `nds-pagination` em arquivo `data-table` das cinco). Trocar `<button>` por
+> âncora vazia num controle que age na própria página é recuo de semântica
+> dentro de um avanço — e a decisão é da rodada do Pagination, não desta.
+
+> **FECHADA · 2026-09-22 — o comentário vencido da docs page do angular, que
+> tinha PIORADO.** Ele descrevia um `anatomy.structureCode.angular` já
+> corrigido; a remedição achou o resto: a página **nem usava a chave** — passava
+> um `ANATOMY_CODE` local, então a chave compartilhada, que estava correta, era
+> invisível para quem lê. O contorno tinha virado permanente. O local saiu, o
+> comentário saiu, e a página voltou a ler a chave compartilhada.
 
 > **FECHADA · 2026-09-17** — a guideline do vanilla listava `cellClass` no meta de
 > coluna, que o vanilla não lê, e omitia `headerLabel`, que ele lê em 8 pontos; a

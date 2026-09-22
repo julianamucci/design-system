@@ -204,6 +204,24 @@ rebaixamento de `table.css:78` para especificidade de elemento, a utilitária
 `.nds-text-right` vale nos dois. E coluna cujo dígito troca — contador, valor,
 data — pede `.nds-tabular-nums`, senão a coluna "dança" a cada atualização.
 
+Até 2026-09-22 **nenhuma das cinco stacks cumpria a metade do cabeçalho**, e a
+regra acima já estava escrita. Ao ligá-la, apareceu a segunda metade, que é o
+que faltava dizer aqui:
+
+> **No cabeçalho ORDENÁVEL, alinhar o texto não alinha nada.** Ali o conteúdo
+> do `<th>` não é texto solto: é um BOTÃO, e o botão é item de flex que
+> preenche a linha. `text-align` não move item de flex, então o rótulo e a
+> seta continuam empacotados no início. A folha do DataTable resolve com
+> `justify-content: flex-end` no botão, condicionado à mesma classe.
+
+Isso importa mais do que parece, porque é a forma de defeito que esta casa mais
+paga: a classe fica escrita no markup, com o prefixo certo, e **não pinta**. Não
+há compilador, suíte ou axe que reprove — a folha é válida e o cabeçalho
+aparece. Duas agentes bateram nela no mesmo dia, cada uma na sua stack, e as
+duas propuseram o remédio no elemento errado (o invólucro, que já preenchia).
+Se você for alinhar cabeçalho em componente novo, **olhe antes se o conteúdo do
+`<th>` é texto ou é item de flex** — a resposta muda o remédio.
+
 ---
 
 ## Estado vazio

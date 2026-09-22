@@ -77,9 +77,13 @@ idiomas, sem nenhuma sobrando de um lado** (conferido em 2026-09-16), com
 | C18 | Linha com `aria-expanded="true"` pinta como se estivesse sob o ponteiro | — · **nenhum produtor em stack nenhuma** |
 | C19 | O componente não dispara evento nenhum | `analytics.description` · — |
 
-**Três contratos da folha não têm quem os prove** (C16, C17, C18) e **dois não têm
-quem os exercite** (C4 e C5, a fiação do nome da região: o portão prova que as
-cinco a têm, e nenhuma story, docs page ou snippet passa `regionLabel`).
+**Três contratos da folha não têm quem os prove** (C16, C17, C18).
+
+C4 e C5 — a fiação do nome da região — **deixaram de estar sem quem os
+exercite em 2026-09-22**: as cinco docs pages do DataTable passam `regionLabel`,
+lendo a legenda da tabela, e por isso a camada que rola ganhou papel e nome.
+Continua verdade que **nenhum exemplo do próprio Table** o passa: quem exercita
+é o vizinho que reusa esta folha.
 
 ## 3. Decisões fixadas
 
@@ -673,14 +677,21 @@ Medido em 2026-09-16, nos três idiomas:
 > fechamento é o CONTEÚDO que saiu, não o contador — o título renomeado sozinho
 > escaparia do mesmo jeito com o catálogo inteiro dentro.
 
-> **PENDÊNCIA · 2026-09-16** — a prop `regionLabel` existe nas cinco stacks e não
-> é passada em nenhum exemplo publicado: o contêiner que rola nunca ganha papel
-> nem nome em story, docs page ou snippet (I7). Falta decidir se a docs page deve
-> nomear a região — e com que texto, já que o nome é do CONTEÚDO e não do
-> componente.
-> **Fecha quando**: as cinco stories de rolagem horizontal passarem `regionLabel`
-> e afirmarem `role="group"` mais o nome acessível, ou a decisão de não nomear em
-> exemplo ficar escrita aqui com a premissa verificada.
+> **PENDÊNCIA · 2026-09-16, ESTREITADA em 2026-09-22** — a prop `regionLabel`
+> existia nas cinco stacks e não era passada em exemplo nenhum: o contêiner que
+> rola nunca ganhava papel nem nome (I7).
+>
+> **A pergunta que faltava — "com que texto?" — foi respondida pela passagem do
+> DataTable**, e a resposta é a que o PRD já supunha: o nome é do CONTEÚDO, não
+> do componente. As cinco docs pages do DataTable passam `regionLabel` lendo a
+> LEGENDA da tabela, que é o nome dela para o leitor de tela (D4 daquele PRD), e
+> `docs/shared/guidelines/20-tabelas.md` fixa que nome e papel da região andam
+> juntos.
+>
+> **O que resta é do Table**: nenhum exemplo do próprio componente passa a prop.
+> **Fecha quando**: as cinco stories de rolagem horizontal do Table passarem
+> `regionLabel` e afirmarem `role="group"` mais o nome acessível — com o texto
+> vindo da legenda, como o DataTable já faz.
 
 > **PENDÊNCIA · 2026-09-16** — três regras da folha não têm produtor (I8), e uma
 > delas, `tr:has([aria-expanded="true"])`, não tem produtor em stack nenhuma nem no

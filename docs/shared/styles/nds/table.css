@@ -67,10 +67,16 @@
  * Escrito como `.nds-table th` ele valia (0,1,1) e vencia qualquer utilitário,
  * que é (0,1,0). `class="nds-text-right"` num `<th>` de coluna numérica era
  * inerte nas CINCO stacks: react, vue, svelte e angular escrevem a classe e ela
- * não fazia nada; o Vanilla nem tentava. E não bastava empatar, porque
- * `utilities.css` é importado ANTES de `table.css` (ver index.css) — no empate
- * quem carrega depois vence, e depois é esta folha. Rebaixar para elemento é o
- * que devolve a última palavra a quem escreve a classe no markup.
+ * não fazia nada; o Vanilla nem tentava. Rebaixar para elemento é o que
+ * devolve a última palavra a quem escreve a classe no markup.
+ *
+ * Até 2026-09-22 este parágrafo justificava o rebaixamento dizendo que
+ * `utilities.css` é importado ANTES desta folha e que, no empate, esta
+ * venceria. **A ordem é a inversa**: em `nds/index.css`, `table.css` está na
+ * linha 58 e `utilities.css` na 123 — o utilitário carrega DEPOIS e venceria
+ * o empate sozinho. A conclusão continua certa e o rebaixamento continua
+ * valendo (ele dispensa o empate: `:where(.nds-table) th` é (0,0,1) contra os
+ * (0,1,0) do utilitário); o que estava errado era a razão.
  *
  * `:where()` não soma especificidade nenhuma; `th` sozinho soma um elemento.
  * As regras mais específicas abaixo (`:has([role="checkbox"])`) seguem valendo.
