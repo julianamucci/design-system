@@ -426,10 +426,33 @@ o motivo DENTRO da docs page, onde a dedução não tinha teste e cada página f
 | stack | peça | forma | exportada por | como se marca a confirmação |
 |---|---|---|---|---|
 | react | `ui/dialog-close-reason.ts` | traduz — a base-ui publica o motivo em `eventDetails.reason` | o próprio arquivo; `dialog.tsx` **não** a reexporta | `markConfirmation()`, estado de módulo consumido na leitura seguinte |
-| angular | `ui/dialog-close-reason.ts` | traduz — o radix-ng publica `RdxDialogOpenChangeReason`, que tem oito palavras contra as nossas quatro; o mesmo arquivo traz `alertDialogCloseReason` | reexportada por `dialog.ts:467` | parâmetro `hints.confirmed` |
+| angular | `ui/dialog-close-reason.ts` | traduz — o radix-ng publica `RdxDialogOpenChangeReason`, que tem oito palavras contra as nossas quatro; o mesmo arquivo traz `alertDialogCloseReason` | reexportada por `dialog.ts:467` | `alertDialogConfirmedFromEvent`, que lê o ALVO do evento — ver a nota abaixo |
 | vanilla | a própria fábrica, em `onClose(reason)` | sabe de primeira mão: é ela que fecha | `DialogCloseReason` em `dialog.ts:77` | `close()` informa `api` |
 | vue | `ui/dialog/dialog.close-reason.ts` | OBSERVA o gesto: a reka-ui não publica motivo | `index.ts:10-17`, com `createDialogCloseWatch` e `DIALOG_CLOSE_SLOT` | gesto `confirm` anotado por quem chama |
 | svelte | `ui/dialog/close-reason.ts` | observa o gesto: a bits-ui também não publica | `index.ts:15-21`, com `createDialogCloseWatch` | `markConfirmation()` do objeto devolvido |
+
+> **2026-09-22 — a marca de confirmação do ANGULAR chegava tarde, e o evento
+> saía com o motivo errado.** Achado escrevendo uma asserção que existia para
+> apenas DOCUMENTAR o comportamento, na passagem do AlertDialog.
+>
+> O `(click)` do template corre **depois** do ouvinte de host do
+> `RdxDialogClose` que a ação compõe. A bandeira de `trackConfirmation` era
+> escrita no `(click)`, e o fechamento já tinha lido o motivo — então
+> **confirmar a exclusão saía no `dialog_close` como `close-button`**, não como
+> `api`. O produto reportava o gesto errado, e a docs page é o consumidor real
+> desses eventos.
+>
+> O conserto não depende de ordem: `alertDialogConfirmedFromEvent` lê o alvo do
+> evento, por delegação, como o vue já fazia. Quatro casos de unidade, e o
+> portão provado replantando: `expected close-button to be api`.
+>
+> **E isto REFUTA a §"`(click)` no host" da `guidelines/13-system-design.md`**
+> do angular, que afirma a ordem inversa. A guideline é da stack e não foi
+> corrigida nesta passagem — fica registrado aqui porque é onde a próxima
+> pessoa que mexer em motivo de fechamento vai olhar.
+>
+> **Fica aberto, medido e não corrigido**: no angular o `dialog_confirm` dispara
+> DEPOIS do `dialog_close`, ao contrário das outras quatro. Mesma raiz de ordem.
 
 Quem marca a CONFIRMAÇÃO é a página — é ela que sabe que a pessoa decidiu —, e a
 marca vence o motivo da lib, porque a ação e o cancelar são as duas partes de

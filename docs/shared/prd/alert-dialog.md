@@ -37,9 +37,14 @@ descrevendo um mundo que acabou.
 >
 > **Nasceu de um defeito, e a simplificação é o conserto**: o véu do Drawer em react, vue e svelte desvanecia 0,5s sob `prefers-reduced-motion`, porque a folha que a `vaul` injeta declara a duração dele um degrau de especificidade acima do nosso guarda (medido; ver a D17 de [`drawer.md`](drawer.md)). Véu que não anima não tem guarda a perder — a decisão apaga a categoria do problema em vez de vencer a disputa de cascata.
 >
-> §1 e §11 foram corrigidos em 2026-09-22, depois de a Fase B medir que os dois
-> afirmavam no presente o que tinha sido removido. §5 e §6 descrevem o estado
-> ANTERIOR e ficam como histórico, por decisão.
+> §1, §5, §10 e §11 foram corrigidos em 2026-09-22 — os quatro afirmavam no
+> presente o que tinha sido removido, e os três primeiros foram achados em
+> rodadas diferentes da MESMA passagem. **Só §6 fica como histórico**, por
+> decisão: ele descreve a coreografia antiga ("fade no véu, fade e zoom no
+> painel") e serve de registro do que mudou.
+>
+> Esta nota já chamou §5 de histórico depois de §5 ter sido corrigido, na mesma
+> passagem. Nota que isenta seção por NÚMERO envelhece junto com a seção.
 
 ## 2. Contrato de comportamento
 
@@ -297,7 +302,7 @@ Forma de API não tem fonte de verdade — cada lib tem a sua.
 | stack | como difere |
 |---|---|
 | vanilla | fábrica `createAlertDialog({ trigger, title, titleLevel, description, media, cancelButton, actionButton, defaultOpen, onOpenChange, onClose, class })` que recebe os botões PRONTOS — a variante de cada um é de quem os cria. Um wrapper `div[data-slot="alert-dialog"]` fica na página com o gatilho; o painel é portalado no `open()` |
-| react | peças sobre a base-ui; `AlertDialogCancel` defaulta a `outline`, `AlertDialogAction` herda o padrão do Button; o motivo do fechamento é traduzido por `dialogCloseReason` + `markConfirmation()` (`ui/dialog-close-reason.ts`) |
+| react | peças sobre a base-ui; `AlertDialogCancel` defaulta a `outline`, `AlertDialogAction` herda o padrão do Button; o motivo do fechamento sai de `ui/alert-dialog-close-reason.ts` (vocabulário de TRÊS palavras, desde 2026-09-22) e a marca de confirmação continua vindo do `markConfirmation()` compartilhado com o Dialog |
 | vue | peças sobre a reka; Action defaulta a `default` e Cancel a `outline`; os dois entregam o `@click` na CAPTURA, antes do fechamento da lib (`PATCHES.md#vue-alert-dialog-click-order`); não exporta `Overlay` nem `Portal` — o Content os monta |
 | svelte | peças sobre o bits; Action e Cancel com os mesmos defaults do vue; a Action renderiza `Dialog.Close` (a `Action` da lib não fecha) e as duas fazem ponte de Enter/Espaço para o `onclick` (`alert-dialog-action.svelte:33-42`); o título escreve a tag pelo snippet `child` |
 | angular | diretivas de atributo no elemento nativo; o painel é `ng-template[ndsAlertDialogContent]`; Cancel e Action não aplicam variante — quem compõe põe `ndsButton variant="…"` |
@@ -314,8 +319,10 @@ Extraído dos exports e dos seletores do código.
 | vanilla | `createAlertDialog`, `createAlertDialogMedia` |
 | angular | `button[ndsAlertDialogAction]`, `button[ndsAlertDialogCancel]`, `button[ndsAlertDialogTrigger]`, `div[ndsAlertDialogFooter]`, `div[ndsAlertDialogHeader]`, `div[ndsAlertDialogMedia]`, `h1[ndsAlertDialogTitle]` … `h6[ndsAlertDialogTitle]` (os seis), `nds-alert-dialog`, `ng-template[ndsAlertDialogContent]`, `p[ndsAlertDialogDescription]`, mais a constante `NDS_ALERT_DIALOG` |
 
-**O motivo do fechamento, por stack** — quatro das cinco têm o vocabulário de
-TRÊS palavras deste componente:
+**O motivo do fechamento, por stack** — as CINCO têm o vocabulário de TRÊS
+palavras deste componente. Até 2026-09-22 eram quatro, e o react era a exceção:
+ele lia o `DialogCloseReason` de quatro palavras, que inclui um `close-button`
+de canto que este componente não tem (D2).
 
 | stack | onde | o que exporta |
 |---|---|---|
@@ -323,7 +330,7 @@ TRÊS palavras deste componente:
 | vue | `ui/alert-dialog/alert-dialog.close-reason.ts`, reexportado pelo `index.ts` | `AlertDialogCloseReason`, `alertDialogCloseReason` (reaproveita o mapeador do Dialog), `createAlertDialogCloseWatch`, `ALERT_DIALOG_CANCEL_SLOT`, e a prova de tipo `AlertDialogFalaODialetoDoDialog` |
 | svelte | `ui/alert-dialog/close-reason.ts`, reexportado pelo `index.ts` | `AlertDialogCloseReason`, `alertDialogCloseReason`, `createAlertDialogCloseWatch` (outra assinatura — ver §7, item 11) |
 | angular | `ui/dialog-close-reason.ts:37,101`, reexportado por `alert-dialog.ts:330-334` | `AlertDialogCloseReason`, `alertDialogCloseReason(motivo, { confirmed })` |
-| react | `ui/dialog-close-reason.ts` | **nenhum tipo próprio** — a docs page usa o `DialogCloseReason` de quatro palavras. Ver §7, item 10 |
+| react | `ui/alert-dialog-close-reason.ts`, mais o `markConfirmation()` de `ui/dialog-close-reason.ts` | `AlertDialogCloseReason`, `alertDialogCloseReason`, e a prova de tipo `AlertDialogSpeaksDialogDialect` que amarra os dois vocabulários |
 
 O índice do svelte também reexporta as formas curtas — `Action`, `Cancel`, `Content`, `Description`, `Footer`, `Header`, `Media`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
@@ -717,8 +724,12 @@ Ordem: folha → primitivo → cabeçalho e rodapé → mídia → stories → d
   que engana.
 - **A descrição é opcional, e vue e svelte precisam de registro** (D4): a reka gera
   o id sempre, e o bits não o apaga quando a descrição sai.
-- **As keyframes vêm das vizinhas** — o véu, de `dialog.css`; o painel, de
-  `utilities.css`. Não duplique.
+- **A keyframe do PAINEL vem da vizinha** — `nds-animate-in`/`-out`, de
+  `utilities.css`. Não duplique. **O véu não tem keyframe**: ele não anima
+  desde 2026-09-20, e as `nds-dialog-fade-in`/`-fade-out` que esta linha mandava
+  procurar em `dialog.css` foram removidas no mesmo commit. Era o quarto
+  resquício daquela mudança, e o mais caro dos quatro — instrução de
+  reconstrução manda alguém procurar o que não existe.
 - **A caixa de mídia se alinha por `:has()`** (D6), não por classe; o texto do
   cabeçalho se centraliza no mobile sem ela.
 - **O foco inicial no Cancelar é EXPLÍCITO** (D3) — não confie na ordem do

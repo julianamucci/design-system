@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
-import { NDS_ALERT_DIALOG } from './alert-dialog';
+import type { RdxDialogOpenChange } from '@radix-ng/primitives/dialog';
+import {
+  NDS_ALERT_DIALOG,
+  alertDialogCloseReason,
+  alertDialogConfirmedFromEvent,
+  type AlertDialogCloseReason,
+} from './alert-dialog';
 import { NdsButton } from './button';
 import { destructiveLabels } from './alert-dialog.fixtures';
 import { alertDialogControlledSource, alertDialogDestructiveSource } from './alert-dialog.source';
@@ -39,6 +45,32 @@ type Story = StoryObj;
 const onConfirmSpy = fn();
 const onCancelSpy = fn();
 const onControlledOpenChange = fn();
+
+/**
+ * O motivo de cada fechamento do painel controlado, na ordem em que saíram.
+ *
+ * Lista de módulo, e não um `fn()` de args: o motivo NÃO é entrada do
+ * componente, e passar por `argTypes` o faria aparecer na tabela de
+ * propriedades da docs page como se fosse.
+ */
+const controlledCloseReasons: AlertDialogCloseReason[] = [];
+
+/**
+ * Traduz o motivo com o MESMO par que a docs page usa — o mapeador e a leitura
+ * do alvo —, e só na saída: abrir não tem motivo.
+ *
+ * A confirmação sai do ALVO do evento, e não de uma bandeira levantada no
+ * `(click)` da ação: medido em 2026-09-22, o `(click)` do template corre depois
+ * do ouvinte de host do `RdxDialogClose`, e a bandeira chegaria sempre tarde.
+ */
+function recordControlledCloseReason(event: RdxDialogOpenChange): void {
+  if (event.open) return;
+  controlledCloseReasons.push(
+    alertDialogCloseReason(event.reason, {
+      confirmed: alertDialogConfirmedFromEvent(event.event),
+    }),
+  );
+}
 
 /**
  * O template da confirmação destrutiva, com os ganchos que cada story liga.
@@ -337,7 +369,12 @@ export const Controlled: Story = {
     onControlledOpenChange.mockClear();
   },
   render: () => ({
-    props: { labels: destructiveLabels(), isOpen: false, onControlledOpenChange },
+    props: {
+      labels: destructiveLabels(),
+      isOpen: false,
+      onControlledOpenChange,
+      recordControlledCloseReason,
+    },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <button ndsButton variant="destructive" (click)="isOpen = true">
@@ -347,6 +384,7 @@ export const Controlled: Story = {
         <nds-alert-dialog
           [open]="isOpen"
           (openChange)="isOpen = $event; onControlledOpenChange($event)"
+          (onOpenChange)="recordControlledCloseReason($event)"
         >
           <ng-template ndsAlertDialogContent>
             <div ndsAlertDialogHeader>
@@ -367,6 +405,9 @@ export const Controlled: Story = {
     const labels = destructiveLabels();
     const opener = () => canvas.getByRole('button', { name: labels.triggerLabel });
     onControlledOpenChange.mockClear();
+    // A play REEXECUTA no mesmo DOM pelo painel Interactions, e o que a rodada
+    // anterior empilhou não é desta medição.
+    controlledCloseReasons.length = 0;
 
     await step('Quem controla o estado é a página, não um gatilho interno', async () => {
       await expect(document.querySelector('.nds-alert-dialog-content')).toBeNull();
@@ -384,6 +425,10 @@ export const Controlled: Story = {
       await waitForPortalVanish('alertdialog');
       await expect(onControlledOpenChange).toHaveBeenLastCalledWith(false);
       await waitFor(() => expect(opener()).toHaveFocus());
+      // É este motivo que vira `dialog_close { reason: 'escape' }` na docs
+      // page. O `escape-key` da lib é o único caminho de saída que ela nomeia
+      // sozinha; os outros dois dependem da marca de quem consome.
+      await expect(controlledCloseReasons.at(-1)).toBe('escape');
     });
 
     await step('O botão de fora volta a abrir pelo mesmo caminho controlado', async () => {
@@ -392,6 +437,31 @@ export const Controlled: Story = {
       // no mesmo DOM.
       await userEvent.click(opener());
       await expect(await waitForPortal('alertdialog')).toBeVisible();
+    });
+
+    await step('O Cancelar se chama close-button, e não "o que sobrou"', async () => {
+      const panel = await waitForPortal('alertdialog');
+      await userEvent.click(within(panel).getByRole('button', { name: labels.cancelLabel }));
+      await waitForPortalVanish('alertdialog');
+      await expect(controlledCloseReasons.at(-1)).toBe('close-button');
+    });
+
+    await step('A ação confirma, e o motivo sai api — não close-button', async () => {
+      await userEvent.click(opener());
+      const panel = await waitForPortal('alertdialog');
+      await userEvent.click(within(panel).getByRole('button', { name: labels.actionLabel }));
+      await waitForPortalVanish('alertdialog');
+      // A lib entrega o MESMO `close-press` do Cancelar: quem separa os dois é
+      // o ALVO do evento que fechou o painel. Sem essa leitura, confirmar a
+      // exclusão chegaria ao relatório como "apertou o Cancelar".
+      await expect(controlledCloseReasons.at(-1)).toBe('api');
+    });
+
+    await step('Os três caminhos relataram motivos DIFERENTES', async () => {
+      // O vocabulário inteiro do componente, de ponta a ponta: três palavras,
+      // três gestos, nenhuma repetição. Sem este passo, um mapeador que
+      // devolvesse a mesma palavra para tudo passaria nos anteriores.
+      await expect(controlledCloseReasons).toEqual(['escape', 'close-button', 'api']);
     });
   },
 };

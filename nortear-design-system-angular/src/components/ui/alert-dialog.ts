@@ -346,6 +346,7 @@ export class NdsAlertDialogAction {}
 // dois alimentam o mesmo `dialog_close`. O evento nasce na camada de produto.
 export {
   alertDialogCloseReason,
+  alertDialogConfirmedFromEvent,
   type AlertDialogCloseReason,
   type DialogCloseHints,
 } from './dialog-close-reason';

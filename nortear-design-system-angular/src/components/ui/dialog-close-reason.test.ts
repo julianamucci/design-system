@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { alertDialogCloseReason, dialogCloseReason } from './dialog-close-reason';
+import {
+  alertDialogCloseReason,
+  alertDialogConfirmedFromEvent,
+  dialogCloseReason,
+} from './dialog-close-reason';
 
 // A tabela INTEIRA do `RdxDialogOpenChangeReason` — as oito palavras da lib, e
 // não um caso por categoria: quem ler este arquivo sabe o que cada motivo vira
@@ -82,5 +86,37 @@ describe('alertDialogCloseReason', () => {
       expect(alertDialogCloseReason(motivo)).not.toBe('overlay');
       expect(alertDialogCloseReason(motivo, { confirmed: true })).not.toBe('overlay');
     }
+  });
+});
+
+// Quem separa a confirmação do cancelamento nesta stack é o ALVO do evento que
+// fechou o painel — as duas chegam como `close-press` da lib. A bandeira
+// levantada no `(click)` de quem consome NÃO serve: medido em 2026-09-22, o
+// `(click)` do template corre depois do ouvinte de host do `RdxDialogClose` que
+// o `ndsAlertDialogAction` compõe, e a marca chega tarde. Este projeto roda em
+// node, então o alvo é dublado pela única capacidade que a função usa.
+describe('alertDialogConfirmedFromEvent', () => {
+  const eventOn = (matchingSelector: string | null) =>
+    ({
+      target: {
+        closest: (selector: string) => (selector === matchingSelector ? {} : null),
+      },
+    }) as unknown as Event;
+
+  it('o clique na ação que confirma é confirmação', () => {
+    expect(alertDialogConfirmedFromEvent(eventOn('[ndsAlertDialogAction]'))).toBe(true);
+  });
+
+  it('o Cancelar não é confirmação, e é o caso que o motivo errado estragava', () => {
+    expect(alertDialogConfirmedFromEvent(eventOn(null))).toBe(false);
+  });
+
+  it('o Escape não tem alvo de botão, e também não é confirmação', () => {
+    expect(alertDialogConfirmedFromEvent(undefined)).toBe(false);
+    expect(alertDialogConfirmedFromEvent({ target: null } as unknown as Event)).toBe(false);
+  });
+
+  it('alvo sem closest não derruba a página', () => {
+    expect(alertDialogConfirmedFromEvent({ target: {} } as unknown as Event)).toBe(false);
   });
 });

@@ -16,7 +16,11 @@ import type { RdxDialogOpenChange } from '@radix-ng/primitives/dialog';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NDS_ALERT_DIALOG, alertDialogCloseReason } from '@/components/ui/alert-dialog';
+import {
+  NDS_ALERT_DIALOG,
+  alertDialogCloseReason,
+  alertDialogConfirmedFromEvent,
+} from '@/components/ui/alert-dialog';
 import {
   alertDialogDestructiveSource,
   alertDialogNeutralSource,
@@ -850,10 +854,9 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected trackConfirmation(triggerId: string, location: string): void {
     // `dialog_confirm` e não um evento novo: é o que a tabela de analytics do
     // conteúdo compartilhado documenta, e ele já existe tipado em AnalyticsEvents.
-    // Levanta a bandeira ANTES do fechamento: o `(click)` de quem consome roda
-    // antes do listener de `host` da diretiva de fechar (armadilha 10 do
-    // CLAUDE.md desta stack), igual ao Dialog.
-    this.confirmed = true;
+    // Não levanta bandeira nenhuma: quem sabe que a pessoa confirmou é o ALVO
+    // do evento que fechou o painel, lido em `trackOpenChange`. Marcar aqui
+    // chegaria tarde — ver `alertDialogConfirmedFromEvent`.
     track('dialog_confirm', { component: 'alert-dialog', trigger_id: triggerId, location });
   }
 
@@ -863,25 +866,25 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
    *
    * O motivo segue o vocabulário do design system (`18-overlay.md` §Analytics),
    * e quem o traduz é `alertDialogCloseReason`, ao lado do primitivo: a página
-   * só sabe que a pessoa confirmou — a palavra é do componente. A ação que
-   * confirma e o Cancelar são as duas partes de fechar, e o radix-ng entrega
-   * `close-press` para as duas; sem a bandeira, "confirmou" chegaria ao
-   * relatório como "apertou o botão de fechar". O Escape chega como
-   * `escape-key` e sai como `escape`. Clique fora não fecha este componente,
-   * então `overlay` não existe no vocabulário dele.
+   * só entrega o que sabe — a palavra é do componente. A ação que confirma e o
+   * Cancelar são as duas partes de fechar, e o radix-ng entrega `close-press`
+   * para as duas; sem separá-las, "confirmou" chegaria ao relatório como
+   * "apertou o botão de fechar". Quem as separa é o ALVO do evento que fechou,
+   * e não uma bandeira levantada no `(click)` — ver
+   * `alertDialogConfirmedFromEvent`. O Escape chega como `escape-key` e sai
+   * como `escape`. Clique fora não fecha este componente, então `overlay` não
+   * existe no vocabulário dele.
    */
   protected trackOpenChange(triggerId: string, location: string, event: RdxDialogOpenChange): void {
     if (event.open) {
-      this.confirmed = false;
       track('dialog_open', { component: 'alert-dialog', trigger_id: triggerId, location });
       return;
     }
-    const reason = alertDialogCloseReason(event.reason, { confirmed: this.confirmed });
-    this.confirmed = false;
+    const reason = alertDialogCloseReason(event.reason, {
+      confirmed: alertDialogConfirmedFromEvent(event.event),
+    });
     track('dialog_close', { component: 'alert-dialog', trigger_id: triggerId, reason, location });
   }
-
-  private confirmed = false;
 
   private observer: { disconnect: () => void } | undefined;
 

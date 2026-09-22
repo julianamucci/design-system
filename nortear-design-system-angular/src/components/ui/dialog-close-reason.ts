@@ -114,3 +114,35 @@ export function alertDialogCloseReason(
       return 'api';
   }
 }
+
+/**
+ * O seletor da ação que CONFIRMA. No Angular o seletor É o contrato da peça, e
+ * é ele que fica no DOM como atributo — diferente de `data-slot`, que neste
+ * elemento é disputado por duas diretivas (`ndsAlertDialogAction` e `ndsButton`
+ * escrevem o mesmo atributo, sem ordem garantida).
+ */
+const ALERT_DIALOG_ACTION_SELECTOR = '[ndsAlertDialogAction]';
+
+/**
+ * A pessoa CONFIRMOU, lido do evento que fechou o painel.
+ *
+ * Por que não uma bandeira marcada no `(click)` de quem consome, como no react:
+ * medido em 2026-09-22, o `(click)` do template corre **DEPOIS** do ouvinte de
+ * host do `RdxDialogClose` que o `ndsAlertDialogAction` compõe — o contrário do
+ * que `guidelines/13-system-design.md` §`(click)` no host afirma para ouvinte
+ * declarado em `host:`. A marca chegava sempre tarde, e confirmar a exclusão
+ * saía no relatório como `close-button`.
+ *
+ * Ler o ALVO não depende de ordem nenhuma: o `RdxDialogOpenChange` carrega o
+ * evento original, e nele o alvo é o botão (ou um filho dele) tanto no clique
+ * quanto no Enter/Espaço. É a mesma leitura por delegação que o vue faz.
+ *
+ * Função pura: recebe o evento e responde; não anexa ouvinte nem escreve no
+ * DOM. O `closest` é conferido por capacidade porque o projeto `unit` roda em
+ * node, onde `Element` não existe.
+ */
+export function alertDialogConfirmedFromEvent(event: Event | undefined): boolean {
+  const target = event?.target as Element | null | undefined;
+  if (!target || typeof target.closest !== 'function') return false;
+  return target.closest(ALERT_DIALOG_ACTION_SELECTOR) !== null;
+}
