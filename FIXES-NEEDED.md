@@ -2963,3 +2963,85 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       Passa isolado. É "a posição chega antes do estado" outra vez, num sítio
       que o commit `9051d807` não cobriu: o slide corrente e o slide com foco
       discordam. Junta-se ao `Drag Gesture` — não fechar como "não reproduz".
+
+## Conteúdo publicado que não chega a tela nenhuma (2026-09-22)
+
+**Este item nasce com forma de medir, e a lista abaixo é só orientação.** O
+preâmbulo deste arquivo ensina que registrar sem prazo de validade produz um
+arquivo em que não se pode confiar, e que pendência deve nascer com dono e com
+medição. A medição aqui é um portão:
+
+```bash
+node scripts/audit.mjs <slug> --json    # regra `conteudo_publicado_sem_tela`
+```
+
+**Quem manda é ele, não a tabela.** Se a tabela e o portão divergirem, a tabela
+está velha — apague a linha, não conserte o texto.
+
+### O que é
+
+O grupo do `translations.json` publica `itemN` / `tipN` / `pairN` até um certo
+número e a docs page cita os índices À MÃO, parando antes. A diferença é texto
+escrito, traduzido nos três idiomas, e que **não aparece na tela de ninguém**.
+
+O que torna a família cara é ser silenciosa em todas as direções: a página
+renderiza sem erro, o build compila, a suíte passa, e o axe não tem do que
+reclamar. Não citar `item5` não é erro de sintaxe nem de tipo.
+
+### Por que nenhuma rede pegava, e isso levou uma investigação
+
+Não era falta de rede — era um eixo faltando:
+
+- **`contract_uncovered` existe** e cobre até o caso uniforme nas cinco stacks,
+  mas no eixo STORY: "está documentado em `testes.*` e nenhuma story verifica".
+  Medido no `chart`: as stories cobrem os ONZE critérios e a docs page renderiza
+  SEIS. O portão fica em zero, corretamente, e o leitor vê metade.
+- As oito regras de `docs/shared/testing/docs-page-contract.ts` medem o que a
+  página RENDERIZOU. Tabela com 6 de 11 linhas não é "tabela sem linhas".
+- O **Check 14** da pipeline confronta as cinco com a FOLHA e o PRD. Funcionou na
+  anatomia do `alert`, porque o §4 daquele PRD listava seis nós contra quatro
+  renderizados. Onde o PRD não enumera o grupo não há terceira fonte — e foi por
+  isso que o `drawer` atravessou uma revisão completa, com Fase B, Check 14,
+  cinco agentes e Fase E, sem que isto aparecesse.
+
+### Instantâneo de 2026-09-22 — 46 pontos em 14 componentes
+
+Leitura: `grupo citado/publicado [stacks]`.
+
+| componente | grupos com teto abaixo do conteúdo |
+|---|---|
+| `chart` | `testes.functional` item6/item11 [react,svelte,vanilla,vue] · `testes.visual` item4/item8 [react,svelte,vanilla,vue] · `usage.guidelines` item2/item6 [angular] · `accessibility` item4/item6 [angular] · `notes` tip4/tip5 [angular] |
+| `switch` | `notes` item4/item5 [as CINCO] |
+| `table` | `testes.functional` item6/item7 · `testes.visual` item5/item6 [react,svelte,vanilla,vue] |
+| `pagination` | `testes.accessibility` item5/item6 [react,svelte,vanilla,vue] |
+| `separator` | `testes.functional` item5/item6 [react,svelte,vanilla,vue] |
+| `data-table` | `testes.functional` item8/item9 · `testes.accessibility` item4/item6 [react,svelte] |
+| `calendar` | `notes` tip3/tip4 [svelte] · `testes.functional` item6/item7 [vanilla] |
+| `carousel` | `testes.visual` item5/item6 [vanilla] · `usage.guidelines` item3/item4 [angular] |
+| `dialog` | `anatomy` item8/item10 [angular] |
+| `slider` | `accessibility.items` item5/item6 [angular] |
+| `popover` | `notes` item1/item4 [angular] |
+| `scroll-area` | `notes` item1/item4 [angular] |
+| `collapsible` | `notes` tip1/tip3 [angular] |
+| `button` | `usage.scenarios` item4/item5 [vue] |
+
+O `popover` e o `scroll-area` do angular são os piores em proporção: publicam
+quatro notas e mostram uma.
+
+### Como fechar, na rodada de cada componente
+
+Derivar os índices do dicionário em vez de listá-los — o `alert` tem a forma
+pronta nas cinco stacks (`itemIndexes(grupo, prefixo)`), e depois da passagem de
+2026-09-22 as cinco páginas dele derivam DEZ grupos. Copiar dali é mais rápido
+que inventar.
+
+**Uma exceção legítima, e ela precisa ser declarada**: em `doDont.pairN` o teto
+não é só mecânico — cada par carrega um preview próprio, então um `pair3`
+publicado exige código novo de qualquer jeito. Ali derivar não basta; o que o
+portão dá é o aviso de que o conteúdo passou o código.
+
+### Dono
+
+A rodada de cada componente, quando ela chegar. **Não é para consertar em massa**:
+são 14 componentes × até 5 stacks, e a regra da casa é que a unidade é o
+componente. O portão garante que nenhuma rodada feche sem ver o seu.
