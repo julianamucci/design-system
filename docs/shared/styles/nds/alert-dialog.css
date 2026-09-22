@@ -128,9 +128,11 @@
 
 /*
  * ─── nds-alert-dialog composite ─────────────────────────────────────────────
- * Animação de entrada/saída para libs headless (data-open/data-closed — o véu
- * reusa as keyframes de nds-dialog, o painel as de nds-animate) e bloco de mídia
- * (ícone) no header.
+ * Animação de entrada/saída do PAINEL para libs headless
+ * (data-open/data-closed, keyframes `nds-animate-in/out` de `utilities.css`) e
+ * bloco de mídia (ícone) no header. **O véu não anima** desde 2026-09-20 — até
+ * essa data esta linha dizia que ele reusava as keyframes de `nds-dialog`, que
+ * já não existem.
  *
  * NÃO há eixo de tamanho: o painel tem uma largura só (max-width 32rem) e se
  * adapta por viewport, não por prop. Existiu um `data-size="sm"` de 20rem com
@@ -146,10 +148,11 @@
  * a convenção do base-ui: a animação de saída nunca rodou em Vue, Svelte nem
  * Vanilla. Aqui as três convenções estão cobertas.
  *
- * O OVERLAY só faz fade. Escalar um backdrop `position: fixed; inset: 0`
- * encolheria a cortina e mostraria a página por baixo nas bordas — o efeito de
- * escala pertence ao painel, que é o objeto que "chega". É assim na referência
- * de animação adotada (popover: painel escala, cortina só esmaece).
+ * O OVERLAY não anima, e o raciocínio de por que ele NUNCA escalou continua
+ * valendo: escalar um backdrop `position: fixed; inset: 0` encolheria a cortina
+ * e mostraria a página por baixo nas bordas — o efeito de escala pertence ao
+ * painel, que é o objeto que "chega". Até 2026-09-20 ele fazia fade; hoje não
+ * faz nada, por decisão da dona, e este parágrafo dizia o contrário.
  *
  * O painel reusa as MESMAS keyframes do alert (`nds-animate-in/out`), então o
  * sistema tem um movimento de entrada só, definido num lugar só. A escala
@@ -171,6 +174,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Os cinco seletores de VÉU abaixo são guarda de REGRESSÃO: desde 2026-09-20
+   * nenhuma regra o anima, e eles sobreviveram à remoção das animações que
+   * existiam para desligar.
+   *
+   * **Ficam com a forma de estado, e não viram classe nua.** Encolher para
+   * `.nds-alert-dialog-overlay` seria mais limpo de ler e mais fraco de valer:
+   * a classe nua é (0,1,0) e perderia para qualquer `[data-…]` que devolvesse
+   * animação ao véu. É a armadilha que `sheet.css` registra ter caído TRÊS
+   * vezes — guarda que existe, parece eficaz e não pinta nada. Espelhar a forma
+   * que a animação teria é o que mantém a guarda capaz de vencer. */
   .nds-alert-dialog-overlay[data-open],
   .nds-alert-dialog-overlay[data-state="open"],
   .nds-alert-dialog-overlay[data-closed],

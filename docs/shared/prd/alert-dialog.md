@@ -22,17 +22,24 @@ escolher. É irmão do Dialog, e o que os separa não é estilo — é decisão.
 
 Nenhum véu modal desfoca (D8); a tabela só lista o que SEPARA os irmãos.
 
-As duas folhas são irmãs de código também: o VÉU do `alert-dialog.css` consome
-as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas em `dialog.css`
-(linhas 204 e 209); o PAINEL usa `nds-animate-in` / `-out`, de `utilities.css`
-(linhas 267 e 272) — o mesmo movimento do alert dispensável.
+As duas folhas são irmãs de código também, e o PAINEL do `alert-dialog.css`
+usa `nds-animate-in` / `-out`, de `utilities.css` — o mesmo movimento do alert
+dispensável.
+
+**O VÉU não consome keyframe nenhum desde 2026-09-20.** Até 2026-09-22 este
+parágrafo afirmava, no presente, que ele consumia `nds-dialog-fade-in` /
+`-fade-out` de `dialog.css` — keyframes que o commit `12c81620b` removeu. A
+nota datada abaixo isentava explicitamente só §5 e §6, e §1 e §11 ficaram
+descrevendo um mundo que acabou.
 
 
 > **2026-09-20 — o VÉU NÃO ANIMA MAIS, por decisão da dona, nos quatro componentes que o têm.** O que anima é o PAINEL, que é quem entra; o véu aparece com ele. Saíram as regras de animação de véu de `sheet.css`, `dialog.css` e `alert-dialog.css`, e com elas os keyframes `nds-sheet-fade-in`, `nds-dialog-fade-in` e `nds-dialog-fade-out`, que ficaram órfãos.
 >
 > **Nasceu de um defeito, e a simplificação é o conserto**: o véu do Drawer em react, vue e svelte desvanecia 0,5s sob `prefers-reduced-motion`, porque a folha que a `vaul` injeta declara a duração dele um degrau de especificidade acima do nosso guarda (medido; ver a D17 de [`drawer.md`](drawer.md)). Véu que não anima não tem guarda a perder — a decisão apaga a categoria do problema em vez de vencer a disputa de cascata.
 >
-> As linhas de §5 e §6 abaixo descrevem o estado ANTERIOR e ficam como histórico.
+> §1 e §11 foram corrigidos em 2026-09-22, depois de a Fase B medir que os dois
+> afirmavam no presente o que tinha sido removido. §5 e §6 descrevem o estado
+> ANTERIOR e ficam como histórico, por decisão.
 
 ## 2. Contrato de comportamento
 
@@ -142,7 +149,7 @@ documentava.
 **Estado**: caixa de 40px com raio `--radius-md` e fundo `--muted`, ícone de 24px
 dentro, margem inferior de 8px.
 **Comportamento**: `:has(.nds-alert-dialog-media)` centraliza a CAIXA do ícone no
-mobile e a devolve à esquerda a partir de 40rem (`alert-dialog.css:228-236`). O
+mobile e a devolve à esquerda a partir de 40rem (`alert-dialog.css:234-241`). O
 TEXTO do cabeçalho não depende dela: ele já é centralizado no mobile, com ou sem
 mídia, pela regra do próprio cabeçalho (linhas 83–94).
 **Por que `:has()` e não uma classe**: a presença do ícone é o que decide, e quem
@@ -615,7 +622,7 @@ Ordem: folha → primitivo → cabeçalho e rodapé → mídia → stories → d
 | assunto | arquivo |
 |---|---|
 | geometria, mídia, decisões de saída | `docs/shared/styles/nds/alert-dialog.css` |
-| keyframes de entrada e saída | `docs/shared/styles/nds/dialog.css` (véu) e `utilities.css` (painel) |
+| keyframes de entrada e saída DO PAINEL | `utilities.css` (`nds-animate-in` / `-out`). O véu não anima desde 2026-09-20 — `dialog.css` não declara mais keyframe de véu |
 | texto, props, critérios de teste | `docs/shared/content/alert-dialog/translations.json` |
 | desenho e anotações | Figma, página `AlertDialog` (componente `212:3`, chave `alertDialog` em `docs/shared/figma/design-links.ts`) |
 | portões determinísticos | `node scripts/audit.mjs alert-dialog --json` |
