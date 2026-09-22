@@ -7,7 +7,6 @@
  * inteira ao carregar. Os previews (demonstração, do & don't, variantes)
  * mostram o botão; o diálogo só aparece após o clique.
  */
-import { computed } from 'vue';
 import { track } from '@/lib/analytics';
 import {
   AlertDialog,
@@ -42,21 +41,16 @@ const props = withDefaults(defineProps<{
    */
   location: string;
   /**
-   * Id estável do gatilho, o `trigger_id` dos eventos. Sem ele, sai do tom
-   * (`destructive` / `neutral`); o Do & Don't passa o do par (`pair1-do`,
-   * `pair2-dont`…, as chaves `doDont.pair*` do conteúdo), porque ali o tom não
-   * distingue o exemplo certo do errado.
+   * Id ESTÁVEL do cenário, o `trigger_id` dos eventos — sempre explícito, nunca
+   * derivado do tom: id derivado muda quando o tom muda, e aí o payload deixa de
+   * identificar o gatilho, que é o que ele existe para fazer. O Do & Don't passa
+   * o do par (`pair1-do`, `pair2-dont`…, as chaves `doDont.pair*` do conteúdo).
    */
-  triggerId?: string;
+  triggerId: string;
 }>(), {
   triggerVariant: 'destructive',
   tone: 'default',
-  triggerId: undefined,
 });
-
-const resolvedTriggerId = computed(
-  () => props.triggerId ?? (props.tone === 'destructive' ? 'destructive' : 'neutral'),
-);
 
 // `trigger_id` é id estável, nunca o título: o título é texto traduzido e
 // quebraria a agregação no GA4 (um valor por idioma para o mesmo demo).
@@ -87,14 +81,14 @@ function handleOpenChange(open: boolean) {
     pendingGesture = null;
     track('dialog_open', {
       component: 'alert-dialog',
-      trigger_id: resolvedTriggerId.value,
+      trigger_id: props.triggerId,
       location: props.location,
     });
     return;
   }
   track('dialog_close', {
     component: 'alert-dialog',
-    trigger_id: resolvedTriggerId.value,
+    trigger_id: props.triggerId,
     reason: alertDialogCloseReason(pendingGesture),
     location: props.location,
   });
@@ -105,7 +99,7 @@ function handleConfirm() {
   pendingGesture = 'confirm';
   track('dialog_confirm', {
     component: 'alert-dialog',
-    trigger_id: resolvedTriggerId.value,
+    trigger_id: props.triggerId,
     location: props.location,
   });
 }

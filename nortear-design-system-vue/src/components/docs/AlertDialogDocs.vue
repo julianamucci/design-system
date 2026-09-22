@@ -451,6 +451,7 @@ const a11yCritCols = computed(() => ({
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
           location="docs_demo"
+          trigger-id="destructive"
         />
 
         <AlertDialogDemo
@@ -461,6 +462,7 @@ const a11yCritCols = computed(() => ({
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.neutralAction')"
           location="docs_demo"
+          trigger-id="neutral"
         />
       </div>
     </DocsDemonstration>
@@ -614,6 +616,7 @@ const a11yCritCols = computed(() => ({
     <DocsVariants
       :items="variantItems"
       :note="stripHtml(tContent('variants.note'))"
+      component-slug="alert-dialog"
     >
       <template #variant-preview-0>
         <AlertDialogDemo
@@ -625,6 +628,7 @@ const a11yCritCols = computed(() => ({
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
           location="docs_variantes"
+          trigger-id="destructive"
         />
       </template>
       <template #variant-preview-1>
@@ -636,6 +640,7 @@ const a11yCritCols = computed(() => ({
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.neutralAction')"
           location="docs_variantes"
+          trigger-id="neutral"
         />
       </template>
     </DocsVariants>
