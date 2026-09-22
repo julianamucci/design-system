@@ -56,6 +56,19 @@ const VARIANT_CLASSNAME: Record<AlertVariant, string> = {
 };
 
 /**
+ * Os modificadores de variante, e só eles: a `default` é a AUSÊNCIA dos quatro,
+ * e por isso não entra na lista.
+ *
+ * Derivado da tabela acima, e não repetido à mão, porque quem consome isto são
+ * as stories que provam EXCLUSIVIDADE — afirmar só a classe escolhida deixa
+ * passar um alerta com dois modificadores ao mesmo tempo. Variante nova entra
+ * na varredura sozinha; lista cravada na story envelheceria em silêncio.
+ */
+export const ALERT_MODIFIER_CLASSNAMES: readonly string[] = Object.values(VARIANT_CLASSNAME).filter(
+  (className) => className !== '',
+);
+
+/**
  * As classes `.nds-animate-in` / `.nds-animate-out` vivem em `utilities.css` e
  * servem a qualquer componente que apareça/suma em runtime.
  *

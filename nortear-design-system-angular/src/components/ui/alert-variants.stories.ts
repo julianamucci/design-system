@@ -8,6 +8,7 @@ import {
   NdsAlertTitle,
   NdsAlertDescription,
   NdsAlertIcon,
+  ALERT_MODIFIER_CLASSNAMES,
   type AlertIconKind,
   type AlertVariant,
 } from './alert';
@@ -65,7 +66,13 @@ export const Default: Story = {
 
     await step('A variante default não recebe classe de modificador', async () => {
       await expect(alerta).toHaveClass('nds-alert');
-      await expect(alerta).not.toHaveClass('nds-alert-destructive');
+      // Contra os QUATRO modificadores, como o `Playground` já faz: afirmar só
+      // a ausência de `destructive` deixava passar um alerta default carregando
+      // `nds-alert-success`, que é exatamente o defeito que a default promete
+      // não ter. A lista vem do primitivo, então variante nova entra sozinha.
+      for (const modifier of ALERT_MODIFIER_CLASSNAMES) {
+        await expect(alerta).not.toHaveClass(modifier);
+      }
       await expect(canvas.getByText('Atenção')).toBeVisible();
     });
 

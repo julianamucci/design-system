@@ -8,6 +8,7 @@ import {
   NdsAlertTitle,
   NdsAlertDescription,
   NdsAlertIcon,
+  ALERT_MODIFIER_CLASSNAMES,
   type AlertIconKind,
   type AlertVariant,
 } from './alert';
@@ -143,13 +144,13 @@ function renderedIconSignature(svg: SVGSVGElement): string {
     .join('|');
 }
 
-/** Os modificadores de variante, e só eles: a default é a ausência dos quatro. */
-const MODIFIERS = [
-  'nds-alert-destructive',
-  'nds-alert-success',
-  'nds-alert-warning',
-  'nds-alert-info',
-];
+/**
+ * Os modificadores de variante, e só eles: a default é a ausência dos quatro.
+ * Vem do primitivo (`ALERT_MODIFIER_CLASSNAMES`), derivado da mesma tabela que
+ * o componente usa para escolher a classe — duas listas iguais escritas à mão
+ * divergem, e a story de variante é justamente quem provaria o contrário.
+ */
+const MODIFIERS = ALERT_MODIFIER_CLASSNAMES;
 
 export const Playground: Story = {
   parameters: {

@@ -874,8 +874,15 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly noteItems = computed(() => {
-    dict();
-    return [1, 2, 3].map((i) => ({ title: '', content: t(`notes.tip${i}`) }));
+    const d = dict();
+    // Mesma regra dos outros nove grupos: quem manda no fim da lista é o
+    // dicionário. Aqui a chave numerada é `tip`, não `item` — com `[1, 2, 3]`
+    // cravado, um `notes.tip4` do conteúdo compartilhado não chegaria à tela e
+    // nenhum portão reprovaria.
+    return itemIndexes(d, 'notes', 'tip').map((i) => ({
+      title: '',
+      content: t(`notes.tip${i}`),
+    }));
   });
 
   protected readonly analyticsCols = computed(() => {
@@ -1004,11 +1011,21 @@ function priorityLabel(raw: string): string {
  * `suffix` é o campo que identifica a linha: `''` para texto solto
  * (`anatomy.item5`) e o primeiro campo para linha com sub-campos
  * (`testes.functional.item3.action`).
+ *
+ * `prefix` é o nome da chave numerada. Quase todo grupo usa `item`, mas nem
+ * todos: as notas publicam `notes.tip1…tipN`, e enquanto a varredura era
+ * ancorada em `item` esse grupo continuava com a lista cravada no chamador —
+ * o mesmo teto, num grupo que a regex não alcançava.
  */
-function indexesUnder(d: Record<string, string>, base: string, suffix: string): number[] {
-  const escaped = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const tail = suffix ? `\\.${suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` : '';
-  const pattern = new RegExp(`^${escaped}\\.item(\\d+)${tail}$`);
+function indexesUnder(
+  d: Record<string, string>,
+  base: string,
+  suffix: string,
+  prefix = 'item',
+): number[] {
+  const escape = (raw: string) => raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const tail = suffix ? `\\.${escape(suffix)}` : '';
+  const pattern = new RegExp(`^${escape(base)}\\.${escape(prefix)}(\\d+)${tail}$`);
   return Object.keys(d)
     .map((key) => pattern.exec(key))
     .filter((match): match is RegExpExecArray => match !== null)
@@ -1026,8 +1043,8 @@ function indexesUnder(d: Record<string, string>, base: string, suffix: string): 
  * três vezes — `anatomy.item5`/`item6`, `functional.item8` e `visual.item6`.
  * Quem manda no fim da lista é o dicionário.
  */
-function itemIndexes(d: Record<string, string>, base: string): number[] {
-  return indexesUnder(d, base, '');
+function itemIndexes(d: Record<string, string>, base: string, prefix = 'item'): number[] {
+  return indexesUnder(d, base, '', prefix);
 }
 
 /** Linhas com sub-campos. Mesma varredura — o buraco não pode dar teto aqui também. */
