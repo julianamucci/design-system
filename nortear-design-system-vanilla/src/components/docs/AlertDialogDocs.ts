@@ -475,6 +475,7 @@ const dialog = createAlertDialog({
         const codeDefault = toSnippet(neutralContent());
 
         return createDocsVariants({
+          componentSlug: 'alert-dialog',
           note: stripHtml(t('variants.note')),
           items: [
             {

@@ -220,7 +220,11 @@ export const Playground: Story = {
     await step('Foco inicial em Cancelar, não na ação destrutiva', async () => {
       const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
+      const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await waitFor(() => expect(cancel).toHaveFocus());
+      // Sem a metade negativa o passo afirma metade da D3: um painel que
+      // focasse também a ação destrutiva passaria por aqui sem reprovar.
+      await expect(action).not.toHaveFocus();
     });
 
     await step('Tab e Shift+Tab ficam presos entre Cancelar e a ação', async () => {

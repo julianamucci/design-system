@@ -248,6 +248,17 @@ do Dialog, que é reto abaixo de 40rem.
 libs — `[data-open]`/`[data-closed]`/`[data-ending-style]` (base-ui, radix-ng) e
 `[data-state]` (reka, bits, e a fábrica do vanilla, que o escreve à mão).
 
+**No VÉU esse atributo não move nada desde 2026-09-20**, e fica de propósito.
+Quem anima é só o painel, e é o `data-state` DELE que a folha lê. O do véu
+continua sendo escrito — pela fábrica no vanilla, pelas libs nas outras quatro —
+por duas razões medidas na passagem de 2026-09-22: a folha pode voltar a pendurar
+regra no véu sem que a fábrica mude, e o véu se descreve com a mesma marcação do
+painel, em vez de ser a única peça sem estado declarado.
+
+Até essa data o comentário da fábrica chamava o atributo de "gancho das
+animações" e dizia que sem ele "o overlay aparecia e sumia seco" — premissa
+correta quando foi escrita e falsa depois que o véu parou de animar.
+
 ## 6. Estados
 
 | estado | quando ocorre | o que muda |

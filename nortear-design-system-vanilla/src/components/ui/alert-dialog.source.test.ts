@@ -85,6 +85,20 @@ describe('alertDialogSnippet', () => {
     expect(code).not.toContain('trigger: trigger');
   });
 
+  it('põe o cancelButton antes do actionButton — a saída segura precede a destrutiva', () => {
+    const code = alertDialogSnippet();
+    // Vale nas duas alturas do trecho: na construção dos botões e na chamada da
+    // fábrica, que é quem decide a ordem no DOM. É a ordem de leitura e de
+    // tabulação, e é sobre ela que a folha trabalha (`column-reverse` no
+    // estreito, `row` no largo) — inverter aqui inverteria a tela.
+    expect(code.indexOf('const cancelButton =')).toBeLessThan(code.indexOf('const actionButton ='));
+    expect(code.indexOf('\n  cancelButton,')).toBeLessThan(code.indexOf('\n  actionButton,'));
+    // E cada um aparece uma vez só: duas ocorrências fariam o `indexOf` medir
+    // um par que não é o que o leitor copia.
+    expect(code.match(/^\s*cancelButton,$/gm)).toHaveLength(1);
+    expect(code.match(/^\s*actionButton,$/gm)).toHaveLength(1);
+  });
+
   it('ignora o callback que a story passa como função de verdade', () => {
     const spy = alertDialogSnippet({ onOpenChange: (() => {}) as unknown as string });
     expect(spy).not.toContain('onOpenChange');

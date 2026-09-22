@@ -134,11 +134,15 @@ export const Open: Story = {
       await expect(dialog).toHaveTextContent(LABELS.description);
     });
 
-    await step('Foco inicial no Cancelar', async () => {
+    await step('Foco inicial no Cancelar, e não na ação destrutiva', async () => {
       const dialog = await waitForPortal('alertdialog');
       await waitFor(() =>
         expect(within(dialog).getByRole('button', { name: LABELS.cancel })).toHaveFocus(),
       );
+      // A metade negativa é o que dá dentes à asserção: sem ela, um painel que
+      // focasse os dois botões (ou que movesse o foco para a ação logo depois)
+      // passaria igual. É a D3 do PRD — a saída segura é que recebe o foco.
+      await expect(within(dialog).getByRole('button', { name: LABELS.action })).not.toHaveFocus();
     });
   },
 };
