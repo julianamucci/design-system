@@ -34,9 +34,67 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 21 itens
+## Aberto de verdade — 23 itens
 
 ### Precisam de decisão da dona (3)
+
+> **Lote agendado — DataTable × Pagination (decidido em 2026-09-22, a fazer).**
+> A dona decidiu que **o rodapé de paginação do DataTable passa a compor o
+> componente Pagination**, e escolheu a forma: **o Pagination cresce e a tela do
+> DataTable não muda.** Fica para rodada própria, por corte dela — é uma
+> passagem de `pagination` disfarçada de passagem de `data-table`.
+>
+> O que a rodada precisa fazer, já medido:
+>
+> | o quê | onde |
+> |---|---|
+> | `Pagination` ganha `showFirstLast` (duplo chevron nas pontas) | as cinco |
+> | `Pagination` ganha `showPages` (default `true`); o rodapé passa `false` | as cinco |
+> | `Pagination` ganha eixo de APARÊNCIA; o rodapé usa o de borda | `pagination.css` |
+> | o rodapé troca `div` + 4 `<button>` por `<nav><ul>` | as cinco |
+>
+> **O eixo de aparência não é opcional**: `.nds-pagination-icon` é 36×36
+> transparente e sem borda, e o rodapé de hoje usa
+> `createButton({ variant: "outline", size: "icon" })`, que tem borda. Compor
+> sem ele mudaria a tela, e a decisão foi que ela não muda. O eixo mora no
+> `Pagination`, não num seletor descendente em `data-table.css`: aparência é
+> decisão do componente, não do vizinho que o hospeda.
+>
+> **Ponto aberto, registrado por decisão da dona**: o `Pagination` renderiza
+> `<a href="#">` quando não há rota, e o rodapé da tabela **nunca** tem rota
+> (confirmado: zero `nds-pagination` em arquivo `data-table` das cinco). Trocar
+> `<button>` por âncora vazia num controle que age na própria página é recuo de
+> semântica dentro de um avanço. A dona decidiu **resolver na rodada do
+> Pagination**, não nesta.
+
+- [ ] **Três stories existem só no angular, e medem comportamento que as cinco
+  têm.** (Medido em 2026-09-22, na Fase B do data-table.) `Sorted`,
+  `SelectedRows` e `WithColumnVisibility` são do angular e de mais ninguém; as
+  outras quatro não têm story dedicada de ordenação nem de seleção. O portão
+  `story_group_divergent` via só duas stories fora do grupo — a assimetria real
+  é maior, e ele não a alcança porque compara ONDE a story mora, não SE ela
+  existe.
+
+  Fora do corte desta passagem (são três stories com play em quatro stacks).
+  A decisão é se o contrato do componente inclui esses três casos: se sim, as
+  quatro ganham as stories; se não, o angular declara `coversNotApplicable` ou
+  as remove.
+
+- [ ] **O DataTable não está ligado ao desenho.** (Pendência de 2026-09-16,
+  remedida em 2026-09-22: continua de pé.) `docs/shared/figma/design-links.ts`
+  não tem entrada para `data-table` e nenhuma story declara `figmaDesign` — o
+  maior componente do sistema é o que não tem component set.
+
+  **Não fechei registrando "a ausência é decisão"**, que era a segunda saída
+  escrita na pendência: ninguém decidiu isso, e dar nome de decisão a uma lacuna
+  é a forma mais cara de fechá-la — some do radar sem ninguém ter escolhido
+  nada. O caminho real é uma rodada de `/figma-sync-component data-table`.
+
+- [ ] **A moeda da demonstração do DataTable não acompanha o idioma.**
+  (Medida em 2026-09-22.) O formatador é `Intl.NumberFormat` fixo em
+  `pt-BR`/`BRL` nas cinco: em `en` e `es` o valor continua saindo em "R$".
+  A segunda não é tradução, é DADO — trocar a moeda muda o que a tabela diz —,
+  então é decisão de conteúdo, não conserto mecânico.
 
 - [ ] **A saída do painel do Dialog e do Select está declarada num dialeto só,
   e por isso roda em UMA das cinco stacks.** (Aberto em 2026-09-22, medido de
