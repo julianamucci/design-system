@@ -5748,7 +5748,13 @@ const ELEVACAO_POR_TIPO = {
   sm: { tipo: 'card, sobre o background', folhas: ['card', 'slider'] },
   md: {
     tipo: 'flutuante interativo',
-    folhas: ['popover', 'dropdown-menu', 'select', 'combobox', 'navigation-menu', 'calendar', 'composer'],
+    // `data-table` entrou em 2026-09-22: a única sombra da folha é a do menu de
+    // colunas, que é flutuante interativo como o `dropdown-menu` ao lado. Ela era
+    // LITERAL e estava isenta por uma exceção de premissa FALSA — dizia ser
+    // "sombra de rolagem do cabeçalho fixo", e `position: sticky` não aparece na
+    // folha uma vez sequer. Exceção com premissa que ninguém confere é como
+    // portão sem dentes: parece cobertura e não é.
+    folhas: ['popover', 'dropdown-menu', 'select', 'combobox', 'navigation-menu', 'calendar', 'composer', 'data-table'],
   },
   lg: { tipo: 'flutuante passivo', folhas: ['hover-card', 'tooltip'] },
   // O toast entra em `xl` por decisão da dona (2026-09-10), e o motivo é de
@@ -5793,7 +5799,6 @@ const ELEVACAO_FORA_DA_REGRA = {
  * declara aqui com a razão, e a razão é sobre o VALOR não estar na escada.
  */
 const SOMBRA_CRAVADA_DECLARADA = {
-  'data-table': 'sombra de rolagem do cabeçalho fixo (`0 8px 24px -4px`), não degrau da escada: ela indica que há conteúdo por baixo, e o blur largo é o que faz esse papel. Aguarda decisão da dona sobre virar token próprio',
   switch: 'relevo do thumb (`0 1px 3px / 0.2`), entre o `xs` e o `sm` e com blur próprio. Aguarda decisão da dona: adotar `xs` o deixa mais raso, adotar `sm` mais escuro',
 };
 
@@ -6982,6 +6987,36 @@ function tokenDeInstancia(slug, stack) {
   return '<' + Slug;
 }
 
+/**
+ * A linha INSTANCIA o componente?
+ *
+ * Não basta `linha.includes(token)`: o token é `createDataTable(` e a fábrica
+ * genérica é chamada como `createDataTable<Invoice>({`. O parâmetro de tipo
+ * entra ENTRE o nome e o parêntese, e a busca literal não casa.
+ *
+ * Custo medido do falso positivo, em 2026-09-22: o Do & Don't do DataTable no
+ * vanilla — que é a stack de REFERÊNCIA — foi acusado de mostrar imitação em 4
+ * de 4 previews, com as quatro fábricas instanciando o componente de verdade.
+ * Um agente chegou a ser instruído a "não mexer" para não piorar a referência
+ * seguindo um portão errado.
+ *
+ * É a terceira correção desta mesma regra pela mesma causa: ela reconhece uma
+ * FORMA de chamada, e toda forma nova que aparece é um falso positivo até
+ * alguém medir. As duas anteriores estão no comentário das fábricas, abaixo.
+ */
+function instanciaNaLinha(linha, token) {
+  if (linha.includes(token)) return true;
+  if (!token.endsWith('(')) return false;
+  const nome = token.slice(0, -1);
+  for (let i = linha.indexOf(nome); i !== -1; i = linha.indexOf(nome, i + 1)) {
+    const resto = linha.slice(i + nome.length);
+    if (!resto.startsWith('<')) continue;
+    const fecha = resto.indexOf('>');
+    if (fecha !== -1 && resto.slice(fecha + 1).trimStart().startsWith('(')) return true;
+  }
+  return false;
+}
+
 function auditDoDontPreview(slug) {
   const porStack = {};
   for (const stack of STACKS) {
@@ -7047,7 +7082,7 @@ function auditDoDontPreview(slug) {
         // agent-plan do vanilla, que a profundidade sozinha dava por imitação.
         // Com o máximo, a regra só reconhece MAIS helpers que a janela antiga.
         fim = Math.max(fim, n + 39);
-        if (linhas.slice(n, fim + 1).some((l) => l.includes(token))) fabricas.add(decl[1]);
+        if (linhas.slice(n, fim + 1).some((l) => instanciaNaLinha(l, token))) fabricas.add(decl[1]);
       }
       const usaFabrica = (l) => [...fabricas].some((f) => l.includes(f + '(') || new RegExp(`<${f}\\b`).test(l));
 
@@ -7071,7 +7106,7 @@ function auditDoDontPreview(slug) {
         // A janela ignora linha de snippet pelo mesmo motivo: instanciação
         // EXIBIDA ao leitor não prova que o preview instancia.
         const janelaViva = janela.filter((_, i) => !emSnippet[inicio + i]);
-        const viva = janelaViva.some((l) => l.includes(token)) || janelaViva.some(usaFabrica);
+        const viva = janelaViva.some((l) => instanciaNaLinha(l, token)) || janelaViva.some(usaFabrica);
         if (viva) vivos += 1;
       }
     }
@@ -7998,6 +8033,43 @@ function auditTextSurfaces(slug) {
       if (!content) continue;
       const rel = relative(ROOT, file);
 
+      // UM nível de indireção conta como sanitizado.
+      //
+      // O helper de legenda das docs pages recebe o texto e aplica
+      // `toPlainText` nele: `captionFor(t(chave))`. A regra só enxergava
+      // `toPlainText(` colado na chamada, então acusava TRÊS stacks por um
+      // construto que as três escreveram de forma independente — sinal de que
+      // o construto é natural e de que a cegueira era da regra. É a mesma
+      // indireção que `dodont_preview_sem_componente` já reconhece, pela mesma
+      // razão e com o mesmo cuidado.
+      //
+      // O reconhecimento é ESTREITO de propósito: entra só o helper cujo corpo
+      // aplica `toPlainText` no PRÓPRIO primeiro parâmetro. Helper que
+      // sanitiza outra coisa não vale — senão a exceção vira porta.
+      const sanitizadores = new Set();
+      {
+        const linhasArq = content.split("\n");
+        // O NOME do helper e os PARÂMETROS dele são lidos em dois passos, e
+        // não num regex só: `const caption = useCallback(` põe o parêntese do
+        // `useCallback` entre o `=` e o parâmetro, que ainda por cima cai na
+        // linha de baixo. Exigir `(param` colado ao `=` deixava o react de
+        // fora — e era o react a stack que sobrava acusada.
+        const decl = /(?:function[ ]+([A-Za-z_$][A-Za-z0-9_$]*)[ ]*\(|const[ ]+([A-Za-z_$][A-Za-z0-9_$]*)[ ]*=)/;
+        const paramRe = /\(([A-Za-z_$][A-Za-z0-9_$]*)[:,)]/g;
+        for (let i = 0; i < linhasArq.length; i++) {
+          const m = linhasArq[i].match(decl);
+          if (!m) continue;
+          const nomeHelper = m[1] ?? m[2];
+          if (!nomeHelper) continue;
+          const cabeca = linhasArq.slice(i, i + 3).join("\n");
+          const corpo = linhasArq.slice(i, i + 12).join("\n");
+          for (const pm of cabeca.matchAll(paramRe)) {
+            if (corpo.includes('toPlainText(' + pm[1])) { sanitizadores.add(nomeHelper); break; }
+          }
+        }
+      }
+      const prefixos = ['toPlainText', ...sanitizadores].map(escapar).join('|');
+
       for (const chave of comMarkup) {
         if (!TEXT_SURFACE_PREFIXES.some((p) => chave.startsWith(p))) continue;
         // a mesma chave pode aparecer literal ou com índice interpolado; sem o
@@ -8005,7 +8077,7 @@ function auditTextSurfaces(slug) {
         const alvos = new Set([chave, chave.replace(/item\d+/, 'item${i}')]);
         for (const alvo of alvos) {
           const re = new RegExp(
-            `(toPlainText\\()?\\s*(?:tContent|\\$?tStore|\\bt)\\(['\`"]${escapar(alvo)}['\`"]\\)`,
+            `((?:${prefixos})\\()?\\s*(?:tContent|\\$?tStore|\\bt)\\(['\`"]${escapar(alvo)}['\`"]\\)`,
             'g',
           );
           for (const m of content.matchAll(re)) {
