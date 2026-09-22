@@ -34,7 +34,8 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { dialogCloseReason, markConfirmation } from "@/components/ui/dialog-close-reason";
+import { markConfirmation } from "@/components/ui/dialog-close-reason";
+import { alertDialogCloseReason } from "@/components/ui/alert-dialog-close-reason";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
@@ -131,8 +132,10 @@ function AlertDialogDemo({
           component: "alert-dialog",
           trigger_id: triggerId,
           // Escape chega aqui como `escape-key` e sai `escape`; o Cancelar,
-          // como `close-button`; a ação, como `api` pela marca abaixo.
-          ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
+          // como `close-button`; a ação, como `api` pela marca abaixo. O
+          // mapeador é o do ALERT dialog — três palavras, sem `overlay`,
+          // porque o clique no véu não fecha este painel (D1).
+          ...(open ? {} : { reason: alertDialogCloseReason(details?.reason) }),
           location,
         })
       }
@@ -543,7 +546,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         secondaryCode={codeImportWithTrigger}
       />
 
-      <DocsVariants
+      <DocsVariants componentSlug="alert-dialog"
         note={tContent("variants.note")}
         items={[
           {

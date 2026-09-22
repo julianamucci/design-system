@@ -200,14 +200,21 @@ export const Playground: Story = {
     const onOpenChange = args.onOpenChange as unknown as ReturnType<typeof fn>;
     const openedWith = (open: boolean) =>
       onOpenChange.mock.calls.some((call) => call[0] === open);
+    // Guardado como nó: com o diálogo aberto o conteúdo externo recebe
+    // aria-hidden/inert, então uma nova query por role não o encontraria — e é
+    // justamente com o painel aberto que o `aria-expanded` interessa.
+    const trigger = canvas.getByRole("button", { name: /^Excluir conta$/i });
 
-    await step("Trigger está presente no DOM", async () => {
-      const trigger = canvas.getByRole("button", { name: /^Excluir conta$/i });
+    await step("Trigger está presente e anuncia que abre um diálogo", async () => {
       await expect(trigger).toBeInTheDocument();
+      // A base-ui escreve os três no gatilho (`DialogTrigger`, reexportado
+      // inteiro pelo alert dialog): `aria-haspopup="dialog"`, o `aria-expanded`
+      // do estado e o `aria-controls` apontando o popup.
+      await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
 
     await step("Diálogo abre ao clicar no trigger", async () => {
-      const trigger = canvas.getByRole("button", { name: /^Excluir conta$/i });
       await userEvent.click(trigger);
       const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
@@ -216,6 +223,9 @@ export const Playground: Story = {
       await expect(
         document.querySelector('[data-slot="alert-dialog-overlay"]'),
       ).not.toBeNull();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      // O gatilho aponta o painel que abriu — a outra metade do anúncio.
+      await expect(trigger).toHaveAttribute("aria-controls", dialog.id);
       await waitFor(() => expect(openedWith(true)).toBe(true));
     });
 
@@ -341,9 +351,12 @@ export const Playground: Story = {
       await waitFor(() => expect(openedWith(false)).toBe(true));
     });
 
-    await step("Foco retorna ao trigger após fechar", async () => {
-      const trigger = canvas.getByRole("button", { name: /^Excluir conta$/i });
+    await step("Foco retorna ao trigger após fechar, e o anúncio volta a false", async () => {
       await waitFor(() => expect(trigger).toHaveFocus());
+      // O ciclo fecha onde começou: false → true → false. Um `aria-expanded`
+      // que ficasse preso em `true` diria ao leitor de tela que o painel
+      // continua aberto depois de o Escape o ter fechado.
+      await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
     });
   },
 };

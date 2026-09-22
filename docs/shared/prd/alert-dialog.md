@@ -538,6 +538,67 @@ tem portão que a veja.
 > **PENDÊNCIA · 2026-09-15** — as dezessete inconsistências acima estão medidas e sem correção; os itens 1, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16 e 17 pedem alinhamento, e os itens 2, 3, 4, 11 e 14 pedem só registro (com as decisões da dona apontadas neles).
 > **Fecha quando**: a próxima revisão de código deste componente remedir cada item no HEAD e marcá-lo como fechado ou registrado, como a §7 do `skeleton.md` fez em 2026-09-14.
 
+### Remedição de 2026-09-22 — o que caiu, o que ficou
+
+A PENDÊNCIA acima pedia que a próxima revisão remedisse cada item no HEAD. Foi
+feito, e o primeiro resultado é o que mais importa: **dos dezessete, ZERO tinham
+caído sozinhos** em uma semana. Registro medido não apodrece por si; ele só
+apodrece quando alguém conserta o código e não volta aqui.
+
+**Fechados nesta rodada:**
+
+| # | o que era | como fechou |
+|---|---|---|
+| 1 | o gatilho do angular não se nomeava | ganhou `host: { 'data-slot': … }`, afirmado no DOM pela Playground |
+| 5 | a negativa do foco inicial faltava em duas | vanilla e angular passam a afirmar que a ação NÃO tem foco |
+| 6 | contrato de gatilho afirmado em partes diferentes | react afirma os três atributos com o ciclo completo; svelte afirma `aria-haspopup` |
+| 8 | o motivo do fechamento só era afirmado em duas | react e svelte passam a empilhar `['escape','close-button','api']` |
+| 10 | o react não tinha o vocabulário de três palavras | nasceu `ui/alert-dialog-close-reason.ts`, na forma do vue e do svelte |
+| 12 | `componentSlug` só chegava no angular | fechou em duas etapas — ver abaixo |
+| 13 | `trigger_id` derivado do tom em duas stacks | vue e svelte passam a escrevê-lo explícito, e a prop virou obrigatória no tipo |
+| 15 | a tabela de tokens do angular em outra ordem | reordenada, idêntica às outras quatro |
+| 17 | a ordem Cancel-antes-de-Action não afirmada em duas | svelte e vanilla passam a afirmar no snippet |
+
+**O item 12 fechou em DUAS etapas, e a primeira enganou.** A varredura de
+`slug_de_rastreio_ausente` de 2026-09-22 corrigiu `DocsImport`, `DocsRelated` e
+`DocsNotes` em 278 páginas — e esta passagem deu o item por fechado com base
+nisso. A Fase B mediu e mostrou que faltava o **`DocsVariants`** em quatro
+stacks: sem o slug, `DocsVariants` monta `trackId` como `undefined`, os cartões
+de variante saem sem `data-track-id`, e **copiar o código da seção Variantes não
+emitia `docs_code_copy`**. O portão daquela varredura vigia três containers e
+sete aceitam a prop — a lacuna é dele, está registrada no `FIXES-NEEDED.md`, e
+vale para 66 páginas fora deste componente.
+
+**Duas medições que mudaram o que se sabia, e as duas vieram de plantio:**
+
+1. **O item 1 tinha uma sub-pergunta marcada como "não medido"** — se o host
+   binding de `Cancel`/`Action` vence o `data-slot` que o `ndsButton` composto
+   escreve. Medida agora, plantando as três formas numa chamada só: **host
+   binding de diretiva GANHA do componente**; a armadilha é o atributo escrito
+   no TEMPLATE, que perde. Ficou o atributo estático, que não depende dessa
+   ordem. A sub-pergunta sai da lista.
+2. **A negativa do foco (item 5) NÃO tem dentes próprios.** Plantadas as duas
+   formas do defeito — foco direto na ação, e foco que escorrega depois —, as
+   duas foram pegas primeiro pela metade positiva. A asserção entra por
+   PARIDADE, não por cobertura nova. Vale para vanilla e angular.
+
+**Continuam abertos**, e agora com dono nomeado:
+
+| # | o que falta | por quê |
+|---|---|---|
+| 7 | o caminho da base-ui e do radix-ng quando a descrição sai com o painel ABERTO | não há story em react nem em angular. **Não é "passa": é não medido** |
+| 9 | asserções de variante desiguais | a caixa de mídia sem `aria-hidden` só o angular afirma; a ordem VISUAL do rodapé empilhado idem |
+| 16 | construtores de snippet sem o nome das stories | `WithIcon`/`NoDescription`/`ClassNameExtra` para stories chamadas `WithMedia`/`WithoutDescription`/`ExtraClass`; o vue ainda mistura idiomas |
+| 2, 3, 4, 11, 14 | registro, não conserto | forma de API, e já estão descritos acima |
+
+E o **C7 segue sem portão**, com uma correção ao que a pendência dizia: na
+REFERÊNCIA ele já tem um, e é o `tsc` — `vanilla/alert-dialog.ts` declara
+`cancelButton` e `actionButton` sem `?`, então uma composição sem rodapé não
+compila. Nas quatro com lib o rodapé é opcional por construção, e o angular
+admite por escrito. Por decisão da dona, o portão a construir é **estático e
+sobre o que o design system PUBLICA**: todo snippet `*Code` e todo `*.source.ts`
+que monta o painel tem de trazer o rodapé com as duas peças.
+
 ## 8. Acessibilidade
 
 **Atributos**: `role="alertdialog"`, `aria-modal="true"`, `aria-labelledby`

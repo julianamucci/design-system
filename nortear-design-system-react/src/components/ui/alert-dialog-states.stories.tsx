@@ -16,6 +16,11 @@ import {
   AlertDialogTrigger,
 } from "./alert-dialog";
 import { Button } from "./button";
+import { markConfirmation } from "./dialog-close-reason";
+import {
+  alertDialogCloseReason,
+  type AlertDialogCloseReason,
+} from "./alert-dialog-close-reason";
 import {
   alertDialogCancelledSource,
   alertDialogConfirmedSource,
@@ -363,6 +368,15 @@ export const Cancelled: Story = {
 // Spy de módulo para provar que o callback de mudança dispara em modo controlado.
 const onControlledOpenChange = fn();
 
+/**
+ * O motivo que cada fechamento do painel controlado relatou, na ordem.
+ *
+ * A play roda no mesmo módulo que a story e lê daqui. Um `fn()` de args não
+ * serviria: o motivo não é prop do AlertDialog, e entraria na tabela de
+ * propriedades da docs page como se fosse.
+ */
+const controlledCloseReasons: AlertDialogCloseReason[] = [];
+
 export const Controlled: Story = {
   parameters: {
     covers: ["functional.item7"],
@@ -389,8 +403,14 @@ export const Controlled: Story = {
           </Button>
           <AlertDialog
             open={open}
-            onOpenChange={(next) => {
+            onOpenChange={(next, details) => {
               onControlledOpenChange(next);
+              // O motivo é o que alimenta o `reason` do `dialog_close` — o
+              // mesmo mapeador que a docs page usa, e o mesmo vocabulário de
+              // três palavras. Só na SAÍDA: abrir não tem motivo.
+              if (!next) {
+                controlledCloseReasons.push(alertDialogCloseReason(details?.reason));
+              }
               setOpen(next);
             }}
           >
@@ -401,7 +421,15 @@ export const Controlled: Story = {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>{LABELS.cancel}</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">{LABELS.action}</AlertDialogAction>
+                <AlertDialogAction
+                  variant="destructive"
+                  // A marca vem ANTES do fechamento: a lib entrega
+                  // `close-press` para o Cancelar e para a ação, e sem ela a
+                  // confirmação chegaria ao relatório como "apertou o cancelar".
+                  onClick={() => markConfirmation()}
+                >
+                  {LABELS.action}
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -412,6 +440,9 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    // A play REEXECUTA no mesmo DOM, e o que a rodada anterior empilhou não é
+    // desta medição.
+    controlledCloseReasons.length = 0;
 
     await step("Clique no trigger externo abre o diálogo", async () => {
       const trigger = canvas.getByRole("button", { name: TRIGGER_NAME });
@@ -436,6 +467,32 @@ export const Controlled: Story = {
       await waitFor(() =>
         expect(canvas.getByRole("button", { name: TRIGGER_NAME })).toHaveFocus(),
       );
+      await expect(controlledCloseReasons.at(-1)).toBe("escape");
+    });
+
+    await step("O Cancelar se chama close-button, e não 'o que sobrou'", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: TRIGGER_NAME }));
+      const dialog = await waitForPortal("alertdialog");
+      await userEvent.click(within(dialog).getByRole("button", { name: CANCEL_NAME }));
+      await waitForClosed();
+      await expect(controlledCloseReasons.at(-1)).toBe("close-button");
+    });
+
+    await step("A ação confirma, e o motivo sai api — não close-button", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: TRIGGER_NAME }));
+      const dialog = await waitForPortal("alertdialog");
+      await userEvent.click(within(dialog).getByRole("button", { name: ACTION_NAME }));
+      await waitForClosed();
+      // A lib entrega o MESMO `close-press` do Cancelar; o que separa os dois é
+      // a marca que o `onClick` da ação deixa antes do fechamento.
+      await expect(controlledCloseReasons.at(-1)).toBe("api");
+    });
+
+    await step("Os três caminhos relataram motivos DIFERENTES", async () => {
+      // O vocabulário inteiro do componente, exercido de ponta a ponta: três
+      // palavras, três gestos, nenhuma repetição. Sem este passo, um mapeador
+      // que devolvesse a mesma palavra para tudo passaria nos anteriores.
+      await expect(controlledCloseReasons).toEqual(["escape", "close-button", "api"]);
     });
   },
 };

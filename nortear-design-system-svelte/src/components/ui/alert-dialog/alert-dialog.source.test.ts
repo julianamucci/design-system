@@ -214,3 +214,40 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('<AlertDialogMedia class="nds-shrink-0">');
   });
 });
+
+describe('ordem do rodapé no que o painel Code ENSINA', () => {
+  // A saída segura vem ANTES da confirmação no DOM, em todo snippet publicado:
+  // é a ordem de leitura e de tabulação, e é sobre ela que a folha trabalha
+  // (`column-reverse` no estreito, `row` no largo). Regra de
+  // `docs/shared/guidelines/02-alinhamento-botoes.md` aplicada ao que o design
+  // system ensina — inverter aqui inverteria a tela de quem copia.
+  //
+  // Vale para as DEZ transforms, e não só para as de composição: o modo
+  // controlado monta o painel por conta própria, fora do construtor comum, e é
+  // justamente o que escaparia de uma varredura parcial.
+  const transforms = {
+    alertDialogSource,
+    alertDialogConfirmedSource,
+    alertDialogCancelledSource,
+    alertDialogControlledSource,
+    alertDialogWithIconSource,
+    alertDialogNeutralSource,
+    alertDialogLongDescriptionSource,
+    alertDialogNoDescriptionSource,
+    alertDialogClassNameExtraSource,
+    alertDialogHeadingH3Source,
+  };
+
+  for (const [name, transform] of Object.entries(transforms)) {
+    it(`${name} põe o Cancelar antes da ação`, () => {
+      const output = transform();
+      const cancel = output.indexOf('<AlertDialogCancel');
+      const action = output.indexOf('<AlertDialogAction');
+      // Os dois existem: sem esta parte, um snippet que perdesse o rodapé
+      // passaria com dois -1, que é o portão sem dentes.
+      expect(cancel).toBeGreaterThan(-1);
+      expect(action).toBeGreaterThan(-1);
+      expect(cancel).toBeLessThan(action);
+    });
+  }
+});

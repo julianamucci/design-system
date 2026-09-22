@@ -221,8 +221,8 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md">
-      <AlertDialogDemo {...destructiveLabels} location="docs_demo" triggerVariant="destructive" tone="destructive" />
-      <AlertDialogDemo {...neutralLabels} location="docs_demo" triggerVariant="outline" tone="default" />
+      <AlertDialogDemo {...destructiveLabels} location="docs_demo" triggerId="destructive" triggerVariant="destructive" tone="destructive" />
+      <AlertDialogDemo {...neutralLabels} location="docs_demo" triggerId="neutral" triggerVariant="outline" tone="default" />
     </div>
   </DocsDemonstration>
 
@@ -339,6 +339,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
+    componentSlug="alert-dialog"
     note={stripHtml($tStore('variants.note'))}
     items={[
       { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
@@ -583,9 +584,9 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
     <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" triggerId="pair2-dont" triggerVariant="destructive" tone="default" />
   {/snippet}
   {#snippet variantDestructive()}
-    <AlertDialogDemo {...destructiveLabels} location="docs_variantes" triggerVariant="destructive" tone="destructive" />
+    <AlertDialogDemo {...destructiveLabels} location="docs_variantes" triggerId="destructive" triggerVariant="destructive" tone="destructive" />
   {/snippet}
   {#snippet variantDefault()}
-    <AlertDialogDemo {...neutralLabels} location="docs_variantes" triggerVariant="outline" tone="default" />
+    <AlertDialogDemo {...neutralLabels} location="docs_variantes" triggerId="neutral" triggerVariant="outline" tone="default" />
   {/snippet}
 </DocsPageLayout>

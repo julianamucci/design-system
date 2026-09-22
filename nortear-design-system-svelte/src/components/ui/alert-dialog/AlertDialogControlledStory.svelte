@@ -26,6 +26,8 @@
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
+    createAlertDialogCloseWatch,
+    type AlertDialogCloseReason,
   } from './index';
   import { Button } from '@/components/ui/button';
 
@@ -36,6 +38,14 @@
     cancelLabel?: string;
     actionLabel?: string;
     onOpenChange?: (open: boolean) => void;
+    /**
+     * Por onde o diálogo fechou, no vocabulário do design system. É o mesmo
+     * caminho que a docs page usa para preencher o `reason` do `dialog_close`:
+     * a lib só avisa QUE fechou, e quem traduz o gesto é o `close-reason.ts`.
+     */
+    onClose?: (reason: AlertDialogCloseReason) => void;
+    /** Handler do consumidor na ação que confirma. */
+    onConfirm?: () => void;
   }
 
   const {
@@ -45,28 +55,65 @@
     cancelLabel = 'Cancelar',
     actionLabel = 'Excluir',
     onOpenChange,
+    onClose,
+    onConfirm,
   }: Props = $props();
 
   let open = $state(false);
 
+  // O gesto observado fica guardado até o diálogo de fato fechar. Uma instância
+  // por montagem: o pendente é do painel, não do módulo.
+  const closeWatch = createAlertDialogCloseWatch();
+
   function onChange(value: boolean) {
     open = value;
     onOpenChange?.(value);
+    if (value) {
+      // Abrir zera o gesto pendente: o diálogo começa sem motivo anotado.
+      closeWatch.reset();
+      return;
+    }
+    onClose?.(closeWatch.takeReason());
+  }
+
+  // Confirmar é decisão de DENTRO, e se marca ANTES: o fechamento sai síncrono
+  // de dentro do clique, e sem a marca o motivo cairia no `close-button` do
+  // Cancelar — "confirmou" chegaria ao relatório como "desistiu".
+  function handleConfirm() {
+    closeWatch.markConfirmation();
+    onConfirm?.();
   }
 </script>
 
 <div class="nds-stack" data-spacing="sm">
-  <Button variant="destructive" onclick={() => (open = true)}>{triggerLabel}</Button>
+  <!--
+    O botão externo escreve o estado direto, e por isso NÃO passa pelo
+    `onOpenChange` — é ele que zera o gesto pendente na abertura.
+  -->
+  <Button
+    variant="destructive"
+    onclick={() => {
+      closeWatch.reset();
+      open = true;
+    }}>{triggerLabel}</Button
+  >
 
   <AlertDialog bind:open onOpenChange={onChange}>
-    <AlertDialogContent>
+    <!-- O Escape é o único caminho de saída que a lib anuncia por evento. -->
+    <AlertDialogContent {...closeWatch.listeners}>
       <AlertDialogHeader>
         <AlertDialogTitle>{title}</AlertDialogTitle>
         <AlertDialogDescription>{description}</AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
-        <AlertDialogAction variant="destructive">{actionLabel}</AlertDialogAction>
+        <!--
+          O clique no Cancelar é o `close-press` que a lib não publica: o
+          Cancelar e a ação saem pelo mesmo caminho de fechamento dela.
+        -->
+        <AlertDialogCancel {...closeWatch.cancelTrigger}>{cancelLabel}</AlertDialogCancel>
+        <AlertDialogAction variant="destructive" onclick={handleConfirm}
+          >{actionLabel}</AlertDialogAction
+        >
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

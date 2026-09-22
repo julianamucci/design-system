@@ -3,7 +3,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
-import { AlertDialog } from './index';
+import { AlertDialog, type AlertDialogCloseReason } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogControlledStory from './AlertDialogControlledStory.svelte';
 import {
@@ -258,6 +258,10 @@ export const Cancelled: Story = {
 };
 
 const onOpenChangeSpy = fn();
+// Por onde cada fechamento saiu, na ordem. É a palavra que a docs page põe no
+// `reason` do `dialog_close`: a lib avisa QUE o diálogo fechou e nunca POR QUÊ,
+// e quem traduz o gesto é o `close-reason.ts` do primitivo.
+const controlledCloseReasons: AlertDialogCloseReason[] = [];
 
 export const Controlled: Story = {
   parameters: {
@@ -274,12 +278,19 @@ export const Controlled: Story = {
   // um diálogo não controlado.
   render: () => ({
     Component: AlertDialogControlledStory,
-    props: { ...DESTRUCTIVE, onOpenChange: onOpenChangeSpy },
+    props: {
+      ...DESTRUCTIVE,
+      onOpenChange: onOpenChangeSpy,
+      onClose: (reason: AlertDialogCloseReason) => controlledCloseReasons.push(reason),
+    },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
     onOpenChangeSpy.mockClear();
+    // A play REEXECUTA no mesmo DOM, e o que a rodada anterior empilhou não é
+    // desta medição.
+    controlledCloseReasons.length = 0;
     const trigger = canvas.getByRole('button', { name: TRIGGER_NAME });
     // Quantas vezes o componente pediu para FECHAR — é o que o pai precisa
     // saber, por qualquer uma das saídas.
@@ -299,8 +310,23 @@ export const Controlled: Story = {
       await userEvent.keyboard('{Escape}');
       await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
       await expect(closeRequests()).toBe(1);
+      // É este motivo que vira `dialog_close { reason: 'escape' }` na docs page.
+      // O Escape é o único caminho de saída que o bits-ui anuncia por evento
+      // próprio; os outros dois precisam da marca de quem consome.
+      await expect(controlledCloseReasons.at(-1)).toBe('escape');
       // C4: o foco volta a quem abriu — aqui, o botão externo.
       await waitFor(() => expect(trigger).toHaveFocus());
+    });
+
+    await step('O Cancelar se chama close-button, e não "o que sobrou"', async () => {
+      await waitForInteractive(trigger);
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toBeVisible());
+      await userEvent.click(within(dialog).getByRole('button', { name: CANCEL_NAME }));
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
+      await expect(closeRequests()).toBe(2);
+      await expect(controlledCloseReasons.at(-1)).toBe('close-button');
     });
 
     // A ação fecha pelo caminho da lib, e é isso que avisa o pai. Se ela
@@ -313,8 +339,16 @@ export const Controlled: Story = {
       await waitFor(() => expect(dialog).toBeVisible());
       await userEvent.click(within(dialog).getByRole('button', { name: ACTION_NAME }));
       await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
-      await expect(closeRequests()).toBe(2);
+      await expect(closeRequests()).toBe(3);
       await expect(onOpenChangeSpy).toHaveBeenLastCalledWith(false);
+      // A marca da confirmação chega ANTES do fechamento, e por isso o motivo
+      // sai `api`. Sem ela sobraria `close-button`, e confirmar a exclusão
+      // chegaria ao relatório como "apertou o Cancelar".
+      await expect(controlledCloseReasons.at(-1)).toBe('api');
+    });
+
+    await step('Os três caminhos relataram motivos DIFERENTES', async () => {
+      await expect(controlledCloseReasons).toEqual(['escape', 'close-button', 'api']);
     });
   },
 };

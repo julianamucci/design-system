@@ -199,11 +199,28 @@ export class NdsAlertDialog {
   }
 }
 
-/** Abre o diálogo. Compõe com `ndsButton` no mesmo elemento. */
+/**
+ * Abre o diálogo. Compõe com `ndsButton` no mesmo elemento.
+ *
+ * O `data-slot` entra como atributo ESTÁTICO de host. Medido no DOM, no gatilho
+ * da Playground — que compõe `ndsAlertDialogTrigger` com `ndsButton` no mesmo
+ * elemento, que é a composição em risco: as DUAS formas saem com
+ * `data-slot="alert-dialog-trigger"`, a estática e o `[attr.data-slot]`. A
+ * armadilha desta stack é outra — é o atributo escrito no TEMPLATE, no call
+ * site, que perde para o host binding do botão; host binding de diretiva ganha
+ * do host binding do componente, porque a diretiva roda depois.
+ *
+ * Entre as duas que funcionam, a estática é a que não depende dessa ordem: o
+ * `NdsButton` lê `getAttribute('data-slot')` uma vez, na construção (ver
+ * `button.ts`), e atributo estático de host já está no elemento nesse instante.
+ * Então as duas diretivas escrevem o MESMO nome, em vez de uma sobrescrever a
+ * outra.
+ */
 @Directive({
   selector: 'button[ndsAlertDialogTrigger]',
   standalone: true,
   hostDirectives: [{ directive: RdxDialogTrigger, inputs: ['id', 'payload', 'disabled'] }],
+  host: { 'data-slot': 'alert-dialog-trigger' },
 })
 export class NdsAlertDialogTrigger {}
 

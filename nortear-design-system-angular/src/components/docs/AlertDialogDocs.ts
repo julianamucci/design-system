@@ -709,19 +709,19 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       { token: '--background',             k: 'contentBg',             target: '.nds-alert-dialog-content' },
       { token: '--foreground',             k: 'contentForeground',     target: '.nds-alert-dialog-content' },
       { token: '--border',                 k: 'border',                target: '.nds-alert-dialog-content' },
+      // O painel usa o raio do Card, não o raio de controle.
+      { token: '--radius-card',            k: 'radius',                target: '.nds-alert-dialog-content' },
+      { token: '--elevation-xl',           k: 'elevation',             target: '.nds-alert-dialog-content' },
+      { token: '--spacing-6',              k: 'padding',               target: '.nds-alert-dialog-content' },
       { token: '--muted-foreground',       k: 'mutedForeground',       target: '.nds-alert-dialog-description' },
+      { token: '--muted',                  k: 'mediaBg',               target: '.nds-alert-dialog-media' },
+      { token: '--radius-md',              k: 'mediaRadius',           target: '.nds-alert-dialog-media' },
       // A ação destrutiva é um Button: quem lê o token é `button.css`, na
       // variante. E `--destructive-foreground` não tem linha porque não tem
       // leitor: a variante destrutiva é soft (fundo suave com o rótulo na
       // PRÓPRIA cor semântica), e nenhuma regra de button.css lê o par
       // `-foreground`. Ver button.css:16-18.
       { token: '--destructive',            k: 'destructive',           target: '.nds-button-destructive' },
-      // O painel usa o raio do Card, não o raio de controle.
-      { token: '--radius-card',            k: 'radius',                target: '.nds-alert-dialog-content' },
-      { token: '--elevation-xl',           k: 'elevation',             target: '.nds-alert-dialog-content' },
-      { token: '--muted',                  k: 'mediaBg',               target: '.nds-alert-dialog-media' },
-      { token: '--radius-md',              k: 'mediaRadius',           target: '.nds-alert-dialog-media' },
-      { token: '--spacing-6',              k: 'padding',               target: '.nds-alert-dialog-content' },
     ].map(({ token, k, target }) => ({
       token,
       value: target,

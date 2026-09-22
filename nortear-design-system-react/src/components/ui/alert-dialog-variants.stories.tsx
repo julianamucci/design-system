@@ -150,7 +150,7 @@ export const Neutral: Story = {
       </AlertDialogContent>
     </AlertDialog>
   ),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step("Diálogo abre com o conteúdo da variante neutra", async () => {
       const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
@@ -159,8 +159,21 @@ export const Neutral: Story = {
 
     await step("Action usa a variante default, sem severidade destrutiva", async () => {
       const action = await waitForPortal("button", { name: /^Sair$/i });
+      // Não basta não ser destrutiva: tem de ser a que o conteúdo compartilhado
+      // nomeia (`variants.items.default`).
       await expect(action).toHaveClass("nds-button-default");
       await expect(action).not.toHaveClass("nds-button-destructive");
+    });
+
+    await step("O gatilho neutro fica no contorno — nada aqui anuncia risco", async () => {
+      // Com o diálogo aberto o trigger fica sob aria-hidden/inert, fora das
+      // queries por role — buscamos pelo slot, como na Destructive.
+      const trigger = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-trigger"]',
+      );
+      await expect(trigger).not.toBeNull();
+      await expect(trigger).toHaveClass("nds-button-outline");
+      await expect(trigger).not.toHaveClass("nds-button-destructive");
     });
   },
 };

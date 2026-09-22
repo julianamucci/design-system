@@ -149,9 +149,14 @@ export const Playground: Story = {
     // A caixa da descrição em execução é de módulo: começa sempre neutra.
     runtimeDescription.current = undefined;
 
-    await step('Trigger está presente no DOM', async () => {
+    await step('Trigger está presente e anuncia que abre um diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
       await expect(trigger).toBeInTheDocument();
+      // O `aria-haspopup` é do contrato do gatilho: sem ele o leitor de tela
+      // anuncia um botão comum, e quem usa só descobre que há um diálogo
+      // depois de ativá-lo. A lib o escreve nos `props` do snippet `child`, e
+      // esta asserção é o que prova que o Button os repassa até o `<button>`.
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
     });
 
     await step('Diálogo abre ao clicar no trigger e notifica a mudança', async () => {

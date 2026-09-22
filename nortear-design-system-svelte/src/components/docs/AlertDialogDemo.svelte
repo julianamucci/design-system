@@ -39,13 +39,18 @@
      */
     location: 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
     /**
-     * Id estável do gatilho, que vai no `trigger_id` dos eventos. Sem ele, sai
-     * do tom (`destructive` / `neutral`); o Do & Don't passa o do par
-     * (`pair1-do`, `pair2-dont`…), porque ali o tom não distingue o exemplo
-     * certo do errado. Nunca texto traduzido: partiria o mesmo evento em três
-     * valores no GA4.
+     * Id estável do gatilho, que vai no `trigger_id` dos eventos.
+     *
+     * OBRIGATÓRIO, e sempre escrito no ponto de uso. Até 2026-09-22 ele era
+     * opcional e caía num valor DERIVADO do `tone` — com isso o id do evento
+     * mudava junto com a cor do botão, e o payload deixava de identificar o
+     * gatilho: era o tom que chegava ao GA4, não o preview. O Do & Don't já
+     * passava o id do par (`pair1-do`, `pair2-dont`…), porque ali o tom não
+     * distingue o exemplo certo do errado; agora todos passam.
+     *
+     * Nunca texto traduzido: partiria o mesmo evento em três valores no GA4.
      */
-    triggerId?: string;
+    triggerId: string;
   }
 
   const {
@@ -57,10 +62,8 @@
     triggerVariant = 'destructive',
     tone = 'default',
     location,
-    triggerId: triggerIdOverride,
+    triggerId,
   }: Props = $props();
-
-  const triggerId = $derived(triggerIdOverride ?? (tone === 'destructive' ? 'destructive' : 'neutral'));
 
   // O `onOpenChange` da lib não diz por que o diálogo fechou, e o
   // `dialog_close` exige `reason` (`18-overlay.md` §Analytics). Quem traduz

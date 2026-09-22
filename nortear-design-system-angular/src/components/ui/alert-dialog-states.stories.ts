@@ -178,6 +178,11 @@ export const Open: Story = {
       const panel = await waitForPortal('alertdialog');
       const cancel = within(panel).getByRole('button', { name: labels.cancelLabel });
       await waitFor(() => expect(cancel).toHaveFocus());
+      // A metade NEGATIVA da D3: sem ela a asserção passa num painel que
+      // focasse a ação destrutiva junto.
+      await expect(
+        within(panel).getByRole('button', { name: labels.actionLabel }),
+      ).not.toHaveFocus();
     });
 
     await step('Aberto por toque, o foco inicial continua no Cancelar', async () => {

@@ -187,10 +187,12 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     overlayEl = document.createElement('div');
     overlayEl.className = 'nds-alert-dialog-overlay';
     overlayEl.dataset.slot = 'alert-dialog-overlay';
-    // data-state: é o gancho das animações em alert-dialog.css. As libs
-    // headless das outras quatro stacks marcam o estado sozinhas (cada uma
-    // com a sua convenção, todas cobertas pela folha); aqui a factory precisa
-    // emitir. Sem ele o overlay/painel aparecia e sumia seco.
+    // data-state no VÉU não move nada hoje: desde 12c81620b o véu não anima
+    // (só o painel anima, e é o `data-state` dele que a folha lê). O que
+    // sobrou aqui é o estado declarado — a mesma marcação que as libs headless
+    // das outras quatro stacks emitem sozinhas, cada uma com a sua convenção.
+    // Mantê-lo é o que deixa a folha poder voltar a pendurar regra no véu sem
+    // mexer na factory, e o que faz o véu se descrever igual ao painel.
     overlayEl.dataset.state = 'open';
 
     panelEl = document.createElement('div');
@@ -322,7 +324,9 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     const removeExiting = (event?: Event) => {
       /* v8 ignore next 2 -- filtros de reentrância do animationend: evento de
          um filho animado e segunda chamada depois do timeout. Nenhum dos dois
-         acontece com overlay e painel animando juntos, que é o caso da suíte. */
+         acontece no caso da suíte: quem anima é só o PAINEL (o véu deixou de
+         animar em 12c81620b), o `animationend` dele chega antes do timeout e
+         já remove os dois, cancelando o relógio. */
       if (event && !saindo.includes(event.target as HTMLElement)) return;
       /* v8 ignore next */
       if (removido) return;

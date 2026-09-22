@@ -162,9 +162,17 @@ export const Playground: Story = {
     onConfirm.mockClear();
     const trigger = () => canvas.getByRole('button', { name: args.triggerLabel });
 
-    await step('O gatilho está presente e anuncia que abre um diálogo', async () => {
+    await step('O gatilho está presente, se nomeia e anuncia que abre um diálogo', async () => {
       await expect(trigger()).toBeVisible();
       await expect(trigger()).toHaveAttribute('aria-haspopup', 'dialog');
+      // O gatilho compõe `ndsAlertDialogTrigger` com `ndsButton` no MESMO
+      // elemento, e nesta stack o `data-slot` é disputado: o botão o escreve
+      // por host binding. É por isso que a asserção olha o DOM, e não a
+      // diretiva — só o navegador diz quem escreveu por último.
+      await expect(trigger()).toHaveAttribute('data-slot', 'alert-dialog-trigger');
+      await expect(
+        canvasElement.querySelector('[data-slot="alert-dialog-trigger"]'),
+      ).toBe(trigger());
     });
 
     await step('A raiz identifica o componente', async () => {
@@ -223,7 +231,11 @@ export const Playground: Story = {
       // Enter apertado por reflexo tem que cancelar, não excluir.
       const panel = await waitForPortal('alertdialog');
       const cancel = within(panel).getByRole('button', { name: args.cancelLabel });
+      const action = within(panel).getByRole('button', { name: args.actionLabel });
       await waitFor(() => expect(cancel).toHaveFocus());
+      // A metade NEGATIVA da D3, e é ela que dá dentes: afirmar só que o
+      // Cancelar tem foco deixa passar um painel que focasse os dois.
+      await expect(action).not.toHaveFocus();
     });
 
     await step('Tab e Shift+Tab ficam presos entre o Cancelar e a ação', async () => {
