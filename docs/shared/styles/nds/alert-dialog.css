@@ -173,10 +173,26 @@
   animation: nds-animate-out var(--duration-base) var(--ease-exit);
 }
 
+/* O véu SAI JUNTO com o painel, e continua sem animar: `nds-overlay-hold` não
+ * muda um pixel — existe para que a reka-ui e a bits-ui tenham o que esperar
+ * antes de desmontar o elemento. A duração é a MESMA da saída acima, e é isso
+ * que faz os dois deixarem a tela no mesmo quadro. Medição e mecanismo na
+ * declaração da keyframe, em `utilities.css`. */
+.nds-alert-dialog-overlay[data-closed],
+.nds-alert-dialog-overlay[data-ending-style],
+.nds-alert-dialog-overlay[data-state="closed"] {
+  animation: nds-overlay-hold var(--duration-base) var(--ease-exit);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  /* Os cinco seletores de VÉU abaixo são guarda de REGRESSÃO: desde 2026-09-20
-   * nenhuma regra o anima, e eles sobreviveram à remoção das animações que
-   * existiam para desligar.
+  /* Os cinco seletores de VÉU abaixo desligam a `nds-overlay-hold` acima, que
+   * é a única animação que o véu tem desde 2026-09-20 — e que não muda pixel
+   * nenhum. Desligá-la aqui não devolve movimento: faz o véu desmontar no
+   * primeiro quadro, junto com o painel, que sob esta preferência também sai
+   * sem animar. A folga volta a ser zero pelos dois lados.
+   *
+   * Até 2026-09-22 este parágrafo dizia que NENHUMA regra animava o véu, e os
+   * seletores eram guarda de regressão pura.
    *
    * **Ficam com a forma de estado, e não viram classe nua.** Encolher para
    * `.nds-alert-dialog-overlay` seria mais limpo de ler e mais fraco de valer:

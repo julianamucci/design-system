@@ -236,6 +236,23 @@
   animation: nds-dialog-zoom-out var(--duration-fast) var(--ease-exit);
 }
 
+/* O véu SAI JUNTO com o painel, e continua sem animar: `nds-overlay-hold` não
+ * muda um pixel — existe para que a reka-ui e a bits-ui tenham o que esperar
+ * antes de desmontar o elemento. Medição e mecanismo na declaração da
+ * keyframe, em `utilities.css`; portão `veu_sem_presenca_na_saida`.
+ *
+ * Hoje a regra é INERTE, e isso é de propósito: a saída do painel aqui está
+ * declarada só em `[data-closed]`, que é o dialeto da base-ui — ou seja, ela
+ * roda no react e em mais nenhuma. Medido em 2026-09-22: react tira os dois
+ * aos 122ms, o vue tira os dois no primeiro quadro (12ms) porque não tem
+ * animação de saída nenhuma, e o vanilla declara por escrito que não anima a
+ * saída (`dialog.ts`). A pergunta de saber se as outras quatro DEVEM animar é
+ * do Dialog e está em `FIXES-NEEDED.md`; a presença do véu entra antes dela
+ * porque é o que evita que a resposta "sim" chegue junto com o defeito. */
+.nds-dialog-overlay[data-closed] {
+  animation: nds-overlay-hold var(--duration-fast) var(--ease-exit);
+}
+
 /* Header do composite React não é centralizado (gap 8px, alinhado à esquerda) */
 .nds-dialog-header {
   gap: var(--spacing-2);

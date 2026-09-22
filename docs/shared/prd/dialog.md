@@ -261,6 +261,25 @@ conteúdo compartilhado, nunca cravado numa stack. `demonstration.labels` tinha
 SEIS chaves para uma página de dez cenários — foi essa escassez que levou cada
 stack a inventar a sua.
 
+> **2026-09-22 — o véu ganhou presença na saída, e a regra é INERTE hoje.**
+> Veio da passagem do AlertDialog, onde o mesmo defeito estava vivo: sem
+> animação própria, o véu desmonta no primeiro quadro na reka-ui e na bits-ui,
+> porque as duas decidem por elemento e leem `animationName === "none"`. O
+> painel termina de sair sozinho, sem cortina, sobre a página viva.
+>
+> `.nds-dialog-overlay[data-closed]` passou a carregar `nds-overlay-hold`, que
+> vai de `opacity: 1` a `opacity: 1` — não devolve o fade removido em
+> 2026-09-20, só a espera. Portão: `veu_sem_presenca_na_saida`.
+>
+> **Por que inerte**: a saída do PAINEL aqui está declarada só em
+> `[data-closed]`, o dialeto da base-ui, então ela roda no react e em mais
+> nenhuma. Medido no mesmo dia, sonda de quadro a quadro na `Open` fechando por
+> Escape: react tira véu e painel aos **122ms**; vue tira os dois no primeiro
+> quadro (**12ms**), por não ter o que animar; o vanilla declara por escrito
+> que não anima a saída. A regra do véu entra ANTES da decisão sobre isso de
+> propósito — se a resposta for "as cinco devem animar", ela já está no lugar,
+> em vez de chegar junto com o defeito. A decisão está em `FIXES-NEEDED.md`.
+
 ## 4. Anatomia
 
 ```

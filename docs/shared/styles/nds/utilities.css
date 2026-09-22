@@ -274,6 +274,37 @@
   to   { opacity: 0; transform: scale(0.95); }
 }
 
+/* O VÉU FICA MONTADO enquanto o painel sai — sem mudar um pixel.
+ *
+ * Medido em 2026-09-22 nas cinco stacks, com sonda de quadro a quadro na
+ * story `Open` do AlertDialog: depois do Escape, o véu do vue sumia no
+ * PRIMEIRO quadro e o do svelte no segundo, enquanto o painel seguia animando
+ * por ~200ms. As outras três desmontavam os dois juntos.
+ *
+ *   stack     último véu    último painel   folga
+ *   react        203ms          203ms         0
+ *   vanilla      202ms          202ms         0
+ *   angular      195ms          195ms         0
+ *   vue        1º quadro        197ms       198ms
+ *   svelte         6ms          202ms       196ms
+ *
+ * A causa é de LIB, e não da folha: o `usePresence` da reka-ui e o
+ * `PresenceManager` da bits-ui desmontam na hora quando o `animationName`
+ * computado do ELEMENTO é `none`. Desde que o véu deixou de animar
+ * (2026-09-20) ele é exatamente esse caso — e essas duas stacks consultam o
+ * próprio elemento, em vez de compartilhar o estado da raiz como a base-ui ou
+ * esperar o portal inteiro como o radix-ng. Por isso o defeito é de duas, e
+ * não de cinco.
+ *
+ * Esta keyframe dá a essas duas uma animação a esperar SEM devolver o fade que
+ * a decisão de 2026-09-20 removeu: ela não muda nada. O véu continua sem
+ * animar aos olhos de quem vê; só para de sair antes da hora. Quem a usa
+ * precisa casar a duração com a da saída do painel. */
+@keyframes nds-overlay-hold {
+  from { opacity: 1; }
+  to   { opacity: 1; }
+}
+
 .nds-animate-in {
   animation: nds-animate-in var(--duration-spring) var(--ease-spring);
 }

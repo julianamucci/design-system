@@ -197,6 +197,46 @@ superfície, e ninguém pinta fundo por fora.
 (ver `dialog.md`, D5). Afirmação sobre o que os vizinhos fazem envelhece sem
 aviso; esta é comparação datada.
 
+### D9 · O véu não anima, mas FICA — e as duas coisas cabem juntas
+
+O véu sai da tela no mesmo quadro que o painel, e não desvanece: a keyframe
+que o segura vai de `opacity: 1` a `opacity: 1`. A decisão de 2026-09-20 —
+véu sem animação — continua de pé no que ela queria dizer, que é o que se vê.
+
+**A medição que obrigou a separar as duas coisas**, em 2026-09-22, com sonda
+de quadro a quadro na story `Open` das cinco stacks, fechando por Escape:
+
+| stack | último quadro com véu | último com painel | folga |
+|---|---:|---:|---:|
+| react | 203ms | 203ms | 0 |
+| vanilla | 202ms | 202ms | 0 |
+| angular | 195ms | 195ms | 0 |
+| **vue** | 1º quadro (8ms) | 197ms | **198ms** |
+| **svelte** | 6ms | 202ms | **196ms** |
+
+Ou seja: em vue e svelte o painel passava ~200ms saindo SEM cortina atrás,
+sobre a página viva. Não é sutileza de animação — é o modal deixando de
+interromper antes de terminar de sair.
+
+**A causa é de lib, e explica por que foram duas e não cinco.** O
+`usePresence` da reka-ui e o `PresenceManager` da bits-ui desmontam o
+elemento na hora quando o `animationName` computado DELE é `none`; a base-ui
+compartilha o estado pela raiz e o radix-ng espera o portal inteiro. Desde
+que o véu parou de animar, ele era exatamente o caso `none`.
+
+**O conserto não devolve o fade** que a decisão removeu — devolve só a
+espera. E o portão `veu_sem_presenca_na_saida` cobra a invariante em toda
+folha com véu: se o painel anima a saída, o véu precisa de regra de saída nas
+mesmas formas de atributo e na mesma duração. Provado replantando as duas
+metades, e ele já nasceu reprovando o `dialog.css`, que foi consertado junto.
+
+**O que a medição REFUTOU**, e vale mais que o conserto: a leitura de que o
+mesmo mecanismo valia para `dialog.css` e `sheet.css`, herdada da
+verificação anterior. Não valia. O painel do Sheet não anima a saída em stack
+nenhuma (decisão de 2026-09-16) e o do Dialog só anima no react, então nem um
+nem outro tinha véu saindo cedo. Generalizar o mecanismo teria "consertado"
+dois componentes que não estavam quebrados.
+
 ## 4. Anatomia
 
 ```
@@ -253,12 +293,19 @@ do Dialog, que é reto abaixo de 40rem.
 libs — `[data-open]`/`[data-closed]`/`[data-ending-style]` (base-ui, radix-ng) e
 `[data-state]` (reka, bits, e a fábrica do vanilla, que o escreve à mão).
 
-**No VÉU esse atributo não move nada desde 2026-09-20**, e fica de propósito.
-Quem anima é só o painel, e é o `data-state` DELE que a folha lê. O do véu
-continua sendo escrito — pela fábrica no vanilla, pelas libs nas outras quatro —
-por duas razões medidas na passagem de 2026-09-22: a folha pode voltar a pendurar
-regra no véu sem que a fábrica mude, e o véu se descreve com a mesma marcação do
-painel, em vez de ser a única peça sem estado declarado.
+**No VÉU esse atributo não move NADA que se veja, e desde 2026-09-22 ele move
+uma coisa que não se vê**: `nds-overlay-hold`, na mesma duração da saída do
+painel. A keyframe vai de `opacity: 1` a `opacity: 1` — não há o que assistir.
+Ela existe para a reka-ui e a bits-ui terem o que esperar antes de desmontar o
+elemento; ver a decisão datada em §3, D9.
+
+Entre 2026-09-20 e essa data o véu não tinha animação nenhuma, e era isso que o
+tirava da tela cedo demais em duas das cinco stacks. O atributo sempre foi
+escrito — pela fábrica no vanilla, pelas libs nas outras quatro —, e as duas
+razões medidas para mantê-lo continuam valendo: a folha pode voltar a pendurar
+regra no véu sem que a fábrica mude (foi exatamente o que aconteceu), e o véu se
+descreve com a mesma marcação do painel, em vez de ser a única peça sem estado
+declarado.
 
 Até essa data o comentário da fábrica chamava o atributo de "gancho das
 animações" e dizia que sem ele "o overlay aparecia e sumia seco" — premissa
