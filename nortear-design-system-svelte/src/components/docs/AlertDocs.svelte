@@ -93,11 +93,20 @@
    * latente, não visível. É a mesma forma que já engoliu um critério funcional,
    * `visual.item6` e dois itens de anatomia antes de alguém reparar.
    */
-  function usageItemIndexes(group: 'guidelines' | 'do' | 'dont'): number[] {
+  function usageItemIndexes(group: 'guidelines' | 'do' | 'dont' | 'scenarios'): number[] {
     const dict = (alertTranslations as unknown as Record<
       string,
       { usage?: Record<string, Record<string, unknown>> }
     >)[$locale]?.usage?.[group] ?? {};
+    return itemIndexes(dict);
+  }
+
+  /** Acessibilidade: mesma regra, último teto cravado da página. */
+  function accessibilityItemIndexes(): number[] {
+    const dict = (alertTranslations as unknown as Record<
+      string,
+      { accessibility?: Record<string, unknown> }
+    >)[$locale]?.accessibility ?? {};
     return itemIndexes(dict);
   }
 
@@ -340,12 +349,11 @@ interface AlertActionProps {
             use: $tStore('usage.scenarios.cols.use'),
             alternative: $tStore('usage.scenarios.cols.alternative'),
           },
-          items: [
-            { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
-            { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-            { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
-            { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
-          ],
+          items: usageItemIndexes('scenarios').map((i) => ({
+            s: $tStore(`usage.scenarios.item${i}.s`),
+            u: $tStore(`usage.scenarios.item${i}.u`),
+            a: $tStore(`usage.scenarios.item${i}.a`),
+          })),
         }}
         uxWriting={{
           title: $tStore('usage.uxWriting.title'),
@@ -616,8 +624,8 @@ interface AlertActionProps {
             },
             items: [
               { name: 'as',       type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.titleAs')) },
-              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
               { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.className')) },
+              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
             ],
           },
           {
@@ -630,8 +638,8 @@ interface AlertActionProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
               { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.className')) },
+              { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.children') },
             ],
           },
           {
@@ -691,13 +699,7 @@ interface AlertActionProps {
         screenReaderTitle={$tNavStore('common.screenReader')}
         screenReaderItems={screenReaderItems}
         summary={$tStore('accessibility.summary')}
-        items={[
-          $tStore('accessibility.item1'),
-          $tStore('accessibility.item2'),
-          $tStore('accessibility.item3'),
-          $tStore('accessibility.item4'),
-          $tStore('accessibility.item5'),
-        ]}
+        items={accessibilityItemIndexes().map((i) => $tStore(`accessibility.item${i}`))}
         keyboardTitle={$tStore('accessibility.keyboardTitle')}
         keyboardItems={[
           { key: 'Tab',   description: $tStore('accessibility.keyboard.tab')        },
