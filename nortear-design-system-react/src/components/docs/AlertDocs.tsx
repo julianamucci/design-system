@@ -46,6 +46,7 @@ type TestGroup = keyof (typeof alertTranslations)["pt-BR"]["testes"];
 type AlertDict = {
   anatomy?: Record<string, unknown>;
   accessibility?: Record<string, unknown>;
+  notes?: Record<string, unknown>;
   testes?: Record<string, Record<string, unknown>>;
   usage?: {
     guidelines?: Record<string, unknown>;
@@ -56,18 +57,25 @@ type AlertDict = {
 };
 
 /**
- * Índices `itemN` de um grupo do dicionário, em ordem. Lista literal no chamador
- * é o que deixava a página renderizar 7 de 8 quando o conteúdo ganhava item —
- * aconteceu com `functional.item8`, com `visual.item6` e de novo com
+ * Índices numerados de um grupo do dicionário, em ordem. Lista literal no
+ * chamador é o que deixava a página renderizar 7 de 8 quando o conteúdo ganhava
+ * item — aconteceu com `functional.item8`, com `visual.item6` e de novo com
  * `anatomy.item5`/`item6`. Derivando, o dicionário cresce e a página acompanha.
+ *
+ * O PREFIXO é parâmetro porque nem todo grupo numera com `item`: `notes` numera
+ * com `tip`, e era o último teto cravado desta página. Filtrar por `item` fixo
+ * deixava um `tip4` novo fora da tela sem nada reprovar.
  *
  * O grupo é opcional de propósito: grupo ausente devolve `[]`, como nas outras
  * quatro stacks. Acessar a propriedade direto fazia esta ser a única que QUEBRA.
  */
-const itemIndexes = (group: Record<string, unknown> | undefined): number[] =>
+const numberedIndexes = (
+  group: Record<string, unknown> | undefined,
+  prefix: string = "item",
+): number[] =>
   Object.keys(group ?? {})
-    .filter((key) => /^item\d+$/.test(key))
-    .map((key) => Number(key.slice("item".length)))
+    .filter((key) => key.startsWith(prefix) && /^\d+$/.test(key.slice(prefix.length)))
+    .map((key) => Number(key.slice(prefix.length)))
     .sort((a, b) => a - b);
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
@@ -140,14 +148,16 @@ export function AlertDocs() {
     [locale],
   );
 
-  const anatomyItemIndexes = useMemo(() => itemIndexes(dict.anatomy), [dict]);
-  const guidelineItemIndexes = useMemo(() => itemIndexes(dict.usage?.guidelines), [dict]);
-  const doItemIndexes = useMemo(() => itemIndexes(dict.usage?.do), [dict]);
-  const dontItemIndexes = useMemo(() => itemIndexes(dict.usage?.dont), [dict]);
-  const scenarioItemIndexes = useMemo(() => itemIndexes(dict.usage?.scenarios), [dict]);
-  const accessibilityItemIndexes = useMemo(() => itemIndexes(dict.accessibility), [dict]);
+  const anatomyItemIndexes = useMemo(() => numberedIndexes(dict.anatomy), [dict]);
+  const guidelineItemIndexes = useMemo(() => numberedIndexes(dict.usage?.guidelines), [dict]);
+  const doItemIndexes = useMemo(() => numberedIndexes(dict.usage?.do), [dict]);
+  const dontItemIndexes = useMemo(() => numberedIndexes(dict.usage?.dont), [dict]);
+  const scenarioItemIndexes = useMemo(() => numberedIndexes(dict.usage?.scenarios), [dict]);
+  const accessibilityItemIndexes = useMemo(() => numberedIndexes(dict.accessibility), [dict]);
+  // `tip`, não `item`: é o prefixo que o conteúdo compartilhado publica em `notes`.
+  const noteTipIndexes = useMemo(() => numberedIndexes(dict.notes, "tip"), [dict]);
   const testItemIndexes = useCallback(
-    (group: TestGroup): number[] => itemIndexes(dict.testes?.[group]),
+    (group: TestGroup): number[] => numberedIndexes(dict.testes?.[group]),
     [dict],
   );
 
@@ -901,11 +911,10 @@ interface AlertActionProps extends React.ComponentProps<"div"> {}`;
           {/* ── Notas ─────────────────────────────────────────────────── */}
           <DocsNotes
             componentSlug="alert"
-            items={[
-              { title: "", content: tContent("notes.tip1") },
-              { title: "", content: tContent("notes.tip2") },
-              { title: "", content: tContent("notes.tip3") },
-            ]}
+            items={noteTipIndexes.map((i) => ({
+              title: "",
+              content: tContent(`notes.tip${i}`),
+            }))}
           />
 
           {/* ── Analytics ─────────────────────────────────────────────── */}
