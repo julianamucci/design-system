@@ -5200,6 +5200,99 @@ function auditInvariantesOverlayCss() {
           + 'de rolar. A forma é `flex: 1 1 auto` (sheet D3, drawer D6 — este medido)',
       });
     }
+
+    // ── 4. o véu fica montado enquanto o painel sai ──────────────────────
+    //
+    // Se o PAINEL anima a saída, o VÉU precisa de animação de saída na mesma
+    // duração — ainda que ela não mude pixel nenhum (`nds-overlay-hold`).
+    //
+    // Não é estética, é PRESENÇA: o `usePresence` da reka-ui e o
+    // `PresenceManager` da bits-ui desmontam o elemento na hora quando o
+    // `animationName` computado DELE é `none`. A base-ui compartilha o estado
+    // pela raiz e o radix-ng espera o portal inteiro, então essas três não
+    // sofrem — e é por isso que o defeito nasce em DUAS das cinco, que é a
+    // forma mais cara de nascer: quem abre uma stack só não vê divergência.
+    //
+    // Medido em 2026-09-22 no AlertDialog, com sonda de quadro a quadro nas
+    // cinco: depois do Escape, o véu do vue saía no PRIMEIRO quadro e o do
+    // svelte no segundo, com o painel seguindo por ~200ms. Folga de 198ms e
+    // 196ms contra 0 nas outras três. Nada ficava vermelho — a folha é válida,
+    // o painel aparece, e o que se perde é a cortina no meio da saída.
+    //
+    // Só olha folha que TEM véu: tooltip, popover e afins animam a saída do
+    // painel e não têm o que segurar.
+    //
+    // Sem uma barra invertida em todo o bloco, de propósito: a primeira versão
+    // veio por heredoc e chegou com as classes de caractere desmontadas
+    // (`[data-closed]` no lugar de um literal), o que a deixou MUDA. Portão
+    // novo que não acusa nada é suspeito de si mesmo tanto quanto o que acusa
+    // demais — este só valeu depois de reprovar o `dialog.css` replantado.
+    const ATTR_SAIDA = ['[data-closed]', '[data-ending-style]', '[data-state="closed"]'];
+
+    const saidaDe = (papel) => {
+      const alvo = `.nds-${arquivo}-${papel}`;
+      const formas = new Set();
+      let duracao = null;
+      let linha = null;
+
+      for (const r of regrasCss(resto)) {
+        if (r.sel.startsWith('@')) continue;
+
+        // O ATALHO `animation`, e não os longhands: é ele que nomeia a
+        // keyframe, e é a keyframe que a lib procura para decidir se espera.
+        let valor = null;
+        for (const decl of r.corpo.split(';')) {
+          const t = decl.trim();
+          const dp = t.indexOf(':');
+          if (dp === -1) continue;
+          if (t.slice(0, dp).trim() !== 'animation') continue;
+          const v = t.slice(dp + 1).trim();
+          if (v.includes('none')) continue;
+          valor = v;
+        }
+        if (!valor) continue;
+
+        for (const um of r.sel.split(',').map((x) => x.trim())) {
+          if (!um.includes(alvo)) continue;
+          for (const forma of ATTR_SAIDA) {
+            if (!um.includes(forma)) continue;
+            formas.add(forma);
+            if (duracao === null) {
+              const i0 = valor.indexOf('var(--duration-');
+              duracao = i0 === -1 ? null : valor.slice(i0, valor.indexOf(')', i0) + 1);
+            }
+            if (linha === null) linha = linhaDe(r.index);
+          }
+        }
+      }
+      return { formas, duracao, linha };
+    };
+
+    if (limpo.includes(`.nds-${arquivo}-overlay`)) {
+      const painel = saidaDe('content');
+      const veu = saidaDe('overlay');
+      const faltam = [...painel.formas].filter((f) => !veu.formas.has(f));
+
+      if (painel.formas.size && faltam.length) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: rel, line: painel.linha, rule: 'veu_sem_presenca_na_saida',
+          message: `\`.nds-${arquivo}-content\` anima a saída em ${[...painel.formas].join(', ')} `
+            + `e \`.nds-${arquivo}-overlay\` não tem regra de saída para ${faltam.join(', ')} — `
+            + 'na reka-ui e na bits-ui o véu desmonta no primeiro quadro e o painel sai sozinho, '
+            + 'sem cortina. A forma é `animation: nds-overlay-hold` na mesma duração (utilities.css)',
+        });
+      } else if (painel.formas.size && veu.duracao !== painel.duracao) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: veu.linha, rule: 'veu_com_duracao_diferente_do_painel',
+          message: `\`.nds-${arquivo}-overlay\` sai em ${veu.duracao ?? 'duração literal'} `
+            + `e \`.nds-${arquivo}-content\` em ${painel.duracao ?? 'duração literal'} — quem `
+            + 'acabar primeiro deixa o outro na tela sozinho, que é o defeito que a presença do véu '
+            + 'existe para evitar',
+        });
+      }
+    }
   }
 
   return violations;
