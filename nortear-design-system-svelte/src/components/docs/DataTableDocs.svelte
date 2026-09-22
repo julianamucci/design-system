@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import DataTable from '@/components/ui/data-table/data-table.svelte';
-  import type { DataTableColumn } from '@/components/ui/data-table';
+  import type { DataTableColumn, DataTableLabels } from '@/components/ui/data-table';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -94,30 +94,153 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  /**
+   * Listas numeradas DERIVADAS do dicionário: quem conta os itens é o conteúdo,
+   * e não um intervalo cravado aqui — foi assim que um teste funcional e dois
+   * critérios de acessibilidade ficaram escritos nos três idiomas sem chegar à
+   * tela. Cravar o número novo repete o defeito daqui a um item. A parada usa o
+   * contrato do `t()` desta stack (chave ausente volta como a própria chave).
+   */
+  function itemsFromDict<K extends string>(
+    tFn: (key: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Record<K, string>[] {
+    const rows: Record<K, string>[] = [];
+    for (let i = 1; ; i++) {
+      const probe = `${base}.item${i}.${fields[0]}`;
+      if (tFn(probe) === probe) break;
+      const row = {} as Record<K, string>;
+      for (const f of fields) row[f] = tFn(`${base}.item${i}.${f}`);
+      rows.push(row);
+    }
+    return rows;
+  }
+
   // ─── Demo data ───────────────────────────────────────────────────────────
-  type Invoice = { id: string; customer: string; status: string; method: string; amount: number };
+
+  /**
+   * A linha carrega CHAVE, não rótulo.
+   *
+   * O texto vem de `demonstration.labels`, resolvido na hora de montar a coluna
+   * — mesma regra do payload de analytics: valor estável no dado, tradução só na
+   * borda. Com o rótulo dentro da linha, a tabela ficava em português no meio de
+   * uma página em inglês, e o mapa de variante do selo só funcionava enquanto
+   * ninguém reescrevesse a tradução.
+   */
+  type InvoiceStatus = 'paid' | 'pending' | 'canceled';
+  type InvoiceMethod = 'pix' | 'bankSlip' | 'creditCard' | 'debitCard' | 'transfer';
+  type Invoice = {
+    id: string;
+    customer: string;
+    status: InvoiceStatus;
+    method: InvoiceMethod;
+    amount: number;
+  };
+
+  // Caminho INTEIRO e escrito por extenso, e não interpolado: quem procura por
+  // `demonstration.labels.paid` na árvore precisa achar esta página. Chave
+  // montada em tempo de execução some da busca — e some também do portão que
+  // compara o conjunto de rótulos das cinco demonstrações.
+  const STATUS_LABEL_KEY: Record<InvoiceStatus, string> = {
+    paid: 'demonstration.labels.paid',
+    pending: 'demonstration.labels.pending',
+    canceled: 'demonstration.labels.canceled',
+  };
+
+  const METHOD_LABEL_KEY: Record<InvoiceMethod, string> = {
+    pix: 'demonstration.labels.methodPix',
+    bankSlip: 'demonstration.labels.methodBankSlip',
+    creditCard: 'demonstration.labels.methodCreditCard',
+    debitCard: 'demonstration.labels.methodDebitCard',
+    transfer: 'demonstration.labels.methodTransfer',
+  };
+
+  const STATUS_VARIANT: Record<InvoiceStatus, 'default' | 'warning' | 'destructive'> = {
+    paid: 'default',
+    // Pendência tem variante própria desde que a `secondary` saiu: `warning`
+    // diz o que o estado é, e não só que ele é menos importante que o pago.
+    pending: 'warning',
+    canceled: 'destructive',
+  };
+
   const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const demoData: Invoice[] = [
-    { id: 'INV-001', customer: 'Ana Souza',    status: 'Pago',      method: 'Cartão de crédito', amount: 250 },
-    { id: 'INV-002', customer: 'Bruno Lima',   status: 'Pendente',  method: 'Boleto bancário',   amount: 150 },
-    { id: 'INV-003', customer: 'Carla Mendes', status: 'Cancelado', method: 'Pix',               amount: 350 },
-    { id: 'INV-004', customer: 'Diego Faria',  status: 'Pago',      method: 'Cartão de débito',  amount: 450 },
-    { id: 'INV-005', customer: 'Eva Oliveira', status: 'Pendente',  method: 'Transferência',     amount: 200 },
+    { id: 'INV-001', customer: 'Ana Souza',    status: 'paid',     method: 'pix',        amount: 250 },
+    { id: 'INV-002', customer: 'Bruno Lima',   status: 'pending',  method: 'bankSlip',   amount: 150 },
+    { id: 'INV-003', customer: 'Carla Mendes', status: 'canceled', method: 'creditCard', amount: 350 },
+    { id: 'INV-004', customer: 'Diego Faria',  status: 'paid',     method: 'debitCard',  amount: 450 },
+    { id: 'INV-005', customer: 'Eva Oliveira', status: 'pending',  method: 'transfer',   amount: 200 },
   ];
 
   const demoColumns: DataTableColumn<Invoice>[] = $derived([
     { accessorKey: 'id', header: $tStore('demonstration.labels.invoice'), size: 110 },
     { accessorKey: 'customer', header: $tStore('demonstration.labels.customer'), size: 200 },
-    { accessorKey: 'status', header: $tStore('demonstration.labels.status'), size: 140 },
-    { accessorKey: 'method', header: $tStore('demonstration.labels.method'), size: 200 },
+    {
+      // O valor da célula é o RÓTULO e o dado da linha é a CHAVE: busca e
+      // ordenação seguem o que está escrito na tela, enquanto a variante do
+      // selo continua saindo de um valor que nenhuma tradução move.
+      id: 'status',
+      accessorFn: (row: Invoice) => $tStore(STATUS_LABEL_KEY[row.status]),
+      header: $tStore('demonstration.labels.status'),
+      size: 140,
+      // O slot de `meta` do conjunto de recursos é declarado sobre `RowData`, e
+      // não sobre `Invoice`: a linha chega solta aqui e o estreitamento é local.
+      meta: { badgeVariant: (_v: unknown, row: unknown) => STATUS_VARIANT[(row as Invoice).status] },
+    },
+    {
+      id: 'method',
+      accessorFn: (row: Invoice) => $tStore(METHOD_LABEL_KEY[row.method]),
+      header: $tStore('demonstration.labels.method'),
+      size: 200,
+    },
     {
       accessorKey: 'amount',
       header: $tStore('demonstration.labels.amount'),
       size: 130,
-      meta: { format: (v) => currency.format(Number(v)) },
+      meta: {
+        // Coluna de número alinha à direita na célula E no cabeçalho, e a
+        // célula ainda ganha figura tabular (guideline 20) — quem aplica as
+        // duas coisas é o primitivo, então o call site não repete a figura.
+        numeric: true,
+        format: (v: unknown) => currency.format(Number(v)),
+        cellClass: 'nds-font-medium',
+      },
     },
   ]);
+
+  /**
+   * Nome acessível de cada tabela desta página.
+   *
+   * A legenda base vem do conteúdo compartilhado; o sufixo distingue um preview
+   * do outro. Sem ela a demonstração e os quatro previews chegavam ao leitor de
+   * tela como "tabela, 6 colunas" — e meia dúzia de tabelas com o mesmo nome não
+   * ajuda ninguém a se localizar. A legenda também nomeia a região rolável, que
+   * lê o `caption`.
+   */
+  function captionFor(suffix: string): string {
+    return `${$tStore('demonstration.labels.caption')} — ${toPlainText(suffix)}`;
+  }
+
+  /**
+   * Rótulos da interface do componente, montados a partir do conteúdo.
+   *
+   * Passando só o placeholder da busca, o rodapé ficava preso ao pt-BR do padrão
+   * em `en` e `es` — "Linhas por página", "Página X de Y", "Primeira página".
+   * Caminho de tradução escrito por extenso e nunca interpolado, mesma razão do
+   * `STATUS_LABEL_KEY`: quem procura a chave na árvore precisa achar esta página.
+   */
+  const demoLabels: Partial<DataTableLabels> = $derived({
+    columns: $tStore('demonstration.labels.columns'),
+    rowsPerPage: $tStore('demonstration.labels.rowsPerPage'),
+    page: $tStore('demonstration.labels.page'),
+    pageOf: $tStore('demonstration.labels.of'),
+    firstPage: $tStore('demonstration.labels.firstPage'),
+    prevPage: $tStore('demonstration.labels.prevPage'),
+    nextPage: $tStore('demonstration.labels.nextPage'),
+    lastPage: $tStore('demonstration.labels.lastPage'),
+  });
 
   // ─── Code strings ────────────────────────────────────────────────────────
   const codeImportBasic = `import DataTable from '@/components/ui/data-table/data-table.svelte';
@@ -177,10 +300,13 @@ const columns: DataTableColumn<Invoice>[] = [
   <DocsDemonstration componentSlug="data-table">
     <div class="nds-w-full">
       <DataTable
+        caption={captionFor($tNavStore('nav.demonstration'))}
         columns={demoColumns}
         data={demoData}
         enableRowSelection
+        labels={demoLabels}
         globalFilterPlaceholder={$tStore('demonstration.labels.search')}
+        emptyMessage={$tStore('demonstration.labels.noResults')}
       />
     </div>
   </DocsDemonstration>
@@ -284,25 +410,61 @@ const columns: DataTableColumn<Invoice>[] = [
     ]}
   />
 
+  <!-- Os quatro previews instanciam o componente VIVO (guideline 08 §15). A
+       imitação anterior eram quatro `<code>` com o padding cravado em `style`:
+       ela ensinava a prop pelo texto sem mostrar a diferença que a prop faz, e
+       o valor inline saía do tema, da densidade e da escala tipográfica. -->
   {#snippet doPair1()}
-    <div class="nds-text-body nds-text-muted-foreground">
-      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">globalFilterPlaceholder="Buscar fatura, cliente, método..."</code>
-    </div>
+    <DataTable
+      caption={captionFor($tStore('doDont.pair1.do'))}
+      columns={demoColumns}
+      data={demoData.slice(0, 3)}
+      enableGlobalFilter
+      labels={demoLabels}
+      globalFilterPlaceholder={$tStore('demonstration.labels.search')}
+      emptyMessage={$tStore('demonstration.labels.noResults')}
+      enableColumnVisibility={false}
+      enablePagination={false}
+    />
   {/snippet}
   {#snippet dontPair1()}
-    <div class="nds-text-body nds-text-muted-foreground">
-      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">globalFilterPlaceholder="Buscar..."</code>
-    </div>
+    <DataTable
+      caption={captionFor($tStore('doDont.pair1.dont'))}
+      columns={demoColumns}
+      data={demoData.slice(0, 3)}
+      enableGlobalFilter
+      labels={demoLabels}
+      globalFilterPlaceholder="Buscar..."
+      emptyMessage={$tStore('demonstration.labels.noResults')}
+      enableColumnVisibility={false}
+      enablePagination={false}
+    />
   {/snippet}
   {#snippet doPair2()}
-    <div class="nds-text-body nds-text-muted-foreground">
-      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">virtualized maxHeight="480px"</code>
-    </div>
+    <DataTable
+      caption={captionFor($tStore('doDont.pair2.do'))}
+      columns={demoColumns}
+      data={demoData}
+      virtualized
+      maxHeight="180px"
+      labels={demoLabels}
+      emptyMessage={$tStore('demonstration.labels.noResults')}
+      enableGlobalFilter={false}
+      enableColumnVisibility={false}
+    />
   {/snippet}
   {#snippet dontPair2()}
-    <div class="nds-text-body nds-text-muted-foreground">
-      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">enablePagination data={`{5000 linhas}`}</code>
-    </div>
+    <DataTable
+      caption={captionFor($tStore('doDont.pair2.dont'))}
+      columns={demoColumns}
+      data={demoData}
+      enablePagination
+      pageSize={3}
+      labels={demoLabels}
+      emptyMessage={$tStore('demonstration.labels.noResults')}
+      enableGlobalFilter={false}
+      enableColumnVisibility={false}
+    />
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -314,18 +476,61 @@ const columns: DataTableColumn<Invoice>[] = [
   />
 
   <!-- ── Recursos (Variantes) ───────────────────────────────────── -->
+  <!-- trackId estável em cada card: o name vem traduzido e viraria snippet_id traduzido. -->
   <DocsCompositions
     id="variantes"
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="data-table"
     items={[
-      { name: 'enableGlobalFilter',    description: stripHtml($tStore('variants.items.globalFilter')),   code: '<DataTable enableGlobalFilter />',     preview: noPreview },
-      { name: 'enableColumnFilters',   description: stripHtml($tStore('variants.items.columnFilters')),  code: '<DataTable enableColumnFilters />',    preview: noPreview },
-      { name: 'enableRowSelection',    description: stripHtml($tStore('variants.items.selection')),      code: '<DataTable enableRowSelection />',     preview: noPreview },
-      { name: 'enableColumnVisibility',description: stripHtml($tStore('variants.items.visibility')),     code: '<DataTable enableColumnVisibility />', preview: noPreview },
-      { name: 'enableColumnResizing',  description: stripHtml($tStore('variants.items.resize')),         code: '<DataTable enableColumnResizing />',   preview: noPreview },
-      { name: 'enableColumnOrdering',  description: stripHtml($tStore('variants.items.reorder')),        code: '<DataTable enableColumnOrdering />',   preview: noPreview },
-      { name: 'enablePagination',      description: stripHtml($tStore('variants.items.pagination')),     code: '<DataTable enablePagination />',       preview: noPreview },
+      {
+        trackId: 'globalFilter',
+        name: $tStore('variants.items.globalFilter.name'),
+        description: stripHtml($tStore('variants.items.globalFilter.description')),
+        code: '<DataTable enableGlobalFilter />',
+        preview: noPreview,
+      },
+      {
+        trackId: 'columnFilters',
+        name: $tStore('variants.items.columnFilters.name'),
+        description: stripHtml($tStore('variants.items.columnFilters.description')),
+        code: '<DataTable enableColumnFilters />',
+        preview: noPreview,
+      },
+      {
+        trackId: 'selection',
+        name: $tStore('variants.items.selection.name'),
+        description: stripHtml($tStore('variants.items.selection.description')),
+        code: '<DataTable enableRowSelection />',
+        preview: noPreview,
+      },
+      {
+        trackId: 'visibility',
+        name: $tStore('variants.items.visibility.name'),
+        description: stripHtml($tStore('variants.items.visibility.description')),
+        code: '<DataTable enableColumnVisibility />',
+        preview: noPreview,
+      },
+      {
+        trackId: 'resize',
+        name: $tStore('variants.items.resize.name'),
+        description: stripHtml($tStore('variants.items.resize.description')),
+        code: '<DataTable enableColumnResizing />',
+        preview: noPreview,
+      },
+      {
+        trackId: 'reorder',
+        name: $tStore('variants.items.reorder.name'),
+        description: stripHtml($tStore('variants.items.reorder.description')),
+        code: '<DataTable enableColumnOrdering />',
+        preview: noPreview,
+      },
+      {
+        trackId: 'pagination',
+        name: $tStore('variants.items.pagination.name'),
+        description: stripHtml($tStore('variants.items.pagination.description')),
+        code: '<DataTable enablePagination />',
+        preview: noPreview,
+      },
       {
         trackId: 'editableSheet',
         name: $tStore('variants.items.editableSheet.name'),
@@ -422,7 +627,7 @@ const columns: DataTableColumn<Invoice>[] = [
           { name: 'pageSizeOptions',         type: 'number[]',               defaultValue: '[10,20,50,100]', required: 'Não', description: toPlainText($tStore('props.table.pageSizeOptions')) },
           { name: 'emptyMessage',            type: 'string',                 defaultValue: '"Sem resultados."', required: 'Não', description: $tStore('props.table.emptyMessage') },
           { name: 'caption',                 type: 'string',                 defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.caption')) },
-          { name: 'labels',                  type: 'Partial<DataTableLabels>', defaultValue: 'DATA_TABLE_LABELS_PADRAO', required: 'Não', description: toPlainText($tStore('props.table.labels')) },
+          { name: 'labels',                  type: 'Partial<DataTableLabels>', defaultValue: 'DATA_TABLE_LABELS_DEFAULT', required: 'Não', description: toPlainText($tStore('props.table.labels')) },
           { name: 'rowKey',                  type: '(row: TData, index: number) => string', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.rowKey')) },
           { name: 'rowLabel',                type: '(row: TData) => string', defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.rowLabel')) },
           { name: 'onCellEdit',              type: '(rowIndex, columnId, value) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onCellEdit')) },
@@ -538,16 +743,11 @@ const columns: DataTableColumn<Invoice>[] = [
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { action: $tStore('testes.functional.item1.action'), result: $tStore('testes.functional.item1.result'), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: $tStore('testes.functional.item2.result'), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: $tStore('testes.functional.item3.result'), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item8.action'), result: $tStore('testes.functional.item8.result'), priority: localPriority($tStore('testes.functional.item8.priority'), $tNavStore) },
-      ],
+      items: itemsFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
+        action: r.action,
+        result: r.result,
+        priority: localPriority(r.priority, $tNavStore),
+      })),
     }}
     accessibility={{
       title: $tStore('testes.accessibility.title'),
@@ -556,12 +756,11 @@ const columns: DataTableColumn<Invoice>[] = [
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: toPlainText($tStore('testes.accessibility.item1.how')) },
-        { criterion: $tStore('testes.accessibility.item2.criterion'), level: $tStore('testes.accessibility.item2.level'), how: toPlainText($tStore('testes.accessibility.item2.how')) },
-        { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: toPlainText($tStore('testes.accessibility.item3.how')) },
-        { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: toPlainText($tStore('testes.accessibility.item4.how')) },
-      ],
+      items: itemsFromDict($tStore, 'testes.accessibility', ['criterion', 'level', 'how']).map((r) => ({
+        criterion: r.criterion,
+        level: r.level,
+        how: toPlainText(r.how),
+      })),
     }}
     visual={{
       title: $tStore('testes.visual.title'),
@@ -569,14 +768,10 @@ const columns: DataTableColumn<Invoice>[] = [
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item6.story'), priority: localPriority($tStore('testes.visual.item6.priority'), $tNavStore) },
-      ],
+      items: itemsFromDict($tStore, 'testes.visual', ['story', 'priority']).map((r) => ({
+        story: r.story,
+        priority: localPriority(r.priority, $tNavStore),
+      })),
     }}
   />
 </DocsPageLayout>

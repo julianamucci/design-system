@@ -3,6 +3,10 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
 import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT, type InvoiceDT } from './data-table.fixtures';
+import {
+  dataTableExplicitRowLabelSource,
+  dataTablePaginatedSource,
+} from './data-table.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -37,6 +41,10 @@ export const Paginated: Story = {
   parameters: {
     covers: ['functional.item8'],
     docs: {
+      // Sem transform, o painel publicaria o template da story — com a fixture
+      // importada e o objeto de props que o renderer do Angular monta. O painel
+      // é a única parte da página feita para ser COPIADA.
+      source: { transform: dataTablePaginatedSource },
       description: {
         story:
           'Quatro botões no rodapé: primeira, anterior, próxima e última. Nos extremos os dois do lado sem saída desabilitam — um botão que continua vivo e não leva a lugar nenhum é uma promessa quebrada.',
@@ -157,6 +165,7 @@ export const Paginated: Story = {
 export const ExplicitRowLabel: Story = {
   parameters: {
     docs: {
+      source: { transform: dataTableExplicitRowLabelSource },
       description: {
         story:
           'Quando a coluna que identifica a linha para quem enxerga não é a primeira, o rótulo do controle de seleção passa a sair do campo escolhido — e continua sendo um nome por linha, nunca um nome repetido.',

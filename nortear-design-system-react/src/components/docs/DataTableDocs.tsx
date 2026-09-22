@@ -34,28 +34,74 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+/**
+ * Índices dos `item<N>` que a seção publica, tirados das PRÓPRIAS chaves.
+ *
+ * Contar à mão envelhece em silêncio: o conteúdo compartilhado cresce nos três
+ * idiomas e a lista da tela fica para trás sem nada ficar vermelho — foi assim
+ * que dois testes funcionais e dois critérios de acessibilidade ficaram escritos
+ * e invisíveis. Cravar o número novo repete o defeito daqui a um item.
+ */
+const itemIndices = (section: unknown): number[] =>
+  Object.keys((section ?? {}) as Record<string, unknown>)
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((digits): digits is string => digits !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
+
 // ─── Dados de exemplo (preview do componente real) ───────────────────────────
+
+/**
+ * A linha carrega CHAVE, não rótulo.
+ *
+ * O texto vem de `demonstration.labels`, resolvido na hora de montar a coluna —
+ * mesma regra do payload de analytics: valor estável no dado, tradução só na
+ * borda. Com o rótulo dentro da linha, a tabela ficava em português no meio de
+ * uma página em inglês, e o mapa de variante do Badge só funcionava enquanto
+ * ninguém reescrevesse a tradução.
+ */
+type InvoiceStatus = "paid" | "pending" | "canceled";
+
+type InvoiceMethod = "pix" | "bankSlip" | "creditCard" | "debitCard" | "transfer";
 
 type Invoice = {
   id: string;
   customer: string;
-  status: "Pago" | "Pendente" | "Cancelado";
-  method: string;
+  status: InvoiceStatus;
+  method: InvoiceMethod;
   amount: number;
 };
 
 const sampleInvoices: Invoice[] = [
-  { id: "INV-001", customer: "Ana Souza",    status: "Pago",      method: "Pix",               amount: 250 },
-  { id: "INV-002", customer: "Bruno Lima",   status: "Pendente",  method: "Boleto bancário",   amount: 150 },
-  { id: "INV-003", customer: "Carla Mendes", status: "Cancelado", method: "Cartão de crédito", amount: 350 },
-  { id: "INV-004", customer: "Diego Faria",  status: "Pago",      method: "Cartão de débito",  amount: 450 },
-  { id: "INV-005", customer: "Eva Oliveira", status: "Pendente",  method: "Transferência",     amount: 200 },
+  { id: "INV-001", customer: "Ana Souza",    status: "paid",     method: "pix",        amount: 250 },
+  { id: "INV-002", customer: "Bruno Lima",   status: "pending",  method: "bankSlip",   amount: 150 },
+  { id: "INV-003", customer: "Carla Mendes", status: "canceled", method: "creditCard", amount: 350 },
+  { id: "INV-004", customer: "Diego Faria",  status: "paid",     method: "debitCard",  amount: 450 },
+  { id: "INV-005", customer: "Eva Oliveira", status: "pending",  method: "transfer",   amount: 200 },
 ];
 
-const statusVariantMap: Record<Invoice["status"], "default" | "warning" | "destructive"> = {
-  Pago: "default",
-  Pendente: "warning",
-  Cancelado: "destructive",
+// Caminho INTEIRO e escrito por extenso, e não interpolado: quem procura por
+// `demonstration.labels.paid` na árvore precisa achar esta página. Chave montada
+// em tempo de execução some da busca — e some também do portão que compara o
+// conjunto de rótulos das cinco demonstrações.
+const statusLabelKey: Record<InvoiceStatus, string> = {
+  paid: "demonstration.labels.paid",
+  pending: "demonstration.labels.pending",
+  canceled: "demonstration.labels.canceled",
+};
+
+const methodLabelKey: Record<InvoiceMethod, string> = {
+  pix: "demonstration.labels.methodPix",
+  bankSlip: "demonstration.labels.methodBankSlip",
+  creditCard: "demonstration.labels.methodCreditCard",
+  debitCard: "demonstration.labels.methodDebitCard",
+  transfer: "demonstration.labels.methodTransfer",
+};
+
+const statusVariantMap: Record<InvoiceStatus, "default" | "warning" | "destructive"> = {
+  paid: "default",
+  pending: "warning",
+  canceled: "destructive",
 };
 
 const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -122,6 +168,19 @@ export function DataTableDocs() {
     [locale],
   );
 
+  // Quantos itens cada lista de testes publica hoje, perguntado ao dicionário.
+  const testesIndices = useMemo(() => {
+    const testes = (dataTableTranslations as unknown as Record<
+      string,
+      { testes?: Record<string, unknown> }
+    >)[locale]?.testes;
+    return {
+      functional: itemIndices(testes?.functional),
+      accessibility: itemIndices(testes?.accessibility),
+      visual: itemIndices(testes?.visual),
+    };
+  }, [locale]);
+
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
     () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
@@ -170,27 +229,80 @@ export function DataTableDocs() {
       { accessorKey: "id", header: tContent("demonstration.labels.invoice"), size: 110 },
       { accessorKey: "customer", header: tContent("demonstration.labels.customer"), size: 180 },
       {
-        accessorKey: "status",
+        // `accessorFn` e não `accessorKey`: o valor que a busca varre e a
+        // ordenação compara tem de ser o TEXTO que a pessoa lê. Com a chave
+        // crua no acessor, procurar "Pago" não acharia nada e a ordenação
+        // seguiria o alfabeto do identificador, igual nos três idiomas.
+        id: "status",
+        accessorFn: (row) => tContent(statusLabelKey[row.status]),
         header: tContent("demonstration.labels.status"),
         size: 140,
         cell: ({ row }) => (
           <Badge variant={statusVariantMap[row.original.status]}>
-            {row.original.status}
+            {tContent(statusLabelKey[row.original.status])}
           </Badge>
         ),
       },
-      { accessorKey: "method", header: tContent("demonstration.labels.method"), size: 180 },
+      {
+        id: "method",
+        accessorFn: (row) => tContent(methodLabelKey[row.method]),
+        header: tContent("demonstration.labels.method"),
+        size: 180,
+      },
       {
         accessorKey: "amount",
         header: tContent("demonstration.labels.amount"),
         size: 130,
+        // Coluna numérica: alinha à direita na célula E no cabeçalho
+        // (guideline 20, §coluna numérica). Quem escreve as classes é o
+        // primitivo, porque o `<th>` não passa por aqui.
+        meta: { numeric: true },
         cell: ({ row }) => (
-          <span className="nds-font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>
+          <span className="nds-font-medium nds-tabular-nums">
             {currency.format(row.original.amount)}
           </span>
         ),
       },
     ],
+    [tContent]
+  );
+
+  // ─── Rótulos e nome acessível dos exemplos ──────────────────────────────────
+
+  /*
+   * O conjunto COMPLETO de rótulos, e não só o placeholder da busca.
+   *
+   * Sem ele o rodapé ficava em pt-BR fixo em `en` e `es` — "Linhas por
+   * página", "Página X de Y", "Primeira página" — porque o componente cai nos
+   * valores padrão, que são o idioma em que o design system nasce. Cada
+   * caminho vai POR EXTENSO: chave interpolada some da busca de quem lê a
+   * árvore e do portão `demonstration_labels_divergent`.
+   */
+  const demoLabels = useMemo(
+    () => ({
+      columns: tContent("demonstration.labels.columns"),
+      rowsPerPage: tContent("demonstration.labels.rowsPerPage"),
+      page: tContent("demonstration.labels.page"),
+      pageOf: tContent("demonstration.labels.of"),
+      firstPage: tContent("demonstration.labels.firstPage"),
+      prevPage: tContent("demonstration.labels.prevPage"),
+      nextPage: tContent("demonstration.labels.nextPage"),
+      lastPage: tContent("demonstration.labels.lastPage"),
+    }),
+    [tContent]
+  );
+
+  /*
+   * Nome acessível de uma tabela do exemplo.
+   *
+   * A legenda é o nome da tabela para o leitor de tela. Sem ela a página
+   * chegava como "tabela, 6 colunas" onze vezes seguidas; com a MESMA legenda
+   * em todas, continuaria indistinguível — por isso o sufixo por exemplo.
+   * Também é ela que nomeia a região rolável, que lê a legenda.
+   */
+  const caption = useCallback(
+    (suffix: string) =>
+      `${tContent("demonstration.labels.caption")} — ${toPlainText(suffix)}`,
     [tContent]
   );
 
@@ -335,17 +447,28 @@ const columns: DataTableColumn<Invoice>[] = [
 type DataTableColumnMeta = {
   filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
   editable?: boolean
+  // Coluna numérica: alinha à direita na célula e no cabeçalho
+  numeric?: boolean
 }`;
 
   // ─── Previews reutilizáveis ─────────────────────────────────────────────────
 
-  const PreviewBasic = (
+  /*
+   * O exemplo que os recursos sem preview proprio reutilizam.
+   *
+   * E FUNCAO por causa da legenda: cada recurso precisa do proprio nome
+   * acessivel, e um no unico nao teria como carregar sete nomes diferentes.
+   */
+  const previewBasic = (suffix: string) => (
     <DataTable<Invoice>
       columns={demoColumns}
       data={sampleInvoices}
       enableGlobalFilter={false}
       enableColumnVisibility={false}
       enablePagination={false}
+      labels={demoLabels}
+      emptyMessage={tContent("demonstration.labels.noResults")}
+      caption={caption(suffix)}
     />
   );
 
@@ -373,6 +496,9 @@ type DataTableColumnMeta = {
             enableGlobalFilter
             globalFilterPlaceholder={tContent("demonstration.labels.search")}
             enablePagination={false}
+            labels={demoLabels}
+            emptyMessage={tContent("demonstration.labels.noResults")}
+            caption={caption(tNav("nav.demonstration"))}
           />
         </div>
       </DocsDemonstration>
@@ -488,6 +614,9 @@ type DataTableColumnMeta = {
                 globalFilterPlaceholder={tContent("demonstration.labels.search")}
                 enableColumnVisibility={false}
                 enablePagination={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(tContent("doDont.pair1.do"))}
               />
             ),
             dontPreview: (
@@ -498,6 +627,9 @@ type DataTableColumnMeta = {
                 globalFilterPlaceholder="Buscar..."
                 enableColumnVisibility={false}
                 enablePagination={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(tContent("doDont.pair1.dont"))}
               />
             ),
             doCaption: toPlainText(tContent("doDont.pair1.do")),
@@ -514,6 +646,9 @@ type DataTableColumnMeta = {
                 maxHeight="180px"
                 enableGlobalFilter={false}
                 enableColumnVisibility={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(tContent("doDont.pair2.do"))}
               />
             ),
             dontPreview: (
@@ -524,6 +659,9 @@ type DataTableColumnMeta = {
                 pageSize={3}
                 enableGlobalFilter={false}
                 enableColumnVisibility={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(tContent("doDont.pair2.dont"))}
               />
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
@@ -548,20 +686,23 @@ type DataTableColumnMeta = {
         componentSlug="data-table"
         items={[
           {
-            name: "enableGlobalFilter",
-            description: tContent("variants.items.globalFilter"),
+            trackId: "globalFilter",
+            name: tContent("variants.items.globalFilter.name"),
+            description: tContent("variants.items.globalFilter.description"),
             code: codeGlobalFilter,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.globalFilter.name")),
           },
           {
-            name: "enableColumnFilters",
-            description: tContent("variants.items.columnFilters"),
+            trackId: "columnFilters",
+            name: tContent("variants.items.columnFilters.name"),
+            description: tContent("variants.items.columnFilters.description"),
             code: codeColumnFilters,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.columnFilters.name")),
           },
           {
-            name: "enableRowSelection",
-            description: tContent("variants.items.selection"),
+            trackId: "selection",
+            name: tContent("variants.items.selection.name"),
+            description: tContent("variants.items.selection.description"),
             code: codeRowSelection,
             preview: (
               <DataTable<Invoice>
@@ -571,32 +712,39 @@ type DataTableColumnMeta = {
                 enableGlobalFilter={false}
                 enableColumnVisibility={false}
                 enablePagination={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(tContent("variants.items.selection.name"))}
               />
             ),
           },
           {
-            name: "enableColumnVisibility",
-            description: tContent("variants.items.visibility"),
+            trackId: "visibility",
+            name: tContent("variants.items.visibility.name"),
+            description: tContent("variants.items.visibility.description"),
             code: codeVisibility,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.visibility.name")),
           },
           {
-            name: "enableColumnResizing",
-            description: tContent("variants.items.resize"),
+            trackId: "resize",
+            name: tContent("variants.items.resize.name"),
+            description: tContent("variants.items.resize.description"),
             code: codeResize,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.resize.name")),
           },
           {
-            name: "enableColumnOrdering",
-            description: tContent("variants.items.reorder"),
+            trackId: "reorder",
+            name: tContent("variants.items.reorder.name"),
+            description: tContent("variants.items.reorder.description"),
             code: codeReorder,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.reorder.name")),
           },
           {
-            name: "enablePagination",
-            description: tContent("variants.items.pagination"),
+            trackId: "pagination",
+            name: tContent("variants.items.pagination.name"),
+            description: tContent("variants.items.pagination.description"),
             code: codePagination,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.pagination.name")),
           },
           {
             trackId: "editableSheet",
@@ -604,7 +752,7 @@ type DataTableColumnMeta = {
             description: tContent("variants.items.editableSheet.description"),
             useWhen: tContent("variants.items.editableSheet.use"),
             code: codeEdit,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.editableSheet.name")),
           },
           {
             trackId: "virtualizedLog",
@@ -620,6 +768,9 @@ type DataTableColumnMeta = {
                 maxHeight="180px"
                 enableGlobalFilter={false}
                 enableColumnVisibility={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(tContent("variants.items.virtualizedLog.name"))}
               />
             ),
           },
@@ -629,7 +780,7 @@ type DataTableColumnMeta = {
             description: tContent("variants.items.pinnedKey.description"),
             useWhen: tContent("variants.items.pinnedKey.use"),
             code: codePin,
-            preview: PreviewBasic,
+            preview: previewBasic(tContent("variants.items.pinnedKey.name")),
           },
         ]}
       />
@@ -653,6 +804,11 @@ type DataTableColumnMeta = {
                 enableGlobalFilter={false}
                 enableColumnVisibility={false}
                 enablePagination={false}
+                labels={demoLabels}
+                emptyMessage={tContent("demonstration.labels.noResults")}
+                caption={caption(
+                  tContent("variants.compositions.selectionWithActions.name")
+                )}
               />
             ),
           },
@@ -736,7 +892,7 @@ type DataTableColumnMeta = {
               { name: "pageSizeOptions", type: "number[]", defaultValue: "[10, 20, 50, 100]", required: "Não", description: toPlainText(tContent("props.table.pageSizeOptions")) },
               { name: "emptyMessage", type: "string", defaultValue: '"Sem resultados."', required: "Não", description: tContent("props.table.emptyMessage") },
               { name: "caption", type: "string", defaultValue: "—", required: "Não", description: tContent("props.table.caption") },
-              { name: "labels", type: "Partial<DataTableLabels>", defaultValue: "DATA_TABLE_LABELS_PADRAO", required: "Não", description: tContent("props.table.labels") },
+              { name: "labels", type: "Partial<DataTableLabels>", defaultValue: "DATA_TABLE_LABELS_DEFAULT", required: "Não", description: tContent("props.table.labels") },
               { name: "rowKey", type: "(row: TData, index: number) => string", defaultValue: "—", required: "Não", description: tContent("props.table.rowKey") },
               { name: "rowLabel", type: "(row: TData) => string", defaultValue: "—", required: "Não", description: tContent("props.table.rowLabel") },
               { name: "onCellEdit", type: "(rowIndex, columnId, value) => void", defaultValue: "—", required: "Não", description: toPlainText(tContent("props.table.onCellEdit")) },
@@ -864,7 +1020,7 @@ type DataTableColumnMeta = {
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
+          items: testesIndices.functional.map((n) => ({
             action: tContent(`testes.functional.item${n}.action`),
             result: tContent(`testes.functional.item${n}.result`),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${n}.priority`)] ?? "common.medium"),
@@ -877,7 +1033,7 @@ type DataTableColumnMeta = {
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [1, 2, 3, 4].map((n) => ({
+          items: testesIndices.accessibility.map((n) => ({
             criterion: tContent(`testes.accessibility.item${n}.criterion`),
             level: tContent(`testes.accessibility.item${n}.level`),
             how: toPlainText(tContent(`testes.accessibility.item${n}.how`)),
@@ -889,7 +1045,7 @@ type DataTableColumnMeta = {
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [1, 2, 3, 4, 5, 6].map((n) => ({
+          items: testesIndices.visual.map((n) => ({
             story: tContent(`testes.visual.item${n}.story`),
             priority: tNav(priorityKeyMap[tContent(`testes.visual.item${n}.priority`)] ?? "common.medium"),
           })),

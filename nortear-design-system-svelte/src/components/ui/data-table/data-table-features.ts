@@ -45,6 +45,15 @@ type DataTableColumnMeta<TData extends RowData, TValue> = {
   badgeVariant?: (value: TValue, row: TData) => 'default' | 'destructive' | 'warning' | 'success' | 'info';
   /** Classes .nds-* extras aplicadas no <td> de cada célula da coluna. */
   cellClass?: string;
+  /**
+   * Coluna de número: alinha à direita na CÉLULA e também no CABEÇALHO
+   * (guideline 20, "Coluna numérica alinha à direita"). A utilitária
+   * `.nds-text-right` vence `.nds-data-table-th` e `.nds-data-table-td` pela
+   * ORDEM — mesma especificidade (0,1,0), e `utilities.css` entra depois de
+   * `data-table.css` em `index.css`. A bandeira vive na coluna porque quem sabe
+   * que o dado é número é quem declara a coluna, não a folha.
+   */
+  numeric?: boolean;
 };
 
 type DataTableTableMeta = {

@@ -21,7 +21,15 @@ import {
   type DataTableColumn,
   type DataTableLabels,
 } from '@/components/ui/data-table';
-import { INVOICES_DT, type InvoiceDT } from '@/components/ui/data-table.fixtures';
+import {
+  INVOICES_DT,
+  METHOD_KEY_DT,
+  STATUS_KEY_DT,
+  statusBadgeDT,
+  type InvoiceDT,
+  type MethodKeyDT,
+  type StatusKeyDT,
+} from '@/components/ui/data-table.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import dataTableTranslations from '@shared/content/data-table/translations.json';
 
@@ -80,11 +88,6 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
     'labels.noFilter': 'Sem filtro para {col}',
     'labels.batchAction': 'Marcar como pagas as faturas selecionadas',
     'labels.batchEmpty': 'Nenhuma fatura selecionada.',
-    'variants.items.globalFilter.name': 'Busca livre',
-    'variants.items.columnFilters.name': 'Filtros por coluna',
-    'variants.items.selection.name': 'Seleção de linhas',
-    'variants.items.visibility.name': 'Visibilidade de colunas',
-    'variants.items.pagination.name': 'Paginação',
     'variants.angularScope':
       'Nesta stack estão entregues busca livre, filtros por coluna, ordenação, seleção com estado misto, menu de visibilidade, edição em célula e paginação. Redimensionar coluna, reordenar por arrasto, fixar coluna e virtualizar ficaram de fora: os quatro dependem de medida em pixel escrita no próprio elemento, e medida escrita no elemento vence a folha e tira o componente do tema, da densidade e da escala tipográfica.',
     'doDont.pair2.do':
@@ -106,7 +109,9 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
     'props.table.colSortable': 'Coluna ordenável ganha botão no cabeçalho e anuncia a direção aplicada.',
     'props.table.colHideable': 'Coluna que pode ser escondida pelo menu de colunas.',
     'props.table.colNumeric':
-      'Coluna numérica: a CÉLULA alinha à direita. O cabeçalho não acompanha — na folha compartilhada o alinhamento do cabeçalho vence por especificidade, nas cinco stacks.',
+      'Coluna numérica: a célula e o cabeçalho alinham à direita, e a coluna passa a usar algarismos de largura fixa para não dançar a cada atualização.',
+    'props.table.colBadge':
+      'Devolve a variante do Badge para o valor da célula, ou nada para texto puro. A variante sai da chave estável do dado: rótulo traduzido mudaria com o idioma e levaria a cor junto.',
   },
   en: {
     'labels.showColumns': 'Show columns',
@@ -122,11 +127,6 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
     'labels.noFilter': 'No filter for {col}',
     'labels.batchAction': 'Mark the selected invoices as paid',
     'labels.batchEmpty': 'No invoice selected.',
-    'variants.items.globalFilter.name': 'Free-text search',
-    'variants.items.columnFilters.name': 'Per-column filters',
-    'variants.items.selection.name': 'Row selection',
-    'variants.items.visibility.name': 'Column visibility',
-    'variants.items.pagination.name': 'Pagination',
     'variants.angularScope':
       'This stack ships free-text search, per-column filters, sorting, selection with a mixed state, the column visibility menu, in-cell editing and pagination. Column resizing, drag reordering, column pinning and virtualization are out: all four depend on a pixel measurement written on the element itself, and a measurement written on the element beats the stylesheet and takes the component out of the theme, the density and the type scale.',
     'doDont.pair2.do':
@@ -144,7 +144,9 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
     'props.table.colSortable': 'A sortable column gets a header button and announces the applied direction.',
     'props.table.colHideable': 'Column that can be hidden from the column menu.',
     'props.table.colNumeric':
-      'Numeric column: the CELL aligns right. The header does not follow — in the shared stylesheet the header alignment wins by specificity, in all five stacks.',
+      'Numeric column: the cell and the header both align right, and the column switches to fixed-width figures so it does not shift on every update.',
+    'props.table.colBadge':
+      'Returns the Badge variant for the cell value, or nothing for plain text. The variant comes from the stable key of the data: a translated label would change with the language and take the colour with it.',
   },
   es: {
     'labels.showColumns': 'Mostrar columnas',
@@ -160,11 +162,6 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
     'labels.noFilter': 'Sin filtro para {col}',
     'labels.batchAction': 'Marcar como pagadas las facturas seleccionadas',
     'labels.batchEmpty': 'Ninguna factura seleccionada.',
-    'variants.items.globalFilter.name': 'Búsqueda libre',
-    'variants.items.columnFilters.name': 'Filtros por columna',
-    'variants.items.selection.name': 'Selección de filas',
-    'variants.items.visibility.name': 'Visibilidad de columnas',
-    'variants.items.pagination.name': 'Paginación',
     'variants.angularScope':
       'En esta stack están entregados la búsqueda libre, los filtros por columna, la ordenación, la selección con estado mixto, el menú de visibilidad, la edición en celda y la paginación. Redimensionar columna, reordenar arrastrando, fijar columna y virtualizar quedaron fuera: los cuatro dependen de una medida en píxeles escrita en el propio elemento, y una medida escrita en el elemento vence a la hoja y saca al componente del tema, de la densidad y de la escala tipográfica.',
     'doDont.pair2.do':
@@ -182,7 +179,9 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
     'props.table.colSortable': 'Una columna ordenable recibe un botón en el encabezado y anuncia la dirección aplicada.',
     'props.table.colHideable': 'Columna que se puede ocultar desde el menú de columnas.',
     'props.table.colNumeric':
-      'Columna numérica: la CELDA se alinea a la derecha. El encabezado no la sigue — en la hoja compartida la alineación del encabezado gana por especificidad, en las cinco stacks.',
+      'Columna numérica: la celda y el encabezado se alinean a la derecha, y la columna pasa a usar cifras de ancho fijo para no bailar en cada actualización.',
+    'props.table.colBadge':
+      'Devuelve la variante del Badge para el valor de la celda, o nada para texto plano. La variante sale de la clave estable del dato: una etiqueta traducida cambiaría con el idioma y se llevaría el color.',
   },
 });
 
@@ -220,12 +219,18 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
 // ─── Snippets ─────────────────────────────────────────────────────────────────
 //
-// O `anatomy.structureCode.angular` do conteúdo compartilhado anuncia
-// "@tanstack/angular-table sobre o mesmo table-core" e passa flags de pin e
-// resize. Não existe: não há TanStack nesta stack — o estado é de signal,
-// escrito à mão — e as flags de pin, resize, reorder e virtualização não são
-// entradas do componente. Os snippets abaixo são o que compila; a divergência
-// está registrada no relatório.
+// A estrutura da anatomia NÃO mora aqui: ela sai de `anatomy.structureCode` do
+// conteúdo compartilhado, como em toda docs page desta stack.
+//
+// Até 2026-09-22 havia uma cópia local no lugar dela, com um comentário que
+// dizia que a chave compartilhada anunciava `@tanstack/angular-table` e passava
+// flags de pin e resize. A chave já tinha sido corrigida — hoje ela abre com
+// "Sem lib de tabela" —, mas a página tinha deixado de LÊ-LA, então nada na
+// tela mudou quando o conteúdo mudou. Contorno que sobrevive à causa vira
+// segunda fonte, e nesta casa a segunda é a que deixa de ser corrigida.
+//
+// O que fica abaixo são os snippets que a página monta por conta própria — os
+// de import e os de cada recurso —, porque não têm chave compartilhada.
 
 const IMPORT_CODE = `import { NdsDataTable, type DataTableColumn } from '@/components/ui/data-table';`;
 
@@ -243,20 +248,6 @@ const COLUNAS: DataTableColumn<Fatura>[] = [
   // depois de "R$ 450,00" na ordenação.
   { id: 'valor',   header: 'Valor',   accessor: (f) => f.valor, format: brl, sortable: true, numeric: true },
 ];`;
-
-const ANATOMY_CODE = `<div
-  ndsDataTable
-  caption="Faturas recentes"
-  [columns]="colunas"
-  [data]="faturas()"
-  [rowKey]="invoiceKey"
-  [rowLabel]="invoiceLabel"
-  [enableRowSelection]="true"
-  [enableColumnFilters]="true"
-  [pageSize]="5"
-  (cellEdit)="aplicarEdicao($event)"
-  (selectionChange)="selecionadas.set($event)"
-></div>`;
 
 const CODE_SEARCH = `<!-- Ligada por padrão. A busca casa em TODA coluna, inclusive nas escondidas
      pelo menu: esconder é decisão de leitura, não de escopo. -->
@@ -615,7 +606,7 @@ function formatarBRL(value: unknown): string {
         <nds-docs-anatomy
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -713,7 +704,6 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly toPlainText = toPlainText;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importMetaCode = IMPORT_META_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly tokensCss = TOKENS_CSS;
 
@@ -731,20 +721,50 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly invoiceKey = (invoice: InvoiceDT): string => invoice.id;
   protected readonly invoiceLabel = (invoice: InvoiceDT): string => invoice.id;
 
-  /** Status do dado (em português) → texto na língua da página. */
-  private readonly statusTraduzido = computed<Record<string, string>>(() => {
+  /**
+   * Chave estável do status → texto na língua da página.
+   *
+   * O mapa é chaveado pela CHAVE, e não pelo rótulo em pt-BR que ele devolvia
+   * antes: a variante do selo pende da mesma chave, e pendurá-la no texto faria
+   * o selo perder a cor assim que a página fosse lida em outro idioma. O único
+   * ponto que ainda conhece o rótulo guardado no dado é `STATUS_KEY_DT`, que
+   * traduz dado → chave uma vez só.
+   */
+  private readonly statusLabels = computed<Record<StatusKeyDT, string>>(() => {
     dict();
     return {
-      Pago: t('demonstration.labels.paid'),
-      Pendente: t('demonstration.labels.pending'),
-      Cancelado: t('demonstration.labels.canceled'),
+      paid: t('demonstration.labels.paid'),
+      pending: t('demonstration.labels.pending'),
+      canceled: t('demonstration.labels.canceled'),
+    };
+  });
+
+  /**
+   * Chave estável do método de pagamento → texto na língua da página.
+   *
+   * Cada caminho vai escrito POR EXTENSO. Chave montada em tempo de execução
+   * some da busca de quem lê a árvore e some do portão que compara o conjunto
+   * de rótulos das cinco demonstrações.
+   */
+  private readonly methodLabels = computed<Record<MethodKeyDT, string>>(() => {
+    dict();
+    return {
+      pix: t('demonstration.labels.methodPix'),
+      bankSlip: t('demonstration.labels.methodBankSlip'),
+      creditCard: t('demonstration.labels.methodCreditCard'),
+      debitCard: t('demonstration.labels.methodDebitCard'),
+      transfer: t('demonstration.labels.methodTransfer'),
     };
   });
 
   protected readonly colunas = computed<DataTableColumn<InvoiceDT>[]>(() => {
     dict();
-    const status = this.statusTraduzido();
+    const status = this.statusLabels();
+    const method = this.methodLabels();
+    /** O texto exibido de cada status, na ordem em que o domínio os lista. */
     const options = Object.values(status);
+    const statusText = (value: unknown) => status[STATUS_KEY_DT[String(value)]!] ?? '—';
+    const methodText = (value: unknown) => method[METHOD_KEY_DT[String(value)]!] ?? '—';
     return [
       {
         id: 'id',
@@ -765,7 +785,10 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
         id: 'status',
         header: t('demonstration.labels.status'),
         accessor: (f) => f.status,
-        format: (value) => status[String(value)] ?? '—',
+        format: statusText,
+        // O status é um ESTADO, e estado se lê no selo: cor mais texto. A
+        // variante sai da chave estável, nunca do rótulo traduzido.
+        badge: statusBadgeDT,
         // As opções do select são o TEXTO exibido: o filtro compara o que se lê.
         filter: { type: 'select', options: options },
       },
@@ -773,6 +796,9 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
         id: 'metodo',
         header: t('demonstration.labels.method'),
         accessor: (f) => f.metodo,
+        // O dado guarda o rótulo em pt-BR; a tela mostra a língua da página. Sem
+        // isto a coluna saía em português no meio da tabela lida em `en` e `es`.
+        format: methodText,
       },
       {
         id: 'valor',
@@ -830,9 +856,13 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
    *
    * A legenda é o nome da tabela para o leitor de tela — repetida em meia dúzia
    * de previews, a lista de tabelas fica indistinguível.
+   *
+   * A base é `demonstration.labels.caption`, e não o título da página: é a
+   * mesma base das outras quatro stacks, e compor do título fazia a mesma
+   * tabela chegar ao leitor de tela com nome diferente em cada uma.
    */
   protected caption(sufixo: string): string {
-    return `${t('title')} — ${toPlainText(sufixo)}`;
+    return `${t('demonstration.labels.caption')} — ${toPlainText(sufixo)}`;
   }
 
   protected aplicarEdicao(edicao: DataTableCellEdit): void {
@@ -955,12 +985,16 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
       { key: 'pagination',    code: CODE_PAGINATION,    tpl: this.tplVarPaginacao()    },
       { key: 'editableSheet', code: CODE_EDIT,       tpl: this.tplVarPlanilha()     },
     ].map(({ key, code, tpl }) => ({
-      // `.name` existe no conteúdo só para `editableSheet`; para os cinco
-      // primeiros vem do override. Lido sempre pelo mesmo caminho, o card nunca
-      // cai no caso em que o título repete a descrição inteira.
+      // `.name` vem do conteúdo COMPARTILHADO para todas as flags desde
+      // 2026-09-22: os cinco nomes que esta página carregava em override local
+      // eram os únicos bons das cinco stacks e foram promovidos tal e qual.
+      // Manter a cópia aqui faria duas fontes, e a segunda é a que deixa de ser
+      // corrigida.
       name: t(`variants.items.${key}.name`),
       description: valueOuField(`variants.items.${key}`, 'description'),
       code,
+      // O id de rastreio é a CHAVE da flag, nunca o `name`: o nome é texto
+      // traduzido, e em `en`/`es` o mesmo botão emitiria outro valor no GA4.
       trackId: key,
       preview: tpl,
     }));
@@ -1071,6 +1105,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
           line('hideable', 'colHideable', 'boolean', 'true'),
           line('editable', 'metaEditable', 'boolean', 'false'),
           line('numeric', 'colNumeric', 'boolean', 'false'),
+          line('badge', 'colBadge', '(value, row) => BadgeVariant | null', '—'),
           line('filter', 'metaFilter', 'DataTableColumnFilter', '—'),
         ],
       },

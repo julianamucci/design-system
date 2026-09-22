@@ -6,7 +6,7 @@
   import ChevronRight from '@lucide/svelte/icons/chevron-right';
   import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
   import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
-  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from './data-table-labels';
+  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from '@shared/primitives/data-table-labels';
 
   const {
     table,

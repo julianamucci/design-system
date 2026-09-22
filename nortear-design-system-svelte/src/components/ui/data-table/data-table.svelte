@@ -50,7 +50,7 @@
   } from '@/components/ui/table';
   import DataTablePagination from './data-table-pagination.svelte';
   import EditableCell from './data-table-editable-cell.svelte';
-  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from './data-table-labels';
+  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from '@shared/primitives/data-table-labels';
 
   type Column = ColumnDef<DataTableFeatures, TData, unknown>;
   type Row = ReturnType<TanstackTable<DataTableFeatures, TData>['getRowModel']>['rows'][number];
@@ -492,7 +492,14 @@
       )}
       style={virtualized ? `max-height: ${maxHeight};` : undefined}
     >
+      <!-- O nome e o papel da região rolável andam JUNTOS: o wrapper entra na
+           ordem de tabulação, e uma parada sem nome é uma parada que o leitor de
+           tela não sabe anunciar. O texto é o MESMO da legenda — é ela que já
+           nomeia a tabela, e dois nomes diferentes para o mesmo assunto seriam
+           dois objetos na árvore. Sem legenda não há nome, e o `Table` então não
+           emite papel nenhum, que é o comportamento certo. -->
       <Table
+        regionLabel={caption}
         class={cn(
           (enableColumnResizing || enableColumnOrdering || virtualized) && 'nds-table-fixed',
         )}
@@ -524,7 +531,11 @@
                     enableColumnResizing ? `width: ${header.getSize()}px;` : '',
                     pinStyle(header.column),
                   ].join(' ')}
-                  class={cn('nds-data-table-th', header.column.getIsPinned() && 'nds-data-table-th-pinned')}
+                  class={cn(
+                    'nds-data-table-th',
+                    header.column.getIsPinned() && 'nds-data-table-th-pinned',
+                    header.column.columnDef.meta?.numeric && 'nds-text-right',
+                  )}
                   draggable={isDraggable}
                   ondragstart={isDraggable ? () => handleDragStart(header.column.id) : undefined}
                   ondragover={isDraggable ? handleDragOver : undefined}
@@ -649,6 +660,11 @@
                     class={cn(
                       'nds-data-table-td',
                       cell.column.getIsPinned() && 'nds-data-table-td-pinned',
+                      /* A bandeira `numeric` declara que a coluna guarda NÚMERO: alinha à
+                         direita E trava a figura tabular, que é o que impede a coluna de
+                         dançar quando o dígito troca (guideline 20). O cabeçalho fica só
+                         com o alinhamento — cabeçalho é texto, não dígito. */
+                      cell.column.columnDef.meta?.numeric && 'nds-text-right nds-tabular-nums',
                       cell.column.columnDef.meta?.cellClass,
                     )}
                   >

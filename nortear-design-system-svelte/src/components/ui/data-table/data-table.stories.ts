@@ -71,7 +71,7 @@ const meta: Meta = {
         'Textos da interface: rótulos dos controles, contagens e navegação. Só as chaves informadas mudam; o resto continua no padrão.',
       table: {
         type: { summary: 'Partial<DataTableLabels>' },
-        defaultValue: { summary: 'DATA_TABLE_LABELS_PADRAO' },
+        defaultValue: { summary: 'DATA_TABLE_LABELS_DEFAULT' },
       },
       control: false,
     },
@@ -226,9 +226,9 @@ export const Playground: Story = {
       const caption = table.querySelector('caption')!;
       await expect(caption.tagName).toBe('CAPTION');
       await expect(caption).toHaveTextContent(CAPTION);
-      const estilo = getComputedStyle(caption);
+      const captionStyle = getComputedStyle(caption);
       const box = caption.getBoundingClientRect();
-      await expect(estilo.position).toBe('absolute');
+      await expect(captionStyle.position).toBe('absolute');
       await expect(box.width).toBeLessThanOrEqual(2);
       await expect(box.height).toBeLessThanOrEqual(2);
     });

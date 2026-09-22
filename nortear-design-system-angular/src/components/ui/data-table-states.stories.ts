@@ -3,6 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
 import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT } from './data-table.fixtures';
+import {
+  dataTableNoResultsSource,
+  dataTableSelectedRowsSource,
+  dataTableSortedSource,
+} from './data-table.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -35,6 +40,10 @@ export const NoResults: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
+      // Sem transform, o painel publicaria o template da story — com a fixture
+      // importada e o objeto de props que o renderer do Angular monta. O painel
+      // é a única parte da página feita para ser COPIADA.
+      source: { transform: dataTableNoResultsSource },
       description: {
         story:
           'Sem linhas, uma célula única cobrindo a largura da tabela. A toolbar continua na tela: é por ela que se limpa o recorte que esvaziou o resultado.',
@@ -93,6 +102,7 @@ export const NoResults: Story = {
 export const Sorted: Story = {
   parameters: {
     docs: {
+      source: { transform: dataTableSortedSource },
       description: {
         story:
           'A coluna ordenada carrega o `aria-sort` na célula de cabeçalho e a seta na direção aplicada. A ordenação usa o valor bruto, não o texto formatado.',
@@ -149,6 +159,7 @@ export const Sorted: Story = {
 export const SelectedRows: Story = {
   parameters: {
     docs: {
+      source: { transform: dataTableSelectedRowsSource },
       description: {
         story:
           'A linha marcada recebe `data-state="selected"` e fundo destacado. A contagem sai por região viva: cor sozinha não chega a quem não enxerga.',

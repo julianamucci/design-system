@@ -48,6 +48,11 @@ import {
   Settings2,
 } from "lucide-react"
 
+import {
+  DATA_TABLE_LABELS_DEFAULT,
+  type DataTableLabels,
+} from "@shared/primitives/data-table-labels"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -85,6 +90,16 @@ import {
 type DataTableColumnMeta = {
   filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
   editable?: boolean
+  /**
+   * Coluna numérica: alinha à direita na CÉLULA e no CABEÇALHO, e usa algarismo
+   * de largura fixa. As duas pontas, porque a guideline de tabelas pede que a
+   * coluna de número forme uma única borda direita — cabeçalho fora do prumo
+   * desfaz a leitura de grandeza que o alinhamento existe para dar.
+   *
+   * Quem escreve a classe é o componente e não quem monta a coluna: o `<th>` é
+   * gerado aqui dentro, e não há por onde alcançá-lo de fora.
+   */
+  numeric?: boolean
 }
 
 type DataTableTableMeta = {
@@ -137,70 +152,14 @@ export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef
 >
 
 /**
- * Todo texto que o componente escreve na tela ou entrega ao leitor de tela.
+ * Textos da interface — o catálogo mora no conteúdo compartilhado.
  *
- * Existe porque a alternativa — texto cravado no componente — deixa a única
- * saída de tradução do lado de fora: quem monta a tabela consegue trocar o
- * cabeçalho de uma coluna, mas não o nome do controle que marca a linha. O
- * contrato é o MESMO nas quatro stacks TanStack (react, vue, svelte, vanilla):
- * mesmas chaves, mesmos valores padrão, para que um texto revisado numa stack
- * possa ser copiado nas outras sem tradução de API.
- *
- * As chaves que dependem de um dado — coluna, linha, contagem — são FUNÇÕES, e
- * não moldes com `{col}`. A função permite ordem de palavras diferente por
- * idioma e concordância de número, coisa que interpolação posicional não faz.
- * (No Angular as mesmas chaves são moldes com `{col}`, porque template não
- * declara função; essa divergência é de API do framework e fica registrada, não
- * alinhada.)
+ * As 21 chaves e os valores padrão em pt-BR estavam copiados palavra por
+ * palavra em quatro stacks. Catálogo de rótulo é REGRA, não implementação:
+ * decide o que se lê, não age sobre elemento vivo. O reexport mantém o ponto
+ * de importação do componente para quem já lia daqui.
  */
-export interface DataTableLabels {
-  columns: string
-  showColumns: string
-  selectAll: string
-  selectRow: (row: string) => string
-  sortBy: (col: string) => string
-  filter: (col: string) => string
-  noFilter: (col: string) => string
-  pinLeft: (col: string) => string
-  unpin: (col: string) => string
-  resize: (col: string) => string
-  edit: (col: string) => string
-  rowsPerPage: string
-  page: string
-  pageOf: string
-  firstPage: string
-  prevPage: string
-  nextPage: string
-  lastPage: string
-  rowsTotal: (n: number) => string
-  rowsSelected: (s: number, n: number) => string
-  allOption: string
-}
-
-/** Português do Brasil — o idioma em que o design system nasce. */
-export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
-  columns: "Colunas",
-  showColumns: "Exibir colunas",
-  selectAll: "Selecionar todas as linhas",
-  selectRow: (r) => `Selecionar linha ${r}`,
-  sortBy: (c) => `Ordenar por ${c}`,
-  filter: (c) => `Filtrar ${c}`,
-  noFilter: (c) => `Sem filtro para ${c}`,
-  pinLeft: (c) => `Fixar ${c} à esquerda`,
-  unpin: (c) => `Desafixar ${c}`,
-  resize: (c) => `Redimensionar coluna ${c}`,
-  edit: (c) => `Editar ${c}`,
-  rowsPerPage: "Linhas por página",
-  page: "Página",
-  pageOf: "de",
-  firstPage: "Primeira página",
-  prevPage: "Página anterior",
-  nextPage: "Próxima página",
-  lastPage: "Última página",
-  rowsTotal: (n) => `${n} linha(s).`,
-  rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
-  allOption: "Todos",
-}
+export { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels }
 
 export interface DataTableProps<TData extends RowData> {
   columns: DataTableColumn<TData>[]
@@ -599,6 +558,15 @@ function DataTable<TData extends RowData>({
         style={virtualized ? { maxHeight } : undefined}
       >
         <Table
+          /*
+            O nome e o papel da região rolável andam juntos: o wrapper entra na
+            ordem de tabulação, e uma parada sem nome é uma parada que o leitor
+            de tela não sabe anunciar. O texto é o MESMO da legenda — é ele que
+            já nomeia a tabela, e dois nomes diferentes para o mesmo assunto
+            seriam dois objetos na árvore. Sem legenda não há nome, e o `Table`
+            então não emite papel nenhum, que é o comportamento certo.
+          */
+          regionLabel={caption}
           className={cn(
             (enableColumnResizing || enableColumnOrdering || virtualized) &&
               "nds-table-fixed"
@@ -647,6 +615,8 @@ function DataTable<TData extends RowData>({
                       }}
                       className={cn(
                         "nds-data-table-th",
+                        header.column.columnDef.meta?.numeric &&
+                          "nds-text-right",
                         header.column.getIsPinned() && "nds-data-table-th-pinned"
                       )}
                       draggable={isDraggable}
@@ -797,6 +767,8 @@ function DataTable<TData extends RowData>({
                       }}
                       className={cn(
                         "nds-data-table-td",
+                        cell.column.columnDef.meta?.numeric &&
+                          "nds-text-right nds-tabular-nums",
                         cell.column.getIsPinned() && "nds-data-table-td-pinned"
                       )}
                     >

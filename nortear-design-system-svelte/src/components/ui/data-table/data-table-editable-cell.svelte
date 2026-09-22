@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Input } from '@/components/ui/input';
-  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from './data-table-labels';
+  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from '@shared/primitives/data-table-labels';
 
   const {
     initial,

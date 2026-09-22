@@ -243,9 +243,9 @@ export const Playground: Story = {
 
       // Fora da tela pela CAIXA COMPUTADA, não pela classe: asserir
       // `.nds-sr-only` provaria só que alguém escreveu o nome da classe.
-      const estilo = getComputedStyle(caption);
+      const captionStyle = getComputedStyle(caption);
       const box = caption.getBoundingClientRect();
-      await expect(estilo.position).toBe('absolute');
+      await expect(captionStyle.position).toBe('absolute');
       await expect(box.width).toBeLessThanOrEqual(2);
       await expect(box.height).toBeLessThanOrEqual(2);
     });

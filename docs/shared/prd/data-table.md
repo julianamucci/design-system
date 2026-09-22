@@ -513,6 +513,34 @@ usa o componente Pagination do design system (§1).
 
 ### Inconsistências entre stacks, medidas em 2026-09-16
 
+> **LEIA ISTO ANTES DA LISTA — 2026-09-22.** A passagem de `fix` deste dia
+> fechou boa parte do que está descrito abaixo, e a lista **não foi reescrita
+> linha a linha de propósito**: ela é o registro do que foi medido naquele dia,
+> e reescrevê-la apagaria a medição. O que mudou está aqui.
+>
+> **Fechados**: os itens **V7** (previews sem nome acessível — as cinco passam
+> `caption` com sufixo por preview), **V8** e **15** (a demonstração só falava o
+> idioma da página em duas stacks — agora nas cinco, e os dados carregam CHAVE
+> ESTÁVEL em vez de texto traduzido), **V9**, **V10**, **V12**, **18** (a folha
+> dizia v8) e **27** (as 21 chaves de rótulo duplicadas — viraram
+> `docs/shared/primitives/data-table-labels.ts`).
+>
+> **D11 — "o defeito que sobrou" — foi corrigido**: a regra do vazio usa
+> `block-size`.
+>
+> **Leitura que o item 15 exigia e se confirmou**: o portão
+> `demonstration_labels_divergent` apontava vanilla e angular, que eram as duas
+> stacks CERTAS, porque a maioria era quem passava menos rótulos. O alinhamento
+> foi das outras três para elas, nunca o contrário. Enquanto as stacks migravam,
+> o portão foi apontando a minoria em movimento — é o comportamento esperado de
+> um portão que compara contra a maioria, e não motivo para desconfiar dele.
+>
+> **Continua de pé** o que a passagem declarou e não fechou: as cinco ainda não
+> emitem a mesma árvore de toolbar (o nó `-columns-wrap` existe em duas), e três
+> stories de comportamento (`Sorted`, `SelectedRows`, `WithColumnVisibility`)
+> existem só no angular — esta está no `FIXES-NEEDED.md`, porque decidir se o
+> contrato inclui esses casos não é conserto mecânico.
+
 Medidas arquivo a arquivo, com leitura dos cinco `package.json` e da folha
 compartilhada. Caminhos curtos: `react/…` é
 `nortear-design-system-react/src/components/…`, e assim nas outras;

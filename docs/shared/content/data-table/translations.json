@@ -29,7 +29,13 @@
         "prevPage": "Página anterior",
         "nextPage": "Próxima página",
         "lastPage": "Última página",
-        "noResults": "Sem resultados."
+        "noResults": "Sem resultados.",
+        "methodPix": "Pix",
+        "methodBankSlip": "Boleto bancário",
+        "methodCreditCard": "Cartão de crédito",
+        "methodDebitCard": "Cartão de débito",
+        "methodTransfer": "Transferência",
+        "caption": "Faturas recentes"
       }
     },
     "anatomy": {
@@ -160,13 +166,34 @@
     "variants": {
       "note": "O DataTable não tem variantes <code>cva</code>. Cada recurso é uma flag opcional na API. Combine livremente conforme a necessidade — paginação e virtualização são mutuamente exclusivas; as demais coexistem.",
       "items": {
-        "globalFilter": "Filtro de busca livre que casa em todas as colunas. Sempre ativo por padrão; desligue com <code>enableGlobalFilter={false}</code>.",
-        "columnFilters": "Filtros por coluna com input ou select. Definidos via <code>meta.filter</code> na column def. Ative com <code>enableColumnFilters</code>.",
-        "selection": "Checkbox de seleção por linha + cabeçalho com tri-state (todas, algumas, nenhuma). Ative com <code>enableRowSelection</code>.",
-        "visibility": "Menu para esconder e exibir colunas. Disponível na toolbar por padrão; desligue com <code>enableColumnVisibility={false}</code>.",
-        "resize": "Handle lateral em cada cabeçalho para arrastar e ajustar largura. Ative com <code>enableColumnResizing</code> e defina <code>size</code> inicial na column def.",
-        "reorder": "Drag handle no cabeçalho para reordenar colunas. Ative com <code>enableColumnOrdering</code>.",
-        "pagination": "Rodapé com contagem, seletor de tamanho e navegação por página. Ativa por padrão; tamanhos via <code>pageSizeOptions</code>.",
+        "globalFilter": {
+          "name": "Busca livre",
+          "description": "Filtro de busca livre que casa em todas as colunas. Sempre ativo por padrão; desligue com <code>enableGlobalFilter={false}</code>."
+        },
+        "columnFilters": {
+          "name": "Filtros por coluna",
+          "description": "Filtros por coluna com input ou select. Definidos via <code>meta.filter</code> na column def. Ative com <code>enableColumnFilters</code>."
+        },
+        "selection": {
+          "name": "Seleção de linhas",
+          "description": "Checkbox de seleção por linha + cabeçalho com tri-state (todas, algumas, nenhuma). Ative com <code>enableRowSelection</code>."
+        },
+        "visibility": {
+          "name": "Visibilidade de colunas",
+          "description": "Menu para esconder e exibir colunas. Disponível na toolbar por padrão; desligue com <code>enableColumnVisibility={false}</code>."
+        },
+        "resize": {
+          "name": "Redimensionar colunas",
+          "description": "Handle lateral em cada cabeçalho para arrastar e ajustar largura. Ative com <code>enableColumnResizing</code> e defina <code>size</code> inicial na column def."
+        },
+        "reorder": {
+          "name": "Reordenar colunas",
+          "description": "Drag handle no cabeçalho para reordenar colunas. Ative com <code>enableColumnOrdering</code>."
+        },
+        "pagination": {
+          "name": "Paginação",
+          "description": "Rodapé com contagem, seletor de tamanho e navegação por página. Ativa por padrão; tamanhos via <code>pageSizeOptions</code>."
+        },
         "editableSheet": {
           "name": "Modo planilha (edição inline)",
           "description": "Combine edição inline em várias colunas, sem paginação e com filtro por coluna para criar uma experiência próxima de planilha. O componente não mantém estado dos dados — o <code>onCellEdit</code> atualiza o array fonte externamente.",
@@ -268,6 +295,7 @@
         "onCellEdit": "Callback chamado ao confirmar edição inline. Assinatura: <code>(rowIndex, columnId, value) =&gt; void</code>.",
         "onTableReady": "Callback que recebe a instância da tabela. Use para acessar API headless (linhas selecionadas, estado de filtros).",
         "metaFilter": "Configuração de filtro por coluna. Use <code>{ type: \"text\" }</code> para input livre ou <code>{ type: \"select\", options: [...] }</code> para select.",
+        "metaNumeric": "Marca a coluna como numérica. O conteúdo alinha à direita na célula <strong>e no cabeçalho</strong> — inclusive quando o cabeçalho é um botão de ordenar, que é o caso em que o alinhamento costuma se perder.",
         "metaEditable": "Marca a coluna como editável inline. A célula vira input ao clicar; o valor é notificado via <code>onCellEdit</code>."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -504,7 +532,13 @@
         "prevPage": "Previous page",
         "nextPage": "Next page",
         "lastPage": "Last page",
-        "noResults": "No results."
+        "noResults": "No results.",
+        "methodPix": "Instant transfer",
+        "methodBankSlip": "Bank slip",
+        "methodCreditCard": "Credit card",
+        "methodDebitCard": "Debit card",
+        "methodTransfer": "Wire transfer",
+        "caption": "Recent invoices"
       }
     },
     "anatomy": {
@@ -635,13 +669,34 @@
     "variants": {
       "note": "DataTable has no <code>cva</code> variants. Each feature is an optional flag on the API. Combine freely as needed — pagination and virtualization are mutually exclusive; the others coexist.",
       "items": {
-        "globalFilter": "Free-text filter that matches across all columns. On by default; disable with <code>enableGlobalFilter={false}</code>.",
-        "columnFilters": "Per-column filters with input or select. Defined via <code>meta.filter</code> on the column def. Enable with <code>enableColumnFilters</code>.",
-        "selection": "Row selection checkbox + header tri-state (all, some, none). Enable with <code>enableRowSelection</code>.",
-        "visibility": "Menu to hide and show columns. Available in the toolbar by default; disable with <code>enableColumnVisibility={false}</code>.",
-        "resize": "Side handle on each header to drag and adjust width. Enable with <code>enableColumnResizing</code> and set initial <code>size</code> on the column def.",
-        "reorder": "Drag handle on the header to reorder columns. Enable with <code>enableColumnOrdering</code>.",
-        "pagination": "Footer with count, page-size selector, and page navigation. On by default; sizes via <code>pageSizeOptions</code>.",
+        "globalFilter": {
+          "name": "Free-text search",
+          "description": "Free-text filter that matches across all columns. On by default; disable with <code>enableGlobalFilter={false}</code>."
+        },
+        "columnFilters": {
+          "name": "Per-column filters",
+          "description": "Per-column filters with input or select. Defined via <code>meta.filter</code> on the column def. Enable with <code>enableColumnFilters</code>."
+        },
+        "selection": {
+          "name": "Row selection",
+          "description": "Row selection checkbox + header tri-state (all, some, none). Enable with <code>enableRowSelection</code>."
+        },
+        "visibility": {
+          "name": "Column visibility",
+          "description": "Menu to hide and show columns. Available in the toolbar by default; disable with <code>enableColumnVisibility={false}</code>."
+        },
+        "resize": {
+          "name": "Column resizing",
+          "description": "Side handle on each header to drag and adjust width. Enable with <code>enableColumnResizing</code> and set initial <code>size</code> on the column def."
+        },
+        "reorder": {
+          "name": "Column reordering",
+          "description": "Drag handle on the header to reorder columns. Enable with <code>enableColumnOrdering</code>."
+        },
+        "pagination": {
+          "name": "Pagination",
+          "description": "Footer with count, page-size selector, and page navigation. On by default; sizes via <code>pageSizeOptions</code>."
+        },
         "editableSheet": {
           "name": "Spreadsheet mode (inline edit)",
           "description": "Combine inline editing on several columns, no pagination, and per-column filters to create a spreadsheet-like experience. The component does not hold data state — <code>onCellEdit</code> updates the source array externally.",
@@ -743,6 +798,7 @@
         "onCellEdit": "Callback fired on inline-edit confirm. Signature: <code>(rowIndex, columnId, value) =&gt; void</code>.",
         "onTableReady": "Callback that receives the table instance. Use to access the headless API (selected rows, filter state).",
         "metaFilter": "Per-column filter configuration. Use <code>{ type: \"text\" }</code> for a free input or <code>{ type: \"select\", options: [...] }</code> for a select.",
+        "metaNumeric": "Marks the column as numeric. Content aligns right in the cell <strong>and in the header</strong> — including when the header is a sort button, which is the case where alignment is usually lost.",
         "metaEditable": "Marks the column as inline-editable. The cell becomes an input on click; the value is notified via <code>onCellEdit</code>."
       },
       "extensibilityTitle": "Extensibility",
@@ -979,7 +1035,13 @@
         "prevPage": "Página anterior",
         "nextPage": "Página siguiente",
         "lastPage": "Última página",
-        "noResults": "Sin resultados."
+        "noResults": "Sin resultados.",
+        "methodPix": "Transferencia inmediata",
+        "methodBankSlip": "Boleto bancario",
+        "methodCreditCard": "Tarjeta de crédito",
+        "methodDebitCard": "Tarjeta de débito",
+        "methodTransfer": "Transferencia",
+        "caption": "Facturas recientes"
       }
     },
     "anatomy": {
@@ -1110,13 +1172,34 @@
     "variants": {
       "note": "DataTable no tiene variantes <code>cva</code>. Cada recurso es una flag opcional en la API. Combínalas libremente según la necesidad — paginación y virtualización son mutuamente excluyentes; las demás coexisten.",
       "items": {
-        "globalFilter": "Filtro de búsqueda libre que coincide en todas las columnas. Activo por defecto; desactiva con <code>enableGlobalFilter={false}</code>.",
-        "columnFilters": "Filtros por columna con input o select. Definidos vía <code>meta.filter</code> en la column def. Activa con <code>enableColumnFilters</code>.",
-        "selection": "Checkbox de selección por fila + cabecera con tri-state (todas, algunas, ninguna). Activa con <code>enableRowSelection</code>.",
-        "visibility": "Menú para ocultar y mostrar columnas. Disponible en la toolbar por defecto; desactiva con <code>enableColumnVisibility={false}</code>.",
-        "resize": "Handle lateral en cada cabecera para arrastrar y ajustar ancho. Activa con <code>enableColumnResizing</code> y define <code>size</code> inicial en la column def.",
-        "reorder": "Drag handle en la cabecera para reordenar columnas. Activa con <code>enableColumnOrdering</code>.",
-        "pagination": "Pie con conteo, selector de tamaño y navegación por página. Activa por defecto; tamaños vía <code>pageSizeOptions</code>.",
+        "globalFilter": {
+          "name": "Búsqueda libre",
+          "description": "Filtro de búsqueda libre que coincide en todas las columnas. Activo por defecto; desactiva con <code>enableGlobalFilter={false}</code>."
+        },
+        "columnFilters": {
+          "name": "Filtros por columna",
+          "description": "Filtros por columna con input o select. Definidos vía <code>meta.filter</code> en la column def. Activa con <code>enableColumnFilters</code>."
+        },
+        "selection": {
+          "name": "Selección de filas",
+          "description": "Checkbox de selección por fila + cabecera con tri-state (todas, algunas, ninguna). Activa con <code>enableRowSelection</code>."
+        },
+        "visibility": {
+          "name": "Visibilidad de columnas",
+          "description": "Menú para ocultar y mostrar columnas. Disponible en la toolbar por defecto; desactiva con <code>enableColumnVisibility={false}</code>."
+        },
+        "resize": {
+          "name": "Redimensionar columnas",
+          "description": "Handle lateral en cada cabecera para arrastrar y ajustar ancho. Activa con <code>enableColumnResizing</code> y define <code>size</code> inicial en la column def."
+        },
+        "reorder": {
+          "name": "Reordenar columnas",
+          "description": "Drag handle en la cabecera para reordenar columnas. Activa con <code>enableColumnOrdering</code>."
+        },
+        "pagination": {
+          "name": "Paginación",
+          "description": "Pie con conteo, selector de tamaño y navegación por página. Activa por defecto; tamaños vía <code>pageSizeOptions</code>."
+        },
         "editableSheet": {
           "name": "Modo planilla (edición inline)",
           "description": "Combina edición inline en varias columnas, sin paginación y con filtro por columna para crear una experiencia tipo planilla. El componente no mantiene estado de datos — el <code>onCellEdit</code> actualiza el array fuente externamente.",
@@ -1218,6 +1301,7 @@
         "onCellEdit": "Callback llamado al confirmar edición inline. Firma: <code>(rowIndex, columnId, value) =&gt; void</code>.",
         "onTableReady": "Callback que recibe la instancia de la tabla. Úsalo para acceder a la API headless (filas seleccionadas, estado de filtros).",
         "metaFilter": "Configuración de filtro por columna. Usa <code>{ type: \"text\" }</code> para input libre o <code>{ type: \"select\", options: [...] }</code> para select.",
+        "metaNumeric": "Marca la columna como numérica. El contenido se alinea a la derecha en la celda <strong>y en el encabezado</strong> — incluso cuando el encabezado es un botón de ordenar, que es el caso en que la alineación suele perderse.",
         "metaEditable": "Marca la columna como editable inline. La celda pasa a input al hacer clic; el valor se notifica vía <code>onCellEdit</code>."
       },
       "extensibilityTitle": "Extensibilidad",

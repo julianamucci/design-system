@@ -27,6 +27,7 @@ import {
 } from 'lucide';
 import type { CheckedState } from '@radix-ng/primitives/menu';
 import { cn } from '@/lib/utils';
+import { NdsBadge, type BadgeVariant } from './badge';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
@@ -121,14 +122,48 @@ export interface DataTableColumn<TData> {
   editable?: boolean;
   filter?: DataTableColumnFilter;
   /**
-   * Coluna numérica: a CÉLULA alinha à direita.
+   * Coluna numérica: a célula E o cabeçalho alinham à direita.
    *
-   * O CABEÇALHO não acompanha, e isso vale para as cinco stacks: no CSS
-   * compartilhado `.nds-table th` declara `text-align: left` com
-   * especificidade (0,1,1), acima da utilitária `.nds-text-right` (0,1,0).
-   * Escrever a classe no `<th>` não faria nada — por isso ela não é escrita.
+   * O que este comentário dizia até 2026-09-22 era que o cabeçalho NÃO
+   * acompanhava, porque `.nds-table th` valia (0,1,1) e vencia a utilitária
+   * `.nds-text-right` (0,1,0) — "escrever a classe no `<th>` não faria nada".
+   * A premissa venceu: a regra compartilhada foi rebaixada para
+   * `:where(.nds-table) th`, que vale (0,0,1), e o que resta disputando é
+   * `.nds-data-table-th` (0,1,0) contra a utilitária (0,1,0) — empate, em que
+   * vence quem carrega depois. `index.css` importa `utilities.css` depois de
+   * `data-table.css`, então hoje quem decide é a classe do markup.
+   * `docs/shared/guidelines/20-tabelas.md` manda alinhar nos dois.
+   *
+   * `text-align` sozinho não basta, e vale registrar por quê: o miolo do
+   * cabeçalho é `display: flex`, e o rótulo de coluna ordenável mora dentro de
+   * um botão que também é flex — alinhamento de texto não move item de flex.
+   * Três agentes acharam isso no mesmo dia, cada uma numa stack.
+   *
+   * Quem resolve é a FOLHA COMPARTILHADA, e de propósito:
+   * `.nds-data-table-th.nds-text-right .nds-data-table-sort-btn` justifica o
+   * conteúdo do botão ao fim. Esta stack chegou a empurrar o rótulo com
+   * `.nds-spacer-start` (margem automática) e a classe foi removida em
+   * 2026-09-22: somada à regra da folha ela AFASTA o rótulo da seta, e um
+   * mecanismo por stack para o mesmo efeito é a divergência que a próxima
+   * rodada paga. Aqui basta a utilitária no `<th>`.
    */
   numeric?: boolean;
+  /**
+   * Selo semântico na célula: devolve a variante do Badge para aquele valor,
+   * ou `null` para texto puro.
+   *
+   * A chave da decisão nunca é o TEXTO exibido. Rótulo traduzido muda com o
+   * idioma e levaria a variante junto — "Pago" vira "Paid" e o selo perde a
+   * cor. Por isso a função recebe o valor BRUTO do `accessor` e a linha
+   * inteira, e quem mapeia pendura a variante na chave estável do domínio.
+   *
+   * Divergência de API de framework, registrada e não "alinhada": nas outras
+   * stacks o mesmo selo sai de um `cell`/`renderCell` que devolve elemento.
+   * Aqui a coluna é um objeto de dado escrito de dentro de um template, e
+   * função que devolve DOM não cabe nele — o que cabe é a DECISÃO, e quem
+   * desenha é o componente.
+   */
+  badge?: (value: unknown, row: TData) => BadgeVariant | null;
 }
 
 /** Payload de uma edição inline confirmada. */
@@ -297,6 +332,8 @@ interface CellRenderizada {
   /** Valor sem formatação — é ele que entra no campo de edição. */
   raw: string;
   numeric: boolean;
+  /** Variante do selo desta célula, ou `null` quando a coluna não usa selo. */
+  badge: BadgeVariant | null;
   editable: boolean;
   editLabel: string;
   /** `linha:coluna` — identifica a célula que está em edição. */
@@ -327,7 +364,7 @@ interface LineRenderizada {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    NdsButton, NdsCheckbox, NdsInput, NdsDataTableIcon,
+    NdsBadge, NdsButton, NdsCheckbox, NdsInput, NdsDataTableIcon,
     NdsTable, NdsTableBody, NdsTableCaption, NdsTableCell, NdsTableHead,
     NdsTableHeader, NdsTableRow, NdsTableWrapper,
     NdsDropdownMenu, NdsDropdownMenuTrigger, NdsDropdownMenuContent,
@@ -404,7 +441,12 @@ interface LineRenderizada {
            ele NÃO está na ordem de tabulação, e rolar por ali deixaria as
            colunas de fora inalcançáveis para quem navega sem mouse
            (WCAG 2.1.1, regra scrollable-region-focusable do axe). -->
-      <div ndsTableWrapper>
+      <!-- O nome e o papel da região rolável andam juntos (guideline 20): a
+           moldura tem tabindex zero, e região focável sem nome não diz o que
+           é. O nome é o MESMO da legenda — quem chega ali por teclado ouve a
+           tabela que está prestes a rolar. Sem legenda não há nome, e aí o
+           primitivo não emite papel nenhum (aria-prohibited-attr). -->
+      <div ndsTableWrapper [regionLabel]="caption()">
         <table ndsTable>
           @if (caption()) {
             <caption ndsTableCaption class="nds-sr-only">{{ caption() }}</caption>
@@ -426,7 +468,17 @@ interface LineRenderizada {
                 </th>
               }
               @for (column of visibleColumns(); track column.id) {
-                <th ndsTableHead class="nds-data-table-th" [sort]="direcaoAria(column)">
+                <!-- Coluna numérica alinha à direita no CABEÇALHO também
+                     (guideline 20). A utilitária resolve o cabeçalho sem botão;
+                     o com botão quem resolve é a folha compartilhada, porque
+                     alinhamento de texto não move item de flex. Ver o docblock
+                     de numeric na definição de coluna. -->
+                <th
+                  ndsTableHead
+                  class="nds-data-table-th"
+                  [class.nds-text-right]="column.numeric"
+                  [sort]="direcaoAria(column)"
+                >
                   <div class="nds-data-table-th-inner">
                     @if (column.sortable) {
                       <button
@@ -545,6 +597,12 @@ interface LineRenderizada {
                           </button>
                         }
                       </div>
+                    } @else if (celula.badge; as badgeVariant) {
+                      <!-- Selo semântico: a variante veio da coluna, que a
+                           decidiu pela chave estável do domínio. A cor sozinha
+                           não informa, e por isso o TEXTO continua dentro do
+                           selo — ele é que nomeia o estado. -->
+                      <span ndsBadge [variant]="badgeVariant">{{ celula.text }}</span>
                     } @else {
                       {{ celula.text }}
                     }
@@ -794,6 +852,7 @@ export class NdsDataTable<TData> implements OnInit {
             return v === null || v === undefined ? '' : String(v);
           })(),
           numeric: !!c.numeric,
+          badge: c.badge ? (c.badge(c.accessor(row), row) ?? null) : null,
           editable: !!c.editable,
           editLabel: preencher(modeloEdit, { col: c.header }),
           key: `${key}:${c.id}`,

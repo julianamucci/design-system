@@ -80,7 +80,7 @@ const meta: Meta<typeof DataTable<Invoice>> = {
         "Textos da interface: rótulos dos controles, contagens e navegação. Só as chaves informadas mudam.",
       table: {
         type: { summary: "Partial<DataTableLabels>" },
-        defaultValue: { summary: "DATA_TABLE_LABELS_PADRAO" },
+        defaultValue: { summary: "DATA_TABLE_LABELS_DEFAULT" },
       },
     },
     rowKey: {
@@ -246,9 +246,9 @@ export const Playground: Story = {
       // Primeiro filho: fora dessa posição o parser expulsa a legenda da tabela.
       await expect(table.firstElementChild).toBe(caption)
       await expect(caption).toHaveTextContent(CAPTION)
-      const estilo = getComputedStyle(caption)
+      const style = getComputedStyle(caption)
       const box = caption.getBoundingClientRect()
-      await expect(estilo.position).toBe("absolute")
+      await expect(style.position).toBe("absolute")
       await expect(box.width).toBeLessThanOrEqual(2)
       await expect(box.height).toBeLessThanOrEqual(2)
     })

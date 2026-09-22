@@ -47,6 +47,17 @@ const { t, subscribe } = createTranslation(dataTableTranslations as Record<strin
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Nome acessível de uma tabela da página.
+ *
+ * A legenda é o nome da tabela para o leitor de tela. Meia dúzia de tabelas com
+ * a mesma legenda é, na lista de tabelas, meia dúzia de tabelas sem nome — por
+ * isso o nome base do conteúdo ganha um sufixo por preview.
+ */
+function captionFor(suffix: string): string {
+  return `${t('demonstration.labels.caption')} — ${toPlainText(suffix)}`;
+}
+
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
   medium: 'common.medium',
@@ -59,34 +70,162 @@ function priorityLabel(raw: string): string {
 
 // ─── Demo data ────────────────────────────────────────────────────────────────
 
+type InvoiceStatus = 'paid' | 'pending' | 'canceled';
+
+type InvoiceMethod = 'pix' | 'bankSlip' | 'creditCard' | 'debitCard' | 'transfer';
+
 type Invoice = {
   id: string;
   customer: string;
-  status: string;
-  method: string;
+  status: InvoiceStatus;
+  method: InvoiceMethod;
   amount: number;
 };
 
-const STATUS_VARIANT: Record<string, 'default' | 'warning' | 'destructive'> = {
-  Pago: 'default', Paid: 'default', Pagado: 'default',
+/**
+ * Chaveado pela CHAVE do status, nunca pelo texto traduzido.
+ *
+ * Por texto, o mapa tinha de ser reeditado a cada tradução e uma tradução sem
+ * entrada caía calada na variante padrão — foi o que aconteceu com o cancelado
+ * em espanhol, que ficou de fora e vinha como `default`. Com a chave estável,
+ * traduzir deixa de tocar no mapa e o compilador cobra todo estado novo.
+ */
+const STATUS_VARIANT: Record<InvoiceStatus, 'default' | 'warning' | 'destructive'> = {
+  paid: 'default',
   // Pendência tem variante própria desde que a `secondary` saiu: `warning`
   // diz o que o estado é, e não só que ele é menos importante que o pago.
-  Pendente: 'warning', Pending: 'warning', Pendiente: 'warning',
-  Cancelado: 'destructive', Canceled: 'destructive',
+  pending: 'warning',
+  canceled: 'destructive',
 };
 
+/**
+ * Caminho LITERAL por estado, e não `demonstration.labels.${status}`.
+ *
+ * A chave interpolada funciona e é invisível: some da busca de quem procura
+ * onde um rótulo é usado, e some do portão `demonstration_labels_divergent`,
+ * que passou a acusar a stack de REFERÊNCIA de não usar três rótulos que ela
+ * usa. É a mesma razão pela qual snippet interpolado não entra em conteúdo
+ * compartilhado.
+ */
+const STATUS_LABEL_KEY: Record<InvoiceStatus, string> = {
+  paid: 'demonstration.labels.paid',
+  pending: 'demonstration.labels.pending',
+  canceled: 'demonstration.labels.canceled',
+};
+
+function statusLabel(status: InvoiceStatus): string {
+  return t(STATUS_LABEL_KEY[status]);
+}
+
+/** Mesma regra do status: o dado guarda a CHAVE, a tradução fica na borda. */
+const METHOD_LABEL_KEY: Record<InvoiceMethod, string> = {
+  pix: 'demonstration.labels.methodPix',
+  bankSlip: 'demonstration.labels.methodBankSlip',
+  creditCard: 'demonstration.labels.methodCreditCard',
+  debitCard: 'demonstration.labels.methodDebitCard',
+  transfer: 'demonstration.labels.methodTransfer',
+};
+
+function methodLabel(method: InvoiceMethod): string {
+  return t(METHOD_LABEL_KEY[method]);
+}
+
+/**
+ * A linha guarda a CHAVE do meio de pagamento, não o texto traduzido.
+ *
+ * Com o rótulo assado na linha, a tabela ficava no idioma em que a fixture foi
+ * montada — e trocar de idioma sem remontar o dado deixava a coluna em
+ * português no meio de uma página em inglês. A tradução acontece no acessor da
+ * coluna, que é também o que faz a busca livre e a ordenação varrerem o texto
+ * que está na tela.
+ */
 function demoInvoices(): Invoice[] {
-  const paid = t('demonstration.labels.paid');
-  const pending = t('demonstration.labels.pending');
-  const canceled = t('demonstration.labels.canceled');
   return [
-    { id: 'INV-001', customer: 'Ana Souza',    status: paid,     method: 'Pix',                amount: 250 },
-    { id: 'INV-002', customer: 'Bruno Lima',   status: pending,  method: 'Boleto',             amount: 150 },
-    { id: 'INV-003', customer: 'Carla Mendes', status: canceled, method: 'Cartão de crédito',  amount: 350 },
-    { id: 'INV-004', customer: 'Diego Faria',  status: paid,     method: 'Cartão de débito',   amount: 450 },
-    { id: 'INV-005', customer: 'Eva Oliveira', status: pending,  method: 'Transferência',      amount: 200 },
+    { id: 'INV-001', customer: 'Ana Souza',    status: 'paid',     method: 'pix',        amount: 250 },
+    { id: 'INV-002', customer: 'Bruno Lima',   status: 'pending',  method: 'bankSlip',   amount: 150 },
+    { id: 'INV-003', customer: 'Carla Mendes', status: 'canceled', method: 'creditCard', amount: 350 },
+    { id: 'INV-004', customer: 'Diego Faria',  status: 'paid',     method: 'debitCard',  amount: 450 },
+    { id: 'INV-005', customer: 'Eva Oliveira', status: 'pending',  method: 'transfer',   amount: 200 },
   ];
 }
+
+/**
+ * Rótulos da interface da tabela, montados a partir do conteúdo compartilhado.
+ *
+ * Sem eles o rodapé cai nos padrões do componente, que são pt-BR — "Linhas por
+ * página", "Página X de Y", "Primeira página" — e ficava fixo assim em `en` e
+ * `es`. Um objeto só para os treze exemplos da página; cada caminho vai por
+ * extenso, pela mesma razão do `STATUS_LABEL_KEY`.
+ */
+function demoLabels() {
+  return {
+    columns: t('demonstration.labels.columns'),
+    rowsPerPage: t('demonstration.labels.rowsPerPage'),
+    page: t('demonstration.labels.page'),
+    pageOf: t('demonstration.labels.of'),
+    firstPage: t('demonstration.labels.firstPage'),
+    prevPage: t('demonstration.labels.prevPage'),
+    nextPage: t('demonstration.labels.nextPage'),
+    lastPage: t('demonstration.labels.lastPage'),
+  };
+}
+
+/**
+ * Caminho LITERAL por variante — mesma razão do `STATUS_LABEL_KEY`: caminho
+ * montado em tempo de execução some da busca de quem procura onde um texto é
+ * usado, e some do portão que compara os conjuntos de chaves das cinco stacks.
+ */
+type FlagVariant =
+  | 'globalFilter' | 'columnFilters' | 'selection' | 'visibility'
+  | 'resize' | 'reorder' | 'pagination';
+
+/**
+ * As sete bandeiras, com nome e descrição.
+ *
+ * Até 2026-09-22 este mapa apontava para `variants.items.<flag>` direto,
+ * porque a chave era uma STRING com a descrição — enquanto as três variantes
+ * nomeadas ao lado já eram objeto. Formas misturadas no mesmo mapa do
+ * conteúdo, e o efeito aqui era o nome do card virar a chave camelCase crua.
+ */
+const FLAG_VARIANT_KEY: Record<FlagVariant, { name: string; description: string }> = {
+  globalFilter:  { name: 'variants.items.globalFilter.name',  description: 'variants.items.globalFilter.description' },
+  columnFilters: { name: 'variants.items.columnFilters.name', description: 'variants.items.columnFilters.description' },
+  selection:     { name: 'variants.items.selection.name',     description: 'variants.items.selection.description' },
+  visibility:    { name: 'variants.items.visibility.name',    description: 'variants.items.visibility.description' },
+  resize:        { name: 'variants.items.resize.name',        description: 'variants.items.resize.description' },
+  reorder:       { name: 'variants.items.reorder.name',       description: 'variants.items.reorder.description' },
+  pagination:    { name: 'variants.items.pagination.name',    description: 'variants.items.pagination.description' },
+};
+
+type NamedVariant = 'editableSheet' | 'virtualizedLog' | 'pinnedKey';
+
+const NAMED_VARIANT_KEY: Record<NamedVariant, { name: string; description: string; use: string }> = {
+  editableSheet: {
+    name:        'variants.items.editableSheet.name',
+    description: 'variants.items.editableSheet.description',
+    use:         'variants.items.editableSheet.use',
+  },
+  virtualizedLog: {
+    name:        'variants.items.virtualizedLog.name',
+    description: 'variants.items.virtualizedLog.description',
+    use:         'variants.items.virtualizedLog.use',
+  },
+  pinnedKey: {
+    name:        'variants.items.pinnedKey.name',
+    description: 'variants.items.pinnedKey.description',
+    use:         'variants.items.pinnedKey.use',
+  },
+};
+
+type Composition = 'selectionWithActions';
+
+const COMPOSITION_KEY: Record<Composition, { name: string; description: string; use: string }> = {
+  selectionWithActions: {
+    name:        'variants.compositions.selectionWithActions.name',
+    description: 'variants.compositions.selectionWithActions.description',
+    use:         'variants.compositions.selectionWithActions.use',
+  },
+};
 
 function getCurrencyFormatter(): Intl.NumberFormat {
   const locale = getLocale();
@@ -101,27 +240,43 @@ function demoColumns(): DataTableColumn<Invoice>[] {
     { accessorKey: 'id',       header: t('demonstration.labels.invoice'),  size: 110, meta: { headerLabel: t('demonstration.labels.invoice') } },
     { accessorKey: 'customer', header: t('demonstration.labels.customer'), size: 180, meta: { headerLabel: t('demonstration.labels.customer') } },
     {
-      accessorKey: 'status',
+      id: 'status',
+      // O valor da célula é o RÓTULO e o dado da linha é a CHAVE: busca e
+      // ordenação seguem o que está escrito na tela, enquanto a variante do
+      // selo continua saindo de um valor que nenhuma tradução move.
+      accessorFn: (row: Invoice) => statusLabel(row.status),
       header: t('demonstration.labels.status'),
       size: 130,
       meta: {
         headerLabel: t('demonstration.labels.status'),
-        renderCell: (ctx: { value: unknown }) => createBadge({
-          variant: STATUS_VARIANT[ctx.value as string] ?? 'default',
+        renderCell: (ctx: { value: unknown; row: unknown }) => createBadge({
+          variant: STATUS_VARIANT[(ctx.row as Invoice).status],
           text: ctx.value as string,
         }),
       },
     },
-    { accessorKey: 'method', header: t('demonstration.labels.method'), size: 180, meta: { headerLabel: t('demonstration.labels.method') } },
+    {
+      id: 'method',
+      // Igual ao status: o acessor devolve o RÓTULO para que busca e ordenação
+      // sigam o texto da tela, e a linha continua guardando a chave.
+      accessorFn: (row: Invoice) => methodLabel(row.method),
+      header: t('demonstration.labels.method'),
+      size: 180,
+      meta: { headerLabel: t('demonstration.labels.method') },
+    },
     {
       accessorKey: 'amount',
       header: t('demonstration.labels.amount'),
       size: 130,
       meta: {
         headerLabel: t('demonstration.labels.amount'),
+        // Coluna de número alinha à direita na célula E no cabeçalho, e a
+        // célula ganha figura tabular (guideline 20) — quem aplica é o
+        // primitivo, então aqui não se repete `nds-tabular-nums`.
+        numeric: true,
         renderCell: (ctx: { value: unknown }) => {
           const s = document.createElement('span');
-          s.className = 'nds-font-medium nds-tabular-nums';
+          s.className = 'nds-font-medium';
           s.textContent = fmt.format(ctx.value as number);
           return s;
         },
@@ -235,22 +390,14 @@ export function createDataTableDocs(): HTMLElement {
         return createDocsDemonstration({
           componentSlug: 'data-table',
           demoFactory: () => createDataTable<Invoice>({
+            caption: captionFor(tNav('nav.demonstration')),
             columns: demoColumns(),
             data: demoInvoices(),
             enableRowSelection: true,
             enableGlobalFilter: true,
             enableColumnVisibility: true,
             globalFilterPlaceholder: t('demonstration.labels.search'),
-            labels: {
-              columns: t('demonstration.labels.columns'),
-              rowsPerPage: t('demonstration.labels.rowsPerPage'),
-              page: t('demonstration.labels.page'),
-              pageOf: t('demonstration.labels.of'),
-              firstPage: t('demonstration.labels.firstPage'),
-              prevPage: t('demonstration.labels.prevPage'),
-              nextPage: t('demonstration.labels.nextPage'),
-              lastPage: t('demonstration.labels.lastPage'),
-            },
+            labels: demoLabels(),
             emptyMessage: t('demonstration.labels.noResults'),
           }),
         });
@@ -319,8 +466,10 @@ export function createDataTableDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const t2 = createDataTable<Invoice>({
+                  caption: captionFor(t('doDont.pair1.do')),
                   columns: demoColumns(),
                   data: demoInvoices().slice(0, 3),
+                  labels: demoLabels(),
                   enableColumnVisibility: false,
                   enablePagination: false,
                   globalFilterPlaceholder: t('demonstration.labels.search'),
@@ -328,8 +477,10 @@ export function createDataTableDocs(): HTMLElement {
                 return t2;
               },
               dontPreviewFactory: () => createDataTable<Invoice>({
+                caption: captionFor(t('doDont.pair1.dont')),
                 columns: demoColumns(),
                 data: demoInvoices().slice(0, 3),
+                labels: demoLabels(),
                 enableColumnVisibility: false,
                 enablePagination: false,
                 globalFilterPlaceholder: 'Buscar...',
@@ -341,16 +492,20 @@ export function createDataTableDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createDataTable<Invoice>({
+                caption: captionFor(t('doDont.pair2.do')),
                 columns: demoColumns(),
                 data: demoInvoices(),
+                labels: demoLabels(),
                 virtualized: true,
                 maxHeight: '200px',
                 enableColumnVisibility: false,
                 enableGlobalFilter: false,
               }),
               dontPreviewFactory: () => createDataTable<Invoice>({
+                caption: captionFor(t('doDont.pair2.dont')),
                 columns: demoColumns(),
                 data: demoInvoices(),
+                labels: demoLabels(),
                 enableColumnVisibility: false,
                 enableGlobalFilter: false,
                 pageSize: 5,
@@ -385,12 +540,14 @@ export function createDataTableDocs(): HTMLElement {
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'data-table',
           items: [
-            ...[
-              'globalFilter', 'columnFilters', 'selection', 'visibility',
-              'resize', 'reorder', 'pagination',
-            ].map((key) => ({
-              name: key,
-              description: stripHtml(t(`variants.items.${key}`)),
+            ...(Object.keys(FLAG_VARIANT_KEY) as FlagVariant[]).map((key) => ({
+              name: t(FLAG_VARIANT_KEY[key].name),
+              // O `name` é texto TRADUZIDO e por isso não pode ser o id: o
+              // `DocsVariants` compõe `data-track-id` como
+              // `{slug}:code:{trackId ?? name}`, e sem esta linha o mesmo botão
+              // emitiria um `snippet_id` por idioma no GA4.
+              trackId: key,
+              description: stripHtml(t(FLAG_VARIANT_KEY[key].description)),
               code: `createDataTable({ columns, data, enable${key.charAt(0).toUpperCase() + key.slice(1)}: true })`,
               previewFactory: () => {
                 const flag: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
@@ -403,17 +560,19 @@ export function createDataTableDocs(): HTMLElement {
                   pagination: { enablePagination: true, pageSize: 3, enableColumnVisibility: false, enableGlobalFilter: false },
                 };
                 return createDataTable<Invoice>({
+                  caption: captionFor(t(FLAG_VARIANT_KEY[key].name)),
                   columns: demoColumns(),
                   data: demoInvoices(),
+                  labels: demoLabels(),
                   ...(flag[key] ?? {}),
                 });
               },
             })),
-            ...['editableSheet', 'virtualizedLog', 'pinnedKey'].map((key) => ({
-              name: t(`variants.items.${key}.name`),
+            ...(Object.keys(NAMED_VARIANT_KEY) as NamedVariant[]).map((key) => ({
+              name: t(NAMED_VARIANT_KEY[key].name),
               trackId: key,
-              description: stripHtml(t(`variants.items.${key}.description`)),
-              useWhen: t(`variants.items.${key}.use`),
+              description: stripHtml(t(NAMED_VARIANT_KEY[key].description)),
+              useWhen: t(NAMED_VARIANT_KEY[key].use),
               code: `createDataTable({ /* ${key} */ })`,
               previewFactory: () => {
                 const arranjo: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
@@ -422,8 +581,10 @@ export function createDataTableDocs(): HTMLElement {
                   pinnedKey: { enableColumnPinning: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
                 };
                 return createDataTable<Invoice>({
+                  caption: captionFor(t(NAMED_VARIANT_KEY[key].name)),
                   columns: demoColumns(),
                   data: demoInvoices(),
+                  labels: demoLabels(),
                   ...(arranjo[key] ?? {}),
                 });
               },
@@ -435,19 +596,21 @@ export function createDataTableDocs(): HTMLElement {
         return createDocsCompositions({
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'data-table',
-          items: ['selectionWithActions'].map((key) => ({
+          items: (Object.keys(COMPOSITION_KEY) as Composition[]).map((key) => ({
             trackId: key,
-            name: t(`variants.compositions.${key}.name`),
-            description: stripHtml(t(`variants.compositions.${key}.description`)),
-            useWhen: t(`variants.compositions.${key}.use`),
+            name: t(COMPOSITION_KEY[key].name),
+            description: stripHtml(t(COMPOSITION_KEY[key].description)),
+            useWhen: t(COMPOSITION_KEY[key].use),
             code: `createDataTable({ /* ${key} */ })`,
             previewFactory: () => {
               const variants: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
                 selectionWithActions: { enableRowSelection: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
               };
               return createDataTable<Invoice>({
+                caption: captionFor(t(COMPOSITION_KEY[key].name)),
                 columns: demoColumns(),
                 data: demoInvoices(),
+                labels: demoLabels(),
                 ...(variants[key] ?? {}),
               });
             },

@@ -8,12 +8,17 @@ import {
   NdsDataTableDemo,
   LABELS_DT,
 } from './data-table.fixtures';
+import {
+  dataTableColumnFiltersSource,
+  dataTableColumnVisibilitySource,
+  dataTableInlineEditingSource,
+} from './data-table.source';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'Components/Tables/DataTable/Variants',
+  title: 'Components/Tables/DataTable/Compositions',
   tags: ['tables'],
   decorators: [moduleMetadata({ imports: [NdsDataTable, NdsDataTableDemo] })],
   parameters: {
@@ -43,6 +48,10 @@ export const WithColumnFilters: Story = {
     // só lá era cobertura parcial passando por completa.
     covers: ['functional.item2', 'accessibility.item4', 'visual.item2'],
     docs: {
+      // Sem `transform`, o painel publicaria o template da story — com a
+      // fixture importada e o objeto de `props` que o renderer monta. O painel
+      // é a única parte da página feita para ser COPIADA.
+      source: { transform: dataTableColumnFiltersSource },
       description: {
         story:
           'Segunda linha no cabeçalho, com input ou select conforme o tipo declarado na coluna. Os filtros se somam entre si e ao filtro global.',
@@ -126,6 +135,7 @@ export const WithColumnVisibility: Story = {
   parameters: {
     a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
+      source: { transform: dataTableColumnVisibilitySource },
       description: {
         story:
           'O menu da toolbar liga e desliga colunas. Esconder uma coluna é decisão de leitura: a busca livre continua casando nela.',
@@ -198,6 +208,10 @@ export const WithInlineEditing: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
+      // O preview usa `<nds-data-table-demo>`, que é ANDAIME: ele existe para a
+      // story ter onde guardar o array. O snippet publica a classe de verdade,
+      // com o sinal e o método que aplicam a edição.
+      source: { transform: dataTableInlineEditingSource },
       description: {
         story:
           'Colunas marcadas como editáveis viram input ao clique. O componente não guarda os dados: ele avisa a edição e quem consome atualiza o array.',

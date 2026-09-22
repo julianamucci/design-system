@@ -5,6 +5,10 @@
 // redimensionamento, reordenação, fixação, edição inline e virtualização.
 
 import { cn } from '@/lib/utils';
+import {
+  DATA_TABLE_LABELS_DEFAULT,
+  type DataTableLabels,
+} from '@shared/primitives/data-table-labels';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import {
   constructTable,
@@ -70,6 +74,21 @@ type DataTableColumnMeta<TData extends RowData> = {
   filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
   editable?: boolean;
   headerLabel?: string;
+  /**
+   * Coluna de número: alinha à direita na CÉLULA e também no CABEÇALHO
+   * (guideline 20, "Coluna numérica alinha à direita"). A utilitária
+   * `.nds-text-right` vence `.nds-data-table-th` e `.nds-data-table-td` pela
+   * ORDEM — mesma especificidade (0,1,0), e `utilities.css` entra depois de
+   * `data-table.css` em `index.css`. A bandeira vive na coluna porque quem sabe
+   * que o dado é número é quem declara a coluna, não a folha.
+   *
+   * A CÉLULA ganha também `.nds-tabular-nums`, e o cabeçalho não: a bandeira
+   * declara que a coluna guarda NÚMERO, e figura tabular é o que impede a
+   * coluna de dançar quando o dígito troca; cabeçalho é texto, não dígito.
+   * Deixar a figura por conta de quem chama foi como as cinco stacks
+   * divergiram no primeiro dia de vida da bandeira.
+   */
+  numeric?: boolean;
   /** Renderiza conteúdo customizado para a célula (string ou HTMLElement). */
   renderCell?: (ctx: { value: unknown; row: TData; rowIndex: number }) => string | HTMLElement;
 };
@@ -188,62 +207,12 @@ export interface DataTableOptions<TData extends RowData> {
 }
 
 /**
- * Contrato de textos comum às quatro stacks que rodam TanStack.
- *
- * `selectRow` recebe o identificador da linha em vez de ser texto fixo: dez
- * controles com o mesmo nome são, para quem navega pela lista de controles do
- * leitor, dez controles sem nome (WCAG 4.1.2).
- *
- * `noFilter` existe porque o texto da célula sem filtro estava cravado em
- * português dentro do `renderHeader` — invisível para quem troca os labels.
+ * Os 21 rótulos e os padrões em pt-BR moram no conteúdo compartilhado
+ * (`docs/shared/primitives/data-table-labels.ts`): catálogo de rótulo é regra,
+ * não implementação. O tipo é reexportado porque quem consome a fábrica o
+ * importa daqui.
  */
-export interface DataTableLabels {
-  columns: string;
-  showColumns: string;
-  selectAll: string;
-  selectRow: (row: string) => string;
-  sortBy: (col: string) => string;
-  filter: (col: string) => string;
-  noFilter: (col: string) => string;
-  pinLeft: (col: string) => string;
-  unpin: (col: string) => string;
-  resize: (col: string) => string;
-  edit: (col: string) => string;
-  rowsPerPage: string;
-  page: string;
-  pageOf: string;
-  firstPage: string;
-  prevPage: string;
-  nextPage: string;
-  lastPage: string;
-  rowsTotal: (n: number) => string;
-  rowsSelected: (s: number, n: number) => string;
-  allOption: string;
-}
-
-const DEFAULT_LABELS: DataTableLabels = {
-  columns: 'Colunas',
-  showColumns: 'Exibir colunas',
-  selectAll: 'Selecionar todas as linhas',
-  selectRow: (r) => `Selecionar linha ${r}`,
-  sortBy: (c) => `Ordenar por ${c}`,
-  filter: (c) => `Filtrar ${c}`,
-  noFilter: (c) => `Sem filtro para ${c}`,
-  pinLeft: (c) => `Fixar ${c} à esquerda`,
-  unpin: (c) => `Desafixar ${c}`,
-  resize: (c) => `Redimensionar coluna ${c}`,
-  edit: (c) => `Editar ${c}`,
-  rowsPerPage: 'Linhas por página',
-  page: 'Página',
-  pageOf: 'de',
-  firstPage: 'Primeira página',
-  prevPage: 'Página anterior',
-  nextPage: 'Próxima página',
-  lastPage: 'Última página',
-  rowsTotal: (n) => `${n} linha(s).`,
-  rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
-  allOption: 'Todos',
-};
+export type { DataTableLabels };
 
 // ─── Icons (SVG seguros — strings literais, sem variáveis dinâmicas) ──────────
 
@@ -334,7 +303,7 @@ export function createDataTable<TData extends RowData>(
     onCellEdit,
   } = options;
 
-  const L: DataTableLabels = { ...DEFAULT_LABELS, ...(options.labels ?? {}) };
+  const L: DataTableLabels = { ...DATA_TABLE_LABELS_DEFAULT, ...(options.labels ?? {}) };
 
   // ── State (mantido no closure; passado ao TanStack via state + onChange) ──
   let sorting: SortingState = [];
@@ -415,7 +384,14 @@ export function createDataTable<TData extends RowData>(
     scrollContainer.style.maxHeight = maxHeight;
   }
 
-  const { wrapper: tableWrapper, table: tableEl } = createTableWrapper();
+  // O nome e o papel da região rolável andam JUNTOS (guideline 20): a moldura
+  // que rola já recebia foco, mas chegava ao leitor de tela como parada sem
+  // nome. O nome é o MESMO da legenda — é o único texto que este componente
+  // tem sobre o conteúdo da grade, e repetir o nome da tabela na moldura é o
+  // que responde "o que é que rola aqui". Sem legenda não há nome, e aí o
+  // primitivo também não emite papel: `aria-label` em elemento sem papel é
+  // atributo proibido (`aria-prohibited-attr`).
+  const { wrapper: tableWrapper, table: tableEl } = createTableWrapper(undefined, caption);
   if (enableColumnResizing || enableColumnOrdering || virtualized) {
     tableEl.classList.add('nds-table-fixed');
   }
@@ -758,7 +734,9 @@ export function createDataTable<TData extends RowData>(
         const col = header.column;
         const lbl = headerLabel(col.columnDef, col.id);
         const th = document.createElement('th');
-        th.className = 'nds-data-table-th';
+        th.className = col.columnDef.meta?.numeric
+          ? 'nds-data-table-th nds-text-right'
+          : 'nds-data-table-th';
         th.scope = 'col';
 
         if (enableColumnResizing) th.style.width = `${header.getSize()}px`;
@@ -967,7 +945,9 @@ export function createDataTable<TData extends RowData>(
     for (const cell of tanstackRow.getVisibleCells()) {
       const col = cell.column;
       const td = document.createElement('td');
-      td.className = 'nds-data-table-td';
+      td.className = col.columnDef.meta?.numeric
+        ? 'nds-data-table-td nds-text-right nds-tabular-nums'
+        : 'nds-data-table-td';
       if (enableColumnResizing) td.style.width = `${col.getSize()}px`;
       Object.assign(td.style, pinStyle(col));
       markPinned(td, col, 'td');

@@ -1,5 +1,5 @@
 import type { DataTableColumn } from './index';
-import type { DataTableLabels } from './data-table-labels';
+import type { DataTableLabels } from '@shared/primitives/data-table-labels';
 
 export type Invoice = {
   id: string;

@@ -157,12 +157,18 @@ virtualizador é o `@tanstack/svelte-virtual`, e ele precisa de um contador de
 medições próprio porque o store do adaptador reemite sempre o MESMO objeto, e
 `$derived` nunca invalidaria.
 
-**Dois módulos que só existem aqui**, cada um por um motivo de linguagem:
+**Um módulo que só existe aqui**, por um motivo de linguagem:
 
 | arquivo | por que está fora do `.svelte` |
 |---|---|
 | `data-table-features.ts` | o índice importa o componente e o componente precisa do conjunto de recursos — juntos fechariam ciclo de import. E `createRecursos(comPaginacao)` nasce por INSTÂNCIA: as ligações de reatividade guardam estado, e um conjunto compartilhado misturaria as assinaturas de todas as tabelas da página |
-| `data-table-labels.ts` | arquivo de componente não exporta tipo — quem consome precisa de `DataTableLabels` para montar o objeto parcial |
+
+**O catálogo de rótulos NÃO é mais desta stack.** `DataTableLabels` e
+`DATA_TABLE_LABELS_DEFAULT` vivem em `docs/shared/primitives/data-table-labels.ts`
+e chegam por `@shared/primitives/data-table-labels`; a cópia local saiu em
+2026-09-22. O que continua sendo desta stack é o CAMINHO: arquivo `.svelte` não
+exporta tipo, então quem monta o objeto parcial precisa do tipo vindo de um
+`.ts` — e é o índice do componente que o reexporta.
 
 **O `ColumnMeta` é próprio desta stack**: `filter`, `editable`, `format`,
 `badgeVariant` e `cellClass`. Os três últimos existem por causa de um limite do

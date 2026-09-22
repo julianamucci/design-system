@@ -8,6 +8,7 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import type { BadgeVariant } from './badge';
 import {
   NdsDataTable,
   type DataTableCellEdit,
@@ -36,21 +37,74 @@ export interface InvoiceDT {
 }
 
 export const INVOICES_DT: InvoiceDT[] = [
-  { id: '#INV-001', cliente: 'Ana Prado',      status: 'Pago',      metodo: 'Cartão de crédito',      value: 250 },
-  { id: '#INV-002', cliente: 'Bruno Lima',     status: 'Pendente',  metodo: 'Transferência bancária', value: 150 },
-  { id: '#INV-003', cliente: 'Carla Souza',    status: 'Cancelado', metodo: 'Pix',                    value: 350 },
-  { id: '#INV-004', cliente: 'Diego Martins',  status: 'Pago',      metodo: 'Cartão de crédito',      value: 450 },
-  { id: '#INV-005', cliente: 'Elisa Rocha',    status: 'Pendente',  metodo: 'Pix',                    value: 50  },
-  { id: '#INV-006', cliente: 'Fábio Nunes',    status: 'Pago',      metodo: 'Pix',                    value: 90  },
-  { id: '#INV-007', cliente: 'Gabriela Alves', status: 'Pendente',  metodo: 'Cartão de crédito',      value: 720 },
-  { id: '#INV-008', cliente: 'Henrique Dias',  status: 'Cancelado', metodo: 'Transferência bancária', value: 180 },
-  { id: '#INV-009', cliente: 'Isabel Freitas', status: 'Pago',      metodo: 'Pix',                    value: 310 },
-  { id: '#INV-010', cliente: 'João Teixeira',  status: 'Pendente',  metodo: 'Pix',                    value: 40  },
-  { id: '#INV-011', cliente: 'Karina Melo',    status: 'Pago',      metodo: 'Cartão de crédito',      value: 990 },
-  { id: '#INV-012', cliente: 'Lucas Barreto',  status: 'Cancelado', metodo: 'Pix',                    value: 210 },
+  { id: '#INV-001', cliente: 'Ana Prado',      status: 'Pago',      metodo: 'Cartão de crédito', value: 250 },
+  { id: '#INV-002', cliente: 'Bruno Lima',     status: 'Pendente',  metodo: 'Transferência',     value: 150 },
+  { id: '#INV-003', cliente: 'Carla Souza',    status: 'Cancelado', metodo: 'Pix',               value: 350 },
+  { id: '#INV-004', cliente: 'Diego Martins',  status: 'Pago',      metodo: 'Cartão de crédito', value: 450 },
+  { id: '#INV-005', cliente: 'Elisa Rocha',    status: 'Pendente',  metodo: 'Pix',               value: 50  },
+  { id: '#INV-006', cliente: 'Fábio Nunes',    status: 'Pago',      metodo: 'Pix',               value: 90  },
+  { id: '#INV-007', cliente: 'Gabriela Alves', status: 'Pendente',  metodo: 'Cartão de crédito', value: 720 },
+  { id: '#INV-008', cliente: 'Henrique Dias',  status: 'Cancelado', metodo: 'Transferência',     value: 180 },
+  { id: '#INV-009', cliente: 'Isabel Freitas', status: 'Pago',      metodo: 'Pix',               value: 310 },
+  { id: '#INV-010', cliente: 'João Teixeira',  status: 'Pendente',  metodo: 'Pix',               value: 40  },
+  { id: '#INV-011', cliente: 'Karina Melo',    status: 'Pago',      metodo: 'Cartão de crédito', value: 990 },
+  { id: '#INV-012', cliente: 'Lucas Barreto',  status: 'Cancelado', metodo: 'Pix',               value: 210 },
 ];
 
 export const STATUS_DT = ['Pago', 'Pendente', 'Cancelado'];
+
+/** Chave estável do status — é ela, e nunca o texto, que decide a variante. */
+export type StatusKeyDT = 'paid' | 'pending' | 'canceled';
+
+/**
+ * O que a fixture guarda → a chave estável.
+ *
+ * A fixture guarda o rótulo em pt-BR porque é ele que a tela mostra nas cinco
+ * stacks (a regressão visual compara a mesma tabela em cinco portas). Mapear a
+ * variante direto do rótulo é que seria o defeito: bastaria a docs page traduzir
+ * o status para o selo perder a cor.
+ */
+export const STATUS_KEY_DT: Record<string, StatusKeyDT> = {
+  Pago: 'paid',
+  Pendente: 'pending',
+  Cancelado: 'canceled',
+};
+
+/** Chave estável → variante do selo. Pendência tem variante própria desde que a
+ * `secondary` saiu do Badge. */
+export const STATUS_VARIANT_DT: Record<StatusKeyDT, BadgeVariant> = {
+  paid: 'default',
+  pending: 'warning',
+  canceled: 'destructive',
+};
+
+/** A variante do selo para um valor bruto da coluna de status. */
+export function statusBadgeDT(value: unknown): BadgeVariant | null {
+  return STATUS_VARIANT_DT[STATUS_KEY_DT[String(value)]!] ?? null;
+}
+
+/** Chave estável do método de pagamento — o domínio que o conteúdo compartilhado nomeia. */
+export type MethodKeyDT = 'pix' | 'bankSlip' | 'creditCard' | 'debitCard' | 'transfer';
+
+/**
+ * O que a fixture guarda → a chave estável do método.
+ *
+ * Mesma mecânica do status, e pelo mesmo motivo: a coluna de método saía em
+ * português no meio da tabela lida em `en` e em `es`, porque o texto estava
+ * cravado no dado. A fixture continua guardando o rótulo em pt-BR — é ele que a
+ * story mostra, e a regressão visual compara a mesma tabela em cinco portas —,
+ * e quem traduz é a docs page, que resolve a chave.
+ *
+ * `bankSlip` e `debitCard` não ocorrem nestas doze faturas; estão aqui porque o
+ * mapa é o do DOMÍNIO, e é ele que a docs page consulta.
+ */
+export const METHOD_KEY_DT: Record<string, MethodKeyDT> = {
+  Pix: 'pix',
+  'Boleto bancário': 'bankSlip',
+  'Cartão de crédito': 'creditCard',
+  'Cartão de débito': 'debitCard',
+  Transferência: 'transfer',
+};
 
 /** Rótulos em português para as stories — o componente nasce com os mesmos. */
 export const LABELS_DT: Partial<DataTableLabels> = {
@@ -77,7 +131,9 @@ function formatarBRL(value: unknown): string {
 export const COLUMNS_INVOICES: DataTableColumn<InvoiceDT>[] = [
   { id: 'id',      header: 'Fatura',  accessor: (f) => f.id,      sortable: true, hideable: false },
   { id: 'cliente', header: 'Cliente', accessor: (f) => f.cliente, sortable: true },
-  { id: 'status',  header: 'Status',  accessor: (f) => f.status },
+  // O status é um estado, e estado se lê no selo: cor mais texto. A variante sai
+  // da CHAVE estável, nunca do rótulo — ver `statusBadgeDT`.
+  { id: 'status',  header: 'Status',  accessor: (f) => f.status, badge: statusBadgeDT },
   { id: 'metodo',  header: 'Método',  accessor: (f) => f.metodo },
   {
     id: 'valor',
@@ -85,9 +141,10 @@ export const COLUMNS_INVOICES: DataTableColumn<InvoiceDT>[] = [
     accessor: (f) => f.value,
     format: formatarBRL,
     sortable: true,
-    // Só a CÉLULA alinha à direita. `.nds-table th` declara `text-align: left`
-    // com especificidade (0,1,1), acima de `.nds-text-right` (0,1,0) — o
-    // cabeçalho de coluna numérica fica à esquerda nas cinco stacks.
+    // Célula E cabeçalho à direita (guideline 20). A premissa antiga escrita
+    // aqui — `.nds-table th` em (0,1,1) tornando `.nds-text-right` inerte —
+    // venceu: a regra compartilhada hoje é `:where(.nds-table) th`, (0,0,1).
+    // O docblock de `numeric` em `data-table.ts` tem a medição inteira.
     numeric: true,
   },
 ];

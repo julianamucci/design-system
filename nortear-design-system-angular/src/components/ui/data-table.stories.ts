@@ -220,9 +220,9 @@ export const Playground: Story = {
       await expect(caption.tagName).toBe('CAPTION');
       await expect(caption).toHaveTextContent(args.caption);
 
-      const estilo = getComputedStyle(caption);
+      const captionStyle = getComputedStyle(caption);
       const box = caption.getBoundingClientRect();
-      await expect(estilo.position).toBe('absolute');
+      await expect(captionStyle.position).toBe('absolute');
       await expect(box.width).toBeLessThanOrEqual(2);
       await expect(box.height).toBeLessThanOrEqual(2);
     });

@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
+import { DataTable, type DataTableColumn, type DataTableLabels } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -128,46 +128,133 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 });
 
 // ─── Demo data ────────────────────────────────────────────────────────────────
+// A linha carrega CHAVE ESTÁVEL, nunca o texto traduzido: quem resolve o rótulo
+// é a coluna, com `t()`. Com o texto no dado, a tabela mostrava "Pago" e
+// "Boleto bancário" no meio de uma página em inglês, e todo mapa chaveado por
+// rótulo precisava ser reeditado a cada ajuste de tradução.
+type InvoiceStatus = 'paid' | 'pending' | 'canceled';
+
+type InvoiceMethod =
+  | 'methodPix'
+  | 'methodBankSlip'
+  | 'methodCreditCard'
+  | 'methodDebitCard'
+  | 'methodTransfer';
+
 type Invoice = {
   id: string;
   customer: string;
-  status: 'Pago' | 'Pendente' | 'Cancelado';
-  method: string;
+  status: InvoiceStatus;
+  method: InvoiceMethod;
   amount: number;
 };
 
 const demoData = ref<Invoice[]>([
-  { id: 'INV-001', customer: 'Ana Souza',    status: 'Pago',      method: 'Cartão de crédito', amount: 250 },
-  { id: 'INV-002', customer: 'Bruno Lima',   status: 'Pendente',  method: 'Boleto bancário',   amount: 150 },
-  { id: 'INV-003', customer: 'Carla Mendes', status: 'Cancelado', method: 'Pix',               amount: 350 },
-  { id: 'INV-004', customer: 'Diego Faria',  status: 'Pago',      method: 'Cartão de débito',  amount: 450 },
-  { id: 'INV-005', customer: 'Eva Oliveira', status: 'Pendente',  method: 'Transferência',     amount: 200 },
+  { id: 'INV-001', customer: 'Ana Souza',    status: 'paid',     method: 'methodPix',        amount: 250 },
+  { id: 'INV-002', customer: 'Bruno Lima',   status: 'pending',  method: 'methodBankSlip',   amount: 150 },
+  { id: 'INV-003', customer: 'Carla Mendes', status: 'canceled', method: 'methodCreditCard', amount: 350 },
+  { id: 'INV-004', customer: 'Diego Faria',  status: 'paid',     method: 'methodDebitCard',  amount: 450 },
+  { id: 'INV-005', customer: 'Eva Oliveira', status: 'pending',  method: 'methodTransfer',   amount: 200 },
 ]);
 
 const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-const statusVariant: Record<Invoice['status'], 'default' | 'warning' | 'destructive'> = {
-  Pago: 'default',
-  Pendente: 'warning',
-  Cancelado: 'destructive',
+const statusVariant: Record<InvoiceStatus, 'default' | 'warning' | 'destructive'> = {
+  paid: 'default',
+  pending: 'warning',
+  canceled: 'destructive',
 };
+
+// Caminho de tradução POR EXTENSO, nunca montado em runtime.
+//
+// A forma anterior concatenava o prefixo do grupo com o nome do status ou do
+// método, e resolvia certo na tela — o custo é de BUSCA. Chave interpolada não
+// aparece para quem procura o rótulo no repositório, e não aparece para o portão
+// `demonstration_labels_divergent`, que compara qual CONJUNTO de rótulos cada
+// stack usa lendo o texto do arquivo. Era por isso que o vue figurava como se
+// não consumisse os rótulos que consome.
+function statusLabel(status: InvoiceStatus): string {
+  switch (status) {
+    case 'paid':     return tContent('demonstration.labels.paid');
+    case 'pending':  return tContent('demonstration.labels.pending');
+    case 'canceled': return tContent('demonstration.labels.canceled');
+  }
+}
+
+function methodLabel(method: InvoiceMethod): string {
+  switch (method) {
+    case 'methodPix':        return tContent('demonstration.labels.methodPix');
+    case 'methodBankSlip':   return tContent('demonstration.labels.methodBankSlip');
+    case 'methodCreditCard': return tContent('demonstration.labels.methodCreditCard');
+    case 'methodDebitCard':  return tContent('demonstration.labels.methodDebitCard');
+    case 'methodTransfer':   return tContent('demonstration.labels.methodTransfer');
+  }
+}
+
+/**
+ * O conjunto COMPLETO de rótulos da tabela, no idioma da página.
+ *
+ * Passar só o placeholder da busca deixava o RODAPÉ em português fixo em `en` e
+ * `es` — "Linhas por página", "Página X de Y", "Primeira página" —, porque o
+ * que não chega aqui cai no padrão do componente, que é pt-BR. Vanilla e
+ * angular já passavam o conjunto inteiro (PRD §7 item 15).
+ */
+const demoLabels = computed<Partial<DataTableLabels>>(() => ({
+  columns:     tContent('demonstration.labels.columns'),
+  rowsPerPage: tContent('demonstration.labels.rowsPerPage'),
+  page:        tContent('demonstration.labels.page'),
+  pageOf:      tContent('demonstration.labels.of'),
+  firstPage:   tContent('demonstration.labels.firstPage'),
+  prevPage:    tContent('demonstration.labels.prevPage'),
+  nextPage:    tContent('demonstration.labels.nextPage'),
+  lastPage:    tContent('demonstration.labels.lastPage'),
+}));
+
+/**
+ * Nome acessível de cada tabela da página.
+ *
+ * Sai como `<caption>` fora da tela e é também o nome da região rolável. Sem
+ * ele a pessoa que usa leitor de tela entra numa "tabela, 6 colunas" — e a
+ * `testes.accessibility.item6` desta mesma página promete o contrário. O sufixo
+ * por preview existe porque meia dúzia de tabelas com o mesmo nome deixa a
+ * lista de tabelas do leitor indistinguível.
+ */
+function demoCaption(suffix: string): string {
+  return `${tContent('demonstration.labels.caption')} — ${toPlainText(suffix)}`;
+}
 
 const demoColumns = computed<DataTableColumn<Invoice>[]>(() => [
   { accessorKey: 'id', header: tContent('demonstration.labels.invoice'), size: 110 },
   { accessorKey: 'customer', header: tContent('demonstration.labels.customer'), size: 200 },
   {
-    accessorKey: 'status',
+    // `accessorFn` e não `accessorKey`: o valor que a busca varre e a ordenação
+    // compara tem de ser o TEXTO que a pessoa lê. Com a chave crua no acessor,
+    // procurar "Pago" não acharia nada e a ordenação seguiria o alfabeto do
+    // identificador, igual nos três idiomas.
+    id: 'status',
+    accessorFn: (row) => statusLabel(row.status),
     header: tContent('demonstration.labels.status'),
     size: 140,
     cell: ({ row }) =>
-      h(Badge, { variant: statusVariant[row.original.status] }, () => row.original.status),
+      h(Badge, { variant: statusVariant[row.original.status] }, () =>
+        statusLabel(row.original.status),
+      ),
   },
-  { accessorKey: 'method', header: tContent('demonstration.labels.method'), size: 200 },
+  {
+    id: 'method',
+    accessorFn: (row) => methodLabel(row.method),
+    header: tContent('demonstration.labels.method'),
+    size: 200,
+  },
   {
     accessorKey: 'amount',
     header: tContent('demonstration.labels.amount'),
     size: 130,
+    // Coluna numérica: alinha à direita na célula E no cabeçalho (guideline 20,
+    // "coluna numérica"). Quem escreve as classes é o primitivo, porque o `<th>`
+    // não passa por aqui.
+    meta: { numeric: true },
     cell: ({ row }) =>
-      h('span', { class: 'font-medium tabular-nums' }, currency.format(row.original.amount)),
+      h('span', { class: 'nds-font-medium nds-tabular-nums' }, currency.format(row.original.amount)),
   },
 ]);
 
@@ -260,24 +347,29 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'enableGlobalFilter',     description: stripHtml(tContent('variants.items.globalFilter'))     },
-  { name: 'enableColumnFilters',    description: stripHtml(tContent('variants.items.columnFilters'))    },
-  { name: 'enableRowSelection',     description: stripHtml(tContent('variants.items.selection'))        },
-  { name: 'enableColumnVisibility', description: stripHtml(tContent('variants.items.visibility'))       },
-  { name: 'enableColumnResizing',   description: stripHtml(tContent('variants.items.resize'))           },
-  { name: 'enableColumnOrdering',   description: stripHtml(tContent('variants.items.reorder'))          },
-  { name: 'enablePagination',       description: stripHtml(tContent('variants.items.pagination'))       },
+  // `name` vem traduzido do conteúdo compartilhado, então o id de rastreio é a
+  // chave da flag — valor estável, igual nos três idiomas e nas cinco stacks.
+  { trackId: 'globalFilter',  name: tContent('variants.items.globalFilter.name'),  description: stripHtml(tContent('variants.items.globalFilter.description'))  },
+  { trackId: 'columnFilters', name: tContent('variants.items.columnFilters.name'), description: stripHtml(tContent('variants.items.columnFilters.description')) },
+  { trackId: 'selection',     name: tContent('variants.items.selection.name'),     description: stripHtml(tContent('variants.items.selection.description'))     },
+  { trackId: 'visibility',    name: tContent('variants.items.visibility.name'),    description: stripHtml(tContent('variants.items.visibility.description'))    },
+  { trackId: 'resize',        name: tContent('variants.items.resize.name'),        description: stripHtml(tContent('variants.items.resize.description'))        },
+  { trackId: 'reorder',       name: tContent('variants.items.reorder.name'),       description: stripHtml(tContent('variants.items.reorder.description'))       },
+  { trackId: 'pagination',    name: tContent('variants.items.pagination.name'),    description: stripHtml(tContent('variants.items.pagination.description'))    },
   {
+    trackId: 'editableSheet',
     name: tContent('variants.items.editableSheet.name'),
     description: tContent('variants.items.editableSheet.description'),
     useWhen: tContent('variants.items.editableSheet.use'),
   },
   {
+    trackId: 'virtualizedLog',
     name: tContent('variants.items.virtualizedLog.name'),
     description: tContent('variants.items.virtualizedLog.description'),
     useWhen: tContent('variants.items.virtualizedLog.use'),
   },
   {
+    trackId: 'pinnedKey',
     name: tContent('variants.items.pinnedKey.name'),
     description: tContent('variants.items.pinnedKey.description'),
     useWhen: tContent('variants.items.pinnedKey.use'),
@@ -286,6 +378,7 @@ const variantItems = computed(() => [
 
 const compositionItems = computed(() => [
   {
+    trackId: 'selectionWithActions',
     name: tContent('variants.compositions.selectionWithActions.name'),
     description: tContent('variants.compositions.selectionWithActions.description'),
     useWhen: tContent('variants.compositions.selectionWithActions.use'),
@@ -329,7 +422,7 @@ const dataTablePropItems = computed(() => [
   { name: 'pageSizeOptions',         type: 'number[]',                 defaultValue: '[10,20,50,100]', required: 'Não', description: toPlainText(tContent('props.table.pageSizeOptions')) },
   { name: 'emptyMessage',            type: 'string',                   defaultValue: '"Sem resultados."', required: 'Não', description: tContent('props.table.emptyMessage')      },
   { name: 'caption',                 type: 'string',                   defaultValue: '—',        required: 'Não', description: toPlainText(tContent('props.table.caption'))   },
-  { name: 'labels',                  type: 'Partial<DataTableLabels>', defaultValue: 'DATA_TABLE_LABELS_PADRAO', required: 'Não', description: toPlainText(tContent('props.table.labels')) },
+  { name: 'labels',                  type: 'Partial<DataTableLabels>', defaultValue: 'DATA_TABLE_LABELS_DEFAULT', required: 'Não', description: toPlainText(tContent('props.table.labels')) },
   { name: 'rowKey',                  type: '(row: TData, index: number) => string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.rowKey'))  },
   { name: 'rowLabel',                type: '(row: TData) => string',   defaultValue: '—',        required: 'Não', description: toPlainText(tContent('props.table.rowLabel'))  },
 ]);
@@ -455,10 +548,13 @@ const visualTestItems = computed(() => [
     <DocsDemonstration>
       <div class="nds-w-full">
         <DataTable
+          :caption="demoCaption(tNav('nav.demonstration'))"
           :columns="demoColumns"
           :data="demoData"
+          :labels="demoLabels"
           :enable-row-selection="true"
           :global-filter-placeholder="tContent('demonstration.labels.search')"
+          :empty-message="tContent('demonstration.labels.noResults')"
         />
       </div>
     </DocsDemonstration>
@@ -516,36 +612,53 @@ const visualTestItems = computed(() => [
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- Cada tabela recebe uma legenda PRÓPRIA: ela é o nome acessível da
+           tabela e da região rolável, e repetida em cinco previews a lista de
+           tabelas do leitor de tela fica indistinguível. -->
       <template #do-preview-0>
+        <!-- Placeholder específico ao escopo: diz onde a busca procura. -->
         <DataTable
+          :caption="demoCaption(toPlainText(tContent('doDont.pair1.do')))"
           :columns="demoColumns"
           :data="demoData"
+          :labels="demoLabels"
           :enable-row-selection="false"
-          global-filter-placeholder="Buscar fatura, cliente ou método"
+          :global-filter-placeholder="tContent('demonstration.labels.search')"
+          :empty-message="tContent('demonstration.labels.noResults')"
         />
       </template>
       <template #dont-preview-0>
+        <!-- Placeholder genérico: não orienta ninguém. -->
         <DataTable
+          :caption="demoCaption(toPlainText(tContent('doDont.pair1.dont')))"
           :columns="demoColumns"
           :data="demoData"
+          :labels="demoLabels"
           :enable-row-selection="false"
           global-filter-placeholder="Buscar..."
+          :empty-message="tContent('demonstration.labels.noResults')"
         />
       </template>
       <template #do-preview-1>
         <DataTable
+          :caption="demoCaption(toPlainText(tContent('doDont.pair2.do')))"
           :columns="demoColumns"
           :data="demoData"
+          :labels="demoLabels"
           :virtualized="true"
           max-height="240px"
           :enable-column-visibility="false"
+          :empty-message="tContent('demonstration.labels.noResults')"
         />
       </template>
       <template #dont-preview-1>
         <DataTable
+          :caption="demoCaption(toPlainText(tContent('doDont.pair2.dont')))"
           :columns="demoColumns"
           :data="demoData"
+          :labels="demoLabels"
           :page-size="50"
+          :empty-message="tContent('demonstration.labels.noResults')"
         />
       </template>
     </DocsDoDont>

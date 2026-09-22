@@ -71,7 +71,7 @@ const meta: Meta<Record<string, unknown>> = {
     labels: {
       description:
         'Textos da interface: rótulos dos controles, contagens e navegação. Só as chaves informadas mudam; o resto continua no padrão.',
-      table: { type: { summary: 'Partial<DataTableLabels>' }, defaultValue: { summary: 'DATA_TABLE_LABELS_PADRAO' } },
+      table: { type: { summary: 'Partial<DataTableLabels>' }, defaultValue: { summary: 'DATA_TABLE_LABELS_DEFAULT' } },
       control: false,
     },
     rowKey: {
@@ -200,9 +200,9 @@ export const Playground: Story = {
       await expect(table).toHaveAccessibleName('Faturas recentes');
       // O efeito COMPUTADO, não o nome da classe: uma classe renomeada no CSS
       // deixaria a legenda visível sem quebrar asserção nenhuma.
-      const estilo = getComputedStyle(caption!);
+      const style = getComputedStyle(caption!);
       const box = caption!.getBoundingClientRect();
-      await expect(estilo.position).toBe('absolute');
+      await expect(style.position).toBe('absolute');
       await expect(box.width).toBeLessThanOrEqual(2);
       await expect(box.height).toBeLessThanOrEqual(2);
     });

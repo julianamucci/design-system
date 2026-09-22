@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { ColumnDef, RowData } from '@tanstack/vue-table';
 import {
+  DATA_TABLE_LABELS_DEFAULT,
+  type DataTableLabels,
+} from '@shared/primitives/data-table-labels';
+import {
   columnFilteringFeature,
   columnOrderingFeature,
   columnPinningFeature,
@@ -33,6 +37,16 @@ import {
 type DataTableColumnMeta = {
   filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
   editable?: boolean;
+  /**
+   * Coluna numérica: alinha à direita na CÉLULA e no CABEÇALHO, e usa algarismo
+   * de largura fixa. As duas pontas, porque a guideline de tabelas pede que a
+   * coluna de número forme uma única borda direita — cabeçalho fora do prumo
+   * desfaz a leitura de grandeza que o alinhamento existe para dar.
+   *
+   * Quem escreve a classe é o componente e não quem monta a coluna: o `<th>` é
+   * gerado aqui dentro, e não há por onde alcançá-lo de fora.
+   */
+  numeric?: boolean;
 };
 
 type DataTableTableMeta = {
@@ -86,66 +100,17 @@ export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef
 /**
  * Todo texto que a tabela escreve na tela ou entrega ao leitor.
  *
- * Existe porque o componente tinha as frases cravadas em português no meio do
- * markup: quem monta uma tabela de faturas não conseguia dizer "Selecionar
- * fatura" nem trocar de idioma sem reescrever o componente.
+ * O catálogo e os valores padrão moram no conteúdo compartilhado desde
+ * 2026-09-22: as mesmas 21 chaves estavam copiadas palavra por palavra em
+ * quatro stacks, e quatro cópias declaradas iguais é o estado em que uma muda
+ * sem ninguém ver. Catálogo de rótulo é REGRA — decide o que se lê, não o que
+ * acontece —, então ele passa na régua do `@nortear/ds-core`.
  *
- * As chaves que dependem de um dado são FUNÇÃO, e não template com `{col}`:
- * função é a forma que TypeScript sabe checar (aridade e tipo de argumento) e
- * que não obriga ninguém a decorar o nome do buraco. `rowsSelected` recebe os
- * dois números porque a ordem deles muda de idioma para idioma.
+ * O re-export daqui continua: quem usa a tabela importa tipo e padrão do
+ * componente, e não precisa saber onde o texto é definido.
  */
-export interface DataTableLabels {
-  columns: string;
-  showColumns: string;
-  selectAll: string;
-  selectRow: (row: string) => string;
-  sortBy: (col: string) => string;
-  filter: (col: string) => string;
-  noFilter: (col: string) => string;
-  pinLeft: (col: string) => string;
-  unpin: (col: string) => string;
-  resize: (col: string) => string;
-  edit: (col: string) => string;
-  rowsPerPage: string;
-  page: string;
-  pageOf: string;
-  firstPage: string;
-  prevPage: string;
-  nextPage: string;
-  lastPage: string;
-  rowsTotal: (n: number) => string;
-  rowsSelected: (s: number, n: number) => string;
-  allOption: string;
-}
-
-/**
- * O padrão é o texto que o componente já dizia — trocar de API não podia mudar
- * o que a tela mostra a quem nunca passou `labels`.
- */
-export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
-  columns: 'Colunas',
-  showColumns: 'Exibir colunas',
-  selectAll: 'Selecionar todas as linhas',
-  selectRow: (r) => `Selecionar linha ${r}`,
-  sortBy: (c) => `Ordenar por ${c}`,
-  filter: (c) => `Filtrar ${c}`,
-  noFilter: (c) => `Sem filtro para ${c}`,
-  pinLeft: (c) => `Fixar ${c} à esquerda`,
-  unpin: (c) => `Desafixar ${c}`,
-  resize: (c) => `Redimensionar coluna ${c}`,
-  edit: (c) => `Editar ${c}`,
-  rowsPerPage: 'Linhas por página',
-  page: 'Página',
-  pageOf: 'de',
-  firstPage: 'Primeira página',
-  prevPage: 'Página anterior',
-  nextPage: 'Próxima página',
-  lastPage: 'Última página',
-  rowsTotal: (n) => `${n} linha(s).`,
-  rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
-  allOption: 'Todos',
-};
+export type { DataTableLabels };
+export { DATA_TABLE_LABELS_DEFAULT };
 
 export interface DataTableProps<TData extends RowData> {
   columns: DataTableColumn<TData>[];
@@ -766,6 +731,7 @@ watch(
       :style="virtualized ? { maxHeight } : undefined"
     >
       <Table
+        :region-label="caption"
         :class="cn( (enableColumnResizing || enableColumnOrdering || virtualized) && 'nds-table-fixed', )"
       >
         <!--
@@ -802,7 +768,7 @@ watch(
                 width: enableColumnResizing ? `${header.getSize()}px` : undefined,
                 ...pinStyle(header.column),
               }"
-              :class="cn( 'nds-data-table-th', header.column.getIsPinned() && 'nds-data-table-th-pinned', )"
+              :class="cn( 'nds-data-table-th', header.column.columnDef.meta?.numeric && 'nds-text-right', header.column.getIsPinned() && 'nds-data-table-th-pinned', )"
               :draggable="
                 enableColumnOrdering && header.column.id !== '__select__'
               "
@@ -962,7 +928,7 @@ watch(
                   width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined,
                   ...pinStyle(cell.column),
                 }"
-                :class="cn('nds-data-table-td', cell.column.getIsPinned() && 'nds-data-table-td-pinned')"
+                :class="cn('nds-data-table-td', cell.column.columnDef.meta?.numeric && 'nds-text-right nds-tabular-nums', cell.column.getIsPinned() && 'nds-data-table-td-pinned')"
               >
                 <EditableCell
                   v-if="cell.column.columnDef.meta?.editable"
