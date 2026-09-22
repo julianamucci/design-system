@@ -1416,6 +1416,200 @@ function dicionarioDoSlug(slug) {
 }
 const _walk = (n, ps) => ps.reduce((c, k) => (c && typeof c === 'object') ? c[k] : undefined, n);
 
+/**
+ * O maior número de um array LITERAL que alimenta uma citação interpolada.
+ *
+ * Devolve `null` quando não há array literal na janela — e aí a citação é
+ * derivação de verdade, que é o conserto e não o defeito.
+ *
+ * A janela olha para TRÁS a partir da citação porque a forma é sempre
+ * `[1, 2, 3].map(… item${i} …)`: o array vem antes. Vinte e cinco caracteres não
+ * bastariam (`.map((i) => tContent(` já come mais que isso) e a janela grande
+ * pegaria array de outra expressão — 240 foi o meio medido nas cinco stacks.
+ */
+function tetoDeArrayLiteral(src, posDaCitacao) {
+  const JANELA = 240;
+  const inicio = Math.max(0, posDaCitacao - JANELA);
+  const trecho = src.slice(inicio, posDaCitacao);
+  const fecha = trecho.lastIndexOf(']');
+  if (fecha === -1) return null;
+  const abre = trecho.lastIndexOf('[', fecha);
+  if (abre === -1) return null;
+
+  const dentro = trecho.slice(abre + 1, fecha);
+  if (dentro.trim() === '') return null;
+
+  const nums = [];
+  for (const parte of dentro.split(',')) {
+    const t = parte.trim();
+    // Só array de números puros: `['a', 'b']` e `[foo, bar]` não são teto de
+    // índice, e tratá-los como tal inventaria achado.
+    if (t === '' || ![...t].every((c) => c >= '0' && c <= '9')) return null;
+    nums.push(Number(t));
+  }
+  return nums.length ? Math.max(...nums) : null;
+}
+
+/**
+ * Conteúdo publicado que NUNCA chega a uma tela.
+ *
+ * O grupo do dicionário publica `itemN`/`tipN` até um certo número e a docs page
+ * cita os índices À MÃO, parando antes. A diferença é texto escrito, traduzido
+ * nos três idiomas, e invisível — e nada reprovava.
+ *
+ * ## Por que nenhuma das redes existentes pegava
+ *
+ * Não é falta de rede: é um eixo faltando, e isso levou uma investigação inteira
+ * para ficar claro.
+ *
+ * - `contract_uncovered` EXISTE e cobre até o caso uniforme nas cinco — mas no
+ *   eixo STORY ("está em `testes.*` e nenhuma story verifica"), não no eixo
+ *   PÁGINA. Medido no `chart`: as stories cobrem os ONZE critérios e a docs page
+ *   renderiza SEIS. O portão fica em zero, corretamente, e o leitor vê metade.
+ * - As oito regras de `docs/shared/testing/docs-page-contract.ts` medem o que a
+ *   página RENDERIZOU — chave vazada, valor indefinido, bloco de código vazio,
+ *   preview descentrado, título pulado, tabela sem linhas. Tabela com 6 de 11
+ *   linhas não é tabela sem linhas.
+ * - O Check 14 da pipeline confronta as cinco com a FOLHA e o PRD. Funcionou na
+ *   anatomia do `alert`, porque o §4 daquele PRD listava seis nós contra quatro
+ *   renderizados. Onde o PRD não enumera o grupo não há terceira fonte — e foi
+ *   por isso que o `drawer` atravessou uma revisão completa, com Fase B, Check
+ *   14, cinco agentes e Fase E, com duas guidelines de uso e dois itens de
+ *   acessibilidade publicados e fora da tela.
+ * - Compilador e lint não têm o que reprovar: não citar `item5` não é erro de
+ *   sintaxe nem de tipo.
+ *
+ * ## Quando ela dispara, e por que só então
+ *
+ * Só quando o teto CRAVADO ficou abaixo do conteúdo. A varredura de 2026-09-21
+ * mediu 42 pontos em 20 componentes nesse estado, e mais 1316 pontos em 51
+ * componentes com lista cravada hoje completa.
+ *
+ * Despejar os 1316 seria portão que ensina a ser ignorado — e seria errado:
+ * lista cravada completa não esconde nada HOJE. Ela vira defeito no dia em que o
+ * conteúdo cresce, e é exatamente nesse dia que esta regra passa a acusar. O
+ * gatilho é o instante em que o defeito nasce, não a forma que o antecede.
+ *
+ * ## Dois falsos positivos que a primeira versão tinha
+ *
+ * 1. PROSA — um docblock mencionando `anatomy.item5` contava como citação, e o
+ *    `alert` entrou na lista por uma linha de comentário. Foram 59 achados que
+ *    viraram 42 quando os comentários saíram. É a mesma armadilha do portão que
+ *    casa palavra solta. Saem os de código (`stripComments`) e os de markup.
+ * 2. DERIVAÇÃO — página que faz `anatomy.item` seguido de interpolação cita o
+ *    grupo sem índice literal. Grupo com qualquer citação NÃO seguida de dígito
+ *    é tratado como derivado e sai da conta inteira. É a leitura conservadora:
+ *    derivar é o conserto, não o defeito.
+ */
+function auditConteudoNaoRenderizado(slug) {
+  const violations = [];
+  const dict = dicionarioDoSlug(slug);
+  const base = dict?.['pt-BR'];
+  if (!base) return violations;
+
+  const DIGITOS = new Set(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+  const ehNumero = (t) => t.length > 0 && [...t].every((c) => DIGITOS.has(c));
+
+  // Sem regex, de propósito: nesta casa o escape do shell comeu barra invertida
+  // quatro vezes numa sessão só, e a versão de medição deste detector devolveu
+  // "zero achados" porque o padrão de dígito havia virado a letra `d`. Zero com
+  // cara de sucesso é o pior resultado possível para um portão.
+  const sufixoNumerado = (chave) => {
+    for (const palavra of ['item', 'tip']) {
+      if (chave.startsWith(palavra) && ehNumero(chave.slice(palavra.length))) {
+        return { palavra, n: Number(chave.slice(palavra.length)) };
+      }
+    }
+    return null;
+  };
+
+  const grupos = [];
+  const andar = (obj, prefixo) => {
+    if (!obj || typeof obj !== 'object') return;
+    const nums = [];
+    let palavra = null;
+    for (const k of Object.keys(obj)) {
+      const su = sufixoNumerado(k);
+      if (su) { nums.push(su.n); palavra = su.palavra; }
+    }
+    if (nums.length && prefixo) grupos.push({ caminho: prefixo, maior: Math.max(...nums), palavra });
+    for (const k of Object.keys(obj)) {
+      if (obj[k] && typeof obj[k] === 'object') andar(obj[k], prefixo ? prefixo + '.' + k : k);
+    }
+  };
+  andar(base, '');
+  if (!grupos.length) return violations;
+
+  /** Comentário de markup, que o `stripComments` não alcança. */
+  const semComentarioDeMarkup = (src) => {
+    let saida = src;
+    for (;;) {
+      const a = saida.indexOf('<!--');
+      if (a === -1) break;
+      const b = saida.indexOf('-->', a);
+      if (b === -1) { saida = saida.slice(0, a); break; }
+      saida = saida.slice(0, a) + saida.slice(b + 3);
+    }
+    return saida;
+  };
+
+  for (const stack of STACKS) {
+    for (const file of filesForSlug(slug, stack).docs) {
+      const cru = readFile(file);
+      if (!cru) continue;
+      const src = semComentarioDeMarkup(stripComments(cru));
+
+      for (const g of grupos) {
+        const alvo = g.caminho + '.' + g.palavra;
+        const citados = [];
+        let derivadoDeVerdade = false;
+        let i = src.indexOf(alvo);
+        while (i !== -1) {
+          let j = i + alvo.length;
+          let num = '';
+          while (j < src.length && DIGITOS.has(src[j])) { num += src[j]; j += 1; }
+          if (num) {
+            citados.push(Number(num));
+          } else {
+            // Citação INTERPOLADA. Duas coisas muito diferentes chegam aqui, e
+            // confundi-las foi o primeiro ponto cego desta regra:
+            //
+            //   itemIndexes(dict.anatomy).map((i) => t(`anatomy.item${i}`))
+            //   [1, 2, 3, 4].map((i) => t(`anatomy.item${i}`))
+            //
+            // A primeira é o conserto — o teto acompanha o dicionário. A segunda
+            // é teto CRAVADO com outra roupa, e era a forma do angular. As duas
+            // interpolam, então "interpolou, logo derivou" deixava passar
+            // justamente a que se quer pegar.
+            //
+            // O desempate é olhar para trás: se a fonte dos índices é um literal
+            // de números, o teto é aquele array. Se não se acha array nenhum na
+            // janela, assume-se derivação — falso NEGATIVO é o erro que se
+            // escolhe aqui, porque acusar quem deriva seria acusar o conserto.
+            const teto = tetoDeArrayLiteral(src, i);
+            if (teto === null) derivadoDeVerdade = true;
+            else citados.push(teto);
+          }
+          i = src.indexOf(alvo, i + alvo.length);
+        }
+        if (derivadoDeVerdade || citados.length === 0) continue;
+        const maiorCitado = Math.max(...citados);
+        if (maiorCitado >= g.maior) continue;
+
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack,
+          file: relative(ROOT, file), rule: 'conteudo_publicado_sem_tela',
+          message: g.caminho + ' publica ate ' + g.palavra + g.maior
+            + ' e a pagina alcanca ' + g.palavra + maiorCitado
+            + ' — o resto esta escrito nos tres idiomas e nao chega a tela. Derive os indices do dicionario em vez de listá-los',
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
 function auditDocsItemTrackId() {
   const violations = [];
   const LOCALES = ['pt-BR', 'en', 'es'];
@@ -12703,6 +12897,7 @@ function runAudit(slug, category) {
     ...auditIdentificadorPtNovo(slug),
     ...auditButtonGap(slug),
     ...auditPromessaDeCustomizacao(slug),
+    ...auditConteudoNaoRenderizado(slug),
     ...auditDeadClassInTokenTable(slug),
   ];
   // por último, e consultando o resultado das outras: a pendência de PRD
