@@ -1500,44 +1500,112 @@ function tetoDeArrayLiteral(src, posDaCitacao) {
  *    grupo sem índice literal. Grupo com qualquer citação NÃO seguida de dígito
  *    é tratado como derivado e sai da conta inteira. É a leitura conservadora:
  *    derivar é o conserto, não o defeito.
- */
+ *
+ * ## O que este portão AINDA não vê, declarado
+ *
+ * Exceção se declara com a premissa verificada, e um portão sem a lista do que
+ * ele não alcança é um portão em que se confia demais.
+ *
+ * O desempate de teto (`tetoDeArrayLiteral`) só reconhece array de dígitos
+ * puros numa janela de 240 caracteres antes da interpolação. Passam por
+ * "derivado" e saem da conta:
+ *
+ *   Array.from({ length: 3 }, (_, i) => i + 1)
+ *   [...Array(3).keys()]
+ *   itemIndexes(...).slice(0, 3)
+ *   indices.filter((i) => i <= 3)
+ *   const IDX = [1, 2, 3]   — declarado longe do ponto de uso
+ *
+ * Medido em 2026-09-22: **nenhuma** dessas formas aparece nas docs pages de
+ * nenhuma das cinco stacks. Elas são risco de escrita futura, não dívida atual,
+ * e por isso o portão não tenta adivinhá-las — heurística para caso que não
+ * existe é fonte de falso positivo, que é o defeito que faz portão ser
+ * desligado.
+ *
+ * **Fecha quando**: alguma delas aparecer. O sinal é conteúdo publicado que
+ * ninguém vê na tela e que este portão não acusou — e aí o conserto é
+ * reconhecer a forma nova, não afrouxar a que existe.
+ *
+ * ## Uma correção que não mudou número nenhum, e por que isso está certo
+ *
+ * A primeira versão desta regra cravava a lista de prefixos em
+ * `['item', 'tip']`. A Fase E da quinta leva do `alert` nomeou o defeito melhor
+ * do que quem o escreveu: era a mesma mecânica que havia escondido `tipN` por
+ * quatro levas, subida um nível — antes a busca conhecia um prefixo, agora
+ * conhecia dois. `pairN` existe em 83 dos 89 dicionários e `spacingN` em 25, e
+ * nada disso era visível.
+ *
+ * Com o prefixo derivado da FORMA da chave, as duas varreduras completas deram
+ * o MESMO resultado: 46 pontos em 14 componentes, zero achado novo, zero
+ * desaparecido. Porque todo teto de `pair` e de `spacing` está completo hoje.
+ *
+ * Isso não torna a correção inútil — torna-a prospectiva, e vale registrar a
+ * diferença: ela não pagou dívida, tirou uma cegueira. O dia em que alguém
+ * escrever `pair3` é o dia em que a versão antiga teria ficado calada. */
 function auditConteudoNaoRenderizado(slug) {
   const violations = [];
   const dict = dicionarioDoSlug(slug);
-  const base = dict?.['pt-BR'];
-  if (!base) return violations;
+  if (!dict) return violations;
 
   const DIGITOS = new Set(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
-  const ehNumero = (t) => t.length > 0 && [...t].every((c) => DIGITOS.has(c));
+  const LETRAS = (c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 
   // Sem regex, de propósito: nesta casa o escape do shell comeu barra invertida
   // quatro vezes numa sessão só, e a versão de medição deste detector devolveu
   // "zero achados" porque o padrão de dígito havia virado a letra `d`. Zero com
   // cara de sucesso é o pior resultado possível para um portão.
-  const sufixoNumerado = (chave) => {
-    for (const palavra of ['item', 'tip']) {
-      if (chave.startsWith(palavra) && ehNumero(chave.slice(palavra.length))) {
-        return { palavra, n: Number(chave.slice(palavra.length)) };
-      }
-    }
-    return null;
+  //
+  // **O PREFIXO SAI DA CHAVE, e isso foi um conserto.** A primeira versão
+  // percorria a lista `['item', 'tip']`, e a Fase E nomeou o defeito melhor do
+  // que eu: "é a mesma mecânica que escondeu `tipN` por quatro levas, subida um
+  // nível — antes a busca conhecia um prefixo, agora conhece dois". Consertar a
+  // instância e reproduzir a classe é o padrão que esta casa chama de mapa que
+  // envelhece em silêncio.
+  //
+  // Medido nos 89 dicionários de `docs/shared/content/`: `pairN` existe em 83
+  // slugs (o `doDont` de quase todo componente) e `spacingN` em 25
+  // (`tokens.table`), mais `chartN`, `ruleN` e `textHN`. Nenhum era visível.
+  // Agora o detector não conhece prefixo nenhum: conhece a FORMA.
+  const raizNumerada = (chave) => {
+    let i = 0;
+    while (i < chave.length && LETRAS(chave[i])) i += 1;
+    if (i === 0 || i === chave.length) return null;
+    for (let j = i; j < chave.length; j += 1) if (!DIGITOS.has(chave[j])) return null;
+    return { palavra: chave.slice(0, i), n: Number(chave.slice(i)) };
   };
 
-  const grupos = [];
+  // Uma entrada por (caminho, PREFIXO), e não uma por caminho.
+  //
+  // A versão anterior empilhava uma entrada só e misturava os números dos dois
+  // prefixos, com `palavra` recebendo o último que aparecesse em
+  // `Object.keys` — o que produzia falso positivo (acusar `tip5` num grupo que
+  // publica `tip2` e `item5`) E falso negativo (o prefixo que não virou
+  // `palavra` simplesmente não era medido). Latente quando foi achado, porque
+  // nenhum grupo do alert mistura prefixos; latente não é inofensivo.
+  const porGrupo = new Map();
   const andar = (obj, prefixo) => {
     if (!obj || typeof obj !== 'object') return;
-    const nums = [];
-    let palavra = null;
     for (const k of Object.keys(obj)) {
-      const su = sufixoNumerado(k);
-      if (su) { nums.push(su.n); palavra = su.palavra; }
+      const raiz = raizNumerada(k);
+      if (!raiz || !prefixo) continue;
+      const chave = prefixo + '\u0000' + raiz.palavra;
+      const atual = porGrupo.get(chave);
+      if (!atual || raiz.n > atual.maior) {
+        porGrupo.set(chave, { caminho: prefixo, palavra: raiz.palavra, maior: raiz.n });
+      }
     }
-    if (nums.length && prefixo) grupos.push({ caminho: prefixo, maior: Math.max(...nums), palavra });
     for (const k of Object.keys(obj)) {
       if (obj[k] && typeof obj[k] === 'object') andar(obj[k], prefixo ? prefixo + '.' + k : k);
     }
   };
-  andar(base, '');
+
+  // Os TRÊS idiomas, e não só o `pt-BR`.
+  //
+  // Teto acima do português e abaixo do inglês seria invisível medindo um
+  // idioma só — e conteúdo que existe em `en`/`es` e não em `pt-BR` é
+  // exatamente o tipo de assimetria que um dicionário trilíngue acumula.
+  for (const locale of ['pt-BR', 'en', 'es']) andar(dict[locale], '');
+  const grupos = [...porGrupo.values()];
   if (!grupos.length) return violations;
 
   /** Comentário de markup, que o `stripComments` não alcança. */
