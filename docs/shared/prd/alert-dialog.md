@@ -535,6 +535,43 @@ tem portão que a veja.
 > **PENDÊNCIA · 2026-09-15** — o C7 (rodapé com Cancelar + Ação obrigatório) não tem portão: uma composição sem rodapé passa nas cinco stacks.
 > **Fecha quando**: um teste ou regra reprovar um painel montado sem `alert-dialog-footer` ou sem `alert-dialog-cancel`, com o defeito plantado e medido nas cinco.
 
+> **FECHADA · 2026-09-22 — o portão existe, e é `rodape_obrigatorio_ausente` no
+> `audit.mjs`.** Por decisão da dona, ele cobre **o que o design system
+> PUBLICA**: o `anatomy.structureCode` nos três idiomas e os cinco
+> `alert-dialog.source.ts`, que são o que a aba Code mostra.
+>
+> Provado nas CINCO, cada uma com uma peça diferente removida, plantando e
+> restaurando na mesma chamada:
+>
+>     base                                        0
+>     react   — snippet publicado sem rodapé      3
+>     react   — construtor sem AlertDialogFooter  2
+>     vue     — construtor sem AlertDialogCancel  1
+>     svelte  — construtor sem AlertDialogAction  2
+>     vanilla — composição sem cancelButton       1
+>     angular — construtor sem ndsAlertDialogFooter 1
+>     restaurado                                  0
+>
+> **O que ele deliberadamente NÃO alcança**, e isto é exceção declarada: a
+> composição de quem CONSOME. Isso é runtime, e portão estático que prometesse
+> alcançá-lo estaria mentindo. A forma honesta para aquela metade é o primitivo
+> se defender — e a referência já faz: o vanilla declara `cancelButton` e
+> `actionButton` sem `?`, então uma composição sem rodapé **não compila**. Nas
+> quatro com lib o rodapé é opcional por construção, e o angular admite por
+> escrito no próprio código.
+>
+> Ou seja, a pendência original estava meio errada: ela dizia que "uma composição
+> sem rodapé passa nas cinco stacks", e na referência não passa. O que falta,
+> registrado e sem dono ainda, é as quatro com lib alcançarem a mesma proteção —
+> por tipo onde a lib deixar, ou por aviso em dev.
+>
+> **Duas correções do próprio portão, feitas antes de ele valer:** a primeira
+> versão contava a tag de FECHAMENTO como abertura e acusou dezoito falsos na
+> estreia — nas três stacks cujo markup eu tinha acabado de conferir peça por
+> peça. A segunda janelava o `.source.ts` do vanilla, que COMPÕE o snippet em vez
+> de escrevê-lo, e por isso media o lugar errado. Portão novo que acusa muito na
+> estreia é suspeito de si mesmo.
+
 > **PENDÊNCIA · 2026-09-15** — as dezessete inconsistências acima estão medidas e sem correção; os itens 1, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16 e 17 pedem alinhamento, e os itens 2, 3, 4, 11 e 14 pedem só registro (com as decisões da dona apontadas neles).
 > **Fecha quando**: a próxima revisão de código deste componente remedir cada item no HEAD e marcá-lo como fechado ou registrado, como a §7 do `skeleton.md` fez em 2026-09-14.
 

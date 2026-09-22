@@ -1542,6 +1542,137 @@ function tetoDeArrayLiteral(src, posDaCitacao) {
  * Isso não torna a correção inútil — torna-a prospectiva, e vale registrar a
  * diferença: ela não pagou dívida, tirou uma cegueira. O dia em que alguém
  * escrever `pair3` é o dia em que a versão antiga teria ficado calada. */
+/**
+ * C7 do AlertDialog — o rodapé com Cancelar E Ação é obrigatório.
+ *
+ * O AlertDialog não tem botão de fechar no canto (D2), então o rodapé é a ÚNICA
+ * saída além do Escape. Um painel publicado sem ele ensina uma composição que
+ * prende quem usa.
+ *
+ * ## Por que esta regra existe, e o que ela deliberadamente NÃO tenta
+ *
+ * A PENDÊNCIA de 2026-09-15 registrava que "uma composição sem rodapé passa nas
+ * cinco stacks". A remedição de 2026-09-22 achou que isso era meia verdade:
+ *
+ * > **Na REFERÊNCIA o C7 já tem portão, e é o `tsc`.** O vanilla declara
+ * > `cancelButton: HTMLElement` e `actionButton: HTMLElement` **sem `?`**, então
+ * > um `createAlertDialog` sem rodapé não compila. Nas quatro com lib o rodapé é
+ * > opcional por construção, e o angular admite por escrito no próprio código:
+ * > "Sem Cancelar registrado (composição que viola o C7), fica o padrão do
+ * > primitivo".
+ *
+ * Por decisão da dona (2026-09-22), esta regra cobre **o que o design system
+ * PUBLICA** — o snippet canônico e os construtores do painel Code. Ela NÃO
+ * tenta alcançar a composição de quem consome: isso é runtime, e a forma honesta
+ * seria o primitivo se defender, como o vanilla já faz pelo tipo. Portão
+ * estático que promete alcançar runtime é portão que mente.
+ *
+ * ## O mapa de marcas é POR STACK, e foi conferido contra a fonte
+ *
+ * Cada lib nomeia as peças à sua maneira, e derivar isso do nome do componente
+ * seria o mapa que envelhece em silêncio. As marcas abaixo foram lidas do
+ * `anatomy.structureCode` de cada stack em 2026-09-22, com as cinco completas —
+ * ou seja, a linha de base é verde e o que reprovar é regressão.
+ *
+ * O vanilla é o único cujo alvo não é markup: a fábrica recebe os botões
+ * PRONTOS por opção, então o que se cobra são as duas chaves.
+ */
+function auditRodapeObrigatorio(slug) {
+  const violations = [];
+  // O C7 é contrato DESTE componente. Regra que tentasse generalizar precisaria
+  // de um mapa de peças por slug, e hoje nenhum outro componente declara um
+  // contrato de rodapé obrigatório — inventar a generalidade agora seria criar
+  // a tabela que ninguém mantém.
+  if (slug !== 'alert-dialog') return violations;
+
+  // O terceiro campo, `ehAbertura`, existe porque a primeira versão varria TODA
+  // ocorrência da marca — inclusive a tag de FECHAMENTO. A janela para frente a
+  // partir de `</AlertDialogContent>` não contém peça nenhuma, então a regra
+  // acusava as três stacks de markup com o snippet inteiro e correto logo acima:
+  // dezoito achados, todos falsos, na primeira execução.
+  //
+  // Vale reparar no que salvou: a linha de base era VERDE por medição prévia.
+  // Portão novo que acusa muito na estreia é suspeito de si mesmo — e este
+  // acusou exatamente as stacks cujo markup eu tinha acabado de conferir peça
+  // por peça.
+  const MARCAS = {
+    react: { abre: 'AlertDialogContent', exige: ['AlertDialogFooter', 'AlertDialogCancel', 'AlertDialogAction'], ehAbertura: (t, i) => t[i - 1] === '<' },
+    vue: { abre: 'AlertDialogContent', exige: ['AlertDialogFooter', 'AlertDialogCancel', 'AlertDialogAction'], ehAbertura: (t, i) => t[i - 1] === '<' },
+    svelte: { abre: 'AlertDialogContent', exige: ['AlertDialogFooter', 'AlertDialogCancel', 'AlertDialogAction'], ehAbertura: (t, i) => t[i - 1] === '<' },
+    // O vanilla não exige `(` depois da marca, e a diferença é do arquivo, não
+    // do gosto: o construtor dele MONTA o snippet por composição — `importing(…,
+    // 'createAlertDialog')` numa linha, `const cancelButton = …` em outra — e
+    // nunca escreve `createAlertDialog(` literal. Com o parêntese obrigatório a
+    // varredura do `.source.ts` do vanilla não casava nada, e o plantio que
+    // tirava o `cancelButton` passava verde.
+    //
+    // Sem ele a conferência ali vira de ARQUIVO, não de janela: se o arquivo
+    // menciona o construtor, tem de mencionar as duas peças. É mais grosso que
+    // nas outras quatro, que emitem a marcação literal — e é o que o formato
+    // permite.
+    vanilla: { abre: 'createAlertDialog', exige: ['cancelButton', 'actionButton'], ehAbertura: () => true, arquivoInteiro: true },
+    angular: { abre: 'ndsAlertDialogContent', exige: ['ndsAlertDialogFooter', 'ndsAlertDialogCancel', 'ndsAlertDialogAction'], ehAbertura: (t, i) => t[i - 1] !== '/' },
+  };
+
+  // A janela é grande o bastante para o snippet canônico inteiro (o de anatomia
+  // tem ~600 caracteres) e pequena o bastante para não emendar dois snippets
+  // vizinhos num arquivo de transforms.
+  const JANELA = 1400;
+
+  const conferir = (texto, stack, onde, file) => {
+    const m = MARCAS[stack];
+    if (!m) return;
+    let i = texto.indexOf(m.abre);
+    while (i !== -1) {
+      if (!m.ehAbertura(texto, i, m.abre)) { i = texto.indexOf(m.abre, i + m.abre.length); continue; }
+      // `arquivoInteiro` é o modo do vanilla, e existe porque janelar um arquivo
+      // que COMPÕE o snippet mede o lugar errado: as peças ficam espalhadas em
+      // linhas distantes, e a janela a partir da terceira menção do construtor
+      // já não as alcança. Foi assim que a base ficou em 1 achado com o arquivo
+      // correto — falso positivo que eu tinha declarado no comentário e não
+      // implementado.
+      const trecho = m.arquivoInteiro ? texto : texto.slice(i, i + JANELA);
+      const faltam = m.exige.filter((peca) => !trecho.includes(peca));
+      if (faltam.length) {
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack,
+          file, rule: 'rodape_obrigatorio_ausente',
+          message: onde + ' monta o painel e não traz ' + faltam.join(' nem ')
+            + ' — o AlertDialog não tem botão de fechar no canto (D2), então o rodapé é a única saída além do Escape (C7)',
+        });
+      }
+      if (m.arquivoInteiro) return;
+      i = texto.indexOf(m.abre, i + m.abre.length);
+    }
+  };
+
+  // 1. O snippet canônico, que é o que o leitor copia.
+  const dict = dicionarioDoSlug(slug);
+  for (const locale of ['pt-BR', 'en', 'es']) {
+    const code = dict?.[locale]?.anatomy?.structureCode;
+    if (!code || typeof code !== 'object') continue;
+    for (const stack of STACKS) {
+      if (typeof code[stack] !== 'string') continue;
+      conferir(code[stack], stack, 'anatomy.structureCode.' + stack + ' (' + locale + ')',
+        'docs/shared/content/' + slug + '/translations.json');
+    }
+  }
+
+  // 2. Os construtores do painel Code — o que a aba Code mostra quando alguém
+  //    mexe nos controls. Publicado igual, e por caminho diferente.
+  for (const stack of STACKS) {
+    for (const file of filesForSlug(slug, stack).ui) {
+      const norm = file.replace(/\\/g, '/');
+      if (!norm.endsWith('.source.ts')) continue;
+      const src = readFile(file);
+      if (!src) continue;
+      conferir(stripComments(src), stack, basename(file), relative(ROOT, file));
+    }
+  }
+
+  return violations;
+}
+
 function auditConteudoNaoRenderizado(slug) {
   const violations = [];
   const dict = dicionarioDoSlug(slug);
@@ -12966,6 +13097,7 @@ function runAudit(slug, category) {
     ...auditButtonGap(slug),
     ...auditPromessaDeCustomizacao(slug),
     ...auditConteudoNaoRenderizado(slug),
+    ...auditRodapeObrigatorio(slug),
     ...auditDeadClassInTokenTable(slug),
   ];
   // por último, e consultando o resultado das outras: a pendência de PRD
