@@ -59,14 +59,20 @@ function priorityLabel(raw: string): string {
 }
 
 /**
- * Índices `itemN` presentes num grupo do dicionário, em ordem numérica. É o
+ * Índices numerados presentes num grupo do dicionário, em ordem numérica. É o
  * lado que DERIVA o teto da lista, e é o que toda seção numerada consome: um
  * intervalo cravado fica para antes do último item quando o conteúdo cresce
  * (foi assim que `functional.item8` e `visual.item6` ficaram de fora da página).
+ *
+ * O prefixo é PARÂMETRO porque o dicionário não numera tudo com `itemN`: as
+ * dicas de `notes` numeram com `tipN`, e foi atrás desse prefixo diferente que
+ * a última lista cravada da página sobreviveu a quatro levas de caça a este
+ * mesmo teto. Grupo numerado novo entra por aqui, nunca por uma lista à mão.
  */
-function itemIndexes(group: Record<string, unknown> | undefined): number[] {
+function itemIndexes(group: Record<string, unknown> | undefined, prefix = 'item'): number[] {
+  const numbered = new RegExp('^' + prefix + '(\\d+)$');
   return Object.keys(group ?? {})
-    .map((key) => /^item(\d+)$/.exec(key))
+    .map((key) => numbered.exec(key))
     .filter((match): match is RegExpExecArray => match !== null)
     .map((match) => Number(match[1]))
     .sort((a, b) => a - b);
@@ -101,11 +107,23 @@ function usageItemIndexes(group: 'guidelines' | 'scenarios' | 'do' | 'dont'): nu
 /**
  * Índices dos itens de `accessibility` — o grupo mistura `itemN` com chaves
  * nomeadas (`summary`, `keyboard`, `screenReader`), e o filtro de `itemIndexes`
- * já as ignora. Era a última lista cravada da página.
+ * já as ignora. Foi a PENÚLTIMA lista cravada da página: a mensagem de commit
+ * que a deu como última estava errada, porque `notes.tipN` seguia à mão e não
+ * aparecia em nenhuma busca por `itemN`.
  */
 function accessibilityItemIndexes(): number[] {
   const content = (alertTranslations as unknown as Record<string, { accessibility?: Record<string, unknown> }>)[getLocale()];
   return itemIndexes(content?.accessibility);
+}
+
+/**
+ * Índices das dicas de `notes` — numeradas por `tipN`, e é essa diferença de
+ * prefixo que as manteve fora das quatro levas anteriores. Com isto, um `tip4`
+ * no conteúdo compartilhado chega à tela sem tocar nesta página.
+ */
+function notesTipIndexes(): number[] {
+  const content = (alertTranslations as unknown as Record<string, { notes?: Record<string, unknown> }>)[getLocale()];
+  return itemIndexes(content?.notes, 'tip');
 }
 
 /** Literal de snippet a partir de uma chave do dicionário — o código mostrado acompanha o idioma e o preview. */
@@ -692,11 +710,7 @@ export interface AlertActionOptions {
       case 'notas':
         return createDocsNotes({
           componentSlug: 'alert',
-          items: [
-            { title: '', content: t('notes.tip1') },
-            { title: '', content: t('notes.tip2') },
-            { title: '', content: t('notes.tip3') },
-          ],
+          items: notesTipIndexes().map(i => ({ title: '', content: t(`notes.tip${i}`) })),
         });
 
       case 'analytics':
