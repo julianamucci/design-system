@@ -34,9 +34,37 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 20 itens
+## Aberto de verdade — 21 itens
 
-### Precisam de decisão da dona (2)
+### Precisam de decisão da dona (3)
+
+- [ ] **A saída do painel do Dialog e do Select está declarada num dialeto só,
+  e por isso roda em UMA das cinco stacks.** (Aberto em 2026-09-22, medido de
+  passagem ao consertar a presença do véu do AlertDialog.)
+
+  `dialog.css` e `select.css` declaram a animação de saída apenas em
+  `[data-closed]`, que é o atributo da base-ui — o react. As outras quatro
+  escrevem `[data-state="closed"]`, e para elas a regra simplesmente não
+  existe. Comparar: `alert-dialog.css` e `accordion.css` cobrem as duas
+  formas, que é o padrão da casa.
+
+  Medido no Dialog, com sonda de quadro a quadro na story `Open`, fechando por
+  Escape: **react tira véu e painel aos 122ms** (a animação roda), **vue tira
+  os dois no primeiro quadro, 12ms** (não há animação a rodar). O vanilla
+  **declara por escrito** que não anima a saída (`dialog.ts`, "Não anima a
+  SAÍDA … é como Sheet e Drawer se comportam nesta stack").
+
+  A decisão não é de forma, é de produto: **o painel do Dialog e do Select deve
+  sair animado?** Se sim, a regra ganha `[data-state="closed"]` e o vanilla
+  precisa passar a esperar a animação (hoje ele remove o nó no mesmo quadro,
+  como o AlertDialog dele já sabe fazer, com `animationend` + timeout). Se não,
+  a regra sai do react e o comportamento fica igual nas cinco — que é o que a
+  folha do Sheet já escolheu em 2026-09-16.
+
+  **Não fica sem portão enquanto espera**: a invariante vizinha — se o painel
+  anima a saída, o véu tem de ficar montado até o fim — virou
+  `veu_sem_presenca_na_saida` no `audit.mjs`, e foi ela que trouxe este achado
+  à tona. Qualquer resposta "sim" aqui passa por ela.
 
 - [x] **`description` do alert-dialog: opcional no código, obrigatória na anatomia** (L73 do log). **Decidido pela dona (2026-08-17): a documentação alinha ao código — a descrição é opcional.** `anatomy.item6`, `usage.guidelines.item2`, `accessibility.item2`, `accessibility.aria.describedby` e `accessibility.screenReader.onOpen` reescritos nos três idiomas; os dois `v8 ignore` do Vanilla saíram; guidelines de react, vue e angular corrigidas. O caminho passou a ter contrato (`testes.accessibility.item8`) e story nas cinco (`WithoutDescription`). **Achado da medição**: das cinco, só o Vue quebrava — o `DialogContentImpl` do reka-ui gera o id da descrição sempre e ligava `aria-describedby` a um id inexistente (a própria lib avisa disso em dev). Corrigido no wrapper via registro da descrição.
 - [x] **`defaultOpen` na tabela de props do alert-dialog, só no Svelte.** Medido em `bits-ui/dist/bits/dialog/types.d.ts`: a raiz expõe `open`/`onOpenChange`/`onOpenChangeComplete`, sem `defaultOpen`. As outras quatro têm a prop de verdade. **Resolvido (2026-08-17)**: a prop saiu dos dois lugares de `AlertDialogDocs.svelte` — a linha da tabela e o `interfaceCode` que o leitor copia — pela mesma convenção do `DropdownMenuDocs.svelte`, o comentário no lugar da linha. As outras quatro ficaram intactas.
