@@ -944,15 +944,27 @@ stacks, nem as 21 chaves de rótulo copiadas quatro vezes.
 > vez sequer. A exceção saiu. Exceção com premissa que ninguém confere é como
 > portão sem dentes: parece cobertura e não é.
 
-> **FECHADA PELA METADE · 2026-09-22 — `-columns-btn` declarada duas vezes.**
-> A folha tem **uma declaração por classe**, com a margem automática dentro
-> dela e o motivo escrito: duas stacks emitem o nó de embrulho `-columns-wrap`
-> e três não, e a margem é inerte para quem tem embrulho, porque o botão é
+> **FECHADA · 2026-09-22 — `-columns-btn` era declarada duas vezes na folha.**
+> Agora é **uma declaração por classe**, com a margem automática dentro dela e o
+> motivo escrito: duas stacks emitem o nó de embrulho `-columns-wrap` e três
+> não, e a margem é inerte para quem tem embrulho, porque o botão é
 > `inline-flex` e margem automática não desloca elemento em linha.
+
+> **PENDÊNCIA · 2026-09-22** — as cinco stacks não emitem a mesma árvore de
+> toolbar: `-columns-wrap` existe em duas e não existe em três. A folha já
+> absorve a diferença numa declaração só, então **não há defeito visível hoje** —
+> o que há é uma divergência de markup que a folha está compensando, e que volta
+> a morder quando alguém mexer na margem ou no posicionamento do botão.
 >
-> **A outra metade NÃO fechou, e fica declarada**: as cinco continuam sem
-> emitir a mesma árvore de toolbar. Alinhar o embrulho é mudança de markup nas
-> cinco e não coube nesta passagem.
+> Nasceu como "a outra metade" da pendência de 2026-09-16 sobre a classe
+> duplicada, e ficou registrada dentro de um bloco `FECHADA PELA METADE` — **o
+> guarda do `pre-commit` só reconhece `> **PENDÊNCIA · `, então ela era
+> invisível para ele**. Declarada e invisível é o estado em que item medido vira
+> item esquecido; por isso virou marcador próprio no dia seguinte.
+>
+> **Fecha quando**: as cinco emitirem a mesma árvore de toolbar — com o embrulho
+> ou sem ele, decidido pela referência —, e a folha declarar a margem num lugar
+> só, sem compensar diferença de markup.
 
 > **FECHADA · 2026-09-22 — listas de teste mais curtas que o conteúdo.** react e
 > svelte publicavam 8 dos 9 itens funcionais e 4 dos 6 de acessibilidade, e o
