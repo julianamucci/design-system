@@ -27,7 +27,7 @@
  * dele assim que o texto cresce, que é o que um `height` cravado impedia — ele
  * prendia o trilho em 36px enquanto o rótulo continuava crescendo, e o gatilho
  * passava a vazar para fora do fundo arredondado. É a mesma forma de
- * `.nds-toggle` e `.nds-pagination-link`; NUNCA reintroduzir `height` aqui.
+ * `.nds-toggle` e `.nds-button`; NUNCA reintroduzir `height` aqui.
  *
  * Medido (Inter, densidade padrão, fonte da raiz em 16px): gatilho 24px +
  * 2 × 4px de respiro = 32px de conteúdo, com o piso de 36px valendo. Nas outras
