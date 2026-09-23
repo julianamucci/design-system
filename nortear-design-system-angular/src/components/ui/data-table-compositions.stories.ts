@@ -10,10 +10,8 @@ import {
 } from './data-table.fixtures';
 import {
   dataTableColumnFiltersSource,
-  dataTableColumnVisibilitySource,
   dataTableInlineEditingSource,
 } from './data-table.source';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA, axeRules } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -125,79 +123,6 @@ export const WithColumnFilters: Story = {
       await expect(canvasElement.querySelector('.nds-data-table-empty')).toHaveTextContent(
         'Sem resultados.',
       );
-    });
-  },
-};
-
-// ─── Menu de colunas ──────────────────────────────────────────────────────────
-
-export const WithColumnVisibility: Story = {
-  parameters: {
-    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
-    docs: {
-      source: { transform: dataTableColumnVisibilitySource },
-      description: {
-        story:
-          'O menu da toolbar liga e desliga colunas. Esconder uma coluna é decisão de leitura: a busca livre continua casando nela.',
-      },
-    },
-  },
-  render: () => ({
-    props: { colunas: COLUMNS_WITH_FILTER, faturas: INVOICES_DT, rotulos: LABELS_DT },
-    template: `
-      <div
-        ndsDataTable
-        caption="Faturas recentes"
-        [columns]="colunas"
-        [data]="faturas"
-        [labels]="rotulos"
-        [pageSize]="5"
-      ></div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const cabecalhos = () => [
-      ...canvasElement.querySelectorAll<HTMLElement>('thead tr:first-child th'),
-    ];
-
-    await step('O gatilho é achável pela classe, não pelo data-slot', async () => {
-      // Duas diretivas no mesmo botão (gatilho do menu e visual do botão) ligam
-      // `data-slot` e uma sobrescreve a outra sem ordem garantida. A classe é o
-      // que sobra estável — armadilha 11 do CLAUDE.md deste stack.
-      const trigger = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
-      await expect(trigger.tagName).toBe('BUTTON');
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
-      await expect(cabecalhos().length).toBe(COLUMNS_WITH_FILTER.length);
-    });
-
-    await step('Desmarcar uma coluna a tira da grade inteira', async () => {
-      const trigger = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
-      await userEvent.click(trigger);
-      await waitForPortal('menu');
-
-      const menu = within(document.body);
-      const item = menu.getByRole('menuitemcheckbox', { name: 'Método' });
-      await expect(item).toHaveAttribute('aria-checked', 'true');
-      await userEvent.click(item);
-
-      await waitFor(async () => {
-        await expect(cabecalhos().length).toBe(COLUMNS_WITH_FILTER.length - 1);
-      });
-      await expect(canvas.queryByText('Método')).toBeNull();
-    });
-
-    await step('A busca continua casando na coluna escondida', async () => {
-      // Esconder é decisão de LEITURA. Se o filtro global deixasse de olhar a
-      // coluna, esconder mudaria o resultado da busca — e ninguém veria por quê.
-      await userEvent.keyboard('{Escape}');
-      await waitForPortalVanish('menu');
-
-      const search = canvas.getByRole('searchbox');
-      await userEvent.type(search, 'Transferência');
-      await waitFor(async () => {
-        await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(2);
-      });
     });
   },
 };

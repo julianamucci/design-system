@@ -1,14 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   dataTableColumnFiltersSource,
-  dataTableColumnVisibilitySource,
   dataTableExplicitRowLabelSource,
   dataTableInlineEditingSource,
   dataTableNoResultsSource,
   dataTablePaginatedSource,
   dataTablePlaygroundSource,
-  dataTableSelectedRowsSource,
-  dataTableSortedSource,
 } from './data-table.source';
 
 /**
@@ -30,13 +27,10 @@ import {
 const ALL = [
   dataTablePlaygroundSource,
   dataTableColumnFiltersSource,
-  dataTableColumnVisibilitySource,
   dataTableInlineEditingSource,
   dataTablePaginatedSource,
   dataTableExplicitRowLabelSource,
   dataTableNoResultsSource,
-  dataTableSortedSource,
-  dataTableSelectedRowsSource,
 ];
 
 /** O bloco `template:` do snippet — é ali que mora a marcação publicada. */
@@ -51,9 +45,13 @@ describe('o que vale para todo snippet da DataTable', () => {
     // o componente não tem — foi o que a docs page afirmou por um tempo.
     for (const build of ALL) {
       const output = build();
-      expect(output).toContain(
-        `import { NdsDataTable, type DataTableColumn } from '@/components/ui/data-table'`.slice(0, 38),
-      );
+      // DUAS pontas, e não um prefixo fatiado de um import de linha única: o
+      // snippet de edição inline importa três nomes e por isso quebra o import
+      // em várias linhas, onde `.slice(0, 38)` nunca casa. O teste nasceu
+      // vermelho assim em 2026-09-22 e sobreviveu a uma verificação que leu só
+      // a reconciliação de ARQUIVOS da suíte, sem olhar o resultado dos testes.
+      expect(output).toContain('NdsDataTable');
+      expect(output).toContain(`from '@/components/ui/data-table'`);
       expect(output).not.toContain('@tanstack');
       expect(output).not.toContain('table-core');
     }
@@ -182,14 +180,6 @@ describe('cada story publica a própria lição', () => {
     expect(template(output)).toContain('[enableColumnFilters]="true"');
   });
 
-  it('o menu de colunas protege a coluna que identifica a linha', () => {
-    const output = dataTableColumnVisibilitySource();
-    expect(output).toContain('hideable: false');
-    // Ligado por padrão: o snippet não escreve a flag, escreve o motivo.
-    expect(template(output)).not.toContain('[enableColumnVisibility]');
-    expect(template(output)).toContain('hideable: false não entra nele');
-  });
-
   it('a edição inline exige dono de estado: o componente não guarda os dados', () => {
     const output = dataTableInlineEditingSource();
     expect(output).toContain('editable: true');
@@ -226,21 +216,6 @@ describe('cada story publica a própria lição', () => {
     // As colunas permanecem: quem esvaziou o recorte com um filtro precisa do
     // campo para desfazer, e quem usa leitor precisa saber que colunas voltam.
     expect(template(output)).toContain('[columns]="colunas"');
-  });
-
-  it('a ordenação usa o valor bruto, e o snippet diz isso', () => {
-    const output = dataTableSortedSource();
-    expect(output).toContain('sortable: true');
-    expect(template(output)).toContain('Ordenar usa o valor de accessor, não o texto de format');
-  });
-
-  it('a seleção publica o vocabulário do domínio', () => {
-    // Dez controles chamados "Selecionar linha" são indistinguíveis entre si
-    // para quem usa leitor de tela (WCAG 4.1.2).
-    const output = dataTableSelectedRowsSource();
-    expect(template(output)).toContain('[enableRowSelection]="true"');
-    expect(output).toContain("selectAll: 'Selecionar todas as faturas',");
-    expect(output).toContain("selectRow: 'Selecionar fatura {row}',");
   });
 
   it('nenhum construtor devolve o mesmo snippet que o vizinho', () => {

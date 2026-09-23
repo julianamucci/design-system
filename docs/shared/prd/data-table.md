@@ -536,10 +536,37 @@ usa o componente Pagination do design system (§1).
 > um portão que compara contra a maioria, e não motivo para desconfiar dele.
 >
 > **Continua de pé** o que a passagem declarou e não fechou: as cinco ainda não
-> emitem a mesma árvore de toolbar (o nó `-columns-wrap` existe em duas), e três
-> stories de comportamento (`Sorted`, `SelectedRows`, `WithColumnVisibility`)
-> existem só no angular — esta está no `FIXES-NEEDED.md`, porque decidir se o
-> contrato inclui esses casos não é conserto mecânico.
+> emitem a mesma árvore de toolbar (o nó `-columns-wrap` existe em duas).
+>
+> **DECIDIDO em 2026-09-22 — as três stories que só o angular tinha foram
+> REMOVIDAS**, e o angular passou a ser subconjunto estrito das outras quatro.
+>
+> A assimetria era de mão dupla, e só um dos lados era irregular: as outras
+> quatro têm `ReorderableAndPinnable`, `ResizableColumns` e
+> `Virtualized1000Rows`, que o angular não tem **por declaração** — o
+> `coversNotApplicable` do meta nomeia os quatro itens de contrato e o motivo de
+> cada um (D1: sem TanStack, motor em signals). Já `Sorted`, `SelectedRows` e
+> `WithColumnVisibility` mediam comportamento que as CINCO têm.
+>
+> **O preço foi medido antes e a dona decidiu pagá-lo**: cinco asserções que não
+> existiam em mais lugar nenhum saíram junto — dinheiro ordenando por número e
+> não alfabeticamente; a coluna não ordenada anunciando `aria-sort="none"`; o
+> fundo da linha marcada diferindo do da não marcada; a contagem da região viva
+> contando o CONJUNTO e não a página; e as três do menu de visibilidade, entre
+> elas a busca continuar casando em coluna escondida.
+>
+> O Playground do angular já cobria o resto — anuncia ordenação, percorre
+> asc/desc/nenhum, nomeia cada checkbox, marca tudo, estado misto, e afirma que
+> ordenar não move a marcação —, e é por isso que a maior parte das três era
+> duplicata. Saíram junto os três construtores de snippet que ficaram órfãos e
+> os três casos de teste deles.
+>
+> **E o corte achou um teste que nascera VERMELHO na véspera**: a asserção "ensina
+> a importação do design system" procurava um prefixo de 38 caracteres de um
+> import escrito em uma linha, e o snippet de edição inline importa três nomes em
+> import multilinha — nunca casava. Ela sobreviveu à verificação da Fase D porque
+> eu li a reconciliação de ARQUIVOS da suíte e não o resultado dos testes.
+> Reescrita para afirmar as duas pontas, e provada replantando.
 
 Medidas arquivo a arquivo, com leitura dos cinco `package.json` e da folha
 compartilhada. Caminhos curtos: `react/…` é

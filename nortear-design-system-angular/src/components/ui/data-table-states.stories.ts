@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
 import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT } from './data-table.fixtures';
 import {
   dataTableNoResultsSource,
-  dataTableSelectedRowsSource,
-  dataTableSortedSource,
 } from './data-table.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -93,120 +91,6 @@ export const NoResults: Story = {
       // nasceria marcado numa tabela sem nada para marcar.
       const allBox = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
       await expect(allBox).toHaveAttribute('aria-checked', 'false');
-    });
-  },
-};
-
-// ─── Ordenado ─────────────────────────────────────────────────────────────────
-
-export const Sorted: Story = {
-  parameters: {
-    docs: {
-      source: { transform: dataTableSortedSource },
-      description: {
-        story:
-          'A coluna ordenada carrega o `aria-sort` na célula de cabeçalho e a seta na direção aplicada. A ordenação usa o valor bruto, não o texto formatado.',
-      },
-    },
-  },
-  render: () => ({
-    props: { colunas: COLUMNS_INVOICES, faturas: INVOICES_DT, rotulos: LABELS_DT },
-    template: `
-      <div
-        ndsDataTable
-        caption="Faturas recentes"
-        [columns]="colunas"
-        [data]="faturas"
-        [labels]="rotulos"
-        [enableGlobalFilter]="false"
-        [enablePagination]="false"
-      ></div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('Só a coluna ordenada anuncia direção', async () => {
-      const button = canvas.getByRole('button', { name: 'Ordenar por Cliente' });
-      await userEvent.click(button);
-
-      const ordenada = button.closest('th')!;
-      await expect(ordenada).toHaveAttribute('aria-sort', 'ascending');
-
-      const other = canvas.getByRole('button', { name: 'Ordenar por Fatura' }).closest('th')!;
-      await expect(other).toHaveAttribute('aria-sort', 'none');
-    });
-
-    await step('A ordem do dinheiro é numérica, não alfabética', async () => {
-      // "R$ 50,00" depois de "R$ 450,00" é o defeito clássico de tabela de
-      // valor: a coluna guarda número e só o texto é formatado.
-      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await userEvent.click(button);
-
-      await waitFor(async () => {
-        const values = [
-          ...canvasElement.querySelectorAll<HTMLElement>('tbody tr td:last-child'),
-        ].map((td) => td.textContent!.trim());
-        await expect(values[0]).toContain('40,00');
-        await expect(values[values.length - 1]).toContain('990,00');
-      });
-    });
-  },
-};
-
-// ─── Selecionado ──────────────────────────────────────────────────────────────
-
-export const SelectedRows: Story = {
-  parameters: {
-    docs: {
-      source: { transform: dataTableSelectedRowsSource },
-      description: {
-        story:
-          'A linha marcada recebe `data-state="selected"` e fundo destacado. A contagem sai por região viva: cor sozinha não chega a quem não enxerga.',
-      },
-    },
-  },
-  render: () => ({
-    props: { colunas: COLUMNS_INVOICES, faturas: INVOICES_DT, rotulos: LABELS_DT },
-    template: `
-      <div
-        ndsDataTable
-        caption="Faturas recentes"
-        [columns]="colunas"
-        [data]="faturas"
-        [labels]="rotulos"
-        [enableRowSelection]="true"
-        [pageSize]="5"
-      ></div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-
-    await step('Marcar duas linhas destaca só elas', async () => {
-      const first = lines()[0].querySelector<HTMLElement>('button[role="checkbox"]')!;
-      await userEvent.click(first);
-      const terceira = lines()[2].querySelector<HTMLElement>('button[role="checkbox"]')!;
-      await userEvent.click(terceira);
-
-      await expect(lines()[0]).toHaveAttribute('data-state', 'selected');
-      await expect(lines()[2]).toHaveAttribute('data-state', 'selected');
-      await expect(lines()[1].hasAttribute('data-state')).toBe(false);
-      await expect(getComputedStyle(lines()[0]).backgroundColor).not.toBe(
-        getComputedStyle(lines()[1]).backgroundColor,
-      );
-    });
-
-    await step('A contagem é anunciada e conta o conjunto, não a página', async () => {
-      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-      await expect(regiao).toHaveClass('nds-sr-only');
-      await expect(regiao).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
-    });
-
-    await step('O cabeçalho fica em estado misto enquanto a página não está inteira', async () => {
-      const allBox = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      await expect(allBox).toHaveAttribute('aria-checked', 'mixed');
     });
   },
 };

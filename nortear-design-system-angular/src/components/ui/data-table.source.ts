@@ -314,22 +314,6 @@ export function dataTableColumnFiltersSource(): string {
 }
 
 /**
- * Menu de visibilidade: esconder uma coluna é decisão de LEITURA.
- *
- * A busca livre continua casando na coluna escondida — se deixasse de olhar,
- * esconder mudaria o resultado da busca e ninguém veria por quê. `hideable:
- * false` protege a coluna que identifica a linha.
- */
-export function dataTableColumnVisibilitySource(): string {
-  return dataTableSnippet({
-    columns: 'filters',
-    labels: true,
-    pageSize: 5,
-    note: 'O menu de colunas é ligado por padrão. A coluna com hideable: false não entra nele.',
-  });
-}
-
-/**
  * Edição inline: o DataTable não guarda os dados.
  *
  * `editable` na coluna abre o campo na célula e `(cellEdit)` avisa com
@@ -392,36 +376,5 @@ export function dataTableNoResultsSource(): string {
     labels: true,
     enableRowSelection: true,
     emptyMessage: 'Nenhuma fatura encontrada.',
-  });
-}
-
-/**
- * Ordenação: quem ordena é a coluna que declara `sortable`.
- *
- * O ciclo tem três estados — ascendente, descendente e nenhum —, e o terceiro é
- * o que devolve a ordem original a quem ordenou por engano. O `aria-sort` mora
- * no `th`, que é quem tem a relação com a coluna.
- */
-export function dataTableSortedSource(): string {
-  return dataTableSnippet({
-    labels: true,
-    enableGlobalFilter: false,
-    enablePagination: false,
-    note: 'Ordenar usa o valor de accessor, não o texto de format: a coluna de dinheiro ordena como número.',
-  });
-}
-
-/**
- * Seleção de linhas: a contagem sai por região viva.
- *
- * A linha marcada recebe `data-state="selected"` e fundo destacado — e cor
- * sozinha é muda para quem não enxerga, por isso o componente anuncia o número.
- * `labels.rowsSelected` é o texto desse anúncio.
- */
-export function dataTableSelectedRowsSource(): string {
-  return dataTableSnippet({
-    labels: true,
-    enableRowSelection: true,
-    pageSize: 5,
   });
 }

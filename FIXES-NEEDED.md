@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 23 itens
+## Aberto de verdade — 22 itens
 
 ### Precisam de decisão da dona (3)
 
@@ -67,19 +67,17 @@ histórico; a lista de cima é o que está por fazer.
 > semântica dentro de um avanço. A dona decidiu **resolver na rodada do
 > Pagination**, não nesta.
 
-- [ ] **Três stories existem só no angular, e medem comportamento que as cinco
-  têm.** (Medido em 2026-09-22, na Fase B do data-table.) `Sorted`,
-  `SelectedRows` e `WithColumnVisibility` são do angular e de mais ninguém; as
-  outras quatro não têm story dedicada de ordenação nem de seleção. O portão
-  `story_group_divergent` via só duas stories fora do grupo — a assimetria real
-  é maior, e ele não a alcança porque compara ONDE a story mora, não SE ela
-  existe.
+- [x] **Três stories existiam só no angular.** (Medido em 2026-09-22, decidido
+  no mesmo dia.) `Sorted`, `SelectedRows` e `WithColumnVisibility` mediam
+  comportamento que as cinco têm. **A dona decidiu removê-las**, ciente do preço:
+  cinco asserções que não existiam em mais lugar nenhum saíram junto — entre elas
+  a de que dinheiro ordena por número e não alfabeticamente, e a de que a busca
+  alcança coluna escondida. O angular virou subconjunto estrito das outras
+  quatro; o que ele não tem está declarado em `coversNotApplicable` (D1).
 
-  Fora do corte desta passagem (são três stories com play em quatro stacks).
-  A decisão é se o contrato do componente inclui esses três casos: se sim, as
-  quatro ganham as stories; se não, o angular declara `coversNotApplicable` ou
-  as remove.
-
+  O corte achou de quebra um teste que nascera VERMELHO na véspera e passara pela
+  Fase D: a verificação lia a reconciliação de ARQUIVOS da suíte, não o resultado
+  dos testes.
 - [ ] **O DataTable não está ligado ao desenho.** (Pendência de 2026-09-16,
   remedida em 2026-09-22: continua de pé.) `docs/shared/figma/design-links.ts`
   não tem entrada para `data-table` e nenhuma story declara `figmaDesign` — o
