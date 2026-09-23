@@ -58,7 +58,7 @@ export const Default: Story = {
       <Pagination :total="50" :items-per-page="10" :page="1" aria-label="Paginação com link inativo">
         <PaginationContent>
           <PaginationItem>
-            <PaginationLink href="#" aria-label="Ir para página 2" @click.prevent>2</PaginationLink>
+            <PaginationLink aria-label="Ir para página 2">2</PaginationLink>
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -66,12 +66,12 @@ export const Default: Story = {
   }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: 'Ir para página 2' });
-    await expect(link).not.toHaveAttribute('aria-current');
+    const control = canvas.getByRole('button', { name: 'Ir para página 2' });
+    await expect(control).not.toHaveAttribute('aria-current');
     // `data-active` só existe quando é verdade — atributo presente com valor
     // "false" faria `[data-active]` casar o item errado.
-    await expect(link.hasAttribute('data-active')).toBe(false);
-    await expect(link).toHaveClass('nds-button-ghost');
+    await expect(control.hasAttribute('data-active')).toBe(false);
+    await expect(control).toHaveClass('nds-button-ghost');
   },
 };
 
@@ -91,10 +91,10 @@ export const Active: Story = {
       <Pagination :total="50" :items-per-page="10" :page="2" aria-label="Paginação com página atual">
         <PaginationContent>
           <PaginationItem>
-            <PaginationLink href="#" aria-label="Ir para página 1" @click.prevent>1</PaginationLink>
+            <PaginationLink aria-label="Ir para página 1">1</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#" :is-active="true" aria-label="Ir para página 2" @click.prevent>2</PaginationLink>
+            <PaginationLink :is-active="true" aria-label="Ir para página 2">2</PaginationLink>
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -103,7 +103,7 @@ export const Active: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Exatamente um link se anuncia como página atual', async () => {
+    await step('Exatamente um controle se anuncia como página atual', async () => {
       // accessibility.item4 — o contrato é o atributo, não a classe: é ele que
       // o leitor de tela lê.
       const marcados = canvasElement.querySelectorAll('[aria-current="page"]');
@@ -112,10 +112,10 @@ export const Active: Story = {
     });
 
     await step('O destaque acompanha a marcação', async () => {
-      const active = canvas.getByRole('link', { name: 'Ir para página 2' });
+      const active = canvas.getByRole('button', { name: 'Ir para página 2' });
       await expect(active).toHaveAttribute('data-active', 'true');
       await expect(active).toHaveClass('nds-button-outline');
-      await expect(canvas.getByRole('link', { name: 'Ir para página 1' })).toHaveClass(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 1' })).toHaveClass(
         'nds-button-ghost',
       );
     });
@@ -126,7 +126,7 @@ export const Directional: Story = {
   parameters: {
     covers: ['accessibility.item5', 'accessibility.item6'],
     docs: {
-      // Outras peças: os direcionais no lugar do link numerado, e nenhum número
+      // Outras peças: os direcionais no lugar do controle numerado, e nenhum número
       // na faixa — a ausência é o assunto.
       source: { transform: paginationDirecionalSource },
       description: {

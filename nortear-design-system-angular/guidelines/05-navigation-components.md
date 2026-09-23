@@ -143,26 +143,35 @@ de navegação desta stack.
 sem `@radix-ng/primitives`. O pacote instalado, 1.1.2, PUBLICA um `pagination`; ele
 não é usado porque crava o nome acessível em inglês por host binding — que nesta
 stack vence o atributo estático de quem compõe — e desabilita por
-`[attr.disabled]`, que não tem efeito em `<a>`. A medição está na D9 do PRD; o
-docblock de `src/components/ui/pagination.ts` ainda afirma que o pacote não publica
-a peça, e a correção é da revisão de código. As peças são `nav[ndsPagination]`,
-`ul[ndsPaginationContent]`, `li[ndsPaginationItem]`, `a[ndsPaginationLink]`,
-`a[ndsPaginationPrevious]`, `a[ndsPaginationNext]`,
-`span[ndsPaginationEllipsis]` e `svg[ndsPaginationIcon]`. A aparência de botão vem
+`[attr.disabled]`, que não tem efeito em `<a>`. A medição está na D9 do PRD. As
+peças são `nav[ndsPagination]`, `ul[ndsPaginationContent]`, `li[ndsPaginationItem]`,
+`span[ndsPaginationEllipsis]`, `svg[ndsPaginationIcon]` e os três controles, que
+aceitam as DUAS tags — `a[ndsPaginationLink], button[ndsPaginationLink]`, e o mesmo
+par em `ndsPaginationPrevious` e `ndsPaginationNext`. A aparência de botão vem
 de `btnClass()`, a mesma função pura que o `NdsButton` usa, sem herdar componente
 e sem invólucro no DOM.
 
 **O ícone é peça publicada só aqui**, pela mecânica de ícone do topo deste arquivo.
 
-**Desabilitado tem de barrar de verdade, e é por isso que a escuta é em fase de
-CAPTURA.** As peças direcionais desta stack são `<a>`, e um listener declarado no
-`host` de uma diretiva é registrado **depois** do `(click)` que quem consome
-escreve no mesmo elemento — barrar dali não alcança ninguém, porque o handler de
-quem usa já disparou. A interceptação é registrada no construtor, na fase de
-captura, e o estado desabilitado é lido na hora do clique (ler um `input()` dentro
-do construtor devolveria o default). Sintoma quando isso falha: o link
-desabilitado continua chamando o callback de página, sem erro nenhum. Ver
-[`13-system-design.md`](13-system-design.md) §Eventos.
+**A tag do controle segue a ROTA, e quem a escolhe é quem compõe.** Com endereço
+de página o controle é `<a>` — destino de verdade, abre em nova aba, é indexável.
+Sem rota é `<button type="button">`, porque âncora vazia que age na própria página
+engana quem navega por teclado e por leitor de tela. O primitivo lê a tag do host
+na CONSTRUÇÃO e reemite o `type` por binding, pelo mesmo motivo do `aria-label` do
+`<nav>`: host binding apaga atributo estático, e `[attr.type]` no template perde
+para ele.
+
+**Desabilitado são dois mecanismos, um por tag, e os dois existem.** No `<button>`
+é o `disabled` nativo, que o navegador resolve antes de qualquer ouvinte — não há
+guarda a registrar. No `<a>` não existe `disabled`: é `aria-disabled` mais
+`tabindex="-1"` mais uma guarda de clique, **e é por isso que a escuta é em fase de
+CAPTURA** — um listener declarado no `host` de uma diretiva é registrado **depois**
+do `(click)` que quem consome escreve no mesmo elemento, e barrar dali não alcança
+ninguém, porque o handler de quem usa já disparou. A interceptação é registrada no
+construtor, na fase de captura, e o estado desabilitado é lido na hora do clique
+(ler um `input()` dentro do construtor devolveria o default). Sintoma quando isso
+falha: o controle desabilitado continua chamando o callback de página, sem erro
+nenhum. Ver [`13-system-design.md`](13-system-design.md) §Eventos.
 
 ---
 

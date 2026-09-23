@@ -16,7 +16,10 @@
         "next": "Próxima",
         "page": "Ir para página",
         "current": "Página atual",
-        "more": "Mais páginas"
+        "more": "Mais páginas",
+        "previousLabel": "Ir para a página anterior",
+        "nextLabel": "Ir para a próxima página",
+        "navigationLabel": "Paginação"
       }
     },
     "anatomy": {
@@ -245,19 +248,19 @@
         "class": "Classe",
         "part": "Aplicação",
         "foreground": {
-          "class": ".nds-pagination-link",
+          "class": ".nds-button",
           "part": "Texto do número da página"
         },
         "accent": {
-          "class": ".nds-pagination-link:hover",
+          "class": ".nds-button:hover",
           "part": "Fundo sob o ponteiro e na página atual"
         },
         "accentForeground": {
-          "class": ".nds-pagination-link:hover",
+          "class": ".nds-button:hover",
           "part": "Texto sob o ponteiro e na página atual"
         },
         "ring": {
-          "class": ".nds-pagination-link:focus-visible",
+          "class": ".nds-button:focus-visible",
           "part": "Anel de foco por teclado"
         },
         "ellipsis": {
@@ -265,7 +268,7 @@
           "part": "Cor das reticências"
         },
         "radius": {
-          "class": ".nds-pagination-link",
+          "class": ".nds-button",
           "part": "Raio do alvo clicável"
         },
         "gap": {
@@ -326,7 +329,7 @@
       }
     },
     "notes": {
-      "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por padrão</strong> — em SPAs sem URLs reais, componha com elemento filho para renderizar <code>&lt;button&gt;</code>.",
+      "item1": "<strong>A tag segue a rota</strong> — com endereço de página o controle é <code>&lt;a&gt;</code>, um destino de verdade que abre em nova aba e é indexável; sem endereço ele é <code>&lt;button&gt;</code>, porque âncora vazia que age na própria página engana quem navega por teclado e por leitor de tela.",
       "item2": "<strong>Estado disabled</strong> — em <code>&lt;a&gt;</code> não existe <code>disabled</code>. O par correto é <code>aria-disabled=\"true\"</code> mais <code>tabindex=\"-1\"</code>; a opacidade e o bloqueio do ponteiro vêm do CSS do design system.",
       "item3": "<strong>Reticências tipográficas</strong> — o caractere <code>…</code> (U+2026) como texto do elemento, não três pontos <code>...</code> nem um ícone. É o que o leitor de tela ignora e o que o CSS dimensiona.",
       "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível."
@@ -371,12 +374,36 @@
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
-        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.2 AA)",
-        "item3": "Focus ring visível em todos os links e botões",
-        "item4": "aria-current=\"page\" presente na página ativa",
-        "item5": "aria-label descritivo em Previous, Next e links numerados",
-        "item6": "Alvo de toque de no mínimo 24×24 px em todos os controles (WCAG 2.5.8)"
+        "item1": {
+          "criterion": "Sem violações reportadas pelo axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-core, no estado padrão da story"
+        },
+        "item2": {
+          "criterion": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.2 AA)",
+          "level": "AA",
+          "how": "axe-core, regra color-contrast"
+        },
+        "item3": {
+          "criterion": "Focus ring visível em todos os links e botões",
+          "level": "AA",
+          "how": "Teste de teclado — Tab até o controle e inspeção do anel"
+        },
+        "item4": {
+          "criterion": "aria-current=\"page\" presente na página ativa",
+          "level": "A",
+          "how": "Inspecionar HTML no controle da página ativa"
+        },
+        "item5": {
+          "criterion": "aria-label descritivo em Previous, Next e links numerados",
+          "level": "A",
+          "how": "Inspecionar HTML nos direcionais e nos números"
+        },
+        "item6": {
+          "criterion": "Alvo de toque de no mínimo 24×24 px em todos os controles (WCAG 2.5.8)",
+          "level": "AA",
+          "how": "Medir a caixa do controle — WCAG 2.5.8 pede 24×24"
+        }
       },
       "visual": {
         "title": "Regressão Visual",
@@ -418,7 +445,10 @@
         "next": "Next",
         "page": "Go to page",
         "current": "Current page",
-        "more": "More pages"
+        "more": "More pages",
+        "previousLabel": "Go to the previous page",
+        "nextLabel": "Go to the next page",
+        "navigationLabel": "Pagination"
       }
     },
     "anatomy": {
@@ -647,19 +677,19 @@
         "class": "Class",
         "part": "Application",
         "foreground": {
-          "class": ".nds-pagination-link",
+          "class": ".nds-button",
           "part": "Page number text"
         },
         "accent": {
-          "class": ".nds-pagination-link:hover",
+          "class": ".nds-button:hover",
           "part": "Background under the pointer and on the current page"
         },
         "accentForeground": {
-          "class": ".nds-pagination-link:hover",
+          "class": ".nds-button:hover",
           "part": "Text under the pointer and on the current page"
         },
         "ring": {
-          "class": ".nds-pagination-link:focus-visible",
+          "class": ".nds-button:focus-visible",
           "part": "Keyboard focus ring"
         },
         "ellipsis": {
@@ -667,7 +697,7 @@
           "part": "Ellipsis color"
         },
         "radius": {
-          "class": ".nds-pagination-link",
+          "class": ".nds-button",
           "part": "Radius of the clickable target"
         },
         "gap": {
@@ -728,7 +758,7 @@
       }
     },
     "notes": {
-      "item1": "<strong>Renders <code>&lt;a&gt;</code> by default</strong> — in SPAs without real URLs, compose with a child element to render <code>&lt;button&gt;</code>.",
+      "item1": "<strong>The tag follows the route</strong> — with a page address the control is an <code>&lt;a&gt;</code>, a real destination that opens in a new tab and can be indexed; without one it is a <code>&lt;button&gt;</code>, because an empty anchor that acts on the current page misleads keyboard and screen reader users.",
       "item2": "<strong>Disabled state</strong> — <code>&lt;a&gt;</code> has no <code>disabled</code>. The correct pair is <code>aria-disabled=\"true\"</code> plus <code>tabindex=\"-1\"</code>; opacity and pointer blocking come from the design system CSS.",
       "item3": "<strong>Typographic ellipsis</strong> — the <code>…</code> character (U+2026) as the element text, not three dots <code>...</code> and not an icon. It is what the screen reader ignores and what the CSS sizes.",
       "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible."
@@ -773,12 +803,36 @@
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria that automated tools should confirm.",
-        "item1": "No violations reported by axe-core in the default state",
-        "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.2 AA)",
-        "item3": "Visible focus ring on all links and buttons",
-        "item4": "aria-current=\"page\" present on the active page",
-        "item5": "Descriptive aria-label on Previous, Next and numbered links",
-        "item6": "Minimum 24×24 px target size on every control (WCAG 2.5.8)"
+        "item1": {
+          "criterion": "No violations reported by axe-core in the default state",
+          "level": "AA",
+          "how": "axe-core, in the story default state"
+        },
+        "item2": {
+          "criterion": "Minimum 4.5:1 contrast between text and background (WCAG 2.2 AA)",
+          "level": "AA",
+          "how": "axe-core, color-contrast rule"
+        },
+        "item3": {
+          "criterion": "Visible focus ring on all links and buttons",
+          "level": "AA",
+          "how": "Keyboard test — Tab to the control and inspect the ring"
+        },
+        "item4": {
+          "criterion": "aria-current=\"page\" present on the active page",
+          "level": "A",
+          "how": "Inspect the HTML on the active page control"
+        },
+        "item5": {
+          "criterion": "Descriptive aria-label on Previous, Next and numbered links",
+          "level": "A",
+          "how": "Inspect the HTML on the directional and numbered controls"
+        },
+        "item6": {
+          "criterion": "Minimum 24×24 px target size on every control (WCAG 2.5.8)",
+          "level": "AA",
+          "how": "Measure the control box — WCAG 2.5.8 asks for 24×24"
+        }
       },
       "visual": {
         "title": "Visual Regression",
@@ -820,7 +874,10 @@
         "next": "Siguiente",
         "page": "Ir a la página",
         "current": "Página actual",
-        "more": "Más páginas"
+        "more": "Más páginas",
+        "previousLabel": "Ir a la página anterior",
+        "nextLabel": "Ir a la página siguiente",
+        "navigationLabel": "Paginación"
       }
     },
     "anatomy": {
@@ -1049,19 +1106,19 @@
         "class": "Clase",
         "part": "Aplicación",
         "foreground": {
-          "class": ".nds-pagination-link",
+          "class": ".nds-button",
           "part": "Texto del número de página"
         },
         "accent": {
-          "class": ".nds-pagination-link:hover",
+          "class": ".nds-button:hover",
           "part": "Fondo bajo el puntero y en la página actual"
         },
         "accentForeground": {
-          "class": ".nds-pagination-link:hover",
+          "class": ".nds-button:hover",
           "part": "Texto bajo el puntero y en la página actual"
         },
         "ring": {
-          "class": ".nds-pagination-link:focus-visible",
+          "class": ".nds-button:focus-visible",
           "part": "Anillo de foco por teclado"
         },
         "ellipsis": {
@@ -1069,7 +1126,7 @@
           "part": "Color de los puntos suspensivos"
         },
         "radius": {
-          "class": ".nds-pagination-link",
+          "class": ".nds-button",
           "part": "Radio del área clicable"
         },
         "gap": {
@@ -1130,7 +1187,7 @@
       }
     },
     "notes": {
-      "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por defecto</strong> — en SPAs sin URLs reales, compón con elemento hijo para renderizar <code>&lt;button&gt;</code>.",
+      "item1": "<strong>La etiqueta sigue a la ruta</strong> — con dirección de página el control es <code>&lt;a&gt;</code>, un destino real que abre en una pestaña nueva y es indexable; sin dirección es <code>&lt;button&gt;</code>, porque un ancla vacía que actúa en la propia página engaña a quien navega con teclado o lector de pantalla.",
       "item2": "<strong>Estado disabled</strong> — en <code>&lt;a&gt;</code> no existe <code>disabled</code>. El par correcto es <code>aria-disabled=\"true\"</code> más <code>tabindex=\"-1\"</code>; la opacidad y el bloqueo del puntero vienen del CSS del design system.",
       "item3": "<strong>Puntos suspensivos tipográficos</strong> — el carácter <code>…</code> (U+2026) como texto del elemento, no tres puntos <code>...</code> ni un icono. Es lo que el lector de pantalla ignora y lo que el CSS dimensiona.",
       "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible."
@@ -1175,12 +1232,36 @@
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
-        "item1": "Sin violaciones reportadas por axe-core en el estado por defecto",
-        "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.2 AA)",
-        "item3": "Anillo de foco visible en todos los links y botones",
-        "item4": "aria-current=\"page\" presente en la página activa",
-        "item5": "aria-label descriptivo en Previous, Next y links numerados",
-        "item6": "Área de destino mínima de 24×24 px en todos los controles (WCAG 2.5.8)"
+        "item1": {
+          "criterion": "Sin violaciones reportadas por axe-core en el estado por defecto",
+          "level": "AA",
+          "how": "axe-core, en el estado por defecto de la story"
+        },
+        "item2": {
+          "criterion": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.2 AA)",
+          "level": "AA",
+          "how": "axe-core, regla color-contrast"
+        },
+        "item3": {
+          "criterion": "Anillo de foco visible en todos los links y botones",
+          "level": "AA",
+          "how": "Prueba de teclado — Tab hasta el control e inspección del anillo"
+        },
+        "item4": {
+          "criterion": "aria-current=\"page\" presente en la página activa",
+          "level": "A",
+          "how": "Inspeccionar el HTML en el control de la página activa"
+        },
+        "item5": {
+          "criterion": "aria-label descriptivo en Previous, Next y links numerados",
+          "level": "A",
+          "how": "Inspeccionar el HTML en los direccionales y en los números"
+        },
+        "item6": {
+          "criterion": "Área de destino mínima de 24×24 px en todos los controles (WCAG 2.5.8)",
+          "level": "AA",
+          "how": "Medir la caja del control — WCAG 2.5.8 pide 24×24"
+        }
       },
       "visual": {
         "title": "Regresión Visual",

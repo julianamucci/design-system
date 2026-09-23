@@ -44,6 +44,21 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+/**
+ * Índices dos `item<N>` que a seção publica, tirados das PRÓPRIAS chaves.
+ *
+ * Contar à mão envelhece em silêncio: o conteúdo compartilhado cresce nos três
+ * idiomas e a lista da tela fica para trás sem nada ficar vermelho — foi assim
+ * que o sexto critério de acessibilidade ficou escrito em pt-BR, en e es e
+ * nunca chegou à tela. Cravar o número novo repete o defeito daqui a um item.
+ */
+const itemIndices = (section: unknown): number[] =>
+  Object.keys((section ?? {}) as Record<string, unknown>)
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((digits): digits is string => digits !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -105,6 +120,19 @@ export function PaginationDocs() {
     [locale],
   );
 
+  // Quantos itens cada lista de testes publica hoje, perguntado ao dicionário.
+  const testesIndices = useMemo(() => {
+    const testes = (paginationTranslations as unknown as Record<
+      string,
+      { testes?: Record<string, unknown> }
+    >)[locale]?.testes;
+    return {
+      functional: itemIndices(testes?.functional),
+      accessibility: itemIndices(testes?.accessibility),
+      visual: itemIndices(testes?.visual),
+    };
+  }, [locale]);
+
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
     () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
@@ -150,6 +178,16 @@ export function PaginationDocs() {
   const lblPrev = tContent("demonstration.labels.previous");
   const lblNext = tContent("demonstration.labels.next");
   const lblPage = tContent("demonstration.labels.page");
+  // Texto VISÍVEL e NOME ACESSÍVEL são chaves diferentes: "Anterior" some abaixo
+  // de 40rem, e o que o leitor de tela anuncia é a frase inteira. Sem estas três
+  // o nome acessível caía no padrão em português do componente, e as páginas
+  // `en` e `es` anunciavam "Ir para a página anterior" em português.
+  const lblPrevLabel = tContent("demonstration.labels.previousLabel");
+  const lblNextLabel = tContent("demonstration.labels.nextLabel");
+  const lblNav = tContent("demonstration.labels.navigationLabel");
+  // Leitor do estado que vive FORA do componente. Sem ele a demo parece guardar
+  // a página sozinha, que é o oposto do que a seção ensina.
+  const lblCurrent = tContent("demonstration.labels.current");
 
   // ─── Code strings ────────────────────────────────────────────────────────
   const codeImport = `import {
@@ -165,21 +203,23 @@ export function PaginationDocs() {
   const structureCode = tContent("anatomy.structureCode");
 
   const codeDefault = `<PaginationItem>
-  <PaginationLink href="#" aria-label="${lblPage} 2">2</PaginationLink>
+  <PaginationLink aria-label="${lblPage} 2">2</PaginationLink>
 </PaginationItem>`;
 
   const codeDirectional = `<PaginationItem>
-  <PaginationPrevious href="#" text="${lblPrev}" />
+  <PaginationPrevious text="${lblPrev}" />
 </PaginationItem>
 <PaginationItem>
-  <PaginationNext href="#" text="${lblNext}" />
+  <PaginationNext text="${lblNext}" />
 </PaginationItem>`;
 
   const interfaceCode = `// PaginationLink
 type PaginationLinkProps = {
   isActive?: boolean;                              // default false
   size?: "default" | "sm" | "lg" | "icon";         // default "icon"
-} & React.ComponentProps<"a">;
+  href?: string;                                   // com endereço: <a>; sem: <button>
+  disabled?: boolean;                              // default false
+} & React.HTMLAttributes<HTMLElement>;
 
 // PaginationPrevious / PaginationNext
 type PaginationDirectionalProps =
@@ -255,16 +295,14 @@ type PaginationDirectionalProps =
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {demoSimpleLabel}
             </p>
-            <Pagination aria-label={demoSimpleLabel}>
+            <Pagination aria-label={lblNav}>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href="#"
                     text={lblPrev}
-                    aria-disabled={page === 1}
-                    tabIndex={page === 1 ? -1 : 0}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    aria-label={lblPrevLabel}
+                    disabled={page === 1}
+                    onClick={() => {
                       if (page > 1) goTo(page - 1);
                     }}
                   />
@@ -272,11 +310,9 @@ type PaginationDirectionalProps =
                 {Array.from({ length: totalSimple }, (_, i) => i + 1).map((n) => (
                   <PaginationItem key={n}>
                     <PaginationLink
-                      href="#"
                       isActive={page === n}
                       aria-label={`${lblPage} ${n}`}
-                      onClick={(e) => {
-                        e.preventDefault();
+                      onClick={() => {
                         goTo(n);
                       }}
                     >
@@ -286,18 +322,21 @@ type PaginationDirectionalProps =
                 ))}
                 <PaginationItem>
                   <PaginationNext
-                    href="#"
                     text={lblNext}
-                    aria-disabled={page === totalSimple}
-                    tabIndex={page === totalSimple ? -1 : 0}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    aria-label={lblNextLabel}
+                    disabled={page === totalSimple}
+                    onClick={() => {
                       if (page < totalSimple) goTo(page + 1);
                     }}
                   />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
+            {/* A página não mora no componente: quem a guarda é esta página, e
+                a legenda é o leitor desse estado. */}
+            <p className="nds-text-body nds-text-muted-foreground">
+              {lblCurrent}: {page} / {totalSimple}
+            </p>
           </div>
 
           {/* Demo 2 — com ellipsis */}
@@ -308,10 +347,10 @@ type PaginationDirectionalProps =
             <Pagination aria-label={demoEllipsisLabel}>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" text={lblPrev} />
+                  <PaginationPrevious text={lblPrev} aria-label={lblPrevLabel} />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" aria-label={`${lblPage} 1`}>
+                  <PaginationLink aria-label={`${lblPage} 1`}>
                     1
                   </PaginationLink>
                 </PaginationItem>
@@ -319,13 +358,12 @@ type PaginationDirectionalProps =
                   <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" aria-label={`${lblPage} 5`}>
+                  <PaginationLink aria-label={`${lblPage} 5`}>
                     5
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink
-                    href="#"
                     isActive
                     aria-label={`${lblPage} 6`}
                   >
@@ -333,7 +371,7 @@ type PaginationDirectionalProps =
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" aria-label={`${lblPage} 7`}>
+                  <PaginationLink aria-label={`${lblPage} 7`}>
                     7
                   </PaginationLink>
                 </PaginationItem>
@@ -341,12 +379,12 @@ type PaginationDirectionalProps =
                   <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" aria-label={`${lblPage} 12`}>
+                  <PaginationLink aria-label={`${lblPage} 12`}>
                     12
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#" text={lblNext} />
+                  <PaginationNext text={lblNext} aria-label={lblNextLabel} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
@@ -360,21 +398,20 @@ type PaginationDirectionalProps =
             <Pagination aria-label={demoLastPageLabel}>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" text={lblPrev} />
+                  <PaginationPrevious text={lblPrev} aria-label={lblPrevLabel} />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" aria-label={`${lblPage} 8`}>
+                  <PaginationLink aria-label={`${lblPage} 8`}>
                     8
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" aria-label={`${lblPage} 9`}>
+                  <PaginationLink aria-label={`${lblPage} 9`}>
                     9
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink
-                    href="#"
                     isActive
                     aria-label={`${lblPage} 10`}
                   >
@@ -382,12 +419,7 @@ type PaginationDirectionalProps =
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    text={lblNext}
-                    aria-disabled
-                    tabIndex={-1}
-                  />
+                  <PaginationNext text={lblNext} aria-label={lblNextLabel} disabled />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
@@ -515,7 +547,7 @@ type PaginationDirectionalProps =
               <Pagination aria-label={stripHtml(tContent("doDont.pair1.do"))}>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 1`}>
+                    <PaginationLink aria-label={`${lblPage} 1`}>
                       1
                     </PaginationLink>
                   </PaginationItem>
@@ -524,7 +556,6 @@ type PaginationDirectionalProps =
                   </PaginationItem>
                   <PaginationItem>
                     <PaginationLink
-                      href="#"
                       isActive
                       aria-label={`${lblPage} 6`}
                     >
@@ -535,17 +566,40 @@ type PaginationDirectionalProps =
                     <PaginationEllipsis />
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 12`}>
+                    <PaginationLink aria-label={`${lblPage} 12`}>
                       12
                     </PaginationLink>
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
             ),
+            // Componente VIVO também no lado errado (guideline 08 §15): a
+            // imitação em monoespaçado não mostrava o que a faixa faz quando a
+            // lista não colapsa — mostrava uma linha de texto.
+            //
+            // SEIS números, e a contagem é medida: cada link numerado é um
+            // quadrado de `var(--size-lg)` (36px) com `flex-shrink: 0`, a
+            // moldura do par ocupa metade da largura da seção (menos de 280px
+            // na docs page) e a lista TRANSBORDA em vez de encolher. Seis pedem
+            // 6 × 36 + 5 × 4 = 236px e cabem; a nove o axe reprova em
+            // `target-size`, com o último controle sobrando poucos pixels
+            // visíveis. A legenda é que fala das dezenas — a moldura não tem
+            // largura para elas.
             dontPreview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
-                1 2 3 4 5 6 7 8 9 10 11 12
-              </div>
+              <Pagination aria-label={stripHtml(tContent("doDont.pair1.dont"))}>
+                <PaginationContent>
+                  {[1, 2, 3, 4, 5, 6].map((n) => (
+                    <PaginationItem key={n}>
+                      <PaginationLink
+                        isActive={n === 3}
+                        aria-label={`${lblPage} ${n}`}
+                      >
+                        {n}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                </PaginationContent>
+              </Pagination>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
             dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
@@ -557,18 +611,37 @@ type PaginationDirectionalProps =
               <Pagination aria-label={stripHtml(tContent("doDont.pair2.do"))}>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" text={lblPrev} />
+                    <PaginationPrevious text={lblPrev} aria-label={lblPrevLabel} />
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationNext href="#" text={lblNext} />
+                    <PaginationNext text={lblNext} aria-label={lblNextLabel} />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
             ),
+            // O defeito é o CONTROLE de direção sem nome, então ele precisa ser
+            // um controle: `PaginationLink` cru, com a seta como único texto e
+            // sem `aria-label` — é exatamente o que `PaginationPrevious` e
+            // `PaginationNext` evitam ao escreverem o nome acessível sozinhos.
+            // Usá-los aqui apagaria o defeito que a legenda descreve.
             dontPreview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
-                &lt; &nbsp;&nbsp; &gt;
-              </div>
+              <Pagination aria-label={stripHtml(tContent("doDont.pair2.dont"))}>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationLink>&lt;</PaginationLink>
+                  </PaginationItem>
+                  {[1, 2, 3].map((n) => (
+                    <PaginationItem key={n}>
+                      <PaginationLink isActive={n === 2}>
+                        {n}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationLink>&gt;</PaginationLink>
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
             dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
@@ -594,7 +667,7 @@ type PaginationDirectionalProps =
               <Pagination aria-label={tContent("variants.items.default")}>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 2`}>
+                    <PaginationLink aria-label={`${lblPage} 2`}>
                       2
                     </PaginationLink>
                   </PaginationItem>
@@ -611,10 +684,10 @@ type PaginationDirectionalProps =
               <Pagination aria-label={tContent("variants.items.directional")}>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" text={lblPrev} />
+                    <PaginationPrevious text={lblPrev} aria-label={lblPrevLabel} />
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationNext href="#" text={lblNext} />
+                    <PaginationNext text={lblNext} aria-label={lblNextLabel} />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
@@ -628,15 +701,15 @@ type PaginationDirectionalProps =
             code: `<Pagination>
   <PaginationContent>
     <PaginationItem>
-      <PaginationPrevious href="#" text="${lblPrev}" aria-disabled tabIndex={-1} />
+      <PaginationPrevious text="${lblPrev}" disabled />
     </PaginationItem>
     {[1,2,3,4,5].map((n) => (
       <PaginationItem key={n}>
-        <PaginationLink href="#" isActive={n === 1} aria-label={\`${lblPage} \${n}\`}>{n}</PaginationLink>
+        <PaginationLink isActive={n === 1} aria-label={\`${lblPage} \${n}\`}>{n}</PaginationLink>
       </PaginationItem>
     ))}
     <PaginationItem>
-      <PaginationNext href="#" text="${lblNext}" />
+      <PaginationNext text="${lblNext}" />
     </PaginationItem>
   </PaginationContent>
 </Pagination>`,
@@ -644,17 +717,11 @@ type PaginationDirectionalProps =
               <Pagination aria-label={tContent("variants.items.simple.name")}>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      text={lblPrev}
-                      aria-disabled
-                      tabIndex={-1}
-                    />
+                    <PaginationPrevious text={lblPrev} aria-label={lblPrevLabel} disabled />
                   </PaginationItem>
                   {[1, 2, 3, 4, 5].map((n) => (
                     <PaginationItem key={n}>
                       <PaginationLink
-                        href="#"
                         isActive={n === 1}
                         aria-label={`${lblPage} ${n}`}
                       >
@@ -663,7 +730,7 @@ type PaginationDirectionalProps =
                     </PaginationItem>
                   ))}
                   <PaginationItem>
-                    <PaginationNext href="#" text={lblNext} />
+                    <PaginationNext text={lblNext} aria-label={lblNextLabel} />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
@@ -676,46 +743,46 @@ type PaginationDirectionalProps =
             useWhen: tContent("variants.items.withEllipsis.use"),
             code: `<Pagination>
   <PaginationContent>
-    <PaginationItem><PaginationPrevious href="#" text="${lblPrev}" /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationPrevious text="${lblPrev}" /></PaginationItem>
+    <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
     <PaginationItem><PaginationEllipsis /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">5</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink href="#" isActive>6</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink href="#">7</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>5</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink isActive>6</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>7</PaginationLink></PaginationItem>
     <PaginationItem><PaginationEllipsis /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">12</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationNext href="#" text="${lblNext}" /></PaginationItem>
+    <PaginationItem><PaginationLink>12</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationNext text="${lblNext}" /></PaginationItem>
   </PaginationContent>
 </Pagination>`,
             preview: (
               <Pagination aria-label={tContent("variants.items.withEllipsis.name")}>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" text={lblPrev} />
+                    <PaginationPrevious text={lblPrev} aria-label={lblPrevLabel} />
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 1`}>1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 5`}>5</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive aria-label={`${lblPage} 6`}>6</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 7`}>7</PaginationLink>
+                    <PaginationLink aria-label={`${lblPage} 1`}>1</PaginationLink>
                   </PaginationItem>
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 12`}>12</PaginationLink>
+                    <PaginationLink aria-label={`${lblPage} 5`}>5</PaginationLink>
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationNext href="#" text={lblNext} />
+                    <PaginationLink isActive aria-label={`${lblPage} 6`}>6</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink aria-label={`${lblPage} 7`}>7</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink aria-label={`${lblPage} 12`}>12</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext text={lblNext} aria-label={lblNextLabel} />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
@@ -733,19 +800,16 @@ const total = 8;
   <PaginationContent>
     <PaginationItem>
       <PaginationPrevious
-        href="#"
         text="${lblPrev}"
-        aria-disabled={current === 1}
-        tabIndex={current === 1 ? -1 : 0}
-        onClick={(e) => { e.preventDefault(); if (current > 1) setCurrent(current - 1); }}
+        disabled={current === 1}
+        onClick={() => { if (current > 1) setCurrent(current - 1); }}
       />
     </PaginationItem>
     {Array.from({ length: total }, (_, i) => i + 1).map((n) => (
       <PaginationItem key={n}>
         <PaginationLink
-          href="#"
           isActive={current === n}
-          onClick={(e) => { e.preventDefault(); setCurrent(n); }}
+          onClick={() => { setCurrent(n); }}
         >
           {n}
         </PaginationLink>
@@ -753,11 +817,9 @@ const total = 8;
     ))}
     <PaginationItem>
       <PaginationNext
-        href="#"
         text="${lblNext}"
-        aria-disabled={current === total}
-        tabIndex={current === total ? -1 : 0}
-        onClick={(e) => { e.preventDefault(); if (current < total) setCurrent(current + 1); }}
+        disabled={current === total}
+        onClick={() => { if (current < total) setCurrent(current + 1); }}
       />
     </PaginationItem>
   </PaginationContent>
@@ -768,15 +830,10 @@ const total = 8;
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious
-                        href="#"
                         text={lblPrev}
-                        aria-disabled={compPage === 1}
-                        tabIndex={compPage === 1 ? -1 : 0}
-                        className={
-                          compPage === 1 ? "pointer-events-none opacity-50" : ""
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
+                        aria-label={lblPrevLabel}
+                        disabled={compPage === 1}
+                        onClick={() => {
                           if (compPage > 1) setCompPage(compPage - 1);
                         }}
                       />
@@ -784,11 +841,9 @@ const total = 8;
                     {Array.from({ length: compTotal }, (_, i) => i + 1).map((n) => (
                       <PaginationItem key={n}>
                         <PaginationLink
-                          href="#"
                           isActive={compPage === n}
                           aria-label={`${lblPage} ${n}`}
-                          onClick={(e) => {
-                            e.preventDefault();
+                          onClick={() => {
                             setCompPage(n);
                           }}
                         >
@@ -798,25 +853,18 @@ const total = 8;
                     ))}
                     <PaginationItem>
                       <PaginationNext
-                        href="#"
                         text={lblNext}
-                        aria-disabled={compPage === compTotal}
-                        tabIndex={compPage === compTotal ? -1 : 0}
-                        className={
-                          compPage === compTotal
-                            ? "pointer-events-none opacity-50"
-                            : ""
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
+                        aria-label={lblNextLabel}
+                        disabled={compPage === compTotal}
+                        onClick={() => {
                           if (compPage < compTotal) setCompPage(compPage + 1);
                         }}
                       />
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
-                <p className="nds-text-body">
-                  {lblPage} {compPage} {locale === "en" ? "of" : "de"} {compTotal}
+                <p className="nds-text-body nds-text-muted-foreground">
+                  {lblCurrent}: {compPage} / {compTotal}
                 </p>
               </div>
             ),
@@ -1056,40 +1104,14 @@ const total = 8;
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              action: tContent("testes.functional.item1.action"),
-              result: tContent("testes.functional.item1.result"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.functional.item1.priority")] ??
-                  "common.high"
-              ),
-            },
-            {
-              action: tContent("testes.functional.item2.action"),
-              result: tContent("testes.functional.item2.result"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.functional.item2.priority")] ??
-                  "common.high"
-              ),
-            },
-            {
-              action: tContent("testes.functional.item3.action"),
-              result: tContent("testes.functional.item3.result"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.functional.item3.priority")] ??
-                  "common.high"
-              ),
-            },
-            {
-              action: tContent("testes.functional.item4.action"),
-              result: tContent("testes.functional.item4.result"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.functional.item4.priority")] ??
-                  "common.medium"
-              ),
-            },
-          ],
+          items: testesIndices.functional.map((n) => ({
+            action: tContent(`testes.functional.item${n}.action`),
+            result: tContent(`testes.functional.item${n}.result`),
+            priority: tNav(
+              priorityKeyMap[tContent(`testes.functional.item${n}.priority`)] ??
+                "common.medium"
+            ),
+          })),
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
@@ -1098,29 +1120,16 @@ const total = 8;
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [
-            { criterion: tContent("testes.accessibility.item1"), level: "AA", how: "axe-core" },
-            {
-              criterion: tContent("testes.accessibility.item2"),
-              level: "1.4.3",
-              how: "Contrast checker",
-            },
-            {
-              criterion: tContent("testes.accessibility.item3"),
-              level: "2.4.7",
-              how: "Keyboard test",
-            },
-            {
-              criterion: tContent("testes.accessibility.item4"),
-              level: "4.1.2",
-              how: "DevTools attribute",
-            },
-            {
-              criterion: tContent("testes.accessibility.item5"),
-              level: "4.1.2",
-              how: "DevTools a11y tree",
-            },
-          ],
+          items: testesIndices.accessibility.map((n) => ({
+            // As três colunas vêm do dicionário compartilhado: faltando `level`
+            // e `how` ali, cada stack cravava os seus e o mesmo campo saía com
+            // quatro valores diferentes entre as cinco páginas.
+            criterion: toPlainText(
+              tContent(`testes.accessibility.item${n}.criterion`),
+            ),
+            level: tContent(`testes.accessibility.item${n}.level`),
+            how: toPlainText(tContent(`testes.accessibility.item${n}.how`)),
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),
@@ -1128,36 +1137,13 @@ const total = 8;
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              story: tContent("testes.visual.item1.story"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.visual.item1.priority")] ??
-                  "common.high"
-              ),
-            },
-            {
-              story: tContent("testes.visual.item2.story"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.visual.item2.priority")] ??
-                  "common.high"
-              ),
-            },
-            {
-              story: tContent("testes.visual.item3.story"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.visual.item3.priority")] ??
-                  "common.high"
-              ),
-            },
-            {
-              story: tContent("testes.visual.item4.story"),
-              priority: tNav(
-                priorityKeyMap[tContent("testes.visual.item4.priority")] ??
-                  "common.medium"
-              ),
-            },
-          ],
+          items: testesIndices.visual.map((n) => ({
+            story: tContent(`testes.visual.item${n}.story`),
+            priority: tNav(
+              priorityKeyMap[tContent(`testes.visual.item${n}.priority`)] ??
+                "common.medium"
+            ),
+          })),
         }}
       />
     </DocsPageLayout>

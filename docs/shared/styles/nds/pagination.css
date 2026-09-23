@@ -5,13 +5,31 @@
  * Estrutura:
  *   <nav class="nds-pagination" aria-label="Paginação">
  *     <ul class="nds-pagination-list">
- *       <li><a class="nds-pagination-link nds-pagination-icon">‹</a></li>
- *       <li><a class="nds-pagination-link" aria-current="page">1</a></li>
- *       <li><a class="nds-pagination-link">2</a></li>
+ *       <li><a class="nds-button nds-button-ghost nds-pagination-prev">‹ Anterior</a></li>
+ *       <li><a class="nds-button nds-button-outline nds-button-icon" aria-current="page">1</a></li>
+ *       <li><a class="nds-button nds-button-ghost nds-button-icon">2</a></li>
  *       <li><span class="nds-pagination-ellipsis">…</span></li>
- *       <li><a class="nds-pagination-link nds-pagination-icon">›</a></li>
+ *       <li><a class="nds-button nds-button-ghost nds-pagination-next">Próxima ›</a></li>
  *     </ul>
  *   </nav>
+ *
+ * ─── O CONTROLE é o botão, nas cinco (2026-09-23) ──────────────────────
+ *
+ * Esta folha teve, até esta data, DOIS sistemas de controle: o vanilla vestia
+ * `.nds-pagination-link` — onde moravam altura mínima, padding, raio,
+ * tipografia, hover, anel de foco, realce da página atual, o quadrado do ícone
+ * e o estado desabilitado — e as outras quatro vestiam `.nds-button` com
+ * variante e tamanho.
+ *
+ * **Cerca de 70 das 190 linhas daqui valiam para UMA stack**, e a tabela de
+ * tokens que as CINCO docs pages publicam nomeava `.nds-pagination-link` como
+ * classe de aplicação de cinco dos sete tokens — descrevendo a realidade de uma
+ * stack para leitores de todas. Por decisão da dona, o vanilla passou a compor
+ * o botão e as regras do link saíram.
+ *
+ * O que sobra aqui é o que o botão NÃO resolve: a moldura da faixa, o
+ * alinhamento, a lista, as reticências, o recuo assimétrico dos direcionais e o
+ * rótulo textual que some em tela estreita.
  *
  * Tokens: --accent, --accent-foreground, --ring, --radius, --spacing-*
  */
@@ -60,83 +78,6 @@
   list-style: none;
 }
 
-/* ── Link (item numérico) ────────────────────────────────────────────────── */
-.nds-pagination-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-1);
-
-  min-height: var(--size-lg);        /* 36px de alvo de toque, nao teto */
-  padding-inline: var(--spacing-4);             /* 16px */
-  padding-block: var(--spacing-2);              /* 8px */
-
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: var(--text-control);                          /* 14px */
-  font-weight: var(--font-weight-medium, 500);
-  color: hsl(var(--foreground));
-  white-space: nowrap;
-  text-decoration: none;
-  cursor: pointer;
-  outline: 0;
-  transition: background-color var(--duration-fast), color var(--duration-fast);
-}
-
-.nds-pagination-link:hover {
-  background-color: hsl(var(--accent) / 0.1);
-  color: hsl(var(--accent-foreground));
-}
-
-.nds-pagination-link:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
-}
-
-/*
- * Página atual.
- *
- * Sem `pointer-events: none`. Ele existia aqui e valia só para a forma
- * standalone — nas quatro stacks que compõem o link em cima do botão, o mesmo
- * link continuava clicável e hoverável. O que impede a página atual de navegar
- * para si mesma é a guarda de quem trata o clique, não o CSS; e a regra ainda
- * tirava o hover do único stack em que se aplicava.
- */
-.nds-pagination-link[aria-current="page"] {
-  background-color: hsl(var(--accent) / 0.2);
-  color: hsl(var(--accent-foreground));
-}
-
-/* Variante icon (prev/next chevrons) — quadrado */
-.nds-pagination-link.nds-pagination-icon {
-  width: var(--size-lg);             /* 36×36 */
-  padding-inline: 0;
-}
-
-.nds-pagination-link.nds-pagination-icon > svg {
-  width: var(--spacing-4);
-  height: var(--spacing-4);
-}
-
-/*
- * Estado desabilitado (prev em página 1, next em última).
- *
- * Vale para a forma standalone. Onde prev/next são compostos em cima do botão,
- * quem barra é `.nds-button:disabled, .nds-button[aria-disabled="true"]` em
- * button.css — medido nas cinco stacks: `pointer-events` computado sai `none` e
- * o `elementFromPoint` no centro do controle já não devolve o controle.
- *
- * O bloqueio é do PONTEIRO. O teclado sai por `tabindex="-1"` (link) ou pelo
- * `disabled` nativo (botão) — sem um dos dois, o controle continua tabulável e
- * o Enter navega.
- */
-.nds-pagination-link[aria-disabled="true"],
-.nds-pagination-link.is-disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
 /* ── Prev/Next compostos com botão (padding assimétrico do lado do ícone) ── */
 /*
  * O seletor precisa incluir `.nds-button` para valer (0,2,0).
@@ -144,19 +85,24 @@
  * Sozinhas, estas classes eram (0,1,0) e perdiam para `.nds-button:has(> svg)`,
  * que é (0,1,1) e declara o padding do botão com ícone. Ou seja: o recuo
  * assimétrico que estas regras existem para dar nunca chegou a se aplicar em
- * react, vue, svelte nem angular — as quatro stacks que compõem prev/next em
- * cima do botão. O Vanilla não passa por aqui: ele usa `.nds-pagination-link`
- * standalone (a convivência dos dois sistemas está registrada como material de
- * cross-stack).
+ * react, vue, svelte nem angular — as quatro stacks que compunham prev/next em
+ * cima do botão. **Desde 2026-09-23 são as cinco**: o vanilla passou a compor o
+ * botão também, e a forma standalone deixou de existir.
  *
- * Manter as classes sozinhas também, para o caso de o elemento não ser botão.
+ * Por isso a variante SEM `.nds-button` saiu junto. Ela estava aqui "para o
+ * caso de o elemento não ser botão" e nunca teve instância viva — reserva sem
+ * produtor é regra que ninguém pode provar errada, e esta folha já tinha
+ * aprendido isso do jeito caro.
+ *
+ * O comentário também afirmava que a convivência dos dois sistemas estava
+ * "registrada como material de cross-stack". **Esse registro nunca existiu** —
+ * medido em 2026-09-16, varrendo os `.md` do repositório. Hoje a convivência
+ * acabou, e o que existe está no PRD.
  */
-.nds-pagination-prev,
 .nds-button.nds-pagination-prev {
   padding-inline-start: var(--spacing-1-5);
 }
 
-.nds-pagination-next,
 .nds-button.nds-pagination-next {
   padding-inline-end: var(--spacing-1-5);
 }
@@ -183,8 +129,8 @@
   color: hsl(var(--muted-foreground));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nds-pagination-link {
-    transition: none;
-  }
-}
+/* Sem guarda de `prefers-reduced-motion` aqui, e isso é declaração, não
+ * esquecimento: a única transição desta folha era a de `.nds-pagination-link`,
+ * que saiu em 2026-09-23. O movimento do controle agora é do botão, e quem o
+ * desliga é a guarda de `button.css`. Guarda que não tem o que desligar é
+ * guarda inerte — e inerte parece eficaz, que é o pior estado. */

@@ -9,7 +9,8 @@
  * invólucro declarado dentro do arquivo de story. Quem copiasse levava embora um
  * componente que não existe em lugar nenhum. Aqui o snippet mostra o que o
  * invólucro FAZ: a página atual num estado, o `isActive` derivado dela e os dois
- * extremos desabilitados pelo par de atributos que um `<a>` aceita.
+ * extremos desabilitados pelo `disabled` nativo — a faixa do Playground não tem
+ * endereço de página, e sem rota a tag do controle é `<button>`.
  *
  * Duas ausências de propósito:
  *
@@ -64,7 +65,7 @@ ${indentar(items, '    ')}
  */
 function numberedLink(numero: number, active = false): string {
   return `<PaginationItem>
-  <PaginationLink href="#"${active ? ' isActive' : ''} aria-label="Ir para página ${numero}">
+  <PaginationLink${active ? ' isActive' : ''} aria-label="Ir para página ${numero}">
     ${numero}
   </PaginationLink>
 </PaginationItem>`;
@@ -73,14 +74,16 @@ function numberedLink(numero: number, active = false): string {
 /**
  * Controle de direção, opcionalmente desabilitado.
  *
- * Em `<a>` não existe `disabled`: o par correto é `aria-disabled` mais a saída
- * da ordem de tabulação. O primitivo completa o serviço barrando o clique que
- * chega por teclado ou por script — o CSS sozinho só barra o ponteiro.
+ * A tag segue a rota, e estas faixas não têm uma: sem `href` o controle é
+ * `<button type="button">`, e o indisponível é o `disabled` NATIVO — o navegador
+ * barra ponteiro, Enter e tabulação de uma vez. Com endereço de página o mesmo
+ * controle sairia `<a>`, e aí o par seria `aria-disabled` mais o tabindex
+ * negativo, porque `<a>` não tem `disabled`.
  */
 function direcional(part: 'PaginationPrevious' | 'PaginationNext', bloqueado = false): string {
-  if (!bloqueado) return `<PaginationItem>\n  <${part} href="#" />\n</PaginationItem>`;
+  if (!bloqueado) return `<PaginationItem>\n  <${part} />\n</PaginationItem>`;
   return `<PaginationItem>
-  <${part} href="#" aria-disabled tabIndex={-1} />
+  <${part} disabled />
 </PaginationItem>`;
 }
 
@@ -129,6 +132,8 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
 
   const labelPrevious = propText('text', text(args.previousText) === TEXT_PREVIOUS ? undefined : args.previousText);
   const labelNext = propText('text', text(args.nextText) === TEXT_NEXT ? undefined : args.nextText);
+  // O rótulo, quando difere do padrão, é a PRIMEIRA linha de atributo do
+  // controle: sem `href` não há mais nada antes dele.
   const attrPrevious = labelPrevious ? `\n        ${labelPrevious}` : '';
   const attrNext = labelNext ? `\n        ${labelNext}` : '';
 
@@ -159,13 +164,9 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
       typeof trecho === "number" ? (
         <PaginationItem key={trecho}>
           <PaginationLink
-            href="#"
             isActive={trecho === pagina}
             aria-label={\`Ir para página \${trecho}\`}
-            onClick={(evento) => {
-              evento.preventDefault();
-              setPagina(trecho);
-            }}
+            onClick={() => setPagina(trecho)}
           >
             {trecho}
           </PaginationLink>
@@ -179,13 +180,9 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
     : `    {paginas.map((n) => (
       <PaginationItem key={n}>
         <PaginationLink
-          href="#"
           isActive={n === pagina}
           aria-label={\`Ir para página \${n}\`}
-          onClick={(evento) => {
-            evento.preventDefault();
-            setPagina(n);
-          }}
+          onClick={() => setPagina(n)}
         >
           {n}
         </PaginationLink>
@@ -197,28 +194,18 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
     `<Pagination>
   <PaginationContent>
     <PaginationItem>
-      <PaginationPrevious
-        href="#"${attrPrevious}
-        aria-disabled={pagina === 1}
-        tabIndex={pagina === 1 ? -1 : 0}
-        onClick={(evento) => {
-          evento.preventDefault();
-          if (pagina > 1) setPagina(pagina - 1);
-        }}
+      <PaginationPrevious${attrPrevious}
+        disabled={pagina === 1}
+        onClick={() => setPagina(pagina - 1)}
       />
     </PaginationItem>
 
 ${numbered}
 
     <PaginationItem>
-      <PaginationNext
-        href="#"${attrNext}
-        aria-disabled={pagina === total}
-        tabIndex={pagina === total ? -1 : 0}
-        onClick={(evento) => {
-          evento.preventDefault();
-          if (pagina < total) setPagina(pagina + 1);
-        }}
+      <PaginationNext${attrNext}
+        disabled={pagina === total}
+        onClick={() => setPagina(pagina + 1)}
       />
     </PaginationItem>
   </PaginationContent>
@@ -268,9 +255,9 @@ export function paginationDirecionalSource(): string {
 }
 
 /**
- * Extremo bloqueado. O par `aria-disabled` + `tabIndex={-1}` é o que substitui o
- * `disabled` que um `<a>` não tem: o controle continua visível e anunciado como
- * indisponível, mas sai da tabulação e não navega.
+ * Extremo bloqueado. Sem endereço de página o controle é `<button>`, então o
+ * indisponível é o `disabled` nativo: ele continua visível e anunciado como
+ * indisponível, e sai da tabulação sem precisar de tabindex negativo.
  */
 export function paginationDisabledSource(): string {
   return jsxSnippet(
@@ -320,7 +307,7 @@ ${indentar(direcional('PaginationPrevious'), '    ')}
     {paginas.map((trecho, indice) =>
       typeof trecho === "number" ? (
         <PaginationItem key={trecho}>
-          <PaginationLink href="#" isActive={trecho === 6} aria-label={\`Ir para página \${trecho}\`}>
+          <PaginationLink isActive={trecho === 6} aria-label={\`Ir para página \${trecho}\`}>
             {trecho}
           </PaginationLink>
         </PaginationItem>
@@ -338,8 +325,8 @@ ${indentar(direcional('PaginationNext'), '    ')}
 }
 
 /**
- * Última página: o mesmo par de atributos do outro extremo, agora no controle de
- * avanço. A regra é de POSIÇÃO na lista, não de qual dos dois controles é.
+ * Última página: o mesmo atributo do outro extremo, agora no controle de avanço.
+ * A regra é de POSIÇÃO na lista, não de qual dos dois controles é.
  */
 export function paginationLastPageSource(): string {
   return jsxSnippet(
@@ -391,26 +378,17 @@ const [pagina, setPagina] = useState(1);`,
     <PaginationContent>
       <PaginationItem>
         <PaginationPrevious
-          href="#"
-          aria-disabled={pagina === 1}
-          tabIndex={pagina === 1 ? -1 : 0}
-          onClick={(evento) => {
-            evento.preventDefault();
-            if (pagina > 1) setPagina(pagina - 1);
-          }}
+          disabled={pagina === 1}
+          onClick={() => setPagina(pagina - 1)}
         />
       </PaginationItem>
 
       {[1, 2, 3, 4].map((n) => (
         <PaginationItem key={n}>
           <PaginationLink
-            href="#"
             isActive={n === pagina}
             aria-label={\`Ir para página \${n}\`}
-            onClick={(evento) => {
-              evento.preventDefault();
-              setPagina(n);
-            }}
+            onClick={() => setPagina(n)}
           >
             {n}
           </PaginationLink>
@@ -419,13 +397,8 @@ const [pagina, setPagina] = useState(1);`,
 
       <PaginationItem>
         <PaginationNext
-          href="#"
-          aria-disabled={pagina === total}
-          tabIndex={pagina === total ? -1 : 0}
-          onClick={(evento) => {
-            evento.preventDefault();
-            if (pagina < total) setPagina(pagina + 1);
-          }}
+          disabled={pagina === total}
+          onClick={() => setPagina(pagina + 1)}
         />
       </PaginationItem>
     </PaginationContent>

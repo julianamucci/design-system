@@ -97,11 +97,9 @@ function PaginationDemo({
         items.push(
           <PaginationItem key={n}>
             <PaginationLink
-              href="#"
               isActive={page === n}
               aria-label={`Ir para página ${n}`}
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 goTo(n);
               }}
             >
@@ -122,11 +120,9 @@ function PaginationDemo({
     items.push(
       <PaginationItem key={1}>
         <PaginationLink
-          href="#"
           isActive={page === 1}
           aria-label="Ir para página 1"
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             goTo(1);
           }}
         >
@@ -145,11 +141,9 @@ function PaginationDemo({
       items.push(
         <PaginationItem key={n}>
           <PaginationLink
-            href="#"
             isActive={page === n}
             aria-label={`Ir para página ${n}`}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               goTo(n);
             }}
           >
@@ -168,11 +162,9 @@ function PaginationDemo({
     items.push(
       <PaginationItem key={totalPages}>
         <PaginationLink
-          href="#"
           isActive={page === totalPages}
           aria-label={`Ir para página ${totalPages}`}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             goTo(totalPages);
           }}
         >
@@ -186,21 +178,18 @@ function PaginationDemo({
   const prevDisabled = page === 1;
   const nextDisabled = page === totalPages;
 
-  // Em <a> não existe `disabled`: o par correto é aria-disabled + tabindex="-1".
-  // O `pointer-events-none opacity-50` que morava aqui era do framework
-  // utilitário que saiu — inerte. Quem barra o ponteiro e reduz a opacidade é
-  // `.nds-button[aria-disabled="true"]`, no CSS compartilhado.
+  // Paginação de memória: sem endereço de página o controle é
+  // `<button type="button">`, e o extremo é desabilitado pelo `disabled` NATIVO —
+  // o navegador barra clique, Enter e tabulação de uma vez. Quem reduz a
+  // opacidade é `.nds-button:disabled`, no CSS compartilhado.
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href="#"
             text={previousText}
-            aria-disabled={prevDisabled}
-            tabIndex={prevDisabled ? -1 : 0}
-            onClick={(e) => {
-              e.preventDefault();
+            disabled={prevDisabled}
+            onClick={() => {
               goTo(page - 1);
             }}
           />
@@ -208,12 +197,9 @@ function PaginationDemo({
         {renderPages()}
         <PaginationItem>
           <PaginationNext
-            href="#"
             text={nextText}
-            aria-disabled={nextDisabled}
-            tabIndex={nextDisabled ? -1 : 0}
-            onClick={(e) => {
-              e.preventDefault();
+            disabled={nextDisabled}
+            onClick={() => {
               goTo(page + 1);
             }}
           />
@@ -253,30 +239,36 @@ export const Playground: Story = {
     });
 
     await step("Todo controle tem rótulo com contexto", async () => {
-      // accessibility.item5 — "3" sozinho não diz nada em voz alta.
+      // accessibility.item5 — "3" sozinho não diz nada em voz alta. A consulta é
+      // por `button`: esta faixa não tem endereço de página, e sem rota a tag do
+      // controle é `<button>`.
       for (let n = 1; n <= Math.min(args.totalPages, 5); n++) {
-        const link = canvas.getByRole("link", { name: `Ir para página ${n}` });
-        await expect(link).toHaveAttribute("data-slot", "pagination-link");
+        const control = canvas.getByRole("button", { name: `Ir para página ${n}` });
+        await expect(control).toHaveAttribute("data-slot", "pagination-link");
+        await expect(control.tagName).toBe("BUTTON");
       }
       await expect(
-        canvas.getByRole("link", { name: "Ir para a página anterior" })
+        canvas.getByRole("button", { name: "Ir para a página anterior" })
       ).toHaveAttribute("data-slot", "pagination-previous");
       await expect(
-        canvas.getByRole("link", { name: "Ir para a próxima página" })
+        canvas.getByRole("button", { name: "Ir para a próxima página" })
       ).toHaveAttribute("data-slot", "pagination-next");
     });
 
     await step("A página atual é marcada e o extremo é desabilitado", async () => {
       // accessibility.item4
-      const active = canvas.getByRole("link", {
+      const active = canvas.getByRole("button", {
         name: `Ir para página ${args.initialPage}`,
       });
       await expect(active).toHaveAttribute("aria-current", "page");
       await expect(active).toHaveAttribute("data-active", "true");
 
-      const prev = canvas.getByRole("link", { name: "Ir para a página anterior" });
-      await expect(prev).toHaveAttribute("aria-disabled", "true");
-      await expect(prev).toHaveAttribute("tabindex", "-1");
+      // Sem rota o indisponível é o `disabled` nativo, e ele sozinho tira o
+      // controle da tabulação: `aria-disabled` + `tabindex="-1"` é o par da
+      // ÂNCORA, e escrevê-lo aqui duplicaria o estado em dois vocabulários.
+      const prev = canvas.getByRole("button", { name: "Ir para a página anterior" });
+      await expect(prev).toBeDisabled();
+      await expect(prev.hasAttribute("aria-disabled")).toBe(false);
     });
 
     await step("Clicar numa página avisa quem controla o estado", async () => {
@@ -287,17 +279,17 @@ export const Playground: Story = {
       const target = args.initialPage === 1 ? 2 : 1;
       const spy = args.onPageChange as unknown as { mockClear: () => void };
       spy.mockClear();
-      await userEvent.click(canvas.getByRole("link", { name: `Ir para página ${target}` }));
+      await userEvent.click(canvas.getByRole("button", { name: `Ir para página ${target}` }));
       await expect(args.onPageChange).toHaveBeenLastCalledWith(target);
       await expect(
-        canvas.getByRole("link", { name: `Ir para página ${target}` })
+        canvas.getByRole("button", { name: `Ir para página ${target}` })
       ).toHaveAttribute("aria-current", "page");
 
       await userEvent.click(
-        canvas.getByRole("link", { name: `Ir para página ${args.initialPage}` })
+        canvas.getByRole("button", { name: `Ir para página ${args.initialPage}` })
       );
       await expect(
-        canvas.getByRole("link", { name: `Ir para página ${args.initialPage}` })
+        canvas.getByRole("button", { name: `Ir para página ${args.initialPage}` })
       ).toHaveAttribute("aria-current", "page");
     });
 
@@ -307,10 +299,10 @@ export const Playground: Story = {
       // controle fora da tabulação é filtrado), senão a asserção só valeria com
       // os controls no valor padrão.
       const esperados = [
-        canvas.getByRole("link", { name: "Ir para a página anterior" }),
-        canvas.getByRole("link", { name: "Ir para página 1" }),
-        canvas.getByRole("link", { name: "Ir para página 2" }),
-      ].filter((el) => el.getAttribute("tabindex") !== "-1");
+        canvas.getByRole("button", { name: "Ir para a página anterior" }),
+        canvas.getByRole("button", { name: "Ir para página 1" }),
+        canvas.getByRole("button", { name: "Ir para página 2" }),
+      ].filter((el) => !(el as HTMLButtonElement).disabled);
 
       (document.activeElement as HTMLElement | null)?.blur();
       for (const target of esperados) {

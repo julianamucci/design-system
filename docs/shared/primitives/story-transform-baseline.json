@@ -118,8 +118,6 @@
     "nortear-design-system-angular/src/components/ui/navigation-menu-compositions.stories.ts": 4,
     "nortear-design-system-angular/src/components/ui/navigation-menu-states.stories.ts": 3,
     "nortear-design-system-angular/src/components/ui/navigation-menu-variants.stories.ts": 2,
-    "nortear-design-system-angular/src/components/ui/pagination-states.stories.ts": 4,
-    "nortear-design-system-angular/src/components/ui/pagination-variants.stories.ts": 4,
     "nortear-design-system-angular/src/components/ui/quota-banner-compositions.stories.ts": 1,
     "nortear-design-system-angular/src/components/ui/quota-banner.stories.ts": 1,
     "nortear-design-system-angular/src/components/ui/radio-group-compositions.stories.ts": 2,

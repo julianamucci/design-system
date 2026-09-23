@@ -976,13 +976,13 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <Pagination>
     <PaginationContent>
       <PaginationItem>
-        <PaginationPrevious href="#" />
+        <PaginationPrevious />
       </PaginationItem>
-      <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
-      <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
-      <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationLink isActive>1</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationLink>2</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
       <PaginationItem>
-        <PaginationNext href="#" />
+        <PaginationNext />
       </PaginationItem>
     </PaginationContent>
   </Pagination>
@@ -1013,16 +1013,16 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>
-                      <PaginationPrevious href="#" />
+                      <PaginationPrevious />
                     </PaginationItem>
                     <PaginationItem>
-                      <PaginationLink href="#" isActive>1</PaginationLink>
+                      <PaginationLink isActive>1</PaginationLink>
                     </PaginationItem>
                     <PaginationItem>
-                      <PaginationLink href="#">2</PaginationLink>
+                      <PaginationLink>2</PaginationLink>
                     </PaginationItem>
                     <PaginationItem>
-                      <PaginationNext href="#" />
+                      <PaginationNext />
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>

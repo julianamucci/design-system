@@ -73,9 +73,14 @@ const TARGET_MINIMUM_PX = 24;
  * Um consumidor de cada degrau que estava preso ao literal, mais dois controles.
  *
  * Os controles são `.nds-input` padding-block (`--spacing-2`, que SEMPRE seguiu
- * a densidade) e `.nds-pagination-link` (`--size-lg`, escada de caixa): se a
+ * a densidade) e o número da paginação (`--size-lg`, escada de caixa): se a
  * medição estivesse quebrada, eles falhariam junto e a falha seria da sonda, não
  * do token.
+ *
+ * O número era `.nds-pagination-link` até 2026-09-23, quando o controle da
+ * paginação passou a ser o BOTÃO nas cinco stacks e aquela classe deixou de ter
+ * produtor. A sonda seguiu o elemento, não o nome: a caixa continua sendo lida
+ * de `--size-lg`, agora por `.nds-button-icon`.
  */
 function cenario(): HTMLElement {
   const root = document.createElement('div');
@@ -97,7 +102,7 @@ function cenario(): HTMLElement {
       <button type="button" class="nds-alert-action">Desfazer</button>
       <button type="button" class="nds-alert-dismiss" aria-label="Fechar"></button>
     </div>
-    <nav class="nds-pagination"><a class="nds-pagination-link" href="#">2</a></nav>
+    <nav class="nds-pagination"><a class="nds-button nds-button-icon nds-button-ghost" href="#">2</a></nav>
     <div class="nds-input-otp"><div class="nds-input-otp-slot">7</div></div>
     <button type="button" class="nds-button nds-button-xs nds-button-default">xs</button>
   `;
@@ -157,7 +162,7 @@ const TARGETS: EspacoTarget[] = [
     esperado: { condensado: 1.6, default: 2, confortavel: 2.5 } },
 
   // ── Controle: caixa de controle migrada de --spacing-9 para --size-lg ────
-  { name: 'pagination link · --size-lg', selector: '.nds-pagination-link', prop: 'min-height',
+  { name: 'pagination link · --size-lg', selector: '.nds-pagination .nds-button-icon', prop: 'width',
     esperado: { condensado: 32, default: 36, confortavel: 44 }, alvoDeToque: true },
   { name: 'input-otp slot · --size-lg', selector: '.nds-input-otp-slot', prop: 'width',
     esperado: { condensado: 32, default: 36, confortavel: 44 }, alvoDeToque: true },

@@ -27,6 +27,13 @@ export type PaginationSnippetOptions = {
   hrefForPage?: string;
   /** Expressão do callback de mudança de página. */
   onPageChange?: string;
+  /**
+   * Expressão do catálogo parcial de rótulos.
+   *
+   * Entra como EXPRESSÃO e não como objeto porque o painel Code mostra código:
+   * quem copia a linha precisa ver o molde de `page`, que é função.
+   */
+  labels?: string;
 };
 
 /** Nome que a fábrica assume quando `'aria-label'` não é passado. */
@@ -62,6 +69,9 @@ function linesComuns(o: PaginationSnippetOptions, current: string): Array<[strin
     // `true` é o padrão da fábrica: só a supressão dos direcionais entra.
     ['showPrevNext', o.showPrevNext === false ? 'false' : undefined],
     ['hrefForPage', o.hrefForPage],
+    // Sem `labels` a faixa fala o padrão em pt-BR, e documentação não ensina a
+    // repetir o padrão.
+    ['labels', o.labels],
   ];
 }
 

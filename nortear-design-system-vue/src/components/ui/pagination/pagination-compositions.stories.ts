@@ -73,7 +73,7 @@ export const Simple: Story = {
         <PaginationContent>
           <PaginationItem><PaginationPrevious /></PaginationItem>
           <PaginationItem v-for="n in pages" :key="n">
-            <PaginationLink href="#" :is-active="n === 1" :aria-label="\`Ir para página \${n}\`" @click.prevent>
+            <PaginationLink :is-active="n === 1" :aria-label="\`Ir para página \${n}\`">
               {{ n }}
             </PaginationLink>
           </PaginationItem>
@@ -98,7 +98,7 @@ export const Simple: Story = {
     });
 
     await step('A primeira página é a atual e Anterior está desabilitado', async () => {
-      await expect(canvas.getByRole('link', { name: 'Ir para página 1' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 1' })).toHaveAttribute(
         'aria-current',
         'page',
       );
@@ -131,10 +131,8 @@ export const WithEllipsis: Story = {
             <PaginationEllipsis v-if="trecho === 'ellipsis'" />
             <PaginationLink
               v-else
-              href="#"
               :is-active="trecho === 6"
               :aria-label="\`Ir para página \${trecho}\`"
-              @click.prevent
             >
               {{ trecho }}
             </PaginationLink>
@@ -164,8 +162,10 @@ export const WithEllipsis: Story = {
         await expect(item).toHaveAttribute('aria-hidden', 'true');
         await expect(item.hasAttribute('tabindex')).toBe(false);
       }
-      // Cinco números continuam navegáveis; Previous e Next são botões.
-      await expect(canvas.getAllByRole('link').length).toBe(5);
+      // Cinco números continuam navegáveis. Sem rota, o controle numerado é
+      // `<button>` como os direcionais, então quem separa um do outro é o nome
+      // acessível, não mais o papel.
+      await expect(canvas.getAllByRole('button', { name: /^Ir para página/ }).length).toBe(5);
     });
   },
 };
@@ -191,7 +191,7 @@ export const LastPage: Story = {
         <PaginationContent>
           <PaginationItem><PaginationPrevious /></PaginationItem>
           <PaginationItem v-for="n in pages" :key="n">
-            <PaginationLink href="#" :is-active="n === 10" :aria-label="\`Ir para página \${n}\`" @click.prevent>
+            <PaginationLink :is-active="n === 10" :aria-label="\`Ir para página \${n}\`">
               {{ n }}
             </PaginationLink>
           </PaginationItem>
@@ -223,7 +223,7 @@ export const LastPage: Story = {
     });
 
     await step('A página atual é a última da faixa', async () => {
-      await expect(canvas.getByRole('link', { name: 'Ir para página 10' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 10' })).toHaveAttribute(
         'aria-current',
         'page',
       );
@@ -265,10 +265,9 @@ export const Controlled: Story = {
             </PaginationItem>
             <PaginationItem v-for="n in pages" :key="n">
               <PaginationLink
-                href="#"
                 :is-active="current === n"
                 :aria-label="\`Ir para página \${n}\`"
-                @click.prevent="irTo(n)"
+                @click="irTo(n)"
               >
                 {{ n }}
               </PaginationLink>
@@ -287,9 +286,9 @@ export const Controlled: Story = {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
-      const target = canvas.getByRole('link', { name: `Ir para página ${n}` });
+      const target = canvas.getByRole('button', { name: `Ir para página ${n}` });
       if (target.getAttribute('aria-current') !== 'page') await userEvent.click(target);
-      await expect(canvas.getByRole('link', { name: `Ir para página ${n}` })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: `Ir para página ${n}` })).toHaveAttribute(
         'aria-current',
         'page',
       );
@@ -356,10 +355,8 @@ export const CompleteTable: Story = {
               <PaginationEllipsis v-if="trecho === 'ellipsis'" />
               <PaginationLink
                 v-else
-                href="#"
                 :is-active="trecho === 2"
                 :aria-label="\`Ir para página \${trecho}\`"
-                @click.prevent
               >
                 {{ trecho }}
               </PaginationLink>
@@ -386,7 +383,7 @@ export const CompleteTable: Story = {
     await step('O contador e a faixa dividem a mesma linha', async () => {
       const footer = canvasElement.querySelector('.nds-cluster') as HTMLElement;
       await expect(getComputedStyle(footer).justifyContent).toBe('space-between');
-      await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 2' })).toHaveAttribute(
         'aria-current',
         'page',
       );

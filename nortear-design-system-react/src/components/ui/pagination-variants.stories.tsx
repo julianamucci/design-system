@@ -45,7 +45,7 @@ export const Default: Story = {
       source: { transform: paginationLinkInactiveSource },
       description: {
         story:
-          "Link inativo — fundo transparente. Padrão para toda página que não é a atual.",
+          "Controle inativo — fundo transparente. Padrão para toda página que não é a atual.",
       },
     },
   },
@@ -53,17 +53,17 @@ export const Default: Story = {
     <Pagination aria-label="Paginação com link inativo">
       <PaginationContent>
         <PaginationItem>
-          <PaginationLink href="#" aria-label="Ir para página 2">
-            2
-          </PaginationLink>
+          <PaginationLink aria-label="Ir para página 2">2</PaginationLink>
         </PaginationItem>
       </PaginationContent>
     </Pagination>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("O link inativo não se anuncia como página atual", async () => {
-      const link = canvas.getByRole("link", { name: "Ir para página 2" });
+    await step("O controle inativo não se anuncia como página atual", async () => {
+      // Sem endereço de página a tag é `<button>` — é a regra da rota, e ela
+      // vale para o número tanto quanto para o direcional.
+      const link = canvas.getByRole("button", { name: "Ir para página 2" });
       await expect(link).not.toHaveAttribute("aria-current");
       // `data-active` só existe quando é verdade — atributo presente com valor
       // "false" faria `[data-active]` casar o item errado.
@@ -90,12 +90,10 @@ export const Active: Story = {
     <Pagination aria-label="Paginação com página atual">
       <PaginationContent>
         <PaginationItem>
-          <PaginationLink href="#" aria-label="Ir para página 1">
-            1
-          </PaginationLink>
+          <PaginationLink aria-label="Ir para página 1">1</PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink href="#" isActive aria-label="Ir para página 2">
+          <PaginationLink isActive aria-label="Ir para página 2">
             2
           </PaginationLink>
         </PaginationItem>
@@ -112,8 +110,8 @@ export const Active: Story = {
       await expect(marcados[0]).toHaveTextContent("2");
     });
     await step("O destaque acompanha a marcação", async () => {
-      const active = canvas.getByRole("link", { name: "Ir para página 2" });
-      const inactive = canvas.getByRole("link", { name: "Ir para página 1" });
+      const active = canvas.getByRole("button", { name: "Ir para página 2" });
+      const inactive = canvas.getByRole("button", { name: "Ir para página 1" });
       await expect(active).toHaveAttribute("data-active", "true");
       await expect(active).toHaveClass("nds-button-outline");
       await expect(inactive).toHaveClass("nds-button-ghost");
@@ -138,10 +136,10 @@ export const Directional: Story = {
     <Pagination aria-label="Paginação direcional">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" text="Anterior" />
+          <PaginationPrevious text="Anterior" />
         </PaginationItem>
         <PaginationItem>
-          <PaginationNext href="#" text="Próxima" />
+          <PaginationNext text="Próxima" />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
@@ -151,9 +149,9 @@ export const Directional: Story = {
 
     await step("O nome acessível não depende do rótulo visível", async () => {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
-      // acessível viesse do texto visível, o link ficaria mudo em tela pequena.
-      const previous = canvas.getByRole("link", { name: "Ir para a página anterior" });
-      const next = canvas.getByRole("link", { name: "Ir para a próxima página" });
+      // acessível viesse do texto visível, o controle ficaria mudo em tela pequena.
+      const previous = canvas.getByRole("button", { name: "Ir para a página anterior" });
+      const next = canvas.getByRole("button", { name: "Ir para a próxima página" });
       await expect(previous.querySelector(".nds-pagination-label")).toHaveTextContent("Anterior");
       await expect(next.querySelector(".nds-pagination-label")).toHaveTextContent("Próxima");
       await expect(previous).toHaveClass("nds-pagination-prev");

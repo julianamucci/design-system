@@ -59,13 +59,13 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Cinco números visíveis, sem controles direcionais', async () => {
-      const links = canvas.getAllByRole('link');
+      const links = canvas.getAllByRole('button');
       await expect(links.length).toBe(5);
       await expect(canvasElement.querySelector('[data-slot="pagination-previous"]')).toBeNull();
     });
 
     await step('O link inativo não se anuncia como página atual', async () => {
-      const inactive = canvas.getByRole('link', { name: 'Ir para página 3' });
+      const inactive = canvas.getByRole('button', { name: 'Ir para página 3' });
       await expect(inactive).not.toHaveAttribute('aria-current');
       // `data-active` só existe quando é verdade — atributo presente com valor
       // "false" faria `[data-active]` casar o item errado.
@@ -108,9 +108,15 @@ export const Active: Story = {
     });
 
     await step('A página atual continua rotulada e destacada', async () => {
-      const active = canvas.getByRole('link', { name: 'Ir para página 4' });
+      const active = canvas.getByRole('button', { name: 'Ir para página 4' });
       await expect(active).toHaveAttribute('aria-current', 'page');
       await expect(active).toHaveAttribute('data-active', 'true');
+      // O realce da página atual é a VARIANTE do botão, não uma segunda folha
+      // de link: `outline` na atual, `ghost` nas demais.
+      await expect(active).toHaveClass('nds-button-outline');
+      await expect(canvas.getByRole('button', { name: 'Ir para página 3' })).toHaveClass(
+        'nds-button-ghost',
+      );
     });
   },
 };
@@ -132,14 +138,48 @@ export const Directional: Story = {
     const canvas = within(canvasElement);
 
     await step('Os controles de direção têm rótulo em português', async () => {
-      // accessibility.item5 — o ícone não tem texto: sem o rótulo, o controle
-      // fica mudo. Antes daqui ele saía como "Go to previous page".
-      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
-      const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(previous).toHaveClass('nds-pagination-icon');
-      await expect(next).toHaveClass('nds-pagination-icon');
+      // accessibility.item5 — abaixo de 40rem o rótulo por extenso é escondido
+      // e sobra o chevron: sem o `aria-label` o controle fica mudo justamente
+      // na tela estreita. Antes daqui ele saía como "Go to previous page".
+      const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
       await expect(previous.querySelector('svg')).not.toBeNull();
       await expect(next.querySelector('svg')).not.toBeNull();
+    });
+
+    await step('O controle é o BOTÃO, na mesma variante e tamanho das outras stacks', async () => {
+      // O direcional é `.nds-button` ghost em tamanho default MAIS a classe de
+      // recuo assimétrico — que sozinha é (0,1,0) e perderia para
+      // `.nds-button:has(> svg)`. Asserir as duas juntas é o que dá dentes à
+      // decisão: emitir só `.nds-pagination-prev` volta a ser invisível na tela.
+      const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
+      await expect(previous).toHaveClass('nds-button');
+      await expect(previous).toHaveClass('nds-button-ghost');
+      await expect(previous).toHaveClass('nds-pagination-prev');
+      await expect(next).toHaveClass('nds-button');
+      await expect(next).toHaveClass('nds-button-ghost');
+      await expect(next).toHaveClass('nds-pagination-next');
+
+      // O número é o mesmo botão em tamanho `icon`.
+      //
+      // Página 3, e não 2: com `total: 8` e `current: 4` a régua colapsa 2, 6 e 7
+      // atrás das reticências, então a 2 não chega a ser renderizada. A asserção
+      // nasceu apontando para ela e reprovou na primeira suíte — é fato de DOM
+      // renderizado, que nenhuma conferência estática alcança.
+      const numbered = canvas.getByRole('button', { name: 'Ir para página 3' });
+      await expect(numbered).toHaveClass('nds-button');
+      await expect(numbered).toHaveClass('nds-button-icon');
+      await expect(numbered).toHaveClass('nds-button-ghost');
+    });
+
+    await step('O rótulo por extenso acompanha o chevron', async () => {
+      // "Anterior"/"Próxima" por extenso é o que o próprio Do & Don't pede.
+      // `.nds-pagination-label` é quem o esconde abaixo de 40rem — a classe
+      // existe na folha compartilhada e nenhuma stack a emitia aqui.
+      const labels = canvasElement.querySelectorAll('.nds-pagination-label');
+      await expect(labels.length).toBe(2);
+      await expect([...labels].map((r) => r.textContent)).toEqual(['Anterior', 'Próxima']);
     });
 
     await step('O ícone é decoração, não conteúdo', async () => {

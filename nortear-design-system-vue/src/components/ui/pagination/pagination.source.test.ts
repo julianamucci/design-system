@@ -49,10 +49,9 @@ function irPara(n: number) {
       </PaginationItem>
       <PaginationItem v-for="n in paginas" :key="n">
         <PaginationLink
-          href="#"
           :is-active="atual === n"
           :aria-label="\`Ir para página \${n}\`"
-          @click.prevent="irPara(n)"
+          @click="irPara(n)"
         >
           {{ n }}
         </PaginationLink>
@@ -112,11 +111,11 @@ function irPara(n: number) {
     expect(output).toContain('const atual = ref(1)');
   });
 
-  it('o link numerado tem destino e nome com contexto', () => {
+  it('o controle numerado age na própria página, e por isso não finge destino', () => {
     const output = paginationSource();
-    // Sem `href` a âncora não ganha papel de link nem entra na tabulação: a
-    // faixa numerada inteira ficaria fora do teclado.
-    expect(output).toContain('href="#"');
+    // Sem rota não há endereço a oferecer: `href="#"` anunciaria "link" e
+    // prometeria uma ida que não acontece. A tag passa a ser `<button>`.
+    expect(output).not.toContain('href');
     // "3" sozinho não diz nada em voz alta.
     expect(output).toContain(':aria-label="`Ir para página ${n}`"');
   });
@@ -141,9 +140,9 @@ describe('transforms das stories de estado', () => {
 });
 
 describe('transforms das stories de variante', () => {
-  it('o link inativo não escreve a própria ênfase', () => {
+  it('o controle inativo não escreve a própria ênfase', () => {
     const output = paginationLinkInactiveSource();
-    expect(output).toContain('<PaginationLink href="#" aria-label="Ir para página 2" @click.prevent>2</PaginationLink>');
+    expect(output).toContain('<PaginationLink aria-label="Ir para página 2">2</PaginationLink>');
     expect(output).not.toContain('is-active');
   });
 

@@ -100,44 +100,43 @@ export const Playground: Story = {
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
       pageLabel: LABEL_PAGE,
-      irTo: (evento: Event, page: number) => {
-        evento.preventDefault();
-        onPageChange(page);
-      },
+      // Sem rota o controle é botão: não há navegação a anular, só o aviso a
+      // quem guarda a página.
+      irTo: (page: number) => onPageChange(page),
     },
     template: `
       <nav ndsPagination>
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationPrevious
-              href="#"
+              type="button"
               [text]="previousText"
               [label]="labelPrevious"
               [disabled]="current === 1"
-              (click)="irTo($event, current - 1)"
-            ></a>
+              (click)="irTo(current - 1)"
+            ></button>
           </li>
           @for (n of pages; track n) {
             <li ndsPaginationItem>
-              <a
+              <button
                 ndsPaginationLink
-                href="#"
+                type="button"
                 [isActive]="n === current"
                 [attr.aria-label]="pageLabel + ' ' + n"
-                (click)="irTo($event, n)"
-              >{{ n }}</a>
+                (click)="irTo(n)"
+              >{{ n }}</button>
             </li>
           }
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationNext
-              href="#"
+              type="button"
               [text]="nextText"
               [label]="labelNext"
               [disabled]="current === total"
-              (click)="irTo($event, current + 1)"
-            ></a>
+              (click)="irTo(current + 1)"
+            ></button>
           </li>
         </ul>
       </nav>
@@ -162,21 +161,21 @@ export const Playground: Story = {
       await expect(list!.children.length).toBe(args.total + 2);
     });
 
-    await step('Todo link numerado tem rótulo com contexto', async () => {
+    await step('Todo controle numerado tem rótulo com contexto', async () => {
       // accessibility.item5 — "3" sozinho não diz nada em voz alta; o número
       // vira nome acessível de verdade com o prefixo.
       for (let n = 1; n <= args.total; n++) {
-        const link = canvas.getByRole('link', { name: `${LABEL_PAGE} ${n}` });
-        await expect(link).toHaveAttribute('data-slot', 'pagination-link');
-        await expect(link).toHaveTextContent(String(n));
+        const control = canvas.getByRole('button', { name: `${LABEL_PAGE} ${n}` });
+        await expect(control).toHaveAttribute('data-slot', 'pagination-link');
+        await expect(control).toHaveTextContent(String(n));
       }
       // Previous e Next também: o rótulo visível encurta em tela estreita, o
       // nome acessível não.
-      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
         'pagination-previous',
       );
-      await expect(canvas.getByRole('link', { name: LABEL_NEXT })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: LABEL_NEXT })).toHaveAttribute(
         'data-slot',
         'pagination-next',
       );
@@ -184,21 +183,21 @@ export const Playground: Story = {
 
     await step('A página atual é marcada e destacada', async () => {
       // accessibility.item4 — e prova que os inputs chegaram ao template: sem
-      // AOT o binding cai em silêncio e TODOS os links ficariam ghost
+      // AOT o binding cai em silêncio e TODOS os controles ficariam ghost
       // (armadilha 1 do CLAUDE.md deste stack).
-      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.current}` });
+      const active = canvas.getByRole('button', { name: `${LABEL_PAGE} ${args.current}` });
       await expect(active).toHaveAttribute('aria-current', 'page');
       await expect(active).toHaveAttribute('data-active', 'true');
       await expect(active).toHaveClass('nds-button-outline');
 
-      const inactive = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.current + 1}` });
+      const inactive = canvas.getByRole('button', { name: `${LABEL_PAGE} ${args.current + 1}` });
       await expect(inactive.hasAttribute('aria-current')).toBe(false);
       await expect(inactive).toHaveClass('nds-button-ghost');
     });
 
     await step('O rótulo visível de Previous e Next vem do input', async () => {
-      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
-      const next = canvas.getByRole('link', { name: LABEL_NEXT });
+      const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
       await expect(previous.querySelector('.nds-pagination-label')).toHaveTextContent(
         args.previousText,
       );
@@ -216,7 +215,7 @@ export const Playground: Story = {
       // espião aqui é o que faz a contagem valer nesta rodada, inclusive no
       // replay do painel Interactions, que roda no mesmo DOM.
       onPageChange.mockClear();
-      await userEvent.click(canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.total}` }));
+      await userEvent.click(canvas.getByRole('button', { name: `${LABEL_PAGE} ${args.total}` }));
       await expect(onPageChange).toHaveBeenCalledTimes(1);
       await expect(onPageChange).toHaveBeenLastCalledWith(args.total);
     });
@@ -225,11 +224,11 @@ export const Playground: Story = {
       // functional.item4 — a ordem de foco é a do DOM, e o DOM é a ordem em que
       // a faixa é lida: anterior, 1..N, próxima.
       const esperados = [
-        canvas.getByRole('link', { name: LABEL_PREVIOUS }),
+        canvas.getByRole('button', { name: LABEL_PREVIOUS }),
         ...Array.from({ length: args.total }, (_, i) =>
-          canvas.getByRole('link', { name: `${LABEL_PAGE} ${i + 1}` }),
+          canvas.getByRole('button', { name: `${LABEL_PAGE} ${i + 1}` }),
         ),
-        canvas.getByRole('link', { name: LABEL_NEXT }),
+        canvas.getByRole('button', { name: LABEL_NEXT }),
       ];
       (document.activeElement as HTMLElement | null)?.blur();
       for (const target of esperados) {

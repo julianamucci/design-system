@@ -70,10 +70,9 @@ function range(label: string, current: number) {
           </PaginationItem>
           <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink
-              href="#"
               :is-active="n === current"
               :aria-label="\`Ir para página \${n}\`"
-              @click.prevent="onPageChange(n)"
+              @click="onPageChange(n)"
             >
               {{ n }}
             </PaginationLink>
@@ -94,10 +93,10 @@ export const Default: Story = {
   render: range('Paginação em repouso', 3),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: 'Ir para página 4' });
-    await expect(link).toBeVisible();
-    await expect(link).not.toHaveAttribute('aria-current');
-    await expect(getComputedStyle(link).pointerEvents).toBe('auto');
+    const control = canvas.getByRole('button', { name: 'Ir para página 4' });
+    await expect(control).toBeVisible();
+    await expect(control).not.toHaveAttribute('aria-current');
+    await expect(getComputedStyle(control).pointerEvents).toBe('auto');
   },
 };
 
@@ -106,25 +105,25 @@ export const Hover: Story = {
     docs: {
       description: {
         story:
-          'Sob o ponteiro o link recebe fundo accent. A afordância é o cursor de clique, e o alvo tem que estar realmente alcançável.',
+          'Sob o ponteiro o controle recebe fundo accent. A afordância é o cursor de clique, e o alvo tem que estar realmente alcançável.',
       },
     },
   },
   render: range('Paginação sob o ponteiro', 3),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: 'Ir para página 4' });
-    await userEvent.hover(link);
+    const control = canvas.getByRole('button', { name: 'Ir para página 4' });
+    await userEvent.hover(control);
     // Não se assere a cor do hover: `:hover` computado é frágil no harness. O
     // que prova a afordância é o cursor, e o que prova que o clique CHEGA é o
     // elemento devolvido no centro da caixa.
-    await expect(getComputedStyle(link).cursor).toBe('pointer');
-    const box = link.getBoundingClientRect();
+    await expect(getComputedStyle(control).cursor).toBe('pointer');
+    const box = control.getBoundingClientRect();
     const target = document.elementFromPoint(
       box.left + box.width / 2,
       box.top + box.height / 2,
     );
-    await expect(link.contains(target)).toBe(true);
+    await expect(control.contains(target)).toBe(true);
   },
 };
 
@@ -137,7 +136,7 @@ export const Active: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Exatamente um link é a página atual', async () => {
+    await step('Exatamente um controle é a página atual', async () => {
       // visual.item3
       const marcados = canvasElement.querySelectorAll('[aria-current="page"]');
       await expect(marcados.length).toBe(1);
@@ -145,10 +144,10 @@ export const Active: Story = {
     });
 
     await step('O destaque é visual e não depende da posição', async () => {
-      await expect(canvas.getByRole('link', { name: 'Ir para página 3' })).toHaveClass(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 3' })).toHaveClass(
         'nds-button-outline',
       );
-      await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveClass(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 2' })).toHaveClass(
         'nds-button-ghost',
       );
     });
@@ -209,7 +208,7 @@ export const Focus: Story = {
     docs: {
       description: {
         story:
-          'Foco por teclado desenha um anel visível em qualquer link da faixa — inclusive no da página atual.',
+          'Foco por teclado desenha um anel visível em qualquer controle da faixa — inclusive no da página atual.',
       },
     },
   },
@@ -217,19 +216,19 @@ export const Focus: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('O anel de foco aparece no link numerado', async () => {
+    await step('O anel de foco aparece no controle numerado', async () => {
       // accessibility.item3 — medir a sombra computada é o que prova que a
       // regra do CSS compartilhado chegou ao elemento, e não só que o foco
       // chegou. `ring-2 ring-ring`, que a documentação citava, não existe.
-      const link = canvas.getByRole('link', { name: 'Ir para página 2' });
-      link.blur();
-      link.focus();
-      await expect(link).toHaveFocus();
-      await expect(getComputedStyle(link).boxShadow).not.toBe('none');
+      const control = canvas.getByRole('button', { name: 'Ir para página 2' });
+      control.blur();
+      control.focus();
+      await expect(control).toHaveFocus();
+      await expect(getComputedStyle(control).boxShadow).not.toBe('none');
     });
 
     await step('A página atual também é focável', async () => {
-      const active = canvas.getByRole('link', { name: 'Ir para página 3' });
+      const active = canvas.getByRole('button', { name: 'Ir para página 3' });
       active.blur();
       active.focus();
       await expect(active).toHaveFocus();
@@ -244,13 +243,13 @@ export const Contrast: Story = {
     docs: {
       description: {
         story:
-          'O texto de todo link da faixa — ativo, inativo e direcional — fica acima de 4.5:1 sobre o fundo em que aparece.',
+          'O texto de todo controle da faixa — ativo, inativo e direcional — fica acima de 4.5:1 sobre o fundo em que aparece.',
       },
     },
   },
   render: range('Paginação medida por contraste', 3),
   play: async ({ canvasElement, step }) => {
-    await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
+    await step('Todo controle passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
       const measurements = rangeContrastes(canvasElement);

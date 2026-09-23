@@ -115,6 +115,48 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  /**
+   * `href` é prop só desta stack — o conteúdo compartilhado não tem chave para
+   * ela —, então a descrição mora aqui. Nos três idiomas: um texto cravado em
+   * português deixaria a tabela meio traduzida. Sem marcação de tag no texto,
+   * porque a tabela renderiza descrição como HTML.
+   */
+  const HREF_PROP_DESCRIPTION: Record<'pt-BR' | 'en' | 'es', string> = {
+    'pt-BR':
+      'Endereço da página. Com ele o controle é uma âncora navegável; sem ele, um botão que age na própria página.',
+    en: 'Page address. With it the control is a navigable anchor; without it, a button that acts on the current page.',
+    es: 'Dirección de la página. Con ella el control es un ancla navegable; sin ella, un botón que actúa en la propia página.',
+  };
+
+  const hrefPropDescription = $derived(
+    HREF_PROP_DESCRIPTION[$locale as 'pt-BR' | 'en' | 'es'] ?? HREF_PROP_DESCRIPTION['pt-BR'],
+  );
+
+  /**
+   * Listas numeradas DERIVADAS do dicionário: quem conta os itens é o conteúdo,
+   * e não um intervalo cravado aqui — foi assim que o sexto critério de
+   * acessibilidade (alvo de toque, WCAG 2.5.8) ficou escrito nos três idiomas
+   * sem chegar à tela. Cravar o número novo repete o defeito daqui a um item.
+   * A parada usa o contrato do `t()` desta stack (chave ausente volta como a
+   * própria chave), e o primeiro campo é quem decide se o item existe — os
+   * demais acompanham.
+   */
+  function itemsFromDict<K extends string>(
+    tFn: (key: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Record<K, string>[] {
+    const rows: Record<K, string>[] = [];
+    for (let i = 1; ; i++) {
+      const probe = `${base}.item${i}.${fields[0]}`;
+      if (tFn(probe) === probe) break;
+      const row = {} as Record<K, string>;
+      for (const f of fields) row[f] = tFn(`${base}.item${i}.${f}`);
+      rows.push(row);
+    }
+    return rows;
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -169,6 +211,7 @@ interface PaginationProps {
 interface PaginationLinkProps {
   page: { type: 'page'; value: number };
   isActive?: boolean;
+  href?: string;          // com rota: <a href>; sem rota: <button type="button">
   size?: 'default' | 'sm' | 'lg' | 'icon';
   class?: string;
 }
@@ -205,23 +248,25 @@ interface PaginationDirectionalProps {
   <DocsDemonstration>
     <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
       <!-- aria-label por instância: a página monta vários nav "pagination"; sem rótulo distinto o axe acusa landmark-unique -->
-      <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tNavStore('nav.demonstration')} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
+      <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tStore('demonstration.labels.navigationLabel')} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
         {#snippet children({ pages, currentPage })}
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious aria-label={$tStore('demonstration.labels.previous')} />
+              <PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} />
             </PaginationItem>
             {#each pages as p (p.key)}
               <PaginationItem>
                 {#if p.type === 'ellipsis'}
                   <PaginationEllipsis />
                 {:else}
+                  <!-- Rótulo IGUAL para a página atual: quem anuncia "página atual" é o
+                       `aria-current="page"`, nativamente e em qualquer idioma. Prefixo
+                       próprio aqui duplicava o anúncio e contradizia o comentário do
+                       próprio `pagination-link`, que já documenta essa decisão. -->
                   <PaginationLink
                     page={p}
                     isActive={currentPage === p.value}
-                    aria-label={currentPage === p.value
-                      ? `${$tStore('demonstration.labels.current')}, ${p.value}`
-                      : `${$tStore('demonstration.labels.page')} ${p.value}`}
+                    aria-label={`${$tStore('demonstration.labels.page')} ${p.value}`}
                   >
                     {p.value}
                   </PaginationLink>
@@ -229,7 +274,7 @@ interface PaginationDirectionalProps {
               </PaginationItem>
             {/each}
             <PaginationItem>
-              <PaginationNext aria-label={$tStore('demonstration.labels.next')} />
+              <PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} />
             </PaginationItem>
           </PaginationContent>
         {/snippet}
@@ -338,21 +383,21 @@ interface PaginationDirectionalProps {
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious aria-label="Anterior" />
+            <PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} />
           </PaginationItem>
           {#each pages as p (p.key)}
             <PaginationItem>
               {#if p.type === 'ellipsis'}
                 <PaginationEllipsis />
               {:else}
-                <PaginationLink page={p} isActive={currentPage === p.value} aria-label={`Ir para página ${p.value}`}>
+                <PaginationLink page={p} isActive={currentPage === p.value} aria-label={`${$tStore('demonstration.labels.page')} ${p.value}`}>
                   {p.value}
                 </PaginationLink>
               {/if}
             </PaginationItem>
           {/each}
           <PaginationItem>
-            <PaginationNext aria-label="Próxima" />
+            <PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} />
           </PaginationItem>
         </PaginationContent>
       {/snippet}
@@ -380,7 +425,7 @@ interface PaginationDirectionalProps {
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious aria-label="Anterior" />
+            <PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} />
           </PaginationItem>
           {#each pages as p (p.key)}
             <PaginationItem>
@@ -392,7 +437,7 @@ interface PaginationDirectionalProps {
             </PaginationItem>
           {/each}
           <PaginationItem>
-            <PaginationNext aria-label="Próxima" />
+            <PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} />
           </PaginationItem>
         </PaginationContent>
       {/snippet}
@@ -521,7 +566,7 @@ interface PaginationDirectionalProps {
           {#each pages as p (p.key)}
             <PaginationItem>
               {#if p.type !== 'ellipsis'}
-                <PaginationLink page={p} isActive={false} aria-label={`Ir para página ${p.value}`}>
+                <PaginationLink page={p} isActive={false} aria-label={`${$tStore('demonstration.labels.page')} ${p.value}`}>
                   {p.value}
                 </PaginationLink>
               {/if}
@@ -535,10 +580,10 @@ interface PaginationDirectionalProps {
     <Pagination count={50} perPage={10} page={2} aria-label={$tStore('variants.items.directional')}>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious aria-label="Ir para a página anterior" />
+          <PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} />
         </PaginationItem>
         <PaginationItem>
-          <PaginationNext aria-label="Ir para a próxima página" />
+          <PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
@@ -548,7 +593,7 @@ interface PaginationDirectionalProps {
     <Pagination count={50} perPage={10} page={1} aria-label={$tStore('variants.items.simple.name')}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
-          <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+          <PaginationItem><PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} /></PaginationItem>
           {#each pages as p (p.key)}
             <PaginationItem>
               {#if p.type !== 'ellipsis'}
@@ -556,7 +601,7 @@ interface PaginationDirectionalProps {
               {/if}
             </PaginationItem>
           {/each}
-          <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+          <PaginationItem><PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} /></PaginationItem>
         </PaginationContent>
       {/snippet}
     </Pagination>
@@ -565,7 +610,7 @@ interface PaginationDirectionalProps {
     <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tStore('variants.items.withEllipsis.name')}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
-          <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+          <PaginationItem><PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} /></PaginationItem>
           {#each pages as p (p.key)}
             <PaginationItem>
               {#if p.type === 'ellipsis'}
@@ -575,7 +620,7 @@ interface PaginationDirectionalProps {
               {/if}
             </PaginationItem>
           {/each}
-          <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+          <PaginationItem><PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} /></PaginationItem>
         </PaginationContent>
       {/snippet}
     </Pagination>
@@ -585,7 +630,7 @@ interface PaginationDirectionalProps {
       <Pagination count={80} perPage={10} bind:page={interactiveCurrent} aria-label={$tStore('variants.items.interactive.name')}>
         {#snippet children({ pages, currentPage })}
           <PaginationContent>
-            <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+            <PaginationItem><PaginationPrevious text={$tStore('demonstration.labels.previous')} aria-label={$tStore('demonstration.labels.previousLabel')} /></PaginationItem>
             {#each pages as p (p.key)}
               <PaginationItem>
                 {#if p.type === 'ellipsis'}
@@ -595,11 +640,20 @@ interface PaginationDirectionalProps {
                 {/if}
               </PaginationItem>
             {/each}
-            <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+            <PaginationItem><PaginationNext text={$tStore('demonstration.labels.next')} aria-label={$tStore('demonstration.labels.nextLabel')} /></PaginationItem>
           </PaginationContent>
         {/snippet}
       </Pagination>
-      <p class="nds-text-body">Página current: {interactiveCurrent} / 8</p>
+      <!--
+        O leitor do estado EXTERNO. A composição existe para ensinar que o
+        componente não guarda a página — sem esta linha a demo parece guardá-la
+        sozinha, que é o oposto do que a seção ensina. Aqui `labels.current` é
+        legenda VISÍVEL, nunca prefixo de nome acessível: no controle ativo ela
+        duplicaria o que o `aria-current="page"` já anuncia.
+      -->
+      <p class="nds-text-body nds-text-muted-foreground">
+        {$tStore('demonstration.labels.current')}: {interactiveCurrent} / 8
+      </p>
     </div>
   {/snippet}
 
@@ -628,6 +682,7 @@ interface PaginationDirectionalProps {
         items: [
           { name: 'isActive',  type: $tStore('props.table.isActive.type'),  defaultValue: $tStore('props.table.isActive.default'),  required: $tStore('props.table.isActive.required'),  description: toPlainText($tStore('props.table.isActive.description'))  },
           { name: 'size',      type: $tStore('props.table.size.type'),      defaultValue: $tStore('props.table.size.default'),      required: $tStore('props.table.size.required'),      description: toPlainText($tStore('props.table.size.description'))      },
+          { name: 'href',      type: 'string',                              defaultValue: '—',                                     required: $tStore('props.table.size.required'),      description: hrefPropDescription                                      },
           { name: 'text',      type: $tStore('props.table.text.type'),      defaultValue: $tStore('props.table.text.default'),      required: $tStore('props.table.text.required'),      description: $tStore('props.table.text.description')                  },
           { name: 'class',     type: $tStore('props.table.className.type'), defaultValue: $tStore('props.table.className.default'), required: $tStore('props.table.className.required'), description: $tStore('props.table.className.description')             },
           { name: 'children',  type: 'Snippet',                              defaultValue: $tStore('props.table.children.default'), required: $tStore('props.table.children.required'),  description: $tStore('props.table.children.description')              },
@@ -723,10 +778,10 @@ interface PaginationDirectionalProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4].map((i) => ({
-        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
-        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
-        priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
+      items: itemsFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
+        action: toPlainText(r.action),
+        result: toPlainText(r.result),
+        priority: localPriority(r.priority, $tNavStore),
       })),
     }}
     accessibility={{
@@ -736,13 +791,11 @@ interface PaginationDirectionalProps {
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
-        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.4.3', how: 'Contrast analyzer' },
-        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '2.4.7', how: 'Keyboard test' },
-        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
-        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2', how: 'DOM inspection' },
-      ],
+      items: itemsFromDict($tStore, 'testes.accessibility', ['criterion', 'level', 'how']).map((r) => ({
+        criterion: toPlainText(r.criterion),
+        level: r.level,
+        how: toPlainText(r.how),
+      })),
     }}
     visual={{
       title: $tStore('testes.visual.title'),
@@ -750,9 +803,9 @@ interface PaginationDirectionalProps {
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4].map((i) => ({
-        story: $tStore(`testes.visual.item${i}.story`),
-        priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
+      items: itemsFromDict($tStore, 'testes.visual', ['story', 'priority']).map((r) => ({
+        story: r.story,
+        priority: localPriority(r.priority, $tNavStore),
       })),
     }}
   />

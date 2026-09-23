@@ -165,9 +165,18 @@ morta; mas é reserva sem instância viva.
 regra perdedora de especificidade. O padding existia, era válido, e era
 sobrescrito.
 
-### D6 · Dois sistemas de link convivem, e o vanilla é o único fora do botão
+### D6 · O controle é o BOTÃO, nas cinco
 
-**Estado medido em 2026-09-16, por varredura de `.nds-*` no código das cinco**:
+**Decisão da dona, 2026-09-23.** Até essa data conviviam dois sistemas de
+controle, e a pendência abaixo esperava exatamente esta escolha. O vanilla
+passou a compor o botão; as regras de `.nds-pagination-link` saíram da folha,
+que encolheu de 190 para 137 linhas.
+
+**O que a decisão NÃO é**: ela é sobre a CLASSE, não sobre a tag. A tag é
+assunto de D10, e mudou no mesmo dia por outra razão.
+
+**O estado que a motivou, medido em 2026-09-16 por varredura de `.nds-*` no
+código das cinco:**
 
 | classe | quem emite |
 |---|---|
@@ -198,15 +207,24 @@ onde os dois sistemas estão descritos é a própria folha e, agora, este PRD.
 que está nele é o que o design system define. A divergência aqui não é de API de
 framework: é de markup e de classe, e tem fonte de verdade.
 
-> **PENDÊNCIA · 2026-09-16** — o comentário de `pagination.css` afirma que a
-> convivência dos dois sistemas de controle "está registrada como material de
-> cross-stack", e o registro não existe em lugar nenhum: `nds-pagination` não
-> aparece em nenhum `.md` do repositório. Enquanto isso, 70 das 190 linhas da
-> folha valem para uma stack só, e as cinco docs pages nomeiam
-> `.nds-pagination-link` na tabela de tokens.
-> **Fecha quando**: a decisão da dona estiver escrita — ou as quatro alinham ao
-> vanilla, ou o vanilla passa a compor o botão e as regras do link saem da folha
-> — e o comentário da folha apontar para onde ela está escrita.
+> **FECHADA · 2026-09-23 — a dona decidiu, e foi pelo segundo caminho**: o
+> vanilla passou a compor o botão e as regras do link saíram da folha.
+>
+> O que saiu, com produtor zero confirmado por varredura: `.nds-pagination-link`
+> e `.nds-pagination-icon`, com hover, foco, realce da página atual, quadrado do
+> ícone e estado desabilitado. Saiu junto a variante SEM `.nds-button` do recuo
+> assimétrico (D5), que estava ali "para o caso de o elemento não ser botão" e
+> nunca teve instância viva — e a guarda de `prefers-reduced-motion`, que só
+> desligava a transição do controle standalone e ficou sem o que desligar.
+>
+> A tabela de tokens das cinco docs pages deixou de nomear a classe morta.
+> **E o comentário que dizia existir um registro cross-stack saiu**: ele nunca
+> existiu, e agora não há convivência a registrar.
+>
+> **Achado de vizinhança que a remoção quase enterrou**: a sonda de densidade de
+> `escala-de-espacamento.stories.ts` usava `.nds-pagination-link` como consumidor
+> de `--size-lg`. Sem retarget, ela mediria NADA — verde, silenciosa e inútil.
+> Quem a achou foi a stack que mudou, não o portão.
 
 ### D7 · O rótulo textual de Prev/Next é ESCONDIDO por media query, nunca removido
 
@@ -225,9 +243,26 @@ caixa, e a caixa é alvo de toque.
 rótulo textual nenhum — os direcionais dele são quadrados de ícone em qualquer
 largura. Ver V7.
 
-### D8 · Desabilitado é `aria-disabled` MAIS saída da tabulação, porque `<a>` não tem `disabled`
+### D8 · O mecanismo do desabilitado segue a TAG
 
-**Estado nas três stacks de `<a>`** (vanilla, react, angular): `aria-disabled="true"`
+**Reescrita em 2026-09-23**, quando D10 passou a decidir a tag pela rota. A
+regra virou o espelho dela, e vale nas cinco:
+
+- **`<button>`** (sem rota): `disabled` nativo. O navegador resolve antes de
+  tudo — sai da tabulação, não dispara clique, e `elemento.click()` é no-op por
+  especificação;
+- **`<a>`** (com rota): `aria-disabled="true"` MAIS `tabindex="-1"` MAIS guarda
+  de clique em JS, porque em âncora não existe `disabled` e `.click()` dispara.
+
+**O vanilla guardava os DOIS caminhos, e isso foi corrigido junto.** O
+comentário dele admitia o motivo: a guarda existia para que a story provasse o
+extremo, porque a story usava `fireEvent`, que é `dispatchEvent` e atravessa
+`disabled`. Era **a asserção ditando o código de produção** — em vez de trocar
+o método do teste, o primitivo ganhou uma linha para o teste funcionar. O
+angular tinha chegado ao mesmo fato e resolvido pelo lado certo, com
+`elemento.click()`.
+
+**Estado anterior, nas três stacks de `<a>`** (vanilla, react, angular): `aria-disabled="true"`
 mais `tabindex="-1"`, mais uma guarda de clique em JavaScript.
 **Motivo, escrito nos três primitivos**: `pointer-events: none` barra só o
 mouse. Sem o tabindex negativo o controle inerte continua na ordem de tabulação
@@ -285,7 +320,27 @@ compõe o `Button` do design system com `nativeButton={false}` e `render`. Só v
 e svelte têm primitivo (reka e bits), e é de lá que vem a régua de páginas
 deles. Ver V11.
 
-### D10 · `hrefForPage` existe para o link ser destino de verdade (vanilla)
+### D10 · A TAG segue a rota, nas cinco
+
+**Decisão da dona, 2026-09-23.** Com endereço de página o controle é `<a>` —
+destino de verdade, abre em nova aba, é indexável. Sem endereço ele é
+`<button type="button">`, porque âncora vazia que age na própria página engana
+quem navega por teclado e por leitor de tela.
+
+Antes disso a tag era escolha de stack: `<a>` em vanilla, react e angular,
+`<button>` em vue e svelte — e o svelte tinha uma pendência aberta por causa
+disso. A decisão fecha as duas pontas de uma vez.
+
+**Custo medido antes de decidir**: 119 consultas `getByRole('link')` nas
+stories das cinco. Depois da mudança, quase todas viraram `button`, e as que
+ficaram `link` são as que exercitam rota de verdade — que passaram a existir,
+porque antes o caminho com rota tinha story em uma stack só.
+
+**O que isto habilita**: o rodapé de paginação do DataTable pode compor este
+componente sem herdar âncora vazia. Era a razão de a decisão ter sido adiada
+para esta passagem.
+
+#### `hrefForPage` existe para o link ser destino de verdade (vanilla)
 
 **Estado**: sem a função, todo link nasce `href="#"` e o clique é anulado — o
 que serve à paginação que vive só na memória. Com ela, o link ganha endereço e o
@@ -340,40 +395,55 @@ com tag variável e template Angular exige tag estática; os nós são criados p
 
 ## 5. Geometria e tokens
 
-Fonte: `docs/shared/styles/nds/pagination.css`, 190 linhas, lida linha a linha
-em 2026-09-16. Instrumento de conferência cruzada:
+Fonte: `docs/shared/styles/nds/pagination.css`, **137 linhas** depois de DD1,
+lida linha a linha em 2026-09-23. Instrumento de conferência cruzada:
 `node scripts/tabela-tokens.mjs pagination`.
+
+> **A tabela abaixo encolheu em 2026-09-23, e o motivo é DD1.** Até essa data
+> ela tinha vinte e oito linhas, e dezoito descreviam o CONTROLE — padding,
+> peso, cor em repouso, hover, realce da página atual, anel de foco, quadrado do
+> ícone, opacidade do desabilitado, transição. Nada disso é mais desta folha: o
+> controle passou a ser `.nds-button`, e quem declara essas propriedades é
+> `button.css`.
+>
+> **Quem apontou foi o portão, contra mim.** `prd_token_sem_lastro` acusou seis
+> tokens nomeados aqui que a folha já não lê — `--spacing-4`, `--spacing-2`,
+> `--font-weight-medium`, `--foreground`, `--background` e `--duration-fast` —,
+> e quem os deixou sem lastro foi a limpeza que eu mesma fiz na folha, na mesma
+> rodada. É a forma mais barata de descobrir que a documentação ficou para trás:
+> uma regra que compara os dois lados em vez de confiar em quem escreveu.
 
 | propriedade | valor | token |
 |---|---|---|
 | faixa · largura padrão | 100% | **literal** — é o que a torna um bloco de linha própria (D1) |
 | faixa · centragem padrão | automática | **literal** `auto` em `margin-inline` (D1) |
 | lista · distância entre controles | 4px | `--spacing-1` |
-| controle · altura mínima | 36px | `--size-lg` — piso, não teto (D2) |
-| controle · padding lateral | 16px | `--spacing-4` |
-| controle · padding vertical | 8px | `--spacing-2` |
-| controle · raio | 14px na base | `--radius` |
-| controle · corpo do texto | 14px | `--text-control` |
-| controle · peso | 500 | `--font-weight-medium`, com literal `500` de fallback |
-| controle · família | herdada | **literal** `inherit` — a faixa não escolhe fonte |
-| controle · texto em repouso | — | `--foreground` |
-| controle · gap interno | 4px | `--spacing-1` |
-| hover · fundo | accent a 10% | `--accent` com alfa literal `0.1` |
-| hover · texto | — | `--accent-foreground` |
-| página atual · fundo | accent a 20% | `--accent` com alfa literal `0.2` (D3) |
-| página atual · texto | — | `--accent-foreground` |
-| foco · vão interno | 2px | `--background`, com o `2px` literal |
-| foco · banda | 5px | `--ring`, com o `5px` literal |
-| desabilitado · opacidade | 0.5 | **literal** |
-| direcional quadrado · lado | 36px | `--size-lg` |
-| direcional quadrado · ícone | 16px | `--spacing-4` |
 | recuo do lado do ícone | 6px | `--spacing-1-5` (D5) |
 | reticências · lado | 36px | `--size-lg` |
 | reticências · corpo do texto | 14px | `--text-control` |
 | reticências · cor | — | `--muted-foreground` |
-| transição | fundo e cor | `--duration-fast` |
 | rótulo textual · ponto de aparição | 40rem | **literal** — ver abaixo |
 
+**O que esta folha deixou de declarar, e onde foi parar.** Estas linhas saíram
+da tabela porque saíram do arquivo; quem quiser conferi-las agora lê
+`button.css`, e a tabela de tokens que as cinco docs pages publicam já aponta
+para lá:
+
+| propriedade | quem declara agora |
+|---|---|
+| altura mínima do controle (piso de 36px, D2) | `.nds-button` |
+| padding lateral e vertical | `.nds-button`, por tamanho |
+| raio, corpo do texto, peso e família | `.nds-button` |
+| texto em repouso, hover e realce da página atual | `.nds-button-ghost` e `.nds-button-outline` |
+| anel de foco | `.nds-button:focus-visible` |
+| opacidade do desabilitado | `.nds-button[aria-disabled="true"]` e `:disabled` |
+| quadrado do ícone | `.nds-button-icon` |
+| transição | `.nds-button` |
+
+**Consequência que vale registrar**: o realce da página atual deixou de ser
+`--accent` a 20% e passou a ser a variante `outline` do botão (D3 foi
+reescrita). Não é a mesma cor, e a mudança é deliberada — o que o componente
+promete é que a página atual se distingue das demais, não um matiz específico.
 **Nenhuma cor literal na folha.** As duas únicas quantidades de cor escritas à
 mão são os alfas `0.1` e `0.2`, que são força de composição e não matiz: a cor
 vem sempre do token.
@@ -421,18 +491,23 @@ mesmo accent a 10%, por coincidência de valor e não por leitura da mesma regra
 
 ## 6. Estados
 
+> **Reescrita em 2026-09-23, por DD1.** Quatro linhas desta tabela descreviam
+> o controle standalone — repouso, ponteiro, página atual e foco —, e o
+> controle passou a ser o botão nas cinco. O que muda em cada estado é agora
+> do `.nds-button`; o que esta folha ainda governa é a faixa, a lista, as
+> reticências e o rótulo que some em tela estreita.
+
 | estado | quando ocorre | o que muda | tem produtor? |
 |---|---|---|---|
-| Repouso | sempre | fundo transparente, texto `--foreground` | sim, as cinco |
-| Sob o ponteiro | `:hover` | fundo accent a 10%, texto `--accent-foreground` | sim nas cinco como story (`Hover` em quatro; no angular não há story de hover) — mas **a cor não é afirmada em lugar nenhum**: o vanilla registra por escrito que `:hover` computado é frágil no harness e afirma o cursor e a alcançabilidade no lugar |
-| Página atual | `aria-current="page"` | vanilla: fundo accent a 20%; as outras quatro: variante `outline` do botão | sim, as cinco |
+| Repouso | sempre | a variante `ghost` do botão: fundo transparente e texto herdado | sim, as cinco |
+| Sob o ponteiro | `:hover` | o hover da variante `ghost` do botão | sim nas cinco como story (`Hover` em quatro; no angular não há story de hover) — mas **a cor não é afirmada em lugar nenhum**: o vanilla registra por escrito que `:hover` computado é frágil no harness e afirma o cursor e a alcançabilidade no lugar |
+| Página atual | `aria-current="page"` | a variante `outline` do botão, nas CINCO desde 2026-09-23 — antes o vanilla usava fundo accent a 20% e era a única fora do botão (D6) | sim, as cinco |
 | Desabilitado | Prev na página 1, Next na última | opacidade 0.5 e ponteiro barrado; teclado sai por `tabindex="-1"` ou `disabled` nativo | sim, as cinco |
-| Foco por teclado | `:focus-visible` | vão de 2px em `--background` mais banda de 5px em `--ring` | sim, as cinco, medindo `boxShadow` diferente de `none` |
+| Foco por teclado | `:focus-visible` | o anel do botão | sim, as cinco, medindo `boxShadow` diferente de `none` |
 | Rótulo escondido | largura abaixo de 40rem | o texto de Prev/Next sai da tela; o nome acessível fica | **não** — nenhuma story muda a largura do viewport (C16) |
 | Faixa alinhada à ponta | `data-align="end"` | largura automática, sem margem automática, justificação na borda | sim em react, vue, svelte e vanilla; **não no angular** |
 | Faixa alinhada ao início | `data-align="start"` | o espelho do anterior | **não** — o valor aparece só no snippet de anatomia do vanilla |
-| Movimento reduzido | `prefers-reduced-motion: reduce` | `transition: none` | **não** — nenhuma story de pagination lê a preferência; quem a zera por cima é a escada de `docs/shared/tokens/motion.css` |
-| Inerte por classe | `.is-disabled` no link | mesma coisa que `aria-disabled="true"` | **não** — zero produtores nas cinco stacks |
+| Movimento reduzido | `prefers-reduced-motion: reduce` | nada nesta folha — a única transição que ela tinha era a do controle standalone, e saiu com ele. Quem desliga o movimento do botão é a guarda de `button.css` | **não se aplica mais aqui** |
 
 O conteúdo compartilhado publica SEIS configurações em `states`
 (`default`, `hover`, `active`, `disabled`, `focus`, `lastPage`), e as cinco docs
@@ -503,7 +578,7 @@ Nenhum dos itens abaixo é visto por portão. Os que TÊM portão estão na §11
 |---|---|---|---|
 | V1 | tag do link numerado | `<button>` no svelte (snippet `child` do bits); `<a>` em react, vue, vanilla e angular | 4 × 1 — e o conteúdo compartilhado (`notes.item1`) afirma `<a>` por padrão, então a exceção contradiz a documentação que ela publica |
 | V2 | tag dos direcionais | `<button>` em vue e svelte (primitivos da lib); `<a>` em react, vanilla e angular | 3 × 2 |
-| V3 | mecanismo de desabilitado | `disabled` nativo em vue e svelte; `aria-disabled` + `tabindex="-1"` + guarda de clique em react, vanilla e angular | 3 × 2 — `notes.item2` documenta só o segundo |
+| V3 | mecanismo de desabilitado | **resolvido em 2026-09-23**: o mecanismo segue a TAG nas cinco (D8) — `disabled` nativo no botão, `aria-disabled` + `tabindex="-1"` + guarda em JS na âncora. Antes era escolha de stack | 3 × 2 — `notes.item2` documenta só o segundo |
 | V4 | quem veste o controle | `.nds-pagination-link` standalone no vanilla; `.nds-button` + variante em react, vue, svelte e angular | 4 × 1 (D6) |
 | V5 | realce da página atual | accent a 20% no vanilla; borda e relevo da variante `outline` nas outras quatro | 4 × 1 — e `props.table.isActive.description` do conteúdo descreve a variante outline, isto é, documenta a maioria e não a referência |
 | V6 | caixa do link numerado | 36×36 com altura CRAVADA nas quatro (tamanho de ícone do botão, cujo comentário justifica o height fixo por "não haver texto"); no vanilla, 36px de piso com 16px de padding lateral | 4 × 1 — o link numerado tem texto, que é o número |
@@ -606,15 +681,14 @@ Medido em 2026-09-16:
 dentro de um template de snippet), não é violação de axe, e o evento "existe"
 porque está escrito em dois documentos.
 
-> **PENDÊNCIA · 2026-09-16** — `pagination_change` é ensinado pelo snippet de
-> importação da docs page do vanilla, e não está tipado em nenhuma das cinco
-> `analytics.ts`. O evento real é `page_change`, tipado nas cinco e disparado nas
-> cinco. Estreitada em 2026-09-17: as guidelines de navegação do vanilla e do
-> angular também o ensinavam, e as duas deixaram de ensinar com a migração do
-> catálogo. Sobra o snippet, que é código de docs page.
-> **Fecha quando**: o snippet do vanilla disser `page_change`, e
-> `grep -rn "pagination_change"` não achar nada fora dos documentos que registram
-> o defeito.
+> **FECHADA · 2026-09-23** — o snippet do vanilla diz `page_change`, e
+> `pagination_change` não aparece mais em código nenhum das cinco stacks. O que
+> resta são os documentos que registram o defeito, incluindo este parágrafo.
+>
+> Vale guardar o mecanismo, porque ele não é do Pagination: `event_not_typed` lê
+> só o conteúdo COMPARTILHADO, então nome de evento inventado dentro de um
+> snippet de docs page passa por todos os portões. O leitor copia o snippet e
+> recebe um evento que não existe no catálogo — e ninguém fica vermelho.
 
 ## 10. Reconstruir do zero
 
@@ -696,7 +770,16 @@ acima — então fica registrada aqui com a contagem por regra:
 | `titulo_como_item_da_propria_lista` | medium | angular | a lista de `accessibility.screenReader` é montada com `Object.values` e o `title` do bloco vira o primeiro item dela |
 | `identificador_pt` | low | react, angular (2×) | `estilo` em duas stories e `novo` em uma |
 
-> **PENDÊNCIA · 2026-09-16** — os 21 achados acima estão abertos, e quatro deles
+> **FECHADA · 2026-09-23** — o `audit.mjs pagination` está em ZERO.
+>
+> Eram 21 em 2026-09-16 e **25 quando esta passagem começou**: a lista não
+> zerou e ainda cresceu em uma semana. É o argumento para a ordem que a dona
+> escolheu — arrumar este componente ANTES de o rodapé do DataTable passar a
+> compô-lo, porque cada conserto adiado passaria a valer por seis lugares.
+>
+> Texto original, para registro:
+>
+> **Registro de 2026-09-16** — os 21 achados acima estão abertos, e quatro deles
 > são de severidade alta: a lista de acessibilidade truncada em quatro stacks e
 > os quatro valores de design em `style` inline no vanilla.
 > **Fecha quando**: `node scripts/audit.mjs pagination --json` devolver lista
@@ -769,7 +852,13 @@ a referência, e a revisão precisa decidir qual dos dois corrigir:
 3. a tabela de tokens nomeia `.nds-pagination-link` em cinco das sete linhas, e
    essa classe existe numa stack só (D6).
 
-> **PENDÊNCIA · 2026-09-16** — o link numerado do svelte é um `<button>` sem
+> **FECHADA · 2026-09-23 por D10** — a tag deixou de ser escolha de stack e
+> passou a seguir a rota. O svelte estava certo para o caso sem rota e ganhou o
+> caminho com rota, que não tinha; as outras quatro ganharam o caminho de botão.
+>
+> Texto original, para registro:
+>
+> **Registro de 2026-09-16** — o link numerado do svelte é um `<button>` sem
 > `href`, e os direcionais de vue e svelte também são `<button>`. A promessa de
 > `usage.do.item4` — a URL refletir a página atual para compartilhamento — não
 > tem como ser cumprida onde não há endereço, e `notes.item1` afirma `<a>` por

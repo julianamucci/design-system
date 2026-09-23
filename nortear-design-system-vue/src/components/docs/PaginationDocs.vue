@@ -72,6 +72,34 @@ function localPriority(raw: string): string {
   return priorityKeyMap[raw] ?? raw;
 }
 
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo. O
+ * primeiro campo é quem decide se o item existe, e os demais acompanham.
+ *
+ * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+ * compartilhado ganha um item e ele simplesmente não existe para quem lê — sem
+ * erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu aqui com o
+ * sexto critério de acessibilidade, o do alvo de toque (WCAG 2.5.8).
+ *
+ * Trocar 5 por 6 não resolveria: o total cravado É o defeito, e ele volta no
+ * item seguinte.
+ */
+function entriesFromDict<K extends string>(
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!tContent(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, tContent(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
 
 useSeoEffect(computed(() => ({
@@ -224,7 +252,8 @@ interface PaginationProps {
 
 // PaginationLink
 interface PaginationLinkProps {
-  href?: string;
+  href?: string;                             // com rota: <a href>; sem rota: <button type="button">
+
   size?: 'default' | 'sm' | 'lg' | 'icon';   // default 'icon'
   isActive?: boolean;                        // default false
   class?: string;
@@ -338,10 +367,27 @@ const propCols = computed(() => ({
   description: tContent('props.table.description'),
 }));
 
+/**
+ * `href` é prop só desta stack — o conteúdo compartilhado não tem chave para
+ * ela, e as outras quatro não a expõem —, então a descrição mora aqui. Nos três
+ * idiomas: um texto cravado em português deixaria a tabela meio traduzida.
+ */
+const HREF_PROP_DESCRIPTION: Record<'pt-BR' | 'en' | 'es', string> = {
+  // Sem marcação de tag no texto: a tabela renderiza descrição como HTML, e
+  // um "a href" escrito com sinais de menor e maior sumiria da tela.
+  'pt-BR': 'Endereço da página. Com ele o controle é uma âncora navegável; sem ele, um botão que age na própria página.',
+  en: 'Page address. With it the control is a navigable anchor; without it, a button that acts on the current page.',
+  es: 'Dirección de la página. Con ella el control es un ancla navegable; sin ella, un botón que actúa en la propia página.',
+};
+
+const hrefPropDescription = computed(
+  () => HREF_PROP_DESCRIPTION[locale.value as 'pt-BR' | 'en' | 'es'] ?? HREF_PROP_DESCRIPTION['pt-BR'],
+);
+
 const linkPropItems = computed(() => [
   { name: 'isActive',  type: tContent('props.table.isActive.type'),  defaultValue: tContent('props.table.isActive.default'),  required: tContent('props.table.isActive.required'),  description: toPlainText(tContent('props.table.isActive.description'))  },
   { name: 'size',      type: tContent('props.table.size.type'),      defaultValue: tContent('props.table.size.default'),      required: tContent('props.table.size.required'),      description: toPlainText(tContent('props.table.size.description'))      },
-  { name: 'href',      type: 'string',                                defaultValue: '—',                                       required: 'Não',                                        description: 'URL do link. Em SPA pode ser omitido — o componente dispara onClick.' },
+  { name: 'href',      type: 'string',                                defaultValue: '—',                                       required: tContent('props.table.size.required'),        description: hrefPropDescription.value },
   { name: 'class',     type: tContent('props.table.className.type'), defaultValue: tContent('props.table.className.default'), required: tContent('props.table.className.required'), description: toPlainText(tContent('props.table.className.description')) },
 ]);
 
@@ -398,24 +444,30 @@ const analyticsItems = computed(() => [
   },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
-  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
-  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
-  priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
-})));
+const functionalTestItems = computed(() =>
+  entriesFromDict('testes.functional', ['action', 'result', 'priority']).map((row) => ({
+    action: toPlainText(row.action),
+    result: toPlainText(row.result),
+    priority: localPriority(row.priority),
+  })),
+);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'AA',    how: 'axe-core'         },
-  { criterion: tContent('testes.accessibility.item2'), level: '1.4.3', how: 'Contrast checker' },
-  { criterion: tContent('testes.accessibility.item3'), level: '2.4.7', how: 'Manual review'    },
-  { criterion: tContent('testes.accessibility.item4'), level: '4.1.2', how: 'DevTools attribute' },
-  { criterion: tContent('testes.accessibility.item5'), level: '4.1.2', how: 'DevTools attribute' },
-]);
+// Nível WCAG e forma de verificar vêm do dicionário — cravá-los aqui foi o que
+// deu quatro valores diferentes para o mesmo campo entre as cinco páginas.
+const a11yTestItems = computed(() =>
+  entriesFromDict('testes.accessibility', ['criterion', 'level', 'how']).map((row) => ({
+    criterion: toPlainText(row.criterion),
+    level: row.level,
+    how: toPlainText(row.how),
+  })),
+);
 
-const visualTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
-  story: tContent(`testes.visual.item${i}.story`),
-  priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
-})));
+const visualTestItems = computed(() =>
+  entriesFromDict('testes.visual', ['story', 'priority']).map((row) => ({
+    story: row.story,
+    priority: localPriority(row.priority),
+  })),
+);
 
 const a11yCritCols = computed(() => ({
   criterion: tNav('common.criterion'),
@@ -446,7 +498,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="lg"
       >
         <Pagination
-          :aria-label="tNav('nav.demonstration')"
+          :aria-label="tContent('demonstration.labels.navigationLabel')"
           :total="50"
           :items-per-page="10"
           :default-page="1"
@@ -454,7 +506,7 @@ const a11yCritCols = computed(() => ({
         >
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious>
+              <PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')">
                 <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.previous') }}</span>
               </PaginationPrevious>
             </PaginationItem>
@@ -500,7 +552,7 @@ const a11yCritCols = computed(() => ({
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationNext>
+              <PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')">
                 <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.next') }}</span>
               </PaginationNext>
             </PaginationItem>
@@ -605,7 +657,7 @@ const a11yCritCols = computed(() => ({
         >
           <PaginationContent>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 1`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 1`">
                 1
               </PaginationLink>
             </PaginationItem>
@@ -613,14 +665,14 @@ const a11yCritCols = computed(() => ({
             <PaginationItem>
               <PaginationLink
                 :is-active="true"
-                :aria-label="`Página atual, 6`"
+                :aria-label="`${tContent('demonstration.labels.page')} 6`"
               >
                 6
               </PaginationLink>
             </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 12`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 12`">
                 12
               </PaginationLink>
             </PaginationItem>
@@ -636,7 +688,7 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <PaginationContent>
-            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')" /></PaginationItem>
             <PaginationItem
               v-for="n in 12"
               :key="n"
@@ -645,7 +697,7 @@ const a11yCritCols = computed(() => ({
                 {{ n }}
               </PaginationLink>
             </PaginationItem>
-            <PaginationItem><PaginationNext /></PaginationItem>
+            <PaginationItem><PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')" /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
@@ -659,8 +711,8 @@ const a11yCritCols = computed(() => ({
         >
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious>
-                <span class="hidden nds-sm-block">Anterior</span>
+              <PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')">
+                <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.previous') }}</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
@@ -671,13 +723,18 @@ const a11yCritCols = computed(() => ({
             </PaginationItem>
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
             <PaginationItem>
-              <PaginationNext>
-                <span class="hidden nds-sm-block">Próxima</span>
+              <PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')">
+                <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.next') }}</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
+      <!-- O defeito é o CONTROLE de direção sem nome, então ele precisa ser
+           um controle: `PaginationLink` cru, com a seta como único texto e
+           sem `aria-label` — é exatamente o que `PaginationPrevious` e
+           `PaginationNext` evitam ao escreverem o nome acessível sozinhos.
+           Usá-los aqui apagaria o defeito que a legenda descreve. -->
       <template #dont-preview-1>
         <Pagination
           :aria-label="stripHtml(tContent('doDont.pair2.dont'))"
@@ -687,7 +744,7 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <PaginationContent>
-            <PaginationItem><PaginationPrevious><span>&lt;</span></PaginationPrevious></PaginationItem>
+            <PaginationItem><PaginationLink>&lt;</PaginationLink></PaginationItem>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
             <PaginationItem>
               <PaginationLink :is-active="true">
@@ -695,7 +752,7 @@ const a11yCritCols = computed(() => ({
               </PaginationLink>
             </PaginationItem>
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationNext><span>&gt;</span></PaginationNext></PaginationItem>
+            <PaginationItem><PaginationLink>&gt;</PaginationLink></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
@@ -723,7 +780,7 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <PaginationContent>
-            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')" /></PaginationItem>
             <PaginationItem>
               <PaginationLink :is-active="true">
                 1
@@ -731,7 +788,7 @@ const a11yCritCols = computed(() => ({
             </PaginationItem>
             <PaginationItem><PaginationLink>2</PaginationLink></PaginationItem>
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationNext /></PaginationItem>
+            <PaginationItem><PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')" /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
@@ -745,13 +802,13 @@ const a11yCritCols = computed(() => ({
         >
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious>
-                <span class="hidden nds-sm-block">Anterior</span>
+              <PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')">
+                <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.previous') }}</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem>
-              <PaginationNext>
-                <span class="hidden nds-sm-block">Próxima</span>
+              <PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')">
+                <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.next') }}</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>
@@ -766,36 +823,36 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <PaginationContent>
-            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')" /></PaginationItem>
             <PaginationItem>
               <PaginationLink
                 :is-active="true"
-                :aria-label="`Página atual, 1`"
+                :aria-label="`${tContent('demonstration.labels.page')} 1`"
               >
                 1
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 2`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 2`">
                 2
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 3`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 3`">
                 3
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 4`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 4`">
                 4
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 5`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 5`">
                 5
               </PaginationLink>
             </PaginationItem>
-            <PaginationItem><PaginationNext /></PaginationItem>
+            <PaginationItem><PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')" /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
@@ -808,38 +865,38 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <PaginationContent>
-            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationPrevious :aria-label="tContent('demonstration.labels.previousLabel')" /></PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 1`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 1`">
                 1
               </PaginationLink>
             </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 5`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 5`">
                 5
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
               <PaginationLink
                 :is-active="true"
-                :aria-label="`Página atual, 6`"
+                :aria-label="`${tContent('demonstration.labels.page')} 6`"
               >
                 6
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 7`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 7`">
                 7
               </PaginationLink>
             </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 12`">
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 12`">
                 12
               </PaginationLink>
             </PaginationItem>
-            <PaginationItem><PaginationNext /></PaginationItem>
+            <PaginationItem><PaginationNext :aria-label="tContent('demonstration.labels.nextLabel')" /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
@@ -857,10 +914,14 @@ const a11yCritCols = computed(() => ({
           >
             <PaginationContent>
               <PaginationItem>
+                <!--
+                  O extremo se desabilita sozinho: o componente lê `:page` e
+                  escreve `disabled` nativo no botão. O `aria-disabled` à mão,
+                  com `tabindex` e classes do framework utilitário que saiu,
+                  duplicava isso — e as classes eram inertes.
+                -->
                 <PaginationPrevious
-                  :aria-disabled="compInteractiveCurrent === 1"
-                  :tabindex="compInteractiveCurrent === 1 ? -1 : 0"
-                  :class="compInteractiveCurrent === 1 ? 'pointer-events-none opacity-50' : ''"
+                  :aria-label="tContent('demonstration.labels.previousLabel')"
                   @click="compInteractiveCurrent = Math.max(1, compInteractiveCurrent - 1)"
                 />
               </PaginationItem>
@@ -868,9 +929,11 @@ const a11yCritCols = computed(() => ({
                 v-for="n in 8"
                 :key="n"
               >
+                <!-- A página atual NÃO ganha rótulo diferente: quem anuncia
+                     "página atual" é o `aria-current`, e em qualquer idioma. -->
                 <PaginationLink
                   :is-active="n === compInteractiveCurrent"
-                  :aria-label="n === compInteractiveCurrent ? `Página atual, ${n}` : `Ir para página ${n}`"
+                  :aria-label="`${tContent('demonstration.labels.page')} ${n}`"
                   @click="compInteractiveCurrent = n"
                 >
                   {{ n }}
@@ -878,19 +941,19 @@ const a11yCritCols = computed(() => ({
               </PaginationItem>
               <PaginationItem>
                 <PaginationNext
-                  :aria-disabled="compInteractiveCurrent === 8"
-                  :tabindex="compInteractiveCurrent === 8 ? -1 : 0"
-                  :class="compInteractiveCurrent === 8 ? 'pointer-events-none opacity-50' : ''"
+                  :aria-label="tContent('demonstration.labels.nextLabel')"
                   @click="compInteractiveCurrent = Math.min(8, compInteractiveCurrent + 1)"
                 />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-          <p
-            class="nds-text-body"
-            style="text-align: center"
-          >
-            Página {{ compInteractiveCurrent }} de 8
+          <!--
+            O leitor do estado EXTERNO. A composição existe para ensinar que o
+            componente não guarda a página — sem esta linha a demo parece
+            guardá-la sozinha, que é o oposto do que a seção ensina.
+          -->
+          <p class="nds-text-body nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.current') }}: {{ compInteractiveCurrent }} / 8
           </p>
         </div>
       </template>

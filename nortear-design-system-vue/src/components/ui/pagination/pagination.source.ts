@@ -42,21 +42,22 @@ function numero(value: unknown, defaultValue: number): number {
 /**
  * Link numerado.
  *
- * `href` é obrigatório na prática: sem ele a âncora não ganha papel de link,
- * não entra na ordem de tabulação e o Enter não a alcança — a faixa numerada
- * inteira ficaria fora do teclado.
+ * Sem `href` o controle é `<button type="button">` — a faixa que age na própria
+ * página não tem endereço a oferecer, e âncora vazia anunciaria "link" para
+ * prometer uma ida que não acontece. Quem tem URL de verdade passa a sua em
+ * `href` e recebe `<a href>` de volta.
  *
- * O `aria-label` com o número por extenso também não é enfeite: "3" sozinho não
- * diz nada em voz alta.
+ * O `aria-label` com o número por extenso não é enfeite: "3" sozinho não diz
+ * nada em voz alta.
  */
 function numberedLink(options: { active: string; recuo: number; onClick?: string; value?: string }): string {
-  const { active, recuo, onClick = '@click.prevent', value = 'n' } = options;
+  const { active, recuo, onClick, value = 'n' } = options;
   const p = ' '.repeat(recuo);
+  // Sem handler o controle não ganha linha vazia no lugar dele.
+  const clickAttribute = onClick ? `\n${p}  ${onClick}` : '';
   return `${p}<PaginationLink
-${p}  href="#"
 ${p}  :is-active="${active}"
-${p}  :aria-label="\`Ir para página \${${value}}\`"
-${p}  ${onClick}
+${p}  :aria-label="\`Ir para página \${${value}}\`"${clickAttribute}
 ${p}>
 ${p}  {{ ${value} }}
 ${p}</PaginationLink>`;
@@ -105,7 +106,7 @@ function irPara(n: number) {
       <PaginationPrevious${previous} @click="irPara(atual - 1)" />
     </PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ active: 'atual === n', recuo: 6, onClick: '@click.prevent="irPara(n)"' })}
+${numberedLink({ active: 'atual === n', recuo: 6, onClick: '@click="irPara(n)"' })}
     </PaginationItem>
     <PaginationItem>
       <PaginationNext${next} @click="irPara(atual + 1)" />
@@ -167,7 +168,7 @@ export function paginationLinkInactiveSource(): string {
     `<Pagination :total="50" :items-per-page="10" :page="1">
   <PaginationContent>
     <PaginationItem>
-      <PaginationLink href="#" aria-label="Ir para página 2" @click.prevent>2</PaginationLink>
+      <PaginationLink aria-label="Ir para página 2">2</PaginationLink>
     </PaginationItem>
   </PaginationContent>
 </Pagination>`,
@@ -184,10 +185,10 @@ export function paginationLinkActiveSource(): string {
     `<Pagination :total="50" :items-per-page="10" :page="2">
   <PaginationContent>
     <PaginationItem>
-      <PaginationLink href="#" aria-label="Ir para página 1" @click.prevent>1</PaginationLink>
+      <PaginationLink aria-label="Ir para página 1">1</PaginationLink>
     </PaginationItem>
     <PaginationItem>
-      <PaginationLink href="#" :is-active="true" aria-label="Ir para página 2" @click.prevent>2</PaginationLink>
+      <PaginationLink :is-active="true" aria-label="Ir para página 2">2</PaginationLink>
     </PaginationItem>
   </PaginationContent>
 </Pagination>`,
@@ -266,10 +267,8 @@ const trechos: Trecho[] = [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12]`,
       <PaginationEllipsis v-if="trecho === 'ellipsis'" />
       <PaginationLink
         v-else
-        href="#"
         :is-active="trecho === 6"
         :aria-label="\`Ir para página \${trecho}\`"
-        @click.prevent
       >
         {{ trecho }}
       </PaginationLink>
@@ -342,7 +341,7 @@ function irPara(n: number) {
         <PaginationPrevious @click="irPara(atual - 1)" />
       </PaginationItem>
       <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ active: 'atual === n', recuo: 8, onClick: '@click.prevent="irPara(n)"' })}
+${numberedLink({ active: 'atual === n', recuo: 8, onClick: '@click="irPara(n)"' })}
       </PaginationItem>
       <PaginationItem>
         <PaginationNext @click="irPara(atual + 1)" />
@@ -398,10 +397,8 @@ const trechos: Trecho[] = [1, 2, 3, 'ellipsis', 12]`,
         <PaginationEllipsis v-if="trecho === 'ellipsis'" />
         <PaginationLink
           v-else
-          href="#"
           :is-active="trecho === 2"
           :aria-label="\`Ir para página \${trecho}\`"
-          @click.prevent
         >
           {{ trecho }}
         </PaginationLink>

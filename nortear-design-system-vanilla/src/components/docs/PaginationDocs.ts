@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createPagination } from '@/components/ui/pagination';
+import { createPagination, type PaginationLabels } from '@/components/ui/pagination';
 import uiTranslations from '@/i18n/ui.json';
 import paginationTranslations from '@shared/content/pagination/translations.json';
 
@@ -45,6 +45,32 @@ function screenReaderItems(): string[] {
 }
 const { t, subscribe } = createTranslation(paginationTranslations as Record<string, unknown>);
 
+/**
+ * Os índices `itemN` de uma seção do dicionário, em ordem.
+ *
+ * Contar à mão envelhece em silêncio: `testes.accessibility` tinha SEIS itens
+ * escritos nos três idiomas e a página publicava cinco — o sexto existia, era
+ * traduzido, e não chegava à tela. Cravar `[1..6]` no lugar de `[1..5]`
+ * repetiria o defeito na próxima entrada, então a lista sai do próprio
+ * dicionário e passa a acompanhar quem escreve o conteúdo.
+ */
+function itemIndices(path: string): number[] {
+  const locale = getLocale();
+  const section = path
+    .split('.')
+    .reduce<unknown>(
+      (node, key) =>
+        node && typeof node === 'object' ? (node as Record<string, unknown>)[key] : undefined,
+      (paginationTranslations as Record<string, unknown>)[locale],
+    );
+  if (!section || typeof section !== 'object') return [];
+  return Object.keys(section)
+    .map((key) => /^item(\d+)$/.exec(key))
+    .filter((m): m is RegExpExecArray => m !== null)
+    .map((m) => Number(m[1]))
+    .sort((a, b) => a - b);
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
@@ -56,6 +82,38 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * Rótulos dos controles no IDIOMA DA PÁGINA.
+ *
+ * Sem isto a faixa desta stack anunciava "Ir para página 3" em português nas
+ * páginas `en` e `es`: os rótulos eram constante de módulo da fábrica, e só o
+ * nome do landmark aceitava valor de fora. As outras quatro stacks sempre
+ * passaram os seus por `demonstration.labels.*`.
+ *
+ * Cada caminho aparece POR EXTENSO, nunca montado por interpolação: chave
+ * interpolada some da busca de quem lê e do próprio portão que compara as cinco
+ * demonstrações — foi assim que o vanilla apareceu divergente no `data-table`
+ * sendo a referência.
+ *
+ * Texto VISÍVEL e NOME ACESSÍVEL dos direcionais são chaves diferentes, e é o
+ * que faltava: `previous` / `next` são "Anterior" / "Próxima", que somem abaixo
+ * de 40rem; `previousLabel` / `nextLabel` são a frase inteira que o leitor de
+ * tela anuncia, e sem elas o padrão da fábrica saía em português nas páginas
+ * `en` e `es`. `navigationLabel` é o nome do landmark — a opção `aria-label`
+ * continua vencendo quando a instância precisa de nome distinto.
+ */
+function demoLabels(): Partial<PaginationLabels> {
+  const pagePrefix = t('demonstration.labels.page');
+  return {
+    navigation: t('demonstration.labels.navigationLabel'),
+    previous: t('demonstration.labels.previousLabel'),
+    next: t('demonstration.labels.nextLabel'),
+    previousText: t('demonstration.labels.previous'),
+    nextText: t('demonstration.labels.next'),
+    page: (n: number) => `${pagePrefix} ${n}`,
+  };
+}
+
 function buildDemoPagination(total: number, current: number, label?: string): HTMLElement {
   const nav = createPagination({
     total,
@@ -65,6 +123,7 @@ function buildDemoPagination(total: number, current: number, label?: string): HT
     // fábrica, e não por um setAttribute depois de construir — o retoque some
     // na primeira refatoração.
     ...(label ? { 'aria-label': label } : {}),
+    labels: demoLabels(),
     onPageChange: (page) => {
       track('page_change', {
         component: 'pagination',
@@ -74,6 +133,96 @@ function buildDemoPagination(total: number, current: number, label?: string): HT
       });
     },
   });
+  return nav;
+}
+
+/**
+ * Deixa a faixa quebrar linha dentro do painel do Do & Don't.
+ *
+ * O painel do par ocupa METADE da largura da seção, e `.nds-button` declara
+ * `flex-shrink: 0`: a lista não encolhe, ela transborda — e quem clipa corta os
+ * dois lados, porque `.nds-pagination` é largura total centrada. O axe acha
+ * isso pela beirada, em `target-size`, com sobras de poucos pixels; foi medido
+ * assim no vue. O risco cresceu aqui quando o direcional passou a carregar
+ * "Anterior"/"Próxima" por extenso.
+ *
+ * `flex-wrap` é mecânica, não valor de desenho.
+ */
+function allowWrap(nav: HTMLElement): HTMLElement {
+  const list = nav.querySelector<HTMLElement>('[data-slot="pagination-content"]');
+  if (list) list.style.flexWrap = 'wrap';
+  return nav;
+}
+
+/**
+ * Anti-padrão do par 1: a MESMA faixa, com as reticências abertas.
+ *
+ * A fábrica colapsa toda faixa acima de sete páginas e não expõe como desligar.
+ * Desenhar `<a>` cru no lugar é imitação — a guideline 08 §15 pede componente
+ * VIVO em toda seção com exemplo, e era o que faltava aqui —, então a faixa é a
+ * que a fábrica produziu e cada reticência é trocada pelos números que ela
+ * escondia, clonando o link vizinho. O que o leitor compara continua sendo o
+ * componente.
+ */
+function expandEllipsis(nav: HTMLElement): HTMLElement {
+  const list = nav.querySelector<HTMLElement>('[data-slot="pagination-content"]');
+  const template = nav.querySelector<HTMLAnchorElement>(
+    '[data-slot="pagination-link"]:not([aria-current])',
+  );
+  if (!list || !template) return nav;
+  allowWrap(nav);
+
+  const itemNumber = (li: Element | null): number | null => {
+    const text = li?.querySelector('[data-slot="pagination-link"]')?.textContent?.trim();
+    const value = Number(text);
+    return text && Number.isInteger(value) ? value : null;
+  };
+
+  for (const li of Array.from(list.children)) {
+    if (!li.querySelector('[data-slot="pagination-ellipsis"]')) continue;
+    const from = itemNumber(li.previousElementSibling);
+    const to = itemNumber(li.nextElementSibling);
+    if (from === null || to === null) continue;
+
+    const replacement = document.createDocumentFragment();
+    for (let page = from + 1; page < to; page++) {
+      const item = li.cloneNode(false) as HTMLElement;
+      const link = template.cloneNode(true) as HTMLAnchorElement;
+      link.textContent = String(page);
+      // O rótulo sai do próprio template, para seguir o idioma da fábrica em vez
+      // de uma segunda frase escrita aqui.
+      const label = template.getAttribute('aria-label');
+      if (label) link.setAttribute('aria-label', label.replace(/\d+/, String(page)));
+      // `cloneNode` não copia ouvinte, e o `href` do clone é `#`: sem isto o
+      // clique rolaria a página ao topo.
+      link.addEventListener('click', (e) => e.preventDefault());
+      item.appendChild(link);
+      replacement.appendChild(item);
+    }
+    li.replaceWith(replacement);
+  }
+  return nav;
+}
+
+/**
+ * Anti-padrão do par 2: os direcionais reduzidos a "<" e ">".
+ *
+ * Mesma forma do par acima — o componente é o de verdade, e o que muda é o
+ * CONTEÚDO do controle: somem o chevron e o "Anterior"/"Próxima" por extenso,
+ * que é o que a legenda condena.
+ *
+ * O `aria-label` da fábrica FICA. Tirá-lo deixaria o link sem nome acessível e
+ * plantaria uma violação de axe na própria docs page; o defeito que o par
+ * mostra é o que se vê na tela, e é assim também nas outras stacks.
+ */
+function arrowsOnly(nav: HTMLElement): HTMLElement {
+  const arrows: Array<[string, string]> = [
+    ['pagination-previous', '<'],
+    ['pagination-next', '>'],
+  ];
+  for (const [slot, arrow] of arrows) {
+    nav.querySelector<HTMLElement>(`[data-slot="${slot}"]`)?.replaceChildren(arrow);
+  }
   return nav;
 }
 
@@ -179,14 +328,18 @@ export function createPaginationDocs(): HTMLElement {
             wrap.className = 'nds-cluster nds-w-full nds-p-2';
             wrap.dataset.justify = 'center';
             wrap.classList.add('nds-min-h-30');
-            wrap.appendChild(buildDemoPagination(10, 3, tNav('nav.demonstration')));
+            // Sem nome distinto de propósito: esta é a faixa que mostra o
+            // padrão, e o padrão do landmark é `labels.navigation`. As outras
+            // instâncias da página seguem com nome próprio, que é o que mantém
+            // o `landmark-unique` do axe satisfeito.
+            wrap.appendChild(buildDemoPagination(10, 3));
             return wrap;
           },
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
+          items: itemIndices('anatomy').map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -195,7 +348,7 @@ export function createPaginationDocs(): HTMLElement {
         return createDocsWhenToUse({
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
+            items: itemIndices('usage.guidelines').map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -204,7 +357,7 @@ export function createPaginationDocs(): HTMLElement {
               use: t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemIndices('usage.scenarios').map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
               a: t(`usage.scenarios.item${i}.a`),
@@ -227,11 +380,11 @@ export function createPaginationDocs(): HTMLElement {
           },
           do: {
             title: t('usage.do.title'),
-            items: [1, 2, 3, 4].map(i => t(`usage.do.item${i}`)),
+            items: itemIndices('usage.do').map(i => t(`usage.do.item${i}`)),
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.dont.item${i}`))),
+            items: itemIndices('usage.dont').map(i => DOMPurify.sanitize(t(`usage.dont.item${i}`))),
           },
         });
 
@@ -249,7 +402,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.classList.add('nds-min-h-20');
-                wrap.appendChild(buildDemoPagination(12, 6, stripHtml(t('doDont.pair1.do'))));
+                wrap.appendChild(allowWrap(buildDemoPagination(12, 6, stripHtml(t('doDont.pair1.do')))));
                 return wrap;
               },
               dontPreviewFactory: () => {
@@ -258,36 +411,13 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.classList.add('nds-min-h-20');
-                // Don't: muitos números seguidos sem ellipsis (composição manual).
-                const nav = document.createElement('nav');
-                nav.setAttribute('role', 'navigation');
-                nav.setAttribute('aria-label', 'Pagination (anti-padrão)');
-                nav.className = 'nds-cluster nds-w-full';
-                nav.dataset.justify = 'center';
-                nav.style.marginInline = 'auto';
-                const ul = document.createElement('ul');
-                ul.className = 'nds-cluster';
-                ul.dataset.spacing = 'xs';
-                ul.style.flexWrap = 'wrap';
-                for (let i = 1; i <= 14; i++) {
-                  const li = document.createElement('li');
-                  li.className = 'nds-list-none';
-                  const a = document.createElement('a');
-                  a.href = '#';
-                  a.className =
-                    'nds-rounded-md nds-text-body nds-font-medium nds-hover-bg-accent';
-                  a.style.cssText += ';display:inline-flex;align-items:center;justify-content:center;height:2.25rem;width:2.25rem;';
-                  a.textContent = String(i);
-                  if (i === 7) {
-                    a.setAttribute('aria-current', 'page');
-                    a.classList.add('nds-border-default');
-                  }
-                  a.addEventListener('click', (e) => e.preventDefault());
-                  li.appendChild(a);
-                  ul.appendChild(li);
-                }
-                nav.appendChild(ul);
-                wrap.appendChild(nav);
+                // Don't: a faixa de 12 páginas com as reticências abertas —
+                // componente vivo, e não um `<a>` desenhado à mão.
+                wrap.appendChild(
+                  expandEllipsis(
+                    buildDemoPagination(12, 6, stripHtml(t('doDont.pair1.dont'))),
+                  ),
+                );
                 return wrap;
               },
             },
@@ -302,7 +432,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.classList.add('nds-min-h-20');
-                wrap.appendChild(buildDemoPagination(5, 2, stripHtml(t('doDont.pair2.do'))));
+                wrap.appendChild(allowWrap(buildDemoPagination(5, 2, stripHtml(t('doDont.pair2.do')))));
                 return wrap;
               },
               dontPreviewFactory: () => {
@@ -311,30 +441,11 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.classList.add('nds-min-h-20');
-                // Don't: setas sem aria-label (composição manual).
-                const nav = document.createElement('nav');
-                nav.setAttribute('role', 'navigation');
-                nav.className = 'nds-cluster nds-w-full';
-                nav.dataset.justify = 'center';
-                nav.style.marginInline = 'auto';
-                const ul = document.createElement('ul');
-                ul.className = 'nds-cluster';
-                ul.dataset.spacing = 'xs';
-                ['<', '1', '2', '3', '>'].forEach((label) => {
-                  const li = document.createElement('li');
-                  li.className = 'nds-list-none';
-                  const a = document.createElement('a');
-                  a.href = '#';
-                  a.className =
-                    'nds-rounded-md nds-text-body nds-font-medium nds-hover-bg-accent';
-                  a.style.cssText += ';display:inline-flex;align-items:center;justify-content:center;height:2.25rem;width:2.25rem;';
-                  a.textContent = label;
-                  a.addEventListener('click', (e) => e.preventDefault());
-                  li.appendChild(a);
-                  ul.appendChild(li);
-                });
-                nav.appendChild(ul);
-                wrap.appendChild(nav);
+                // Don't: os direcionais reduzidos a "<" e ">" — componente
+                // vivo, com o conteúdo do controle trocado.
+                wrap.appendChild(
+                  allowWrap(arrowsOnly(buildDemoPagination(3, 2, stripHtml(t('doDont.pair2.dont'))))),
+                );
                 return wrap;
               },
             },
@@ -349,11 +460,11 @@ export function createPaginationDocs(): HTMLElement {
           secondaryCode: `const nav = createPagination({
   total: 10,
   current: 2,
-  // Cada link ganha destino de verdade e o clique NÃO é anulado: abrir em
-  // nova aba funciona, e o roteador de cliente intercepta como faria com
-  // qualquer link da página.
+  // Com endereço, cada controle é um link de verdade e o clique NÃO é
+  // anulado: abrir em nova aba funciona, e o roteador de cliente intercepta
+  // como faria com qualquer link da página. Sem ele, o controle é um botão.
   hrefForPage: (page) => \`?page=\${page}\`,
-  onPageChange: (page) => track('pagination_change', { page }),
+  onPageChange: (page) => track('page_change', { page }),
   align: 'end',
   'aria-label': 'Paginação de resultados',
 });`,
@@ -433,6 +544,7 @@ const nav = createPagination({
                   total: 5,
                   current: 1,
                   showPrevNext: true,
+                  labels: demoLabels(),
                   onPageChange: () => {},
                 });
                 nav.setAttribute('aria-label', t('variants.items.simple.name'));
@@ -462,6 +574,7 @@ const nav = createPagination({
                   total: 12,
                   current: 6,
                   showPrevNext: true,
+                  labels: demoLabels(),
                   onPageChange: () => {},
                 });
                 nav.setAttribute('aria-label', t('variants.items.withEllipsis.name'));
@@ -482,9 +595,10 @@ const nav = createPagination({
                 `wrapper.dataset.spacing = 'sm';\n` +
                 `wrapper.style.alignItems = 'center';\n` +
                 `const status = document.createElement('p');\n` +
+                `status.className = 'nds-text-body nds-text-muted-foreground';\n` +
                 `const navContainer = document.createElement('div');\n` +
                 `function rerender() {\n` +
-                `  status.textContent = \`Página \${current} de \${total}\`;\n` +
+                `  status.textContent = \`Página atual: \${current} / \${total}\`;\n` +
                 `  navContainer.replaceChildren(createPagination({\n` +
                 `    total,\n` +
                 `    current,\n` +
@@ -492,7 +606,7 @@ const nav = createPagination({
                 `    onPageChange: (page) => { current = page; rerender(); },\n` +
                 `  }));\n` +
                 `}\n` +
-                `wrapper.append(status, navContainer);\n` +
+                `wrapper.append(navContainer, status);\n` +
                 `rerender();`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -506,8 +620,11 @@ const nav = createPagination({
                 wrapper.dataset.spacing = 'sm';
                 wrapper.style.alignItems = 'center';
 
+                // O leitor do estado EXTERNO: a composição existe para ensinar
+                // que a fábrica não guarda a página, e sem a legenda a demo
+                // parece guardá-la sozinha — o oposto do que a seção ensina.
                 const status = document.createElement('p');
-                status.className = 'nds-text-body';
+                status.className = 'nds-text-body nds-text-muted-foreground';
 
                 const navContainer = document.createElement('div');
 
@@ -515,18 +632,22 @@ const nav = createPagination({
                 const total = 8;
 
                 const rerender = () => {
-                  status.textContent = `Página ${current} de ${total}`;
-                  const nav = createPagination({
-                    total,
-                    current,
-                    showPrevNext: true,
-                    onPageChange: (page: number) => { current = page; rerender(); },
-                  });
-                  nav.setAttribute('aria-label', t('variants.items.interactive.name'));
-                  navContainer.replaceChildren(nav);
+                  status.textContent = `${t('demonstration.labels.current')}: ${current} / ${total}`;
+                  // Pela OPÇÃO da fábrica, e não por um `setAttribute` depois de
+                  // construir: o retoque some na primeira refatoração.
+                  navContainer.replaceChildren(
+                    createPagination({
+                      total,
+                      current,
+                      showPrevNext: true,
+                      'aria-label': t('variants.items.interactive.name'),
+                      labels: demoLabels(),
+                      onPageChange: (page: number) => { current = page; rerender(); },
+                    }),
+                  );
                 };
 
-                wrapper.append(status, navContainer);
+                wrapper.append(navContainer, status);
                 rerender();
                 wrap.appendChild(wrapper);
                 return wrap;
@@ -559,12 +680,24 @@ export type PaginationOptions = {
   total: number;                           // total de páginas
   current: number;                         // página atualmente ativa (1-based)
   onPageChange?: (page: number) => void;   // avisado quando outra página é pedida
-  hrefForPage?: (page: number) => string;  // endereço real de cada página
+  hrefForPage?: (page: number) => string;  // endereço real; decide a tag do controle
   showPrevNext?: boolean;                  // exibe Previous e Next (default true)
   'aria-label'?: string;                   // nome do landmark (default 'Paginação')
   align?: 'start' | 'end';                 // encosta a faixa numa das pontas
   class?: string;                          // classes .nds-* extras no <nav>
+  labels?: Partial<PaginationLabels>;      // textos dos controles; o resto fica no padrão
 };
+
+export interface PaginationLabels {
+  navigation: string;                      // nome do landmark; 'aria-label' vence
+  previous: string;                        // nome acessível do controle anterior
+  next: string;                            // nome acessível do controle próximo
+  page: (n: number) => string;             // nome acessível de cada página numerada
+  previousText: string;                    // texto visível do controle anterior
+  nextText: string;                        // texto visível do controle próximo
+}
+
+export const PAGINATION_LABELS_DEFAULT: PaginationLabels;
 
 export function createPagination(options: PaginationOptions): HTMLElement;`;
 
@@ -585,11 +718,12 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
                 { name: 'total',         type: 'number',                    defaultValue: '—',            required: 'Sim', description: 'Total de páginas. Define quantos itens são renderizados.' },
                 { name: 'current',       type: 'number',                    defaultValue: '—',            required: 'Sim', description: 'Página atual (1-based). Recebe aria-current="page".' },
                 { name: 'onPageChange',  type: '(page: number) => void',    defaultValue: '—',            required: 'Não', description: 'Avisado quando outra página é pedida — clique numa página, no anterior ou no próximo. Continua sendo chamado junto com hrefForPage: é por ele que passam a analítica e o estado da tela.' },
-                { name: 'hrefForPage',   type: '(page: number) => string',  defaultValue: '—',            required: 'Não', description: 'Endereço real de cada página. Sem ele todo link nasce href="#" e o clique é anulado, o que serve à paginação que vive só na memória; com ele o link é um destino de verdade e o clique SEGUE — quem usa roteador de cliente o intercepta como faria com qualquer link.' },
+                { name: 'hrefForPage',   type: '(page: number) => string',  defaultValue: '—',            required: 'Não', description: 'Endereço real de cada página, e é ele que decide a tag do controle. Com ele cada controle é um link de verdade, que abre em nova aba e é indexável, e o clique SEGUE — quem usa roteador de cliente o intercepta como faria com qualquer link. Sem ele o controle é um botão, e o estado desabilitado passa a ser o nativo.' },
                 { name: 'showPrevNext',  type: 'boolean',                   defaultValue: 'true',         required: 'Não', description: 'Exibe controles Previous/Next nas extremidades.' },
                 { name: 'aria-label',    type: 'string',                    defaultValue: "'Paginação'",  required: 'Não', description: 'Nome acessível do landmark de navegação. Aceita também o apelido depreciado label; quando os dois vêm, aria-label vence.' },
                 { name: 'align',         type: "'start' | 'end'",           defaultValue: '—',            required: 'Não', description: 'Sem valor, a faixa ocupa a linha inteira e fica centrada; start e end a encolhem e a encostam na ponta — o caso do rodapé de tabela.' },
                 { name: 'class',         type: 'string',                    defaultValue: '—',            required: 'Não', description: 'Classes .nds-* extras no <nav>.' },
+                { name: 'labels',        type: 'Partial<PaginationLabels>', defaultValue: 'PAGINATION_LABELS_DEFAULT', required: 'Não', description: 'Textos dos controles, parcial: o que não vier continua no padrão em português. Cobre o nome do landmark, o nome acessível do anterior e do próximo, o rótulo de cada página numerada e o texto visível dos dois direcionais. É por aqui que a faixa fala o idioma da página.' },
               ],
             },
           ],
@@ -624,7 +758,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
+          items: itemIndices('accessibility.items').map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab'))      },
@@ -647,7 +781,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
       case 'notas':
         return createDocsNotes({
           componentSlug: 'pagination',
-          items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
+          items: itemIndices('notes').map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':
@@ -685,7 +819,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemIndices('testes.functional').map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -698,10 +832,14 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: t(`testes.accessibility.item${i}`),
-              level: 'AA',
-              how: 'axe-core / manual',
+            // Nível e ferramenta vêm do DICIONÁRIO, como em `functional` e
+            // `visual`. Enquanto o item era uma string solta, cada stack cravava
+            // os seus dois campos aqui — e as cinco páginas publicavam quatro
+            // respostas diferentes para a mesma pergunta.
+            items: itemIndices('testes.accessibility').map(i => ({
+              criterion: t(`testes.accessibility.item${i}.criterion`),
+              level: t(`testes.accessibility.item${i}.level`),
+              how: t(`testes.accessibility.item${i}.how`),
             })),
           },
           visual: {
@@ -710,7 +848,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemIndices('testes.visual').map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

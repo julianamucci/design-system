@@ -116,14 +116,14 @@ export const Playground: Story = {
       // a faixa saía com "Page 2" e "Go to previous page", em inglês, e o link
       // da página atual não tinha rótulo nenhum.
       for (let n = 1; n <= args.total; n++) {
-        const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
+        const link = canvas.getByRole('button', { name: `Ir para página ${n}` });
         await expect(link).toHaveAttribute('data-slot', 'pagination-link');
       }
-      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
         'pagination-previous',
       );
-      await expect(canvas.getByRole('link', { name: LABEL_NEXT })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: LABEL_NEXT })).toHaveAttribute(
         'data-slot',
         'pagination-next',
       );
@@ -131,13 +131,16 @@ export const Playground: Story = {
 
     await step('A página atual é marcada e o extremo é desabilitado', async () => {
       // accessibility.item4
-      const active = canvas.getByRole('link', { name: `Ir para página ${args.current}` });
+      const active = canvas.getByRole('button', { name: `Ir para página ${args.current}` });
       await expect(active).toHaveAttribute('aria-current', 'page');
       await expect(active).toHaveAttribute('data-active', 'true');
 
-      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
-      await expect(previous).toHaveAttribute('aria-disabled', 'true');
-      await expect(previous).toHaveAttribute('tabindex', '-1');
+      // O Playground não passa `hrefForPage`, então o controle é botão e o
+      // desabilitado é o nativo. Com rota, a mesma faixa sai de âncoras e o
+      // par é `aria-disabled` + `tabindex="-1"` — provado em Compositions.
+      const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+      await expect(previous.tagName).toBe('BUTTON');
+      await expect(previous).toBeDisabled();
     });
 
     await step('Clicar numa página avisa quem controla o estado', async () => {
@@ -146,17 +149,17 @@ export const Playground: Story = {
       // mesmo DOM, e sem isso a segunda rodada partiria de outra página.
       const target = args.current === 1 ? 2 : 1;
       onPageChange.mockClear();
-      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${target}` }));
+      await userEvent.click(canvas.getByRole('button', { name: `Ir para página ${target}` }));
       await expect(onPageChange).toHaveBeenLastCalledWith(target);
       await expect(
-        canvas.getByRole('link', { name: `Ir para página ${target}` }),
+        canvas.getByRole('button', { name: `Ir para página ${target}` }),
       ).toHaveAttribute('aria-current', 'page');
 
       await userEvent.click(
-        canvas.getByRole('link', { name: `Ir para página ${args.current}` }),
+        canvas.getByRole('button', { name: `Ir para página ${args.current}` }),
       );
       await expect(
-        canvas.getByRole('link', { name: `Ir para página ${args.current}` }),
+        canvas.getByRole('button', { name: `Ir para página ${args.current}` }),
       ).toHaveAttribute('aria-current', 'page');
     });
 

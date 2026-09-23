@@ -196,12 +196,19 @@ a última, a atual e as vizinhas.
 | `total` | — | Total de páginas |
 | `current` | — | Página atual, contando de 1 |
 | `onPageChange` | — | Avisado quando outra página é pedida. Opcional: uma paginação inteiramente de rota não precisa dele — e ele continua sendo chamado quando há `hrefForPage`, porque é por ele que passam a analítica e o estado da tela |
-| `hrefForPage` | — | Endereço real de cada página. Com ele o link é destino de verdade e o clique SEGUE — é o ponto de integração com roteador de cliente. Sem ele todo link nasce `#` e o clique é anulado |
+| `hrefForPage` | — | Endereço real de cada página, e é ele que decide a TAG do controle. Com ele o controle é `<a href>` — destino de verdade, abre em nova aba, é indexável, e o clique SEGUE para o roteador de cliente. Sem ele o controle é `<button type="button">`, e o desabilitado passa a ser o nativo |
 | `showPrevNext` | `true` | Exibe os controles direcionais |
 | `aria-label` | `'Paginação'` | Nome acessível do landmark |
 | `label` | — | **Apelido depreciado** de `aria-label`; quando os dois vêm, o canônico vence |
 | `align` | — | `start`/`end` encolhem a faixa e a encostam na ponta; sem valor ela ocupa a linha e fica centrada |
 | `class` | — | Classes `.nds-*` adicionais |
+
+**O desabilitado tem dois mecanismos, um por tag.** Em `<button>` é o `disabled`
+nativo, que sozinho tira da tabulação, barra o clique e se anuncia. Em `<a>` — o
+caso da faixa de rota — não existe `disabled`, e o par é `aria-disabled="true"`
+mais `tabindex="-1"`; o ponteiro quem barra é `.nds-button[aria-disabled="true"]`.
+Os dois caminhos existem porque a tag segue a rota, e uma story de cada prova o
+seu.
 
 **Os chevrons são da própria fábrica**: ela os cria por `createElementNS`, já com
 `aria-hidden`, então não se passa ícone no call site. Os rótulos acessíveis dos

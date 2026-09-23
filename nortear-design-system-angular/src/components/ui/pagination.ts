@@ -18,11 +18,15 @@ import { cn } from '@/lib/utils';
 // Visual: `.nds-pagination` + `.nds-pagination-list` + as classes de botão
 // (docs/shared/styles/nds/pagination.css e button.css).
 //
-// SEM primitivo do @radix-ng/primitives: o pacote não publica um `pagination`
-// (conferido em node_modules/@radix-ng/primitives). E não haveria o que compor:
+// SEM primitivo do @radix-ng/primitives, e o motivo escrito aqui até hoje
+// estava ERRADO: o pacote PUBLICA um `pagination` (1.1.2, com `rdxPaginationRoot`
+// e irmãs). O motivo medido para não usá-lo está na D9 do PRD — ele crava o nome
+// acessível em inglês por host binding, que nesta stack vence o atributo estático
+// de quem compõe, e desabilita por `[attr.disabled]`, que não tem efeito em `<a>`.
+// E não haveria muito o que compor:
 // a paginação não guarda estado próprio, não gerencia foco e não tem interação
-// de teclado além da que `<a>` já traz. O que a torna acessível é markup nativo
-// (`nav` + `ul` + `li` + `a`) mais três atributos ARIA.
+// de teclado além da que o elemento nativo já traz. O que a torna acessível é
+// markup nativo (`nav` + `ul` + `li` + o controle) mais três atributos ARIA.
 //
 // O visual de cada link é o do Button — é o que o conteúdo compartilhado
 // documenta (a prop `size` fala em "tamanho do botão subjacente", o estado
@@ -162,10 +166,47 @@ export class NdsPaginationContent {}
 })
 export class NdsPaginationItem {}
 
+// ─── A tag do controle segue a ROTA ───────────────────────────────────────────
+//
+// COM endereço de página o controle é `<a>`: destino de verdade, abre em nova
+// aba, é indexável. SEM rota ele é `<button type="button">` — âncora vazia que
+// age na própria página engana quem navega por teclado e por leitor de tela.
+//
+// Em Angular a diretiva vai no elemento de quem escreve, então quem escolhe a
+// tag é o consumidor: cada seletor aceita as duas, e o primitivo LÊ a tag do
+// host na construção para decidir o mecanismo de indisponível.
+//
+// Os dois caminhos existem, e são mecanismos diferentes para o mesmo contrato:
+//
+//   <a>       aria-disabled + tabindex="-1" + a guarda de clique (D8)
+//   <button>  o `disabled` nativo, que o navegador resolve antes de qualquer
+//             ouvinte — não há guarda a registrar
+//
+// O `type` é lido do atributo escrito e reemitido por binding, pelo mesmo
+// motivo do `aria-label` do `<nav>`: host binding APAGA atributo estático, e
+// `[attr.type]` no template perde para ele. O padrão é `button`, para que o
+// controle nunca submeta um formulário por acidente.
+
+type ControlHost = {
+  /** A tag do host é `<button>`? Decidido uma vez, na construção. */
+  readonly isButton: boolean;
+  /** `type` do botão, ou `null` quando o host é âncora. */
+  readonly buttonType: string | null;
+};
+
+function readControlHost(): ControlHost {
+  const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  const isButton = host.tagName === 'BUTTON';
+  return {
+    isButton,
+    buttonType: isButton ? (host.getAttribute('type') ?? 'button') : null,
+  };
+}
+
 // ─── Link numerado ────────────────────────────────────────────────────────────
 
 /**
- * Link de uma página — `<a href>`.
+ * Controle de uma página — `<a href>` com rota, `<button type="button">` sem.
  *
  * Diretiva-componente de atributo, e não componente com prop de render: é assim
  * que a integração com router acontece em Angular. O `<a routerLink="…">` do
@@ -177,7 +218,7 @@ export class NdsPaginationItem {}
  * projetado: uma `<ng-content>` só, fora de qualquer `@if`.
  */
 @Component({
-  selector: 'a[ndsPaginationLink]',
+  selector: 'a[ndsPaginationLink], button[ndsPaginationLink]',
   standalone: true,
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -185,12 +226,16 @@ export class NdsPaginationItem {}
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"pagination-link"',
+    '[attr.type]': 'buttonType',
     '[attr.data-active]': 'isActive() ? "true" : null',
     '[attr.aria-current]': 'isActive() ? "page" : null',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    // Sem tabindex negativo o link desabilitado continua na ordem de tabulação
-    // e o Enter navega — `pointer-events: none` só barra o mouse.
-    '[attr.tabindex]': 'disabled() ? "-1" : null',
+    // No botão quem desabilita é o atributo nativo; na âncora, o par
+    // aria-disabled + tabindex negativo, porque sem ele o controle inerte
+    // continua na ordem de tabulação e o Enter navega — `pointer-events: none`
+    // só barra o mouse.
+    '[attr.disabled]': 'isButton && disabled() ? "" : null',
+    '[attr.aria-disabled]': '!isButton && disabled() ? "true" : null',
+    '[attr.tabindex]': '!isButton && disabled() ? "-1" : null',
   },
 })
 export class NdsPaginationLink {
@@ -201,22 +246,30 @@ export class NdsPaginationLink {
   readonly size = input<ButtonSize>('icon');
 
   /**
-   * Desabilita o link. Em `<a>` não existe `disabled` — o par correto é
-   * `aria-disabled` mais a supressão do clique e da tabulação.
+   * Desabilita o controle. Em `<button>` é o `disabled` nativo; em `<a>` não
+   * existe `disabled`, e o par correto é `aria-disabled` mais a supressão do
+   * clique e da tabulação.
    */
   readonly disabled = input<boolean>(false);
+
+  private readonly hostKind = readControlHost();
+  protected readonly isButton = this.hostKind.isButton;
+  protected readonly buttonType = this.hostKind.buttonType;
 
   protected readonly hostClass = computed(() =>
     btnClass(this.isActive() ? 'outline' : 'ghost', this.size()),
   );
 
   constructor() {
-    barrarClickQuandoDisabled(this);
+    if (!this.isButton) barrarClickQuandoDisabled(this);
   }
 }
 
 /**
- * Barra o clique enquanto o controle está desabilitado.
+ * Barra o clique enquanto o controle está desabilitado — caminho de ÂNCORA.
+ *
+ * No caminho de botão não há guarda: o `disabled` nativo resolve antes de
+ * qualquer ouvinte, inclusive o que o consumidor escreveu.
  *
  * Registrado no CONSTRUTOR com `addEventListener`, e não por
  * `host: { '(click)': … }`: medido neste projeto, o binding de host entra
@@ -234,7 +287,7 @@ export class NdsPaginationLink {
  * script, e o `click()` de um teste.
  */
 function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
-  const host = inject<ElementRef<HTMLAnchorElement>>(ElementRef).nativeElement;
+  const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   host.addEventListener(
     'click',
     (evento) => {
@@ -248,9 +301,10 @@ function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
 
 // ─── Previous / Next ──────────────────────────────────────────────────────────
 //
-// Sem `<ng-content>`: o contrato compartilhado é `<a ndsPaginationPrevious></a>`
-// — elemento vazio, com o desenho e o rótulo vindo do componente. Quem precisa
-// de conteúdo próprio usa o `ndsPaginationLink` direto.
+// Sem `<ng-content>`: o contrato compartilhado é o elemento VAZIO
+// (`<button ndsPaginationPrevious type="button"></button>`, ou `<a>` com rota),
+// com o desenho e o rótulo vindo do componente. Quem precisa de conteúdo
+// próprio usa o `ndsPaginationLink` direto.
 //
 // O rótulo textual fica em `.nds-pagination-label`, que o CSS esconde abaixo de
 // 40rem: em tela estreita sobra o ícone, e o nome acessível continua no
@@ -258,7 +312,7 @@ function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
 
 /** Link para a página anterior — ícone à esquerda do rótulo. */
 @Component({
-  selector: 'a[ndsPaginationPrevious]',
+  selector: 'a[ndsPaginationPrevious], button[ndsPaginationPrevious]',
   standalone: true,
   imports: [NdsPaginationIcon],
   template: `
@@ -270,9 +324,11 @@ function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"pagination-previous"',
+    '[attr.type]': 'buttonType',
     '[attr.aria-label]': 'accessibleName()',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    '[attr.tabindex]': 'disabled() ? "-1" : null',
+    '[attr.disabled]': 'isButton && disabled() ? "" : null',
+    '[attr.aria-disabled]': '!isButton && disabled() ? "true" : null',
+    '[attr.tabindex]': '!isButton && disabled() ? "-1" : null',
   },
 })
 export class NdsPaginationPrevious {
@@ -287,18 +343,22 @@ export class NdsPaginationPrevious {
 
   protected readonly accessibleName = computed(() => this.label() ?? this.text());
 
+  private readonly hostKind = readControlHost();
+  protected readonly isButton = this.hostKind.isButton;
+  protected readonly buttonType = this.hostKind.buttonType;
+
   protected readonly hostClass = computed(() =>
     cn(btnClass('ghost', 'default'), 'nds-pagination-prev'),
   );
 
   constructor() {
-    barrarClickQuandoDisabled(this);
+    if (!this.isButton) barrarClickQuandoDisabled(this);
   }
 }
 
 /** Link para a próxima página — ícone à direita do rótulo. */
 @Component({
-  selector: 'a[ndsPaginationNext]',
+  selector: 'a[ndsPaginationNext], button[ndsPaginationNext]',
   standalone: true,
   imports: [NdsPaginationIcon],
   template: `
@@ -310,9 +370,11 @@ export class NdsPaginationPrevious {
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"pagination-next"',
+    '[attr.type]': 'buttonType',
     '[attr.aria-label]': 'accessibleName()',
-    '[attr.aria-disabled]': 'disabled() ? "true" : null',
-    '[attr.tabindex]': 'disabled() ? "-1" : null',
+    '[attr.disabled]': 'isButton && disabled() ? "" : null',
+    '[attr.aria-disabled]': '!isButton && disabled() ? "true" : null',
+    '[attr.tabindex]': '!isButton && disabled() ? "-1" : null',
   },
 })
 export class NdsPaginationNext {
@@ -327,12 +389,16 @@ export class NdsPaginationNext {
 
   protected readonly accessibleName = computed(() => this.label() ?? this.text());
 
+  private readonly hostKind = readControlHost();
+  protected readonly isButton = this.hostKind.isButton;
+  protected readonly buttonType = this.hostKind.buttonType;
+
   protected readonly hostClass = computed(() =>
     cn(btnClass('ghost', 'default'), 'nds-pagination-next'),
   );
 
   constructor() {
-    barrarClickQuandoDisabled(this);
+    if (!this.isButton) barrarClickQuandoDisabled(this);
   }
 }
 

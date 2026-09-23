@@ -522,7 +522,7 @@ Cada item aqui tem medição e espera decisão. Nenhum é defeito de texto.
    `.nds-button`. Não é API de framework: é markup e classe, e tem fonte de verdade.
    A folha afirma que a convivência "está registrada como material de cross-stack",
    e esse registro não existe.
-8. **`pagination_change` ainda é ensinado** pelo snippet de importação da docs page
+8. **`pagination_change` deixou de ser ensinado** (2026-09-23) — o snippet de importação da docs page
    do vanilla, e não compila para quem copiar. É código de docs page, da revisão.
 9. **O limiar para paginar tem quatro números no repositório** — 10 em duas
    guidelines de navegação antigas, 20 em outras duas. A categoria não tem o seu.

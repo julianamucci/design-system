@@ -52,7 +52,7 @@ export const Default: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O link inativo está visível e não é a página atual', async () => {
-      const inactive = canvas.getByRole('link', { name: 'Ir para página 4' });
+      const inactive = canvas.getByRole('button', { name: 'Ir para página 4' });
       await expect(inactive).toBeVisible();
       await expect(inactive).not.toHaveAttribute('aria-current');
       await expect(getComputedStyle(inactive).pointerEvents).toBe('auto');
@@ -65,7 +65,7 @@ export const Hover: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O link é alcançável pelo ponteiro e se anuncia clicável', async () => {
-      const target = canvas.getByRole('link', { name: 'Ir para página 4' });
+      const target = canvas.getByRole('button', { name: 'Ir para página 4' });
       await userEvent.hover(target);
       // Não se assere a cor do hover: `:hover` computado é frágil no harness. O
       // que prova a afordância é o cursor, e o que prova que o clique CHEGA é o
@@ -108,29 +108,36 @@ export const DisabledFirst: Story = {
   render: range('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+    const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
-      // visual.item4 — em `<a>` não existe `disabled`; o par correto é
-      // aria-disabled + a supressão do clique e da tabulação.
-      await expect(previous).toHaveAttribute('aria-disabled', 'true');
-      await expect(previous).toHaveAttribute('tabindex', '-1');
+      // visual.item4 — estas stories não passam `hrefForPage`, então o controle
+      // é botão e o desabilitado é o NATIVO. `disabled` já tira da tabulação e
+      // barra o clique; `aria-disabled` e `tabindex="-1"` seriam remendo de
+      // âncora aplicado a quem não precisa deles.
+      await expect(previous.tagName).toBe('BUTTON');
+      await expect(previous).toBeDisabled();
+      await expect(previous).not.toHaveAttribute('aria-disabled');
+      await expect(previous.hasAttribute('tabindex')).toBe(false);
       await expect(getComputedStyle(previous).pointerEvents).toBe('none');
       await expect(Number(getComputedStyle(previous).opacity)).toBeLessThan(1);
     });
 
     await step('Clicar em Anterior não navega', async () => {
-      // functional.item2 — `fireEvent` e não `userEvent`: o CSS já barra o
-      // ponteiro, e o que falta provar é o outro caminho, o evento que chega
-      // por script ou por teclado.
+      // functional.item2 — o método `click()` e não `fireEvent`: o CSS já barra
+      // o ponteiro, e o que falta provar é o outro caminho. Em controle de
+      // formulário desabilitado o `click()` RETORNA sem disparar nada, então
+      // quem barra aqui é o navegador. `fireEvent` despacha o evento à força e
+      // só passava por causa de uma guarda em JavaScript que existia para esta
+      // asserção — asserção ditando o código de produção.
       onPageChange.mockClear();
-      await fireEvent.click(previous);
+      previous.click();
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
     await step('Próxima continua ativo', async () => {
-      const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(next).not.toHaveAttribute('aria-disabled');
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
+      await expect(next).toBeEnabled();
       onPageChange.mockClear();
       await userEvent.click(next);
       await expect(onPageChange).toHaveBeenLastCalledWith(2);
@@ -149,25 +156,23 @@ export const DisabledLast: Story = {
   render: range('Paginação na última página', 5),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const next = canvas.getByRole('link', { name: LABEL_NEXT });
+    const next = canvas.getByRole('button', { name: LABEL_NEXT });
 
     await step('Próxima está marcado como desabilitado', async () => {
-      await expect(next).toHaveAttribute('aria-disabled', 'true');
-      await expect(next).toHaveAttribute('tabindex', '-1');
+      await expect(next).toBeDisabled();
       await expect(getComputedStyle(next).pointerEvents).toBe('none');
     });
 
     await step('Clicar em Próxima não navega', async () => {
-      // functional.item3
+      // functional.item3 — mesmo motivo do extremo oposto: `click()` em botão
+      // desabilitado não dispara, e é o navegador que prova o extremo.
       onPageChange.mockClear();
-      await fireEvent.click(next);
+      next.click();
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
     await step('Anterior continua ativo', async () => {
-      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).not.toHaveAttribute(
-        'aria-disabled',
-      );
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toBeEnabled();
     });
   },
 };
@@ -182,10 +187,15 @@ export const Focus: Story = {
     await step('Tab percorre os controles na ordem visual', async () => {
       // functional.item4 — a ordem de foco é a do DOM: anterior, 1..5, próxima.
       const esperados = [
-        canvas.getByRole('link', { name: LABEL_PREVIOUS }),
-        canvas.getByRole('link', { name: 'Ir para página 1' }),
-        canvas.getByRole('link', { name: 'Ir para página 2' }),
-      ].filter((el) => el.getAttribute('tabindex') !== '-1');
+        canvas.getByRole('button', { name: LABEL_PREVIOUS }),
+        canvas.getByRole('button', { name: 'Ir para página 1' }),
+        canvas.getByRole('button', { name: 'Ir para página 2' }),
+        // O filtro cobre os DOIS mecanismos de desabilitado: `disabled` nativo
+        // no botão, `tabindex="-1"` na âncora de rota. Ler só um deixaria a
+        // ordem de foco afirmada contra uma faixa que nunca é medida.
+      ].filter(
+        (el) => el.getAttribute('tabindex') !== '-1' && !(el as HTMLButtonElement).disabled,
+      );
 
       (document.activeElement as HTMLElement | null)?.blur();
       for (const target of esperados) {
@@ -198,7 +208,7 @@ export const Focus: Story = {
       // accessibility.item3 — medir a sombra computada é o que prova que a
       // regra do CSS compartilhado chegou ao elemento. `ring-2 ring-ring`, que
       // a documentação citava, não existe.
-      const target = canvas.getByRole('link', { name: 'Ir para página 2' });
+      const target = canvas.getByRole('button', { name: 'Ir para página 2' });
       target.blur();
       target.focus();
       await expect(target).toHaveFocus();

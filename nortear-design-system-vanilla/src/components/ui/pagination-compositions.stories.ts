@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createPagination } from './pagination';
+import { createPagination, PAGINATION_LABELS_DEFAULT } from './pagination';
 import { wrap } from './pagination.fixtures';
 import {
   paginationWithStateSourceWith,
@@ -62,14 +62,25 @@ export const Simple: Story = {
     });
 
     await step('A primeira página é a atual e Anterior está desabilitado', async () => {
-      await expect(canvas.getByRole('link', { name: 'Ir para página 1' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 1' })).toHaveAttribute(
         'aria-current',
         'page',
       );
-      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).toHaveAttribute(
-        'aria-disabled',
-        'true',
-      );
+      // Sem rota o controle é botão, e o desabilitado é o NATIVO: `disabled` já
+      // tira da tabulação, barra o clique e se anuncia, sem atributo ARIA.
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toBeDisabled();
+    });
+
+    await step('Sem rota, todo controle é botão', async () => {
+      // notes.item1 — a tag segue a rota. Sem asserção, voltar a emitir
+      // `<a href="#">` passaria despercebido: a faixa fica idêntica na tela.
+      for (const control of canvasElement.querySelectorAll(
+        '[data-slot="pagination-link"], [data-slot="pagination-previous"], [data-slot="pagination-next"]',
+      )) {
+        await expect(control.tagName).toBe('BUTTON');
+        await expect(control).toHaveAttribute('type', 'button');
+        await expect(control.hasAttribute('href')).toBe(false);
+      }
     });
   },
 };
@@ -122,9 +133,9 @@ export const WithEllipsis: Story = {
     });
 
     await step('Primeira, última e a atual continuam visíveis', async () => {
-      await expect(canvas.getByRole('link', { name: 'Ir para página 1' })).toBeVisible();
-      await expect(canvas.getByRole('link', { name: 'Ir para página 12' })).toBeVisible();
-      await expect(canvas.getByRole('link', { name: 'Ir para página 6' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 1' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Ir para página 12' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Ir para página 6' })).toHaveAttribute(
         'aria-current',
         'page',
       );
@@ -159,16 +170,20 @@ export const LastPage: Story = {
     const canvas = within(canvasElement);
 
     await step('A página 10 é a atual', async () => {
-      await expect(canvas.getByRole('link', { name: 'Ir para página 10' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 10' })).toHaveAttribute(
         'aria-current',
         'page',
       );
     });
 
     await step('Próxima está desabilitado e fora da tabulação', async () => {
-      const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(next).toHaveAttribute('aria-disabled', 'true');
-      await expect(next).toHaveAttribute('tabindex', '-1');
+      // Botão: `disabled` nativo faz as duas coisas de uma vez. O par
+      // `aria-disabled` + `tabindex="-1"` é o caminho da ÂNCORA, e vale só
+      // quando há rota — ver a story `Integrated with routing`.
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
+      await expect(next).toBeDisabled();
+      await expect(next).not.toHaveAttribute('aria-disabled');
+      await expect(next.hasAttribute('tabindex')).toBe(false);
     });
   },
 };
@@ -230,10 +245,10 @@ export const Interactive: Story = {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
-      const target = canvas.getByRole('link', { name: `Ir para página ${n}` });
+      const target = canvas.getByRole('button', { name: `Ir para página ${n}` });
       if (target.getAttribute('aria-current') !== 'page') await userEvent.click(target);
       await waitFor(() =>
-        expect(canvas.getByRole('link', { name: `Ir para página ${n}` })).toHaveAttribute(
+        expect(canvas.getByRole('button', { name: `Ir para página ${n}` })).toHaveAttribute(
           'aria-current',
           'page',
         ),
@@ -258,17 +273,17 @@ export const Interactive: Story = {
 
 // ─── Integrada a rota ─────────────────────────────────────────────────────────
 //
-// Sem `hrefForPage` todo link nasce `#` e o clique é anulado: serve à paginação
-// que vive só na memória, e para de servir quando a página precisa ser
-// compartilhável, indexável ou aberta em nova aba. Com ele o link é um destino
-// de verdade e o clique SEGUE — quem usa roteador de cliente o intercepta como
-// interceptaria qualquer link da página.
+// `hrefForPage` decide a TAG do controle. Com ele cada controle é `<a href>`:
+// destino de verdade, abre em nova aba, é indexável, e o clique SEGUE — quem usa
+// roteador de cliente o intercepta como interceptaria qualquer link da página.
+// Sem ele o controle é `<button type="button">`, porque âncora vazia que age na
+// própria página engana quem navega por teclado e por leitor de tela.
 
 export const WithRoute: Story = {
   name: 'Integrated with routing',
   parameters: {
     // Override de story: `hrefForPage` é o assunto, e sem ele o snippet do meta
-    // mostraria links que nascem `#`.
+    // mostraria a faixa de botões, que é justamente o outro caminho.
     docs: {
       source: {
         transform: paginationSourceWith({
@@ -322,6 +337,9 @@ export const WithRoute: Story = {
 
     await step('Cada link carrega o endereço real da sua página', async () => {
       const pagina4 = canvas.getByRole('link', { name: 'Ir para página 4' });
+      // COM rota a tag é âncora — e é por ser âncora que o destino existe para
+      // o "abrir em nova aba", para o indexador e para o roteador de cliente.
+      await expect(pagina4.tagName).toBe('A');
       await expect(pagina4.getAttribute('href')).toBe('?page=4');
       await expect(
         canvas.getByRole('link', { name: LABEL_NEXT }).getAttribute('href'),
@@ -329,6 +347,24 @@ export const WithRoute: Story = {
       await expect(
         canvas.getByRole('link', { name: LABEL_PREVIOUS }).getAttribute('href'),
       ).toBe('?page=2');
+    });
+
+    await step('Com rota, o extremo desabilitado usa o par da âncora', async () => {
+      // O outro mecanismo de desabilitado. Em `<a>` não existe `disabled`, e sem
+      // asserção o par `aria-disabled` + `tabindex="-1"` seria promessa: a faixa
+      // desta story está na página 3, longe dos dois extremos.
+      const naPrimeira = createPagination({
+        total: 8,
+        current: 1,
+        hrefForPage: (page) => `?page=${page}`,
+        'aria-label': 'Paginação por rota, primeira página',
+      });
+      const previous = naPrimeira.querySelector('[data-slot="pagination-previous"]')!;
+      await expect(previous.tagName).toBe('A');
+      await expect(previous).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous).toHaveAttribute('tabindex', '-1');
+      // Endereço válido no extremo convidaria a abrir uma página que não existe.
+      await expect(previous.getAttribute('href')).toBe('#');
     });
 
     await step('O clique chega vivo ao roteador, e ainda avisa quem escuta', async () => {
@@ -398,10 +434,126 @@ export const CompleteTable: Story = {
     await step('O contador e a faixa dividem a mesma linha', async () => {
       const footer = canvasElement.querySelector('.nds-cluster') as HTMLElement;
       await expect(getComputedStyle(footer).justifyContent).toBe('space-between');
-      await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: 'Ir para página 2' })).toHaveAttribute(
         'aria-current',
         'page',
       );
+    });
+  },
+};
+
+/**
+ * O mesmo catálogo em inglês, montado por quem CHAMA a fábrica.
+ *
+ * Fora de uma story, quem monta isto é a docs page, lendo
+ * `demonstration.labels.*` do conteúdo compartilhado; aqui o objeto é literal
+ * para que a asserção compare com um texto que ela mesma enuncia.
+ */
+const LABELS_EN = {
+  navigation: 'Pagination',
+  previous: 'Go to the previous page',
+  next: 'Go to the next page',
+  page: (n: number) => `Go to page ${n}`,
+  previousText: 'Previous',
+  nextText: 'Next',
+};
+
+export const TranslatedLabels: Story = {
+  name: 'Labels from the consumer (another language)',
+  parameters: {
+    // Override de story: o assunto É a opção `labels`, e o snippet do meta
+    // mostraria a faixa em português — justamente o que esta story existe para
+    // deixar de ser obrigatório.
+    docs: {
+      source: {
+        transform: paginationSourceWith({
+          total: 5,
+          current: 2,
+          labels:
+            "{ navigation: 'Pagination', previous: 'Go to the previous page', "
+            + "next: 'Go to the next page', page: (n) => `Go to page ${n}`, "
+            + "previousText: 'Previous', nextText: 'Next' }",
+        }),
+      },
+    },
+  },
+  render: () =>
+    wrap(
+      createPagination({
+        total: 5,
+        current: 2,
+        showPrevNext: true,
+        // Sem `'aria-label'`: aqui o nome do landmark vem do próprio catálogo,
+        // que é o caminho de quem traduz a faixa inteira de uma vez.
+        labels: LABELS_EN,
+        onPageChange: () => {},
+      }),
+    ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O landmark é nomeado pelo catálogo recebido', async () => {
+      const nav = canvas.getByRole('navigation', { name: 'Pagination' });
+      await expect(nav).toHaveAttribute('data-slot', 'pagination');
+    });
+
+    await step('Todo controle numerado fala o idioma de quem chamou', async () => {
+      // Até 2026-09-23 esta faixa anunciava "Ir para página 3" em português em
+      // QUALQUER idioma: os rótulos eram constante de módulo sem caminho de
+      // override, e só o nome do landmark aceitava valor de fora.
+      for (let n = 1; n <= 5; n++) {
+        await expect(
+          canvas.getByRole('button', { name: `Go to page ${n}` }),
+        ).toHaveAttribute('data-slot', 'pagination-link');
+      }
+      await expect(canvas.getByRole('button', { name: 'Go to page 2' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+    });
+
+    await step('Os direcionais trocam o nome acessível E o texto visível', async () => {
+      // São duas coisas diferentes: o nome acessível é a frase inteira, e o
+      // texto visível é a palavra que `.nds-pagination-label` esconde em tela
+      // estreita. Trocar só um deixaria a faixa bilíngue.
+      const previous = canvas.getByRole('button', { name: 'Go to the previous page' });
+      const next = canvas.getByRole('button', { name: 'Go to the next page' });
+      await expect(previous).toHaveAttribute('data-slot', 'pagination-previous');
+      await expect(next).toHaveAttribute('data-slot', 'pagination-next');
+      await expect(previous.querySelector('.nds-pagination-label')).toHaveTextContent('Previous');
+      await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent('Next');
+    });
+
+    await step('O catálogo é PARCIAL: o que não vier continua no padrão', async () => {
+      // Sem esta asserção, `labels` seria uma opção tudo-ou-nada, e quem
+      // quisesse trocar uma palavra teria de redigitar as seis.
+      const meia = createPagination({
+        total: 3,
+        current: 1,
+        labels: { nextText: 'Next' },
+      });
+      await expect(
+        meia.querySelector('[data-slot="pagination-next"] .nds-pagination-label'),
+      ).toHaveTextContent('Next');
+      await expect(meia.querySelector('[data-slot="pagination-next"]')).toHaveAttribute(
+        'aria-label',
+        PAGINATION_LABELS_DEFAULT.next,
+      );
+      await expect(meia.querySelector('[data-slot="pagination-link"]')).toHaveAttribute(
+        'aria-label',
+        PAGINATION_LABELS_DEFAULT.page(1),
+      );
+      await expect(meia).toHaveAttribute('aria-label', PAGINATION_LABELS_DEFAULT.navigation);
+    });
+
+    await step('O nome do landmark tem dono: a opção canônica vence o catálogo', async () => {
+      const nomeado = createPagination({
+        total: 3,
+        current: 1,
+        'aria-label': 'Pagination, search results',
+        labels: LABELS_EN,
+      });
+      await expect(nomeado).toHaveAttribute('aria-label', 'Pagination, search results');
     });
   },
 };

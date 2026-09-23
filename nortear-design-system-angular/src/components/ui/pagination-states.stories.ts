@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { minimumTargetsBelow, rangeContrastes } from '@shared/testing/pagination-probe';
 import {
   NdsPagination,
@@ -11,11 +11,23 @@ import {
   NdsPaginationNext,
   NdsPaginationPrevious,
 } from './pagination';
+import {
+  paginationContrastSource,
+  paginationFirstPageSource,
+  paginationFocusVisibleSource,
+  LABEL_NEXT,
+  LABEL_PAGE,
+  LABEL_PREVIOUS,
+} from './pagination.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
 // `controls.disable`: nenhuma story daqui tem argTypes, e sem isso o painel
 // Controls aparece vazio.
+//
+// `LastPage` saiu deste arquivo para `pagination-compositions.stories.ts`: nas
+// outras quatro stacks ela é composição, e o grupo da barra lateral sai do
+// ARQUIVO. O par dela, `FirstPage`, é estado puro e fica.
 
 const meta: Meta = {
   title: 'Components/Navigation/Pagination/States',
@@ -40,7 +52,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados dos controles: extremos desabilitados, foco visível por teclado e contraste do texto sobre o fundo.',
+          'Estados dos controles: extremo desabilitado, foco visível por teclado e contraste do texto sobre o fundo.',
       },
     },
   },
@@ -49,21 +61,18 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const LABEL_PAGE = 'Ir para página';
-const LABEL_PREVIOUS = 'Ir para a página anterior';
-const LABEL_NEXT = 'Ir para a próxima página';
-
 /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onPageChange = fn();
 
-function aoNavegar(evento: Event, page: number): void {
-  evento.preventDefault();
+// Sem rota o controle é botão: não há navegação a anular, só o aviso a quem
+// guarda a página.
+function onNavigate(page: number): void {
   onPageChange(page);
 }
 
 /**
  * Faixa de 5 páginas com os dois extremos parametrizados. Um só molde para as
- * stories de extremo evita que uma delas envelheça sozinha.
+ * stories de estado evita que uma delas envelheça sozinha.
  */
 function range(label: string, current: number): Record<string, unknown> {
   return {
@@ -76,41 +85,41 @@ function range(label: string, current: number): Record<string, unknown> {
       pageLabel: LABEL_PAGE,
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
-      aoNavegar,
+      onNavigate,
     },
     template: `
       <nav ndsPagination [label]="label">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationPrevious
-              href="#"
+              type="button"
               text="Anterior"
               [label]="labelPrevious"
               [disabled]="current === 1"
-              (click)="aoNavegar($event, current - 1)"
-            ></a>
+              (click)="onNavigate(current - 1)"
+            ></button>
           </li>
           @for (n of pages; track n) {
             <li ndsPaginationItem>
-              <a
+              <button
                 ndsPaginationLink
-                href="#"
+                type="button"
                 [isActive]="n === current"
                 [attr.aria-label]="pageLabel + ' ' + n"
-                (click)="aoNavegar($event, n)"
-              >{{ n }}</a>
+                (click)="onNavigate(n)"
+              >{{ n }}</button>
             </li>
           }
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationNext
-              href="#"
+              type="button"
               text="Próxima"
               [label]="labelNext"
               [disabled]="current === total"
-              (click)="aoNavegar($event, current + 1)"
-            ></a>
+              (click)="onNavigate(current + 1)"
+            ></button>
           </li>
         </ul>
       </nav>
@@ -124,6 +133,7 @@ export const FirstPage: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item4'],
     docs: {
+      source: { transform: paginationFirstPageSource },
       description: {
         story:
           'Na primeira página o controle Anterior fica desabilitado: opacidade reduzida, fora da tabulação e sem navegar.',
@@ -133,71 +143,37 @@ export const FirstPage: Story = {
   render: () => range('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+    const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
-      // visual.item4 — em `<a>` não existe `disabled`; o par correto é
-      // aria-disabled + a supressão do clique e da tabulação.
-      await expect(previous).toHaveAttribute('aria-disabled', 'true');
-      await expect(previous).toHaveAttribute('tabindex', '-1');
-      const estilo = getComputedStyle(previous);
-      await expect(estilo.pointerEvents).toBe('none');
-      await expect(Number(estilo.opacity)).toBeLessThan(1);
+      // visual.item4 — sem rota o controle é `<button>`, e aí quem desabilita é
+      // o atributo nativo: o navegador barra clique e tabulação sozinho. O par
+      // aria-disabled + tabindex negativo é do caminho de âncora, e não deve
+      // sobrar aqui — dois mecanismos no mesmo elemento é um a mais.
+      await expect(previous).toBeDisabled();
+      await expect(previous.hasAttribute('aria-disabled')).toBe(false);
+      await expect(previous.hasAttribute('tabindex')).toBe(false);
+      const styles = getComputedStyle(previous);
+      await expect(styles.pointerEvents).toBe('none');
+      await expect(Number(styles.opacity)).toBeLessThan(1);
     });
 
     await step('Clicar em Anterior não navega', async () => {
-      // functional.item2 — `fireEvent` e não `userEvent`: o CSS já barra o
-      // ponteiro, e o que esta asserção precisa provar é o outro caminho — o
-      // evento que chega por script ou por teclado também não passa.
+      // functional.item2 — o método `click()` e não `userEvent`: o CSS já barra
+      // o ponteiro, e o que falta provar é o outro caminho. Em controle de
+      // formulário desabilitado o `click()` RETORNA sem disparar nada — é o
+      // navegador barrando, sem guarda de JavaScript no meio.
       onPageChange.mockClear();
-      await fireEvent.click(previous);
+      previous.click();
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
     await step('Próxima continua ativo', async () => {
-      const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(next.hasAttribute('aria-disabled')).toBe(false);
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
+      await expect(next).toBeEnabled();
       onPageChange.mockClear();
       await userEvent.click(next);
       await expect(onPageChange).toHaveBeenLastCalledWith(2);
-    });
-  },
-};
-
-// ─── Última página ────────────────────────────────────────────────────────────
-
-export const LastPage: Story = {
-  parameters: {
-    covers: ['functional.item3'],
-    docs: {
-      description: {
-        story:
-          'Na última página o controle Próxima fica desabilitado, pelo mesmo par de atributos usado em Anterior.',
-      },
-    },
-  },
-  render: () => range('Paginação na última página', 5),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const next = canvas.getByRole('link', { name: LABEL_NEXT });
-
-    await step('Próxima está marcado como desabilitado', async () => {
-      await expect(next).toHaveAttribute('aria-disabled', 'true');
-      await expect(next).toHaveAttribute('tabindex', '-1');
-      await expect(getComputedStyle(next).pointerEvents).toBe('none');
-    });
-
-    await step('Clicar em Próxima não navega', async () => {
-      // functional.item3
-      onPageChange.mockClear();
-      await fireEvent.click(next);
-      await expect(onPageChange).not.toHaveBeenCalled();
-    });
-
-    await step('A página atual é a última da faixa', async () => {
-      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} 5` });
-      await expect(active).toHaveAttribute('aria-current', 'page');
-      await expect(active).toHaveClass('nds-button-outline');
     });
   },
 };
@@ -208,9 +184,10 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      source: { transform: paginationFocusVisibleSource },
       description: {
         story:
-          'Foco por teclado desenha um anel visível em qualquer link da faixa — inclusive no da página atual.',
+          'Foco por teclado desenha um anel visível em qualquer controle da faixa — inclusive no da página atual.',
       },
     },
   },
@@ -218,22 +195,22 @@ export const FocusVisible: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('O anel de foco aparece no link numerado', async () => {
+    await step('O anel de foco aparece no controle numerado', async () => {
       // accessibility.item3 — `:focus-visible` é o que separa o anel do clique
       // de mouse; medir a sombra computada é o que prova que a regra do CSS
       // compartilhado chegou ao elemento, e não só que o foco chegou.
-      const link = canvas.getByRole('link', { name: `${LABEL_PAGE} 2` });
-      link.blur();
-      link.focus();
-      await expect(link).toHaveFocus();
-      await expect(link.matches(':focus-visible')).toBe(true);
-      await expect(getComputedStyle(link).boxShadow).not.toBe('none');
+      const control = canvas.getByRole('button', { name: `${LABEL_PAGE} 2` });
+      control.blur();
+      control.focus();
+      await expect(control).toHaveFocus();
+      await expect(control.matches(':focus-visible')).toBe(true);
+      await expect(getComputedStyle(control).boxShadow).not.toBe('none');
     });
 
     await step('A página atual também é focável', async () => {
       // Ela não navega para lugar nenhum, mas continua alcançável pelo teclado:
       // tirar do fluxo de foco quebraria a leitura sequencial da faixa.
-      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
+      const active = canvas.getByRole('button', { name: `${LABEL_PAGE} 3` });
       active.blur();
       active.focus();
       await expect(active).toHaveFocus();
@@ -252,15 +229,16 @@ export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item2', 'accessibility.item6'],
     docs: {
+      source: { transform: paginationContrastSource },
       description: {
         story:
-          'O texto de todo link da faixa — ativo, inativo e direcional — fica acima de 4.5:1 sobre o fundo em que aparece.',
+          'O texto de todo controle da faixa — ativo, inativo e direcional — fica acima de 4.5:1 sobre o fundo em que aparece.',
       },
     },
   },
   render: () => range('Paginação medida por contraste', 3),
   play: async ({ canvasElement, step }) => {
-    await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
+    await step('Todo controle passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
       // A página atual troca de variante (ghost → outline): medir TODOS é o que

@@ -38,13 +38,31 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 
 type PaginationLinkProps = {
   isActive?: boolean
+  /**
+   * Endereço da página. É ele que decide a TAG do controle.
+   *
+   * Com endereço o controle é `<a>`: destino de verdade, abre em nova aba e é
+   * indexável. Sem endereço ele é `<button type="button">`, porque âncora vazia
+   * que age na própria página engana quem navega por teclado e por leitor de
+   * tela — e `#` não é endereço.
+   */
+  href?: string
+  /** Controle indisponível. O mecanismo muda com a tag; ver abaixo. */
+  disabled?: boolean
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">
+  React.HTMLAttributes<HTMLElement>
+
+/** `#` e string vazia não são destino: são a âncora que não leva a lugar nenhum. */
+function hasRoute(href: string | undefined): href is string {
+  return href !== undefined && href !== "" && href !== "#"
+}
 
 function PaginationLink({
   className,
   isActive,
   size = "icon",
+  href,
+  disabled: disabledProp,
   onClick,
   tabIndex,
   "aria-disabled": ariaDisabled,
@@ -53,21 +71,46 @@ function PaginationLink({
   // O React escreve booleano em atributo ARIA como a string "false", então
   // `aria-disabled={false}` deixava o atributo NO elemento com valor negativo —
   // `[aria-disabled]` passava a casar o controle habilitado. Aqui ele só existe
-  // quando é verdade.
-  const disabled = ariaDisabled === true || ariaDisabled === "true"
+  // quando é verdade. `aria-disabled` continua aceito como entrada porque quem
+  // compõe o escrevia assim antes de existir a prop `disabled`.
+  const disabled =
+    disabledProp === true || ariaDisabled === true || ariaDisabled === "true"
+  const variant = isActive ? "outline" : "ghost"
+
+  // Sem rota o controle age na PRÓPRIA página: é botão, e o indisponível é o
+  // `disabled` nativo — o navegador barra o clique, o Enter e a tabulação
+  // sozinho, sem precisar de tabindex negativo nem de guarda em JavaScript.
+  if (!hasRoute(href)) {
+    return (
+      <Button
+        type="button"
+        variant={variant}
+        size={size}
+        className={cn(className)}
+        disabled={disabled}
+        aria-current={isActive ? "page" : undefined}
+        data-slot="pagination-link"
+        // `data-active` só existe quando é verdade, pelo mesmo motivo.
+        data-active={isActive ? "true" : undefined}
+        tabIndex={tabIndex}
+        onClick={onClick}
+        {...props}
+      />
+    )
+  }
 
   return (
     <Button
-      variant={isActive ? "outline" : "ghost"}
+      variant={variant}
       size={size}
       className={cn(className)}
       nativeButton={false}
       render={
         <a
+          href={href}
           aria-current={isActive ? "page" : undefined}
           aria-disabled={disabled ? "true" : undefined}
           data-slot="pagination-link"
-          // `data-active` só existe quando é verdade, pelo mesmo motivo.
           data-active={isActive ? "true" : undefined}
           role="link"
           // Em `<a>` não existe `disabled`: o par correto é aria-disabled mais

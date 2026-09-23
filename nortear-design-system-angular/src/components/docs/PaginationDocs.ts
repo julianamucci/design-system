@@ -63,11 +63,11 @@ const { t, dict } = useTranslation(paginationTranslations as Record<string, unkn
     'props.table.children.description':
       'Conteúdo do link — o número da página, escrito no template de quem usa.',
     'props.table.disabled.description':
-      'Desliga o controle nos extremos da faixa. Aplica aria-disabled, tira o link da tabulação e barra o clique — em um link não existe disabled.',
+      'Desliga o controle nos extremos da faixa. Num botão é o disabled nativo; num link, que não tem disabled, aplica aria-disabled, tira o controle da tabulação e barra o clique.',
     'props.table.label.description':
       'Nome acessível: do landmark no container, do controle em Previous e Next, das reticências quando elas precisam ser anunciadas.',
     'notes.item1':
-      '<strong>A diretiva vai no elemento que você escreve</strong> — é um <code>&lt;a&gt;</code> de verdade, com o <code>href</code> e o <code>routerLink</code> que você já usava. Não há elemento a substituir.',
+      '<strong>A diretiva vai no elemento que você escreve, e a tag segue a rota</strong> — com endereço de página é um <code>&lt;a&gt;</code> de verdade, com o <code>href</code> ou o <code>routerLink</code> que você já usava; sem rota, é um <code>&lt;button type="button"&gt;</code>. Não há elemento a substituir.',
     'notes.item5':
       '<strong>Estado é de quem consome</strong> — a paginação não guarda página atual. Mantenha o número num sinal do componente pai e sincronize com a URL para preservar deep-link e botão voltar.',
   },
@@ -77,11 +77,11 @@ const { t, dict } = useTranslation(paginationTranslations as Record<string, unkn
     'props.table.children.description':
       'Link content — the page number, written in the consumer template.',
     'props.table.disabled.description':
-      'Turns the control off at the edges of the range. Applies aria-disabled, removes the link from tab order and blocks the click — a link has no disabled.',
+      'Turns the control off at the edges of the range. On a button it is the native disabled; on a link, which has none, it applies aria-disabled, removes the control from tab order and blocks the click.',
     'props.table.label.description':
       'Accessible name: of the landmark on the container, of the control on Previous and Next, of the ellipsis when it needs to be announced.',
     'notes.item1':
-      '<strong>The directive goes on the element you write</strong> — it is a real <code>&lt;a&gt;</code>, with the <code>href</code> and <code>routerLink</code> you already had. There is no element to replace.',
+      '<strong>The directive goes on the element you write, and the tag follows the route</strong> — with a page address it is a real <code>&lt;a&gt;</code>, with the <code>href</code> or <code>routerLink</code> you already had; with no route, it is a <code>&lt;button type="button"&gt;</code>. There is no element to replace.',
     'notes.item5':
       '<strong>State belongs to the consumer</strong> — pagination holds no current page. Keep the number in a parent signal and sync it with the URL to preserve deep-link and the back button.',
   },
@@ -91,11 +91,11 @@ const { t, dict } = useTranslation(paginationTranslations as Record<string, unkn
     'props.table.children.description':
       'Contenido del enlace — el número de página, escrito en el template de quien lo usa.',
     'props.table.disabled.description':
-      'Apaga el control en los extremos de la franja. Aplica aria-disabled, saca el enlace de la tabulación y bloquea el clic — en un enlace no existe disabled.',
+      'Apaga el control en los extremos de la franja. En un botón es el disabled nativo; en un enlace, que no lo tiene, aplica aria-disabled, saca el control de la tabulación y bloquea el clic.',
     'props.table.label.description':
       'Nombre accesible: del landmark en el contenedor, del control en Previous y Next, de los puntos suspensivos cuando deben anunciarse.',
     'notes.item1':
-      '<strong>La directiva va en el elemento que escribes</strong> — es un <code>&lt;a&gt;</code> real, con el <code>href</code> y el <code>routerLink</code> que ya tenías. No hay elemento que reemplazar.',
+      '<strong>La directiva va en el elemento que escribes, y la etiqueta sigue a la ruta</strong> — con dirección de página es un <code>&lt;a&gt;</code> real, con el <code>href</code> o el <code>routerLink</code> que ya tenías; sin ruta, es un <code>&lt;button type="button"&gt;</code>. No hay elemento que reemplazar.',
     'notes.item5':
       '<strong>El estado es de quien consume</strong> — la paginación no guarda la página actual. Mantén el número en una señal del componente padre y sincronízalo con la URL para preservar deep-link y el botón atrás.',
   },
@@ -159,43 +159,43 @@ const IMPORT_BASICO = `import {
 } from '@/components/ui/pagination';`;
 
 const CODE_LINK = `<li ndsPaginationItem>
-  <a ndsPaginationLink href="#" aria-label="Ir para página 2">2</a>
+  <button ndsPaginationLink type="button" aria-label="Ir para página 2">2</button>
 </li>`;
 
 const CODE_DIRECIONAL = `<li ndsPaginationItem>
-  <a
+  <button
     ndsPaginationPrevious
-    href="#"
+    type="button"
     text="Anterior"
     label="Ir para a página anterior"
-  ></a>
+  ></button>
 </li>
 <li ndsPaginationItem>
-  <a
+  <button
     ndsPaginationNext
-    href="#"
+    type="button"
     text="Próxima"
     label="Ir para a próxima página"
-  ></a>
+  ></button>
 </li>`;
 
 const SIMPLE_CODE = `<nav ndsPagination>
   <ul ndsPaginationContent>
     <li ndsPaginationItem>
-      <a ndsPaginationPrevious href="#" text="Anterior" [disabled]="true"></a>
+      <button ndsPaginationPrevious type="button" text="Anterior" [disabled]="true"></button>
     </li>
     @for (n of paginas; track n) {
       <li ndsPaginationItem>
-        <a
+        <button
           ndsPaginationLink
-          href="#"
+          type="button"
           [isActive]="n === 1"
           [attr.aria-label]="'Ir para página ' + n"
-        >{{ n }}</a>
+        >{{ n }}</button>
       </li>
     }
     <li ndsPaginationItem>
-      <a ndsPaginationNext href="#" text="Próxima"></a>
+      <button ndsPaginationNext type="button" text="Próxima"></button>
     </li>
   </ul>
 </nav>`;
@@ -203,24 +203,24 @@ const SIMPLE_CODE = `<nav ndsPagination>
 const CODE_ELLIPSIS = `<nav ndsPagination>
   <ul ndsPaginationContent>
     <li ndsPaginationItem>
-      <a ndsPaginationPrevious href="#" text="Anterior"></a>
+      <button ndsPaginationPrevious type="button" text="Anterior"></button>
     </li>
     @for (trecho of trechos; track $index) {
       <li ndsPaginationItem>
         @if (trecho === 'ellipsis') {
           <span ndsPaginationEllipsis></span>
         } @else {
-          <a
+          <button
             ndsPaginationLink
-            href="#"
+            type="button"
             [isActive]="trecho === atual()"
             [attr.aria-label]="'Ir para página ' + trecho"
-          >{{ trecho }}</a>
+          >{{ trecho }}</button>
         }
       </li>
     }
     <li ndsPaginationItem>
-      <a ndsPaginationNext href="#" text="Próxima"></a>
+      <button ndsPaginationNext type="button" text="Próxima"></button>
     </li>
   </ul>
 </nav>`;
@@ -229,8 +229,7 @@ const CODE_INTERATIVO = `readonly atual = signal(3);
 readonly total = 8;
 readonly paginas = Array.from({ length: this.total }, (_, i) => i + 1);
 
-irPara(evento: Event, pagina: number): void {
-  evento.preventDefault();
+irPara(pagina: number): void {
   this.atual.set(pagina);
 }
 
@@ -238,32 +237,32 @@ irPara(evento: Event, pagina: number): void {
 <nav ndsPagination>
   <ul ndsPaginationContent>
     <li ndsPaginationItem>
-      <a
+      <button
         ndsPaginationPrevious
-        href="#"
+        type="button"
         text="Anterior"
         [disabled]="atual() === 1"
-        (click)="irPara($event, atual() - 1)"
-      ></a>
+        (click)="irPara(atual() - 1)"
+      ></button>
     </li>
     @for (n of paginas; track n) {
       <li ndsPaginationItem>
-        <a
+        <button
           ndsPaginationLink
-          href="#"
+          type="button"
           [isActive]="n === atual()"
-          (click)="irPara($event, n)"
-        >{{ n }}</a>
+          (click)="irPara(n)"
+        >{{ n }}</button>
       </li>
     }
     <li ndsPaginationItem>
-      <a
+      <button
         ndsPaginationNext
-        href="#"
+        type="button"
         text="Próxima"
         [disabled]="atual() === total"
-        (click)="irPara($event, atual() + 1)"
-      ></a>
+        (click)="irPara(atual() + 1)"
+      ></button>
     </li>
   </ul>
 </nav>`;
@@ -277,16 +276,17 @@ export class NdsPagination {
 // ul[ndsPaginationContent] · li[ndsPaginationItem]
 // Diretivas sem entrada: aplicam classe e data-slot no elemento nativo.
 
-// a[ndsPaginationLink] — link de uma página
-@Component({ selector: 'a[ndsPaginationLink]' })
+// a[ndsPaginationLink] · button[ndsPaginationLink] — controle de uma página
+// A tag segue a rota: <a> com endereço, <button type="button"> sem.
+@Component({ selector: 'a[ndsPaginationLink], button[ndsPaginationLink]' })
 export class NdsPaginationLink {
   readonly isActive = input<boolean>(false);
   readonly size = input<ButtonSize>('icon');
   readonly disabled = input<boolean>(false);
 }
 
-// a[ndsPaginationPrevious] · a[ndsPaginationNext] — controles de direção
-@Component({ selector: 'a[ndsPaginationPrevious]' })
+// ndsPaginationPrevious · ndsPaginationNext — controles de direção
+@Component({ selector: 'a[ndsPaginationPrevious], button[ndsPaginationPrevious]' })
 export class NdsPaginationPrevious {
   readonly text = input<string>('Previous');               // rótulo visível
   readonly label = input<string | undefined>(undefined);   // nome acessível
@@ -301,26 +301,10 @@ export class NdsPaginationEllipsis {
 
 const EXTENSIBILIDADE_ANGULAR = {
   'pt-BR':
-    'Todos os subcomponentes são seletores de atributo no elemento nativo: as classes extras vão no <code>class</code> do próprio elemento e o Angular as mescla com a classe base. Para integrar com o router, aplique <code>ndsPaginationLink</code> no <code>&lt;a routerLink&gt;</code> — não há elemento a substituir, porque o elemento já é o de quem escreve.',
-  en: 'Every subcomponent is an attribute selector on the native element: extra classes go on the element own <code>class</code> and Angular merges them with the base class. To integrate with the router, apply <code>ndsPaginationLink</code> on the <code>&lt;a routerLink&gt;</code> — there is no element to replace, because the element is already the one you wrote.',
-  es: 'Todos los subcomponentes son selectores de atributo sobre el elemento nativo: las clases extra van en el <code>class</code> del propio elemento y Angular las combina con la clase base. Para integrar con el router, aplica <code>ndsPaginationLink</code> en el <code>&lt;a routerLink&gt;</code> — no hay elemento que reemplazar, porque el elemento ya es el tuyo.',
+    'Todos os subcomponentes são seletores de atributo no elemento nativo: as classes extras vão no <code>class</code> do próprio elemento e o Angular as mescla com a classe base. A tag do controle segue a rota: com endereço de página, aplique a diretiva no <code>&lt;a routerLink&gt;</code> — o controle continua sendo destino de verdade, abre em nova aba e é indexável; sem rota, escreva um <code>&lt;button type="button"&gt;</code>, porque âncora vazia que age na própria página engana quem navega por teclado e por leitor de tela. Não há elemento a substituir, porque o elemento já é o de quem escreve.',
+  en: 'Every subcomponent is an attribute selector on the native element: extra classes go on the element own <code>class</code> and Angular merges them with the base class. The control tag follows the route: with a page address, apply the directive on the <code>&lt;a routerLink&gt;</code> — the control stays a real destination, opens in a new tab and is indexable; with no route, write a <code>&lt;button type="button"&gt;</code>, because an empty anchor that acts on the current page misleads keyboard and screen reader users. There is no element to replace, because the element is already the one you wrote.',
+  es: 'Todos los subcomponentes son selectores de atributo sobre el elemento nativo: las clases extra van en el <code>class</code> del propio elemento y Angular las combina con la clase base. La etiqueta del control sigue a la ruta: con dirección de página, aplica la directiva en el <code>&lt;a routerLink&gt;</code> — el control sigue siendo un destino real, abre en pestaña nueva y es indexable; sin ruta, escribe un <code>&lt;button type="button"&gt;</code>, porque un enlace vacío que actúa en la propia página engaña a quien navega con teclado y con lector de pantalla. No hay elemento que reemplazar, porque el elemento ya es el tuyo.',
 } as const;
-
-/**
- * Nível WCAG e técnica de verificação de cada critério de acessibilidade.
- *
- * O texto do critério vem do conteúdo compartilhado; só o par nível/técnica
- * mora aqui, porque as três colunas da tabela existem no container e não no
- * JSON. Indexado por posição, com folga: se o conteúdo ganhar um critério, ele
- * aparece com o padrão em vez de sumir da tabela.
- */
-const META_A11Y = [
-  { level: 'AA',    how: 'axe-core' },
-  { level: '1.4.3', how: 'axe-core (color-contrast)' },
-  { level: '2.4.7', how: 'Storybook Interactions' },
-  { level: '4.1.2', how: 'DevTools' },
-  { level: '4.1.2', how: 'DevTools' },
-];
 
 @Component({
   selector: 'nds-pagination-docs',
@@ -345,12 +329,12 @@ const META_A11Y = [
       <nav ndsPagination [label]="label('variante-link')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationLink
-              href="#"
+              type="button"
               [attr.aria-label]="pageLabel(2)"
-              (click)="irTo($event, 2, totalSimples)"
-            >2</a>
+              (click)="irTo(2, totalSimples)"
+            >2</button>
           </li>
         </ul>
       </nav>
@@ -360,22 +344,22 @@ const META_A11Y = [
       <nav ndsPagination [label]="label('variante-direcional')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationPrevious
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.previous')"
-              [label]="t('demonstration.labels.previous')"
-              (click)="irTo($event, 1, totalSimples)"
-            ></a>
+              [label]="t('demonstration.labels.previousLabel')"
+              (click)="irTo(1, totalSimples)"
+            ></button>
           </li>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationNext
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.next')"
-              [label]="t('demonstration.labels.next')"
-              (click)="irTo($event, 2, totalSimples)"
-            ></a>
+              [label]="t('demonstration.labels.nextLabel')"
+              (click)="irTo(2, totalSimples)"
+            ></button>
           </li>
         </ul>
       </nav>
@@ -385,33 +369,33 @@ const META_A11Y = [
       <nav ndsPagination [label]="label('variante-simples')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationPrevious
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.previous')"
-              [label]="t('demonstration.labels.previous')"
+              [label]="t('demonstration.labels.previousLabel')"
               [disabled]="true"
-            ></a>
+            ></button>
           </li>
           @for (n of paginasSimples; track n) {
             <li ndsPaginationItem>
-              <a
+              <button
                 ndsPaginationLink
-                href="#"
+                type="button"
                 [isActive]="n === 1"
                 [attr.aria-label]="pageLabel(n)"
-                (click)="irTo($event, n, totalSimples)"
-              >{{ n }}</a>
+                (click)="irTo(n, totalSimples)"
+              >{{ n }}</button>
             </li>
           }
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationNext
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.next')"
-              [label]="t('demonstration.labels.next')"
-              (click)="irTo($event, 2, totalSimples)"
-            ></a>
+              [label]="t('demonstration.labels.nextLabel')"
+              (click)="irTo(2, totalSimples)"
+            ></button>
           </li>
         </ul>
       </nav>
@@ -421,37 +405,37 @@ const META_A11Y = [
       <nav ndsPagination [label]="label('variante-reticencias')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationPrevious
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.previous')"
-              [label]="t('demonstration.labels.previous')"
-              (click)="irTo($event, 5, totalLongo)"
-            ></a>
+              [label]="t('demonstration.labels.previousLabel')"
+              (click)="irTo(5, totalLongo)"
+            ></button>
           </li>
           @for (trecho of trechosLongos; track $index) {
             <li ndsPaginationItem>
               @if (trecho === 'ellipsis') {
                 <span ndsPaginationEllipsis></span>
               } @else {
-                <a
+                <button
                   ndsPaginationLink
-                  href="#"
+                  type="button"
                   [isActive]="trecho === 6"
                   [attr.aria-label]="pageLabel(trecho)"
-                  (click)="irTo($event, trecho, totalLongo)"
-                >{{ trecho }}</a>
+                  (click)="irTo(trecho, totalLongo)"
+                >{{ trecho }}</button>
               }
             </li>
           }
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationNext
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.next')"
-              [label]="t('demonstration.labels.next')"
-              (click)="irTo($event, 7, totalLongo)"
-            ></a>
+              [label]="t('demonstration.labels.nextLabel')"
+              (click)="irTo(7, totalLongo)"
+            ></button>
           </li>
         </ul>
       </nav>
@@ -462,35 +446,35 @@ const META_A11Y = [
         <nav ndsPagination [label]="label('variante-interativa')">
           <ul ndsPaginationContent>
             <li ndsPaginationItem>
-              <a
+              <button
                 ndsPaginationPrevious
-                href="#"
+                type="button"
                 [text]="t('demonstration.labels.previous')"
-                [label]="t('demonstration.labels.previous')"
+                [label]="t('demonstration.labels.previousLabel')"
                 [disabled]="interactivePage() === 1"
-                (click)="irTo($event, interactivePage() - 1, totalInterativo)"
-              ></a>
+                (click)="irTo(interactivePage() - 1, totalInterativo)"
+              ></button>
             </li>
             @for (n of paginasInterativo; track n) {
               <li ndsPaginationItem>
-                <a
+                <button
                   ndsPaginationLink
-                  href="#"
+                  type="button"
                   [isActive]="n === interactivePage()"
                   [attr.aria-label]="pageLabel(n)"
-                  (click)="irTo($event, n, totalInterativo)"
-                >{{ n }}</a>
+                  (click)="irTo(n, totalInterativo)"
+                >{{ n }}</button>
               </li>
             }
             <li ndsPaginationItem>
-              <a
+              <button
                 ndsPaginationNext
-                href="#"
+                type="button"
                 [text]="t('demonstration.labels.next')"
-                [label]="t('demonstration.labels.next')"
+                [label]="t('demonstration.labels.nextLabel')"
                 [disabled]="interactivePage() === totalInterativo"
-                (click)="irTo($event, interactivePage() + 1, totalInterativo)"
-              ></a>
+                (click)="irTo(interactivePage() + 1, totalInterativo)"
+              ></button>
             </li>
           </ul>
         </nav>
@@ -508,13 +492,13 @@ const META_A11Y = [
               @if (trecho === 'ellipsis') {
                 <span ndsPaginationEllipsis></span>
               } @else {
-                <a
+                <button
                   ndsPaginationLink
-                  href="#"
+                  type="button"
                   [isActive]="trecho === 6"
                   [attr.aria-label]="pageLabel(trecho)"
-                  (click)="irTo($event, trecho, totalLongo)"
-                >{{ trecho }}</a>
+                  (click)="irTo(trecho, totalLongo)"
+                >{{ trecho }}</button>
               }
             </li>
           }
@@ -528,13 +512,13 @@ const META_A11Y = [
         <ul ndsPaginationContent>
           @for (n of paginasLongas; track n) {
             <li ndsPaginationItem>
-              <a
+              <button
                 ndsPaginationLink
-                href="#"
+                type="button"
                 [isActive]="n === 6"
                 [attr.aria-label]="pageLabel(n)"
-                (click)="irTo($event, n, totalLongo)"
-              >{{ n }}</a>
+                (click)="irTo(n, totalLongo)"
+              >{{ n }}</button>
             </li>
           }
         </ul>
@@ -545,22 +529,22 @@ const META_A11Y = [
       <nav ndsPagination [label]="label('do-2')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationPrevious
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.previous')"
-              [label]="t('demonstration.labels.previous')"
-              (click)="irTo($event, 1, totalSimples)"
-            ></a>
+              [label]="t('demonstration.labels.previousLabel')"
+              (click)="irTo(1, totalSimples)"
+            ></button>
           </li>
           <li ndsPaginationItem>
-            <a
+            <button
               ndsPaginationNext
-              href="#"
+              type="button"
               [text]="t('demonstration.labels.next')"
-              [label]="t('demonstration.labels.next')"
-              (click)="irTo($event, 2, totalSimples)"
-            ></a>
+              [label]="t('demonstration.labels.nextLabel')"
+              (click)="irTo(2, totalSimples)"
+            ></button>
           </li>
         </ul>
       </nav>
@@ -594,38 +578,38 @@ const META_A11Y = [
               <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('variants.items.interactive.name') }}
               </p>
-              <nav ndsPagination [label]="label('demo-interativa')">
+              <nav ndsPagination [label]="t('demonstration.labels.navigationLabel')">
                 <ul ndsPaginationContent>
                   <li ndsPaginationItem>
-                    <a
+                    <button
                       ndsPaginationPrevious
-                      href="#"
+                      type="button"
                       [text]="t('demonstration.labels.previous')"
-                      [label]="t('demonstration.labels.previous')"
+                      [label]="t('demonstration.labels.previousLabel')"
                       [disabled]="demoPage() === 1"
-                      (click)="irParaDemo($event, demoPage() - 1)"
-                    ></a>
+                      (click)="irParaDemo(demoPage() - 1)"
+                    ></button>
                   </li>
                   @for (n of paginasSimples; track n) {
                     <li ndsPaginationItem>
-                      <a
+                      <button
                         ndsPaginationLink
-                        href="#"
+                        type="button"
                         [isActive]="n === demoPage()"
                         [attr.aria-label]="pageLabel(n)"
-                        (click)="irParaDemo($event, n)"
-                      >{{ n }}</a>
+                        (click)="irParaDemo(n)"
+                      >{{ n }}</button>
                     </li>
                   }
                   <li ndsPaginationItem>
-                    <a
+                    <button
                       ndsPaginationNext
-                      href="#"
+                      type="button"
                       [text]="t('demonstration.labels.next')"
-                      [label]="t('demonstration.labels.next')"
+                      [label]="t('demonstration.labels.nextLabel')"
                       [disabled]="demoPage() === totalSimples"
-                      (click)="irParaDemo($event, demoPage() + 1)"
-                    ></a>
+                      (click)="irParaDemo(demoPage() + 1)"
+                    ></button>
                   </li>
                 </ul>
               </nav>
@@ -641,37 +625,37 @@ const META_A11Y = [
               <nav ndsPagination [label]="label('demo-reticencias')">
                 <ul ndsPaginationContent>
                   <li ndsPaginationItem>
-                    <a
+                    <button
                       ndsPaginationPrevious
-                      href="#"
+                      type="button"
                       [text]="t('demonstration.labels.previous')"
-                      [label]="t('demonstration.labels.previous')"
-                      (click)="irTo($event, 5, totalLongo)"
-                    ></a>
+                      [label]="t('demonstration.labels.previousLabel')"
+                      (click)="irTo(5, totalLongo)"
+                    ></button>
                   </li>
                   @for (trecho of trechosLongos; track $index) {
                     <li ndsPaginationItem>
                       @if (trecho === 'ellipsis') {
                         <span ndsPaginationEllipsis></span>
                       } @else {
-                        <a
+                        <button
                           ndsPaginationLink
-                          href="#"
+                          type="button"
                           [isActive]="trecho === 6"
                           [attr.aria-label]="pageLabel(trecho)"
-                          (click)="irTo($event, trecho, totalLongo)"
-                        >{{ trecho }}</a>
+                          (click)="irTo(trecho, totalLongo)"
+                        >{{ trecho }}</button>
                       }
                     </li>
                   }
                   <li ndsPaginationItem>
-                    <a
+                    <button
                       ndsPaginationNext
-                      href="#"
+                      type="button"
                       [text]="t('demonstration.labels.next')"
-                      [label]="t('demonstration.labels.next')"
-                      (click)="irTo($event, 7, totalLongo)"
-                    ></a>
+                      [label]="t('demonstration.labels.nextLabel')"
+                      (click)="irTo(7, totalLongo)"
+                    ></button>
                   </li>
                 </ul>
               </nav>
@@ -684,33 +668,33 @@ const META_A11Y = [
               <nav ndsPagination [label]="label('demo-ultima')">
                 <ul ndsPaginationContent>
                   <li ndsPaginationItem>
-                    <a
+                    <button
                       ndsPaginationPrevious
-                      href="#"
+                      type="button"
                       [text]="t('demonstration.labels.previous')"
-                      [label]="t('demonstration.labels.previous')"
-                      (click)="irTo($event, 4, totalSimples)"
-                    ></a>
+                      [label]="t('demonstration.labels.previousLabel')"
+                      (click)="irTo(4, totalSimples)"
+                    ></button>
                   </li>
                   @for (n of paginasSimples; track n) {
                     <li ndsPaginationItem>
-                      <a
+                      <button
                         ndsPaginationLink
-                        href="#"
+                        type="button"
                         [isActive]="n === totalSimples"
                         [attr.aria-label]="pageLabel(n)"
-                        (click)="irTo($event, n, totalSimples)"
-                      >{{ n }}</a>
+                        (click)="irTo(n, totalSimples)"
+                      >{{ n }}</button>
                     </li>
                   }
                   <li ndsPaginationItem>
-                    <a
+                    <button
                       ndsPaginationNext
-                      href="#"
+                      type="button"
                       [text]="t('demonstration.labels.next')"
-                      [label]="t('demonstration.labels.next')"
+                      [label]="t('demonstration.labels.nextLabel')"
                       [disabled]="true"
-                    ></a>
+                    ></button>
                   </li>
                 </ul>
               </nav>
@@ -829,12 +813,15 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   private readonly tplDoDont2Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont2Dont');
 
   /**
-   * Nome do landmark de cada instância. O prefixo vem traduzido; o sufixo é o
-   * identificador do exemplo, e não texto de leitura — é o que garante nomes
-   * distintos entre as nove paginações da página.
+   * Nome do landmark de cada instância. O prefixo é o nome do landmark
+   * traduzido (`navigationLabel`) — `title` valia "Pagination" nos três idiomas,
+   * ou seja, nome de landmark sem tradução. O sufixo é o identificador do
+   * exemplo, e não texto de leitura: é o que garante nomes distintos entre as
+   * paginações da página. A faixa da demonstração não usa este método, porque
+   * ela é a que mostra o padrão e leva o nome puro.
    */
   protected label(sufixo: string): string {
-    return `${t('title')} — ${sufixo}`;
+    return `${t('demonstration.labels.navigationLabel')} — ${sufixo}`;
   }
 
   /** Nome acessível de um link numerado: o número sozinho não diz nada em voz alta. */
@@ -843,12 +830,12 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Os links da página são exemplos: navegar de verdade tiraria a pessoa da
-   * documentação. O payload leva números e o slug — nunca texto traduzido, que
-   * partiria um evento em três no GA4.
+   * Os controles da página são exemplos: nenhum deles tem rota, então são
+   * `<button type="button">` e não há navegação a anular — um botão sem
+   * formulário não faz nada por conta própria. O payload leva números e o slug
+   * — nunca texto traduzido, que partiria um evento em três no GA4.
    */
-  protected irTo(evento: Event, page: number | string, total: number): void {
-    evento.preventDefault();
+  protected irTo(page: number | string, total: number): void {
     track('page_change', {
       component: SLUG,
       page: Number(page),
@@ -858,9 +845,9 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   }
 
   /** A demonstração da seção guarda estado; as outras só emitem o evento. */
-  protected irParaDemo(evento: Event, page: number): void {
+  protected irParaDemo(page: number): void {
     this.demoPage.set(page);
-    this.irTo(evento, page, SIMPLE_TOTAL);
+    this.irTo(page, SIMPLE_TOTAL);
   }
 
   protected readonly navGroups = computed(() => {
@@ -1117,11 +1104,17 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
     // Neste componente as falas do leitor moram sob `accessibility.screenReader`
     // — em outros ficam na raiz. As chaves variam, então só os valores chegam ao
     // container.
+    //
+    // `title` FICA DE FORA: ele é o cabeçalho da seção, e com `Object.values` o
+    // cabeçalho virava o primeiro item da própria lista — a seção se anunciando
+    // como uma das falas que ela lista.
     const byLocale = paginationTranslations as unknown as Record<
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    return Object.values(byLocale[locale]?.accessibility?.screenReader ?? {});
+    return Object.entries(byLocale[locale]?.accessibility?.screenReader ?? {})
+      .filter(([key]) => key !== 'title')
+      .map(([, line]) => line);
   });
 
   protected readonly relatedItems = computed(() => {
@@ -1183,14 +1176,18 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
 
   protected readonly testesAccessibility = computed(() => {
     const d = dict();
+    // As três colunas vêm do conteúdo compartilhado, inclusive nível e técnica.
+    // Enquanto o critério era texto solto, cada stack cravava o par que faltava
+    // e saíram QUATRO valores diferentes para o mesmo campo entre as cinco
+    // páginas — a constante local que fazia isso aqui não existe mais.
     return {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: stringsFromDict(d, 'testes.accessibility').map((criterio, i) => ({
-        criterion: toPlainText(criterio),
-        level: META_A11Y[i]?.level ?? 'AA',
-        how: META_A11Y[i]?.how ?? 'axe-core',
+      items: itemsFromDict(d, 'testes.accessibility', ['criterion', 'level', 'how']).map((r) => ({
+        criterion: toPlainText(r.criterion),
+        level: toPlainText(r.level),
+        how: toPlainText(r.how),
       })),
     };
   });

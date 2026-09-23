@@ -133,10 +133,9 @@ export const Playground: Story = {
           </PaginationItem>
           <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink
-              href="#"
               :is-active="current === n"
               :aria-label="\`Ir para página \${n}\`"
-              @click.prevent="irTo(n)"
+              @click="irTo(n)"
             >
               {{ n }}
             </PaginationLink>
@@ -164,8 +163,8 @@ export const Playground: Story = {
     await step('Todo controle tem rótulo com contexto', async () => {
       // accessibility.item5 — "3" sozinho não diz nada em voz alta.
       for (let n = 1; n <= totalPages; n++) {
-        const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
-        await expect(link).toHaveAttribute('data-slot', 'pagination-link');
+        const control = canvas.getByRole('button', { name: `Ir para página ${n}` });
+        await expect(control).toHaveAttribute('data-slot', 'pagination-link');
       }
       await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
@@ -179,7 +178,7 @@ export const Playground: Story = {
 
     await step('A página atual é marcada e o extremo é desabilitado', async () => {
       // accessibility.item4
-      const active = canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` });
+      const active = canvas.getByRole('button', { name: `Ir para página ${args.defaultPage}` });
       await expect(active).toHaveAttribute('aria-current', 'page');
       await expect(active).toHaveAttribute('data-active', 'true');
       await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toBeDisabled();
@@ -191,17 +190,17 @@ export const Playground: Story = {
       // DOM, e sem isso a segunda rodada partiria de outra página.
       const target = args.defaultPage === 1 ? 2 : 1;
       (args.onPageChange as unknown as { mockClear: () => void }).mockClear();
-      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${target}` }));
+      await userEvent.click(canvas.getByRole('button', { name: `Ir para página ${target}` }));
       await expect(args.onPageChange).toHaveBeenLastCalledWith(target);
       await expect(
-        canvas.getByRole('link', { name: `Ir para página ${target}` }),
+        canvas.getByRole('button', { name: `Ir para página ${target}` }),
       ).toHaveAttribute('aria-current', 'page');
 
       await userEvent.click(
-        canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` }),
+        canvas.getByRole('button', { name: `Ir para página ${args.defaultPage}` }),
       );
       await expect(
-        canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` }),
+        canvas.getByRole('button', { name: `Ir para página ${args.defaultPage}` }),
       ).toHaveAttribute('aria-current', 'page');
     });
 
@@ -211,8 +210,8 @@ export const Playground: Story = {
       // com os controls no valor padrão.
       const esperados = [
         canvas.getByRole('button', { name: LABEL_PREVIOUS }),
-        canvas.getByRole('link', { name: 'Ir para página 1' }),
-        canvas.getByRole('link', { name: 'Ir para página 2' }),
+        canvas.getByRole('button', { name: 'Ir para página 1' }),
+        canvas.getByRole('button', { name: 'Ir para página 2' }),
       ].filter((el) => !(el as HTMLButtonElement).disabled);
 
       (document.activeElement as HTMLElement | null)?.blur();

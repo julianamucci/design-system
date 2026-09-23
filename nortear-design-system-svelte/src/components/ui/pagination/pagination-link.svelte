@@ -8,11 +8,21 @@
 		size = "icon",
 		isActive,
 		page,
+		href,
 		children,
 		...restProps
 	}: PaginationPrimitive.PageProps & {
 		size?: ButtonSize;
 		isActive: boolean;
+		/**
+		 * Endereço da página. É ele que decide a TAG do controle.
+		 *
+		 * Com `href` o controle é `<a href>`: destino de verdade, abre em nova
+		 * aba, é indexável. Sem ele é `<button type="button">`, porque âncora sem
+		 * destino anuncia "link" ao leitor de tela e promete uma ida que não
+		 * acontece — o que acontece é uma ação na própria página.
+		 */
+		href?: string;
 	} = $props();
 
 	// O bits-ui fixa `aria-label="Page N"` — em inglês — nos próprios props da
@@ -27,10 +37,28 @@
 		((restProps as Record<string, unknown>)["aria-label"] as string | undefined) ??
 			`Ir para página ${page.value}`,
 	);
+
+	/**
+	 * Props da âncora: os do bits MENOS o `onkeydown`.
+	 *
+	 * O handler da lib chama `preventDefault()` no Enter para trocar a página na
+	 * própria tela. Numa âncora com destino isso CANCELA a navegação — o teclado
+	 * deixaria de fazer o que o mouse faz. No caminho do botão ele continua
+	 * inteiro, que é onde ele resolve alguma coisa.
+	 */
+	function anchorProps(props: Record<string, unknown>): Record<string, unknown> {
+		const withoutKeydown = { ...props };
+		delete withoutKeydown.onkeydown;
+		return withoutKeydown;
+	}
 </script>
 
-{#snippet Fallback()}
-	{page.value}
+{#snippet Content()}
+	{#if children}
+		{@render children?.()}
+	{:else}
+		{page.value}
+	{/if}
 {/snippet}
 
 <PaginationPrimitive.Page
@@ -43,12 +71,19 @@
 	{...restProps}
 >
 	{#snippet child({ props })}
-		<button {...props} aria-label={ariaLabel}>
-			{#if children}
-				{@render children?.()}
-			{:else}
-				{@render Fallback()}
-			{/if}
-		</button>
+		{#if href}
+			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- o destino vem do consumidor, e um design system não tem roteador para resolver -->
+			<a {...anchorProps(props)} {href} aria-label={ariaLabel}>
+				{@render Content()}
+			</a>
+		{:else}
+			<!--
+				Sem `type` explícito o botão é `submit` e envia o formulário que o
+				cercar — a faixa costuma viver dentro de um, em filtro de tabela.
+			-->
+			<button {...props} type="button" aria-label={ariaLabel}>
+				{@render Content()}
+			</button>
+		{/if}
 	{/snippet}
 </PaginationPrimitive.Page>
