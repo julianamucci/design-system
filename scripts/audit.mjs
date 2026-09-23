@@ -12023,9 +12023,27 @@ function auditQuality(slug) {
     // comparação, que é justamente o que dá utilidade ao documento.
     const secao = prd.split(/^## /m).find((s) => /^\d+\.\s+Geometria/.test(s));
     if (secao) {
+      // Só as LINHAS DE TABELA da seção, e não a seção inteira.
+      //
+      // A mensagem desta regra diz "a tabela de geometria nomeia", e até
+      // 2026-09-23 ela lia todo o texto da seção — inclusive prosa. O caso que
+      // a desmascarou é o oposto do defeito que ela persegue: ao mover o
+      // controle do Pagination para o botão, a §5 ganhou uma nota explicando
+      // QUAIS tokens a folha deixou de ler, e a regra contou os seis como se o
+      // PRD os estivesse reivindicando. Seis achados, todos sobre a frase que
+      // explicava por que não havia mais nada a achar.
+      //
+      // É a mesma família de "portão que casa palavra solta mede PROSA", já
+      // registrada no CLAUDE.md para a guarda de nome acessível — e aqui a
+      // regra ainda prometia, por escrito, medir só a tabela.
+      //
       // `--[a-z]` e não `--[a-z0-9-]`: sem a letra, o `---` que separa cabeçalho
       // de corpo em toda tabela markdown entraria como token.
-      const tokens = [...new Set(secao.match(/--[a-z][a-z0-9-]*/g) ?? [])];
+      const linhasDeTabela = secao
+        .split("\n")
+        .filter((l) => l.trimStart().startsWith("|"))
+        .join("\n");
+      const tokens = [...new Set(linhasDeTabela.match(/--[a-z][a-z0-9-]*/g) ?? [])];
       for (const token of tokens) {
         // Fronteira nos dois lados: `--radius` não pode ser dado por lastreado
         // porque a folha lê `--radius-md`. São pontos de customização
