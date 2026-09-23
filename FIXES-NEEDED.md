@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 22 itens
+## Aberto de verdade — 21 itens
 
 ### Precisam de decisão da dona (3)
 
@@ -88,12 +88,21 @@ histórico; a lista de cima é o que está por fazer.
   é a forma mais cara de fechá-la — some do radar sem ninguém ter escolhido
   nada. O caminho real é uma rodada de `/figma-sync-component data-table`.
 
-- [ ] **A moeda da demonstração do DataTable não acompanha o idioma.**
-  (Medida em 2026-09-22.) O formatador é `Intl.NumberFormat` fixo em
-  `pt-BR`/`BRL` nas cinco: em `en` e `es` o valor continua saindo em "R$".
-  A segunda não é tradução, é DADO — trocar a moeda muda o que a tabela diz —,
-  então é decisão de conteúdo, não conserto mecânico.
+- [x] **A moeda da demonstração do DataTable não acompanha o idioma.**
+  (Medida em 2026-09-22, **fechada em 2026-09-23**.) Eu a registrei aqui como
+  decisão de conteúdo — "trocar a moeda muda o dado, não a tradução" — e isso
+  estava ERRADO: o vanilla, que é a referência, já resolvia (en→USD, es→EUR,
+  resto→BRL). As outras quatro é que cravavam `pt-BR`/`BRL`. Não era decisão
+  pendente, era alinhamento à referência — e classificá-la como "precisa da dona"
+  foi o que a deixou parada.
 
+  A causa técnica era a mesma nas quatro: o formatador era constante de MÓDULO,
+  criada uma vez, e `Intl.NumberFormat` congela o locale na construção. Virou
+  valor derivado do idioma em cada stack.
+
+  **A fixture das stories fica em pt-BR de propósito**, nas cinco: `negociarLocale`
+  consulta o idioma do NAVEGADOR antes do padrão, então um headless em `en-US`
+  passaria a coluna para dólar e criaria diferença falsa na regressão visual.
 - [ ] **A saída do painel do Dialog e do Select está declarada num dialeto só,
   e por isso roda em UMA das cinco stacks.** (Aberto em 2026-09-22, medido de
   passagem ao consertar a presença do véu do AlertDialog.)

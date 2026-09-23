@@ -164,7 +164,17 @@
     canceled: 'destructive',
   };
 
-  const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+  // A moeda acompanha o idioma: a tabela traduzida com a coluna de valor em
+  // reais dizia, no meio de um texto em inglês, que o exemplo era de outro
+  // lugar. Formatador é $derived porque o locale muda em tempo de execução —
+  // uma constante criada uma vez ficaria presa ao idioma da montagem.
+  const currency = $derived(
+    $locale === 'en'
+      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+      : $locale === 'es'
+        ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' })
+        : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
+  );
 
   const demoData: Invoice[] = [
     { id: 'INV-001', customer: 'Ana Souza',    status: 'paid',     method: 'pix',        amount: 250 },

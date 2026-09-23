@@ -121,6 +121,19 @@ export const LABELS_DT: Partial<DataTableLabels> = {
 // O valor é NÚMERO na fixture e vira texto só na exibição. Guardar "R$ 250,00"
 // faria a ordenação comparar strings, e "R$ 50,00" cairia depois de
 // "R$ 450,00" — o defeito clássico de tabela de dinheiro.
+//
+// A moeda fica CRAVADA em pt-BR aqui de propósito, e é o vanilla — a referência
+// — que decide assim: o formatador por idioma vive na docs page, e a fixture
+// das stories não o consome. Duas razões, e a segunda é a que morde:
+//
+//  1. a story não tem idioma de página. Fora da docs page o locale sai da
+//     escada de `negociarLocale` — `?lang=`, depois preferência salva, depois
+//     IDIOMA DO NAVEGADOR. Não é "pt-BR por padrão": num Chrome headless em
+//     `en-US` a coluna passaria a sair em dólar sem ninguém pedir;
+//  2. a regressão visual compara a MESMA tabela em cinco portas, e uma coluna
+//     que muda de moeda conforme o idioma da máquina que roda vira diferença
+//     falsa — a mesma razão pela qual o rótulo do status e o do método também
+//     ficam em pt-BR aqui.
 function formatarBRL(value: unknown): string {
   return typeof value === 'number'
     ? value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })

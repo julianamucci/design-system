@@ -432,54 +432,62 @@
           </div>
         {/if}
         {#if enableColumnVisibility}
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              {#snippet child({ props })}
-                <Button {...props} variant="outline" size="sm" class="nds-data-table-columns-btn">
-                  <Settings2 aria-hidden="true" />
-                  {rotulos.columns}
-                </Button>
-              {/snippet}
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" class="nds-data-table-columns-menu-content">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>{rotulos.showColumns}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {#each table.getAllLeafColumns().filter((c) => c.getCanHide()) as column (column.id)}
-                  {@const pinned = column.getIsPinned()}
-                  {@const label = headerLabel(column)}
-                  <div class="nds-data-table-columns-menu-row">
-                    <DropdownMenuCheckboxItem
-                      class="nds-data-table-columns-menu-check"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(v: boolean) => column.toggleVisibility(!!v)}
-                    >
-                      {label}
-                    </DropdownMenuCheckboxItem>
-                    {#if enableColumnPinning}
-                      <div class="nds-data-table-pin-wrap">
-                        <button
-                          type="button"
-                          aria-label={pinned === 'start' ? rotulos.unpin(label) : rotulos.pinLeft(label)}
-                          onclick={() => column.pin(pinned === 'start' ? false : 'start')}
-                          class={cn(
-                            'nds-data-table-pin-btn',
-                            pinned === 'start' && 'is-active',
-                          )}
-                        >
-                          {#if pinned === 'start'}
-                            <PinOff aria-hidden="true" class="nds-dt-icon" />
-                          {:else}
-                            <Pin aria-hidden="true" class="nds-dt-icon nds-dt-icon-pin" />
-                          {/if}
-                        </button>
-                      </div>
-                    {/if}
-                  </div>
-                {/each}
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <!-- O embrulho é a árvore da referência (vanilla): é dele, e não do
+               botão, que sai o margin-left automático que empurra o controle de
+               colunas para a ponta da toolbar. Aqui ele NÃO é a âncora de
+               posicionamento do menu — o conteúdo do dropdown da bits-ui sai por
+               portal e se posiciona sozinho —, então o que fica dentro é a
+               declaração do menu, não o painel já renderizado. -->
+          <div class="nds-data-table-columns-wrap">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                {#snippet child({ props })}
+                  <Button {...props} variant="outline" size="sm" class="nds-data-table-columns-btn">
+                    <Settings2 aria-hidden="true" />
+                    {rotulos.columns}
+                  </Button>
+                {/snippet}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" class="nds-data-table-columns-menu-content">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>{rotulos.showColumns}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {#each table.getAllLeafColumns().filter((c) => c.getCanHide()) as column (column.id)}
+                    {@const pinned = column.getIsPinned()}
+                    {@const label = headerLabel(column)}
+                    <div class="nds-data-table-columns-menu-row">
+                      <DropdownMenuCheckboxItem
+                        class="nds-data-table-columns-menu-check"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(v: boolean) => column.toggleVisibility(!!v)}
+                      >
+                        {label}
+                      </DropdownMenuCheckboxItem>
+                      {#if enableColumnPinning}
+                        <div class="nds-data-table-pin-wrap">
+                          <button
+                            type="button"
+                            aria-label={pinned === 'start' ? rotulos.unpin(label) : rotulos.pinLeft(label)}
+                            onclick={() => column.pin(pinned === 'start' ? false : 'start')}
+                            class={cn(
+                              'nds-data-table-pin-btn',
+                              pinned === 'start' && 'is-active',
+                            )}
+                          >
+                            {#if pinned === 'start'}
+                              <PinOff aria-hidden="true" class="nds-dt-icon" />
+                            {:else}
+                              <Pin aria-hidden="true" class="nds-dt-icon nds-dt-icon-pin" />
+                            {/if}
+                          </button>
+                        </div>
+                      {/if}
+                    </div>
+                  {/each}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         {/if}
       </div>
     {/if}

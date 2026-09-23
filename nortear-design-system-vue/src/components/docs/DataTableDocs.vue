@@ -157,7 +157,20 @@ const demoData = ref<Invoice[]>([
   { id: 'INV-005', customer: 'Eva Oliveira', status: 'pending',  method: 'methodTransfer',   amount: 200 },
 ]);
 
-const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+/**
+ * Formatador de moeda do IDIOMA DA PÁGINA, e não constante de módulo.
+ *
+ * Preso a `pt-BR`/`BRL` na carga do módulo, o valor saía em reais no meio de
+ * uma tabela traduzida: em `en` e `es` o resto da linha mudava de idioma e a
+ * coluna de valor não. Como `computed` sobre o `locale` que a página já lê, o
+ * formatador é refeito na troca de idioma e a coluna acompanha — é a forma que
+ * o vanilla já tinha.
+ */
+const currency = computed(() => {
+  if (locale.value === 'en') return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  if (locale.value === 'es') return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+});
 const statusVariant: Record<InvoiceStatus, 'default' | 'warning' | 'destructive'> = {
   paid: 'default',
   pending: 'warning',
@@ -254,7 +267,7 @@ const demoColumns = computed<DataTableColumn<Invoice>[]>(() => [
     // não passa por aqui.
     meta: { numeric: true },
     cell: ({ row }) =>
-      h('span', { class: 'nds-font-medium nds-tabular-nums' }, currency.format(row.original.amount)),
+      h('span', { class: 'nds-font-medium nds-tabular-nums' }, currency.value.format(row.original.amount)),
   },
 ]);
 

@@ -104,7 +104,20 @@ const statusVariantMap: Record<InvoiceStatus, "default" | "warning" | "destructi
   canceled: "destructive",
 };
 
-const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+/**
+ * A moeda acompanha o IDIOMA da página.
+ *
+ * Era uma constante de módulo cravada em `pt-BR`/`BRL`: a tabela saía em reais
+ * no meio de uma página em inglês ou espanhol. Constante de módulo é o defeito
+ * em si — ela é avaliada uma vez, antes de haver locale, e nunca mais. O
+ * formatador precisa ser recalculado quando o locale muda, o que aqui quer
+ * dizer `useMemo` com o locale na dependência.
+ */
+const getCurrencyFormatter = (locale: string): Intl.NumberFormat => {
+  if (locale === "en") return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+  if (locale === "es") return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+};
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -224,6 +237,8 @@ export function DataTableDocs() {
 
   // ─── Columns memoizadas ─────────────────────────────────────────────────────
 
+  const currency = useMemo(() => getCurrencyFormatter(locale), [locale]);
+
   const demoColumns = useMemo<DataTableColumn<Invoice>[]>(
     () => [
       { accessorKey: "id", header: tContent("demonstration.labels.invoice"), size: 110 },
@@ -264,7 +279,7 @@ export function DataTableDocs() {
         ),
       },
     ],
-    [tContent]
+    [tContent, currency]
   );
 
   // ─── Rótulos e nome acessível dos exemplos ──────────────────────────────────

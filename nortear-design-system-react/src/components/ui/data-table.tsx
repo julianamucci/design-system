@@ -471,80 +471,88 @@ function DataTable<TData extends RowData>({
               />
             </div>
           )}
+          {/* O embrulho é a árvore da referência (vanilla): é dele, e não do
+              botão, que sai o margin-left automático que empurra o controle de
+              colunas para a ponta da toolbar. Aqui ele NÃO é a âncora de
+              posicionamento do menu — o conteúdo do dropdown do @base-ui sai
+              por portal e se posiciona sozinho —, então o que fica dentro é a
+              declaração do menu, não o painel já renderizado. */}
           {enableColumnVisibility && (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button variant="outline" size="sm" className="nds-data-table-columns-btn">
-                    <Settings2 aria-hidden="true" />
-                    {L.columns}
-                  </Button>
-                }
-              />
-              <DropdownMenuContent align="end" className="nds-data-table-columns-menu-content">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>{L.showColumns}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {table
-                    .getAllLeafColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => {
-                      const pinned = column.getIsPinned()
-                      const label =
-                        flexHeaderLabel(column.columnDef.header) ?? column.id
-                      return (
-                        <div
-                          key={column.id}
-                          className="nds-data-table-columns-menu-row"
-                        >
-                          <DropdownMenuCheckboxItem
-                            className="nds-data-table-columns-menu-check"
-                            checked={column.getIsVisible()}
-                            onCheckedChange={(value) =>
-                              column.toggleVisibility(!!value)
-                            }
+            <div className="nds-data-table-columns-wrap">
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button variant="outline" size="sm" className="nds-data-table-columns-btn">
+                      <Settings2 aria-hidden="true" />
+                      {L.columns}
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="end" className="nds-data-table-columns-menu-content">
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>{L.showColumns}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {table
+                      .getAllLeafColumns()
+                      .filter((column) => column.getCanHide())
+                      .map((column) => {
+                        const pinned = column.getIsPinned()
+                        const label =
+                          flexHeaderLabel(column.columnDef.header) ?? column.id
+                        return (
+                          <div
+                            key={column.id}
+                            className="nds-data-table-columns-menu-row"
                           >
-                            {label}
-                          </DropdownMenuCheckboxItem>
-                          {enableColumnPinning && (
-                            <div className="nds-data-table-pin-wrap">
-                              <button
-                                type="button"
-                                aria-label={
-                                  pinned === "start"
-                                    ? L.unpin(label)
-                                    : L.pinLeft(label)
-                                }
-                                onClick={() =>
-                                  column.pin(
-                                    pinned === "start" ? false : "start"
-                                  )
-                                }
-                                className={cn(
-                                  "nds-data-table-pin-btn",
-                                  pinned === "start" && "is-active"
-                                )}
-                              >
-                                {pinned === "start" ? (
-                                  <PinOff
-                                    aria-hidden="true"
-                                    className="nds-dt-icon"
-                                  />
-                                ) : (
-                                  <Pin
-                                    aria-hidden="true"
-                                    className="nds-dt-icon nds-dt-icon-pin"
-                                  />
-                                )}
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                            <DropdownMenuCheckboxItem
+                              className="nds-data-table-columns-menu-check"
+                              checked={column.getIsVisible()}
+                              onCheckedChange={(value) =>
+                                column.toggleVisibility(!!value)
+                              }
+                            >
+                              {label}
+                            </DropdownMenuCheckboxItem>
+                            {enableColumnPinning && (
+                              <div className="nds-data-table-pin-wrap">
+                                <button
+                                  type="button"
+                                  aria-label={
+                                    pinned === "start"
+                                      ? L.unpin(label)
+                                      : L.pinLeft(label)
+                                  }
+                                  onClick={() =>
+                                    column.pin(
+                                      pinned === "start" ? false : "start"
+                                    )
+                                  }
+                                  className={cn(
+                                    "nds-data-table-pin-btn",
+                                    pinned === "start" && "is-active"
+                                  )}
+                                >
+                                  {pinned === "start" ? (
+                                    <PinOff
+                                      aria-hidden="true"
+                                      className="nds-dt-icon"
+                                    />
+                                  ) : (
+                                    <Pin
+                                      aria-hidden="true"
+                                      className="nds-dt-icon nds-dt-icon-pin"
+                                    />
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           )}
         </div>
       )}

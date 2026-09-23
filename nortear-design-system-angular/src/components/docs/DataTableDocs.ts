@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { useTranslation, getLocale } from '@/lib/i18n';
+import { useTranslation, getLocale, type Locale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import {
@@ -360,15 +360,22 @@ const TOKENS_CSS = `/* O DataTable não declara variáveis próprias: consome os
 }`;
 
 /**
- * Dinheiro formatado só na EXIBIÇÃO.
+ * Dinheiro formatado só na EXIBIÇÃO, e na moeda do idioma que a página está
+ * lendo.
  *
  * O valor continua número no dado — guardar "R$ 250,00" faria a ordenação
  * comparar strings, e "R$ 50,00" cairia depois de "R$ 450,00".
+ *
+ * A moeda acompanha o idioma pelo mesmo motivo que o status e o método
+ * acompanham: a coluna saía em reais no meio de uma tabela lida em `en` e em
+ * `es`. Quem devolve o formatador é uma FUNÇÃO, nunca uma constante de módulo,
+ * porque o `Intl.NumberFormat` congela o locale na construção — criado uma vez,
+ * ele sobreviveria à troca de idioma mostrando a moeda anterior.
  */
-function formatarBRL(value: unknown): string {
-  return typeof value === 'number'
-    ? value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-    : '—';
+function formatadorDeMoeda(locale: Locale): Intl.NumberFormat {
+  if (locale === 'en') return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  if (locale === 'es') return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 @Component({
@@ -761,6 +768,9 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     dict();
     const status = this.statusLabels();
     const method = this.methodLabels();
+    // `getLocale()` lê o signal de idioma por dentro: é isto que recria o
+    // formatador na troca de idioma, em vez de manter o da primeira leitura.
+    const moeda = formatadorDeMoeda(getLocale());
     /** O texto exibido de cada status, na ordem em que o domínio os lista. */
     const options = Object.values(status);
     const statusText = (value: unknown) => status[STATUS_KEY_DT[String(value)]!] ?? '—';
@@ -804,7 +814,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
         id: 'valor',
         header: t('demonstration.labels.amount'),
         accessor: (f) => f.value,
-        format: formatarBRL,
+        format: (value) => (typeof value === 'number' ? moeda.format(value) : '—'),
         sortable: true,
         numeric: true,
       },

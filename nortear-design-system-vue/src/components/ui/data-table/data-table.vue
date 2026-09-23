@@ -664,64 +664,79 @@ watch(
           class="nds-data-table-search-input"
         />
       </div>
-      <DropdownMenu v-if="enableColumnVisibility">
-        <DropdownMenuTrigger as-child>
-          <Button
-            variant="outline"
-            size="sm"
-            class="nds-data-table-columns-btn"
-          >
-            <Settings2 aria-hidden="true" />
-            {{ rotulos.columns }}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          class="nds-data-table-columns-menu-content"
-        >
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>{{ rotulos.showColumns }}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <template
-              v-for="column in table.getAllLeafColumns().filter((c) => c.getCanHide())"
-              :key="column.id"
+      <!--
+        O embrulho existe para que a toolbar tenha a MESMA árvore nas cinco
+        stacks: `-columns-wrap` era emitido só por vanilla (a referência) e
+        angular, e a folha compartilhada vinha compensando a diferença com um
+        `margin-left: auto` a mais no botão. Aqui o `position: relative` do
+        embrulho é inerte — o painel do `reka-ui` sai por portal, preso ao
+        gatilho pelo posicionador da lib, e não ao embrulho —, exatamente como
+        no angular, que também usa lib de menu. O que o nó dá nesta stack é a
+        margem que empurra o botão para a ponta da toolbar.
+      -->
+      <div
+        v-if="enableColumnVisibility"
+        class="nds-data-table-columns-wrap"
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button
+              variant="outline"
+              size="sm"
+              class="nds-data-table-columns-btn"
             >
-              <div class="nds-data-table-columns-menu-row">
-                <DropdownMenuCheckboxItem
-                  class="nds-data-table-columns-menu-check"
-                  :model-value="column.getIsVisible()"
-                  @update:model-value="(v: boolean) => column.toggleVisibility(!!v)"
-                  @select.prevent
-                >
-                  {{ flexHeaderLabel(column.columnDef.header) ?? column.id }}
-                </DropdownMenuCheckboxItem>
-                <div
-                  v-if="enableColumnPinning"
-                  class="nds-data-table-pin-wrap"
-                >
-                  <button
-                    type="button"
-                    :aria-label="pinLabel(column)"
-                    :class="cn( 'nds-data-table-pin-btn', column.getIsPinned() === 'start' && 'is-active', )"
-                    @click="togglePin(column)"
+              <Settings2 aria-hidden="true" />
+              {{ rotulos.columns }}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            class="nds-data-table-columns-menu-content"
+          >
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{{ rotulos.showColumns }}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <template
+                v-for="column in table.getAllLeafColumns().filter((c) => c.getCanHide())"
+                :key="column.id"
+              >
+                <div class="nds-data-table-columns-menu-row">
+                  <DropdownMenuCheckboxItem
+                    class="nds-data-table-columns-menu-check"
+                    :model-value="column.getIsVisible()"
+                    @update:model-value="(v: boolean) => column.toggleVisibility(!!v)"
+                    @select.prevent
                   >
-                    <PinOff
-                      v-if="column.getIsPinned() === 'start'"
-                      aria-hidden="true"
-                      class="nds-dt-icon"
-                    />
-                    <Pin
-                      v-else
-                      aria-hidden="true"
-                      class="nds-dt-icon nds-dt-icon-pin"
-                    />
-                  </button>
+                    {{ flexHeaderLabel(column.columnDef.header) ?? column.id }}
+                  </DropdownMenuCheckboxItem>
+                  <div
+                    v-if="enableColumnPinning"
+                    class="nds-data-table-pin-wrap"
+                  >
+                    <button
+                      type="button"
+                      :aria-label="pinLabel(column)"
+                      :class="cn( 'nds-data-table-pin-btn', column.getIsPinned() === 'start' && 'is-active', )"
+                      @click="togglePin(column)"
+                    >
+                      <PinOff
+                        v-if="column.getIsPinned() === 'start'"
+                        aria-hidden="true"
+                        class="nds-dt-icon"
+                      />
+                      <Pin
+                        v-else
+                        aria-hidden="true"
+                        class="nds-dt-icon nds-dt-icon-pin"
+                      />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+              </template>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
 
     <!-- Scroll container -->

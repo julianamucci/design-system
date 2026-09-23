@@ -289,7 +289,7 @@ data-table                       <div>, coluna flex, gap de 8px
 │   ├── search                   moldura relativa do campo
 │   │   ├── svg                  lupa, absoluta à esquerda, aria-hidden
 │   │   └── search-input         input[type=search] — papel searchbox
-│   └── columns-wrap             só vanilla e angular emitem este nó
+│   └── columns-wrap             as CINCO emitem este nó (desde 2026-09-23)
 │       ├── columns-btn          Button outline/sm, com ícone e rótulo
 │       └── menu de colunas      vanilla: div[hidden] absoluto, role=group
 │                                outras quatro: DropdownMenu em portal
@@ -525,6 +525,13 @@ usa o componente Pagination do design system (§1).
 > dizia v8) e **27** (as 21 chaves de rótulo duplicadas — viraram
 > `docs/shared/primitives/data-table-labels.ts`).
 >
+> **Fechados em 2026-09-23**, um dia depois: o item **V4** (só vanilla e angular
+> emitiam `columns-wrap`, e a folha declarava a margem duas vezes) e o **item
+> 10**, que é o mesmo assunto pelo lado da folha. E a moeda da demonstração
+> passou a seguir o idioma nas cinco — o vanilla já fazia, e as outras quatro
+> cravavam `pt-BR`/`BRL` numa constante de módulo, que é o que impedia o
+> formatador de reagir à troca de idioma.
+>
 > **D11 — "o defeito que sobrou" — foi corrigido**: a regra do vazio usa
 > `block-size`.
 >
@@ -535,8 +542,9 @@ usa o componente Pagination do design system (§1).
 > o portão foi apontando a minoria em movimento — é o comportamento esperado de
 > um portão que compara contra a maioria, e não motivo para desconfiar dele.
 >
-> **Continua de pé** o que a passagem declarou e não fechou: as cinco ainda não
-> emitem a mesma árvore de toolbar (o nó `-columns-wrap` existe em duas).
+> **Fechado em 2026-09-23**: as cinco passaram a emitir a mesma árvore de
+> toolbar. Era o último item que a passagem de 2026-09-22 tinha declarado e não
+> fechado. Ver a pendência correspondente, abaixo, e o item V4 desta seção.
 >
 > **DECIDIDO em 2026-09-22 — as três stories que só o angular tinha foram
 > REMOVIDAS**, e o angular passou a ser subconjunto estrito das outras quatro.
@@ -946,25 +954,28 @@ stacks, nem as 21 chaves de rótulo copiadas quatro vezes.
 
 > **FECHADA · 2026-09-22 — `-columns-btn` era declarada duas vezes na folha.**
 > Agora é **uma declaração por classe**, com a margem automática dentro dela e o
-> motivo escrito: duas stacks emitem o nó de embrulho `-columns-wrap` e três
-> não, e a margem é inerte para quem tem embrulho, porque o botão é
-> `inline-flex` e margem automática não desloca elemento em linha.
+> motivo escrito na época: duas stacks emitiam o nó de embrulho
+> `-columns-wrap` e três não, e a margem no botão era inerte para quem tinha o
+> embrulho. **Em 2026-09-23 as cinco passaram a emitir o nó**, a segunda
+> declaração ficou sem consumidor e saiu: a margem mora num lugar só.
 
-> **PENDÊNCIA · 2026-09-22** — as cinco stacks não emitem a mesma árvore de
-> toolbar: `-columns-wrap` existe em duas e não existe em três. A folha já
-> absorve a diferença numa declaração só, então **não há defeito visível hoje** —
-> o que há é uma divergência de markup que a folha está compensando, e que volta
-> a morder quando alguém mexer na margem ou no posicionamento do botão.
+> **FECHADA · 2026-09-23 — as cinco emitem a mesma árvore de toolbar.**
+> `-columns-wrap` existia em vanilla e angular, e a folha compensava a ausência
+> declarando a margem também em `-columns-btn`. React, vue e svelte passaram a
+> emitir o nó, a segunda declaração saiu, e a margem voltou a morar num lugar só.
 >
-> Nasceu como "a outra metade" da pendência de 2026-09-16 sobre a classe
-> duplicada, e ficou registrada dentro de um bloco `FECHADA PELA METADE` — **o
-> guarda do `pre-commit` só reconhece `> **PENDÊNCIA · `, então ela era
-> invisível para ele**. Declarada e invisível é o estado em que item medido vira
-> item esquecido; por isso virou marcador próprio no dia seguinte.
+> **Não havia defeito na tela, e é por isso que durava**: CSS que absorve
+> diferença de árvore só cobra quando alguém mexe na margem ou no posicionamento.
 >
-> **Fecha quando**: as cinco emitirem a mesma árvore de toolbar — com o embrulho
-> ou sem ele, decidido pela referência —, e a folha declarar a margem num lugar
-> só, sem compensar diferença de markup.
+> **O papel do nó diverge por lib, e isso fica registrado, não "alinhado"**: só o
+> vanilla posiciona o menu à mão, e nele o `position: relative` do embrulho é a
+> âncora. Nas outras quatro o painel sai por PORTAL e se posiciona pela lib, então
+> ali o nó vale pela margem e por igualar a árvore. As quatro escrevem isso no
+> próprio componente, cada uma ao lado do seu menu.
+>
+> Esta pendência nasceu no dia anterior porque a metade aberta estava escrita
+> dentro de um bloco `FECHADA PELA METADE`, invisível para o guarda do
+> `pre-commit`. Viveu um dia como marcador próprio e fechou.
 
 > **FECHADA · 2026-09-22 — listas de teste mais curtas que o conteúdo.** react e
 > svelte publicavam 8 dos 9 itens funcionais e 4 dos 6 de acessibilidade, e o
