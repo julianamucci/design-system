@@ -52,7 +52,7 @@ dez stories que a consomem são as `-states` e as `-variants` das cinco stacks.
 |---|---|---|
 | C1 | A raiz é `<nav>` com `role="navigation"` explícito e nome acessível em português (`Paginação` por padrão nas cinco) | `accessibility.items.item1`, `accessibility.aria.navLabel` · Playground das cinco |
 | C2 | O conteúdo é `<ul>`, e cada controle mora num `<li>` próprio | `anatomy.item2`, `anatomy.item3` · Playground das cinco, pela sonda (`list.tag`, `list.items`) |
-| C3 | Sete `data-slot` compõem o contrato de markup: `pagination`, `-content`, `-item`, `-link`, `-previous`, `-next`, `-ellipsis` | `anatomy.item1` a `item6` · `measurePagination` busca por esses seletores, e campo `null` é o achado |
+| C3 | **Nove** `data-slot` compõem o contrato de markup: `pagination`, `-content`, `-item`, `-link`, `-first`, `-previous`, `-next`, `-last`, `-ellipsis`. Os dois das pontas entraram em 2026-09-23 com `showFirstLast` e saem só quando ele é verdadeiro | `anatomy.item1` a `item6` · `measurePagination` busca por esses seletores, e campo `null` é o achado |
 | C4 | Exatamente UM link carrega `aria-current="page"`, e ele também recebe `data-active="true"` | `accessibility.items.item2`, `accessibility.aria.current` · `Active` das cinco — o vanilla afirma a contagem (`querySelectorAll` igual a 1) |
 | C5 | Todo link numerado tem nome com contexto (`Ir para página N`); o número sozinho não é nome | `accessibility.items.item3`, `accessibility.aria.linkLabel` · Playground das cinco |
 | C6 | Prev e Next estão SEMPRE presentes; nos extremos ficam desabilitados, nunca escondidos | `usage.guidelines.item4`, `states.lastPage.behavior` · `Disabled` (react, vue, svelte), `DisabledFirst`/`DisabledLast` (vanilla), `FirstPage`/`LastPage` (angular) |
@@ -365,6 +365,8 @@ página atual para compartilhamento") não tem como ser cumprida ali.
 pagination                     <nav>, role="navigation", aria-label, [data-align]
 └── pagination-content         <ul>, flex em linha, gap de 4px, sem marcador
     ├── pagination-item        <li>
+    │   └── pagination-first      salto à primeira; só com `showFirstLast`
+    ├── pagination-item
     │   └── pagination-previous   controle direcional, ícone + rótulo escondível
     ├── pagination-item
     │   └── pagination-link       número da página; aria-current quando é a atual
@@ -372,11 +374,18 @@ pagination                     <nav>, role="navigation", aria-label, [data-align
     │   └── pagination-ellipsis   <span> decorativo, caractere U+2026
     ├── pagination-item
     │   └── pagination-link
+    ├── pagination-item
+    │   └── pagination-next       controle direcional, rótulo + ícone
     └── pagination-item
-        └── pagination-next       controle direcional, rótulo + ícone
+        └── pagination-last       salto à última; só com `showFirstLast`
 ```
 
-Sete `data-slot`, e os sete saem nas cinco stacks. A árvore acima é a do vanilla
+**Nove `data-slot`, e os sete originais saem nas cinco stacks.** Os dois das
+pontas dependem de `showFirstLast` e nasceram em 2026-09-23, quando o rodapé do
+DataTable passou a compor este componente — o rodapé tem salto para a primeira
+e a última página, e o Pagination não tinha.
+
+A árvore acima é a do vanilla
 e é a que a sonda busca; o `<li>` é estrutura obrigatória, não invólucro
 opcional — o CSS estiliza o item por `.nds-pagination-list > li`, e é por isso
 que o `PaginationItem` do vue e do angular não têm classe própria (uma classe
@@ -538,6 +547,35 @@ paginação mostra a faixa meia dúzia de vezes, e sem nomes distintos o axe acu
 qual é qual.
 
 ### Divergências de framework, registradas
+
+> **Três nasceram em 2026-09-23**, com os eixos que a composição do rodapé do
+> DataTable exigiu. As três são de framework e ficam REGISTRADAS, não
+> "alinhadas" — e as três foram declaradas pelas próprias stacks durante a
+> rodada, em vez de contornadas:
+>
+> **`showPages` só existe onde a régua é do COMPONENTE.** São três formas, e a
+> pergunta que as separa é "quem calcula as páginas?":
+>
+> | stack | quem calcula | resultado |
+> |---|---|---|
+> | vanilla | o componente, por régua embutida | vira propriedade |
+> | react, angular | quem consome escreve cada controle | **não vira propriedade** — não há régua interna a esconder |
+> | vue, svelte | a lib CALCULA, quem consome RENDERIZA | **não vira propriedade** — suprimir é não escrever o laço |
+>
+> Nas quatro sem propriedade, a ausência está escrita no docblock do módulo,
+> onde quem procurar o eixo vai cair. Criar a propriedade ali seria opção
+> inerte, que parece contrato — a mesma família da regra de reserva que saiu de
+> `pagination.css` nesta semana por nunca ter tido produtor.
+>
+> **O svelte escreve os dois controles das pontas à mão**: a lib headless tem
+> Root, Page, PrevButton e NextButton, e não tem primitivo de primeira/última.
+> No rodapé do DataTable isso não custa nada, porque as duas respostas vêm da
+> tabela.
+>
+> **`appearance` é a mesma prop nas cinco**, e essa é a que NÃO diverge: a
+> variante era derivada e cravada (`isActive ? outline : ghost`) nos cinco
+> primitivos, e o consumidor não tinha como pedir contorno em todos. Era a
+> lacuna que impedia a tela do rodapé de ficar idêntica.
 
 | stack | como difere |
 |---|---|

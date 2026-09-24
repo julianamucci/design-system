@@ -39,6 +39,30 @@ const IMPORT_DIRECIONAL = `import {
   PaginationPrevious,
 } from "@/components/ui/pagination";`;
 
+/** A faixa numerada mais os dois saltos de ponta. */
+const IMPORT_SALTOS = `import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationItem,
+  PaginationLast,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";`;
+
+/** Só os quatro controles de navegação — a forma do rodapé de tabela. */
+const IMPORT_SALTOS_SEM_NUMERO = `import {
+  Pagination,
+  PaginationContent,
+  PaginationFirst,
+  PaginationItem,
+  PaginationLast,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";`;
+
 /**
  * Atributos da raiz. Só o que difere do padrão do primitivo entra —
  * `perPage` é 10, `page` é 1 e `siblingCount` é 1 sem que ninguém escreva.
@@ -220,4 +244,149 @@ let paginaAtual = $state(${page});`,
   }
 
   return svelteSnippet(IMPORT_RANGE, simpleMarkup(rootProps(args)));
+}
+
+// ─── Os três eixos que o rodapé de tabela precisava ──────────────────────────
+//
+// `appearance`, os saltos de ponta e a faixa sem números nasceram em
+// 2026-09-23, quando o rodapé do DataTable passou a compor esta faixa em vez de
+// desenhar quatro botões soltos. Cada um tem story própria, e cada story tem o
+// snippet dela: eixo sem story é API que ninguém prova, e painel que herda o
+// snippet do vizinho ensina outro exemplo.
+
+/**
+ * Aparência dos controles não ativos.
+ *
+ * `appearance` vai em cada peça, e não numa `class`: `buttonVariants` já
+ * escreveu uma variante, e quem chega depois pelo `cn` não desfaz a que veio
+ * antes. A página atual segue `outline` sem que ninguém peça — é ela que o
+ * realce existe para marcar.
+ */
+export function paginationAppearanceSource(): string {
+  return svelteSnippet(
+    IMPORT_RANGE,
+    `<Pagination count={50} page={2} siblingCount={2}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationPrevious appearance="outline" />
+      </PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type === "ellipsis"}
+            <PaginationEllipsis />
+          {:else}
+            <PaginationLink page={p} appearance="outline" isActive={currentPage === p.value}>
+              {p.value}
+            </PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem>
+        <PaginationNext appearance="outline" />
+      </PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+  );
+}
+
+/**
+ * Saltos para as pontas.
+ *
+ * Eles entram POR FORA dos direcionais — primeira antes do anterior, última
+ * depois do próximo — e trazem duplo chevron, que é o que os separa do passo de
+ * uma página.
+ *
+ * O `onclick` e o `disabled` são do consumidor de propósito: a lib headless
+ * desta stack não tem primitivo de primeira/última, e inventar um que adivinhe
+ * o extremo esconderia de quem lê que a decisão é dele. Quem já tem a resposta
+ * na mão — um rodapé de tabela, por exemplo — passa a sua.
+ */
+export function paginationFirstLastSource(): string {
+  return svelteSnippet(
+    `${IMPORT_SALTOS}
+
+const TOTAL = 80;
+const POR_PAGINA = 10;
+const totalPaginas = Math.ceil(TOTAL / POR_PAGINA);
+
+let paginaAtual = $state(4);`,
+    `<Pagination count={TOTAL} perPage={POR_PAGINA} bind:page={paginaAtual} siblingCount={2}>
+  {#snippet children({ pages })}
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationFirst disabled={paginaAtual === 1} onclick={() => (paginaAtual = 1)} />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationPrevious />
+      </PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type === "ellipsis"}
+            <PaginationEllipsis />
+          {:else}
+            <PaginationLink
+              page={p}
+              isActive={paginaAtual === p.value}
+              onclick={() => (paginaAtual = p.value)}
+            >
+              {p.value}
+            </PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem>
+        <PaginationNext />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLast
+          disabled={paginaAtual === totalPaginas}
+          onclick={() => (paginaAtual = totalPaginas)}
+        />
+      </PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+  );
+}
+
+/**
+ * A faixa sem a régua numerada — a forma do rodapé de tabela.
+ *
+ * Aqui não há prop que apague os números: a régua é COMPOSTA por quem consome,
+ * e suprimi-la é não escrever o laço. Sem números o snippet dispensa até o
+ * snippet `children`, que só existia para receber `pages`.
+ *
+ * Os direcionais vão com `text=""`: sem palavra na tela eles viram quadrado de
+ * ícone, e quem os nomeia é o `aria-label` que cada um já traz.
+ */
+export function paginationWithoutPagesSource(): string {
+  return svelteSnippet(
+    `${IMPORT_SALTOS_SEM_NUMERO}
+
+const TOTAL = 100;
+const totalPaginas = Math.ceil(TOTAL / 10);
+
+let paginaAtual = $state(1);`,
+    `<Pagination count={TOTAL} bind:page={paginaAtual}>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationFirst disabled={paginaAtual === 1} onclick={() => (paginaAtual = 1)} />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationPrevious text="" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext text="" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLast
+        disabled={paginaAtual === totalPaginas}
+        onclick={() => (paginaAtual = totalPaginas)}
+      />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+  );
 }

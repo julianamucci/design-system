@@ -7,6 +7,7 @@
 		class: className,
 		size = "icon",
 		isActive,
+		appearance = "ghost",
 		page,
 		href,
 		children,
@@ -14,6 +15,17 @@
 	}: PaginationPrimitive.PageProps & {
 		size?: ButtonSize;
 		isActive: boolean;
+		/**
+		 * Aparência dos controles NÃO ativos. Padrão `ghost`.
+		 *
+		 * A página atual continua `outline` sempre: é ela que o realce existe
+		 * para marcar, e deixá-la seguir o eixo apagaria a marcação justamente
+		 * quando a faixa inteira fosse `outline`.
+		 *
+		 * Não se resolve por `class`: `buttonVariants` já escreveu uma variante,
+		 * e quem chega depois pelo `cn` não desfaz a que veio antes.
+		 */
+		appearance?: "ghost" | "outline";
 		/**
 		 * Endereço da página. É ele que decide a TAG do controle.
 		 *
@@ -67,7 +79,7 @@
 	aria-current={isActive ? "page" : undefined}
 	data-slot="pagination-link"
 	data-active={isActive ? "true" : undefined}
-	class={cn(buttonVariants({ size, variant: isActive ? "outline" : "ghost" }), className)}
+	class={cn(buttonVariants({ size, variant: isActive ? "outline" : appearance }), className)}
 	{...restProps}
 >
 	{#snippet child({ props })}

@@ -409,3 +409,118 @@ const trechos: Trecho[] = [1, 2, 3, 'ellipsis', 12]`,
 </div>`,
   );
 }
+
+// ─── Os três eixos que o rodapé de tabela precisava ──────────────────────────
+//
+// `appearance`, os saltos de ponta e a faixa sem números nasceram em
+// 2026-09-23, quando o rodapé do DataTable passou a compor esta faixa em vez de
+// desenhar quatro botões soltos. Cada um tem story própria, e cada story tem o
+// snippet dela: eixo sem story é API que ninguém prova, e painel que herda o
+// snippet do vizinho ensina outro exemplo.
+
+/**
+ * Aparência dos controles não ativos.
+ *
+ * `appearance` vai em cada peça, e não numa `class`: `buttonVariants` já
+ * escreveu uma variante, e quem chega depois pelo `cn` não desfaz a que veio
+ * antes. A página atual segue `outline` sem que ninguém peça — é ela que o
+ * realce existe para marcar.
+ */
+export function paginationAppearanceSource(): string {
+  return vueSnippet(
+    `${importa(
+      'Pagination',
+      'PaginationContent',
+      'PaginationItem',
+      'PaginationLink',
+      'PaginationNext',
+      'PaginationPrevious',
+    )}
+
+const paginas = [1, 2, 3, 4, 5]`,
+    `<Pagination :total="50" :items-per-page="10" :page="2">
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious appearance="outline" /></PaginationItem>
+    <PaginationItem v-for="n in paginas" :key="n">
+      <PaginationLink
+        appearance="outline"
+        :is-active="n === 2"
+        :aria-label="\`Ir para página \${n}\`"
+      >
+        {{ n }}
+      </PaginationLink>
+    </PaginationItem>
+    <PaginationItem><PaginationNext appearance="outline" /></PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+  );
+}
+
+/**
+ * Saltos para as pontas.
+ *
+ * Eles entram POR FORA dos direcionais — primeira antes do anterior, última
+ * depois do próximo — e trazem duplo chevron, que é o que os separa do passo
+ * de uma página. Quem desabilita no extremo continua sendo o componente,
+ * lendo `:page` contra `:total` e `:items-per-page`.
+ */
+export function paginationFirstLastSource(): string {
+  return vueSnippet(
+    `${importa(
+      'Pagination',
+      'PaginationContent',
+      'PaginationFirst',
+      'PaginationItem',
+      'PaginationLast',
+      'PaginationLink',
+      'PaginationNext',
+      'PaginationPrevious',
+    )}
+
+const paginas = [1, 2, 3, 4, 5, 6, 7, 8]`,
+    `<Pagination :total="80" :items-per-page="10" :page="4">
+  <PaginationContent>
+    <PaginationItem><PaginationFirst /></PaginationItem>
+    <PaginationItem><PaginationPrevious /></PaginationItem>
+    <PaginationItem v-for="n in paginas" :key="n">
+${numberedLink({ active: 'n === 4', recuo: 6 })}
+    </PaginationItem>
+    <PaginationItem><PaginationNext /></PaginationItem>
+    <PaginationItem><PaginationLast /></PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+  );
+}
+
+/**
+ * A faixa sem a régua numerada — a forma do rodapé de tabela.
+ *
+ * Aqui não há prop que apague os números: a régua é COMPOSTA por quem consome,
+ * e suprimi-la é não escrever o `v-for`. O que o componente continua calculando
+ * sozinho é o extremo, e é por isso que o rodapé pode contar as páginas em
+ * texto ao lado em vez de mostrá-las.
+ *
+ * Os direcionais vão com `text=""`: sem palavra na tela eles viram quadrado de
+ * ícone, e quem os nomeia é o `aria-label` que cada um já traz.
+ */
+export function paginationWithoutPagesSource(): string {
+  return vueSnippet(
+    importa(
+      'Pagination',
+      'PaginationContent',
+      'PaginationFirst',
+      'PaginationItem',
+      'PaginationLast',
+      'PaginationNext',
+      'PaginationPrevious',
+    ),
+    `<Pagination :total="100" :items-per-page="10" :page="1">
+  <PaginationContent>
+    <PaginationItem><PaginationFirst /></PaginationItem>
+    <PaginationItem><PaginationPrevious text="" /></PaginationItem>
+    <PaginationItem><PaginationNext text="" /></PaginationItem>
+    <PaginationItem><PaginationLast /></PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+  );
+}

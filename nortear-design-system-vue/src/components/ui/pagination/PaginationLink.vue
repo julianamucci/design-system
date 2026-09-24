@@ -18,10 +18,22 @@ const props = withDefaults(defineProps<{
   href?: string
   size?: ButtonVariants['size']
   isActive?: boolean
+  /**
+   * Aparência dos controles NÃO ativos. Padrão `ghost`.
+   *
+   * A página atual continua `outline` sempre: é ela que o realce existe para
+   * marcar, e deixá-la seguir o eixo apagaria a marcação justamente quando a
+   * faixa inteira fosse `outline`.
+   *
+   * Não se resolve por `class`: `buttonVariants` já traz uma variante, e quem
+   * chega depois pelo `cn` não desfaz a que veio antes.
+   */
+  appearance?: 'ghost' | 'outline'
   class?: HTMLAttributes['class']
 }>(), {
   size: 'icon',
   isActive: false,
+  appearance: 'ghost',
 })
 
 /** O que os dois caminhos compartilham — só a tag e o destino divergem. */
@@ -30,7 +42,7 @@ const sharedAttrs = computed(() => ({
   'data-active': props.isActive ? 'true' : undefined,
   'aria-current': props.isActive ? ('page' as const) : undefined,
   class: cn(
-    buttonVariants({ variant: props.isActive ? 'outline' : 'ghost', size: props.size }),
+    buttonVariants({ variant: props.isActive ? 'outline' : props.appearance, size: props.size }),
     props.class,
   ),
 }))

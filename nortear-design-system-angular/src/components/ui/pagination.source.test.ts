@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import paginationTranslations from '@shared/content/pagination/translations.json';
 import {
+  paginationAppearanceSource,
   paginationContrastSource,
   paginationDirectionalSource,
+  paginationFirstLastSource,
   paginationFirstPageSource,
   paginationFocusVisibleSource,
   paginationInteractiveSource,
@@ -10,6 +12,7 @@ import {
   paginationPlaygroundSource,
   paginationSimpleSource,
   paginationWithEllipsisSource,
+  paginationWithoutPagesSource,
   LABEL_NEXT,
   LABEL_PAGE,
   LABEL_PREVIOUS,
@@ -61,6 +64,12 @@ const builders: Array<[string, () => string]> = [
   ['paginationFirstPageSource', paginationFirstPageSource],
   ['paginationFocusVisibleSource', paginationFocusVisibleSource],
   ['paginationContrastSource', paginationContrastSource],
+  // Os três eixos que o rodapé do DataTable precisou (2026-09-23). Entram nesta
+  // lista no mesmo commit em que nascem: construtor fora dela é varredura que
+  // encolhe em silêncio, e este repositório já pagou caro por isso duas vezes.
+  ['paginationAppearanceSource', paginationAppearanceSource],
+  ['paginationFirstLastSource', paginationFirstLastSource],
+  ['paginationWithoutPagesSource', paginationWithoutPagesSource],
 ];
 
 describe('os rótulos acessíveis são os do conteúdo compartilhado', () => {
@@ -245,6 +254,9 @@ describe('cada story liga o próprio construtor', () => {
     ['FirstPage', 'paginationFirstPageSource'],
     ['FocusVisible', 'paginationFocusVisibleSource'],
     ['Contrast', 'paginationContrastSource'],
+    ['Appearance', 'paginationAppearanceSource'],
+    ['FirstLast', 'paginationFirstLastSource'],
+    ['WithoutPages', 'paginationWithoutPagesSource'],
   ];
 
   it('os quatro arquivos de story foram lidos', () => {
@@ -275,6 +287,9 @@ describe('o painel diz o que a tela mostra', () => {
     ['FirstPage', paginationFirstPageSource, 'Paginação na primeira página'],
     ['FocusVisible', paginationFocusVisibleSource, 'Paginação com foco'],
     ['Contrast', paginationContrastSource, 'Paginação medida por contraste'],
+    ['Appearance', paginationAppearanceSource, 'Paginação em outline'],
+    ['FirstLast', paginationFirstLastSource, 'Paginação com salto para as pontas'],
+    ['WithoutPages', paginationWithoutPagesSource, 'Paginação sem números'],
   ];
 
   for (const [story, fn, landmark] of pairs) {

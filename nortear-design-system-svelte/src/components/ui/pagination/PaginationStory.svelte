@@ -4,13 +4,23 @@
     Pagination,
     PaginationContent,
     PaginationEllipsis,
+    PaginationFirst,
     PaginationItem,
+    PaginationLast,
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
   } from './index';
 
-  type Demonstration = 'simples' | 'directional' | 'controlada' | 'tabela';
+  type Demonstration =
+    | 'simples'
+    | 'directional'
+    | 'controlada'
+    | 'tabela'
+    // Os três eixos que o rodapé do DataTable precisava (2026-09-23).
+    | 'appearance'
+    | 'first-last'
+    | 'without-pages';
 
   interface Props {
     count?: number;
@@ -44,7 +54,92 @@
 </script>
 
 {#key `${count}-${perPage}-${initialPage}-${siblingCount}-${demonstration}`}
-  {#if demonstration === 'directional'}
+  {#if demonstration === 'appearance'}
+    <!-- A aparência vai em CADA peça: `class` perderia para a variante que o botão já escreveu. -->
+    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={label}>
+      {#snippet children({ pages, currentPage: cp })}
+        <PaginationContent>
+          <PaginationItem><PaginationPrevious appearance="outline" /></PaginationItem>
+          {#each pages as p (p.key)}
+            <PaginationItem>
+              {#if p.type === 'ellipsis'}
+                <PaginationEllipsis />
+              {:else}
+                <PaginationLink page={p} appearance="outline" isActive={cp === p.value}>
+                  {p.value}
+                </PaginationLink>
+              {/if}
+            </PaginationItem>
+          {/each}
+          <PaginationItem><PaginationNext appearance="outline" /></PaginationItem>
+        </PaginationContent>
+      {/snippet}
+    </Pagination>
+  {:else if demonstration === 'first-last'}
+    <!--
+      A faixa guarda a página porque o assunto é o SALTO: sem estado, clicar não
+      moveria nada e a asserção mediria só a presença.
+
+      `disabled` e `onclick` nos saltos porque nesta stack eles não são peça da
+      lib — ver a nota em pagination-first.svelte.
+    -->
+    <Pagination {count} {perPage} bind:page={currentPage} {siblingCount} aria-label={label}>
+      {#snippet children({ pages })}
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationFirst
+              disabled={currentPage === 1}
+              onclick={() => (currentPage = 1)}
+            />
+          </PaginationItem>
+          <PaginationItem><PaginationPrevious /></PaginationItem>
+          {#each pages as p (p.key)}
+            <PaginationItem>
+              {#if p.type === 'ellipsis'}
+                <PaginationEllipsis />
+              {:else}
+                <PaginationLink
+                  page={p}
+                  isActive={currentPage === p.value}
+                  onclick={() => (currentPage = p.value)}
+                >
+                  {p.value}
+                </PaginationLink>
+              {/if}
+            </PaginationItem>
+          {/each}
+          <PaginationItem><PaginationNext /></PaginationItem>
+          <PaginationItem>
+            <PaginationLast
+              disabled={currentPage === totalPages}
+              onclick={() => (currentPage = totalPages)}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      {/snippet}
+    </Pagination>
+  {:else if demonstration === 'without-pages'}
+    <!--
+      A forma do rodapé de tabela: sem a régua numerada e sem texto visível nos
+      direcionais. Aqui não há prop que apague os números — a régua é COMPOSTA
+      por quem consome, e suprimi-la é não escrever o laço.
+    -->
+    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={label}>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationFirst disabled={initialPage === 1} onclick={() => onPageChange(1)} />
+        </PaginationItem>
+        <PaginationItem><PaginationPrevious text="" /></PaginationItem>
+        <PaginationItem><PaginationNext text="" /></PaginationItem>
+        <PaginationItem>
+          <PaginationLast
+            disabled={initialPage === totalPages}
+            onclick={() => onPageChange(totalPages)}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  {:else if demonstration === 'directional'}
     <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={label}>
       <PaginationContent>
         <PaginationItem>

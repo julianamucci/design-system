@@ -63,12 +63,21 @@ ${indentar(items, '    ')}
  * Um link numerado estático. O rótulo tem contexto porque "3" sozinho não diz
  * nada em voz alta, e o nome acessível é o que o leitor de tela anuncia.
  */
-function numberedLink(numero: number, active = false): string {
+function numberedLink(numero: number, active = false, appearance?: 'outline'): string {
+  const eixo = appearance ? ` appearance="${appearance}"` : '';
   return `<PaginationItem>
-  <PaginationLink${active ? ' isActive' : ''} aria-label="Ir para página ${numero}">
+  <PaginationLink${active ? ' isActive' : ''}${eixo} aria-label="Ir para página ${numero}">
     ${numero}
   </PaginationLink>
 </PaginationItem>`;
+}
+
+/**
+ * Salto para uma das pontas. Só de ícone por construção: sem texto visível o
+ * controle nasce quadrado, e quem o nomeia é o `aria-label` que a peça escreve.
+ */
+function salto(part: 'PaginationFirst' | 'PaginationLast', bloqueado = false): string {
+  return `<PaginationItem>\n  <${part}${bloqueado ? ' disabled' : ''} />\n</PaginationItem>`;
 }
 
 /**
@@ -80,11 +89,19 @@ function numberedLink(numero: number, active = false): string {
  * controle sairia `<a>`, e aí o par seria `aria-disabled` mais o tabindex
  * negativo, porque `<a>` não tem `disabled`.
  */
-function direcional(part: 'PaginationPrevious' | 'PaginationNext', bloqueado = false): string {
-  if (!bloqueado) return `<PaginationItem>\n  <${part} />\n</PaginationItem>`;
-  return `<PaginationItem>
-  <${part} disabled />
-</PaginationItem>`;
+function direcional(
+  part: 'PaginationPrevious' | 'PaginationNext',
+  bloqueado = false,
+  eixos: { appearance?: 'outline'; iconOnly?: boolean } = {},
+): string {
+  // `text=""` é o que apaga a palavra ao lado do chevron — e com ela somem o
+  // `<span>` de rótulo e o recuo assimétrico, porque o controle vira quadrado.
+  const attrs = [
+    eixos.appearance ? ` appearance="${eixos.appearance}"` : '',
+    eixos.iconOnly ? ' text=""' : '',
+    bloqueado ? ' disabled' : '',
+  ].join('');
+  return `<PaginationItem>\n  <${part}${attrs} />\n</PaginationItem>`;
 }
 
 /**
@@ -453,5 +470,142 @@ ${indentar(
     </PaginationContent>
   </Pagination>
 </div>`,
+  );
+}
+
+// ─── Os eixos que o rodapé de tabela pediu ───────────────────────────────────
+//
+// `appearance` e o par `PaginationFirst` / `PaginationLast` nasceram em
+// 2026-09-23, quando o rodapé do DataTable passou a compor esta faixa em vez de
+// desenhar quatro botões soltos. O terceiro eixo da passagem — esconder a régua
+// numerada — não virou prop aqui: nesta stack a régua é de quem compõe, e quem
+// não quer números não os escreve. É o que o último snippet ensina.
+
+/**
+ * Aparência dos controles NÃO ativos.
+ *
+ * `appearance` existe porque a variante do botão era derivada e cravada: todo
+ * controle inativo saía `ghost`, e o rodapé de tabela precisa dos quatro em
+ * `outline`. A página atual continua `outline` de qualquer jeito — é ela que o
+ * realce existe para marcar, e o `aria-current` é quem a anuncia em voz alta
+ * quando a variante deixa de distinguir.
+ */
+export function paginationAppearanceSource(): string {
+  return jsxSnippet(
+    importingPagination(
+      'Pagination',
+      'PaginationContent',
+      'PaginationItem',
+      'PaginationLink',
+      'PaginationNext',
+      'PaginationPrevious',
+    ),
+    range(
+      [
+        direcional('PaginationPrevious', false, { appearance: 'outline' }),
+        ...[1, 2, 3, 4, 5].map((n) => numberedLink(n, n === 2, 'outline')),
+        direcional('PaginationNext', false, { appearance: 'outline' }),
+      ].join('\n'),
+    ),
+  );
+}
+
+/**
+ * Salto para as pontas, por fora dos controles de passo.
+ *
+ * A ORDEM é o contrato: primeira antes do anterior, última depois do próximo.
+ * As duas peças são composição de quem chama, e não peça implícita da faixa —
+ * numa régua numerada o salto costuma sobrar, porque o 1 e o último já estão
+ * escritos ali.
+ */
+export function paginationFirstLastSource(): string {
+  return jsxSnippet(
+    `import { useState } from "react";
+${importingPagination(
+  'Pagination',
+  'PaginationContent',
+  'PaginationFirst',
+  'PaginationItem',
+  'PaginationLast',
+  'PaginationLink',
+  'PaginationNext',
+  'PaginationPrevious',
+)}
+
+const total = 5;
+const [pagina, setPagina] = useState(3);`,
+    `<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationFirst disabled={pagina === 1} onClick={() => setPagina(1)} />
+    </PaginationItem>
+
+    <PaginationItem>
+      <PaginationPrevious
+        disabled={pagina === 1}
+        onClick={() => setPagina(pagina - 1)}
+      />
+    </PaginationItem>
+
+    {[1, 2, 3, 4, 5].map((n) => (
+      <PaginationItem key={n}>
+        <PaginationLink
+          isActive={n === pagina}
+          aria-label={\`Ir para página \${n}\`}
+          onClick={() => setPagina(n)}
+        >
+          {n}
+        </PaginationLink>
+      </PaginationItem>
+    ))}
+
+    <PaginationItem>
+      <PaginationNext
+        disabled={pagina === total}
+        onClick={() => setPagina(pagina + 1)}
+      />
+    </PaginationItem>
+
+    <PaginationItem>
+      <PaginationLast
+        disabled={pagina === total}
+        onClick={() => setPagina(total)}
+      />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+  );
+}
+
+/**
+ * A faixa sem régua numerada — a forma do rodapé de tabela.
+ *
+ * Não há prop para esconder os números: nesta stack a régua é do CONSUMIDOR, e
+ * o que a apaga é simplesmente não escrever `PaginationLink` nenhum. Quem
+ * responde "que página é esta?" passa a ser o contador ao lado da faixa.
+ *
+ * `text=""` nos controles de passo é o outro lado da mesma decisão: sem palavra
+ * visível o controle vira quadrado, sem o `<span>` de rótulo e sem o recuo
+ * assimétrico que existia para abrir espaço ao lado dela.
+ */
+export function paginationWithoutPagesSource(): string {
+  return jsxSnippet(
+    importingPagination(
+      'Pagination',
+      'PaginationContent',
+      'PaginationFirst',
+      'PaginationItem',
+      'PaginationLast',
+      'PaginationNext',
+      'PaginationPrevious',
+    ),
+    range(
+      [
+        salto('PaginationFirst'),
+        direcional('PaginationPrevious', false, { iconOnly: true }),
+        direcional('PaginationNext', false, { iconOnly: true }),
+        salto('PaginationLast'),
+      ].join('\n'),
+    ),
   );
 }

@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  paginationAppearanceSource,
+  paginationFirstLastSource,
+  paginationWithoutPagesSource,
   paginationWithEllipsisSource,
   paginationControladaSource,
   paginationDirecionalSource,
@@ -220,6 +223,9 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     paginationLastPageSource,
     paginationControladaSource,
     tablePaginationFooterSource,
+    paginationAppearanceSource,
+    paginationFirstLastSource,
+    paginationWithoutPagesSource,
   ];
 
   it('nenhuma traz o espião de contagem nem o nome de story no landmark', () => {
@@ -237,5 +243,39 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     for (const fn of all) {
       expect(fn()).toContain(`from '@/components/ui/pagination'`);
     }
+  });
+});
+
+describe('transforms dos três eixos do rodapé', () => {
+  it('a aparência vai em cada peça, nunca numa class', () => {
+    const output = paginationAppearanceSource();
+    // A prop é o único caminho: `class` chega depois no `cn` e não desfaz a
+    // variante que `buttonVariants` já escreveu.
+    expect(output).not.toContain('class=');
+    expect(output.match(/appearance="outline"/g)).toHaveLength(3);
+    // A página atual não pede `outline`: ela já é assim por ser a atual.
+    expect(output).toContain(':is-active="n === 2"');
+  });
+
+  it('os saltos entram POR FORA dos direcionais', () => {
+    const output = paginationFirstLastSource();
+    const first = output.indexOf('<PaginationFirst');
+    const previous = output.indexOf('<PaginationPrevious');
+    const next = output.indexOf('<PaginationNext');
+    const last = output.indexOf('<PaginationLast');
+    expect(first).toBeGreaterThan(-1);
+    expect(first).toBeLessThan(previous);
+    expect(next).toBeLessThan(last);
+    // Nenhum dos dois escreve desabilitado: quem chega ao extremo é o
+    // componente, lendo `:page` contra `:total`.
+    expect(output).not.toContain('disabled');
+  });
+
+  it('a faixa sem régua não tem laço de números, e os direcionais ficam só de ícone', () => {
+    const output = paginationWithoutPagesSource();
+    expect(output).not.toContain('v-for');
+    expect(output).not.toContain('PaginationLink');
+    expect(output).not.toContain('PaginationEllipsis');
+    expect(output.match(/text=""/g)).toHaveLength(2);
   });
 });

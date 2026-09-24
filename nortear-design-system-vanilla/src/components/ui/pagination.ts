@@ -11,6 +11,12 @@
 // docs pages publicam nomeava aquela classe — descrevendo a realidade de uma
 // para leitores de todas.
 //
+// Desde 2026-09-23 esta fábrica é também o RODAPÉ do DataTable: `showPages:
+// false` tira a régua, `showFirstLast` põe os saltos nas pontas e `appearance`
+// escolhe a variante dos controles não ativos. Os três eixos existem porque
+// havia duas paginações no sistema com a mesma aparência e semânticas
+// diferentes — só uma delas era landmark, e não era a que a tabela usava.
+//
 // A TAG do controle segue a ROTA: com `hrefForPage` ele é `<a href>`, sem ela é
 // `<button type="button">`. Até aqui era sempre âncora, e sem rota ela nascia
 // `href="#"` — promessa de ida que não existe, anunciada como link e anulada no
@@ -44,6 +50,35 @@ export type PaginationOptions = {
    */
   hrefForPage?: (page: number) => string;
   showPrevNext?: boolean;
+  /**
+   * Primeira/última página, nas PONTAS da faixa.
+   *
+   * Quando verdadeira, entram dois controles de duplo chevron — antes do
+   * anterior e depois do próximo —, com `data-slot="pagination-first"` e
+   * `"pagination-last"`. Padrão `false`: a faixa numerada já oferece o 1 e o
+   * último número, e o salto só vira necessário quando os números somem.
+   */
+  showFirstLast?: boolean;
+  /**
+   * A régua numerada.
+   *
+   * Com `false` a faixa não renderiza número nem reticência, e sobram os
+   * direcionais — é a forma do rodapé de tabela, onde quem diz em que página se
+   * está é o "Página X de Y" ao lado.
+   */
+  showPages?: boolean;
+  /**
+   * Aparência dos controles NÃO ativos. Padrão `ghost`.
+   *
+   * A página atual continua `outline` sempre: é ela que o realce existe para
+   * marcar, e deixá-la seguir o eixo apagaria a marcação justamente quando a
+   * faixa inteira fosse `outline`. Com `showPages: false` não há controle
+   * ativo, então no rodapé de tabela a regra não compete.
+   *
+   * Não se resolve por `class`: a lista de `btnClass` já traz uma variante, e
+   * quem chega depois pelo `cn` não desfaz a que veio antes.
+   */
+  appearance?: 'ghost' | 'outline';
   /** Nome acessível do landmark. Padrão: `Paginação`. */
   'aria-label'?: string;
   /** @deprecated Apelido de `aria-label`. */
@@ -86,8 +121,12 @@ export type PaginationOptions = {
 export interface PaginationLabels {
   /** Nome acessível do landmark; `aria-label` na opção da fábrica vence. */
   navigation: string;
+  /** Nome acessível do salto para a primeira página (`showFirstLast`). */
+  first: string;
   previous: string;
   next: string;
+  /** Nome acessível do salto para a última página (`showFirstLast`). */
+  last: string;
   page: (n: number) => string;
   previousText: string;
   nextText: string;
@@ -96,8 +135,10 @@ export interface PaginationLabels {
 /** Padrão em pt-BR — o idioma do componente sem configuração. */
 export const PAGINATION_LABELS_DEFAULT: PaginationLabels = {
   navigation: 'Paginação',
+  first: 'Ir para a primeira página',
   previous: 'Ir para a página anterior',
   next: 'Ir para a próxima página',
+  last: 'Ir para a última página',
   page: (n) => `Ir para página ${n}`,
   previousText: 'Anterior',
   nextText: 'Próxima',
@@ -107,7 +148,13 @@ export const PAGINATION_LABELS_DEFAULT: PaginationLabels = {
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-function createChevronSvg(direction: 'left' | 'right'): SVGSVGElement {
+/**
+ * Chevron simples (passo) ou duplo (salto).
+ *
+ * Os traçados são os mesmos que o rodapé do DataTable já desenhava, e é por
+ * isso que a tela não muda quando ele passa a compor esta fábrica.
+ */
+function createChevronSvg(direction: 'left' | 'right', double = false): SVGSVGElement {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('xmlns', SVG_NS);
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -117,9 +164,16 @@ function createChevronSvg(direction: 'left' | 'right'): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  const path = document.createElementNS(SVG_NS, 'path');
-  path.setAttribute('d', direction === 'left' ? 'm15 18-6-6 6-6' : 'm9 18 6-6-6-6');
-  svg.appendChild(path);
+  const paths = double
+    ? direction === 'left'
+      ? ['m11 17-5-5 5-5', 'm18 17-5-5 5-5']
+      : ['m6 17 5-5-5-5', 'm13 17 5-5-5-5']
+    : [direction === 'left' ? 'm15 18-6-6 6-6' : 'm9 18 6-6-6-6'];
+  for (const d of paths) {
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', d);
+    svg.appendChild(path);
+  }
   return svg;
 }
 
@@ -140,7 +194,17 @@ function getPages(total: number, current: number): (number | 'ellipsis')[] {
 // ─── createPagination ──────────────────────────────────────────────────────
 
 export function createPagination(options: PaginationOptions): HTMLElement {
-  const { total, current, onPageChange, hrefForPage, showPrevNext = true, align } = options;
+  const {
+    total,
+    current,
+    onPageChange,
+    hrefForPage,
+    showPrevNext = true,
+    showFirstLast = false,
+    showPages = true,
+    appearance = 'ghost',
+    align,
+  } = options;
   // Parcial: quem chama troca só o que quer, e o resto continua em pt-BR.
   const labels: PaginationLabels = { ...PAGINATION_LABELS_DEFAULT, ...options.labels };
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
@@ -190,8 +254,9 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     if (control instanceof HTMLAnchorElement) control.href = hrefForPage!(page);
     control.dataset.slot = 'pagination-link';
     // Mesma variante e mesmo tamanho das outras quatro: `outline` marca a
-    // página atual, `ghost` é o item inativo, e o número vive num quadrado.
-    control.className = btnClass(isCurrent ? 'outline' : 'ghost', 'icon');
+    // página atual, o item inativo segue o eixo de aparência, e o número vive
+    // num quadrado.
+    control.className = btnClass(isCurrent ? 'outline' : appearance, 'icon');
 
     // Todo controle numerado tem rótulo com contexto — inclusive o da página
     // atual: "3" sozinho não diz nada em voz alta. Quem anuncia que é a página
@@ -224,25 +289,36 @@ export function createPagination(options: PaginationOptions): HTMLElement {
    *   existe `disabled`. `.nds-button[aria-disabled="true"]` barra o ponteiro, e
    *   sem o tabindex negativo o controle inerte fica na ordem de tabulação.
    */
-  function makeDirecional(
-    direction: 'left' | 'right',
-    label: string,
-    text: string,
-    slot: string,
-    disabled: boolean,
-    destination: number,
-    onClick: () => void,
-  ): HTMLAnchorElement | HTMLButtonElement {
+  function makeDirecional(spec: {
+    direction: 'left' | 'right';
+    /** Duplo chevron: o controle SALTA para a ponta em vez de andar um passo. */
+    double?: boolean;
+    label: string;
+    /** Texto visível ao lado do chevron. Vazio deixa o controle só de ícone. */
+    text?: string;
+    slot: string;
+    disabled: boolean;
+    destination: number;
+    onClick: () => void;
+  }): HTMLAnchorElement | HTMLButtonElement {
+    const { direction, double = false, label, text = '', slot, disabled, destination, onClick } = spec;
     const control = createControl();
     control.dataset.slot = slot;
     control.setAttribute('aria-label', label);
-    // `.nds-pagination-prev` / `-next` só valem ACOMPANHADAS de `.nds-button`:
-    // sozinhas são (0,1,0) e perdem para `.nds-button:has(> svg)`, que é (0,1,1)
-    // e declara o respiro lateral do botão com ícone. `btnClass` põe a base.
-    control.className = cn(
-      btnClass('ghost'),
-      direction === 'left' ? 'nds-pagination-prev' : 'nds-pagination-next',
-    );
+    // Sem texto visível o direcional é um controle SÓ DE ÍCONE, e então ele é
+    // quadrado como o numerado — `nds-button-icon`. O recuo assimétrico de
+    // `.nds-pagination-prev` / `-next` existe para abrir espaço ENTRE o chevron
+    // e a palavra ao lado; num quadrado ele só desalinharia o ícone.
+    //
+    // As duas classes só valem ACOMPANHADAS de `.nds-button`: sozinhas são
+    // (0,1,0) e perdem para `.nds-button:has(> svg)`, que é (0,1,1) e declara o
+    // respiro lateral do botão com ícone. `btnClass` põe a base.
+    control.className = text
+      ? cn(
+          btnClass(appearance),
+          direction === 'left' ? 'nds-pagination-prev' : 'nds-pagination-next',
+        )
+      : btnClass(appearance, 'icon');
     if (control instanceof HTMLAnchorElement) {
       // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
       // endereço válido convidaria a abrir em nova aba uma página que não existe.
@@ -254,14 +330,22 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     } else if (disabled) {
       control.disabled = true;
     }
-    const icon = createChevronSvg(direction);
+    const icon = createChevronSvg(direction, double);
     icon.setAttribute('data-icon', direction === 'left' ? 'inline-start' : 'inline-end');
-    const caption = document.createElement('span');
-    caption.className = 'nds-pagination-label';
-    caption.textContent = text;
-    // O ícone fica do lado para onde o controle leva.
-    if (direction === 'left') control.append(icon, caption);
-    else control.append(caption, icon);
+    if (text) {
+      const caption = document.createElement('span');
+      caption.className = 'nds-pagination-label';
+      caption.textContent = text;
+      // O ícone fica do lado para onde o controle leva.
+      if (direction === 'left') control.append(icon, caption);
+      else control.append(caption, icon);
+    } else {
+      // Rótulo vazio não vira `<span>` vazio: `.nds-pagination-label` é `block`
+      // acima de 40rem, e um bloco sem texto ainda ocupa uma linha inteira
+      // dentro do botão — o quadrado deixaria de ser quadrado. Quem nomeia o
+      // controle aqui é o `aria-label`, que já está posto.
+      control.appendChild(icon);
+    }
     control.addEventListener('click', (e) => {
       // A guarda é do caminho de ÂNCORA, e só dele. Em `<a>` não existe
       // `disabled`: sem ela o Enter do teclado e o clique vindo de script ainda
@@ -280,51 +364,84 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     return control;
   }
 
+  // First — fora do `showPrevNext` de propósito: são eixos independentes, e o
+  // rodapé de tabela mostra os quatro sem régua.
+  if (showFirstLast) {
+    addItem(
+      makeDirecional({
+        direction: 'left',
+        double: true,
+        label: labels.first,
+        slot: 'pagination-first',
+        disabled: current <= 1,
+        destination: 1,
+        onClick: () => onPageChange?.(1),
+      }),
+    );
+  }
+
   // Prev
   if (showPrevNext) {
     addItem(
-      makeDirecional(
-        'left',
-        labels.previous,
-        labels.previousText,
-        'pagination-previous',
-        current <= 1,
-        current - 1,
-        () => onPageChange?.(current - 1),
-      ),
+      makeDirecional({
+        direction: 'left',
+        label: labels.previous,
+        text: labels.previousText,
+        slot: 'pagination-previous',
+        disabled: current <= 1,
+        destination: current - 1,
+        onClick: () => onPageChange?.(current - 1),
+      }),
     );
   }
 
   // Pages
-  const pages = getPages(total, current);
-  for (const page of pages) {
-    if (page === 'ellipsis') {
-      const span = document.createElement('span');
-      span.dataset.slot = 'pagination-ellipsis';
-      span.className = 'nds-pagination-ellipsis';
-      span.setAttribute('aria-hidden', 'true');
-      span.textContent = '…';
-      const li = document.createElement('li');
-      li.dataset.slot = 'pagination-item';
-      li.appendChild(span);
-      ul.appendChild(li);
-    } else {
-      addItem(makeLink(page, page === current));
+  if (showPages) {
+    const pages = getPages(total, current);
+    for (const page of pages) {
+      if (page === 'ellipsis') {
+        const span = document.createElement('span');
+        span.dataset.slot = 'pagination-ellipsis';
+        span.className = 'nds-pagination-ellipsis';
+        span.setAttribute('aria-hidden', 'true');
+        span.textContent = '…';
+        const li = document.createElement('li');
+        li.dataset.slot = 'pagination-item';
+        li.appendChild(span);
+        ul.appendChild(li);
+      } else {
+        addItem(makeLink(page, page === current));
+      }
     }
   }
 
   // Next
   if (showPrevNext) {
     addItem(
-      makeDirecional(
-        'right',
-        labels.next,
-        labels.nextText,
-        'pagination-next',
-        current >= total,
-        current + 1,
-        () => onPageChange?.(current + 1),
-      ),
+      makeDirecional({
+        direction: 'right',
+        label: labels.next,
+        text: labels.nextText,
+        slot: 'pagination-next',
+        disabled: current >= total,
+        destination: current + 1,
+        onClick: () => onPageChange?.(current + 1),
+      }),
+    );
+  }
+
+  // Last
+  if (showFirstLast) {
+    addItem(
+      makeDirecional({
+        direction: 'right',
+        double: true,
+        label: labels.last,
+        slot: 'pagination-last',
+        disabled: current >= total,
+        destination: total,
+        onClick: () => onPageChange?.(total),
+      }),
     );
   }
 

@@ -9,7 +9,7 @@ import {
   input,
   ViewEncapsulation,
 } from '@angular/core';
-import { ChevronLeft, ChevronRight } from 'lucide';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide';
 import { btnClass, type ButtonSize } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -34,6 +34,24 @@ import { cn } from '@/lib/utils';
 // react, vue e svelte fazem. Aqui isso vira uma chamada a `btnClass()`, a mesma
 // função pura que o `NdsButton` usa: sem herdar componente, sem wrapper no DOM.
 //
+// ─── Os três eixos que o rodapé do DataTable precisava (2026-09-23) ──────────
+//
+// Desde esta data o rodapé do DataTable COMPÕE esta faixa em vez de desenhar
+// quatro botões soltos. Os três eixos que a composição exigiu, e a forma de
+// cada um AQUI:
+//
+// - `appearance` — input nos cinco controles, valendo para os NÃO ativos. O
+//   rodapé usa `outline` nos quatro; o numerado ativo segue `outline` sempre.
+// - primeira/última — `NdsPaginationFirst` e `NdsPaginationLast`, duplo chevron,
+//   nas pontas.
+// - régua numerada — **não há eixo a implementar nesta stack**. A régua é do
+//   CONSUMIDOR (V11 do PRD): quem monta a faixa escreve cada `<li>` com o seu
+//   `ndsPaginationLink`, e a faixa sem números é simplesmente a que não os
+//   escreve. Um `showPages` aqui não teria o que esconder — seria uma opção que
+//   não governa nada, e opção inerte é pior que opção ausente porque parece
+//   contrato. O mesmo vale para o alinhamento: `data-align="end"` é atributo
+//   estático no `<nav>`, e a folha compartilhada é quem o lê.
+//
 // Cada subcomponente é seletor de ATRIBUTO no elemento nativo correspondente,
 // então o DOM sai com a mesma estrutura das outras stacks e o CSS `.nds-*` casa
 // sem wrapper. `@Directive` em tudo que não tem template próprio.
@@ -51,14 +69,33 @@ import { cn } from '@/lib/utils';
 // classe é decorada, então uma referência a símbolo declarado abaixo cairia na
 // zona morta do `class` e quebraria em runtime.
 
-export type PaginationIconKind = 'chevron-left' | 'chevron-right';
+export type PaginationIconKind =
+  | 'chevron-left' | 'chevron-right'
+  | 'chevrons-left' | 'chevrons-right';
 
 type LucideIconNode = [string, Record<string, string>];
 
 const PAGINATION_ICON_MAP: Record<PaginationIconKind, LucideIconNode[]> = {
-  'chevron-left':  ChevronLeft  as unknown as LucideIconNode[],
-  'chevron-right': ChevronRight as unknown as LucideIconNode[],
+  'chevron-left':   ChevronLeft   as unknown as LucideIconNode[],
+  'chevron-right':  ChevronRight  as unknown as LucideIconNode[],
+  // Duplo chevron: o controle SALTA para a ponta em vez de andar um passo, e a
+  // diferença de desenho é o que separa as duas ações na tela.
+  'chevrons-left':  ChevronsLeft  as unknown as LucideIconNode[],
+  'chevrons-right': ChevronsRight as unknown as LucideIconNode[],
 };
+
+/**
+ * Aparência dos controles NÃO ativos da faixa. Padrão `ghost`.
+ *
+ * A página atual continua `outline` sempre: é ela que o realce existe para
+ * marcar, e deixá-la seguir o eixo apagaria a marcação justamente quando a
+ * faixa inteira fosse `outline`. Num rodapé de tabela, que não tem régua
+ * numerada, a regra não compete.
+ *
+ * Não se resolve por `class` no call site: `btnClass` já devolve uma variante,
+ * e quem chega depois pelo `cn` não desfaz a que veio antes.
+ */
+export type PaginationAppearance = 'ghost' | 'outline';
 
 /**
  * SVG direcional de Previous/Next.
@@ -252,12 +289,15 @@ export class NdsPaginationLink {
    */
   readonly disabled = input<boolean>(false);
 
+  /** Aparência do controle quando ele NÃO é a página atual. */
+  readonly appearance = input<PaginationAppearance>('ghost');
+
   private readonly hostKind = readControlHost();
   protected readonly isButton = this.hostKind.isButton;
   protected readonly buttonType = this.hostKind.buttonType;
 
   protected readonly hostClass = computed(() =>
-    btnClass(this.isActive() ? 'outline' : 'ghost', this.size()),
+    btnClass(this.isActive() ? 'outline' : this.appearance(), this.size()),
   );
 
   constructor() {
@@ -309,6 +349,18 @@ function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
 // O rótulo textual fica em `.nds-pagination-label`, que o CSS esconde abaixo de
 // 40rem: em tela estreita sobra o ícone, e o nome acessível continua no
 // `aria-label` do `<a>`.
+//
+// ─── Texto visível VAZIO deixa o controle quadrado ────────────────────────────
+//
+// `text=""` é a forma que o rodapé do DataTable usa: nome acessível sim,
+// palavra na tela não. Aí o direcional é um controle SÓ DE ÍCONE, e então ele é
+// quadrado como o numerado — `nds-button-icon`, sem `.nds-pagination-prev` /
+// `-next`. O recuo assimétrico dessas duas classes existe para abrir espaço
+// ENTRE o chevron e a palavra ao lado; num quadrado ele só desalinharia o ícone.
+//
+// E o `<span>` some junto, em vez de nascer vazio: `.nds-pagination-label` é
+// `display: block` acima de 40rem, e um bloco sem texto ainda ocupa uma linha
+// inteira dentro do botão — o quadrado deixaria de ser quadrado.
 
 /** Link para a página anterior — ícone à esquerda do rótulo. */
 @Component({
@@ -317,7 +369,9 @@ function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
   imports: [NdsPaginationIcon],
   template: `
     <svg ndsPaginationIcon kind="chevron-left"></svg>
-    <span class="nds-pagination-label">{{ text() }}</span>
+    @if (text()) {
+      <span class="nds-pagination-label">{{ text() }}</span>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -341,14 +395,22 @@ export class NdsPaginationPrevious {
   /** Desabilita o controle — o caso da primeira página. */
   readonly disabled = input<boolean>(false);
 
-  protected readonly accessibleName = computed(() => this.label() ?? this.text());
+  /** Aparência do controle. Padrão `ghost`. */
+  readonly appearance = input<PaginationAppearance>('ghost');
+
+  // `||` e não `??`: com `text=""` o encadeamento por `??` devolveria a string
+  // vazia e o controle sairia com `aria-label` vazio, que é um nome acessível
+  // ausente com cara de presente.
+  protected readonly accessibleName = computed(() => this.label() || this.text() || null);
 
   private readonly hostKind = readControlHost();
   protected readonly isButton = this.hostKind.isButton;
   protected readonly buttonType = this.hostKind.buttonType;
 
   protected readonly hostClass = computed(() =>
-    cn(btnClass('ghost', 'default'), 'nds-pagination-prev'),
+    this.text()
+      ? cn(btnClass(this.appearance(), 'default'), 'nds-pagination-prev')
+      : btnClass(this.appearance(), 'icon'),
   );
 
   constructor() {
@@ -362,7 +424,9 @@ export class NdsPaginationPrevious {
   standalone: true,
   imports: [NdsPaginationIcon],
   template: `
-    <span class="nds-pagination-label">{{ text() }}</span>
+    @if (text()) {
+      <span class="nds-pagination-label">{{ text() }}</span>
+    }
     <svg ndsPaginationIcon kind="chevron-right"></svg>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -387,15 +451,121 @@ export class NdsPaginationNext {
   /** Desabilita o controle — o caso da última página. */
   readonly disabled = input<boolean>(false);
 
-  protected readonly accessibleName = computed(() => this.label() ?? this.text());
+  /** Aparência do controle. Padrão `ghost`. */
+  readonly appearance = input<PaginationAppearance>('ghost');
+
+  // Ver a nota em `NdsPaginationPrevious`: `||` para que `text=""` não vire um
+  // `aria-label` vazio.
+  protected readonly accessibleName = computed(() => this.label() || this.text() || null);
 
   private readonly hostKind = readControlHost();
   protected readonly isButton = this.hostKind.isButton;
   protected readonly buttonType = this.hostKind.buttonType;
 
   protected readonly hostClass = computed(() =>
-    cn(btnClass('ghost', 'default'), 'nds-pagination-next'),
+    this.text()
+      ? cn(btnClass(this.appearance(), 'default'), 'nds-pagination-next')
+      : btnClass(this.appearance(), 'icon'),
   );
+
+  constructor() {
+    if (!this.isButton) barrarClickQuandoDisabled(this);
+  }
+}
+
+// ─── First / Last — o salto para as pontas ────────────────────────────────────
+//
+// Dois controles que entram nas PONTAS da faixa: o primeiro antes do anterior,
+// o último depois do próximo. É a ordem do contrato, e ela não é decorativa —
+// emitir os quatro fora dela passaria em qualquer asserção de presença e
+// entregaria uma faixa que ninguém consegue ler.
+//
+// Eles nasceram em 2026-09-23, quando o rodapé do DataTable passou a compor
+// esta faixa em vez de desenhar quatro botões soltos: havia duas paginações no
+// design system com a mesma aparência e semânticas diferentes, e só uma delas
+// era landmark — não a que a tabela usava.
+//
+// SEM texto visível, sempre: o salto se explica pelo duplo chevron e pelo nome
+// acessível, e uma palavra ao lado dele competiria com "Anterior"/"Próxima" na
+// mesma linha. Por isso o host é quadrado (`nds-button-icon`), e o nome vem do
+// `label` — que o consumidor troca para o vocabulário dele, como o rodapé da
+// tabela faz.
+//
+// Nesta stack a faixa é montada por quem CONSOME (V11 do PRD), então "mostrar
+// primeira/última" é escrever estes dois elementos; não há flag a ligar.
+
+/** Salto para a primeira página — duplo chevron à esquerda, sem texto. */
+@Component({
+  selector: 'a[ndsPaginationFirst], button[ndsPaginationFirst]',
+  standalone: true,
+  imports: [NdsPaginationIcon],
+  template: '<svg ndsPaginationIcon kind="chevrons-left"></svg>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '[class]': 'hostClass()',
+    '[attr.data-slot]': '"pagination-first"',
+    '[attr.type]': 'buttonType',
+    '[attr.aria-label]': 'label()',
+    '[attr.disabled]': 'isButton && disabled() ? "" : null',
+    '[attr.aria-disabled]': '!isButton && disabled() ? "true" : null',
+    '[attr.tabindex]': '!isButton && disabled() ? "-1" : null',
+  },
+})
+export class NdsPaginationFirst {
+  /** Nome acessível. Sem texto visível, ele é a única coisa que nomeia o controle. */
+  readonly label = input<string>('Ir para a primeira página');
+
+  /** Desabilita o controle — o caso da primeira página. */
+  readonly disabled = input<boolean>(false);
+
+  /** Aparência do controle. Padrão `ghost`. */
+  readonly appearance = input<PaginationAppearance>('ghost');
+
+  private readonly hostKind = readControlHost();
+  protected readonly isButton = this.hostKind.isButton;
+  protected readonly buttonType = this.hostKind.buttonType;
+
+  protected readonly hostClass = computed(() => btnClass(this.appearance(), 'icon'));
+
+  constructor() {
+    if (!this.isButton) barrarClickQuandoDisabled(this);
+  }
+}
+
+/** Salto para a última página — duplo chevron à direita, sem texto. */
+@Component({
+  selector: 'a[ndsPaginationLast], button[ndsPaginationLast]',
+  standalone: true,
+  imports: [NdsPaginationIcon],
+  template: '<svg ndsPaginationIcon kind="chevrons-right"></svg>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '[class]': 'hostClass()',
+    '[attr.data-slot]': '"pagination-last"',
+    '[attr.type]': 'buttonType',
+    '[attr.aria-label]': 'label()',
+    '[attr.disabled]': 'isButton && disabled() ? "" : null',
+    '[attr.aria-disabled]': '!isButton && disabled() ? "true" : null',
+    '[attr.tabindex]': '!isButton && disabled() ? "-1" : null',
+  },
+})
+export class NdsPaginationLast {
+  /** Nome acessível. Sem texto visível, ele é a única coisa que nomeia o controle. */
+  readonly label = input<string>('Ir para a última página');
+
+  /** Desabilita o controle — o caso da última página. */
+  readonly disabled = input<boolean>(false);
+
+  /** Aparência do controle. Padrão `ghost`. */
+  readonly appearance = input<PaginationAppearance>('ghost');
+
+  private readonly hostKind = readControlHost();
+  protected readonly isButton = this.hostKind.isButton;
+  protected readonly buttonType = this.hostKind.buttonType;
+
+  protected readonly hostClass = computed(() => btnClass(this.appearance(), 'icon'));
 
   constructor() {
     if (!this.isButton) barrarClickQuandoDisabled(this);

@@ -15,6 +15,12 @@ export type PaginationSnippetOptions = {
   total?: number;
   current?: number;
   showPrevNext?: boolean;
+  /** Primeira/última nas pontas, com duplo chevron. */
+  showFirstLast?: boolean;
+  /** A régua numerada; `false` deixa só os direcionais. */
+  showPages?: boolean;
+  /** Aparência dos controles não ativos. */
+  appearance?: 'ghost' | 'outline';
   /**
    * Nome acessível do landmark.
    *
@@ -68,6 +74,10 @@ function linesComuns(o: PaginationSnippetOptions, current: string): Array<[strin
     ['align', o.align ? text(o.align) : undefined],
     // `true` é o padrão da fábrica: só a supressão dos direcionais entra.
     ['showPrevNext', o.showPrevNext === false ? 'false' : undefined],
+    // Mesma regra para os três eixos novos — só o que difere do padrão aparece.
+    ['showFirstLast', o.showFirstLast ? 'true' : undefined],
+    ['showPages', o.showPages === false ? 'false' : undefined],
+    ['appearance', o.appearance ? text(o.appearance) : undefined],
     ['hrefForPage', o.hrefForPage],
     // Sem `labels` a faixa fala o padrão em pt-BR, e documentação não ensina a
     // repetir o padrão.

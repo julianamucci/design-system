@@ -214,6 +214,9 @@
           "required": "Não",
           "description": "Tamanho do botão subjacente. Previous e Next usam <code>default</code>."
         },
+        "appearance": "Aparência dos controles que não são a página atual: discreta por padrão, ou com contorno. A página atual mantém o contorno sempre, para continuar se distinguindo das vizinhas.",
+        "showFirstLast": "Acrescenta os saltos para a primeira e a última página, nas pontas da faixa. Nascem desligados: só faz sentido saltar quando o total é conhecido e grande.",
+        "showPages": "Esconde os números e as reticências, deixando só os controles de passo. <strong>Existe como propriedade apenas onde a régua de páginas é calculada pelo componente</strong> — onde ela é montada por quem consome, suprimir é não escrever o laço, e uma propriedade ali seria inerte.",
         "text": {
           "type": "string",
           "default": "\"Anterior\" / \"Próxima\"",
@@ -643,6 +646,9 @@
           "required": "No",
           "description": "Underlying button size. Previous and Next use <code>default</code>."
         },
+        "appearance": "Appearance of the controls that are not the current page: quiet by default, or outlined. The current page always keeps the outline, so it stays distinct from its neighbours.",
+        "showFirstLast": "Adds the jumps to the first and last page, at the ends of the strip. They start off: jumping only makes sense when the total is known and large.",
+        "showPages": "Hides the numbers and the ellipsis, leaving only the step controls. <strong>It exists as a property only where the page ruler is computed by the component</strong> — where the consumer builds it, suppressing means not writing the loop, and a property there would be inert.",
         "text": {
           "type": "string",
           "default": "\"Anterior\" / \"Próxima\"",
@@ -1072,6 +1078,9 @@
           "required": "No",
           "description": "Tamaño del botón subyacente. Previous y Next usan <code>default</code>."
         },
+        "appearance": "Apariencia de los controles que no son la página actual: discreta por defecto, o con contorno. La página actual mantiene el contorno siempre, para seguir distinguiéndose de las vecinas.",
+        "showFirstLast": "Añade los saltos a la primera y a la última página, en los extremos de la franja. Nacen apagados: saltar solo tiene sentido cuando el total es conocido y grande.",
+        "showPages": "Oculta los números y los puntos suspensivos, dejando solo los controles de paso. <strong>Existe como propiedad solo donde la regla de páginas la calcula el componente</strong> — donde la construye quien consume, suprimir es no escribir el bucle, y una propiedad allí sería inerte.",
         "text": {
           "type": "string",
           "default": "\"Anterior\" / \"Próxima\"",

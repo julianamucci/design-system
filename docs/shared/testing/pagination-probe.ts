@@ -303,7 +303,13 @@ export interface ContrastMeasurement {
 export function rangeContrastes(raizBusca: HTMLElement): ContrastMeasurement[] {
   const controles = Array.from(
     raizBusca.querySelectorAll<HTMLElement>(
-      '[data-slot="pagination-link"], [data-slot="pagination-previous"], [data-slot="pagination-next"], .nds-pagination-link',
+      // Os SEIS controles, e não quatro. `pagination-first` e `-last` nasceram
+      // em 2026-09-23 com `showFirstLast`, e uma lista de slots escrita à mão
+      // exclui em SILÊNCIO o que não está nela: a medição continuaria
+      // reportando sucesso sobre dois terços dos controles. É a mesma forma do
+      // `source-snippets.test.ts`, que encolheu quando 28 exports saíram da
+      // varredura sem nada ficar vermelho.
+      '[data-slot="pagination-link"], [data-slot="pagination-first"], [data-slot="pagination-previous"], [data-slot="pagination-next"], [data-slot="pagination-last"], .nds-pagination-link',
     ),
   );
   const vistos = new Set<Element>();
@@ -340,7 +346,13 @@ export interface TargetMedido {
 export function minimumTargetsBelow(raizBusca: HTMLElement, minimum = 24): TargetMedido[] {
   const controles = Array.from(
     raizBusca.querySelectorAll<HTMLElement>(
-      '[data-slot="pagination-link"], [data-slot="pagination-previous"], [data-slot="pagination-next"], .nds-pagination-link',
+      // Os SEIS controles, e não quatro. `pagination-first` e `-last` nasceram
+      // em 2026-09-23 com `showFirstLast`, e uma lista de slots escrita à mão
+      // exclui em SILÊNCIO o que não está nela: a medição continuaria
+      // reportando sucesso sobre dois terços dos controles. É a mesma forma do
+      // `source-snippets.test.ts`, que encolheu quando 28 exports saíram da
+      // varredura sem nada ficar vermelho.
+      '[data-slot="pagination-link"], [data-slot="pagination-first"], [data-slot="pagination-previous"], [data-slot="pagination-next"], [data-slot="pagination-last"], .nds-pagination-link',
     ),
   );
   const vistos = new Set<Element>();

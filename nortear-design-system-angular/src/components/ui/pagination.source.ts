@@ -32,6 +32,9 @@
 export const LABEL_PREVIOUS = 'Ir para a página anterior';
 export const LABEL_NEXT = 'Ir para a próxima página';
 export const LABEL_PAGE = 'Ir para página';
+/** Nome acessível do salto para as pontas — o padrão de `NdsPaginationFirst`/`Last`. */
+export const LABEL_FIRST = 'Ir para a primeira página';
+export const LABEL_LAST = 'Ir para a última página';
 
 export type PaginationArgs = {
   total: number;
@@ -348,6 +351,252 @@ import {
 })
 export class Exemplo {
   readonly current = signal(1);
+
+  goTo(page: number): void {
+    this.current.set(page);
+  }
+}`;
+}
+
+// ─── Os três eixos do rodapé de tabela (2026-09-23) ──────────────────────────
+//
+// `appearance` e os saltos para as pontas nasceram quando o rodapé do DataTable
+// passou a compor esta faixa. O terceiro eixo — a régua numerada — não tem
+// forma própria AQUI: nesta stack quem monta a faixa é o consumidor, e a faixa
+// sem números é a que não escreve os `<li>` de número. O snippet de
+// `WithoutPages` é o que ensina essa forma.
+
+/**
+ * `Variants/Appearance` — a faixa inteira em `outline`.
+ *
+ * O eixo vale para os controles NÃO ativos: a página atual segue `outline`
+ * sempre, porque é ela que o realce existe para marcar.
+ */
+export function paginationAppearanceSource(): string {
+  return `import { Component, signal } from '@angular/core';
+import {
+  NdsPagination, NdsPaginationContent, NdsPaginationItem,
+  NdsPaginationLink, NdsPaginationPrevious, NdsPaginationNext,
+} from '@/components/ui/pagination';
+
+@Component({
+  imports: [
+    NdsPagination, NdsPaginationContent, NdsPaginationItem,
+    NdsPaginationLink, NdsPaginationPrevious, NdsPaginationNext,
+  ],
+  template: \`
+    <nav ndsPagination label="Paginação em outline">
+      <ul ndsPaginationContent>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationPrevious
+            type="button"
+            text="Anterior"
+            appearance="outline"
+            label="${LABEL_PREVIOUS}"
+            (click)="goTo(current() - 1)"
+          ></button>
+        </li>
+        @for (n of pages; track n) {
+          <li ndsPaginationItem>
+            <button
+              ndsPaginationLink
+              type="button"
+              appearance="outline"
+              [isActive]="n === current()"
+              [attr.aria-label]="'${LABEL_PAGE} ' + n"
+              (click)="goTo(n)"
+            >{{ n }}</button>
+          </li>
+        }
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationNext
+            type="button"
+            text="Próxima"
+            appearance="outline"
+            label="${LABEL_NEXT}"
+            (click)="goTo(current() + 1)"
+          ></button>
+        </li>
+      </ul>
+    </nav>
+  \`,
+})
+export class Exemplo {
+  readonly pages = [1, 2, 3, 4, 5];
+  readonly current = signal(2);
+
+  goTo(page: number): void {
+    this.current.set(page);
+  }
+}`;
+}
+
+/**
+ * `Variants/FirstLast` — o salto para as pontas.
+ *
+ * Os dois entram POR FORA dos direcionais: primeira antes do anterior, última
+ * depois do próximo. Sem texto visível, e por isso quadrados — quem os nomeia é
+ * o `label`.
+ */
+export function paginationFirstLastSource(): string {
+  return `import { Component, signal } from '@angular/core';
+import {
+  NdsPagination, NdsPaginationContent, NdsPaginationItem,
+  NdsPaginationFirst, NdsPaginationLast,
+  NdsPaginationLink, NdsPaginationPrevious, NdsPaginationNext,
+} from '@/components/ui/pagination';
+
+@Component({
+  imports: [
+    NdsPagination, NdsPaginationContent, NdsPaginationItem,
+    NdsPaginationFirst, NdsPaginationLast,
+    NdsPaginationLink, NdsPaginationPrevious, NdsPaginationNext,
+  ],
+  template: \`
+    <nav ndsPagination label="Paginação com salto para as pontas">
+      <ul ndsPaginationContent>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationFirst
+            type="button"
+            label="${LABEL_FIRST}"
+            [disabled]="current() === 1"
+            (click)="goTo(1)"
+          ></button>
+        </li>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationPrevious
+            type="button"
+            text="Anterior"
+            label="${LABEL_PREVIOUS}"
+            [disabled]="current() === 1"
+            (click)="goTo(current() - 1)"
+          ></button>
+        </li>
+        @for (n of pages; track n) {
+          <li ndsPaginationItem>
+            <button
+              ndsPaginationLink
+              type="button"
+              [isActive]="n === current()"
+              [attr.aria-label]="'${LABEL_PAGE} ' + n"
+              (click)="goTo(n)"
+            >{{ n }}</button>
+          </li>
+        }
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationNext
+            type="button"
+            text="Próxima"
+            label="${LABEL_NEXT}"
+            [disabled]="current() === total"
+            (click)="goTo(current() + 1)"
+          ></button>
+        </li>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationLast
+            type="button"
+            label="${LABEL_LAST}"
+            [disabled]="current() === total"
+            (click)="goTo(total)"
+          ></button>
+        </li>
+      </ul>
+    </nav>
+  \`,
+})
+export class Exemplo {
+  readonly total = 8;
+  readonly pages = [1, 2, 3, 4, 5, 6, 7, 8];
+  readonly current = signal(4);
+
+  goTo(page: number): void {
+    this.current.set(page);
+  }
+}`;
+}
+
+/**
+ * `Variants/WithoutPages` — a faixa sem régua numerada.
+ *
+ * É a forma do rodapé de tabela: quatro saltos e passos, nome acessível em cada
+ * um, nenhuma palavra na tela. Quem diz em que página se está é o texto ao lado
+ * da faixa, e não um número realçado dentro dela.
+ *
+ * `text=""` é o que deixa o direcional quadrado: sem palavra, o controle é só
+ * de ícone, e o `<span>` do rótulo nem chega a existir.
+ */
+export function paginationWithoutPagesSource(): string {
+  return `import { Component, signal } from '@angular/core';
+import {
+  NdsPagination, NdsPaginationContent, NdsPaginationItem,
+  NdsPaginationFirst, NdsPaginationLast,
+  NdsPaginationPrevious, NdsPaginationNext,
+} from '@/components/ui/pagination';
+
+@Component({
+  imports: [
+    NdsPagination, NdsPaginationContent, NdsPaginationItem,
+    NdsPaginationFirst, NdsPaginationLast,
+    NdsPaginationPrevious, NdsPaginationNext,
+  ],
+  template: \`
+    <nav ndsPagination data-align="end" label="Paginação sem números">
+      <ul ndsPaginationContent>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationFirst
+            type="button"
+            appearance="outline"
+            label="Primeira página"
+            [disabled]="current() === 1"
+            (click)="goTo(1)"
+          ></button>
+        </li>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationPrevious
+            type="button"
+            text=""
+            appearance="outline"
+            label="Página anterior"
+            [disabled]="current() === 1"
+            (click)="goTo(current() - 1)"
+          ></button>
+        </li>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationNext
+            type="button"
+            text=""
+            appearance="outline"
+            label="Próxima página"
+            [disabled]="current() === total"
+            (click)="goTo(current() + 1)"
+          ></button>
+        </li>
+        <li ndsPaginationItem>
+          <button
+            ndsPaginationLast
+            type="button"
+            appearance="outline"
+            label="Última página"
+            [disabled]="current() === total"
+            (click)="goTo(total)"
+          ></button>
+        </li>
+      </ul>
+    </nav>
+  \`,
+})
+export class Exemplo {
+  readonly total = 10;
+  readonly current = signal(5);
 
   goTo(page: number): void {
     this.current.set(page);

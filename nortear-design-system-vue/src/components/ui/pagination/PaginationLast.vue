@@ -1,32 +1,32 @@
 <script setup lang="ts">
-import type { PaginationNextProps } from 'reka-ui'
+import type { PaginationLastProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
 import type { ButtonVariants } from '@/components/ui/button'
 import { reactiveOmit } from '@vueuse/core'
-import { ChevronRightIcon } from 'lucide-vue-next'
-import { PaginationNext, useForwardProps } from 'reka-ui'
+import { ChevronsRightIcon } from 'lucide-vue-next'
+import { PaginationLast, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
-const props = withDefaults(defineProps<PaginationNextProps & {
+const props = withDefaults(defineProps<PaginationLastProps & {
   size?: ButtonVariants['size']
-  /** Texto visível do controle. Traduzível — o mesmo nome de prop das outras stacks. */
+  /** Texto visível do controle. Vazio por padrão — ver a nota em PaginationFirst.vue. */
   text?: string
   /** Aparência do controle. Padrão `ghost` — ver a nota em PaginationLink.vue. */
   appearance?: 'ghost' | 'outline'
   class?: HTMLAttributes['class']
 }>(), {
   size: 'default',
-  text: 'Próxima',
+  text: '',
   appearance: 'ghost',
 })
 
 const delegatedProps = reactiveOmit(props, 'class', 'size', 'text', 'appearance')
 const forwarded = useForwardProps(delegatedProps)
 
-/** Sem texto visível o direcional vira quadrado — ver a nota em PaginationPrevious.vue. */
+/** Sem texto visível o controle é quadrado — ver a nota em PaginationPrevious.vue. */
 const iconOnly = computed(() => !props.text)
 
 const classes = computed(() => cn(
@@ -37,10 +37,10 @@ const classes = computed(() => cn(
 </script>
 
 <template>
-  <!-- `nds-pagination-next` no lugar de `pr-1.5!` — ver a nota em PaginationPrevious.vue. -->
-  <PaginationNext
-    aria-label="Ir para a próxima página"
-    data-slot="pagination-next"
+  <!-- Salto para a última página — o espelho de PaginationFirst.vue. -->
+  <PaginationLast
+    aria-label="Ir para a última página"
+    data-slot="pagination-last"
     :class="classes"
     v-bind="forwarded"
   >
@@ -49,7 +49,7 @@ const classes = computed(() => cn(
         v-if="!iconOnly"
         class="nds-pagination-label"
       >{{ text }}</span>
-      <ChevronRightIcon data-icon="inline-end" />
+      <ChevronsRightIcon data-icon="inline-end" />
     </slot>
-  </PaginationNext>
+  </PaginationLast>
 </template>

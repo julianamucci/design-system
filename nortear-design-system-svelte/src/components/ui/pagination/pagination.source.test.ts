@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { paginationSource } from './pagination.source';
+import {
+  paginationAppearanceSource,
+  paginationFirstLastSource,
+  paginationSource,
+  paginationWithoutPagesSource,
+} from './pagination.source';
 
 describe('paginationSource', () => {
   it('sem args, entrega a faixa canônica com os valores do Playground', () => {
@@ -89,5 +94,41 @@ describe('paginationSource', () => {
     // Cada story usa um `label` diferente para não repetir o nome do landmark
     // na mesma página de docs; o padrão do primitivo já é "Paginação".
     expect(paginationSource()).not.toContain('aria-label');
+  });
+});
+
+describe('transforms dos três eixos do rodapé', () => {
+  it('a aparência vai em cada peça, nunca numa class', () => {
+    const output = paginationAppearanceSource();
+    // A prop é o único caminho: `class` chega depois no `cn` e não desfaz a
+    // variante que `buttonVariants` já escreveu.
+    expect(output).not.toContain('class=');
+    expect(output.match(/appearance="outline"/g)).toHaveLength(3);
+    // A página atual não pede `outline`: ela já é assim por ser a atual.
+    expect(output).toContain('isActive={currentPage === p.value}');
+  });
+
+  it('os saltos entram POR FORA dos direcionais, e o extremo é de quem consome', () => {
+    const output = paginationFirstLastSource();
+    const first = output.indexOf('<PaginationFirst');
+    const previous = output.indexOf('<PaginationPrevious');
+    const next = output.indexOf('<PaginationNext');
+    const last = output.indexOf('<PaginationLast');
+    expect(first).toBeGreaterThan(-1);
+    expect(first).toBeLessThan(previous);
+    expect(next).toBeLessThan(last);
+    // A lib headless desta stack não tem primitivo de primeira/última, então o
+    // snippet ENSINA quem decide: o consumidor, com `onclick` e `disabled`.
+    expect(output).toContain('disabled={paginaAtual === 1}');
+    expect(output).toContain('disabled={paginaAtual === totalPaginas}');
+  });
+
+  it('a faixa sem régua não tem laço de números, e os direcionais ficam só de ícone', () => {
+    const output = paginationWithoutPagesSource();
+    expect(output).not.toContain('{#each');
+    expect(output).not.toContain('{#snippet children');
+    expect(output).not.toContain('PaginationLink');
+    expect(output).not.toContain('PaginationEllipsis');
+    expect(output.match(/text=""/g)).toHaveLength(2);
   });
 });

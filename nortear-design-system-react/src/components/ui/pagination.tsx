@@ -2,8 +2,28 @@ import type * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+} from "lucide-react"
 
+/**
+ * Landmark da faixa de paginação.
+ *
+ * **Não existe `showPages` aqui, e a ausência é o contrato** (V11 do PRD): nesta
+ * stack a régua numerada é do CONSUMIDOR — quem chama escreve um
+ * `PaginationLink` por página dentro do `PaginationContent`. Não há régua
+ * interna para uma opção esconder: quem não quer números não os escreve, que é
+ * a mesma razão de `showPrevNext` só existir no vanilla (V24). O rodapé do
+ * DataTable, que é o caso que pediu o eixo, compõe os quatro direcionais e
+ * nenhum número.
+ *
+ * Os outros dois eixos da mesma passagem viraram peça e prop: o salto para as
+ * pontas é `PaginationFirst` / `PaginationLast`, e a aparência dos controles
+ * não ativos é `appearance` no `PaginationLink`.
+ */
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
@@ -49,6 +69,19 @@ type PaginationLinkProps = {
   href?: string
   /** Controle indisponível. O mecanismo muda com a tag; ver abaixo. */
   disabled?: boolean
+  /**
+   * Aparência dos controles NÃO ativos. Padrão `ghost`.
+   *
+   * A página atual continua `outline` sempre: é ela que o realce existe para
+   * marcar, e deixá-la seguir o eixo apagaria a marcação justamente quando a
+   * faixa inteira fosse `outline`. Num rodapé de tabela, onde não há controle
+   * numerado, a regra não compete.
+   *
+   * Não se resolve por `className`: `buttonVariants` já emite uma variante, e
+   * quem chega depois pelo `cn` não desfaz a que veio antes — as duas classes
+   * ficariam no elemento e quem venceria seria a ordem da folha.
+   */
+  appearance?: "ghost" | "outline"
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
   React.HTMLAttributes<HTMLElement>
 
@@ -63,6 +96,7 @@ function PaginationLink({
   size = "icon",
   href,
   disabled: disabledProp,
+  appearance = "ghost",
   onClick,
   tabIndex,
   "aria-disabled": ariaDisabled,
@@ -75,7 +109,7 @@ function PaginationLink({
   // compõe o escrevia assim antes de existir a prop `disabled`.
   const disabled =
     disabledProp === true || ariaDisabled === true || ariaDisabled === "true"
-  const variant = isActive ? "outline" : "ghost"
+  const variant = isActive ? "outline" : appearance
 
   // Sem rota o controle age na PRÓPRIA página: é botão, e o indisponível é o
   // `disabled` nativo — o navegador barra o clique, o Enter e a tabulação
@@ -135,41 +169,139 @@ function PaginationLink({
   )
 }
 
-function PaginationPrevious({
+type PaginationDirectionalProps = React.ComponentProps<typeof PaginationLink> & {
+  direction: "left" | "right"
+  /** Duplo chevron: o controle SALTA para a ponta em vez de andar um passo. */
+  double?: boolean
+  /** Texto visível ao lado do chevron. Vazio deixa o controle só de ícone. */
+  text?: string
+}
+
+/**
+ * Corpo comum dos quatro controles de direção — passo e salto.
+ *
+ * A forma do controle segue o TEXTO VISÍVEL, e é essa regra que faz o rodapé do
+ * DataTable ficar idêntico ao que ele desenhava à mão:
+ *
+ * · **com texto** — botão de tamanho `default` mais `.nds-pagination-prev` /
+ *   `-next`, cujo recuo assimétrico existe para abrir espaço entre o chevron e
+ *   a palavra ao lado;
+ * · **sem texto** — botão de tamanho `icon`, quadrado, sem aquelas classes e
+ *   sem `<span>` vazio. `.nds-pagination-label` é `display: block` acima de
+ *   40rem, então um bloco sem texto ainda ocuparia uma linha inteira dentro do
+ *   botão e o quadrado deixaria de ser quadrado. Quem nomeia o controle aí é o
+ *   `aria-label`, que os quatro já escrevem.
+ */
+function PaginationDirectional({
   className,
-  text = "Anterior",
+  direction,
+  double = false,
+  text = "",
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+}: PaginationDirectionalProps) {
+  const Icon = double
+    ? direction === "left"
+      ? ChevronsLeftIcon
+      : ChevronsRightIcon
+    : direction === "left"
+      ? ChevronLeftIcon
+      : ChevronRightIcon
+  // O ícone fica do lado para onde o controle leva. O lucide já escreve
+  // `aria-hidden="true"` sozinho quando o SVG não recebe prop de acessibilidade.
+  const icon = (
+    <Icon data-icon={direction === "left" ? "inline-start" : "inline-end"} />
+  )
+
+  if (!text) {
+    return (
+      <PaginationLink size="icon" className={className} {...props}>
+        {icon}
+      </PaginationLink>
+    )
+  }
+
+  const caption = <span className="nds-pagination-label">{text}</span>
   return (
     <PaginationLink
-      aria-label="Ir para a página anterior"
       size="default"
-      data-slot="pagination-previous"
-      className={cn("nds-pagination-prev", className)}
+      className={cn(
+        direction === "left" ? "nds-pagination-prev" : "nds-pagination-next",
+        className
+      )}
       {...props}
     >
-      <ChevronLeftIcon data-icon="inline-start" />
-      <span className="nds-pagination-label">{text}</span>
+      {direction === "left" ? icon : caption}
+      {direction === "left" ? caption : icon}
     </PaginationLink>
   )
 }
 
+function PaginationPrevious({
+  text = "Anterior",
+  ...props
+}: Omit<PaginationDirectionalProps, "direction" | "double">) {
+  return (
+    <PaginationDirectional
+      direction="left"
+      aria-label="Ir para a página anterior"
+      data-slot="pagination-previous"
+      text={text}
+      {...props}
+    />
+  )
+}
+
 function PaginationNext({
-  className,
   text = "Próxima",
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+}: Omit<PaginationDirectionalProps, "direction" | "double">) {
   return (
-    <PaginationLink
+    <PaginationDirectional
+      direction="right"
       aria-label="Ir para a próxima página"
-      size="default"
       data-slot="pagination-next"
-      className={cn("nds-pagination-next", className)}
+      text={text}
       {...props}
-    >
-      <span className="nds-pagination-label">{text}</span>
-      <ChevronRightIcon data-icon="inline-end" />
-    </PaginationLink>
+    />
+  )
+}
+
+/**
+ * Salto para a PRIMEIRA página, na ponta esquerda da faixa.
+ *
+ * Fica FORA da régua numerada de propósito: são eixos independentes, e o rodapé
+ * de tabela mostra os quatro direcionais sem número nenhum. Numa faixa com
+ * números o salto costuma sobrar — o 1 e o último já estão lá —, e por isso ele
+ * é composição de quem chama, nunca peça implícita.
+ *
+ * Só de ícone: sem texto visível o controle nasce quadrado, como o numerado.
+ */
+function PaginationFirst({
+  ...props
+}: Omit<PaginationDirectionalProps, "direction" | "double" | "text">) {
+  return (
+    <PaginationDirectional
+      direction="left"
+      double
+      aria-label="Ir para a primeira página"
+      data-slot="pagination-first"
+      {...props}
+    />
+  )
+}
+
+/** Salto para a ÚLTIMA página, na ponta direita. Espelho de `PaginationFirst`. */
+function PaginationLast({
+  ...props
+}: Omit<PaginationDirectionalProps, "direction" | "double" | "text">) {
+  return (
+    <PaginationDirectional
+      direction="right"
+      double
+      aria-label="Ir para a última página"
+      data-slot="pagination-last"
+      {...props}
+    />
   )
 }
 
@@ -201,7 +333,9 @@ export {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
+  PaginationFirst,
   PaginationItem,
+  PaginationLast,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
