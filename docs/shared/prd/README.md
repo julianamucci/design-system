@@ -215,9 +215,16 @@ Tabelas em 2026-09-16 com a justificativa de que seu único consumidor seria o
 rodapé de uma tabela, e a justificativa não tinha sido medida. Medido em
 2026-09-17: o conteúdo compartilhado o classifica como Navegação, o Storybook o
 agrupa em `Components/Navigation` nas cinco stacks, o catálogo dele morava nas
-`05-navigation-components.md`, e o DataTable não o usa — o rodapé dele é outra
-peça, com outro vocabulário de classe. O PRD dele está na seção de Navegação. O
-que fica aqui é a fronteira entre os dois rodapés, registrada na
+`05-navigation-components.md`, e o DataTable não o usava — o rodapé dele era
+outra peça, com outro vocabulário de classe.
+
+**Em 2026-09-23 essa última razão caiu**: o rodapé do DataTable passou a COMPOR
+o Pagination nas cinco stacks. A categoria não mudou, e é isso que vale guardar —
+ela se sustentava nas outras três razões sozinha. "Só um componente o usa" nunca
+foi critério de categoria; se fosse, a categoria mudaria a cada consumidor novo.
+
+O PRD dele está na seção de Navegação. O que fica aqui é a fronteira entre o que
+é do rodapé e o que é do componente, registrada na
 [`20-tabelas.md`](../guidelines/20-tabelas.md).
 
 **Estes nasceram com o auditor VERMELHO, e isso é diferente das categorias

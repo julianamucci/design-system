@@ -48,9 +48,11 @@ tese a refutar: havia registro a corrigir.
 
 **O Pagination esteve na categoria Tabelas por um dia**, com a justificativa de que
 o único consumidor dele seria o rodapé de uma tabela. A justificativa não tinha sido
-medida: o DataTable não o usa, e o projeto o classifica como navegação em três
-lugares. O que ficou em [`20-tabelas.md`](20-tabelas.md) é só a fronteira entre ele
-e o rodapé do DataTable.
+medida — e em 2026-09-23 ela passou a ser VERDADEIRA pela metade: o rodapé do
+DataTable compõe o componente. Continua em Navegação assim mesmo, porque o projeto
+o classifica assim em três lugares e porque paginar é navegar; ter um consumidor
+conhecido nunca foi critério de categoria. O que ficou em
+[`20-tabelas.md`](20-tabelas.md) é a fronteira entre ele e o rodapé.
 
 ## Por que este arquivo existe
 
@@ -115,7 +117,7 @@ Catálogo de componente não fica em guideline nenhuma: vai para o PRD.
 | Barra de comandos de aplicação, no padrão de menu de desktop (Arquivo, Editar) | Menubar |
 | Um gatilho com uma lista de ações, sem sair da página | DropdownMenu |
 | Ações sobre um alvo, por clique direito | ContextMenu — **sempre** com alternativa acessível: clique direito não é descobrível, e não existe no teclado sem tecla de menu de contexto |
-| Rodapé de página de uma tabela explorável | o rodapé do DataTable, não o Pagination — ver [`20-tabelas.md`](20-tabelas.md) |
+| Rodapé de página de uma tabela explorável | o rodapé do DataTable, que compõe este componente por dentro desde 2026-09-23 — ver [`20-tabelas.md`](20-tabelas.md) |
 | Escolher uma opção que preenche um campo | Select ou Combobox, que são de formulário — menu não é campo |
 | Um painel com texto, campo ou conteúdo composto | Popover, [`18-overlay.md`](18-overlay.md) |
 
@@ -380,8 +382,11 @@ atual de navegar para si mesma é a guarda de quem trata o clique.
 E o rótulo textual de prev/next some abaixo de 40rem (`pagination.css:164-173`),
 ficando só o chevron — o nome acessível não pode depender desse texto.
 
-**A fronteira com a tabela**: o DataTable tem rodapé próprio, com outro vocabulário de
-classe, e não compõe o Pagination em stack nenhuma. Está em
+**A fronteira com a tabela**: o DataTable tem rodapé próprio — com a contagem, o
+seletor de linhas por página e o indicador "Página X de Y", que não são deste
+componente —, e **desde 2026-09-23 esse rodapé COMPÕE o Pagination** para a parte
+que é navegação. Ele passa `showPages: false`, `showFirstLast: true` e
+`appearance: "outline"`, e nomeia o landmark pela legenda da tabela. Está em
 [`20-tabelas.md`](20-tabelas.md).
 
 ---

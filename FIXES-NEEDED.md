@@ -38,46 +38,30 @@ histórico; a lista de cima é o que está por fazer.
 
 ### Precisam de decisão da dona (3)
 
-> **Lote agendado — DataTable × Pagination (decidido em 2026-09-22, a fazer).**
-> A dona decidiu que **o rodapé de paginação do DataTable passa a compor o
-> componente Pagination**, e escolheu a forma: **o Pagination cresce e a tela do
-> DataTable não muda.** Fica para rodada própria, por corte dela — é uma
-> passagem de `pagination` disfarçada de passagem de `data-table`.
+> **Lote FEITO — DataTable × Pagination (decidido em 2026-09-22, entregue em
+> 2026-09-23).** O rodapé do DataTable compõe o componente Pagination nas cinco
+> stacks, na forma que a dona escolheu: o Pagination cresceu e a tela do
+> DataTable não mudou.
 >
-> O que a rodada precisa fazer, já medido:
+> O Pagination ganhou `appearance`, `showFirstLast` e `showPages` — o primeiro
+> era a lacuna que impedia a tela de ficar igual, porque a variante era derivada
+> e CRAVADA nos cinco primitivos e o consumidor não tinha como pedir contorno em
+> todos os controles.
 >
-> | o quê | onde |
-> |---|---|
-> | `Pagination` ganha `showFirstLast` (duplo chevron nas pontas) | as cinco |
-> | `Pagination` ganha `showPages` (default `true`); o rodapé passa `false` | as cinco |
-> | `Pagination` ganha eixo de APARÊNCIA; o rodapé usa o de borda | `pagination.css` |
-> | o rodapé troca `div` + 4 `<button>` por `<nav><ul>` | as cinco |
+> **O `showPages` rendeu três respostas, e as três foram declaradas em vez de
+> contornadas**: vira propriedade só no vanilla, onde a régua é do componente;
+> em react e angular quem escreve cada controle é quem consome; em vue e svelte
+> a lib calcula e o consumidor renderiza. Nas quatro sem propriedade a ausência
+> está no docblock, porque opção inerte parece contrato.
 >
-> **O eixo de aparência não é opcional**: `.nds-pagination-icon` é 36×36
-> transparente e sem borda, e o rodapé de hoje usa
-> `createButton({ variant: "outline", size: "icon" })`, que tem borda. Compor
-> sem ele mudaria a tela, e a decisão foi que ela não muda. O eixo mora no
-> `Pagination`, não num seletor descendente em `data-table.css`: aparência é
-> decisão do componente, não do vizinho que o hospeda.
+> **O risco que quase passou**: cada rodapé virou um `<nav>` nomeado, e a docs
+> page do angular instancia SETE tabelas paginadas — `landmark-unique` do axe
+> reprova nome repetido, e só o `docs-smoke` vê. O nome sai da legenda da tabela,
+> por função no catálogo compartilhado; o angular conferiu os sete nomes nos três
+> idiomas extraindo-os em node, não a olho.
 >
-> **Ponto aberto, registrado por decisão da dona**: o `Pagination` renderiza
-> `<a href="#">` quando não há rota, e o rodapé da tabela **nunca** tem rota
-> (confirmado: zero `nds-pagination` em arquivo `data-table` das cinco). Trocar
-> `<button>` por âncora vazia num controle que age na própria página é recuo de
-> semântica dentro de um avanço. A dona decidiu **resolver na rodada do
-> Pagination**, não nesta.
-
-- [x] **Três stories existiam só no angular.** (Medido em 2026-09-22, decidido
-  no mesmo dia.) `Sorted`, `SelectedRows` e `WithColumnVisibility` mediam
-  comportamento que as cinco têm. **A dona decidiu removê-las**, ciente do preço:
-  cinco asserções que não existiam em mais lugar nenhum saíram junto — entre elas
-  a de que dinheiro ordena por número e não alfabeticamente, e a de que a busca
-  alcança coluna escondida. O angular virou subconjunto estrito das outras
-  quatro; o que ele não tem está declarado em `coversNotApplicable` (D1).
-
-  O corte achou de quebra um teste que nascera VERMELHO na véspera e passara pela
-  Fase D: a verificação lia a reconciliação de ARQUIVOS da suíte, não o resultado
-  dos testes.
+> Isto fecha também o item aberto nº 6 da `20-tabelas.md`, que dizia, com todas
+> as letras, que a decisão estava por tomar.
 - [ ] **O DataTable não está ligado ao desenho.** (Pendência de 2026-09-16,
   remedida em 2026-09-22: continua de pé.) `docs/shared/figma/design-links.ts`
   não tem entrada para `data-table` e nenhuma story declara `figmaDesign` — o

@@ -11,12 +11,21 @@ com data e medição, tokens, peças das cinco stacks — está no PRD dele:
 | Table | [table.md](../prd/table.md) |
 | DataTable | [data-table.md](../prd/data-table.md) |
 
-**O Pagination não é desta categoria.** Ele esteve aqui por um dia, em 2026-09-16,
-com a justificativa de que o único consumidor dele seria o rodapé de uma tabela — e
-a justificativa não tinha sido medida. O conteúdo compartilhado o classifica como
-Navegação, o Storybook o agrupa em `Components/Navigation` nas cinco stacks, e o
-DataTable não o usa. A regra dele está em [`21-navegacao.md`](21-navegacao.md); o
-que fica aqui é a fronteira entre ele e o rodapé do DataTable (§Rodapé de página).
+**O Pagination não é desta categoria**, e desde 2026-09-23 isso se sustenta por
+um motivo diferente do original.
+
+Ele esteve aqui por um dia, em 2026-09-16, com a justificativa de que o único
+consumidor dele seria o rodapé de uma tabela — e a justificativa não tinha sido
+medida. **Hoje o rodapé É consumidor dele**, então aquele argumento morreu; o
+que o mantém em Navegação é o que já bastava sozinho: o conteúdo compartilhado
+o classifica assim, o Storybook o agrupa em `Components/Navigation` nas cinco
+stacks, e paginar é navegar — a tabela é UM consumidor, não a definição.
+
+Vale como lição de categoria: "só um componente o usa" nunca foi razão para
+mover nada. Se fosse, a categoria mudaria a cada consumidor novo.
+
+A regra dele está em [`21-navegacao.md`](21-navegacao.md); o que fica aqui é a
+fronteira entre ele e o rodapé do DataTable (§Rodapé de página).
 
 ## Por que este arquivo existe
 
@@ -95,7 +104,7 @@ componente não fica em guideline nenhuma: vai para o PRD.
 | Dados que cabem na tela e não precisam ser explorados | Table |
 | A pessoa precisa filtrar, ordenar, selecionar ou editar | DataTable |
 | Layout de duas colunas, ficha de dados, formulário | nenhum dos dois — é grade CSS |
-| Rodapé de página do DataTable | o rodapé do próprio DataTable, não o Pagination |
+| Rodapé de página do DataTable | o rodapé do próprio DataTable, que COMPÕE o Pagination por dentro (2026-09-23) |
 
 **`<table>` é para DADOS, e o critério é o cabeçalho**: se as células não se
 descrevem por uma linha ou coluna de cabeçalho, aquilo não é tabela — é layout, e
@@ -244,11 +253,28 @@ mensagem tiver duas linhas.
 
 ## Rodapé de página
 
-**Dois vocabulários, e eles não se compõem.** O rodapé do DataTable é
-`.nds-data-table-pagination*` (`data-table.css:296-342`); o componente Pagination é
-`.nds-pagination*`. Nenhum arquivo `data-table*` de nenhuma stack referencia
-`nds-pagination`. Quem monta um DataTable NÃO compõe o Pagination dentro dele: o
-rodapé já vem.
+**O rodapé COMPÕE o Pagination, desde 2026-09-23.** Quem monta um DataTable
+não precisa compor nada — o rodapé já vem —, mas por dentro ele é o componente
+de paginação do sistema, e não uma segunda implementação.
+
+Até essa data eram dois vocabulários que não se compunham: o rodapé era
+`.nds-data-table-pagination*` com quatro botões de ícone, o componente era
+`.nds-pagination*` com `<nav>`, `<ul>` e `aria-current`, e nenhum arquivo
+`data-table*` de stack nenhuma referenciava `nds-pagination`. A decisão da dona
+foi compor **preservando a tela**: o Pagination ganhou três eixos
+(`showFirstLast`, `showPages`, `appearance`) e o rodapé passa
+`showPages: false`, `showFirstLast: true`, `appearance: "outline"`.
+
+**O que o rodapé continua tendo de próprio**: a contagem do conjunto filtrado,
+o seletor de linhas por página e o indicador "Página X de Y". Esses não são do
+Pagination, e não passaram a ser.
+
+**E o rodapé agora é um landmark.** Cada tabela paginada emite um `<nav>`
+nomeado, e `landmark-unique` do axe reprova nome repetido na mesma página — a
+docs page do DataTable no angular instancia SETE. O nome sai da LEGENDA da
+tabela, pela função `paginationNav` do catálogo compartilhado de rótulos:
+legenda única por instância, nome único por landmark. **Não monte esse texto
+na stack** — a função existe para as cinco não inventarem cinco formatos.
 
 A regra do componente Pagination — alinhamento da faixa, desabilitar prev/next,
 página atual, rótulo em tela estreita, `page_change` — está em
@@ -341,11 +367,15 @@ de texto: os dois PRDs descrevem o que o código faz hoje.
    existem. Não é assunto desta categoria, mas foi medido aqui e não deve se
    perder: acrescentar a entrada torna um portão vermelho para outra categoria, e
    isso é decisão da dona.
-6. **Duas paginações.** O rodapé do DataTable (`.nds-data-table-pagination*`) e o
-   componente Pagination (`.nds-pagination*`) têm markup, semântica e vocabulário
-   de classe diferentes, e não se compõem em stack nenhuma. Decidir se o rodapé
-   passa a instanciar o componente — os dois PRDs chegaram nesta mesma pergunta por
-   caminhos independentes.
+6. **Duas paginações — RESOLVIDO em 2026-09-23.** O rodapé do DataTable passou a
+   compor o componente Pagination nas cinco stacks, por decisão da dona, na forma
+   que preserva a tela. Deixou de haver duas paginações no sistema.
+
+   O item nasceu porque os dois PRDs chegaram à mesma pergunta por caminhos
+   independentes — e ficou aberto uma semana. O que o destravou foi a ORDEM: o
+   Pagination estava com 25 achados de auditoria e quatro pendências, e compor um
+   componente vermelho dentro de um verde importa o vermelho. Ele foi a zero
+   primeiro, numa passagem própria, e só então o rodapé o compôs.
 7. **A folha diz "TanStack Table v8"; o instalado é `^9.1.2`.** Quatro
    guidelines de stack diziam o mesmo, e as quatro passaram a dizer 9 com a
    migração do catálogo, em 2026-09-17 — sobra o docblock de `data-table.css`,

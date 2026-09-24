@@ -53,7 +53,9 @@ const HELPERS = new Set<string>([
   // fecha sobre eles, e a story os importa de volta — o mesmo texto no exemplo
   // e na asserção, em vez de duas cópias, das quais uma envelhece sozinha.
   'LABEL',
+  'LABEL_FIRST',
   'LABEL_HANDLE',
+  'LABEL_LAST',
   'LABEL_NEXT',
   'LABEL_PAGE',
   'LABEL_PREVIOUS',
