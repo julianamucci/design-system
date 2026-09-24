@@ -14,6 +14,11 @@ import {
 import { NdsSkeleton } from './skeleton';
 import { animationActive, backgroundDistincao } from '@shared/testing/skeleton-probe';
 import { INVOICES } from './table.fixtures';
+import {
+  tableEmptySource,
+  tableLoadingSource,
+  tableSelectedRowSource,
+} from './table.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -60,6 +65,7 @@ export const Empty: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item2'],
     docs: {
+      source: { transform: tableEmptySource },
       description: {
         story:
           'Sem dados, uma única linha com `colspan` cobrindo todas as colunas. Tabela vazia e muda deixa a pessoa sem saber se é erro ou ausência de resultado.',
@@ -87,7 +93,7 @@ export const Empty: Story = {
               <td
                 ndsTableCell
                 [attr.colspan]="colunas.length"
-                class="nds-text-center nds-text-muted-foreground"
+                class="nds-table-empty"
               >
                 Nenhuma fatura encontrada.
               </td>
@@ -116,12 +122,20 @@ export const Empty: Story = {
       await expect(canvasElement.querySelectorAll('th').length).toBe(COLUMNS.length);
     });
 
-    await step('A mensagem é discreta e centralizada', async () => {
-      // visual.item2 — `nds-text-center` + `nds-text-muted-foreground` são o que
-      // diferencia "sem resultado" de um dado real. Em `td` as utilitárias
-      // valem: só `th` tem `text-align` próprio no CSS compartilhado.
+    await step('A mensagem é discreta, centralizada e com piso de altura', async () => {
+      // visual.item2 — `.nds-table-empty` é a classe que o design system define
+      // para isso, e ela traz TRÊS coisas de uma vez: o centro, o tom discreto
+      // que separa "sem resultado" de um dado real, e o piso de 96px que
+      // impede a tabela de encolher para uma linha de texto quando a busca não
+      // acha nada. Esta stack montava as duas primeiras com utilitárias soltas
+      // e perdia a terceira — a asserção do piso é o que teria acusado.
       const celula = canvasElement.querySelector<HTMLElement>('tbody td')!;
+      await expect(celula).toHaveClass('nds-table-empty');
       await expect(getComputedStyle(celula).textAlign).toBe('center');
+      // O piso é `--spacing-24` (96px); a margem de folga é para arredondamento
+      // de subpixel, não para aceitar meia altura — sem a classe a célula mede
+      // pouco mais de trinta.
+      await expect(celula.getBoundingClientRect().height).toBeGreaterThan(90);
     });
   },
 };
@@ -132,6 +146,7 @@ export const SelectedRow: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
     docs: {
+      source: { transform: tableSelectedRowSource },
       description: {
         story:
           'A linha marcada recebe `data-state="selected"`. As duas formas de chegar lá convivem: o input `selected` e o atributo escrito à mão.',
@@ -213,6 +228,7 @@ export const Loading: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item6'],
     docs: {
+      source: { transform: tableLoadingSource },
       description: {
         story:
           'Durante a busca, as células de dado viram esqueletos com a caixa aproximada do conteúdo esperado. Quem anuncia o carregamento é a região, nunca o esqueleto.',

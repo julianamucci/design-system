@@ -249,29 +249,35 @@ ${DATA}
 }
 
 /**
- * Tabela larga demais para a caixa. Não há prop nenhuma a escrever: quem rola é
- * o contêiner que o próprio `Table` monta, já com `tabIndex` para que a rolagem
- * exista também para quem navega sem mouse (WCAG 2.1.1). O que o snippet mostra
- * é o que PROVOCA a rolagem — muitas colunas —, e não um ajuste a fazer.
+ * Tabela larga demais para a caixa. Quem rola é o contêiner que o próprio
+ * `Table` monta, já com `tabIndex` para que a rolagem exista também para quem
+ * navega sem mouse (WCAG 2.1.1). O que o snippet mostra é o que PROVOCA a
+ * rolagem — muitas colunas —, e não um ajuste a fazer.
+ *
+ * A única prop escrita é `regionLabel`, e ela é a outra metade da regra: foco
+ * sem nome faz uma parada que o leitor de tela não sabe anunciar. O nome é do
+ * CONTEÚDO, então o design system não tem como cravá-lo — sem ele o wrapper
+ * fica sem papel de propósito, e o snippet que ensina a rolagem tem de ensinar
+ * o nome junto.
  */
 export function tableScrollHorizontalSource(): string {
   return `${IMPORT_NO_FOOTER}
 
 ${DATA}
 
-const meses = ["2025", "2026"].flatMap((ano) =>
+const months = ["2025", "2026"].flatMap((year) =>
   ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map(
-    (mes) => mes + "/" + ano,
+    (month) => month + "/" + year,
   ),
 );
 
-<Table>
+<Table regionLabel="Faturas por mês de competência">
   <TableCaption className="nds-sr-only">Faturas por mês de competência</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead>Fatura</TableHead>
-      {meses.map((mes) => (
-        <TableHead key={mes}>{mes}</TableHead>
+      {months.map((month) => (
+        <TableHead key={month}>{month}</TableHead>
       ))}
     </TableRow>
   </TableHeader>
@@ -279,8 +285,8 @@ const meses = ["2025", "2026"].flatMap((ano) =>
     {invoices.map((invoice) => (
       <TableRow key={invoice.id}>
         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
-        {meses.map((mes) => (
-          <TableCell key={mes} className="nds-text-right">
+        {months.map((month) => (
+          <TableCell key={month} className="nds-text-right">
             {invoice.amount}
           </TableCell>
         ))}
@@ -395,4 +401,113 @@ const linhas = [1, 2, 3];
     </TableBody>
   </Table>
 </div>`;
+}
+
+/**
+ * Linha expansível — duas linhas irmãs por registro.
+ *
+ * As quatro decisões da forma, e o motivo de cada uma:
+ *
+ * 1. **`aria-expanded` no BOTÃO, nunca na linha.** A linha já usa `data-state`
+ *    para a SELEÇÃO, e os dois estados coexistem — uma linha marcada pode estar
+ *    aberta. Quem faz a linha reagir ao controle é a folha compartilhada, por
+ *    `tbody tr:has([aria-expanded="true"])`.
+ * 2. **A revelada é IRMÃ e fica SEMPRE no DOM**, escondida por `hidden`: o `id`
+ *    dela é o alvo do `aria-controls`, e alvo que some deixa o atributo
+ *    apontando para nada. `hidden` tira da tela, da árvore de acessibilidade e
+ *    da tabulação de uma vez.
+ * 3. **O nome acessível é do REGISTRO e não muda ao abrir.** Trocar "Mostrar"
+ *    por "Ocultar" diria o que o `aria-expanded` já diz, e ficaria em desacordo
+ *    com ele no instante entre uma escrita e outra. Nada de live region.
+ * 4. **A ordem de foco sai do DOM**: a linha revelada vem logo depois da de
+ *    dados, então o conteúdo dela é o próximo ponto de tabulação, sem
+ *    `tabIndex` nenhum.
+ */
+export function tableExpandableRowsSource(): string {
+  return `${IMPORT_NO_FOOTER}
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { Fragment, useState } from "react";
+
+${DATA}
+
+const selectedId = "#INV-002";
+
+// O id sai do REGISTRO, sem o "#": duas tabelas na mesma tela não podem repetir
+// id, e "#" dentro dele quebraria qualquer seletor.
+const detailId = (id: string) => "invoice-detail-" + id.replace("#", "");
+
+function InvoicesWithDetails() {
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
+
+  const toggle = (id: string) =>
+    setExpanded((atual) => {
+      const next = new Set(atual);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
+  return (
+    <Table>
+      <TableCaption className="nds-sr-only">Faturas recentes com detalhes</TableCaption>
+      <TableHeader>
+        <TableRow>
+          {/* A coluna do disclosure vem primeiro e também tem cabeçalho: o
+              rótulo sai da tela num span, e não por classe no próprio th, que
+              desmontaria a grade. */}
+          <TableHead>
+            <span className="nds-sr-only">Detalhes</span>
+          </TableHead>
+          <TableHead>Fatura</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Método</TableHead>
+          <TableHead className="nds-text-right">Valor</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {invoices.map((invoice) => (
+          <Fragment key={invoice.id}>
+            <TableRow data-state={invoice.id === selectedId ? "selected" : null}>
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-expanded={expanded.has(invoice.id)}
+                  aria-controls={detailId(invoice.id)}
+                  aria-label={"Detalhes da fatura " + invoice.id}
+                  onClick={() => toggle(invoice.id)}
+                >
+                  <ChevronDown className="nds-chevron" aria-hidden="true" />
+                </Button>
+              </TableCell>
+              <TableCell className="nds-font-medium">{invoice.id}</TableCell>
+              <TableCell>{invoice.status}</TableCell>
+              <TableCell>{invoice.method}</TableCell>
+              <TableCell className="nds-text-right">{invoice.amount}</TableCell>
+            </TableRow>
+
+            <TableRow id={detailId(invoice.id)} hidden={!expanded.has(invoice.id)}>
+              {/* Colunas de dado MAIS a do disclosure. */}
+              <TableCell colSpan={5}>
+                <div className="nds-stack" data-spacing="sm">
+                  <p className="nds-text-muted-foreground">
+                    Emitida por {invoice.method}, no valor de {invoice.amount}.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    aria-label={"Baixar recibo da fatura " + invoice.id}
+                  >
+                    Baixar recibo
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </Fragment>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}`;
 }

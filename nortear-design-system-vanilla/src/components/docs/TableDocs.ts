@@ -17,6 +17,7 @@ import { createButton } from '@/components/ui/button';
 import { createCheckbox } from '@/components/ui/checkbox';
 import { createInput } from '@/components/ui/input';
 import { createPagination } from '@/components/ui/pagination';
+import { ChevronDown, createElement } from 'lucide';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
 import { toPlainText } from '@/lib/strip-html';
@@ -71,13 +72,157 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * Os índices `itemN` de uma seção do dicionário, em ordem.
+ *
+ * Contar à mão envelhece em silêncio: `testes.functional` tinha SETE itens
+ * escritos nos três idiomas e a página publicava seis; `testes.visual`, seis e
+ * cinco. Os últimos existiam, eram traduzidos, e não chegavam à tela. Cravar
+ * `[1..7]` no lugar de `[1..6]` repetiria o defeito na próxima entrada, então a
+ * lista sai do próprio dicionário e passa a acompanhar quem escreve o conteúdo.
+ */
+function itemIndices(path: string): number[] {
+  const locale = getLocale();
+  const section = path
+    .split('.')
+    .reduce<unknown>(
+      (node, key) =>
+        node && typeof node === 'object' ? (node as Record<string, unknown>)[key] : undefined,
+      (tableTranslations as Record<string, unknown>)[locale],
+    );
+  if (!section || typeof section !== 'object') return [];
+  return Object.keys(section)
+    .map((key) => /^item(\d+)$/.exec(key))
+    .filter((m): m is RegExpExecArray => m !== null)
+    .map((m) => Number(m[1]))
+    .sort((a, b) => a - b);
+}
+
+/**
+ * Rótulo de coluna por CAMINHO POR EXTENSO, nunca interpolado.
+ *
+ * A varredura que compara as cinco demonstrações procura a string literal
+ * `demonstration.labels.<chave>` no arquivo. Chave montada em template literal
+ * não aparece para ela — foi assim que esta página constava lendo 19 dos 26
+ * rótulos: `method` só existia dentro de um `t(\`…${key}\`)`. O mapa mantém o
+ * laço sobre colunas e devolve a chave ao alcance de quem mede.
+ */
+const columnLabel = {
+  invoice: () => t('demonstration.labels.invoice'),
+  status:  () => t('demonstration.labels.status'),
+  method:  () => t('demonstration.labels.method'),
+  amount:  () => t('demonstration.labels.amount'),
+  actions: () => t('demonstration.labels.actions'),
+  details: () => t('demonstration.labels.detailsColumn'),
+} as const;
+
+// O identificador da fatura também é conteúdo traduzido — idêntico nos três
+// idiomas porque é número de documento, o que é esperado e não redundância.
+// Cravá-lo aqui tirava cinco chaves do dicionário da varredura.
 const invoices = [
-  { id: '#INV-001', status: () => t('demonstration.labels.paid'),    method: () => t('demonstration.labels.creditCard'), amount: () => t('demonstration.labels.amount001') },
-  { id: '#INV-002', status: () => t('demonstration.labels.pending'),  method: () => t('demonstration.labels.bankTransfer'), amount: () => t('demonstration.labels.amount002') },
-  { id: '#INV-003', status: () => t('demonstration.labels.canceled'), method: () => t('demonstration.labels.pix'),          amount: () => t('demonstration.labels.amount003') },
-  { id: '#INV-004', status: () => t('demonstration.labels.paid'),     method: () => t('demonstration.labels.creditCard'),   amount: () => t('demonstration.labels.amount004') },
-  { id: '#INV-005', status: () => t('demonstration.labels.pending'),  method: () => t('demonstration.labels.bankTransfer'), amount: () => t('demonstration.labels.amount005') },
+  { id: () => t('demonstration.labels.inv001'), status: () => t('demonstration.labels.paid'),     method: () => t('demonstration.labels.creditCard'),   amount: () => t('demonstration.labels.amount001') },
+  { id: () => t('demonstration.labels.inv002'), status: () => t('demonstration.labels.pending'),  method: () => t('demonstration.labels.bankTransfer'), amount: () => t('demonstration.labels.amount002') },
+  { id: () => t('demonstration.labels.inv003'), status: () => t('demonstration.labels.canceled'), method: () => t('demonstration.labels.pix'),          amount: () => t('demonstration.labels.amount003') },
+  { id: () => t('demonstration.labels.inv004'), status: () => t('demonstration.labels.paid'),     method: () => t('demonstration.labels.creditCard'),   amount: () => t('demonstration.labels.amount004') },
+  { id: () => t('demonstration.labels.inv005'), status: () => t('demonstration.labels.pending'),  method: () => t('demonstration.labels.bankTransfer'), amount: () => t('demonstration.labels.amount005') },
 ];
+
+/**
+ * Sequência dos `id` de linha de detalhe.
+ *
+ * Módulo, e não seção: a página remonta todas as seções a cada troca de idioma
+ * e de conteúdo, e um contador reiniciado repetiria `id` de linha que ainda
+ * está no documento — `aria-controls` passaria a apontar para a primeira
+ * ocorrência, que é a da árvore antiga.
+ */
+let detailSeq = 0;
+
+/**
+ * Um par de linhas do exemplo de linha expansível: a de dados e a irmã revelada.
+ *
+ * A forma sai da story `WithExpandableRows` de `table-variants.stories.ts`, em
+ * escala menor. Os quatro contratos que ela prova, e que a prévia precisa
+ * manter:
+ *
+ * 1. **`aria-expanded` mora no BOTÃO, nunca na `<tr>`** — a linha já usa
+ *    `data-state` para a seleção, e os dois estados coexistem. Quem faz a linha
+ *    reagir é a folha compartilhada, por `tbody tr:has([aria-expanded="true"])`.
+ * 2. **A revelada é IRMÃ, sempre no DOM, escondida por `hidden`** — o `id` dela
+ *    é o alvo do `aria-controls`, e alvo que some deixa o atributo apontando
+ *    para nada. O `colspan` cobre as colunas de dado MAIS a do disclosure.
+ * 3. **O nome acessível é o do REGISTRO e não muda ao alternar** — quem anuncia
+ *    o estado é o `aria-expanded`.
+ * 4. **A ordem de foco sai do DOM** — a linha revelada vem logo depois da de
+ *    dados, então o botão que ela contém é o próximo ponto de tabulação depois
+ *    do controle, sem `tabindex` nenhum.
+ */
+function buildExpandableRow(
+  tbody: HTMLTableSectionElement,
+  invoice: (typeof invoices)[number],
+  selected = false,
+): void {
+  const detailId = `table-docs-row-detail-${++detailSeq}`;
+  const invoiceId = invoice.id();
+
+  const row = createTableRow();
+  if (selected) row.setAttribute('data-state', 'selected');
+
+  const controlCell = createTableCell('');
+  const toggle = createButton({
+    variant: 'ghost',
+    size: 'icon-sm',
+    'aria-label': `${t('demonstration.labels.detailsLabel')} ${invoiceId}`,
+  });
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-controls', detailId);
+  // Sem classe de tamanho: `.nds-button > svg` já dimensiona o ícone dentro do
+  // botão. `nds-chevron` é a rotação global do disclosure, e ela casa com
+  // `[aria-expanded="true"]` — o mesmo atributo que a folha da tabela lê.
+  const chevron = createElement(ChevronDown);
+  chevron.setAttribute('aria-hidden', 'true');
+  chevron.classList.add('nds-chevron');
+  toggle.appendChild(chevron);
+  controlCell.appendChild(toggle);
+  row.appendChild(controlCell);
+
+  row.appendChild(createTableCell(invoiceId));
+  row.appendChild(createTableCell(invoice.status()));
+  row.appendChild(createTableCell(invoice.amount()));
+  tbody.appendChild(row);
+
+  const detailRow = createTableRow();
+  detailRow.id = detailId;
+  detailRow.hidden = true;
+  const detailCell = createTableCell('');
+  // Três colunas de dado mais a do disclosure.
+  detailCell.setAttribute('colspan', '4');
+
+  const stack = document.createElement('div');
+  stack.className = 'nds-stack';
+  stack.dataset.spacing = 'sm';
+  const description = document.createElement('p');
+  description.className = 'nds-text-muted-foreground';
+  description.textContent = t('demonstration.labels.detailText');
+  // Um controle dentro do detalhe: é ele que torna visível que o conteúdo
+  // revelado entra na tabulação logo depois do disclosure — e sai dela quando a
+  // linha fecha, pelo mesmo `hidden`.
+  const receipt = createButton({
+    variant: 'outline',
+    size: 'sm',
+    label: t('demonstration.labels.receipt'),
+    'aria-label': `${t('demonstration.labels.receiptLabel')} ${invoiceId}`,
+  });
+  stack.append(description, receipt);
+  detailCell.appendChild(stack);
+  detailRow.appendChild(detailCell);
+  tbody.appendChild(detailRow);
+
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    detailRow.hidden = open;
+  });
+}
 
 function buildDemoTable(): HTMLElement {
   const { wrapper, table } = createTable();
@@ -86,9 +231,12 @@ function buildDemoTable(): HTMLElement {
 
   const thead = createTableHeader();
   const headerRow = createTableRow();
+  // O `scope` vem da FÁBRICA: `createTableHead` nasce em `scope="col"`. As
+  // chamadas a `setAttribute('scope', 'col')` que esta página espalhava só
+  // repetiam o default e faziam parecer que a responsabilidade era de quem
+  // chama. Cabeçalho de LINHA continua passando `'row'` no terceiro parâmetro.
   for (const key of ['invoice', 'status', 'method', 'amount'] as const) {
-    const th = createTableHead(t(`demonstration.labels.${key}`));
-    th.setAttribute('scope', 'col');
+    const th = createTableHead(columnLabel[key]());
     headerRow.appendChild(th);
   }
   thead.appendChild(headerRow);
@@ -97,7 +245,7 @@ function buildDemoTable(): HTMLElement {
   const tbody = createTableBody();
   for (const inv of invoices) {
     const tr = createTableRow();
-    tr.appendChild(createTableCell(inv.id));
+    tr.appendChild(createTableCell(inv.id()));
     tr.appendChild(createTableCell(inv.status()));
     tr.appendChild(createTableCell(inv.method()));
     tr.appendChild(createTableCell(inv.amount()));
@@ -218,16 +366,7 @@ export function createTableDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          items: [
-            t('anatomy.item1'),
-            t('anatomy.item2'),
-            t('anatomy.item3'),
-            t('anatomy.item4'),
-            t('anatomy.item5'),
-            t('anatomy.item6'),
-            t('anatomy.item7'),
-            t('anatomy.item8'),
-          ],
+          items: itemIndices('anatomy').map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -236,13 +375,7 @@ export function createTableDocs(): HTMLElement {
         return createDocsWhenToUse({
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [
-              t('usage.guidelines.item1'),
-              t('usage.guidelines.item2'),
-              t('usage.guidelines.item3'),
-              t('usage.guidelines.item4'),
-              t('usage.guidelines.item5'),
-            ],
+            items: itemIndices('usage.guidelines').map(i => t(`usage.guidelines.item${i}`)),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -251,7 +384,7 @@ export function createTableDocs(): HTMLElement {
               use: t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: itemIndices('usage.scenarios').map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
               a: t(`usage.scenarios.item${i}.a`),
@@ -274,20 +407,11 @@ export function createTableDocs(): HTMLElement {
           },
           do: {
             title: t('usage.do.title'),
-            items: [
-              t('usage.do.item1'),
-              t('usage.do.item2'),
-              t('usage.do.item3'),
-              t('usage.do.item4'),
-            ],
+            items: itemIndices('usage.do').map(i => t(`usage.do.item${i}`)),
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [
-              t('usage.dont.item1'),
-              t('usage.dont.item2'),
-              t('usage.dont.item3'),
-            ],
+            items: itemIndices('usage.dont').map(i => t(`usage.dont.item${i}`)),
           },
         });
 
@@ -301,29 +425,33 @@ export function createTableDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const { wrapper, table } = createTable();
-                table.appendChild(createTableCaption('Lista de faturas recentes'));
+                table.appendChild(createTableCaption(t('demonstration.labels.caption')));
                 const thead = createTableHeader();
                 const tr = createTableRow();
-                for (const col of ['Fatura', 'Valor']) {
+                for (const col of [columnLabel.invoice(), columnLabel.amount()]) {
                   const th = createTableHead(col);
-                  th.setAttribute('scope', 'col');
                   tr.appendChild(th);
                 }
                 thead.appendChild(tr);
                 table.appendChild(thead);
                 const tbody = createTableBody();
                 const row = createTableRow();
-                row.appendChild(createTableCell('#INV-001'));
-                row.appendChild(createTableCell('R$ 250,00'));
+                row.appendChild(createTableCell(t('demonstration.labels.inv001')));
+                row.appendChild(createTableCell(t('demonstration.labels.amount001')));
                 tbody.appendChild(row);
                 table.appendChild(tbody);
                 return wrapper;
               },
               dontPreviewFactory: () => {
                 const { wrapper, table } = createTable();
+                // Sem `createTableCaption`: a AUSÊNCIA da legenda é o defeito
+                // que o par ilustra, e é a única diferença entre esta prévia e
+                // a do lado — preservar. (O par ilustrava o `scope` ausente até
+                // a fábrica passar a aplicá-lo por default, quando as duas
+                // metades viraram a mesma tabela e o par parou de ensinar.)
                 const thead = createTableHeader();
                 const tr = createTableRow();
-                for (const col of ['Fatura', 'Valor']) {
+                for (const col of [columnLabel.invoice(), columnLabel.amount()]) {
                   const th = createTableHead(col);
                   tr.appendChild(th);
                 }
@@ -331,8 +459,8 @@ export function createTableDocs(): HTMLElement {
                 table.appendChild(thead);
                 const tbody = createTableBody();
                 const row = createTableRow();
-                row.appendChild(createTableCell('#INV-001'));
-                row.appendChild(createTableCell('R$ 250,00'));
+                row.appendChild(createTableCell(t('demonstration.labels.inv001')));
+                row.appendChild(createTableCell(t('demonstration.labels.amount001')));
                 tbody.appendChild(row);
                 table.appendChild(tbody);
                 return wrapper;
@@ -345,19 +473,21 @@ export function createTableDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const { wrapper, table } = createTable();
-                table.appendChild(createTableCaption('Faturas'));
+                table.appendChild(createTableCaption(t('demonstration.labels.caption')));
                 const thead = createTableHeader();
                 const tr = createTableRow();
-                const th = createTableHead('Fatura');
-                th.setAttribute('scope', 'col');
+                const th = createTableHead(columnLabel.invoice());
                 tr.appendChild(th);
                 thead.appendChild(tr);
                 table.appendChild(thead);
                 const tbody = createTableBody();
                 const emptyRow = createTableRow();
-                const emptyCell = createTableCell('Nenhuma fatura encontrada.', 'nds-text-muted-foreground');
-                emptyCell.style.height = '4rem';
-                emptyCell.style.textAlign = 'center';
+                // `.nds-table-empty` é a classe que a folha declara para isto:
+                // ela já traz `block-size`, `text-align: center` e a cor
+                // esmaecida (D3 do PRD). Escrever altura e alinhamento em
+                // `style` inline vencia a folha e levava o estado vazio para
+                // fora do tema, da densidade e da escala tipográfica.
+                const emptyCell = createTableCell(t('demonstration.labels.emptyState'), 'nds-table-empty');
                 emptyCell.setAttribute('colspan', '1');
                 emptyRow.appendChild(emptyCell);
                 tbody.appendChild(emptyRow);
@@ -366,11 +496,10 @@ export function createTableDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const { wrapper, table } = createTable();
-                table.appendChild(createTableCaption('Faturas'));
+                table.appendChild(createTableCaption(t('demonstration.labels.caption')));
                 const thead = createTableHeader();
                 const tr = createTableRow();
-                const th = createTableHead('Fatura');
-                th.setAttribute('scope', 'col');
+                const th = createTableHead(columnLabel.invoice());
                 tr.appendChild(th);
                 thead.appendChild(tr);
                 table.appendChild(thead);
@@ -394,7 +523,13 @@ export function createTableDocs(): HTMLElement {
 
         const codeSrOnly = `table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));`;
 
-        const codeActions = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  'aria-label': \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
+        // O `label` é a reticência tipográfica `…` (U+2026), e não três pontos:
+        // o snippet ensina o mesmo caractere que a prévia ao lado renderiza.
+        const codeActions = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  size: 'sm',\n  label: '…',\n  'aria-label': \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
+
+        const codeEmptyState = `const tbody = createTableBody();\nconst emptyRow = createTableRow();\n// \`nds-table-empty\` reserva a altura, centraliza e esmaece a mensagem.\nconst emptyCell = createTableCell('Nenhuma fatura encontrada.', 'nds-table-empty');\nemptyCell.setAttribute('colspan', '4');\nemptyRow.appendChild(emptyCell);\ntbody.appendChild(emptyRow);\ntable.appendChild(tbody);`;
+
+        const codeExpandable = `// O estado vive no BOTÃO: a linha já usa \`data-state\` para a seleção.\nconst toggle = createButton({\n  variant: 'ghost',\n  size: 'icon-sm',\n  'aria-label': \`Detalhes da fatura \${inv.id}\`,\n});\ntoggle.setAttribute('aria-expanded', 'false');\ntoggle.setAttribute('aria-controls', detailId);\nconst chevron = createElement(ChevronDown);\nchevron.setAttribute('aria-hidden', 'true');\nchevron.classList.add('nds-chevron');\ntoggle.appendChild(chevron);\n\n// A linha revelada é IRMÃ, sempre no DOM, escondida por \`hidden\`.\nconst detailRow = createTableRow();\ndetailRow.id = detailId;\ndetailRow.hidden = true;\nconst detailCell = createTableCell('');\n// Colunas de dado MAIS a do disclosure.\ndetailCell.setAttribute('colspan', '4');\n\ntoggle.addEventListener('click', () => {\n  const open = toggle.getAttribute('aria-expanded') === 'true';\n  toggle.setAttribute('aria-expanded', String(!open));\n  detailRow.hidden = open;\n});`;
 
         return createDocsVariants({
           items: [
@@ -409,8 +544,7 @@ export function createTableDocs(): HTMLElement {
                 const thead = createTableHeader();
                 const tr = createTableRow();
                 for (const key of ['invoice', 'status', 'method', 'amount'] as const) {
-                  const th = createTableHead(t(`demonstration.labels.${key}`));
-                  th.setAttribute('scope', 'col');
+                  const th = createTableHead(columnLabel[key]());
                   tr.appendChild(th);
                 }
                 thead.appendChild(tr);
@@ -418,7 +552,7 @@ export function createTableDocs(): HTMLElement {
                 const tbody = createTableBody();
                 for (const inv of invoices.slice(0, 3)) {
                   const row = createTableRow();
-                  row.appendChild(createTableCell(inv.id));
+                  row.appendChild(createTableCell(inv.id()));
                   row.appendChild(createTableCell(inv.status()));
                   row.appendChild(createTableCell(inv.method()));
                   row.appendChild(createTableCell(inv.amount()));
@@ -439,16 +573,19 @@ export function createTableDocs(): HTMLElement {
                 const thead = createTableHeader();
                 const tr = createTableRow();
                 for (const key of ['invoice', 'status', 'method', 'amount'] as const) {
-                  const th = createTableHead(t(`demonstration.labels.${key}`));
-                  th.setAttribute('scope', 'col');
+                  const th = createTableHead(columnLabel[key]());
                   tr.appendChild(th);
                 }
                 thead.appendChild(tr);
                 table.appendChild(thead);
                 const tbody = createTableBody();
-                for (const inv of invoices.slice(0, 3)) {
+                // As CINCO, e nao as tres primeiras: `totalAmount` e a soma das
+                // cinco faturas. Com tres na tela, o total do rodape nao fechava
+                // com o que estava acima dele — e rodape de total e justamente
+                // o que esta variante existe para ensinar.
+                for (const inv of invoices) {
                   const row = createTableRow();
-                  row.appendChild(createTableCell(inv.id));
+                  row.appendChild(createTableCell(inv.id()));
                   row.appendChild(createTableCell(inv.status()));
                   row.appendChild(createTableCell(inv.method()));
                   row.appendChild(createTableCell(inv.amount()));
@@ -477,8 +614,7 @@ export function createTableDocs(): HTMLElement {
                 const thead = createTableHeader();
                 const tr = createTableRow();
                 for (const key of ['invoice', 'status', 'method', 'amount'] as const) {
-                  const th = createTableHead(t(`demonstration.labels.${key}`));
-                  th.setAttribute('scope', 'col');
+                  const th = createTableHead(columnLabel[key]());
                   tr.appendChild(th);
                 }
                 thead.appendChild(tr);
@@ -486,7 +622,7 @@ export function createTableDocs(): HTMLElement {
                 const tbody = createTableBody();
                 for (const inv of invoices.slice(0, 3)) {
                   const row = createTableRow();
-                  row.appendChild(createTableCell(inv.id));
+                  row.appendChild(createTableCell(inv.id()));
                   row.appendChild(createTableCell(inv.status()));
                   row.appendChild(createTableCell(inv.method()));
                   row.appendChild(createTableCell(inv.amount()));
@@ -507,8 +643,7 @@ export function createTableDocs(): HTMLElement {
                 const thead = createTableHeader();
                 const tr = createTableRow();
                 for (const key of ['invoice', 'status', 'method', 'amount', 'actions'] as const) {
-                  const th = createTableHead(t(`demonstration.labels.${key}`));
-                  th.setAttribute('scope', 'col');
+                  const th = createTableHead(columnLabel[key]());
                   tr.appendChild(th);
                 }
                 thead.appendChild(tr);
@@ -516,19 +651,93 @@ export function createTableDocs(): HTMLElement {
                 const tbody = createTableBody();
                 for (const inv of invoices.slice(0, 3)) {
                   const row = createTableRow();
-                  row.appendChild(createTableCell(inv.id));
+                  row.appendChild(createTableCell(inv.id()));
                   row.appendChild(createTableCell(inv.status()));
                   row.appendChild(createTableCell(inv.method()));
                   row.appendChild(createTableCell(inv.amount()));
                   const actionCell = createTableCell('');
-                  const btn = document.createElement('button');
-                  btn.className = 'btn btn-ghost btn-sm';
-                  btn.textContent = '...';
-                  btn.setAttribute('aria-label', `${t('demonstration.labels.actionsLabel')} ${inv.id}`);
+                  // `btn btn-ghost btn-sm` não existe em `docs/shared/styles/nds/`:
+                  // eram três classes sem uma única declaração, resíduo de antes
+                  // da migração `.nds-*`. O botão aqui é o componente, que é o
+                  // que o snippet ao lado já mostra.
+                  const btn = createButton({
+                    variant: 'ghost',
+                    size: 'sm',
+                    // `…` é a reticência tipográfica (U+2026), UM caractere — não
+                    // os três pontos de `...`, que o leitor de tela soletra e a
+                    // quebra de linha pode partir no meio.
+                    label: '…',
+                    'aria-label': `${t('demonstration.labels.actionsLabel')} ${inv.id()}`,
+                  });
                   actionCell.appendChild(btn);
                   row.appendChild(actionCell);
                   tbody.appendChild(row);
                 }
+                table.appendChild(tbody);
+                return wrapper;
+              },
+            },
+            {
+              trackId: 'withEmptyState',
+              name: t('variants.items.withEmptyState.label'),
+              description: DOMPurify.sanitize(t('variants.items.withEmptyState.description')),
+              code: codeEmptyState,
+              previewFactory: () => {
+                const { wrapper, table } = createTable();
+                table.appendChild(createTableCaption(t('demonstration.labels.caption')));
+                const thead = createTableHeader();
+                const tr = createTableRow();
+                for (const key of ['invoice', 'status', 'method', 'amount'] as const) {
+                  const th = createTableHead(columnLabel[key]());
+                  tr.appendChild(th);
+                }
+                thead.appendChild(tr);
+                table.appendChild(thead);
+                const tbody = createTableBody();
+                const emptyRow = createTableRow();
+                // `.nds-table-empty` é a classe que a folha declara para isto:
+                // ela já traz `block-size`, `text-align: center` e a cor
+                // esmaecida (D3 do PRD). Altura e alinhamento em `style` inline
+                // venceriam a folha e levariam o estado vazio para fora do
+                // tema, da densidade e da escala tipográfica.
+                const emptyCell = createTableCell(t('demonstration.labels.emptyState'), 'nds-table-empty');
+                emptyCell.setAttribute('colspan', '4');
+                emptyRow.appendChild(emptyCell);
+                tbody.appendChild(emptyRow);
+                table.appendChild(tbody);
+                return wrapper;
+              },
+            },
+            {
+              trackId: 'withExpandableRows',
+              name: t('variants.items.withExpandableRows.label'),
+              description: DOMPurify.sanitize(t('variants.items.withExpandableRows.description')),
+              code: codeExpandable,
+              previewFactory: () => {
+                const { wrapper, table } = createTable();
+                table.appendChild(createTableCaption(t('demonstration.labels.caption')));
+                const thead = createTableHeader();
+                const tr = createTableRow();
+                // A coluna do disclosure vem primeiro e TEM cabeçalho: o rótulo
+                // sai da tela num `<span class="nds-sr-only">`, e não por classe
+                // no próprio `<th>`, que desmontaria a grade.
+                const thDetails = createTableHead('');
+                const labelDetails = document.createElement('span');
+                labelDetails.className = 'nds-sr-only';
+                labelDetails.textContent = columnLabel.details();
+                thDetails.appendChild(labelDetails);
+                tr.appendChild(thDetails);
+                for (const key of ['invoice', 'status', 'amount'] as const) {
+                  const th = createTableHead(columnLabel[key]());
+                  tr.appendChild(th);
+                }
+                thead.appendChild(tr);
+                table.appendChild(thead);
+                const tbody = createTableBody();
+                // A segunda nasce MARCADA: aberta e selecionada ao mesmo tempo é
+                // o caso que o `:not([data-state="selected"])` da folha protege,
+                // e é o que esta prévia existe para deixar ver.
+                invoices.slice(0, 3).forEach((inv, i) => buildExpandableRow(tbody, inv, i === 1));
                 table.appendChild(tbody);
                 return wrapper;
               },
@@ -546,7 +755,11 @@ const toolbar = document.createElement('div');
 toolbar.className = 'nds-cluster';
 toolbar.dataset.spacing = 'md';
 
-const input = createInput({ placeholder: 'Filtrar faturas...' });
+// O nome acessível espelha a dica: a dica some ao digitar, o nome fica.
+const input = createInput({
+  placeholder: 'Filtrar faturas...',
+  'aria-label': 'Filtrar faturas',
+});
 toolbar.appendChild(input);
 
 const filterBtn = createButton({ variant: 'outline', label: 'Status' });
@@ -570,7 +783,7 @@ th.appendChild(sortBtn);`;
 const headRow = createTableRow();
 const masterCell = createTableHead('');
 masterCell.setAttribute('scope', 'col');
-masterCell.appendChild(createCheckbox({ 'aria-label': 'Selecionar todas as linhas' }));
+masterCell.appendChild(createCheckbox({ 'aria-label': 'Selecionar todas as faturas' }));
 headRow.appendChild(masterCell);
 // ...demais headers
 
@@ -604,9 +817,25 @@ container.appendChild(pagination);`;
           const toolbar = document.createElement('div');
           toolbar.className = 'nds-cluster';
           toolbar.dataset.spacing = 'md';
-          const input = createInput({ placeholder: 'Filtrar faturas...', class: 'nds-max-w-sm' });
+          // O nome acessível espelha a dica, e as duas saem do dicionário: a
+          // dica some ao digitar, o nome fica. Forma alinhada às outras quatro
+          // e ao que o `data-table` já fazia.
+          const filterLabel = t('demonstration.labels.filterLabel');
+          const input = createInput({
+            placeholder: filterLabel + '...',
+            class: 'nds-max-w-sm',
+          });
+          // Por `setAttribute` e não por opção da fábrica: `InputOptions` não
+          // aceita `aria-label`, enquanto `ButtonOptions` aceita. É lacuna da
+          // fábrica de Input, não desta página — registrada para a passagem
+          // daquele componente. O `data-table` resolve o seletor de linhas por
+          // página do mesmo jeito, pela mesma razão.
+          input.setAttribute('aria-label', filterLabel);
           toolbar.appendChild(input);
-          const filterBtn = createButton({ variant: 'outline', label: 'Status' });
+          // Mesma regra do `aria-label` ao lado, e o defeito era mais silencioso
+          // aqui: `'Status'` cravado casa com pt-BR e com en, então só o leitor
+          // em es via a divergência — o dicionário diz "Estado".
+          const filterBtn = createButton({ variant: 'outline', label: columnLabel.status() });
           toolbar.appendChild(filterBtn);
           container.appendChild(toolbar);
 
@@ -615,8 +844,7 @@ container.appendChild(pagination);`;
           const thead = createTableHeader();
           const headerRow = createTableRow();
           for (const key of ['invoice', 'status', 'amount'] as const) {
-            const th = createTableHead(t(`demonstration.labels.${key}`));
-            th.setAttribute('scope', 'col');
+            const th = createTableHead(columnLabel[key]());
             headerRow.appendChild(th);
           }
           thead.appendChild(headerRow);
@@ -624,7 +852,7 @@ container.appendChild(pagination);`;
           const tbody = createTableBody();
           for (const inv of invoices.slice(0, 2)) {
             const row = createTableRow();
-            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.id()));
             row.appendChild(createTableCell(inv.status()));
             row.appendChild(createTableCell(inv.amount()));
             tbody.appendChild(row);
@@ -646,11 +874,12 @@ container.appendChild(pagination);`;
           ];
           for (const col of colDefs) {
             const th = createTableHead('');
-            th.setAttribute('scope', 'col');
             th.setAttribute('aria-sort', col.sort);
+            // Nem recuo negativo nem altura cravada: o `size: 'sm'` já dimensiona
+            // o botão, e altura fixa em primitivo interativo impede o componente
+            // de crescer com a fonte do navegador (WCAG 1.4.4). As outras quatro
+            // stacks montam este mesmo cabeçalho sem nenhum dos dois.
             const btn = createButton({ variant: 'ghost', size: 'sm', label: col.label });
-            btn.style.marginLeft = '-0.5rem';
-            btn.style.height = '2rem';
             th.appendChild(btn);
             headerRow.appendChild(th);
           }
@@ -659,7 +888,7 @@ container.appendChild(pagination);`;
           const tbody = createTableBody();
           for (const inv of invoices.slice(0, 2)) {
             const row = createTableRow();
-            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.id()));
             row.appendChild(createTableCell(inv.status()));
             row.appendChild(createTableCell(inv.amount()));
             tbody.appendChild(row);
@@ -674,13 +903,16 @@ container.appendChild(pagination);`;
           const thead = createTableHeader();
           const headerRow = createTableRow();
           const masterCell = createTableHead('');
-          masterCell.setAttribute('scope', 'col');
-          masterCell.style.width = '2.5rem';
-          masterCell.appendChild(createCheckbox({ 'aria-label': 'Selecionar todas as linhas' }));
+          // A coluna de seleção não precisa de largura cravada: o `<th>` encolhe
+          // para o checkbox sozinho, que é como as outras quatro stacks montam.
+          // Nome acessível é TEXTO DE TELA: sai do dicionário como qualquer
+          // outro, e não cravado em pt-BR. `selectAll` diz "todas as faturas" e
+          // não "todas as linhas" — nomear o registro é mais útil que nomear a
+          // grade para quem só ouve a página.
+          masterCell.appendChild(createCheckbox({ 'aria-label': t('demonstration.labels.selectAll') }));
           headerRow.appendChild(masterCell);
           for (const key of ['invoice', 'status', 'amount'] as const) {
-            const th = createTableHead(t(`demonstration.labels.${key}`));
-            th.setAttribute('scope', 'col');
+            const th = createTableHead(columnLabel[key]());
             headerRow.appendChild(th);
           }
           thead.appendChild(headerRow);
@@ -690,9 +922,10 @@ container.appendChild(pagination);`;
             const row = createTableRow();
             if (i === 0) row.dataset.state = 'selected';
             const cb = createTableCell('');
-            cb.appendChild(createCheckbox({ checked: i === 0, 'aria-label': `Selecionar fatura ${inv.id}` }));
+            // `selectRow` é PREFIXO, como `actionsLabel`: compõe com o id.
+            cb.appendChild(createCheckbox({ checked: i === 0, 'aria-label': `${t('demonstration.labels.selectRow')} ${inv.id()}` }));
             row.appendChild(cb);
-            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.id()));
             row.appendChild(createTableCell(inv.status()));
             row.appendChild(createTableCell(inv.amount()));
             tbody.appendChild(row);
@@ -710,8 +943,7 @@ container.appendChild(pagination);`;
           const thead = createTableHeader();
           const headerRow = createTableRow();
           for (const key of ['invoice', 'status', 'amount'] as const) {
-            const th = createTableHead(t(`demonstration.labels.${key}`));
-            th.setAttribute('scope', 'col');
+            const th = createTableHead(columnLabel[key]());
             headerRow.appendChild(th);
           }
           thead.appendChild(headerRow);
@@ -719,7 +951,7 @@ container.appendChild(pagination);`;
           const tbody = createTableBody();
           for (const inv of invoices.slice(0, 2)) {
             const row = createTableRow();
-            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.id()));
             row.appendChild(createTableCell(inv.status()));
             row.appendChild(createTableCell(inv.amount()));
             tbody.appendChild(row);
@@ -809,8 +1041,12 @@ createTableFooter(extraClass?: string): HTMLTableSectionElement
 // createTableRow
 createTableRow(extraClass?: string): HTMLTableRowElement
 
-// createTableHead — adicione scope="col" manualmente
-createTableHead(text: string, extraClass?: string): HTMLTableCellElement
+// createTableHead — o scope nasce em "col"; cabeçalho de linha passa "row"
+createTableHead(
+  text: string,
+  extraClass?: string,
+  scope?: 'col' | 'row' | 'colgroup' | 'rowgroup',
+): HTMLTableCellElement
 
 // createTableCell
 createTableCell(text: string, extraClass?: string): HTMLTableCellElement
@@ -969,7 +1205,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: itemIndices('testes.functional').map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -978,7 +1214,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
           accessibility: {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-            items: [1, 2, 3, 4].map(i => ({
+            items: itemIndices('testes.accessibility').map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
@@ -990,7 +1226,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: itemIndices('testes.visual').map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

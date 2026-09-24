@@ -11,7 +11,7 @@
 
   // Dois anos de competência, não um: com doze colunas a tabela ainda cabe num
   // canvas largo, e a story provaria a rolagem só nos viewports estreitos.
-  const meses = ['2025', '2026'].flatMap((year) =>
+  const months = ['2025', '2026'].flatMap((year) =>
     ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
       (month) => `${month}/${year}`,
     ),
@@ -24,12 +24,15 @@
   ];
 </script>
 
-<Table>
+<!-- A legenda nomeia a TABELA; `regionLabel` nomeia o contêiner que ROLA, que é
+     outro elemento e entra sozinho na ordem de tabulação. Sem nome o wrapper não
+     recebe papel, e quem chega nele por Tab ouve uma parada muda. -->
+<Table regionLabel="Faturas por mês de competência">
   <TableCaption class="nds-sr-only">Faturas por mês de competência</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
-      {#each meses as month (month)}
+      {#each months as month (month)}
         <TableHead scope="col">{month}</TableHead>
       {/each}
     </TableRow>
@@ -38,7 +41,7 @@
     {#each invoices as invoice (invoice.id)}
       <TableRow>
         <TableCell class="nds-font-medium">{invoice.id}</TableCell>
-        {#each meses as month (month)}
+        {#each months as month (month)}
           <TableCell class="nds-text-right">{invoice.amount}</TableCell>
         {/each}
       </TableRow>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -26,7 +26,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { ArrowUpDown, Search } from 'lucide-vue-next';
+import { ArrowUpDown, ChevronDown, Search } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
@@ -78,6 +78,35 @@ const priorityKeyMap: Record<string, string> = {
 
 function localPriority(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
+}
+
+/**
+ * Quantos itens a seção publica HOJE, perguntado ao dicionário.
+ *
+ * Lista cravada à mão envelhece em SILÊNCIO: o conteúdo compartilhado cresce nos
+ * três idiomas e a tela fica para trás sem nada ficar vermelho — foi assim que
+ * um teste funcional, um visual e um de acessibilidade ficaram escritos e
+ * invisíveis nesta página. Trocar `item1..item6` por `item1..item8` repetiria
+ * o defeito no item seguinte, então quem decide o fim da lista é o dicionário.
+ *
+ * A parada é no primeiro índice AUSENTE, e não no tamanho do objeto: item
+ * numerado fora de ordem é defeito de conteúdo, e tolerá-lo aqui o esconderia.
+ * Mesma forma do PaginationDocs desta stack.
+ */
+function entriesFromDict<K extends string>(
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!tContent(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, tContent(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
 }
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
@@ -255,6 +284,52 @@ const codeEmpty = `<Table>
   </TableBody>
 </Table>`;
 
+const codeWithExpandableRows = `<Table>
+  <TableCaption class="nds-sr-only">Faturas recentes com detalhes</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <!-- A coluna do disclosure vem primeiro e tem cabeçalho: o rótulo sai da
+           tela num span, e não por classe no th, que desmontaria a grade. -->
+      <TableHead scope="col"><span class="nds-sr-only">Detalhes</span></TableHead>
+      <TableHead scope="col">Fatura</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <template v-for="invoice in invoices" :key="invoice.id">
+      <TableRow :data-state="invoice.id === selected ? 'selected' : null">
+        <TableCell>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            :aria-expanded="open[invoice.id] ? 'true' : 'false'"
+            :aria-controls="\`detalhe-\${invoice.id}\`"
+            :aria-label="\`Detalhes da fatura \${invoice.id}\`"
+            @click="toggle(invoice.id)"
+          >
+            <ChevronDown class="nds-chevron" aria-hidden="true" />
+          </Button>
+        </TableCell>
+        <TableCell class="nds-font-medium">{{ invoice.id }}</TableCell>
+        <TableCell class="nds-text-right">{{ invoice.amount }}</TableCell>
+      </TableRow>
+      <!-- A linha revelada é IRMÃ e está sempre no DOM: \`hidden\` a tira da
+           tela, da árvore de acessibilidade e da tabulação de uma vez. O
+           colspan cobre as colunas de dado MAIS a do disclosure. -->
+      <TableRow :id="\`detalhe-\${invoice.id}\`" :hidden="!open[invoice.id]">
+        <TableCell :colspan="3">
+          <div class="nds-stack" data-spacing="sm">
+            <p class="nds-text-muted-foreground">Emitida em 03/09/2026.</p>
+            <Button variant="outline" size="sm" :aria-label="\`Baixar recibo da fatura \${invoice.id}\`">
+              Baixar recibo
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    </template>
+  </TableBody>
+</Table>`;
+
 const codeCustomizationTokens = `/* Em globals.css — ajustar tokens para customizar a tabela */
 :root {
   --muted: 210 40% 96.1%;
@@ -309,17 +384,68 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item8'),
 ]);
 
+/**
+ * Os três primeiros registros da demonstração, para as prévias VIVAS.
+ *
+ * Cada campo chama `tContent` com o caminho POR EXTENSO, nunca interpolado: a
+ * varredura que compara as cinco demonstrações procura a string literal
+ * `demonstration.labels.<chave>` no arquivo, e chave montada em template
+ * literal não aparece para ela. Prévia de Variantes e de Do & Don't renderiza
+ * componente vivo — rótulo de coluna, dado de célula e legenda saem daqui, como
+ * o vanilla já faz. Texto cravado em pt-BR dentro de template literal é
+ * snippet, código que a página ensina, e continua cravado.
+ */
+const previewRows = computed(() => [
+  { key: 'inv001', id: tContent('demonstration.labels.inv001'), status: tContent('demonstration.labels.paid'),     method: tContent('demonstration.labels.creditCard'),   amount: tContent('demonstration.labels.amount001') },
+  { key: 'inv002', id: tContent('demonstration.labels.inv002'), status: tContent('demonstration.labels.pending'),  method: tContent('demonstration.labels.bankTransfer'), amount: tContent('demonstration.labels.amount002') },
+  { key: 'inv003', id: tContent('demonstration.labels.inv003'), status: tContent('demonstration.labels.canceled'), method: tContent('demonstration.labels.pix'),          amount: tContent('demonstration.labels.amount003') },
+]);
+
+// ─── Prévia da linha expansível ───────────────────────────────────────────────
+
+/**
+ * O estado do disclosure vive no CONTROLE (`aria-expanded` no botão), nunca na
+ * linha: a linha já usa `data-state` para a seleção, e as duas coisas acontecem
+ * juntas. A segunda prévia nasce marcada E abre, que é o contrato protegido por
+ * `:not([data-state="selected"])` na folha compartilhada.
+ */
+const expandedRows = ref<Record<string, boolean>>({});
+
+function toggleExpanded(key: string) {
+  expandedRows.value = { ...expandedRows.value, [key]: !expandedRows.value[key] };
+}
+
+/** Id da linha revelada — alvo do `aria-controls`, estável por registro. */
+function detailRowId(key: string): string {
+  return `table-docs-detail-${key}`;
+}
+
+/** A linha que nasce marcada: aberta e selecionada ao mesmo tempo. */
+const selectedPreviewKey = 'inv002';
+
+/** Colunas de dado MAIS a do disclosure. */
+const detailColspan = 5;
+
 const variantItems = computed(() => [
   { trackId: 'basic', name: tContent('variants.items.basic.label'),           description: tContent('variants.items.basic.description'),           code: codeBasic           },
   { trackId: 'withFooter', name: tContent('variants.items.withFooter.label'),      description: tContent('variants.items.withFooter.description'),      code: codeWithFooter      },
   { trackId: 'withSrOnlyCaption', name: tContent('variants.items.withSrOnlyCaption.label'), description: tContent('variants.items.withSrOnlyCaption.description'), code: codeWithSrOnlyCaption },
   { trackId: 'withInlineActions', name: tContent('variants.items.withInlineActions.label'), description: tContent('variants.items.withInlineActions.description'), code: codeWithActions   },
   { trackId: 'withEmptyState', name: tContent('variants.items.withEmptyState.label'),  description: tContent('variants.items.withEmptyState.description'),  code: codeEmpty           },
+  { trackId: 'withExpandableRows', name: tContent('variants.items.withExpandableRows.label'), description: tContent('variants.items.withExpandableRows.description'), code: codeWithExpandableRows },
 ]);
 
 const codeCompFilterableToolbar = `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster" data-align="center" data-spacing="md">
-    <Input v-model="search" placeholder="Filtrar faturas..." />
+    <div class="nds-w-full nds-max-w-sm" style="position: relative">
+      <Search class="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
+      <Input
+        v-model="search"
+        aria-label="Filtrar faturas"
+        placeholder="Filtrar faturas..."
+        class="nds-pl-8"
+      />
+    </div>
     <Button variant="outline">Status</Button>
   </div>
   <Table>
@@ -364,7 +490,7 @@ const codeCompSelectableRows = `<Table>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">
-        <Checkbox aria-label="Selecionar todas as linhas" />
+        <Checkbox aria-label="Selecionar todas as faturas" />
       </TableHead>
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
@@ -529,29 +655,28 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
-]);
+const functionalTestItems = computed(() =>
+  entriesFromDict('testes.functional', ['action', 'result', 'priority']).map((row) => ({
+    action: toPlainText(row.action),
+    result: toPlainText(row.result),
+    priority: localPriority(row.priority),
+  })),
+);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
-]);
+const a11yTestItems = computed(() =>
+  entriesFromDict('testes.accessibility', ['criterion', 'level', 'how']).map((row) => ({
+    criterion: toPlainText(row.criterion),
+    level: row.level,
+    how: toPlainText(row.how),
+  })),
+);
 
-const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
-]);
+const visualTestItems = computed(() =>
+  entriesFromDict('testes.visual', ['story', 'priority']).map((row) => ({
+    story: row.story,
+    priority: localPriority(row.priority),
+  })),
+);
 </script>
 
 <template>
@@ -718,27 +843,27 @@ const visualTestItems = computed(() => [
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- O par 1 é sobre a LEGENDA, e só sobre ela: as duas prévias são
+           idênticas, o `do` tem `TableCaption` e o `dont` não tem nenhuma.
+           O `scope` não aparece em nenhuma das duas de propósito — a peça de
+           cabeçalho já nasce com `scope="col"`, e escrevê-lo vazio para forçar
+           um contraste ensinaria a desarmar um default seguro. -->
       <template #do-preview-0>
         <Table>
-          <TableCaption>Lista de faturas recentes</TableCaption>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">
-                Fatura
-              </TableHead>
-              <TableHead
-                scope="col"
-                class="nds-text-right"
-              >
-                Valor
+              <TableHead>{{ tContent('demonstration.labels.invoice') }}</TableHead>
+              <TableHead class="nds-text-right">
+                {{ tContent('demonstration.labels.amount') }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell>#INV-001</TableCell>
+              <TableCell>{{ tContent('demonstration.labels.inv001') }}</TableCell>
               <TableCell class="nds-text-right">
-                R$ 250,00
+                {{ tContent('demonstration.labels.amount001') }}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -748,17 +873,17 @@ const visualTestItems = computed(() => [
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Fatura</TableHead>
+              <TableHead>{{ tContent('demonstration.labels.invoice') }}</TableHead>
               <TableHead class="nds-text-right">
-                Valor
+                {{ tContent('demonstration.labels.amount') }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell>#INV-001</TableCell>
+              <TableCell>{{ tContent('demonstration.labels.inv001') }}</TableCell>
               <TableCell class="nds-text-right">
-                R$ 250,00
+                {{ tContent('demonstration.labels.amount001') }}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -766,28 +891,28 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <Table>
-          <TableCaption>Lista de faturas</TableCaption>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                Fatura
+                {{ tContent('demonstration.labels.invoice') }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableEmpty :colspan="1">
-              Nenhuma fatura encontrada.
+              {{ tContent('demonstration.labels.emptyState') }}
             </TableEmpty>
           </TableBody>
         </Table>
       </template>
       <template #dont-preview-1>
         <Table>
-          <TableCaption>Lista de faturas</TableCaption>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                Fatura
+                {{ tContent('demonstration.labels.invoice') }}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -809,40 +934,38 @@ const visualTestItems = computed(() => [
       <!-- Básica -->
       <template #variant-preview-0>
         <Table>
-          <TableCaption>Lista de faturas recentes</TableCaption>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                Fatura
+                {{ tContent('demonstration.labels.invoice') }}
               </TableHead>
               <TableHead scope="col">
-                Status
+                {{ tContent('demonstration.labels.status') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.method') }}
               </TableHead>
               <TableHead
                 scope="col"
                 class="nds-text-right"
               >
-                Valor
+                {{ tContent('demonstration.labels.amount') }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
+            <TableRow
+              v-for="row in previewRows"
+              :key="row.key"
+            >
               <TableCell class="nds-font-medium">
-                #INV-001
+                {{ row.id }}
               </TableCell>
-              <TableCell>Pago</TableCell>
+              <TableCell>{{ row.status }}</TableCell>
+              <TableCell>{{ row.method }}</TableCell>
               <TableCell class="nds-text-right">
-                R$ 250,00
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell class="nds-font-medium">
-                #INV-002
-              </TableCell>
-              <TableCell>Pendente</TableCell>
-              <TableCell class="nds-text-right">
-                R$ 150,00
+                {{ row.amount }}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -851,43 +974,48 @@ const visualTestItems = computed(() => [
       <!-- Com rodapé -->
       <template #variant-preview-1>
         <Table>
-          <TableCaption>Lista de faturas recentes</TableCaption>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                Fatura
+                {{ tContent('demonstration.labels.invoice') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.status') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.method') }}
               </TableHead>
               <TableHead
                 scope="col"
                 class="nds-text-right"
               >
-                Valor
+                {{ tContent('demonstration.labels.amount') }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
+            <TableRow
+              v-for="row in previewRows"
+              :key="row.key"
+            >
               <TableCell class="nds-font-medium">
-                #INV-001
+                {{ row.id }}
               </TableCell>
+              <TableCell>{{ row.status }}</TableCell>
+              <TableCell>{{ row.method }}</TableCell>
               <TableCell class="nds-text-right">
-                R$ 250,00
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell class="nds-font-medium">
-                #INV-002
-              </TableCell>
-              <TableCell class="nds-text-right">
-                R$ 150,00
+                {{ row.amount }}
               </TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell>Total</TableCell>
+              <TableCell colspan="3">
+                {{ tContent('demonstration.labels.total') }}
+              </TableCell>
               <TableCell class="nds-text-right">
-                R$ 400,00
+                {{ tContent('demonstration.labels.totalAmount') }}
               </TableCell>
             </TableRow>
           </TableFooter>
@@ -895,83 +1023,102 @@ const visualTestItems = computed(() => [
       </template>
       <!-- Caption sr-only -->
       <template #variant-preview-2>
-        <div>
-          <p class="nds-text-body nds-font-semibold nds-mb-2">
-            Faturas recentes
-          </p>
-          <Table>
-            <TableCaption class="nds-sr-only">
-              Lista de faturas recentes
-            </TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead scope="col">
-                  Fatura
-                </TableHead>
-                <TableHead
-                  scope="col"
-                  class="nds-text-right"
-                >
-                  Valor
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell class="nds-font-medium">
-                  #INV-001
-                </TableCell>
-                <TableCell class="nds-text-right">
-                  R$ 250,00
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </template>
-      <!-- Ações por linha -->
-      <template #variant-preview-3>
         <Table>
-          <TableCaption>Lista de faturas recentes</TableCaption>
+          <TableCaption class="nds-sr-only">
+            {{ tContent('demonstration.labels.caption') }}
+          </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                Fatura
+                {{ tContent('demonstration.labels.invoice') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.status') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.method') }}
               </TableHead>
               <TableHead
                 scope="col"
                 class="nds-text-right"
               >
-                Ações
+                {{ tContent('demonstration.labels.amount') }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
+            <TableRow
+              v-for="row in previewRows"
+              :key="row.key"
+            >
               <TableCell class="nds-font-medium">
-                #INV-001
+                {{ row.id }}
               </TableCell>
+              <TableCell>{{ row.status }}</TableCell>
+              <TableCell>{{ row.method }}</TableCell>
               <TableCell class="nds-text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  :aria-label="`${tContent('demonstration.labels.actionsLabel')} #INV-001`"
-                >
-                  {{ tContent('demonstration.labels.actions') }}
-                </Button>
+                {{ row.amount }}
               </TableCell>
             </TableRow>
+          </TableBody>
+        </Table>
+      </template>
+      <!-- Ações por linha -->
+      <template #variant-preview-3>
+        <Table>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
+          <TableHeader>
             <TableRow>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.invoice') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.status') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.method') }}
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="nds-text-right"
+              >
+                {{ tContent('demonstration.labels.amount') }}
+              </TableHead>
+              <!-- O rótulo da coluna de ações é VISÍVEL: quem lê a tabela com a
+                   vista precisa saber o que a última coluna guarda tanto quanto
+                   quem a ouve. -->
+              <TableHead
+                scope="col"
+                class="nds-text-right"
+              >
+                {{ tContent('demonstration.labels.actions') }}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow
+              v-for="row in previewRows"
+              :key="row.key"
+            >
               <TableCell class="nds-font-medium">
-                #INV-002
+                {{ row.id }}
+              </TableCell>
+              <TableCell>{{ row.status }}</TableCell>
+              <TableCell>{{ row.method }}</TableCell>
+              <TableCell class="nds-text-right">
+                {{ row.amount }}
               </TableCell>
               <TableCell class="nds-text-right">
+                <!-- Conteúdo visível `…`, e o nome acessível no `aria-label`: o
+                     rótulo "Ações" é o do CABEÇALHO da coluna, e repeti-lo em
+                     cada botão daria três controles com o mesmo nome e nenhum
+                     dizendo de qual fatura é. -->
                 <Button
                   variant="ghost"
                   size="sm"
-                  :aria-label="`${tContent('demonstration.labels.actionsLabel')} #INV-002`"
+                  :aria-label="`${tContent('demonstration.labels.actionsLabel')} ${row.id}`"
                 >
-                  {{ tContent('demonstration.labels.actions') }}
+                  …
                 </Button>
               </TableCell>
             </TableRow>
@@ -981,20 +1128,20 @@ const visualTestItems = computed(() => [
       <!-- Estado vazio -->
       <template #variant-preview-4>
         <Table>
-          <TableCaption>Lista de faturas recentes</TableCaption>
+          <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                Fatura
+                {{ tContent('demonstration.labels.invoice') }}
               </TableHead>
               <TableHead scope="col">
-                Status
+                {{ tContent('demonstration.labels.status') }}
               </TableHead>
               <TableHead
                 scope="col"
                 class="nds-text-right"
               >
-                Valor
+                {{ tContent('demonstration.labels.amount') }}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -1002,6 +1149,97 @@ const visualTestItems = computed(() => [
             <TableEmpty :colspan="3">
               {{ tContent('demonstration.labels.emptyState') }}
             </TableEmpty>
+          </TableBody>
+        </Table>
+      </template>
+      <!-- Linha expansível -->
+      <template #variant-preview-5>
+        <Table>
+          <TableCaption class="nds-sr-only">
+            {{ tContent('demonstration.labels.caption') }}
+          </TableCaption>
+          <TableHeader>
+            <TableRow>
+              <!-- A coluna do disclosure vem primeiro e TEM cabeçalho: o rótulo
+                   sai da tela num span, e não por classe no `th`, que tiraria a
+                   célula da grade e desmontaria as colunas. -->
+              <TableHead scope="col">
+                <span class="nds-sr-only">{{ tContent('demonstration.labels.detailsColumn') }}</span>
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.invoice') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.status') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.method') }}
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="nds-text-right"
+              >
+                {{ tContent('demonstration.labels.amount') }}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <template
+              v-for="row in previewRows"
+              :key="row.key"
+            >
+              <TableRow :data-state="row.key === selectedPreviewKey ? 'selected' : null">
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    :aria-expanded="expandedRows[row.key] ? 'true' : 'false'"
+                    :aria-controls="detailRowId(row.key)"
+                    :aria-label="`${tContent('demonstration.labels.detailsLabel')} ${row.id}`"
+                    @click="toggleExpanded(row.key)"
+                  >
+                    <ChevronDown
+                      class="nds-chevron"
+                      aria-hidden="true"
+                    />
+                  </Button>
+                </TableCell>
+                <TableCell class="nds-font-medium">
+                  {{ row.id }}
+                </TableCell>
+                <TableCell>{{ row.status }}</TableCell>
+                <TableCell>{{ row.method }}</TableCell>
+                <TableCell class="nds-text-right">
+                  {{ row.amount }}
+                </TableCell>
+              </TableRow>
+              <!-- A revelada é IRMÃ e está sempre no DOM: `hidden` a tira da
+                   tela, da árvore de acessibilidade e da tabulação de uma vez —
+                   por isso o botão do detalhe só existe para o teclado quando a
+                   linha abre. -->
+              <TableRow
+                :id="detailRowId(row.key)"
+                :hidden="!expandedRows[row.key]"
+              >
+                <TableCell :colspan="detailColspan">
+                  <div
+                    class="nds-stack"
+                    data-spacing="sm"
+                  >
+                    <p class="nds-text-muted-foreground">
+                      {{ tContent('demonstration.labels.detailText') }}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      :aria-label="`${tContent('demonstration.labels.receiptLabel')} ${row.id}`"
+                    >
+                      {{ tContent('demonstration.labels.receipt') }}
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </template>
           </TableBody>
         </Table>
       </template>
@@ -1032,9 +1270,20 @@ const visualTestItems = computed(() => [
                 class="nds-icon-input-start nds-icon nds-text-muted-foreground"
                 aria-hidden="true"
               />
+              <!-- `nds-pl-8` e não `padding-left` inline: o inline era contorno
+                   de um defeito de cascata já consertado — `spacing.css` passou
+                   a ser importada depois de `input.css`, e a utilitária vence o
+                   empate. Valor de desenho cravado no atributo `style` deixa o
+                   tema, a densidade e a escala de tipo para trás.
+
+                   O `aria-label` espelha o placeholder porque placeholder NÃO é
+                   nome acessível: ele some ao digitar, e o campo passaria a ser
+                   um controle mudo justo quando tem conteúdo. Mesma forma do
+                   campo de filtro do DataTable. -->
               <Input
+                :aria-label="tContent('demonstration.labels.filterLabel')"
                 placeholder="Filtrar faturas..."
-                style="padding-left: 2rem"
+                class="nds-pl-8"
               />
             </div>
             <Button variant="outline">
@@ -1099,7 +1348,6 @@ const visualTestItems = computed(() => [
                 <Button
                   variant="ghost"
                   size="sm"
-                 
                 >
                   Fatura
                   <ArrowUpDown
@@ -1115,7 +1363,6 @@ const visualTestItems = computed(() => [
                 <Button
                   variant="ghost"
                   size="sm"
-                 
                 >
                   Status
                   <ArrowUpDown
@@ -1132,7 +1379,6 @@ const visualTestItems = computed(() => [
                 <Button
                   variant="ghost"
                   size="sm"
-                 
                 >
                   Valor
                   <ArrowUpDown
@@ -1175,9 +1421,10 @@ const visualTestItems = computed(() => [
             <TableRow>
               <TableHead
                 scope="col"
-               
               >
-                <Checkbox aria-label="Selecionar todas as linhas" />
+                <!-- O nome acessível é texto de tela: sai do dicionário, nos
+                     três idiomas, como o rótulo de qualquer coluna. -->
+                <Checkbox :aria-label="tContent('demonstration.labels.selectAll')" />
               </TableHead>
               <TableHead scope="col">
                 Fatura
@@ -1196,9 +1443,12 @@ const visualTestItems = computed(() => [
           <TableBody>
             <TableRow data-state="selected">
               <TableCell>
+                <!-- Prefixo do dicionário MAIS o identificador do registro: sem
+                     ele, duas caixas na mesma tabela teriam o mesmo nome e
+                     nenhuma diria de qual fatura é. -->
                 <Checkbox
                   :model-value="true"
-                  aria-label="Selecionar fatura #INV-001"
+                  :aria-label="`${tContent('demonstration.labels.selectRow')} ${tContent('demonstration.labels.inv001')}`"
                 />
               </TableCell>
               <TableCell class="nds-font-medium">
@@ -1211,7 +1461,7 @@ const visualTestItems = computed(() => [
             </TableRow>
             <TableRow>
               <TableCell>
-                <Checkbox aria-label="Selecionar fatura #INV-002" />
+                <Checkbox :aria-label="`${tContent('demonstration.labels.selectRow')} ${tContent('demonstration.labels.inv002')}`" />
               </TableCell>
               <TableCell class="nds-font-medium">
                 #INV-002

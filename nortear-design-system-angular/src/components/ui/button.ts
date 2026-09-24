@@ -134,10 +134,13 @@ export class NdsButton {
 // declara peer `@angular/core: 13.x - 21.x` e conflitaria com o Angular 22.
 // O Vanilla já monta os SVGs assim — mesma fonte de ícones, sem wrapper.
 
-import { Plus, Trash2, Pencil, ChevronRight, Download, Loader2, X, Copy, Check } from 'lucide';
+import { Plus, Trash2, Pencil, ChevronDown, ChevronRight, Download, Loader2, X, Copy, Check } from 'lucide';
 
 export type ButtonIconKind =
   | 'plus' | 'trash' | 'pencil' | 'chevron-right' | 'download' | 'loader' | 'x'
+  // `chevron-down` é o do DISCLOSURE: `.nds-chevron` gira 180° sob
+  // `[aria-expanded="true"]`, e girar o `chevron-right` apontaria para trás.
+  | 'chevron-down'
   // `copy`/`check` servem ao botão de copiar do CodeBlock, que é um NdsButton
   // ghost/icon-sm — manter um mapa só evita duplicar a montagem de SVG.
   | 'copy' | 'check';
@@ -148,6 +151,7 @@ const BUTTON_ICON_MAP: Record<ButtonIconKind, LucideIconNode[]> = {
   'plus':          Plus         as unknown as LucideIconNode[],
   'trash':         Trash2       as unknown as LucideIconNode[],
   'pencil':        Pencil       as unknown as LucideIconNode[],
+  'chevron-down':  ChevronDown  as unknown as LucideIconNode[],
   'chevron-right': ChevronRight as unknown as LucideIconNode[],
   'download':      Download     as unknown as LucideIconNode[],
   'loader':        Loader2      as unknown as LucideIconNode[],

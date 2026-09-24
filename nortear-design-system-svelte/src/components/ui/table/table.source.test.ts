@@ -9,6 +9,7 @@ import {
   tableScrollHorizontalSource,
   tableSource,
   tableVaziaSource,
+  tableWithExpandableRowsSource,
 } from './table.source';
 
 describe('tableSource', () => {
@@ -122,8 +123,48 @@ describe('transforms das stories de variação e estado', () => {
 
   it('a rolagem horizontal nasce de muitas colunas, não de uma classe', () => {
     const output = tableScrollHorizontalSource();
-    expect(output).toContain('{#each meses as mes (mes)}');
+    expect(output).toContain('{#each months as month (month)}');
     expect(output).not.toContain('overflow');
+  });
+
+  it('a tabela larga ensina o NOME da região rolável junto com a rolagem', () => {
+    const output = tableScrollHorizontalSource();
+    // Foco sem nome faz uma parada que o leitor de tela não sabe anunciar, e o
+    // nome é do conteúdo — o design system não tem como cravá-lo.
+    expect(output).toContain('<Table regionLabel="Faturas por mês de competência">');
+    // A legenda nomeia a TABELA; `regionLabel` nomeia o contêiner. São dois
+    // elementos, e o snippet mostra os dois nomes.
+    expect(output).toContain(
+      '<TableCaption class="nds-sr-only">Faturas por mês de competência</TableCaption>',
+    );
+    // O papel sai do componente quando o nome chega: escrevê-lo aqui ensinaria a
+    // duplicar o que a peça já faz.
+    expect(output).not.toContain('role="group"');
+  });
+
+  it('a linha expansível põe o estado no BOTÃO e esconde a irmã por hidden', () => {
+    const output = tableWithExpandableRowsSource();
+    expect(output).toContain('aria-expanded={abertas[fatura.id] ? "true" : "false"}');
+    expect(output).toContain('aria-controls={idDoDetalhe(fatura.id)}');
+    // O `data-state` da `<tr>` é da SELEÇÃO: o disclosure não pode disputá-lo.
+    expect(output).not.toContain('data-state');
+    // A irmã fica sempre no DOM — alvo de `aria-controls` que some deixa o
+    // atributo apontando para nada.
+    expect(output).toContain('hidden={!abertas[fatura.id]}');
+    expect(output).not.toContain('{#if');
+    // O colspan sai da lista de colunas mais a do disclosure, nunca à mão.
+    expect(output).toContain('colspan={colunas.length + 1}');
+    expect(output).not.toContain('colspan={5}');
+    // O rótulo da coluna de disclosure existe para quem navega por cabeçalhos.
+    expect(output).toContain('<span class="nds-sr-only">Detalhes</span>');
+    // O nome é do REGISTRO e não muda ao abrir: quem anuncia o estado é o
+    // atributo, e "Mostrar"/"Ocultar" diria a mesma coisa duas vezes.
+    expect(output).toContain('aria-label={`Detalhes da fatura ${fatura.id}`}');
+    expect(output).not.toContain('Ocultar');
+    expect(output).not.toContain('aria-live');
+    // Sem `tabindex`: a ordem de foco sai da posição da irmã no DOM.
+    expect(output).not.toContain('tabindex');
+    expect(output).toContain('import ChevronDown from "@lucide/svelte/icons/chevron-down";');
   });
 
   it('o estado vazio ocupa as quatro colunas com a mensagem', () => {

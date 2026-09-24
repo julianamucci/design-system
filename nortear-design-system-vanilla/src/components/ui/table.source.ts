@@ -13,6 +13,8 @@ export type TableSnippetOptions = {
   withFooter?: boolean;
   /** Coluna de ação por linha. */
   withActions?: boolean;
+  /** Coluna de disclosure por linha, com a linha de detalhe irmã. */
+  withExpandableRows?: boolean;
   /** Marca uma linha com `data-state="selected"`. */
   lineSelecionada?: boolean;
 };
@@ -53,6 +55,24 @@ function header(o: TableSnippetOptions = {}): string {
   const lines = [
     'const cabecalho = createTableHeader();',
     'const linhaDeCabecalho = createTableRow();',
+  ];
+
+  if (o.withExpandableRows) {
+    lines.push(
+      '// A coluna do disclosure vem primeiro e também precisa de cabeçalho: o',
+      '// rótulo sai da tela num span, porque a classe no próprio `th` tiraria a',
+      '// célula do fluxo e desmontaria a grade.',
+      "const cabecalhoDeDetalhes = createTableHead('');",
+      "const rotuloDeDetalhes = document.createElement('span');",
+      "rotuloDeDetalhes.className = 'nds-sr-only';",
+      "rotuloDeDetalhes.textContent = 'Detalhes';",
+      'cabecalhoDeDetalhes.appendChild(rotuloDeDetalhes);',
+      'linhaDeCabecalho.appendChild(cabecalhoDeDetalhes);',
+      '',
+    );
+  }
+
+  lines.push(
     '// A última coluna é numérica: o rótulo acompanha os números que ele',
     '// nomeia. O `scope="col"` já vem da fábrica.',
     'for (const [i, coluna] of colunas.entries()) {',
@@ -60,7 +80,7 @@ function header(o: TableSnippetOptions = {}): string {
     "    createTableHead(coluna, i === colunas.length - 1 ? 'nds-text-right' : undefined),",
     '  );',
     '}',
-  ];
+  );
 
   if (o.withActions) {
     lines.push(
@@ -92,6 +112,38 @@ function body(o: TableSnippetOptions): string {
     );
   }
 
+  if (o.withExpandableRows) {
+    lines.push(
+      '  // O `aria-expanded` mora no BOTÃO, e nunca na `<tr>`: o `data-state` da',
+      '  // linha já é da SELEÇÃO, e uma linha pode estar marcada e aberta ao',
+      '  // mesmo tempo. Quem faz a linha reagir ao controle é a folha, por',
+      '  // `:has([aria-expanded="true"])`.',
+      '  // O id sai do REGISTRO, sem o "#": duas tabelas na mesma tela não podem',
+      '  // repetir id, e `#` dentro dele quebraria qualquer `querySelector`.',
+      "  const idDoDetalhe = `fatura-detalhe-${fatura.id.replace('#', '')}`;",
+      "  const celulaDeControle = createTableCell('');",
+      '  const controle = createButton({',
+      "    variant: 'ghost',",
+      "    size: 'icon-sm',",
+      '    // O nome é do REGISTRO e não muda ao abrir: quem anuncia o estado é o',
+      '    // `aria-expanded`. Trocar "Mostrar" por "Ocultar" diria a mesma coisa',
+      '    // duas vezes, e em desacordo enquanto o atributo não acompanhasse.',
+      "    'aria-label': `Detalhes da fatura ${fatura.id}`,",
+      '  });',
+      "  controle.setAttribute('aria-expanded', 'false');",
+      "  controle.setAttribute('aria-controls', idDoDetalhe);",
+      '  // Sem classe de tamanho: `.nds-button > svg` já dimensiona o ícone. A',
+      '  // rotação de abertura é global — `.nds-chevron` gira sob',
+      '  // `[aria-expanded="true"]`, o mesmo atributo que a folha da linha lê.',
+      '  const chevron = createElement(ChevronDown);',
+      "  chevron.setAttribute('aria-hidden', 'true');",
+      "  chevron.classList.add('nds-chevron');",
+      '  controle.appendChild(chevron);',
+      '  celulaDeControle.appendChild(controle);',
+      '  linha.appendChild(celulaDeControle);',
+    );
+  }
+
   lines.push(
     "  linha.appendChild(createTableCell(fatura.id, 'nds-font-medium'));",
     '  linha.appendChild(createTableCell(fatura.status));',
@@ -117,7 +169,33 @@ function body(o: TableSnippetOptions): string {
     );
   }
 
-  lines.push('', '  corpo.appendChild(linha);', '}', 'table.appendChild(corpo);');
+  lines.push('', '  corpo.appendChild(linha);');
+
+  if (o.withExpandableRows) {
+    lines.push(
+      '',
+      '  // A linha revelada é IRMÃ da linha de dados e vem logo depois dela: é o',
+      '  // que põe o conteúdo em seguida ao controle na ordem de foco, sem',
+      '  // `tabindex` nenhum. Ela fica sempre no DOM e some por `hidden`, para o',
+      '  // `aria-controls` nunca apontar para um id que não existe.',
+      '  const detalhe = createTableRow();',
+      '  detalhe.id = idDoDetalhe;',
+      '  detalhe.hidden = true;',
+      '  const celulaDoDetalhe = createTableCell(`Emitida por ${fatura.method}.`);',
+      '  // Mais um pela coluna do disclosure: a célula atravessa a tabela inteira.',
+      "  celulaDoDetalhe.setAttribute('colspan', String(colunas.length + 1));",
+      '  detalhe.appendChild(celulaDoDetalhe);',
+      '  corpo.appendChild(detalhe);',
+      '',
+      "  controle.addEventListener('click', () => {",
+      "    const aberta = controle.getAttribute('aria-expanded') === 'true';",
+      "    controle.setAttribute('aria-expanded', String(!aberta));",
+      '    detalhe.hidden = aberta;',
+      '  });',
+    );
+  }
+
+  lines.push('}', 'table.appendChild(corpo);');
   return lines.join('\n');
 }
 
@@ -148,9 +226,15 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
   ];
   if (o.withFooter) parts.splice(4, 0, 'createTableFooter');
 
-  const importacoes = o.withActions
-    ? [importingParts(...parts), "import { createButton } from '@/components/ui/button';"].join('\n')
-    : importingParts(...parts);
+  const extras = [];
+  if (o.withActions || o.withExpandableRows) {
+    extras.push("import { createButton } from '@/components/ui/button';");
+  }
+  // O chevron é ícone do lucide montado no call site, como nas outras stories
+  // que mostram ícone: `.nds-button > svg` faz o dimensionamento.
+  if (o.withExpandableRows) extras.push("import { ChevronDown, createElement } from 'lucide';");
+
+  const importacoes = [importingParts(...parts), ...extras].join('\n');
 
   return snippet(
     importacoes,

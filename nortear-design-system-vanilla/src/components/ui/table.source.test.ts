@@ -47,6 +47,24 @@ describe('tableSnippet', () => {
     expect(tableSnippet()).not.toContain('data-state');
   });
 
+  it('ensina a linha expansível com o estado no controle e a irmã escondida', () => {
+    const code = tableSnippet({ withExpandableRows: true });
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("import { ChevronDown, createElement } from 'lucide';");
+    // O estado mora no BOTÃO: na `<tr>` o `data-state` já é da seleção.
+    expect(code).toContain("controle.setAttribute('aria-expanded', 'false');");
+    expect(code).toContain("controle.setAttribute('aria-controls', idDoDetalhe);");
+    expect(code).not.toContain("linha.setAttribute('data-state'");
+    // A linha revelada fica no DOM e some por `hidden`, para o `aria-controls`
+    // nunca apontar para um id que não existe.
+    expect(code).toContain('detalhe.hidden = true;');
+    expect(code).toContain("celulaDoDetalhe.setAttribute('colspan', String(colunas.length + 1));");
+    expect(code).toContain("rotuloDeDetalhes.textContent = 'Detalhes';");
+    // A montagem canônica não paga por nada disso.
+    expect(tableSnippet()).not.toContain('aria-expanded');
+    expect(tableSnippet()).not.toContain("from 'lucide'");
+  });
+
   it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
     const code = tableSnippet({ withActions: true });
     expect(code).toContain("'aria-label':");

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { ref } from 'vue';
+import { userEvent, within, expect } from 'storybook/test';
+import { ChevronDown } from 'lucide-vue-next';
 import {
   Table,
   TableBody,
@@ -11,13 +13,14 @@ import {
   TableRow,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { INVOICES, MONTHS, TOTAL } from './table.fixtures';
+import { COLUMNS, INVOICES, MONTHS, TOTAL } from './table.fixtures';
 import {
   tableBasicaSource,
   tableWithActionsSource,
   tableWithFooterSource,
   tableCaptionInvisivelSource,
   tableScrollHorizontalSource,
+  tableWithExpandableRowsSource,
 } from './table.source';
 
 const meta: Meta = {
@@ -324,21 +327,24 @@ export const HorizontalScroll: Story = {
       // Dois anos de competência, não um: com doze colunas a tabela ainda cabe
       // num canvas largo, e a story provaria a rolagem só nos viewports
       // estreitos.
-      return { invoices: INVOICES.slice(0, 3), meses: MONTHS };
+      return { invoices: INVOICES.slice(0, 3), months: MONTHS };
     },
+    // A legenda nomeia a TABELA; `regionLabel` nomeia o contêiner que ROLA, que
+    // é outro elemento e entra sozinho na ordem de tabulação. Sem nome o wrapper
+    // não recebe papel, e quem chega nele por Tab ouve uma parada muda.
     template: `
-      <Table>
+      <Table regionLabel="Faturas por mês de competência">
         <TableCaption class="nds-sr-only">Faturas por mês de competência</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Fatura</TableHead>
-            <TableHead v-for="month in meses" :key="month">{{ month }}</TableHead>
+            <TableHead v-for="month in months" :key="month">{{ month }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow v-for="invoice in invoices" :key="invoice.id">
             <TableCell class="nds-font-medium">{{ invoice.id }}</TableCell>
-            <TableCell v-for="month in meses" :key="month" class="nds-text-right">
+            <TableCell v-for="month in months" :key="month" class="nds-text-right">
               {{ invoice.amount }}
             </TableCell>
           </TableRow>
@@ -356,6 +362,12 @@ export const HorizontalScroll: Story = {
       await expect(wrapper).toHaveAttribute('tabindex', '0');
       await expect(getComputedStyle(wrapper).overflowX).toBe('auto');
       await expect(wrapper.scrollWidth).toBeGreaterThan(wrapper.clientWidth);
+
+      // A parada só é anunciável com PAPEL e NOME: `group` (e não `region`, que
+      // viraria marco de página numa tela com várias tabelas) mais o nome do
+      // conteúdo, que vem de fora porque o design system não o conhece.
+      await expect(wrapper).toHaveAttribute('role', 'group');
+      await expect(wrapper).toHaveAccessibleName('Faturas por mês de competência');
     });
 
     await step('A rolagem chega ao fim da tabela', async () => {
@@ -364,6 +376,216 @@ export const HorizontalScroll: Story = {
       await expect(wrapper).toHaveFocus();
       wrapper.scrollLeft = wrapper.scrollWidth;
       await expect(wrapper.scrollLeft).toBeGreaterThan(0);
+    });
+  },
+};
+
+// ─── Linha expansível ─────────────────────────────────────────────────────────
+
+/** Os três primeiros registros — três pares de linhas bastam para a prova. */
+const EXPANDABLE_LINES = INVOICES.slice(0, 3);
+
+/**
+ * O id da linha revelada sai do REGISTRO, sem o `#`: duas tabelas na mesma tela
+ * não podem repetir id, e `#` dentro dele quebraria qualquer `querySelector`.
+ */
+function detailIdOf(id: string): string {
+  return `table-row-detail-${id.replace('#', '')}`;
+}
+
+/**
+ * Uma linha de dados com disclosure, e a linha irmã que ela revela.
+ *
+ * As quatro decisões da forma, e o motivo de cada uma:
+ *
+ * 1. **`aria-expanded` no BOTÃO, nunca na `<tr>`.** A linha já usa `data-state`
+ *    para a SELEÇÃO, e os dois estados coexistem — uma linha marcada pode estar
+ *    aberta. Quem faz a linha reagir ao controle é a folha compartilhada, por
+ *    `tbody tr:has([aria-expanded="true"])`; o `:has()` existe exatamente para
+ *    o estado morar no controle e o efeito acontecer na linha.
+ * 2. **A revelada é IRMÃ, sempre no DOM, escondida por `hidden`.** O `id` dela é
+ *    o alvo do `aria-controls`, e um alvo que some deixa o atributo apontando
+ *    para nada. O `colspan` sai da lista de colunas mais a do disclosure, e não
+ *    de um número escrito à mão.
+ * 3. **O leitor de tela anuncia pelo `aria-expanded`.** O nome acessível é do
+ *    REGISTRO ("Detalhes da fatura #INV-001") e não muda: trocar "Mostrar" por
+ *    "Ocultar" diria a mesma coisa duas vezes e ficaria em desacordo com o
+ *    atributo no instante entre uma escrita e outra. Nada de live region — a
+ *    mudança de estado do próprio controle já é anunciada.
+ * 4. **A ordem de foco sai do DOM.** A linha revelada vem imediatamente depois
+ *    da linha de dados, então o que ela contém é o próximo ponto de tabulação
+ *    depois do controle, sem `tabindex` nenhum. Fechada, ela é `hidden`: sai da
+ *    tabulação e da árvore de acessibilidade pelo mesmo atributo.
+ */
+export const WithExpandableRows: Story = {
+  parameters: {
+    // Os três itens nasceram nesta mesma rodada, junto com a decisão de que a
+    // linha expansível é recurso do Table. O `visual.item7` é o que prova o
+    // conserto de cascata: marcada E expandida mantém a cor da seleção.
+    covers: ['functional.item8', 'visual.item7', 'accessibility.item5'],
+    docs: { source: { transform: tableWithExpandableRowsSource } },
+  },
+  render: () => ({
+    components: { ...COMPONENTES, Button, ChevronDown },
+    setup() {
+      const open = ref<Record<string, boolean>>({});
+      function toggle(id: string) {
+        open.value = { ...open.value, [id]: !open.value[id] };
+      }
+      return {
+        lines: EXPANDABLE_LINES,
+        // A segunda também está MARCADA: aberta e selecionada ao mesmo tempo é
+        // o caso que o `:not([data-state="selected"])` da folha protege.
+        selected: EXPANDABLE_LINES[1].id,
+        open,
+        toggle,
+        detailIdOf,
+        // Colunas de dado MAIS a do disclosure.
+        detailColspan: COLUMNS.length + 1,
+      };
+    },
+    template: `
+      <Table>
+        <TableCaption class="nds-sr-only">Faturas recentes com detalhes</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <!-- A coluna do disclosure vem primeiro e tem cabeçalho: o rótulo
+                 sai da tela num span, e não por classe no th, que desmontaria
+                 a grade. -->
+            <TableHead><span class="nds-sr-only">Detalhes</span></TableHead>
+            <TableHead>Fatura</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Método</TableHead>
+            <TableHead class="nds-text-right">Valor</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <template v-for="invoice in lines" :key="invoice.id">
+            <TableRow :data-state="invoice.id === selected ? 'selected' : null">
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  :aria-expanded="open[invoice.id] ? 'true' : 'false'"
+                  :aria-controls="detailIdOf(invoice.id)"
+                  :aria-label="'Detalhes da fatura ' + invoice.id"
+                  @click="toggle(invoice.id)"
+                >
+                  <ChevronDown class="nds-chevron" aria-hidden="true" />
+                </Button>
+              </TableCell>
+              <TableCell class="nds-font-medium">{{ invoice.id }}</TableCell>
+              <TableCell>{{ invoice.status }}</TableCell>
+              <TableCell>{{ invoice.method }}</TableCell>
+              <TableCell class="nds-text-right">{{ invoice.amount }}</TableCell>
+            </TableRow>
+            <TableRow :id="detailIdOf(invoice.id)" :hidden="!open[invoice.id]">
+              <TableCell :colspan="detailColspan">
+                <div class="nds-stack" data-spacing="sm">
+                  <p class="nds-text-muted-foreground">
+                    Emitida por {{ invoice.method }}, no valor de {{ invoice.amount }}.
+                  </p>
+                  <!-- Um controle dentro do detalhe: é ele que prova que o
+                       conteúdo revelado vem depois do disclosure na tabulação,
+                       e que some dela quando a linha fecha. -->
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    :aria-label="'Baixar recibo da fatura ' + invoice.id"
+                  >
+                    Baixar recibo
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </template>
+        </TableBody>
+      </Table>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const rows = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const toggles = () => canvas.getAllByRole('button', { name: /^Detalhes da fatura/ });
+
+    // Cada par de linhas é dado + detalhe: 0 dado, 1 detalhe, 2 dado marcado…
+    const collapsedBackground = getComputedStyle(rows()[0]).backgroundColor;
+    const selectedBackground = getComputedStyle(rows()[2]).backgroundColor;
+
+    await step('Fechada, a linha de detalhe sai da tela e da tabulação', async () => {
+      await expect(rows().length).toBe(EXPANDABLE_LINES.length * 2);
+      for (const [i, toggle] of toggles().entries()) {
+        await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        await expect(toggle).toHaveAttribute('aria-controls', rows()[i * 2 + 1].id);
+        // O detalhe atravessa as colunas de dado MAIS a do disclosure.
+        const cell = rows()[i * 2 + 1].querySelector('td')!;
+        await expect(cell).toHaveAttribute('colspan', String(COLUMNS.length + 1));
+      }
+      // `hidden` tira da tela, da árvore de acessibilidade e da tabulação de uma
+      // vez — por isso o botão do detalhe não é alcançável por papel.
+      await expect(getComputedStyle(rows()[1]).display).toBe('none');
+      await expect(canvas.queryAllByRole('button', { name: /^Baixar recibo/ }).length).toBe(0);
+    });
+
+    await step('Enter no controle abre a linha irmã, e o nome não muda', async () => {
+      // Teclado, e não clique: o ponteiro deixaria a linha em `:hover`, que pinta
+      // com a MESMA cor da regra que este teste existe para provar — a asserção
+      // do fundo passaria com ou sem o recurso.
+      toggles()[0].focus();
+      await userEvent.keyboard('{Enter}');
+
+      await expect(toggles()[0]).toHaveAttribute('aria-expanded', 'true');
+      await expect(rows()[1].hidden).toBe(false);
+      await expect(rows()[1].getBoundingClientRect().height).toBeGreaterThan(0);
+      // Quem anuncia o estado é o `aria-expanded`; o nome continua sendo o do
+      // registro, nos dois sentidos da alternância.
+      await expect(toggles()[0]).toHaveAccessibleName(
+        `Detalhes da fatura ${EXPANDABLE_LINES[0].id}`,
+      );
+    });
+
+    await step('O conteúdo revelado é o próximo ponto de tabulação', async () => {
+      // A linha irmã vem logo depois da linha de dados no DOM: a ordem de foco
+      // sai daí, sem `tabindex` nenhum.
+      await userEvent.tab();
+      await expect(
+        canvas.getByRole('button', { name: `Baixar recibo da fatura ${EXPANDABLE_LINES[0].id}` }),
+      ).toHaveFocus();
+    });
+
+    await step('A linha expandida muda de fundo', async () => {
+      // É o contrato da folha compartilhada (`:has([aria-expanded="true"])`), e
+      // até hoje ele não tinha produtor em stack nenhuma.
+      const expandedBackground = getComputedStyle(rows()[0]).backgroundColor;
+      await expect(expandedBackground).not.toBe(collapsedBackground);
+      await expect(expandedBackground).not.toBe('rgba(0, 0, 0, 0)');
+      // A terceira continua fechada: a mudança é da linha aberta, não da tabela.
+      await expect(getComputedStyle(rows()[4]).backgroundColor).toBe(collapsedBackground);
+    });
+
+    await step('Marcada e expandida ao mesmo tempo: a cor da seleção vence', async () => {
+      // Os três seletores de fundo são (0,2,2) — sem o `:not([data-state="selected"])`
+      // a regra do disclosure é a última do arquivo e rebaixaria a linha marcada
+      // ao tom claro do hover.
+      toggles()[1].focus();
+      await userEvent.keyboard('{Enter}');
+
+      await expect(toggles()[1]).toHaveAttribute('aria-expanded', 'true');
+      await expect(rows()[3].hidden).toBe(false);
+      await expect(getComputedStyle(rows()[2]).backgroundColor).toBe(selectedBackground);
+      await expect(getComputedStyle(rows()[2]).backgroundColor).not.toBe(
+        getComputedStyle(rows()[0]).backgroundColor,
+      );
+    });
+
+    await step('Enter de novo fecha, e tudo volta ao estado anterior', async () => {
+      toggles()[0].focus();
+      await userEvent.keyboard('{Enter}');
+
+      await expect(toggles()[0]).toHaveAttribute('aria-expanded', 'false');
+      await expect(getComputedStyle(rows()[1]).display).toBe('none');
+      await expect(getComputedStyle(rows()[0]).backgroundColor).toBe(collapsedBackground);
+      await expect(canvas.queryAllByRole('button', { name: /^Baixar recibo/ }).length).toBe(1);
     });
   },
 };

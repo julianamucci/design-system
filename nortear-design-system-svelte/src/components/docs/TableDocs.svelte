@@ -22,6 +22,7 @@
     PaginationPrevious,
   } from '@/components/ui/pagination';
   import ArrowUpDown from '@lucide/svelte/icons/arrow-up-down';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
   import Search from '@lucide/svelte/icons/search';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -122,19 +123,110 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  /**
+   * Quantos itens a seção publica HOJE, perguntado ao dicionário.
+   *
+   * Lista cravada à mão envelhece em SILÊNCIO: o conteúdo compartilhado cresce
+   * nos três idiomas e a tela fica para trás sem nada ficar vermelho — foi assim
+   * que um teste funcional, um visual e um de acessibilidade ficaram escritos e
+   * invisíveis nesta página. Trocar `item1..item6` por `item1..item8` repetiria
+   * o defeito no item seguinte, então quem decide o fim da lista é o dicionário.
+   *
+   * A parada é no primeiro índice AUSENTE, e não no tamanho do objeto: item
+   * numerado fora de ordem é defeito de conteúdo, e tolerá-lo aqui o esconderia.
+   * Mesma forma do DropdownMenuDocs desta stack.
+   */
+  function entriesFromDict<K extends string>(
+    t: (key: string, defaultValue?: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Array<Record<K, string>> {
+    const out: Array<Record<K, string>> = [];
+    for (let i = 1; ; i++) {
+      if (!t(`${base}.item${i}.${fields[0]}`, '')) break;
+      out.push(
+        Object.fromEntries(
+          fields.map((field) => [field, t(`${base}.item${i}.${field}`, '')]),
+        ) as Record<K, string>,
+      );
+    }
+    return out;
+  }
+
   // ─── Demo data ───────────────────────────────────────────────────────────────
 
-  const invoices = [
-    { id: '#INV-001', status: 'paid',     method: 'creditCard',    amount: 'amount001' },
-    { id: '#INV-002', status: 'pending',  method: 'creditCard',    amount: 'amount002' },
-    { id: '#INV-003', status: 'canceled', method: 'pix',           amount: 'amount003' },
-    { id: '#INV-004', status: 'paid',     method: 'creditCard',    amount: 'amount004' },
-    { id: '#INV-005', status: 'pending',  method: 'bankTransfer',  amount: 'amount005' },
-  ];
-
-  const invoiceIds = ['inv001', 'inv002', 'inv003', 'inv004', 'inv005'] as const;
+  /**
+   * A linha carrega o TEXTO JÁ TRADUZIDO, resolvido chave a chave.
+   *
+   * O caminho é escrito por EXTENSO de propósito. A varredura que compara as
+   * cinco demonstrações procura a string literal `demonstration.labels.<chave>`
+   * no arquivo; chave montada em template literal não aparece para ela — foi
+   * assim que esta página constava lendo 14 dos 26 rótulos, com o método, o
+   * identificador da fatura e três valores existindo só dentro de um
+   * `$tStore(…${chave})`.
+   *
+   * Cinco dos rótulos são idênticos nos três idiomas porque são número de
+   * documento e valor de fatura: esperado, e não redundância.
+   */
+  const invoices = $derived([
+    {
+      id: $tStore('demonstration.labels.inv001'),
+      status: $tStore('demonstration.labels.paid'),
+      method: $tStore('demonstration.labels.creditCard'),
+      amount: $tStore('demonstration.labels.amount001'),
+    },
+    {
+      id: $tStore('demonstration.labels.inv002'),
+      status: $tStore('demonstration.labels.pending'),
+      method: $tStore('demonstration.labels.bankTransfer'),
+      amount: $tStore('demonstration.labels.amount002'),
+    },
+    {
+      id: $tStore('demonstration.labels.inv003'),
+      status: $tStore('demonstration.labels.canceled'),
+      method: $tStore('demonstration.labels.pix'),
+      amount: $tStore('demonstration.labels.amount003'),
+    },
+    {
+      id: $tStore('demonstration.labels.inv004'),
+      status: $tStore('demonstration.labels.paid'),
+      method: $tStore('demonstration.labels.creditCard'),
+      amount: $tStore('demonstration.labels.amount004'),
+    },
+    {
+      id: $tStore('demonstration.labels.inv005'),
+      status: $tStore('demonstration.labels.pending'),
+      method: $tStore('demonstration.labels.pix'),
+      amount: $tStore('demonstration.labels.amount005'),
+    },
+  ]);
 
   const skeletonRows = [1, 2, 3, 4, 5];
+
+  // ─── Linha expansível ────────────────────────────────────────────────────────
+
+  /**
+   * O disclosure da prévia de `withExpandableRows` alterna DE VERDADE.
+   *
+   * Prévia que nasce aberta e não fecha documenta um desenho, não um
+   * comportamento: o contrato que a variante existe para mostrar é o do estado
+   * morando no CONTROLE (`aria-expanded`) enquanto a linha guarda o dela
+   * (`data-state="selected"`) — e os dois acontecerem juntos só se vê alternando.
+   * Mesma forma da story `WithExpandableRows` desta stack, em escala menor.
+   */
+  let expandedRows = $state<Record<string, boolean>>({});
+
+  /**
+   * O `id` sai do REGISTRO e sem o `#`: duas tabelas na mesma página não podem
+   * repetir `id`, e `#` dentro dele quebraria qualquer `querySelector`.
+   */
+  function detailIdOf(id: string): string {
+    return `table-docs-row-detail-${id.replace('#', '')}`;
+  }
+
+  function toggleRow(id: string) {
+    expandedRows = { ...expandedRows, [id]: !expandedRows[id] };
+  }
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
@@ -165,7 +257,17 @@
   </TableBody>
 </Table>`;
 
-  const codeWithFooter = `<Table>
+  /**
+   * O total sai do DICIONÁRIO, e não de um número escrito no snippet.
+   *
+   * Estava cravado em `R$ 1.000,00`, que não fechava com nenhum conjunto de
+   * dados desta página — o mesmo defeito que a variante com rodapé desta stack
+   * já tinha pago. Número de sumário escrito à mão mente em silêncio: nenhum
+   * compilador soma as linhas acima dele, e o leitor copia a mentira junto com
+   * a forma. Sendo o mesmo `totalAmount` que a tabela ao lado exibe, o snippet
+   * e o exemplo não podem mais discordar.
+   */
+  const codeWithFooter = $derived(`<Table>
   <TableCaption>Lista de faturas recentes</TableCaption>
   <TableHeader>
     <TableRow>
@@ -187,11 +289,11 @@
   </TableBody>
   <TableFooter>
     <TableRow>
-      <TableCell colspan={3}>Total</TableCell>
-      <TableCell class="nds-text-right">R$ 1.000,00</TableCell>
+      <TableCell colspan={3}>${$tStore('demonstration.labels.total')}</TableCell>
+      <TableCell class="nds-text-right">${$tStore('demonstration.labels.totalAmount')}</TableCell>
     </TableRow>
   </TableFooter>
-</Table>`;
+</Table>`);
 
   const codeSrOnlyCaption = `<Table>
   <!-- Caption visualmente oculto — título já está acima -->
@@ -248,6 +350,55 @@
     {/each}
   {/if}
 </TableBody>`;
+
+  const codeExpandableRows = `<script lang="ts">
+  let open = $state<Record<string, boolean>>({});
+  const detailId = (id: string) => \`row-detail-\${id.replace('#', '')}\`;
+<\/script>
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <!-- A coluna do disclosure vem primeiro e tem cabeçalho: o rótulo sai da
+           tela num span, e não por classe no th, que desmontaria a grade. -->
+      <TableHead scope="col"><span class="nds-sr-only">Detalhes</span></TableHead>
+      <TableHead scope="col">Fatura</TableHead>
+      <!-- ... -->
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {#each invoices as invoice (invoice.id)}
+      <!-- data-state é da SELEÇÃO; o estado de abertura mora no controle. -->
+      <TableRow data-state={selected.has(invoice.id) ? 'selected' : undefined}>
+        <TableCell>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-expanded={open[invoice.id] ? 'true' : 'false'}
+            aria-controls={detailId(invoice.id)}
+            aria-label={\`Detalhes da fatura \${invoice.id}\`}
+            onclick={() => (open = { ...open, [invoice.id]: !open[invoice.id] })}
+          >
+            <ChevronDown class="nds-chevron" aria-hidden="true" />
+          </Button>
+        </TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
+        <!-- ... -->
+      </TableRow>
+      <!-- A revelada é IRMÃ e está SEMPRE no DOM: o id é alvo do aria-controls,
+           e alvo que some deixa o atributo apontando para nada. Fechada, hidden
+           a tira da tela e da tabulação pelo mesmo atributo. -->
+      <TableRow id={detailId(invoice.id)} hidden={!open[invoice.id]}>
+        <TableCell colspan={columns.length + 1}>
+          <div class="nds-stack" data-spacing="sm">
+            <p class="nds-text-muted-foreground">Emitida em 03/09/2026...</p>
+            <Button variant="outline" size="sm">Baixar recibo</Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    {/each}
+  </TableBody>
+</Table>`;
 
   const codeSelected = `<TableRow data-state={isSelected ? 'selected' : undefined}>
   <!-- ... -->
@@ -324,12 +475,12 @@ interface TableRowProps {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {#each invoiceIds as key, i (key)}
+            {#each invoices as invoice (invoice.id)}
               <TableRow>
-                <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
-                <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
-                <TableCell>{$tStore(`demonstration.labels.${invoices[i].method}`)}</TableCell>
-                <TableCell class="nds-text-right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
+                <TableCell class="nds-font-medium">{invoice.id}</TableCell>
+                <TableCell>{invoice.status}</TableCell>
+                <TableCell>{invoice.method}</TableCell>
+                <TableCell class="nds-text-right">{invoice.amount}</TableCell>
               </TableRow>
             {/each}
           </TableBody>
@@ -441,19 +592,29 @@ interface TableRowProps {
         ]}
       />
 
+      <!-- O par fala da LEGENDA, e só dela: as duas prévias são idênticas
+           exceto pelo `<TableCaption>`, que existe no `do` e não existe no
+           `dont`. Diferença a mais aqui não é reforço — é ruído que o leitor
+           teria de descartar para achar o que o par ensina.
+
+           E `scope` NÃO é escrito em nenhuma das duas, de propósito: o
+           `TableHead` desta stack já nasce com `scope="col"`, então o `dont`
+           renderizaria o atributo de qualquer jeito e o par não ilustraria
+           ausência nenhuma. Escrever `scope` vazio para forçar o contraste
+           ensinaria a desarmar um default seguro. -->
       {#snippet doPair1()}
         <Table>
           <TableCaption>{$tStore('demonstration.labels.caption')}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
-              <TableHead scope="col">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead>{$tStore('demonstration.labels.invoice')}</TableHead>
+              <TableHead>{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-001</TableCell>
-              <TableCell>R$ 250,00</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
+              <TableCell>{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -462,14 +623,14 @@ interface TableRowProps {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Fatura</TableHead>
-              <TableHead>Valor</TableHead>
+              <TableHead>{$tStore('demonstration.labels.invoice')}</TableHead>
+              <TableHead>{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell>#INV-001</TableCell>
-              <TableCell>R$ 250,00</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
+              <TableCell>{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -479,13 +640,15 @@ interface TableRowProps {
           <TableCaption>{$tStore('demonstration.labels.caption')}</TableCaption>
           <TableHeader>
             <TableRow>
+              <!-- UMA coluna, como na referência: o par fala do estado vazio, e
+                   uma segunda coluna só faz o `colspan` parecer maior do que o
+                   contrato precisa. -->
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
-              <TableHead scope="col">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colspan={2} class="nds-table-empty">
+              <TableCell colspan={1} class="nds-table-empty">
                 {$tStore('demonstration.labels.emptyState')}
               </TableCell>
             </TableRow>
@@ -498,7 +661,6 @@ interface TableRowProps {
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
-              <TableHead scope="col">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -520,6 +682,7 @@ interface TableRowProps {
           { trackId: 'withSrOnlyCaption', name: $tStore('variants.items.withSrOnlyCaption.label'),description: stripHtml($tStore('variants.items.withSrOnlyCaption.description')),code: codeSrOnlyCaption,  preview: variantSrOnlyCaption  },
           { trackId: 'withInlineActions', name: $tStore('variants.items.withInlineActions.label'),description: stripHtml($tStore('variants.items.withInlineActions.description')),code: codeInlineActions,  preview: variantInlineActions  },
           { trackId: 'withEmptyState', name: $tStore('variants.items.withEmptyState.label'),   description: stripHtml($tStore('variants.items.withEmptyState.description')),   code: codeEmptyState,     preview: variantEmptyState     },
+          { trackId: 'withExpandableRows', name: $tStore('variants.items.withExpandableRows.label'), description: stripHtml($tStore('variants.items.withExpandableRows.description')), code: codeExpandableRows, preview: variantExpandableRows },
         ]}
       />
 
@@ -535,12 +698,12 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
               <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
               <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-002</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv002')}</TableCell>
               <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
               <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
@@ -560,12 +723,12 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
               <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
               <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-002</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv002')}</TableCell>
               <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
               <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
@@ -593,7 +756,7 @@ interface TableRowProps {
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="nds-font-medium">#INV-001</TableCell>
+                <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
                 <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
                 <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
               </TableRow>
@@ -614,16 +777,16 @@ interface TableRowProps {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {#each invoiceIds.slice(0, 3) as key, i (key)}
+            {#each invoices.slice(0, 3) as invoice (invoice.id)}
               <TableRow>
-                <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
-                <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
-                <TableCell class="nds-text-right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
+                <TableCell class="nds-font-medium">{invoice.id}</TableCell>
+                <TableCell>{invoice.status}</TableCell>
+                <TableCell class="nds-text-right">{invoice.amount}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
                     size="sm"
-                    aria-label={`${$tStore('demonstration.labels.actionsLabel')} ${$tStore(`demonstration.labels.${key}`)}`}
+                    aria-label={`${$tStore('demonstration.labels.actionsLabel')} ${invoice.id}`}
                   >
                     &hellip;
                   </Button>
@@ -655,6 +818,79 @@ interface TableRowProps {
         </Table>
       {/snippet}
 
+      {#snippet variantExpandableRows()}
+        <Table>
+          <TableCaption>{$tStore('demonstration.labels.caption')}</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <!-- A coluna do disclosure vem PRIMEIRO e tem cabeçalho. O rótulo
+                   sai da tela num `<span class="nds-sr-only">` e não por classe
+                   no próprio `<th>`: a classe tiraria a célula do fluxo e
+                   desmontaria a grade, deixando as colunas de dado fora de
+                   prumo com as linhas. -->
+              <TableHead scope="col">
+                <span class="nds-sr-only">{$tStore('demonstration.labels.detailsColumn')}</span>
+              </TableHead>
+              <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
+              <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
+              <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {#each invoices.slice(0, 3) as invoice, i (invoice.id)}
+              <!-- `data-state` é da SELEÇÃO, e o segundo registro nasce marcado
+                   de propósito: aberta E marcada ao mesmo tempo é o caso que o
+                   `:not([data-state="selected"])` da folha compartilhada
+                   protege (C18 do PRD), e é o que esta prévia existe para deixar
+                   ver. O estado de ABERTURA não entra aqui — ele mora no
+                   controle, em `aria-expanded`. -->
+              <TableRow data-state={i === 1 ? 'selected' : undefined}>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-expanded={expandedRows[invoice.id] ? 'true' : 'false'}
+                    aria-controls={detailIdOf(invoice.id)}
+                    aria-label={`${$tStore('demonstration.labels.detailsLabel')} ${invoice.id}`}
+                    onclick={() => toggleRow(invoice.id)}
+                  >
+                    <!-- Sem classe de tamanho: `.nds-button > svg` já dimensiona
+                         o ícone. `nds-chevron` é a rotação global do disclosure
+                         e casa com `[aria-expanded="true"]` — o mesmo atributo
+                         que a folha lê para pintar a linha. -->
+                    <ChevronDown class="nds-chevron" aria-hidden="true" />
+                  </Button>
+                </TableCell>
+                <TableCell class="nds-font-medium">{invoice.id}</TableCell>
+                <TableCell>{invoice.status}</TableCell>
+                <TableCell class="nds-text-right">{invoice.amount}</TableCell>
+              </TableRow>
+              <!-- A revelada é IRMÃ e está SEMPRE no DOM, escondida por `hidden`:
+                   o `id` dela é o alvo do `aria-controls`, e alvo que some deixa
+                   o atributo apontando para nada. O `colspan` é o das três
+                   colunas de dado mais a do disclosure. -->
+              <TableRow id={detailIdOf(invoice.id)} hidden={!expandedRows[invoice.id]}>
+                <TableCell colspan={4}>
+                  <div class="nds-stack" data-spacing="sm">
+                    <p class="nds-text-muted-foreground">{$tStore('demonstration.labels.detailText')}</p>
+                    <!-- Um controle dentro do detalhe: é ele que prova que o
+                         conteúdo revelado entra na tabulação logo depois do
+                         disclosure, e sai dela quando a linha fecha. -->
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      aria-label={`${$tStore('demonstration.labels.receiptLabel')} ${invoice.id}`}
+                    >
+                      {$tStore('demonstration.labels.receipt')}
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            {/each}
+          </TableBody>
+        </Table>
+      {/snippet}
+
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
         useWhenLabel={$tNavStore('common.useWhen')}
@@ -667,7 +903,10 @@ interface TableRowProps {
             useWhen: $tStore('variants.compositions.filterableToolbar.use'),
             code: `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster" data-align="center" data-spacing="md">
-    <Input placeholder="Filtrar faturas..." />
+    <div class="nds-w-full nds-max-w-sm" style="position: relative">
+      <Search class="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
+      <Input aria-label="Filtrar faturas" placeholder="Filtrar faturas..." class="nds-pl-8" />
+    </div>
     <Button variant="outline">Status</Button>
   </div>
   <Table>
@@ -748,7 +987,21 @@ interface TableRowProps {
           <div class="nds-cluster" data-align="center" data-spacing="md">
             <div class="nds-w-full nds-max-w-sm" style="position: relative">
               <Search class="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
-              <Input placeholder="Filtrar faturas..." style="padding-left: 2rem" />
+              <!-- `nds-pl-8` e não `padding-left` inline: o inline era contorno de
+                   um defeito de cascata já consertado — `spacing.css` passou a ser
+                   importada depois de `input.css`, e a utilitária vence o empate.
+                   Valor de desenho cravado no atributo `style` deixa o tema, a
+                   densidade e a escala de tipo para trás.
+
+                   O `aria-label` espelha o placeholder porque placeholder NÃO é
+                   nome acessível: ele some ao digitar, e o campo passaria a ser um
+                   controle mudo justo quando tem conteúdo. Mesma forma do campo de
+                   filtro do DataTable. -->
+              <Input
+                aria-label={$tStore('demonstration.labels.filterLabel')}
+                placeholder="Filtrar faturas..."
+                class="nds-pl-8"
+              />
             </div>
             <Button variant="outline">Status</Button>
           </div>
@@ -763,14 +1016,14 @@ interface TableRowProps {
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="nds-font-medium">#INV-001</TableCell>
-                <TableCell>Pago</TableCell>
-                <TableCell class="nds-text-right">R$ 250,00</TableCell>
+                <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
+                <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
+                <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell class="nds-font-medium">#INV-002</TableCell>
-                <TableCell>Pendente</TableCell>
-                <TableCell class="nds-text-right">R$ 150,00</TableCell>
+                <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv002')}</TableCell>
+                <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
+                <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -804,14 +1057,14 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-001</TableCell>
-              <TableCell>Pago</TableCell>
-              <TableCell class="nds-text-right">R$ 250,00</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
+              <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="nds-font-medium">#INV-002</TableCell>
-              <TableCell>Pendente</TableCell>
-              <TableCell class="nds-text-right">R$ 150,00</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv002')}</TableCell>
+              <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -823,7 +1076,12 @@ interface TableRowProps {
           <TableHeader>
             <TableRow>
               <TableHead scope="col">
-                <Checkbox aria-label="Selecionar todas as linhas" />
+                <!-- Nome acessível é texto de TELA, e por isso sai do dicionário
+                     como o rótulo de coluna ao lado: cravado em pt-BR, o leitor
+                     de en/es ouvia o controle num idioma que não é o da página.
+                     `selectRow` é prefixo, composto com o id da fatura — mesma
+                     forma de `actionsLabel`. -->
+                <Checkbox aria-label={$tStore('demonstration.labels.selectAll')} />
               </TableHead>
               <TableHead scope="col">Fatura</TableHead>
               <TableHead scope="col">Status</TableHead>
@@ -833,19 +1091,24 @@ interface TableRowProps {
           <TableBody>
             <TableRow data-state="selected">
               <TableCell>
-                <Checkbox checked aria-label="Selecionar fatura #INV-001" />
+                <Checkbox
+                  checked
+                  aria-label={`${$tStore('demonstration.labels.selectRow')} ${$tStore('demonstration.labels.inv001')}`}
+                />
               </TableCell>
-              <TableCell class="nds-font-medium">#INV-001</TableCell>
-              <TableCell>Pago</TableCell>
-              <TableCell class="nds-text-right">R$ 250,00</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
+              <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Checkbox aria-label="Selecionar fatura #INV-002" />
+                <Checkbox
+                  aria-label={`${$tStore('demonstration.labels.selectRow')} ${$tStore('demonstration.labels.inv002')}`}
+                />
               </TableCell>
-              <TableCell class="nds-font-medium">#INV-002</TableCell>
-              <TableCell>Pendente</TableCell>
-              <TableCell class="nds-text-right">R$ 150,00</TableCell>
+              <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv002')}</TableCell>
+              <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -864,14 +1127,14 @@ interface TableRowProps {
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="nds-font-medium">#INV-001</TableCell>
-                <TableCell>Pago</TableCell>
-                <TableCell class="nds-text-right">R$ 250,00</TableCell>
+                <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv001')}</TableCell>
+                <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
+                <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell class="nds-font-medium">#INV-002</TableCell>
-                <TableCell>Pendente</TableCell>
-                <TableCell class="nds-text-right">R$ 150,00</TableCell>
+                <TableCell class="nds-font-medium">{$tStore('demonstration.labels.inv002')}</TableCell>
+                <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
+                <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -1085,14 +1348,13 @@ interface TableRowProps {
             result: $tNavStore('common.expectedResult'),
             priority: $tNavStore('common.priority'),
           },
-          items: [
-            { action: $tStore('testes.functional.item1.action'), result: $tStore('testes.functional.item1.result'), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item2.action'), result: $tStore('testes.functional.item2.result'), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item3.action'), result: $tStore('testes.functional.item3.result'), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-          ],
+          items: entriesFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map(
+            (row) => ({
+              action: toPlainText(row.action),
+              result: toPlainText(row.result),
+              priority: localPriority(row.priority, $tNavStore),
+            }),
+          ),
         }}
         accessibility={{
           title: $tStore('testes.accessibility.title'),
@@ -1101,12 +1363,13 @@ interface TableRowProps {
             level: 'WCAG',
             how: $tNavStore('common.howToVerify'),
           },
-          items: [
-            { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-            { criterion: $tStore('testes.accessibility.item2.criterion'), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-            { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-            { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-          ],
+          items: entriesFromDict($tStore, 'testes.accessibility', ['criterion', 'level', 'how']).map(
+            (row) => ({
+              criterion: toPlainText(row.criterion),
+              level: row.level,
+              how: toPlainText(row.how),
+            }),
+          ),
         }}
         visual={{
           title: $tStore('testes.visual.title'),
@@ -1114,13 +1377,10 @@ interface TableRowProps {
             story: $tNavStore('common.storyState'),
             priority: $tNavStore('common.priority'),
           },
-          items: [
-            { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
-          ],
+          items: entriesFromDict($tStore, 'testes.visual', ['story', 'priority']).map((row) => ({
+            story: row.story,
+            priority: localPriority(row.priority, $tNavStore),
+          })),
         }}
       />
 </DocsPageLayout>

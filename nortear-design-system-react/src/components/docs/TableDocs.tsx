@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { MoreHorizontal, ArrowUpDown, Search } from "lucide-react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowUpDown, ChevronDown, Search } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -49,21 +49,147 @@ import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+/**
+ * Quais itens a seção publica HOJE, perguntado ao dicionário.
+ *
+ * Contar à mão envelhece em silêncio: o conteúdo compartilhado cresce nos três
+ * idiomas e a lista da tela fica para trás sem nada ficar vermelho — foi assim
+ * que um teste funcional e um visual ficaram escritos e invisíveis. Cravar o
+ * número novo repete o defeito daqui a um item.
+ */
+const itemIndices = (section: unknown): number[] =>
+  Object.keys((section ?? {}) as Record<string, unknown>)
+    .map((key) => /^item(\d+)$/.exec(key)?.[1])
+    .filter((digits): digits is string => digits !== undefined)
+    .map(Number)
+    .sort((a, b) => a - b);
+
 const priorityKeyMap: Record<string, string> = {
   high:   "common.high",
   medium: "common.medium",
   low:    "common.low",
 };
 
-// ─── Dados de exemplo ─────────────────────────────────────────────────────────
+// ─── Prévia de linhas expansíveis ────────────────────────────────────────────
 
-const invoices = [
-  { id: "#INV-001", status: "Pago",      method: "Cartão de crédito",  amount: "R$ 250,00" },
-  { id: "#INV-002", status: "Pendente",  method: "Boleto bancário",    amount: "R$ 150,00" },
-  { id: "#INV-003", status: "Cancelado", method: "Pix",                amount: "R$ 350,00" },
-  { id: "#INV-004", status: "Pago",      method: "Cartão de débito",   amount: "R$ 450,00" },
-  { id: "#INV-005", status: "Pendente",  method: "Transferência",      amount: "R$ 200,00" },
-];
+type DemoInvoice = {
+  id: string;
+  status: string;
+  method: string;
+  amount: string;
+};
+
+/** Id da linha revelada, sem o "#": ele quebraria qualquer seletor. */
+const detailRowId = (id: string) => `docs-table-row-detail-${id.replace("#", "")}`;
+
+/**
+ * A prévia viva da variante `withExpandableRows`, na mesma forma da story
+ * `WithExpandableRows` e em escala menor (três registros).
+ *
+ * Vive fora de `TableDocs` porque tem estado próprio: o conjunto de linhas
+ * abertas é do exemplo, não da página. As quatro decisões da forma, e o motivo
+ * de cada uma:
+ *
+ * 1. **`aria-expanded` no BOTÃO, nunca na linha.** A linha já usa `data-state`
+ *    para a SELEÇÃO, e os dois estados coexistem — uma linha marcada pode estar
+ *    aberta. Quem faz a linha reagir ao controle é a folha compartilhada, por
+ *    `tbody tr:has([aria-expanded="true"])`.
+ * 2. **A revelada é IRMÃ, sempre no DOM, escondida por `hidden`.** O `id` dela é
+ *    o alvo do `aria-controls`, e um alvo que some deixa o atributo apontando
+ *    para nada. O `colSpan` é das colunas de dado mais a do disclosure.
+ * 3. **A coluna do disclosure vem primeiro e TEM cabeçalho**, com o rótulo fora
+ *    da tela num `<span>` — e não por classe no `<th>`, que desmontaria a grade.
+ * 4. **A ordem de foco sai do DOM.** A linha revelada vem logo depois da linha
+ *    de dados, então o botão que ela contém é o próximo ponto de tabulação
+ *    depois do controle, sem `tabIndex` nenhum.
+ *
+ * A segunda linha nasce MARCADA: aberta e selecionada ao mesmo tempo é o caso
+ * que o `:not([data-state="selected"])` da folha compartilhada protege (C18).
+ */
+function ExpandableRowsPreview({
+  invoices,
+  t,
+}: {
+  invoices: readonly DemoInvoice[];
+  t: (key: string) => string;
+}) {
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
+
+  const toggle = (id: string) =>
+    setExpanded((atual) => {
+      const next = new Set(atual);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
+  return (
+    <div className="nds-w-full">
+      <Table>
+        <TableCaption className="nds-sr-only">
+          {t("demonstration.labels.caption")}
+        </TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead scope="col">
+              <span className="nds-sr-only">{t("demonstration.labels.detailsColumn")}</span>
+            </TableHead>
+            <TableHead scope="col">{t("demonstration.labels.invoice")}</TableHead>
+            <TableHead scope="col">{t("demonstration.labels.status")}</TableHead>
+            <TableHead scope="col">{t("demonstration.labels.method")}</TableHead>
+            <TableHead scope="col" className="nds-text-right">
+              {t("demonstration.labels.amount")}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {invoices.map((invoice, index) => (
+            <Fragment key={invoice.id}>
+              <TableRow data-state={index === 1 ? "selected" : undefined}>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-expanded={expanded.has(invoice.id)}
+                    aria-controls={detailRowId(invoice.id)}
+                    aria-label={`${t("demonstration.labels.detailsLabel")} ${invoice.id}`}
+                    onClick={() => toggle(invoice.id)}
+                  >
+                    <ChevronDown className="nds-chevron" aria-hidden="true" />
+                  </Button>
+                </TableCell>
+                <TableCell className="nds-font-medium">{invoice.id}</TableCell>
+                <TableCell>{invoice.status}</TableCell>
+                <TableCell>{invoice.method}</TableCell>
+                <TableCell className="nds-text-right">{invoice.amount}</TableCell>
+              </TableRow>
+
+              <TableRow id={detailRowId(invoice.id)} hidden={!expanded.has(invoice.id)}>
+                <TableCell colSpan={5}>
+                  <div className="nds-stack" data-spacing="sm">
+                    <p className="nds-text-muted-foreground">
+                      {t("demonstration.labels.detailText")}
+                    </p>
+                    {/* Um controle dentro do detalhe: é ele que prova que o
+                        conteúdo revelado vem depois do disclosure na tabulação —
+                        e que some dela quando a linha fecha. */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      aria-label={`${t("demonstration.labels.receiptLabel")} ${invoice.id}`}
+                    >
+                      {t("demonstration.labels.receipt")}
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -125,6 +251,83 @@ export function TableDocs() {
         .filter(([key]) => key !== "title")
         .map(([, value]) => value),
     [locale],
+  );
+
+  // Quantos itens cada lista de testes publica hoje, perguntado ao dicionário.
+  const testesIndices = useMemo(() => {
+    const testes = (tableTranslations as unknown as Record<
+      string,
+      { testes?: Record<string, unknown> }
+    >)[locale]?.testes;
+    return {
+      functional: itemIndices(testes?.functional),
+      accessibility: itemIndices(testes?.accessibility),
+      visual: itemIndices(testes?.visual),
+    };
+  }, [locale]);
+
+  /**
+   * Dados de exemplo — a linha carrega o TEXTO JÁ TRADUZIDO, resolvido chave a
+   * chave em `demonstration.labels`.
+   *
+   * Estava cravado em português no módulo, e por isso a tabela mostrava "Pago",
+   * "Cartão de crédito" e valores em reais no meio de uma página em inglês. O
+   * caminho é escrito por extenso de propósito: chave montada por interpolação
+   * some das buscas e o auditor de conteúdo não a alcança.
+   */
+  const invoices = useMemo(
+    () => [
+      {
+        id:     tContent("demonstration.labels.inv001"),
+        status: tContent("demonstration.labels.paid"),
+        method: tContent("demonstration.labels.creditCard"),
+        amount: tContent("demonstration.labels.amount001"),
+      },
+      {
+        id:     tContent("demonstration.labels.inv002"),
+        status: tContent("demonstration.labels.pending"),
+        method: tContent("demonstration.labels.bankTransfer"),
+        amount: tContent("demonstration.labels.amount002"),
+      },
+      {
+        id:     tContent("demonstration.labels.inv003"),
+        status: tContent("demonstration.labels.canceled"),
+        method: tContent("demonstration.labels.pix"),
+        amount: tContent("demonstration.labels.amount003"),
+      },
+      {
+        id:     tContent("demonstration.labels.inv004"),
+        status: tContent("demonstration.labels.paid"),
+        method: tContent("demonstration.labels.creditCard"),
+        amount: tContent("demonstration.labels.amount004"),
+      },
+      {
+        id:     tContent("demonstration.labels.inv005"),
+        status: tContent("demonstration.labels.pending"),
+        method: tContent("demonstration.labels.pix"),
+        amount: tContent("demonstration.labels.amount005"),
+      },
+    ],
+    [tContent],
+  );
+
+  /**
+   * Rótulo de coluna por CAMINHO POR EXTENSO, nunca interpolado.
+   *
+   * A prévia é componente VIVO: o que ela escreve é tela, não snippet, e
+   * cabeçalho cravado em português aparecia no meio de uma página em inglês —
+   * o mesmo defeito que os dados da linha já tinham. O caminho literal também é
+   * o que a varredura de conteúdo enxerga; chave montada em template some dela.
+   */
+  const columnLabel = useMemo(
+    () => ({
+      invoice: tContent("demonstration.labels.invoice"),
+      status:  tContent("demonstration.labels.status"),
+      method:  tContent("demonstration.labels.method"),
+      amount:  tContent("demonstration.labels.amount"),
+      actions: tContent("demonstration.labels.actions"),
+    }),
+    [tContent],
   );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
@@ -219,7 +422,7 @@ export function TableDocs() {
   <TableFooter>
     <TableRow>
       <TableCell colSpan={3}>Total</TableCell>
-      <TableCell>R$ 1.400,00</TableCell>
+      <TableCell>R$ 1.250,00</TableCell>
     </TableRow>
   </TableFooter>
 </Table>`;
@@ -247,14 +450,14 @@ export function TableDocs() {
 </Table>`;
 
   const codeWithActions = `<Table>
-  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
+  <TableCaption>Lista de faturas recentes</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
       <TableHead scope="col">Valor</TableHead>
-      <TableHead scope="col"><span className="nds-sr-only">Ações</span></TableHead>
+      <TableHead scope="col">Ações</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
@@ -267,10 +470,10 @@ export function TableDocs() {
         <TableCell>
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             aria-label={\`Ações para fatura \${invoice.id}\`}
           >
-            <MoreHorizontal className="nds-icon" aria-hidden="true" />
+            …
           </Button>
         </TableCell>
       </TableRow>
@@ -297,6 +500,65 @@ export function TableDocs() {
         Nenhum dado encontrado.
       </TableCell>
     </TableRow>
+  </TableBody>
+</Table>`;
+
+  const codeExpandableRows = `const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
+const detailRowId = (id: string) => \`table-row-detail-\${id.replace("#", "")}\`;
+
+<Table>
+  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
+  <TableHeader>
+    <TableRow>
+      {/* A coluna do disclosure vem primeiro; o rótulo dela sai da tela. */}
+      <TableHead scope="col"><span className="nds-sr-only">Detalhes</span></TableHead>
+      <TableHead scope="col">Fatura</TableHead>
+      <TableHead scope="col">Status</TableHead>
+      <TableHead scope="col">Método</TableHead>
+      <TableHead scope="col">Valor</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {invoices.map((invoice) => (
+      <Fragment key={invoice.id}>
+        <TableRow data-state={selected.has(invoice.id) ? "selected" : undefined}>
+          <TableCell>
+            {/* O estado vive no BOTÃO: a linha já usa o \`data-state\` dela
+                para a seleção, e os dois acontecem juntos. */}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-expanded={expanded.has(invoice.id)}
+              aria-controls={detailRowId(invoice.id)}
+              aria-label={\`Detalhes da fatura \${invoice.id}\`}
+              onClick={() => toggle(invoice.id)}
+            >
+              <ChevronDown className="nds-chevron" aria-hidden="true" />
+            </Button>
+          </TableCell>
+          <TableCell>{invoice.id}</TableCell>
+          <TableCell>{invoice.status}</TableCell>
+          <TableCell>{invoice.method}</TableCell>
+          <TableCell>{invoice.amount}</TableCell>
+        </TableRow>
+
+        {/* A revelada é IRMÃ e fica SEMPRE no DOM: \`hidden\` tira da tela, da
+            árvore de acessibilidade e da tabulação de uma vez, e o \`id\`
+            continua sendo alvo válido do \`aria-controls\`. */}
+        <TableRow id={detailRowId(invoice.id)} hidden={!expanded.has(invoice.id)}>
+          <TableCell colSpan={5}>
+            <div className="nds-stack" data-spacing="sm">
+              <p className="nds-text-muted-foreground">
+                Emitida em 03/09/2026, com vencimento em 03/10/2026.
+              </p>
+              <Button variant="outline" size="sm" aria-label={\`Baixar recibo da fatura \${invoice.id}\`}>
+                Baixar recibo
+              </Button>
+            </div>
+          </TableCell>
+        </TableRow>
+      </Fragment>
+    ))}
   </TableBody>
 </Table>`;
 
@@ -486,38 +748,45 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // As duas prévias são IDÊNTICAS a menos da legenda, que é a única
+            // coisa que este par trata. Nenhuma das duas escreve `scope`: o
+            // `TableHead` já nasce com `scope="col"`, então um lado "sem scope"
+            // renderizaria o atributo do mesmo jeito — e escrever
+            // `scope={undefined}` para forçar o contraste ensinaria o leitor a
+            // desarmar um default seguro.
             doPreview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Lista de faturas</TableCaption>
+                  <TableCaption>{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
+                      <TableHead>{columnLabel.invoice}</TableHead>
+                      <TableHead>{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell>#INV-001</TableCell>
-                      <TableCell>Pago</TableCell>
+                      <TableCell>{tContent("demonstration.labels.inv001")}</TableCell>
+                      <TableCell>{tContent("demonstration.labels.amount001")}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </div>
             ),
             dontPreview: (
-              <div className="nds-w-full nds-overflow-x">
+              // Sem legenda: é o defeito que o par ilustra.
+              <div className="nds-w-full">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Fatura</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>{columnLabel.invoice}</TableHead>
+                      <TableHead>{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell>#INV-001</TableCell>
-                      <TableCell>Pago</TableCell>
+                      <TableCell>{tContent("demonstration.labels.inv001")}</TableCell>
+                      <TableCell>{tContent("demonstration.labels.amount001")}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -530,22 +799,21 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Lista de faturas</TableCaption>
+                  <TableCaption>{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell
-                        colSpan={2}
-                        className="nds-table-empty"
-                      >
-                        Nenhuma fatura encontrada.
+                      {/* `.nds-table-empty` é a classe que a folha declara para
+                          isto: ela já traz `block-size`, centralização e a cor
+                          esmaecida (D3 do PRD). */}
+                      <TableCell colSpan={1} className="nds-table-empty">
+                        {tContent("demonstration.labels.emptyState")}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -553,15 +821,15 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
               </div>
             ),
             dontPreview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Lista de faturas</TableCaption>
+                  <TableCaption>{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
                     </TableRow>
                   </TableHeader>
+                  {/* Corpo vazio: é o defeito que o par ilustra. */}
                   <TableBody />
                 </Table>
               </div>
@@ -587,15 +855,15 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.items.basic.description")),
             code: codeBasic,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption>Lista de faturas recentes</TableCaption>
+                  <TableCaption>{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                      <TableHead scope="col">{columnLabel.status}</TableHead>
+                      <TableHead scope="col">{columnLabel.method}</TableHead>
+                      <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -618,15 +886,15 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.items.withFooter.description")),
             code: codeWithFooter,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption>Lista de faturas recentes</TableCaption>
+                  <TableCaption>{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                      <TableHead scope="col">{columnLabel.status}</TableHead>
+                      <TableHead scope="col">{columnLabel.method}</TableHead>
+                      <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -641,8 +909,10 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                   </TableBody>
                   <TableFooter>
                     <TableRow>
-                      <TableCell colSpan={3}>Total</TableCell>
-                      <TableCell className="nds-text-right">R$ 1.400,00</TableCell>
+                      <TableCell colSpan={3}>{tContent("demonstration.labels.total")}</TableCell>
+                      <TableCell className="nds-text-right">
+                        {tContent("demonstration.labels.totalAmount")}
+                      </TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>
@@ -655,15 +925,15 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.items.withSrOnlyCaption.description")),
             code: codeSrOnlyCaption,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
+                  <TableCaption className="nds-sr-only">{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                      <TableHead scope="col">{columnLabel.status}</TableHead>
+                      <TableHead scope="col">{columnLabel.method}</TableHead>
+                      <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -686,18 +956,19 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.items.withInlineActions.description")),
             code: codeWithActions,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
+                  <TableCaption>{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
-                      <TableHead scope="col">
-                        <span className="nds-sr-only">Ações</span>
-                      </TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                      <TableHead scope="col">{columnLabel.status}</TableHead>
+                      <TableHead scope="col">{columnLabel.method}</TableHead>
+                      <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
+                      {/* O rótulo da coluna de ações é VISÍVEL: a coluna existe
+                          na grade e nomeá-la fora da tela deixava o leitor
+                          vidente sem cabeçalho onde os outros quatro têm um. */}
+                      <TableHead scope="col">{columnLabel.actions}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -708,12 +979,16 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableCell>{invoice.method}</TableCell>
                         <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                         <TableCell>
+                          {/* Conteúdo visível `…` e nenhum ícone: o ícone de uma
+                              ação só (lápis, reticência horizontal) promete UMA
+                              coisa onde o exemplo documenta um MENU. O nome
+                              acessível é o do registro. */}
                           <Button
                             variant="ghost"
-                            size="icon"
-                            aria-label={`Ações para fatura ${invoice.id}`}
+                            size="sm"
+                            aria-label={`${tContent("demonstration.labels.actionsLabel")} ${invoice.id}`}
                           >
-                            <MoreHorizontal className="nds-icon" aria-hidden="true" />
+                            …
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -729,15 +1004,15 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.items.withEmptyState.description")),
             code: codeEmpty,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
+                  <TableCaption className="nds-sr-only">{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                      <TableHead scope="col">{columnLabel.status}</TableHead>
+                      <TableHead scope="col">{columnLabel.method}</TableHead>
+                      <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -746,12 +1021,21 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         colSpan={4}
                         className="nds-table-empty"
                       >
-                        Nenhum dado encontrado.
+                        {tContent("demonstration.labels.emptyState")}
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </div>
+            ),
+          },
+          {
+            trackId: "withExpandableRows",
+            name: tContent("variants.items.withExpandableRows.label"),
+            description: stripHtml(tContent("variants.items.withExpandableRows.description")),
+            code: codeExpandableRows,
+            preview: (
+              <ExpandableRowsPreview invoices={invoices.slice(0, 3)} t={tContent} />
             ),
           },
         ]}
@@ -771,7 +1055,11 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <div className="nds-cluster" data-align="center" data-spacing="md">
     <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
       <Search className="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
-      <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
+      <Input
+        aria-label="Filtrar faturas"
+        placeholder="Filtrar faturas"
+        className="nds-pl-8"
+      />
     </div>
     <Button variant="outline">Status</Button>
   </div>
@@ -800,18 +1088,23 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 <div className="nds-cluster" data-align="center" data-spacing="md">
                   <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
                     <Search className="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
-                    <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
+                    <Input
+                      aria-label={tContent("demonstration.labels.filterLabel")}
+                      placeholder={tContent("demonstration.labels.filterLabel")}
+                      className="nds-pl-8"
+                    />
                   </div>
-                  <Button variant="outline">Status</Button>
+                  {/* O filtro é POR coluna, então o rótulo dele é o da coluna. */}
+                  <Button variant="outline">{columnLabel.status}</Button>
                 </div>
-                <div className="nds-w-full nds-overflow-x">
+                <div className="nds-w-full">
                   <Table>
-                    <TableCaption className="nds-sr-only">Lista de faturas filtráveis</TableCaption>
+                    <TableCaption className="nds-sr-only">{tContent("demonstration.labels.caption")}</TableCaption>
                     <TableHeader>
                       <TableRow>
-                        <TableHead scope="col">Fatura</TableHead>
-                        <TableHead scope="col">Status</TableHead>
-                        <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                        <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                        <TableHead scope="col">{columnLabel.status}</TableHead>
+                        <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -853,26 +1146,26 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <TableBody>{/* rows */}</TableBody>
 </Table>`,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Faturas ordenáveis</TableCaption>
+                  <TableCaption className="nds-sr-only">{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col" aria-sort="ascending">
                         <Button variant="ghost" size="sm">
-                          Fatura
+                          {columnLabel.invoice}
                           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
                       <TableHead scope="col" aria-sort="none">
                         <Button variant="ghost" size="sm">
-                          Status
+                          {columnLabel.status}
                           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
                       <TableHead scope="col" aria-sort="none" className="nds-text-right">
                         <Button variant="ghost" size="sm">
-                          Valor
+                          {columnLabel.amount}
                           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
@@ -900,7 +1193,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <TableHeader>
     <TableRow>
       <TableHead scope="col">
-        <Checkbox aria-label="Selecionar todas as linhas" />
+        <Checkbox aria-label="Selecionar todas as faturas" />
       </TableHead>
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
@@ -923,44 +1216,39 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   </TableBody>
 </Table>`,
             preview: (
-              <div className="nds-w-full nds-overflow-x">
+              <div className="nds-w-full">
                 <Table>
-                  <TableCaption className="nds-sr-only">Faturas com seleção</TableCaption>
+                  <TableCaption className="nds-sr-only">{tContent("demonstration.labels.caption")}</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">
-                        <Checkbox aria-label="Selecionar todas as linhas" />
+                        {/* O nome acessível da marcação também é conteúdo: ele
+                            estava cravado aqui e vivia num override de uma stack
+                            só, invisível para quem procurasse no dicionário. */}
+                        <Checkbox aria-label={tContent("demonstration.labels.selectAll")} />
                       </TableHead>
-                      <TableHead scope="col">Fatura</TableHead>
-                      <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                      <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                      <TableHead scope="col">{columnLabel.status}</TableHead>
+                      <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow data-state="selected">
-                      <TableCell>
-                        <Checkbox defaultChecked aria-label="Selecionar fatura #INV-001" />
-                      </TableCell>
-                      <TableCell className="nds-font-medium">#INV-001</TableCell>
-                      <TableCell>Pago</TableCell>
-                      <TableCell className="nds-text-right">R$ 250,00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox aria-label="Selecionar fatura #INV-002" />
-                      </TableCell>
-                      <TableCell className="nds-font-medium">#INV-002</TableCell>
-                      <TableCell>Pendente</TableCell>
-                      <TableCell className="nds-text-right">R$ 150,00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox aria-label="Selecionar fatura #INV-003" />
-                      </TableCell>
-                      <TableCell className="nds-font-medium">#INV-003</TableCell>
-                      <TableCell>Cancelado</TableCell>
-                      <TableCell className="nds-text-right">R$ 350,00</TableCell>
-                    </TableRow>
+                    {invoices.slice(0, 3).map((invoice, index) => (
+                      <TableRow
+                        key={invoice.id}
+                        data-state={index === 0 ? "selected" : undefined}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            defaultChecked={index === 0}
+                            aria-label={`${tContent("demonstration.labels.selectRow")} ${invoice.id}`}
+                          />
+                        </TableCell>
+                        <TableCell className="nds-font-medium">{invoice.id}</TableCell>
+                        <TableCell>{invoice.status}</TableCell>
+                        <TableCell className="nds-text-right">{invoice.amount}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </div>
@@ -989,14 +1277,14 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
 </div>`,
             preview: (
               <div className="nds-w-full nds-stack" data-spacing="sm">
-                <div className="nds-w-full nds-overflow-x">
+                <div className="nds-w-full">
                   <Table>
-                    <TableCaption className="nds-sr-only">Faturas paginadas</TableCaption>
+                    <TableCaption className="nds-sr-only">{tContent("demonstration.labels.caption")}</TableCaption>
                     <TableHeader>
                       <TableRow>
-                        <TableHead scope="col">Fatura</TableHead>
-                        <TableHead scope="col">Status</TableHead>
-                        <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                        <TableHead scope="col">{columnLabel.invoice}</TableHead>
+                        <TableHead scope="col">{columnLabel.status}</TableHead>
+                        <TableHead scope="col" className="nds-text-right">{columnLabel.amount}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -1298,38 +1586,11 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             result:   tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              action:   tContent("testes.functional.item1.action"),
-              result:   tContent("testes.functional.item1.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
-            },
-            {
-              action:   tContent("testes.functional.item2.action"),
-              result:   tContent("testes.functional.item2.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
-            },
-            {
-              action:   tContent("testes.functional.item3.action"),
-              result:   tContent("testes.functional.item3.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.medium"),
-            },
-            {
-              action:   tContent("testes.functional.item4.action"),
-              result:   tContent("testes.functional.item4.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.medium"),
-            },
-            {
-              action:   tContent("testes.functional.item5.action"),
-              result:   tContent("testes.functional.item5.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item5.priority")] ?? "common.high"),
-            },
-            {
-              action:   tContent("testes.functional.item6.action"),
-              result:   tContent("testes.functional.item6.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.medium"),
-            },
-          ],
+          items: testesIndices.functional.map((n) => ({
+            action:   tContent(`testes.functional.item${n}.action`),
+            result:   tContent(`testes.functional.item${n}.result`),
+            priority: tNav(priorityKeyMap[tContent(`testes.functional.item${n}.priority`)] ?? "common.medium"),
+          })),
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
@@ -1338,28 +1599,11 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             level:     "WCAG",
             how:       tNav("common.howToVerify"),
           },
-          items: [
-            {
-              criterion: tContent("testes.accessibility.item1.criterion"),
-              level:     tContent("testes.accessibility.item1.level"),
-              how:       tContent("testes.accessibility.item1.how"),
-            },
-            {
-              criterion: tContent("testes.accessibility.item2.criterion"),
-              level:     tContent("testes.accessibility.item2.level"),
-              how:       tContent("testes.accessibility.item2.how"),
-            },
-            {
-              criterion: tContent("testes.accessibility.item3.criterion"),
-              level:     tContent("testes.accessibility.item3.level"),
-              how:       tContent("testes.accessibility.item3.how"),
-            },
-            {
-              criterion: tContent("testes.accessibility.item4.criterion"),
-              level:     tContent("testes.accessibility.item4.level"),
-              how:       tContent("testes.accessibility.item4.how"),
-            },
-          ],
+          items: testesIndices.accessibility.map((n) => ({
+            criterion: tContent(`testes.accessibility.item${n}.criterion`),
+            level:     tContent(`testes.accessibility.item${n}.level`),
+            how:       tContent(`testes.accessibility.item${n}.how`),
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),
@@ -1367,13 +1611,10 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             story:    tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [
-            { story: tContent("testes.visual.item1.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item1.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item2.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item2.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item3.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.medium") },
-            { story: tContent("testes.visual.item4.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium") },
-            { story: tContent("testes.visual.item5.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item5.priority")] ?? "common.medium") },
-          ],
+          items: testesIndices.visual.map((n) => ({
+            story:    tContent(`testes.visual.item${n}.story`),
+            priority: tNav(priorityKeyMap[tContent(`testes.visual.item${n}.priority`)] ?? "common.medium"),
+          })),
         }}
       />
     </DocsPageLayout>

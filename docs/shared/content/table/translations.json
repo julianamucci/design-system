@@ -37,17 +37,26 @@
         "totalAmount": "R$ 1.250,00",
         "caption": "Lista de faturas recentes",
         "emptyState": "Nenhuma fatura encontrada.",
-        "actionsLabel": "Ações para fatura"
+        "actionsLabel": "Ações para fatura",
+        "filterLabel": "Filtrar faturas",
+        "detailsColumn": "Detalhes",
+        "detailsLabel": "Detalhes da fatura",
+        "detailText": "Emitida em 03/09/2026, com vencimento em 03/10/2026.",
+        "receipt": "Baixar recibo",
+        "receiptLabel": "Baixar recibo da fatura",
+        "selectRow": "Selecionar fatura",
+        "selectAll": "Selecionar todas as faturas",
+        "visibleHeading": "Faturas recentes"
       }
     },
     "anatomy": {
       "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> dentro de um container próprio com <code>overflow-x: auto</code>, criado automaticamente.",
-      "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code> com borda inferior aplicada via <code>[&_tr]:border-b</code>.",
-      "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; remove borda da última linha via <code>[&_tr:last-child]:border-0</code>.",
+      "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code>; a divisa inferior é declarada na folha, por descendência, e não por classe no markup.",
+      "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; a última linha não desenha divisa, também por regra da folha.",
       "item4": "<strong>TableFooter</strong> — elemento <code>&lt;tfoot&gt;</code> com fundo em <code>--muted</code> a 50%; use para totais e sumários.",
       "item5": "<strong>TableRow</strong> — elemento <code>&lt;tr&gt;</code> com hover e estado <code>data-state=\"selected\"</code>.",
       "item6": "<strong>TableHead</strong> — elemento <code>&lt;th&gt;</code> com altura MÍNIMA de 40px, peso médio e <code>scope=\"col\"</code> obrigatório.",
-      "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code> com <code>p-2</code> e <code>align-middle</code>.",
+      "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code>, com recuo interno e alinhamento vertical ao meio vindos da folha.",
       "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> na cor <code>--muted-foreground</code>; pode ficar só para leitor de tela com <code>nds-sr-only</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
@@ -149,8 +158,8 @@
     },
     "doDont": {
       "pair1": {
-        "do": "TableCaption descritivo (pode ficar só para leitor de tela) + scope=\"col\" em todos os cabeçalhos.",
-        "dont": "Tabela sem caption e sem scope — inacessível para leitores de tela."
+        "do": "TableCaption descritivo em toda tabela — pode ficar só para leitor de tela, com a classe nds-sr-only.",
+        "dont": "Tabela sem caption — o leitor de tela anuncia uma grade sem dizer do que ela trata."
       },
       "pair2": {
         "do": "Empty state com mensagem clara quando não há dados.",
@@ -201,6 +210,10 @@
         "withEmptyState": {
           "label": "Estado vazio",
           "description": "Quando não há dados, renderize uma <code>TableRow</code> com <code>TableCell</code> e <code>colspan</code> cobrindo todas as colunas, aplicando <code>nds-table-empty</code> — a regra compartilhada que reserva a altura, centraliza e apaga a cor da mensagem."
+        },
+        "withExpandableRows": {
+          "label": "Com linha expansível",
+          "description": "Cada linha tem um controle que revela uma linha irmã com detalhe, ocupando a largura inteira. O estado vive no controle, não na linha, porque a linha já usa o dela para a seleção — e as duas coisas acontecem juntas."
         }
       }
     },
@@ -244,7 +257,7 @@
       },
       "items": {
         "className": "Classes .nds-* adicionais aplicadas ao elemento HTML correspondente.",
-        "scope": "<code>\"col\"</code> obrigatório no <code>TableHead</code> — associa o cabeçalho à coluna para leitores de tela.",
+        "scope": "Associa o cabeçalho à coluna para leitores de tela. Já nasce em <code>\"col\"</code>, então só é escrito para sobrescrever — em cabeçalho de LINHA, onde o valor é <code>\"row\"</code>.",
         "colSpan": "Número de colunas que a célula deve ocupar. Use no empty state para cobrir todas as colunas.",
         "rowSpan": "Número de linhas que a célula deve ocupar. Use em células que agrupam dados de múltiplas linhas.",
         "dataState": "<code>data-state=\"selected\"</code> no <code>TableRow</code> ativa o estilo de linha selecionada (fundo <code>--muted</code>).",
@@ -305,7 +318,7 @@
     },
     "notes": {
       "tip1": "O componente <code>Table</code> já envolve o elemento <code>&lt;table&gt;</code> em um <code>&lt;div data-slot=\"table-container\"&gt;</code> que rola na horizontal — não é necessário adicionar um wrapper externo.",
-      "tip2": "<code>scope=\"col\"</code> no <code>TableHead</code> não é adicionado automaticamente pelo componente — você deve incluir em cada <code>&lt;th&gt;</code> manualmente.",
+      "tip2": "<code>scope=\"col\"</code> já vem no <code>TableHead</code>: as cinco implementações o emitem por padrão, e você só o escreve para sobrescrever — em cabeçalho de LINHA, por exemplo, onde o valor é <code>row</code>.",
       "tip3": "O empty state é responsabilidade do consumidor — renderize uma <code>TableRow</code> com <code>TableCell</code> e <code>colspan</code> igual ao número de colunas quando o array de dados estiver vazio.",
       "tip4": "<code>TableFooter</code> é para totais e sumários — nunca use uma linha de <code>TableBody</code> para esse fim; o <code>tfoot</code> semântico é lido diferentemente pelos leitores de tela.",
       "tip5": "O container interno do <code>Table</code> já nasce com <code>tabindex=\"0\"</code> — é o que torna a rolagem horizontal alcançável por teclado (WCAG 2.1.1). Não envolva a tabela num segundo wrapper focável: isso só criaria uma parada de tabulação vazia."
@@ -365,6 +378,11 @@
           "action": "Renderizar a tabela em carregamento",
           "result": "Esqueletos no lugar das células de dado, fora da árvore de acessibilidade, dentro de uma região que anuncia o carregamento",
           "priority": "medium"
+        },
+        "item8": {
+          "action": "Alternar o controle de detalhes de uma linha, pelo teclado",
+          "result": "O controle troca aria-expanded, e a linha irmã de detalhe — com colspan da tabela inteira — entra e sai da tela",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -389,6 +407,11 @@
           "criterion": "Sem violações axe-core no estado padrão",
           "level": "AA",
           "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item5": {
+          "criterion": "O controle de detalhes declara aria-expanded e aponta a linha revelada por aria-controls",
+          "level": "A",
+          "how": "Inspecionar o botão e o id da linha irmã no DOM"
         }
       },
       "visual": {
@@ -417,6 +440,10 @@
         "item6": {
           "story": "Carregando — esqueletos preservando a grade",
           "priority": "medium"
+        },
+        "item7": {
+          "story": "Linha expansível — aberta, e aberta sobre linha marcada",
+          "priority": "high"
         }
       }
     }
@@ -459,17 +486,26 @@
         "totalAmount": "$1,250.00",
         "caption": "Recent invoices list",
         "emptyState": "No invoices found.",
-        "actionsLabel": "Actions for invoice"
+        "actionsLabel": "Actions for invoice",
+        "filterLabel": "Filter invoices",
+        "detailsColumn": "Details",
+        "detailsLabel": "Invoice details",
+        "detailText": "Issued on 2026-09-03, due on 2026-10-03.",
+        "receipt": "Download receipt",
+        "receiptLabel": "Download receipt for invoice",
+        "selectRow": "Select invoice",
+        "selectAll": "Select all invoices",
+        "visibleHeading": "Recent invoices"
       }
     },
     "anatomy": {
       "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> inside its own container with <code>overflow-x: auto</code>, created automatically.",
-      "item2": "<strong>TableHeader</strong> — <code>&lt;thead&gt;</code> element with bottom border applied via <code>[&_tr]:border-b</code>.",
-      "item3": "<strong>TableBody</strong> — <code>&lt;tbody&gt;</code> element; removes border from last row via <code>[&_tr:last-child]:border-0</code>.",
+      "item2": "<strong>TableHeader</strong> — the <code>&lt;thead&gt;</code> element; the bottom divider is declared in the stylesheet, by descent, not by a class in the markup.",
+      "item3": "<strong>TableBody</strong> — the <code>&lt;tbody&gt;</code> element; the last row draws no divider, also by a stylesheet rule.",
       "item4": "<strong>TableFooter</strong> — <code>&lt;tfoot&gt;</code> element with a <code>--muted</code> background at 50%; use for totals and summaries.",
       "item5": "<strong>TableRow</strong> — <code>&lt;tr&gt;</code> element with hover and <code>data-state=\"selected\"</code> state.",
       "item6": "<strong>TableHead</strong> — <code>&lt;th&gt;</code> element with a MINIMUM height of 40px, medium weight and mandatory <code>scope=\"col\"</code>.",
-      "item7": "<strong>TableCell</strong> — <code>&lt;td&gt;</code> element with <code>p-2</code> and <code>align-middle</code>.",
+      "item7": "<strong>TableCell</strong> — the <code>&lt;td&gt;</code> element, with inner padding and middle vertical alignment coming from the stylesheet.",
       "item8": "<strong>TableCaption</strong> — <code>&lt;caption&gt;</code> element in <code>--muted-foreground</code>; can be left to screen readers only with <code>nds-sr-only</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
@@ -571,8 +607,8 @@
     },
     "doDont": {
       "pair1": {
-        "do": "Descriptive TableCaption (can be screen-reader only) + scope=\"col\" on all header cells.",
-        "dont": "Table without caption and scope — inaccessible to screen readers."
+        "do": "A descriptive TableCaption on every table — it can stay screen-reader only, with the nds-sr-only class.",
+        "dont": "A table with no caption — the screen reader announces a grid without saying what it is about."
       },
       "pair2": {
         "do": "Empty state with clear message when there is no data.",
@@ -623,6 +659,10 @@
         "withEmptyState": {
           "label": "Empty state",
           "description": "When there is no data, render a <code>TableRow</code> with a <code>TableCell</code> and a <code>colspan</code> covering all columns, applying <code>nds-table-empty</code> — the shared rule that reserves the height, centers the message and mutes its color."
+        },
+        "withExpandableRows": {
+          "label": "With expandable rows",
+          "description": "Each row has a control that reveals a sibling row with detail, spanning the full width. The state lives on the control, not on the row, because the row already uses its own for selection — and the two happen together."
         }
       }
     },
@@ -666,7 +706,7 @@
       },
       "items": {
         "className": "Additional .nds-* classes applied to the corresponding HTML element.",
-        "scope": "<code>\"col\"</code> required on <code>TableHead</code> — associates the header to the column for screen readers.",
+        "scope": "Associates the header with its column for screen readers. It already defaults to <code>\"col\"</code>, so you only write it to override — on a ROW header, where the value is <code>\"row\"</code>.",
         "colSpan": "Number of columns the cell should span. Use in empty state to cover all columns.",
         "rowSpan": "Number of rows the cell should span. Use in cells that group data across multiple rows.",
         "dataState": "<code>data-state=\"selected\"</code> on <code>TableRow</code> activates the selected row style (<code>--muted</code> background).",
@@ -727,7 +767,7 @@
     },
     "notes": {
       "tip1": "The <code>Table</code> component already wraps the <code>&lt;table&gt;</code> element in a <code>&lt;div data-slot=\"table-container\"&gt;</code> that scrolls horizontally — no external wrapper is needed.",
-      "tip2": "<code>scope=\"col\"</code> on <code>TableHead</code> is not added automatically by the component — include it manually on each <code>&lt;th&gt;</code>.",
+      "tip2": "<code>scope=\"col\"</code> already ships with <code>TableHead</code>: all five implementations emit it by default, and you only write it to override — on a ROW header, for instance, where the value is <code>row</code>.",
       "tip3": "The empty state is the consumer's responsibility — render a <code>TableRow</code> with a <code>TableCell</code> and a <code>colspan</code> equal to the number of columns when the data array is empty.",
       "tip4": "<code>TableFooter</code> is for totals and summaries — never use a <code>TableBody</code> row for this; the semantic <code>tfoot</code> is read differently by screen readers.",
       "tip5": "The internal container of <code>Table</code> already ships with <code>tabindex=\"0\"</code> — that is what makes the horizontal scroll reachable by keyboard (WCAG 2.1.1). Do not wrap the table in a second focusable wrapper: that would only create an empty tab stop."
@@ -787,6 +827,11 @@
           "action": "Render the table in a loading state",
           "result": "Skeletons in place of the data cells, out of the accessibility tree, inside a region that announces the loading",
           "priority": "medium"
+        },
+        "item8": {
+          "action": "Toggle a row detail control, from the keyboard",
+          "result": "The control switches aria-expanded, and the sibling detail row — spanning the whole table — comes in and out of view",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -811,6 +856,11 @@
           "criterion": "No axe-core violations in default state",
           "level": "AA",
           "how": "axe-playwright in Storybook test-runner"
+        },
+        "item5": {
+          "criterion": "The detail control declares aria-expanded and points at the revealed row via aria-controls",
+          "level": "A",
+          "how": "Inspect the button and the sibling row id in the DOM"
         }
       },
       "visual": {
@@ -839,6 +889,10 @@
         "item6": {
           "story": "Loading — skeletons preserving the grid",
           "priority": "medium"
+        },
+        "item7": {
+          "story": "Expandable row — open, and open on a selected row",
+          "priority": "high"
         }
       }
     }
@@ -872,26 +926,35 @@
         "creditCard": "Tarjeta de crédito",
         "bankTransfer": "Transferencia bancaria",
         "pix": "Pix",
-        "amount001": "R$ 250,00",
-        "amount002": "R$ 150,00",
-        "amount003": "R$ 350,00",
-        "amount004": "R$ 450,00",
-        "amount005": "R$ 50,00",
+        "amount001": "250,00 €",
+        "amount002": "150,00 €",
+        "amount003": "350,00 €",
+        "amount004": "450,00 €",
+        "amount005": "50,00 €",
         "total": "Total",
-        "totalAmount": "R$ 1.250,00",
+        "totalAmount": "1.250,00 €",
         "caption": "Lista de facturas recientes",
         "emptyState": "No se encontraron facturas.",
-        "actionsLabel": "Acciones para la factura"
+        "actionsLabel": "Acciones para la factura",
+        "filterLabel": "Filtrar facturas",
+        "detailsColumn": "Detalles",
+        "detailsLabel": "Detalles de la factura",
+        "detailText": "Emitida el 03/09/2026, con vencimiento el 03/10/2026.",
+        "receipt": "Descargar recibo",
+        "receiptLabel": "Descargar recibo de la factura",
+        "selectRow": "Seleccionar factura",
+        "selectAll": "Seleccionar todas las facturas",
+        "visibleHeading": "Facturas recientes"
       }
     },
     "anatomy": {
       "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> dentro de un contenedor propio con <code>overflow-x: auto</code>, creado automáticamente.",
-      "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code> con borde inferior aplicado via <code>[&_tr]:border-b</code>.",
-      "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; elimina el borde de la última fila via <code>[&_tr:last-child]:border-0</code>.",
+      "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code>; el divisor inferior se declara en la hoja, por descendencia, y no por clase en el marcado.",
+      "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; la última fila no dibuja divisor, también por regla de la hoja.",
       "item4": "<strong>TableFooter</strong> — elemento <code>&lt;tfoot&gt;</code> con fondo en <code>--muted</code> al 50%; úsalo para totales y sumarios.",
       "item5": "<strong>TableRow</strong> — elemento <code>&lt;tr&gt;</code> con hover y estado <code>data-state=\"selected\"</code>.",
       "item6": "<strong>TableHead</strong> — elemento <code>&lt;th&gt;</code> con altura MÍNIMA de 40px, peso medio y <code>scope=\"col\"</code> obligatorio.",
-      "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code> con <code>p-2</code> y <code>align-middle</code>.",
+      "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code>, con relleno interno y alineación vertical al medio venidos de la hoja.",
       "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> en el color <code>--muted-foreground</code>; puede quedar solo para lector de pantalla con <code>nds-sr-only</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
@@ -993,8 +1056,8 @@
     },
     "doDont": {
       "pair1": {
-        "do": "TableCaption descriptivo (puede quedar solo para lector de pantalla) + scope=\"col\" en todos los encabezados.",
-        "dont": "Tabla sin caption ni scope — inaccesible para lectores de pantalla."
+        "do": "Un TableCaption descriptivo en cada tabla — puede quedar solo para lector de pantalla, con la clase nds-sr-only.",
+        "dont": "Tabla sin caption — el lector de pantalla anuncia una cuadrícula sin decir de qué trata."
       },
       "pair2": {
         "do": "Empty state con mensaje claro cuando no hay datos.",
@@ -1045,6 +1108,10 @@
         "withEmptyState": {
           "label": "Estado vacío",
           "description": "Cuando no hay datos, renderiza una <code>TableRow</code> con <code>TableCell</code> y <code>colspan</code> cubriendo todas las columnas, aplicando <code>nds-table-empty</code> — la regla compartida que reserva la altura, centra el mensaje y apaga su color."
+        },
+        "withExpandableRows": {
+          "label": "Con fila expandible",
+          "description": "Cada fila tiene un control que revela una fila hermana con detalle, ocupando el ancho completo. El estado vive en el control, no en la fila, porque la fila ya usa el suyo para la selección — y las dos cosas ocurren juntas."
         }
       }
     },
@@ -1088,7 +1155,7 @@
       },
       "items": {
         "className": "Clases .nds-* adicionales aplicadas al elemento HTML correspondiente.",
-        "scope": "<code>\"col\"</code> obligatorio en <code>TableHead</code> — asocia el encabezado a la columna para lectores de pantalla.",
+        "scope": "Asocia el encabezado con su columna para lectores de pantalla. Ya nace en <code>\"col\"</code>, así que solo se escribe para sobrescribir — en encabezado de FILA, donde el valor es <code>\"row\"</code>.",
         "colSpan": "Número de columnas que debe ocupar la celda. Usar en el empty state para cubrir todas las columnas.",
         "rowSpan": "Número de filas que debe ocupar la celda. Usar en celdas que agrupan datos de múltiples filas.",
         "dataState": "<code>data-state=\"selected\"</code> en <code>TableRow</code> activa el estilo de fila seleccionada (fondo <code>--muted</code>).",
@@ -1149,7 +1216,7 @@
     },
     "notes": {
       "tip1": "El componente <code>Table</code> ya envuelve el elemento <code>&lt;table&gt;</code> en un <code>&lt;div data-slot=\"table-container\"&gt;</code> que se desplaza en horizontal — no es necesario agregar un wrapper externo.",
-      "tip2": "<code>scope=\"col\"</code> en <code>TableHead</code> no lo agrega el componente automáticamente — debes incluirlo manualmente en cada <code>&lt;th&gt;</code>.",
+      "tip2": "<code>scope=\"col\"</code> ya viene en <code>TableHead</code>: las cinco implementaciones lo emiten por defecto, y solo lo escribes para sobrescribir — en un encabezado de FILA, por ejemplo, donde el valor es <code>row</code>.",
       "tip3": "El empty state es responsabilidad del consumidor — renderiza una <code>TableRow</code> con <code>TableCell</code> y <code>colspan</code> igual al número de columnas cuando el array de datos esté vacío.",
       "tip4": "<code>TableFooter</code> es para totales y sumarios — nunca uses una fila de <code>TableBody</code> para ese fin; el <code>tfoot</code> semántico es leído de forma diferente por los lectores de pantalla.",
       "tip5": "El contenedor interno de <code>Table</code> ya nace con <code>tabindex=\"0\"</code> — es lo que hace que el desplazamiento horizontal sea alcanzable por teclado (WCAG 2.1.1). No envuelvas la tabla en un segundo wrapper enfocable: eso solo crearía una parada de tabulación vacía."
@@ -1209,6 +1276,11 @@
           "action": "Renderizar la tabla en carga",
           "result": "Esqueletos en lugar de las celdas de datos, fuera del árbol de accesibilidad, dentro de una región que anuncia la carga",
           "priority": "medium"
+        },
+        "item8": {
+          "action": "Alternar el control de detalles de una fila, con el teclado",
+          "result": "El control cambia aria-expanded, y la fila hermana de detalle — con colspan de toda la tabla — entra y sale de la pantalla",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1233,6 +1305,11 @@
           "criterion": "Sin violaciones axe-core en estado predeterminado",
           "level": "AA",
           "how": "axe-playwright en test-runner de Storybook"
+        },
+        "item5": {
+          "criterion": "El control de detalles declara aria-expanded y apunta a la fila revelada con aria-controls",
+          "level": "A",
+          "how": "Inspeccionar el botón y el id de la fila hermana en el DOM"
         }
       },
       "visual": {
@@ -1261,6 +1338,10 @@
         "item6": {
           "story": "Cargando — esqueletos preservando la grilla",
           "priority": "medium"
+        },
+        "item7": {
+          "story": "Fila expandible — abierta, y abierta sobre fila marcada",
+          "priority": "high"
         }
       }
     }

@@ -18,13 +18,24 @@ import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
 import { INVOICES, type Invoice } from './table.fixtures';
+import {
+  tableFilterToolbarSource,
+  tableRowSelectionSource,
+  tableSortableHeadersSource,
+} from './table.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
-// As composições que o conteúdo compartilhado documenta e que já têm peça neste
-// stack: toolbar de filtros, cabeçalhos ordenáveis e seleção de linhas. A quarta
-// — tabela com paginação — depende do componente Pagination, que ainda não
-// existe aqui; entra quando ele existir.
+// As três composições que o conteúdo compartilhado documenta e que vivem em
+// story: toolbar de filtros, cabeçalhos ordenáveis e seleção de linhas.
+//
+// A quarta — tabela com paginação — está na DOCS PAGE, e não aqui. O comentário
+// que ocupava este lugar dizia que ela faltava porque o Pagination ainda não
+// existia nesta stack; a premissa venceu (a peça publica oito diretivas, e a
+// própria TableDocs importa sete). O que a mantém fora do arquivo de stories é
+// outra coisa: ali a paginação fica FORA da tabela e o exemplo passa a ser de
+// dois componentes, que é o que uma composição de docs page mostra bem e uma
+// story de Table, não.
 
 const meta: Meta = {
   title: 'Components/Tables/Table/Compositions',
@@ -75,7 +86,11 @@ function valueNumerico(invoice: Invoice): number {
 
 export const FilterToolbar: Story = {
   parameters: {
+    // A busca sem resultado cai no estado vazio com o colspan da tabela inteira,
+    // que é exatamente o que os dois itens descrevem — e a play afirma os dois.
+    covers: ['functional.item2', 'visual.item2'],
     docs: {
+      source: { transform: tableFilterToolbarSource },
       description: {
         story:
           'A busca fica fora da tabela, no mesmo container, e reduz o conjunto exibido. Quando o filtro não acha nada, o empty state entra no lugar das linhas.',
@@ -102,6 +117,11 @@ export const FilterToolbar: Story = {
       },
       template: `
         <div class="nds-stack" data-spacing="sm">
+          <!-- Rótulo VISÍVEL, e não aria-label espelhando o placeholder: aqui o
+               campo abre uma story sozinho, sem ícone de busca e sem a tabela
+               já nomeada acima dele, então o texto de dica é a única pista do
+               que ele faz — e dica some ao digitar. Na docs page, onde o campo
+               fica rente à tabela que ele filtra, vale a outra forma. -->
           <div class="nds-stack" data-spacing="xs">
             <label ndsLabel for="filtro-faturas">Buscar fatura</label>
             <input
@@ -134,11 +154,7 @@ export const FilterToolbar: Story = {
                   </tr>
                 } @empty {
                   <tr ndsTableRow>
-                    <td
-                      ndsTableCell
-                      colspan="4"
-                      class="nds-text-center nds-text-muted-foreground"
-                    >
+                    <td ndsTableCell colspan="4" class="nds-table-empty">
                       Nenhuma fatura encontrada.
                     </td>
                   </tr>
@@ -170,9 +186,16 @@ export const FilterToolbar: Story = {
     await step('Busca sem resultado cai no empty state, não em tabela muda', async () => {
       await userEvent.clear(field);
       await userEvent.type(field, 'boleto');
+      // functional.item2 e visual.item2 — a mensagem atravessa a tabela inteira
+      // e a caixa não encolhe: `.nds-table-empty` traz o piso de 96px junto com
+      // o centro e o tom discreto, e é por isso que ela é a classe, e não três
+      // utilitárias soltas.
       const celula = canvasElement.querySelector<HTMLTableCellElement>('tbody td')!;
       await expect(celula).toHaveAttribute('colspan', '4');
       await expect(celula).toHaveTextContent('Nenhuma fatura encontrada.');
+      await expect(celula).toHaveClass('nds-table-empty');
+      await expect(getComputedStyle(celula).textAlign).toBe('center');
+      await expect(celula.getBoundingClientRect().height).toBeGreaterThan(90);
     });
   },
 };
@@ -181,7 +204,14 @@ export const FilterToolbar: Story = {
 
 export const SortableHeaders: Story = {
   parameters: {
+    // SEM "covers", e de propósito: o contrato compartilhado não tem item sobre
+    // ordenação. Os oito funcionais vão da tabela básica à linha expansível, e
+    // os cinco de acessibilidade falam de scope, caption, nome de ação, axe e
+    // disclosure — nenhum deles fala de "aria-sort". Declarar um item vizinho
+    // para não ficar em branco seria cobertura falsa. O item que falta é dívida
+    // de CONTEÚDO, e vai no relato.
     docs: {
+      source: { transform: tableSortableHeadersSource },
       description: {
         story:
           'O cabeçalho ordenável é um botão dentro do `th`, e o estado da ordenação vive em `aria-sort`. Sem ele a ordem existe só para quem enxerga a tabela.',
@@ -267,7 +297,12 @@ export const SortableHeaders: Story = {
 
 export const RowSelection: Story = {
   parameters: {
+    // Só o funcional: a play afirma que a marcação produz o estado "selected"
+    // na linha, e não olha a cor — quem prova o item visual é a story de
+    // estados, que compara o fundo.
+    covers: ['functional.item4'],
     docs: {
+      source: { transform: tableRowSelectionSource },
       description: {
         story:
           'Checkbox por linha mais um mestre no cabeçalho. A linha marcada recebe `data-state="selected"`; o mestre fica misto enquanto a seleção é parcial.',

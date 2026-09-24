@@ -74,16 +74,49 @@ idiomas, sem nenhuma sobrando de um lado** (conferido em 2026-09-16), com
 | C15 | Carregando é esqueleto `aria-hidden` por célula dentro de uma região com `role="status"`, `aria-busy` e nome | `testes.functional.item7`, `testes.visual.item6`, `states.loading` · `Loading` das cinco |
 | C16 | A última linha do corpo não desenha divisa, e a última do rodapé também não | — · nenhuma story mede |
 | C17 | Célula com controle de marcação perde o padding à direita (`:has([role="checkbox"])`) | — · nenhuma story de `table` produz; o produtor vivo é o DataTable e a composição de seleção do angular |
-| C18 | Linha com `aria-expanded="true"` pinta como se estivesse sob o ponteiro | — · **nenhum produtor em stack nenhuma** |
+| C18 | Linha com `aria-expanded="true"` pinta como se estivesse sob o ponteiro, **exceto quando está marcada** — ali a seleção vence | `testes.visual.item7` · a story `WithExpandableRows` das CINCO, desde 2026-09-24 |
 | C19 | O componente não dispara evento nenhum | `analytics.description` · — |
 
-**Três contratos da folha não têm quem os prove** (C16, C17, C18).
+**Duas perguntas diferentes, e o PRD as confundia até 2026-09-24.** Esta linha
+dizia "três contratos não têm quem os PROVE (C16, C17, C18)", e a I8 da §7 dizia
+"três contratos não têm PRODUTOR: realce sob o ponteiro, célula com marcação e
+`aria-expanded`". São quatro itens em dois eixos, listados como se fossem a
+mesma lista de três.
+
+Medido:
+
+| item | tem PRODUTOR? | tem quem PROVE? |
+|---|---|---|
+| C16 · última linha sem divisa | sim, toda tabela tem última linha | **não** — nenhuma story mede a divisa |
+| C17 · célula com marcação | **sim**, os cinco DataTable compõem Checkbox em célula | não por story de `table` |
+| C18 · linha com `aria-expanded` | **sim, desde 2026-09-24** — ver abaixo | **sim**, a story nova das cinco |
+| realce sob o ponteiro | sim, a folha é viva | **não** — nenhuma story mede a cor |
+
+Ou seja: o que falta hoje é PROVA para C16 e para o realce, e a I8 estava
+desatualizada quanto ao C17 desde que o DataTable passou a compor Checkbox.
 
 C4 e C5 — a fiação do nome da região — **deixaram de estar sem quem os
-exercite em 2026-09-22**: as cinco docs pages do DataTable passam `regionLabel`,
-lendo a legenda da tabela, e por isso a camada que rola ganhou papel e nome.
-Continua verdade que **nenhum exemplo do próprio Table** o passa: quem exercita
-é o vizinho que reusa esta folha.
+exercite em 2026-09-22**: os cinco PRIMITIVOS do DataTable passam
+`regionLabel`, lendo a legenda da tabela, e por isso a camada que rola ganhou
+papel e nome. **Desde 2026-09-24 o próprio Table também o exercita**: a story
+`HorizontalScroll` das cinco passa a legenda que já vivia ali e afirma
+`role="group"` mais o nome acessível. Deixou de ser só o vizinho que reusa a
+folha.
+
+> **Correção de 2026-09-24.** A frase acima dizia "as cinco DOCS PAGES do
+> DataTable passam `regionLabel`", e isso estava errado: nenhuma docs page o
+> passa — elas não precisam, porque o primitivo o faz. Escrevi a versão errada
+> a partir de relato de agente, sem medir.
+>
+> E a medição seguinte, ao consertar, errou pelo outro lado: relatou "3 de 5,
+> e vue e vanilla não passam". As cinco passam. **Duas formas escapam a um
+> `grep` pelo nome da prop**: o vue escreve `:region-label="caption"`, em
+> kebab-case de template, e o vanilla passa por ARGUMENTO POSICIONAL,
+> `createTableWrapper(undefined, caption)`. Quem procura a capacidade pelo nome
+> dela não acha nenhuma das duas.
+>
+> Fica como aviso de método para a próxima medição deste contrato: aqui,
+> contar por `grep` de identificador subestima em dois.
 
 ## 3. Decisões fixadas
 
@@ -241,6 +274,33 @@ globais (`--foreground`, `--muted-foreground`, `--muted`, `--border`,
 **Consequência**: personalizar é redefinir o token no tema, e a tabela acompanha.
 É o que o bloco de customização da docs page do angular diz por escrito, e o que
 as outras quatro mostram ao redefinir `--muted` e `--muted-foreground`.
+
+### D13 · O `scope` virou default da peça, e isso APOSENTOU um par de Do & Don’t
+
+**Estado**: a peça de cabeçalho nasce com `scope="col"` nas cinco — no react,
+`function TableHead({ className, scope = "col", ... })`; no vanilla, o terceiro
+parâmetro de `createTableHead` tem default `'col'`. Quem tem cabeçalho de LINHA
+passa `'row'`; ninguém mais precisa escrever o atributo.
+
+**O efeito colateral, medido em 2026-09-24 e encontrado por quem construía, não
+por portão**: o `doDont.pair1` existia para contrastar "com `scope`" contra "sem
+`scope`", e a prévia do `dont` passou a renderizar `scope="col"` de qualquer
+jeito. **O par continuava com as duas metades na tela e já não ilustrava nada** —
+a legenda prometia um defeito que o componente tinha passado a impedir.
+
+Não há como reintroduzir o contraste sem ensinar o leitor a desarmar o default
+seguro, e ensinar isso é pior que perder o par. Então o par foi REESCRITO: o
+`pair1` passa a ser só sobre a LEGENDA, que continua sendo responsabilidade de
+quem usa. O `do` tem `TableCaption`, o `dont` não tem; no resto as duas prévias
+são idênticas.
+
+**A forma do defeito vale mais que o caso**: quando uma peça absorve uma
+responsabilidade que era do consumidor, todo texto que ensinava a cumpri-la fica
+obsoleto ao mesmo tempo — e nada reprova, porque prosa não compila. Nesta
+passagem o mesmo movimento já tinha exigido reescrever `notes.tip2`, que dizia
+"`scope="col"` não é adicionado automaticamente — você deve incluir em cada `th`
+manualmente". Os dois textos vinham do mesmo dia e morreram no mesmo dia; o
+segundo só foi achado porque o primeiro levantou a pergunta.
 
 ## 4. Anatomia
 
@@ -452,43 +512,66 @@ do código hoje.
    a fixture do react cita por escrito como o defeito que a derivação veio
    resolver (D9). Fecham: a demonstração de vue, svelte, vanilla e angular, e os
    previews de react e vue.
-7. **`regionLabel` existe nos cinco e é exercido em zero**: nenhuma story, docs
-   page ou snippet passa a prop, então o contêiner que rola nunca recebe papel nem
-   nome em exemplo publicado (C4, C5). O portão prova a FIAÇÃO das cinco, não o
-   uso — e o axe não cobra nada quando falta o nome.
-8. **Três contratos da folha não têm produtor nenhum**: o realce sob o ponteiro
-   (sem story que o meça), a célula com controle de marcação e a linha com
-   `aria-expanded="true"` — esta última sem produtor em stack alguma, em nenhum
-   arquivo de `table`.
+7. **RESOLVIDA em 2026-09-24.** Dizia que `regionLabel` existia nos cinco e era
+   exercido em zero. A story `HorizontalScroll` das cinco passa a legenda e afirma
+   `role="group"` mais o nome acessível (C4, C5). Continua valendo a leitura de
+   método que ela carregava: o portão prova a FIAÇÃO, não o USO, e o axe não
+   cobra nada quando falta o nome — foi por isso que a ausência durou tanto.
+8. **RESOLVIDA em 2026-09-24, e ela misturava dois eixos.** O texto dizia que
+   três contratos não tinham "produtor nenhum" e listava o realce sob o
+   ponteiro, a célula com marcação e a linha com `aria-expanded`. Medido: a
+   célula com marcação TEM produtor — os cinco DataTable compõem Checkbox em
+   célula, e a afirmação envelheceu quando aquilo foi construído; o realce tem
+   produtor (a folha é viva) e o que falta é quem o PROVE; e o
+   `aria-expanded` era o único sem produtor de verdade.
+
+   **Esse último deixou de estar sem produtor**: por decisão da dona, a linha
+   expansível virou recurso do Table, e as cinco stacks ganharam a story
+   `WithExpandableRows`. Ver a pendência fechada abaixo. O que continua sem
+   PROVA é o C16 e o realce sob o ponteiro — a tabela da §2 separa os dois
+   eixos agora.
 9. **O angular é a única stack com stories de composição** (V3), e o comentário do
    arquivo afirma que a quarta composição ficou de fora porque "o componente
    Pagination ainda não existe aqui" — o `pagination.ts` daquela stack publica
    oito diretivas, e a própria `TableDocs.ts` dela importa sete delas. Premissa
    vencida sobrevivendo em comentário. 1 de 5.
-10. **A demonstração não tem dois conjuntos iguais de rótulos** (V9), e a
-    consequência visível é do react: "Pago", "Cartão de crédito" e os valores saem
-    em português nos três idiomas, porque a página crava os dados em vez de ler as
-    26 chaves publicadas. Vue lê todas as 26.
-11. **A lista de testes é truncada em quatro das cinco** (V10): o `functional.item7`
-    (carregando) e o `visual.item6` (esqueletos preservando a grade) existem no
-    conteúdo, são medidos pela story `Loading` das cinco, e **não existem para
-    quem lê** a página em react, vue, svelte e vanilla. Só o angular deriva do
-    dicionário.
-12. **O painel Code do angular publica o template da story em 11 das 12** (V4) —
-    incluindo `@for`, binding de renderer e o andaime das fixtures —, e é a única
-    parte da página feita para ser copiada. React e angular não têm
-    `table.source.test.ts`.
+10. **RESOLVIDA em 2026-09-24.** Eram cinco demonstrações diferentes sob o mesmo
+    título — react lia 7 das 26 chaves e cravava "Pago" e "Cartão de crédito" em
+    português nos três idiomas; vue lia as 26. Hoje as cinco leem o mesmo conjunto.
+    Gate: `demonstration_labels_divergent`.
+11. **RESOLVIDA em 2026-09-24, e o conserto CEGOU um portão — vale mais que o
+    item.** As cinco páginas passaram a derivar a lista de testes do dicionário,
+    em vez de escrevê-la à mão. Só que `lista_mais_curta_que_o_conteudo` abre com
+    `if (!renderizado) continue`: sem lista escrita para ler, ele não tem o que
+    comparar e **passa calado**. O mesmo movimento aconteceu em `table`,
+    `data-table` e `pagination`, e atrás dessa cegueira o react vinha renderizando
+    três listas VAZIAS sem nada reprovar.
+
+    Portão que fica cego pelo próprio conserto é a forma mais cara desta casa:
+    ele continua verde, e o verde passa a significar "não olhei".
+12. **RESOLVIDA em 2026-09-24.** O painel Code do angular publicava o template da
+    story em 11 das 12 — `@for`, binding de renderer e o andaime das fixtures —,
+    que é justamente a parte da página feita para ser copiada. As 12 ganharam
+    `transform`, e as CINCO stacks passaram a ter `table.source.test.ts` (faltava
+    em react e angular). Gate: `story_file_sem_transform` e `source_sem_teste`.
 13. **As tabelas de props descrevem cinco componentes diferentes** (V13), e quatro
     delas afirmam que `scope` é obrigatório (V14) contra o default que as cinco
     peças têm. O angular é o único que documenta o wrapper explícito — e ele
     precisa documentar, porque naquela stack quem o escreve é quem usa (D10).
-14. **A grafia do rótulo de ação diverge**: "Ações para fatura #INV-001" em react,
-    vue, svelte e vanilla; "Editar fatura #INV-001" no angular, que também troca o
-    conteúdo do botão por ícone de lápis. 4 de 5.
-15. **O método de pagamento das fixturas não é nenhuma das chaves publicadas**:
-    react, vue, svelte e vanilla usam "Boleto bancário", e o conteúdo publica
-    `bankTransfer` = "Transferência bancária" — que é o que o angular usa. 4 de 5
-    contra a chave.
+14. **RESOLVIDA em 2026-09-24, e ela era maior do que este texto dizia.** O item
+    registrava só a GRAFIA ("Ações para fatura" × "Editar fatura"). Medido ao
+    consertar: o nome acessível já tinha convergido para `actionsLabel` nas cinco,
+    e o que continuava divergindo era o BOTÃO — cinco formas para a mesma peça:
+    ícone `MoreHorizontal` (react), a palavra "Ações" (vue), `…` (svelte), `...`
+    (vanilla) e um ícone de LÁPIS (angular). O lápis era o pior: prometia UMA ação
+    onde o exemplo documenta um menu, e contradizia o `aria-label` ao lado dele.
+
+    Hoje as cinco renderizam `ghost`/`sm` com `…` (U+2026) visível e o cabeçalho
+    da coluna de ações VISÍVEL. Nenhum portão via nada disso: forma de prévia não
+    é texto, não é classe e não é contrato.
+15. **RESOLVIDA em 2026-09-24.** Quatro stacks usavam "Boleto bancário" contra a
+    chave publicada `bankTransfer` = "Transferência bancária". As cinco leem a
+    chave.
 16. **A seção de acessibilidade do vue não publica os cinco itens de ARIA** (V11),
     e o título da lista de teclado sai de três lugares diferentes nas cinco (V12).
 17. **Só o vue publica a frase que diz que a tabela é passiva** (V16) — as outras
@@ -497,10 +580,41 @@ do código hoje.
     de API de framework, registrada e não alinhada. Nas outras stacks os dois são
     atributos nativos escritos no markup.
 19. **A composição "cabeçalhos ordenáveis" é escrita de três formas**: `aria-sort`
-    à mão na docs page (react, vue, svelte, vanilla), input `sort` na diretiva
-    (angular), e no vanilla o botão do cabeçalho recebe `style.marginLeft` e
-    `style.height` inline — dois dos quatro valores de design inline daquela
-    página.
+    à mão na docs page (react, vue, svelte, vanilla) e input `sort` na diretiva
+    (angular) — divergência de API de framework, registrada e não alinhada. O
+    `style.marginLeft` e o `style.height` inline do botão do vanilla **saíram em
+    2026-09-24**; a página não tem mais valor de design inline.
+
+    **Pendência de contrato que sobrou daqui**: `aria-sort` é o assunto de C7 e
+    de D7, a composição existe nas cinco, e não há item de `testes.*` que o
+    descreva — então a `SortableHeaders` não tem `covers`. Publicar o item sem
+    antes ter quem o prove foi tentado nesta passagem e REVERTIDO no mesmo dia:
+    o `contract_uncovered` reprovou em quatro stacks, porque só o angular tem
+    story de composição (I9). O item nasce junto com as quatro stories, não antes.
+
+### Terceira onda, medida em 2026-09-24 e NÃO executada
+
+A segunda onda fechou a forma das prévias de Variantes e de Do & Don’t. Ao
+reconciliar as cinco no fim dela, sobrou isto — tudo medido, nada corrigido, e
+nenhum portão alcança nenhum dos quatro:
+
+| # | o quê | medição |
+|---|---|---|
+| 1 | conjunto de COLUNAS e número de LINHAS de cada prévia | cinco formas: o vue convergiu para 4 colunas × 3 linhas, o react ficou em 5 linhas, o svelte tem 3 colunas × 2 linhas na `basic` e pula `method` na `withInlineActions` |
+| 2 | `nds-text-right` na coluna numérica | **o vanilla não a usa em prévia nenhuma** (0 ocorrências, contra 12 a 50 nas outras quatro) — e é a REFERÊNCIA contradizendo o C11, que ela própria publica |
+| 3 | legenda visível × `nds-sr-only` | sem critério: o angular deixou os dois pares de Do & Don’t com legenda visível, o react manteve `nds-sr-only` na Demonstração e na `withEmptyState` |
+| 4 | as quatro prévias de COMPOSIÇÕES | cravam texto de tela em pt-BR nas cinco, e quatro legendas (`Lista de faturas filtráveis`, `Faturas ordenáveis`, `Faturas com seleção`, `Faturas paginadas`) **não têm chave publicada** — trocar muda o texto renderizado, então é decisão de conteúdo |
+
+O item 2 é o mais instrutivo e é o que inverte a regra de referência: "vanilla
+é a fonte de verdade" vale para markup, classe e comportamento do COMPONENTE.
+Aqui o que diverge é o EXEMPLO, e no exemplo a referência estava errada contra
+o próprio contrato publicado. Referência não é infalibilidade; é onde procurar
+primeiro.
+
+Fechou junto com a segunda onda, por ser erro de fato e não de forma: a prévia
+`withFooter` do vanilla e do angular mostrava TRÊS linhas sob um total que é a
+soma das CINCO. react, vue e svelte já mostravam as cinco. O total agora fecha
+com o que está na tela nas cinco.
 
 ## 8. Acessibilidade
 
@@ -677,25 +791,34 @@ Medido em 2026-09-16, nos três idiomas:
 > fechamento é o CONTEÚDO que saiu, não o contador — o título renomeado sozinho
 > escaparia do mesmo jeito com o catálogo inteiro dentro.
 
-> **PENDÊNCIA · 2026-09-16, ESTREITADA em 2026-09-22** — a prop `regionLabel`
-> existia nas cinco stacks e não era passada em exemplo nenhum: o contêiner que
-> rola nunca ganhava papel nem nome (I7).
+> **FECHADA · 2026-09-24 — o próprio Table passou a exercitar `regionLabel`.**
+> A story `HorizontalScroll` das CINCO passa a legenda que já existia ali e
+> afirma `role="group"` mais o nome acessível. C4 e C5 saíram de "nenhum exemplo
+> exercita" para "exercitado nas cinco".
 >
-> **A pergunta que faltava — "com que texto?" — foi respondida pela passagem do
-> DataTable**, e a resposta é a que o PRD já supunha: o nome é do CONTEÚDO, não
-> do componente. As cinco docs pages do DataTable passam `regionLabel` lendo a
-> LEGENDA da tabela, que é o nome dela para o leitor de tela (D4 daquele PRD), e
-> `docs/shared/guidelines/20-tabelas.md` fixa que nome e papel da região andam
-> juntos.
->
-> **O que resta é do Table**: nenhum exemplo do próprio componente passa a prop.
-> **Fecha quando**: as cinco stories de rolagem horizontal do Table passarem
-> `regionLabel` e afirmarem `role="group"` mais o nome acessível — com o texto
-> vindo da legenda, como o DataTable já faz.
+> A pendência nasceu em 2026-09-16 e foi estreitada em 2026-09-22, quando o
+> DataTable ganhou a fiação. **A frase daquela estreitada estava errada** e foi
+> corrigida em 2026-09-24 — ver a nota na §2: não eram as docs pages que
+> passavam a prop, era o primitivo.
 
-> **PENDÊNCIA · 2026-09-16** — três regras da folha não têm produtor (I8), e uma
-> delas, `tr:has([aria-expanded="true"])`, não tem produtor em stack nenhuma nem no
-> DataTable. Falta decidir se ela descreve um recurso que o Table deve ter (linha
-> expansível) ou se é resíduo a remover.
-> **Fecha quando**: existir story que produza a linha com disclosure aberto nas
-> cinco, ou a regra sair de `table.css`.
+> **FECHADA · 2026-09-24 — a regra descrevia recurso, e o recurso nasceu.**
+> A pergunta em aberto era se `tr:has([aria-expanded="true"])` documentava algo
+> que o Table deve ter ou se era resíduo a remover. **Decisão da dona: fica, e a
+> linha expansível vira recurso do Table.**
+>
+> O que entrou com ela:
+>
+> - a story `WithExpandableRows` nas CINCO, com `aria-expanded` no BOTÃO e nunca
+>   na linha — a linha já usa `data-state` para a seleção, e os dois estados
+>   coexistem; quem faz a linha reagir ao controle é o `:has()` da folha;
+> - a prévia de Variantes nas cinco docs pages, de `variants.items.withExpandableRows`;
+> - três itens de contrato (`functional.item8`, `visual.item7`,
+>   `accessibility.item5`) e o `covers` que os declara;
+> - **um conserto de cascata que só apareceu ao construir**: os três seletores de
+>   fundo de linha em `table.css` têm a MESMA especificidade (0,2,2), então quem
+>   vence é a ordem do arquivo — e a regra do disclosure, por ser a última,
+>   rebaixava a linha MARCADA ao tom do realce. O `:not([data-state="selected"])`
+>   resolve sem reordenar, e o `visual.item7` é o que prova.
+>
+> Das outras duas regras da I8, nenhuma era o que a pendência dizia — ver a
+> tabela de dois eixos na §2.

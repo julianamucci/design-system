@@ -200,33 +200,114 @@ export function tableWithActionsSource(): string {
 }
 
 /**
- * Muitas colunas: nada a configurar. O contêiner do próprio componente rola em X
- * e já aceita foco, então a tabela larga não empurra a página para o lado e a
- * rolagem também existe para quem navega sem mouse (WCAG 2.1.1).
+ * Muitas colunas: o contêiner do próprio componente rola em X e já aceita foco,
+ * então a tabela larga não empurra a página para o lado e a rolagem também
+ * existe para quem navega sem mouse (WCAG 2.1.1).
+ *
+ * A única prop escrita é `regionLabel`, e ela é a outra metade da regra: foco
+ * sem nome faz uma parada que o leitor de tela não sabe anunciar. O nome é do
+ * CONTEÚDO, então o design system não tem como cravá-lo — sem ele o wrapper
+ * fica sem papel de propósito, e o snippet que ensina a rolagem tem de ensinar
+ * o nome junto.
  */
 export function tableScrollHorizontalSource(): string {
   const header = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
-    <TableHead v-for="mes in meses" :key="mes">{{ mes }}</TableHead>
+    <TableHead v-for="month in months" :key="month">{{ month }}</TableHead>
   </TableRow>
 </TableHeader>`;
   const body = `<TableBody>
   <TableRow v-for="fatura in faturas" :key="fatura.id">
     <TableCell class="nds-font-medium">{{ fatura.id }}</TableCell>
-    <TableCell v-for="mes in meses" :key="mes" class="nds-text-right">
+    <TableCell v-for="month in months" :key="month" class="nds-text-right">
       {{ fatura.valor }}
     </TableCell>
   </TableRow>
 </TableBody>`;
-  const meses = `const meses = [2025, 2026].flatMap((ano) =>
+  const months = `const months = [2025, 2026].flatMap((year) =>
   ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
-    (mes) => mes + '/' + ano,
+    (month) => month + '/' + year,
   ),
 )`;
+  const markup = `<Table regionLabel="Faturas por mês de competência">
+${indentar(caption('Faturas por mês de competência'))}
+${indentar(header)}
+${indentar(body)}
+</Table>`;
+  return snippet(`${INVOICES}\n\n${months}`, markup);
+}
+
+/**
+ * Linha expansível: dois `<tr>` irmãos por registro — o de dados e o de detalhe
+ * que ele revela.
+ *
+ * O `aria-expanded` mora no BOTÃO, e nunca na `<tr>`: o `data-state` da linha já
+ * é da SELEÇÃO, e uma linha pode estar marcada e aberta ao mesmo tempo. Quem faz
+ * a linha reagir ao controle é a folha compartilhada, por
+ * `:has([aria-expanded="true"])`.
+ *
+ * A linha revelada fica SEMPRE no DOM e some por `hidden`: o alvo do
+ * `aria-controls` nunca deixa de existir, e `hidden` tira da tela, da árvore de
+ * acessibilidade e da tabulação de uma vez. A ordem de foco sai do DOM, sem
+ * `tabindex` nenhum.
+ *
+ * O nome acessível é do REGISTRO e não muda ao abrir ou fechar — quem anuncia o
+ * estado é o atributo.
+ */
+export function tableWithExpandableRowsSource(): string {
+  const state = `const faturas = [
+  { id: '#INV-001', status: 'Pago', metodo: 'Cartão de crédito', valor: 'R$ 250,00' },
+  { id: '#INV-002', status: 'Pendente', metodo: 'Boleto bancário', valor: 'R$ 150,00' },
+  { id: '#INV-003', status: 'Cancelado', metodo: 'Pix', valor: 'R$ 350,00' },
+]
+
+const colunas = ['Fatura', 'Status', 'Método', 'Valor']
+const abertas = ref<Record<string, boolean>>({})
+
+// Sem o '#': duas tabelas na mesma tela não podem repetir id, e '#' dentro dele
+// quebraria qualquer querySelector.
+const idDoDetalhe = (id: string) => \`fatura-detalhe-\${id.replace('#', '')}\`
+const alternar = (id: string) => {
+  abertas.value = { ...abertas.value, [id]: !abertas.value[id] }
+}`;
+  const header = `<TableHeader>
+  <TableRow>
+    <TableHead><span class="nds-sr-only">Detalhes</span></TableHead>
+    <TableHead v-for="coluna in colunas" :key="coluna">{{ coluna }}</TableHead>
+  </TableRow>
+</TableHeader>`;
+  const body = `<TableBody>
+  <template v-for="fatura in faturas" :key="fatura.id">
+    <TableRow>
+      <TableCell>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          :aria-expanded="abertas[fatura.id] ? 'true' : 'false'"
+          :aria-controls="idDoDetalhe(fatura.id)"
+          :aria-label="'Detalhes da fatura ' + fatura.id"
+          @click="alternar(fatura.id)"
+        >
+          <ChevronDown class="nds-chevron" aria-hidden="true" />
+        </Button>
+      </TableCell>
+      <TableCell class="nds-font-medium">{{ fatura.id }}</TableCell>
+      <TableCell>{{ fatura.status }}</TableCell>
+      <TableCell>{{ fatura.metodo }}</TableCell>
+      <TableCell class="nds-text-right">{{ fatura.valor }}</TableCell>
+    </TableRow>
+    <TableRow :id="idDoDetalhe(fatura.id)" :hidden="!abertas[fatura.id]">
+      <TableCell :colspan="colunas.length + 1">
+        Emitida por {{ fatura.metodo }}, no valor de {{ fatura.valor }}.
+      </TableCell>
+    </TableRow>
+  </template>
+</TableBody>`;
   return snippet(
-    `${INVOICES}\n\n${meses}`,
-    table(caption('Faturas por mês de competência'), header, body),
+    state,
+    table(caption('Faturas recentes com detalhes'), header, body),
+    `import { ref } from 'vue'\nimport { Button } from '@/components/ui/button'\nimport { ChevronDown } from 'lucide-vue-next'`,
   );
 }
 

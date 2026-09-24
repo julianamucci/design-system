@@ -139,7 +139,26 @@
   padding-inline-end: 0;
 }
 
-/* Linha com disclosure aberto */
-.nds-table tbody tr:has([aria-expanded="true"]) {
+/* Linha com disclosure aberto.
+ *
+ * O `:not([data-state="selected"])` é o que impede esta regra de APAGAR a cor
+ * de seleção, e ele é explícito de propósito.
+ *
+ * Os três seletores de fundo de linha — `:hover`, `[data-state="selected"]` e
+ * este — são todos (0,2,2): `:has()` assume a especificidade do argumento mais
+ * específico, e `[aria-expanded="true"]` conta como classe. Com empate triplo,
+ * quem decide é a ORDEM no arquivo, e esta regra é a última. Linha selecionada
+ * E expandida cairia no tom mais claro (`--muted` a 50%) em vez do tom cheio da
+ * seleção.
+ *
+ * Era defeito LATENTE até 2026-09-24: a regra não tinha produtor em stack
+ * nenhuma, nem no DataTable, então nunca chegou a competir. A decisão da dona de
+ * tornar a linha expansível um recurso do Table é o que a acorda — e por isso o
+ * conserto entra ANTES do produtor, não depois.
+ *
+ * Resolver por ordem funcionaria e seria frágil: a próxima pessoa que mover um
+ * bloco reintroduz o defeito sem nada ficar vermelho. O `:not()` declara a
+ * precedência em vez de depender de onde a regra mora. */
+.nds-table tbody tr:has([aria-expanded="true"]):not([data-state="selected"]) {
   background-color: hsl(var(--muted) / 0.5);
 }

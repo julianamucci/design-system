@@ -200,14 +200,23 @@ ${renderCaption('Lista de faturas recentes', true)}
   );
 }
 
-/** Variante de rolagem horizontal: muitas colunas, a rolagem fica na tabela. */
+/**
+ * Variante de rolagem horizontal: muitas colunas, a rolagem fica no contêiner
+ * que o próprio `Table` monta.
+ *
+ * A única prop escrita é `regionLabel`, e ela é a outra metade da regra: foco
+ * sem nome faz uma parada que o leitor de tela não sabe anunciar. O nome é do
+ * CONTEÚDO, então o design system não tem como cravá-lo — sem ele o wrapper
+ * fica sem papel de propósito, e o snippet que ensina a rolagem tem de ensinar
+ * o nome junto.
+ */
 export function tableScrollHorizontalSource(): string {
   return svelteSnippet(
     `${imports(PARTS_BASE)}
 
-const meses = ["2025", "2026"].flatMap((ano) =>
+const months = ["2025", "2026"].flatMap((year) =>
   ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map(
-    (mes) => \`\${month}/\${year}\`,
+    (month) => \`\${month}/\${year}\`,
   ),
 );
 
@@ -216,13 +225,13 @@ const faturas = [
   { id: "#INV-002", valor: "R$ 150,00" },
   { id: "#INV-003", valor: "R$ 350,00" },
 ];`,
-    `<Table>
+    `<Table regionLabel="Faturas por mês de competência">
   <TableCaption class="nds-sr-only">Faturas por mês de competência</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead>Fatura</TableHead>
-      {#each meses as mes (mes)}
-        <TableHead>{mes}</TableHead>
+      {#each months as month (month)}
+        <TableHead>{month}</TableHead>
       {/each}
     </TableRow>
   </TableHeader>
@@ -230,9 +239,90 @@ const faturas = [
     {#each faturas as fatura (fatura.id)}
       <TableRow>
         <TableCell class="nds-font-medium">{fatura.id}</TableCell>
-        {#each meses as mes (mes)}
+        {#each months as month (month)}
           <TableCell class="nds-text-right">{fatura.valor}</TableCell>
         {/each}
+      </TableRow>
+    {/each}
+  </TableBody>
+</Table>`,
+  );
+}
+
+/**
+ * Linha expansível: dois `<tr>` irmãos por registro — o de dados e o de detalhe
+ * que ele revela.
+ *
+ * O `aria-expanded` mora no BOTÃO, e nunca na `<tr>`: o `data-state` da linha já
+ * é da SELEÇÃO, e uma linha pode estar marcada e aberta ao mesmo tempo. Quem faz
+ * a linha reagir ao controle é a folha compartilhada, por
+ * `:has([aria-expanded="true"])`.
+ *
+ * A linha revelada fica SEMPRE no DOM e some por `hidden`: o alvo do
+ * `aria-controls` nunca deixa de existir, e `hidden` tira da tela, da árvore de
+ * acessibilidade e da tabulação de uma vez. A ordem de foco sai do DOM, sem
+ * `tabindex` nenhum.
+ *
+ * O nome acessível é do REGISTRO e não muda ao abrir ou fechar — quem anuncia o
+ * estado é o atributo.
+ */
+export function tableWithExpandableRowsSource(): string {
+  return svelteSnippet(
+    `${imports(PARTS_BASE)}
+import ChevronDown from "@lucide/svelte/icons/chevron-down";
+import { Button } from "@/components/ui/button";
+
+const colunas = ["Fatura", "Status", "Método", "Valor"];
+
+const faturas = [
+  { id: "#INV-001", status: "Pago",      metodo: "Cartão de crédito", valor: "R$ 250,00" },
+  { id: "#INV-002", status: "Pendente",  metodo: "Boleto bancário",   valor: "R$ 150,00" },
+  { id: "#INV-003", status: "Cancelado", metodo: "Pix",               valor: "R$ 350,00" },
+];
+
+let abertas = $state<Record<string, boolean>>({});
+
+// Sem o "#": duas tabelas na mesma tela não podem repetir id, e "#" dentro dele
+// quebraria qualquer querySelector.
+const idDoDetalhe = (id: string) => \`fatura-detalhe-\${id.replace("#", "")}\`;
+
+function alternar(id: string) {
+  abertas = { ...abertas, [id]: !abertas[id] };
+}`,
+    `<Table>
+  <TableCaption class="nds-sr-only">Faturas recentes com detalhes</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead><span class="nds-sr-only">Detalhes</span></TableHead>
+      {#each colunas as coluna (coluna)}
+        <TableHead>{coluna}</TableHead>
+      {/each}
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {#each faturas as fatura (fatura.id)}
+      <TableRow>
+        <TableCell>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-expanded={abertas[fatura.id] ? "true" : "false"}
+            aria-controls={idDoDetalhe(fatura.id)}
+            aria-label={\`Detalhes da fatura \${fatura.id}\`}
+            onclick={() => alternar(fatura.id)}
+          >
+            <ChevronDown class="nds-chevron" aria-hidden="true" />
+          </Button>
+        </TableCell>
+        <TableCell class="nds-font-medium">{fatura.id}</TableCell>
+        <TableCell>{fatura.status}</TableCell>
+        <TableCell>{fatura.metodo}</TableCell>
+        <TableCell class="nds-text-right">{fatura.valor}</TableCell>
+      </TableRow>
+      <TableRow id={idDoDetalhe(fatura.id)} hidden={!abertas[fatura.id]}>
+        <TableCell colspan={colunas.length + 1}>
+          Emitida por {fatura.metodo}, no valor de {fatura.valor}.
+        </TableCell>
       </TableRow>
     {/each}
   </TableBody>

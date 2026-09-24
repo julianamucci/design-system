@@ -39,7 +39,6 @@ import { NdsBadge, type BadgeVariant } from '@/components/ui/badge';
 import { NdsButton, NdsButtonIcon } from '@/components/ui/button';
 import { NdsCheckbox } from '@/components/ui/checkbox';
 import { NdsInput } from '@/components/ui/input';
-import { NdsLabel } from '@/components/ui/label';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
 
@@ -86,12 +85,6 @@ const { t, dict } = useTranslation(tableTranslations as Record<string, unknown>,
       'Marca a linha como selecionada. O atributo escrito à mão continua valendo — os dois caminhos levam ao mesmo estado.',
     'props.items.sort':
       'Direção da ordenação da coluna. Sem valor, nenhuma ordenação é anunciada: coluna que não ordena não deve prometer que ordena.',
-    // O conteúdo compartilhado não tem rótulo de seleção — a composição
-    // "seleção de linhas" está documentada em texto, mas os labels dos
-    // checkboxes nunca foram escritos. Reportado; aqui ficam como override de
-    // rótulo, que é exatamente para o que override serve.
-    'demonstration.labels.selectRow': 'Selecionar fatura',
-    'demonstration.labels.selectAll': 'Selecionar todas as faturas',
   },
   en: {
     'props.items.className':
@@ -106,8 +99,6 @@ const { t, dict } = useTranslation(tableTranslations as Record<string, unknown>,
       'Marks the row as selected. The hand-written attribute still works — both paths lead to the same state.',
     'props.items.sort':
       'Sort direction of the column. With no value, no sorting is announced: a column that does not sort must not promise that it does.',
-    'demonstration.labels.selectRow': 'Select invoice',
-    'demonstration.labels.selectAll': 'Select all invoices',
   },
   es: {
     'props.items.className':
@@ -122,8 +113,6 @@ const { t, dict } = useTranslation(tableTranslations as Record<string, unknown>,
       'Marca la fila como seleccionada. El atributo escrito a mano sigue valiendo — los dos caminos llevan al mismo estado.',
     'props.items.sort':
       'Dirección de ordenación de la columna. Sin valor no se anuncia ninguna ordenación: una columna que no ordena no debe prometer que ordena.',
-    'demonstration.labels.selectRow': 'Seleccionar factura',
-    'demonstration.labels.selectAll': 'Seleccionar todas las facturas',
   },
 });
 
@@ -209,15 +198,20 @@ const CODE_CAPTION_SR_ONLY = `<h2>Faturas recentes</h2>
   </table>
 </div>`;
 
-const CODE_ACTIONS = `<td ndsTableCell class="nds-text-right">
+const CODE_ACTIONS = `<td ndsTableCell>
+  <!-- O conteúdo visível é a reticência tipográfica (U+2026), UM caractere: os
+       três pontos de "..." o leitor de tela soletra, e a quebra de linha pode
+       partir no meio. Ícone de lápis aqui prometeria UMA ação ("Editar") onde o
+       controle abre um MENU de ações.
+
+       O nome acessível carrega o identificador da linha: "Ações" sozinho,
+       repetido em toda linha, é indistinguível na lista de controles. -->
   <button
     ndsButton
     variant="ghost"
-    size="icon-sm"
-    [attr.aria-label]="'Editar fatura ' + fatura.id"
-  >
-    <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
-  </button>
+    size="sm"
+    [attr.aria-label]="'Ações para fatura ' + fatura.id"
+  >…</button>
 </td>`;
 
 const EMPTY_CODE = `<tbody ndsTableBody>
@@ -225,20 +219,82 @@ const EMPTY_CODE = `<tbody ndsTableBody>
     <tr ndsTableRow>...</tr>
   } @empty {
     <tr ndsTableRow>
-      <td
-        ndsTableCell
-        [attr.colspan]="colunas.length"
-        class="nds-text-center nds-text-muted-foreground"
-      >
+      <td ndsTableCell [attr.colspan]="colunas.length" class="nds-table-empty">
         Nenhuma fatura encontrada.
       </td>
     </tr>
   }
 </tbody>`;
 
+const CODE_EXPANDABLE = `<thead ndsTableHeader>
+  <tr ndsTableRow>
+    <!-- A coluna do disclosure vem primeiro e também tem cabeçalho: o rótulo
+         sai da tela num span, e não por classe no próprio th, que desmontaria
+         a grade. -->
+    <th ndsTableHead><span class="nds-sr-only">Detalhes</span></th>
+    <th ndsTableHead>Fatura</th>
+    <th ndsTableHead>Status</th>
+    <th ndsTableHead class="nds-text-right">Valor</th>
+  </tr>
+</thead>
+<tbody ndsTableBody>
+  @for (fatura of faturas(); track fatura.id) {
+    <!-- aria-expanded no BOTÃO, nunca na <tr>: a linha já usa data-state para a
+         SELEÇÃO, e os dois estados acontecem juntos. Quem faz a linha reagir ao
+         controle é a folha, por tbody tr:has([aria-expanded="true"]). -->
+    <tr ndsTableRow [selected]="marcadas().has(fatura.id)">
+      <td ndsTableCell>
+        <button
+          ndsButton
+          variant="ghost"
+          size="icon-sm"
+          [attr.aria-expanded]="abertas().has(fatura.id)"
+          [attr.aria-controls]="idDoDetalhe(fatura.id)"
+          [attr.aria-label]="'Detalhes da fatura ' + fatura.id"
+          (click)="alternar(fatura.id)"
+        >
+          <svg ndsButtonIcon kind="chevron-down" class="nds-chevron"></svg>
+        </button>
+      </td>
+      <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
+      <td ndsTableCell>{{ fatura.status }}</td>
+      <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+    </tr>
+
+    <!-- A revelada fica sempre no DOM e some por hidden: o alvo do
+         aria-controls nunca deixa de existir, e hidden tira da tela, da árvore
+         de acessibilidade e da tabulação de uma vez. O colspan cobre as colunas
+         de dado MAIS a do disclosure. -->
+    <tr ndsTableRow [attr.id]="idDoDetalhe(fatura.id)" [hidden]="!abertas().has(fatura.id)">
+      <td ndsTableCell colspan="4">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-muted-foreground">{{ fatura.detalhe }}</p>
+          <button
+            ndsButton
+            variant="outline"
+            size="sm"
+            [attr.aria-label]="'Baixar recibo da fatura ' + fatura.id"
+          >
+            Baixar recibo
+          </button>
+        </div>
+      </td>
+    </tr>
+  }
+</tbody>`;
+
 const CODE_COMP_TOOLBAR = `<div class="nds-stack" data-spacing="sm">
-  <label ndsLabel for="filtro">Buscar fatura</label>
-  <input ndsInput id="filtro" type="search" (input)="filtrar($event)" />
+  <!-- O campo se nomeia por aria-label espelhando o placeholder: o texto de
+       dica já diz o que o campo faz, e um rótulo visível acima dele repetiria a
+       mesma frase duas vezes na mesma caixa. -->
+  <input
+    ndsInput
+    id="filtro"
+    type="search"
+    aria-label="Filtrar faturas"
+    placeholder="Filtrar faturas"
+    (input)="filtrar($event)"
+  />
 
   <div ndsTableWrapper>
     <table ndsTable>...</table>
@@ -324,22 +380,16 @@ const TOKENS_CSS = `/* O Table não declara variáveis próprias: ele consome os
 
 // ─── Dados de exemplo ─────────────────────────────────────────────────────────
 //
-// As chaves vêm do conteúdo compartilhado; o mapeamento status → variante do
-// badge é o mesmo do Vanilla.
+// O mapeamento status → variante do badge é o mesmo das outras stacks. Os
+// RÓTULOS saem do conteúdo compartilhado, e o caminho de cada chave é escrito
+// POR EXTENSO na chamada — ver a nota em `linhasDemo`.
 
-const LINHAS_DEMO: {
-  key: string;
-  idKey: string;
-  statusKey: string;
-  metodoKey: string;
-  amountKey: string;
-  variant: BadgeVariant;
-}[] = [
-  { key: '001', idKey: 'inv001', statusKey: 'paid',     metodoKey: 'creditCard',   amountKey: 'amount001', variant: 'success'     },
-  { key: '002', idKey: 'inv002', statusKey: 'pending',  metodoKey: 'bankTransfer', amountKey: 'amount002', variant: 'warning'     },
-  { key: '003', idKey: 'inv003', statusKey: 'canceled', metodoKey: 'pix',          amountKey: 'amount003', variant: 'destructive' },
-  { key: '004', idKey: 'inv004', statusKey: 'paid',     metodoKey: 'creditCard',   amountKey: 'amount004', variant: 'success'     },
-  { key: '005', idKey: 'inv005', statusKey: 'pending',  metodoKey: 'pix',          amountKey: 'amount005', variant: 'warning'     },
+const VARIANTS_DEMO: BadgeVariant[] = [
+  'success',
+  'warning',
+  'destructive',
+  'success',
+  'warning',
 ];
 
 @Component({
@@ -352,7 +402,7 @@ const LINHAS_DEMO: {
     NdsPaginationPrevious, NdsPaginationNext, NdsPaginationEllipsis,
     NdsTableWrapper, NdsTable, NdsTableCaption, NdsTableHeader, NdsTableBody,
     NdsTableFooter, NdsTableRow, NdsTableHead, NdsTableCell,
-    NdsBadge, NdsButton, NdsButtonIcon, NdsCheckbox, NdsInput, NdsLabel,
+    NdsBadge, NdsButton, NdsButtonIcon, NdsCheckbox, NdsInput,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants, NdsDocsCompositions,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
@@ -362,61 +412,69 @@ const LINHAS_DEMO: {
     <!-- ── Previews do Do & Don't ───────────────────────────────────────────
          Os previews não usam main nem heading: a docs page já está dentro de
          um main, e marco dentro de marco é landmark-main-is-top-level no axe. -->
+    <!-- Par 1 — a LEGENDA, e só ela: duas colunas (fatura e valor) e UMA linha,
+         idênticas dos dois lados, para que o que muda de um para o outro seja
+         uma coisa só. O par fica menor do que a demonstração de propósito —
+         três linhas de dado só afastariam o olho do que muda.
+
+         O scope NÃO entra no par: ndsTableHead já o emite por padrão, nas
+         cinco stacks, então o dont renderizaria scope="col" de qualquer
+         jeito e o contraste seria falso. Forçá-lo escrevendo o atributo vazio
+         ensinaria a desarmar um default seguro. -->
     <ng-template #tplDoDont1Do>
       <div ndsTableWrapper>
         <table ndsTable>
-          <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
+          <caption ndsTableCaption>{{ t('demonstration.labels.caption') }}</caption>
           <thead ndsTableHeader>
             <tr ndsTableRow>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
-              <th ndsTableHead>{{ t('demonstration.labels.status') }}</th>
+              <th ndsTableHead>{{ t('demonstration.labels.amount') }}</th>
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (line of linhasCurtas(); track line.key) {
-              <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
-                <td ndsTableCell>{{ line.status }}</td>
-              </tr>
-            }
+            <tr ndsTableRow>
+              <td ndsTableCell class="nds-font-medium">{{ t('demonstration.labels.inv001') }}</td>
+              <td ndsTableCell>{{ t('demonstration.labels.amount001') }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <!-- Sem caption e sem scope: a mesma grade, muda para quem não a enxerga. -->
-      <div class="nds-table-wrapper">
-        <table class="nds-table">
-          <thead>
-            <tr>
-              <th>{{ t('demonstration.labels.invoice') }}</th>
-              <th>{{ t('demonstration.labels.status') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (line of linhasCurtas(); track line.key) {
-              <tr>
-                <td>{{ line.id }}</td>
-                <td>{{ line.status }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </ng-template>
-    <ng-template #tplDoDont2Do>
+      <!-- Sem caption: a mesma grade, e ela muda para quem não a enxerga — o
+           leitor de tela anuncia uma tabela sem dizer do que ela trata. -->
       <div ndsTableWrapper>
         <table ndsTable>
-          <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
           <thead ndsTableHeader>
             <tr ndsTableRow>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
-              <th ndsTableHead>{{ t('demonstration.labels.status') }}</th>
+              <th ndsTableHead>{{ t('demonstration.labels.amount') }}</th>
             </tr>
           </thead>
           <tbody ndsTableBody>
             <tr ndsTableRow>
-              <td ndsTableCell colspan="2" class="nds-text-center nds-text-muted-foreground">
+              <td ndsTableCell class="nds-font-medium">{{ t('demonstration.labels.inv001') }}</td>
+              <td ndsTableCell>{{ t('demonstration.labels.amount001') }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+    <!-- Par 2 — o estado vazio. Uma coluna só, legenda nos DOIS lados: o que
+         muda de um para o outro é a linha que diz que não há nada, não a
+         legenda. -->
+    <ng-template #tplDoDont2Do>
+      <div ndsTableWrapper>
+        <table ndsTable>
+          <caption ndsTableCaption>{{ t('demonstration.labels.caption') }}</caption>
+          <thead ndsTableHeader>
+            <tr ndsTableRow>
+              <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
+            </tr>
+          </thead>
+          <tbody ndsTableBody>
+            <tr ndsTableRow>
+              <td ndsTableCell colspan="1" class="nds-table-empty">
                 {{ t('demonstration.labels.emptyState') }}
               </td>
             </tr>
@@ -427,11 +485,10 @@ const LINHAS_DEMO: {
     <ng-template #tplDoDont2Dont>
       <div ndsTableWrapper>
         <table ndsTable>
-          <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
+          <caption ndsTableCaption>{{ t('demonstration.labels.caption') }}</caption>
           <thead ndsTableHeader>
             <tr ndsTableRow>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
-              <th ndsTableHead>{{ t('demonstration.labels.status') }}</th>
             </tr>
           </thead>
           <tbody ndsTableBody></tbody>
@@ -475,8 +532,11 @@ const LINHAS_DEMO: {
               <th ndsTableHead>{{ t('demonstration.labels.amount') }}</th>
             </tr>
           </thead>
+          <!-- As CINCO, e nao as tres curtas: o total do rodape e a soma
+               das cinco faturas. Com tres na tela o leitor via um total que
+               nao fecha com o que estava acima dele. -->
           <tbody ndsTableBody>
-            @for (line of linhasCurtas(); track line.key) {
+            @for (line of linhasDemo(); track line.key) {
               <tr ndsTableRow>
                 <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
                 <td ndsTableCell>{{ line.status }}</td>
@@ -524,9 +584,10 @@ const LINHAS_DEMO: {
             <tr ndsTableRow>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
               <th ndsTableHead>{{ t('demonstration.labels.status') }}</th>
-              <th ndsTableHead>
-                <span class="nds-sr-only">{{ t('demonstration.labels.actions') }}</span>
-              </th>
+              <!-- O rótulo da coluna de ações é VISÍVEL: a coluna existe na
+                   grade, e escondê-la do olho deixava o cabeçalho vazio
+                   sobrando por cima de uma coluna que todo mundo vê. -->
+              <th ndsTableHead>{{ t('demonstration.labels.actions') }}</th>
             </tr>
           </thead>
           <tbody ndsTableBody>
@@ -536,10 +597,12 @@ const LINHAS_DEMO: {
                 <td ndsTableCell>
                   <span ndsBadge [variant]="line.variant">{{ line.status }}</span>
                 </td>
-                <td ndsTableCell class="nds-text-right">
-                  <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="line.acaoLabel">
-                    <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
-                  </button>
+                <td ndsTableCell>
+                  <!-- Reticência tipográfica (U+2026), UM caractere, e não um
+                       ícone de lápis: o controle abre um MENU de ações, e o
+                       lápis prometia "Editar" contradizendo o nome acessível ao
+                       lado dele. -->
+                  <button ndsButton variant="ghost" size="sm" [attr.aria-label]="line.acaoLabel">…</button>
                 </td>
               </tr>
             }
@@ -566,7 +629,7 @@ const LINHAS_DEMO: {
               <td
                 ndsTableCell
                 [attr.colspan]="colunasCurtas().length"
-                class="nds-text-center nds-text-muted-foreground"
+                class="nds-table-empty"
               >
                 {{ t('demonstration.labels.emptyState') }}
               </td>
@@ -576,19 +639,98 @@ const LINHAS_DEMO: {
       </div>
     </ng-template>
 
+    <!-- Linha expansível — a forma sai da story WithExpandableRows, em escala
+         menor. Quatro contratos, e a prévia mantém os quatro:
+
+         1. aria-expanded mora no BOTÃO, nunca na <tr>: a linha já usa
+            data-state para a SELEÇÃO, e os dois estados acontecem juntos.
+            Quem faz a linha reagir é a folha compartilhada, por
+            tbody tr:has([aria-expanded="true"]).
+         2. A revelada é IRMÃ, sempre no DOM, escondida por hidden — o id
+            dela é alvo do aria-controls, e alvo que some deixa o atributo
+            apontando para nada.
+         3. O nome acessível é o do REGISTRO e não muda ao alternar: quem
+            anuncia o estado é o aria-expanded.
+         4. A ordem de foco sai do DOM: a revelada vem logo depois da linha de
+            dados, então o botão dentro dela é o próximo ponto de tabulação
+            depois do disclosure, sem tabindex nenhum.
+
+         A segunda linha nasce MARCADA: aberta e selecionada ao mesmo tempo é o
+         caso que o :not([data-state="selected"]) da folha protege. -->
+    <ng-template #tplVarExpansivel>
+      <div ndsTableWrapper>
+        <table ndsTable>
+          <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
+          <thead ndsTableHeader>
+            <tr ndsTableRow>
+              <!-- A coluna do disclosure vem primeiro e também tem cabeçalho: o
+                   rótulo sai da tela num span, e não por classe no próprio th,
+                   que desmontaria a grade. -->
+              <th ndsTableHead><span class="nds-sr-only">{{ t('demonstration.labels.detailsColumn') }}</span></th>
+              <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
+              <th ndsTableHead>{{ t('demonstration.labels.status') }}</th>
+              <th ndsTableHead class="nds-text-right">{{ t('demonstration.labels.amount') }}</th>
+            </tr>
+          </thead>
+          <tbody ndsTableBody>
+            @for (line of linhasCurtas(); track line.key) {
+              <tr ndsTableRow [selected]="line.key === selectedPreviewKey">
+                <td ndsTableCell>
+                  <button
+                    ndsButton
+                    variant="ghost"
+                    size="icon-sm"
+                    [attr.aria-expanded]="expandidas().has(line.key)"
+                    [attr.aria-controls]="detailId(line.key)"
+                    [attr.aria-label]="line.detalhesLabel"
+                    (click)="toggleExpansion(line.key)"
+                  >
+                    <svg ndsButtonIcon kind="chevron-down" class="nds-chevron"></svg>
+                  </button>
+                </td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell>{{ line.status }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.value }}</td>
+              </tr>
+
+              <tr
+                ndsTableRow
+                [attr.id]="detailId(line.key)"
+                [hidden]="!expandidas().has(line.key)"
+              >
+                <!-- Três colunas de dado mais a do disclosure. -->
+                <td ndsTableCell colspan="4">
+                  <div class="nds-stack" data-spacing="sm">
+                    <p class="nds-text-muted-foreground">{{ t('demonstration.labels.detailText') }}</p>
+                    <button ndsButton variant="outline" size="sm" [attr.aria-label]="line.reciboLabel">
+                      {{ t('demonstration.labels.receipt') }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+
     <!-- ── Previews das composições ───────────────────────────────────────── -->
     <ng-template #tplCompToolbar>
       <div class="nds-stack nds-w-full" data-spacing="sm">
-        <div class="nds-stack" data-spacing="xs">
-          <label ndsLabel for="docs-table-filtro">{{ t('demonstration.labels.invoice') }}</label>
-          <input
-            ndsInput
-            id="docs-table-filtro"
-            type="search"
-            [value]="termo()"
-            (input)="filter($event)"
-          />
-        </div>
+        <!-- O campo se nomeia por aria-label espelhando o placeholder, e as
+             duas saem da MESMA chave: o texto de dica já diz o que o campo faz,
+             e um rótulo visível acima dele repetiria a frase na mesma caixa. O
+             rótulo que estava aqui dizia "Fatura" — o nome da COLUNA, não o do
+             campo. -->
+        <input
+          ndsInput
+          id="docs-table-filtro"
+          type="search"
+          [attr.aria-label]="t('demonstration.labels.filterLabel')"
+          [attr.placeholder]="t('demonstration.labels.filterLabel')"
+          [value]="termo()"
+          (input)="filter($event)"
+        />
         <div ndsTableWrapper>
           <table ndsTable>
             <caption ndsTableCaption class="nds-sr-only">{{ t('demonstration.labels.caption') }}</caption>
@@ -606,7 +748,7 @@ const LINHAS_DEMO: {
                 </tr>
               } @empty {
                 <tr ndsTableRow>
-                  <td ndsTableCell colspan="2" class="nds-text-center nds-text-muted-foreground">
+                  <td ndsTableCell colspan="2" class="nds-table-empty">
                     {{ t('demonstration.labels.emptyState') }}
                   </td>
                 </tr>
@@ -754,9 +896,7 @@ const LINHAS_DEMO: {
                   <th ndsTableHead>{{ t('demonstration.labels.status') }}</th>
                   <th ndsTableHead>{{ t('demonstration.labels.method') }}</th>
                   <th ndsTableHead>{{ t('demonstration.labels.amount') }}</th>
-                  <th ndsTableHead>
-                    <span class="nds-sr-only">{{ t('demonstration.labels.actions') }}</span>
-                  </th>
+                  <th ndsTableHead>{{ t('demonstration.labels.actions') }}</th>
                 </tr>
               </thead>
               <tbody ndsTableBody>
@@ -768,10 +908,8 @@ const LINHAS_DEMO: {
                     </td>
                     <td ndsTableCell>{{ line.metodo }}</td>
                     <td ndsTableCell class="nds-text-right">{{ line.value }}</td>
-                    <td ndsTableCell class="nds-text-right">
-                      <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="line.acaoLabel">
-                        <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
-                      </button>
+                    <td ndsTableCell>
+                      <button ndsButton variant="ghost" size="sm" [attr.aria-label]="line.acaoLabel">…</button>
                     </td>
                   </tr>
                 }
@@ -894,6 +1032,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarCaptionSrOnly = viewChild.required<TemplateRef<unknown>>('tplVarCaptionSrOnly');
   private readonly tplVarAcoes = viewChild.required<TemplateRef<unknown>>('tplVarAcoes');
   private readonly tplVarEmpty = viewChild.required<TemplateRef<unknown>>('tplVarEmpty');
+  private readonly tplVarExpansivel = viewChild.required<TemplateRef<unknown>>('tplVarExpansivel');
   private readonly tplCompToolbar = viewChild.required<TemplateRef<unknown>>('tplCompToolbar');
   private readonly tplCompOrdenacao = viewChild.required<TemplateRef<unknown>>('tplCompOrdenacao');
   private readonly tplCompPaginacao = viewChild.required<TemplateRef<unknown>>('tplCompPaginacao');
@@ -901,25 +1040,105 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
 
   // ─── Dados dos exemplos ─────────────────────────────────────────────────────
 
-  /** As cinco faturas da demonstração, já traduzidas. */
+  /**
+   * As cinco faturas da demonstração, já traduzidas.
+   *
+   * Cada caminho é escrito POR EXTENSO, e nunca montado por interpolação
+   * (`demonstration.labels.${chave}`). Chave montada em tempo de execução some
+   * das buscas de quem procura pelo rótulo e some da varredura de conteúdo: por
+   * ela, esta página declarava usar 10 das 26 chaves da demonstração enquanto
+   * as outras usavam 26 — cinco demonstrações diferentes sob o mesmo título.
+   *
+   * Cinco chaves são idênticas nos três idiomas porque são número de fatura e
+   * valor em reais. É esperado, não redundância.
+   */
   protected readonly linhasDemo = computed(() => {
     dict();
-    return LINHAS_DEMO.map((line) => ({
-      key: line.key,
-      variant: line.variant,
-      id: t(`demonstration.labels.${line.idKey}`),
-      status: t(`demonstration.labels.${line.statusKey}`),
-      metodo: t(`demonstration.labels.${line.metodoKey}`),
-      value: t(`demonstration.labels.${line.amountKey}`),
+    const lines = [
+      {
+        key: '001',
+        id: t('demonstration.labels.inv001'),
+        status: t('demonstration.labels.paid'),
+        metodo: t('demonstration.labels.creditCard'),
+        value: t('demonstration.labels.amount001'),
+      },
+      {
+        key: '002',
+        id: t('demonstration.labels.inv002'),
+        status: t('demonstration.labels.pending'),
+        metodo: t('demonstration.labels.bankTransfer'),
+        value: t('demonstration.labels.amount002'),
+      },
+      {
+        key: '003',
+        id: t('demonstration.labels.inv003'),
+        status: t('demonstration.labels.canceled'),
+        metodo: t('demonstration.labels.pix'),
+        value: t('demonstration.labels.amount003'),
+      },
+      {
+        key: '004',
+        id: t('demonstration.labels.inv004'),
+        status: t('demonstration.labels.paid'),
+        metodo: t('demonstration.labels.creditCard'),
+        value: t('demonstration.labels.amount004'),
+      },
+      {
+        key: '005',
+        id: t('demonstration.labels.inv005'),
+        status: t('demonstration.labels.pending'),
+        metodo: t('demonstration.labels.pix'),
+        value: t('demonstration.labels.amount005'),
+      },
+    ];
+
+    return lines.map((line, i) => ({
+      ...line,
+      variant: VARIANTS_DEMO[i],
       // O rótulo da ação carrega o identificador da linha: "Ações" sozinho, cinco
       // vezes, é indistinguível na lista de controles do leitor de tela.
-      acaoLabel: `${t('demonstration.labels.actionsLabel')} ${t(`demonstration.labels.${line.idKey}`)}`,
-      selecaoLabel: `${t('demonstration.labels.selectRow')} ${t(`demonstration.labels.${line.idKey}`)}`,
+      acaoLabel: `${t('demonstration.labels.actionsLabel')} ${line.id}`,
+      selecaoLabel: `${t('demonstration.labels.selectRow')} ${line.id}`,
+      // O nome acessível do disclosure é o do REGISTRO e não muda ao alternar:
+      // quem anuncia aberto ou fechado é o `aria-expanded`. Trocar "Mostrar"
+      // por "Ocultar" diria a mesma coisa duas vezes.
+      detalhesLabel: `${t('demonstration.labels.detailsLabel')} ${line.id}`,
+      reciboLabel: `${t('demonstration.labels.receiptLabel')} ${line.id}`,
     }));
   });
 
   /** Três linhas para os previews dos cards, que são estreitos. */
   protected readonly linhasCurtas = computed(() => this.linhasDemo().slice(0, 3));
+
+  // ── Variante "linha expansível" ────────────────────────────────────────────
+  //
+  // Signal, e não um Set mutado: o stack é zoneless, e sem sinal a abertura não
+  // dispararia detecção nenhuma.
+  protected readonly expandidas = signal<ReadonlySet<string>>(new Set());
+
+  /**
+   * A linha que nasce MARCADA na prévia de linha expansível.
+   *
+   * Aberta e selecionada ao mesmo tempo é o caso que o
+   * `:not([data-state="selected"])` da folha compartilhada protege — sem ele a
+   * regra do disclosure é a última do arquivo e rebaixaria a linha marcada ao
+   * tom claro do hover. Dar de ver as duas coisas juntas é o que a prévia
+   * acrescenta à story.
+   */
+  protected readonly selectedPreviewKey = '002';
+
+  /** Id da linha revelada. Sem o "#" do identificador da fatura, que quebraria
+   * qualquer seletor — e por isso a chave estável da linha, não o rótulo. */
+  protected detailId(key: string): string {
+    return `docs-table-row-detail-${key}`;
+  }
+
+  protected toggleExpansion(key: string): void {
+    const next = new Set(this.expandidas());
+    if (next.has(key)) next.delete(key);
+    else next.add(key);
+    this.expandidas.set(next);
+  }
 
   protected readonly colunasCurtas = computed(() => {
     dict();
@@ -1075,6 +1294,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       { key: 'withSrOnlyCaption',  code: CODE_CAPTION_SR_ONLY, tpl: this.tplVarCaptionSrOnly()   },
       { key: 'withInlineActions',  code: CODE_ACTIONS,           tpl: this.tplVarAcoes()           },
       { key: 'withEmptyState',     code: EMPTY_CODE,           tpl: this.tplVarEmpty()           },
+      { key: 'withExpandableRows', code: CODE_EXPANDABLE,      tpl: this.tplVarExpansivel()      },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.items.${key}.label`),
       description: t(`variants.items.${key}.description`),

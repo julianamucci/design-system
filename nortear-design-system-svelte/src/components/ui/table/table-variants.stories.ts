@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { Table } from './index';
 import TableVarianteBasica from './TableVarianteBasica.svelte';
 import TableVariantWithFooter from './TableVariantWithFooter.svelte';
 import TableVarianteCaptionSrOnly from './TableVarianteCaptionSrOnly.svelte';
 import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 import TableVarianteRolagemHorizontal from './TableVarianteRolagemHorizontal.svelte';
+import TableVariantWithExpandableRows from './TableVariantWithExpandableRows.svelte';
 import {
   tableBasicaSource,
   tableWithActionsSource,
@@ -14,6 +15,7 @@ import {
   tableCaptionOcultaSource,
   tableScrollHorizontalSource,
   tableSource,
+  tableWithExpandableRowsSource,
 } from './table.source';
 
 const meta: Meta = {
@@ -214,6 +216,12 @@ export const HorizontalScroll: Story = {
       await expect(wrapper).toHaveAttribute('tabindex', '0');
       await expect(getComputedStyle(wrapper).overflowX).toBe('auto');
       await expect(wrapper.scrollWidth).toBeGreaterThan(wrapper.clientWidth);
+
+      // A parada só é anunciável com PAPEL e NOME: `group` (e não `region`, que
+      // viraria marco de página numa tela com várias tabelas) mais o nome do
+      // conteúdo, que vem de fora porque o design system não o conhece.
+      await expect(wrapper).toHaveAttribute('role', 'group');
+      await expect(wrapper).toHaveAccessibleName('Faturas por mês de competência');
     });
 
     await step('A rolagem chega ao fim da tabela', async () => {
@@ -222,6 +230,116 @@ export const HorizontalScroll: Story = {
       await expect(wrapper).toHaveFocus();
       wrapper.scrollLeft = wrapper.scrollWidth;
       await expect(wrapper.scrollLeft).toBeGreaterThan(0);
+    });
+  },
+};
+
+/**
+ * Linha expansível: dois `<tr>` irmãos por registro — o de dados e o de detalhe
+ * que ele revela. Fica no arquivo `-variants` porque linha expansível é FORMA
+ * escolhida na montagem, irmã de `WithRowActions`, e não um estado do mesmo
+ * exemplo.
+ *
+ * As quatro decisões da forma estão no próprio componente
+ * (`TableVariantWithExpandableRows.svelte`); aqui ficam as asserções.
+ */
+export const WithExpandableRows: Story = {
+  parameters: {
+    // Os três itens nasceram nesta mesma rodada, junto com a decisão de que a
+    // linha expansível é recurso do Table. O `visual.item7` é o que prova o
+    // conserto de cascata: marcada E expandida mantém a cor da seleção.
+    covers: ['functional.item8', 'visual.item7', 'accessibility.item5'],
+    docs: { source: { transform: tableWithExpandableRowsSource } },
+  },
+  render: () => ({
+    Component: TableVariantWithExpandableRows,
+    props: {},
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const rows = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const toggles = () => canvas.getAllByRole('button', { name: /^Detalhes da fatura/ });
+    // Três registros, três pares de linhas.
+    const LINES = 3;
+    // Quatro colunas de dado mais a do disclosure.
+    const DETAIL_COLSPAN = '5';
+
+    // Cada par de linhas é dado + detalhe: 0 dado, 1 detalhe, 2 dado marcado…
+    const collapsedBackground = getComputedStyle(rows()[0]).backgroundColor;
+    const selectedBackground = getComputedStyle(rows()[2]).backgroundColor;
+
+    await step('Fechada, a linha de detalhe sai da tela e da tabulação', async () => {
+      await expect(rows().length).toBe(LINES * 2);
+      for (const [i, toggle] of toggles().entries()) {
+        await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        await expect(toggle).toHaveAttribute('aria-controls', rows()[i * 2 + 1].id);
+        // O detalhe atravessa as colunas de dado MAIS a do disclosure.
+        const cell = rows()[i * 2 + 1].querySelector('td')!;
+        await expect(cell).toHaveAttribute('colspan', DETAIL_COLSPAN);
+      }
+      // `hidden` tira da tela, da árvore de acessibilidade e da tabulação de uma
+      // vez — por isso o botão do detalhe não é alcançável por papel.
+      await expect(getComputedStyle(rows()[1]).display).toBe('none');
+      await expect(canvas.queryAllByRole('button', { name: /^Baixar recibo/ }).length).toBe(0);
+    });
+
+    await step('Enter no controle abre a linha irmã, e o nome não muda', async () => {
+      // Teclado, e não clique: o ponteiro deixaria a linha em `:hover`, que pinta
+      // com a MESMA cor da regra que este teste existe para provar — a asserção
+      // do fundo passaria com ou sem o recurso.
+      toggles()[0].focus();
+      await userEvent.keyboard('{Enter}');
+
+      await expect(toggles()[0]).toHaveAttribute('aria-expanded', 'true');
+      await expect(rows()[1].hidden).toBe(false);
+      await expect(rows()[1].getBoundingClientRect().height).toBeGreaterThan(0);
+      // Quem anuncia o estado é o `aria-expanded`; o nome continua sendo o do
+      // registro, nos dois sentidos da alternância.
+      await expect(toggles()[0]).toHaveAccessibleName('Detalhes da fatura #INV-001');
+    });
+
+    await step('O conteúdo revelado é o próximo ponto de tabulação', async () => {
+      // A linha irmã vem logo depois da linha de dados no DOM: a ordem de foco
+      // sai daí, sem `tabindex` nenhum.
+      await userEvent.tab();
+      await expect(
+        canvas.getByRole('button', { name: 'Baixar recibo da fatura #INV-001' }),
+      ).toHaveFocus();
+    });
+
+    await step('A linha expandida muda de fundo', async () => {
+      // É o contrato da folha compartilhada (`:has([aria-expanded="true"])`), e
+      // até hoje ele não tinha produtor em stack nenhuma.
+      const expandedBackground = getComputedStyle(rows()[0]).backgroundColor;
+      await expect(expandedBackground).not.toBe(collapsedBackground);
+      await expect(expandedBackground).not.toBe('rgba(0, 0, 0, 0)');
+      // A terceira continua fechada: a mudança é da linha aberta, não da tabela.
+      await expect(getComputedStyle(rows()[4]).backgroundColor).toBe(collapsedBackground);
+    });
+
+    await step('Marcada e expandida ao mesmo tempo: a cor da seleção vence', async () => {
+      // Os três seletores de fundo são (0,2,2) — sem o `:not([data-state="selected"])`
+      // a regra do disclosure é a última do arquivo e rebaixaria a linha marcada
+      // ao tom claro do hover.
+      toggles()[1].focus();
+      await userEvent.keyboard('{Enter}');
+
+      await expect(toggles()[1]).toHaveAttribute('aria-expanded', 'true');
+      await expect(rows()[3].hidden).toBe(false);
+      await expect(getComputedStyle(rows()[2]).backgroundColor).toBe(selectedBackground);
+      await expect(getComputedStyle(rows()[2]).backgroundColor).not.toBe(
+        getComputedStyle(rows()[0]).backgroundColor,
+      );
+    });
+
+    await step('Enter de novo fecha, e tudo volta ao estado anterior', async () => {
+      toggles()[0].focus();
+      await userEvent.keyboard('{Enter}');
+
+      await expect(toggles()[0]).toHaveAttribute('aria-expanded', 'false');
+      await expect(getComputedStyle(rows()[1]).display).toBe('none');
+      await expect(getComputedStyle(rows()[0]).backgroundColor).toBe(collapsedBackground);
+      await expect(canvas.queryAllByRole('button', { name: /^Baixar recibo/ }).length).toBe(1);
     });
   },
 };

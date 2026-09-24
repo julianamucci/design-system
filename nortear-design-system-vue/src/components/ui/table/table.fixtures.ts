@@ -35,6 +35,13 @@ function formatar(total: number): string {
 
 export const TOTAL = formatar(INVOICES.reduce((sum, i) => sum + centavos(i.amount), 0))
 
+/**
+ * As quatro colunas de dado. Sai daqui, e não de um número escrito à mão, porque
+ * é dela que o `colspan` da linha revelada depende: acrescentar uma coluna e
+ * esquecer o `colspan` deixa a tabela torta sem nenhum erro visível.
+ */
+export const COLUMNS = ['Fatura', 'Status', 'Método', 'Valor']
+
 /** Doze meses de dois anos — a tabela larga da story de rolagem horizontal. */
 export const MONTHS: string[] = ['2025', '2026'].flatMap((year) =>
   ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
