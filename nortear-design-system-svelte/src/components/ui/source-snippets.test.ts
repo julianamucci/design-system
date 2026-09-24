@@ -490,7 +490,14 @@ function ligacoesSemDeclaracao(snippet: string): string[] {
     // barra-mais-caractere no corpo.
     const semCrase = expressao.replace(
       /`(?:[^`\\]|\\[\s\S])*`/g,
-      (trecho) => (trecho.match(/\$\{[^}]*\}/g) ?? []).join(' '),
+      // O `${` e o `}` SAEM junto com o texto. Guardá-los deixava um `$` solto
+      // na frente da expressão, e o colhedor de identificador aceita `$` como
+      // primeiro caractere de nome — então toda crase interpolada DENTRO da
+      // marcação era acusada de ligar um `$` que o `<script>` não declara.
+      // Medido em 2026-09-24, no primeiro snippet de `table` que usou crase na
+      // marcação: o portão reprovava markup correto.
+      (trecho) =>
+        (trecho.match(/\$\{[^}]*\}/g) ?? []).map((interp) => interp.slice(2, -1)).join(' '),
     );
     const withoutText = semCrase
       .replace(/'(?:[^'\\]|\\[\s\S])*'/g, "''")
