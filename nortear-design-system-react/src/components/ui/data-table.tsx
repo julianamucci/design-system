@@ -37,10 +37,6 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   GripVertical,
   Pin,
   PinOff,
@@ -66,6 +62,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationFirst,
+  PaginationItem,
+  PaginationLast,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import {
   Table,
   TableBody,
@@ -840,6 +845,7 @@ function DataTable<TData extends RowData>({
           pageSizeOptions={pageSizeOptions}
           enableRowSelection={enableRowSelection}
           labels={L}
+          caption={caption}
         />
       )}
     </div>
@@ -990,6 +996,14 @@ interface DataTablePaginationProps<TData extends RowData> {
   enableRowSelection: boolean
   /** Já vem mesclado com o padrão quando quem renderiza é o DataTable. */
   labels?: DataTableLabels
+  /**
+   * Legenda da tabela — é dela que sai o nome do landmark de paginação.
+   *
+   * Sem legenda o rodapé fica com "Paginação" seco, e duas tabelas paginadas na
+   * mesma página passam a reprovar em `landmark-unique` do axe. Quem compõe o
+   * texto é `labels.paginationNav`, no catálogo compartilhado.
+   */
+  caption?: string
 }
 
 function DataTablePagination<TData extends RowData>({
@@ -997,6 +1011,7 @@ function DataTablePagination<TData extends RowData>({
   pageSizeOptions,
   enableRowSelection,
   labels = DATA_TABLE_LABELS_DEFAULT,
+  caption,
 }: DataTablePaginationProps<TData>) {
   const pageIndex = table.state.pagination.pageIndex
   const pageCount = table.getPageCount()
@@ -1032,44 +1047,76 @@ function DataTablePagination<TData extends RowData>({
         <div className="nds-data-table-pagination-count">
           {labels.page} {pageIndex + 1} {labels.pageOf} {Math.max(pageCount, 1)}
         </div>
-        <div className="nds-data-table-pagination-nav">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-            aria-label={labels.firstPage}
-          >
-            <ChevronsLeft aria-hidden="true" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            aria-label={labels.prevPage}
-          >
-            <ChevronLeft aria-hidden="true" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            aria-label={labels.nextPage}
-          >
-            <ChevronRight aria-hidden="true" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => table.setPageIndex(pageCount - 1)}
-            disabled={!table.getCanNextPage()}
-            aria-label={labels.lastPage}
-          >
-            <ChevronsRight aria-hidden="true" />
-          </Button>
-        </div>
+        {/*
+         * A faixa de paginação do sistema, composta.
+         *
+         * Até 2026-09-23 estes quatro controles eram quatro `Button` soltos
+         * dentro de um `<div>`: mesma aparência do `Pagination` e nenhuma das
+         * semânticas dele — sem landmark, sem lista, sem `data-slot` de faixa.
+         * Havia duas paginações no design system, e só uma delas era navegável
+         * por landmark.
+         *
+         * A composição não muda a tela: sem número nenhum (quem diz em que
+         * página se está é o "Página X de Y" ao lado), `appearance="outline"` é
+         * a variante que o rodapé sempre usou, e `text=""` nos direcionais de
+         * passo os deixa quadrados como os botões de antes.
+         *
+         * Sem `href` a tag do controle é `<button type="button">` com
+         * `disabled` NATIVO — o rodapé não tem rota, e é isso que mantém de pé
+         * as asserções `toBeDisabled()` das cinco suítes.
+         */}
+        <Pagination
+          data-align="end"
+          /*
+           * O nome do landmark sai da LEGENDA: `landmark-unique` do axe reprova
+           * dois `<nav>` de mesmo nome na mesma página, e uma docs page
+           * instancia mais de uma tabela. Quem compõe o texto é o catálogo
+           * compartilhado, para as cinco stacks não inventarem cinco formatos.
+           */
+          aria-label={labels.paginationNav(caption ?? "")}
+        >
+          <PaginationContent>
+            <PaginationItem>
+              {/*
+               * O vocabulário da TABELA vence: "Primeira página", e não "Ir
+               * para a primeira página". Os defaults do Pagination seguem
+               * valendo para quem usa o componente sozinho.
+               */}
+              <PaginationFirst
+                appearance="outline"
+                aria-label={labels.firstPage}
+                disabled={!table.getCanPreviousPage()}
+                onClick={() => table.setPageIndex(0)}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationPrevious
+                appearance="outline"
+                text=""
+                aria-label={labels.prevPage}
+                disabled={!table.getCanPreviousPage()}
+                onClick={() => table.previousPage()}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                appearance="outline"
+                text=""
+                aria-label={labels.nextPage}
+                disabled={!table.getCanNextPage()}
+                onClick={() => table.nextPage()}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLast
+                appearance="outline"
+                aria-label={labels.lastPage}
+                disabled={!table.getCanNextPage()}
+                onClick={() => table.setPageIndex(pageCount - 1)}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   )

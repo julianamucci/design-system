@@ -55,6 +55,7 @@ import {
 import { createCheckbox } from './checkbox';
 import { createInput } from './input';
 import { createButton } from './button';
+import { createPagination } from './pagination';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -224,10 +225,6 @@ const ICONS = {
   arrowUp: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>`,
   arrowDown: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>`,
   arrowUpDown: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon nds-dt-icon-muted"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>`,
-  chevronLeft: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="m15 18-6-6 6-6"/></svg>`,
-  chevronRight: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="m9 18 6-6-6-6"/></svg>`,
-  chevronsLeft: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>`,
-  chevronsRight: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/></svg>`,
   grip: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon nds-dt-icon-grip"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>`,
   pin: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>`,
   pinOff: `<svg ${ICON_BASE_ATTRS} class="nds-dt-icon"><path d="M12 17v5"/><path d="M15 9.34V6h1a2 2 0 0 0 0-4H7.89"/><path d="m2 2 20 20"/><path d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h11"/></svg>`,
@@ -1151,30 +1148,53 @@ export function createDataTable<TData extends RowData>(
     pageInd.className = 'nds-data-table-pagination-count';
     pageInd.textContent = `${L.page} ${pageIndex + 1} ${L.pageOf} ${Math.max(pageCount, 1)}`;
 
-    // Nav buttons
-    const navWrap = document.createElement('div');
-    navWrap.className = 'nds-data-table-pagination-nav';
+    // Nav — a faixa de paginação do sistema, composta.
+    //
+    // Até 2026-09-23 estes quatro controles eram quatro `createButton` soltos
+    // dentro de um `<div>`: mesma aparência do `Pagination` e nenhuma das
+    // semânticas dele — sem landmark, sem lista, sem `data-slot` de faixa.
+    // Havia duas paginações no design system, e só uma delas era navegável por
+    // landmark.
+    //
+    // A composição não muda a tela: `showPages: false` tira a régua (quem diz
+    // em que página se está é o "Página X de Y" ao lado), `appearance:
+    // 'outline'` é a variante que o rodapé sempre usou, e sem texto visível os
+    // quatro direcionais nascem quadrados como os botões de antes.
+    //
+    // Sem `hrefForPage` a fábrica emite `<button type="button">` com `disabled`
+    // nativo — o rodapé nunca tem rota, e é isso que mantém de pé as asserções
+    // `toBeDisabled()` das cinco suítes.
+    const nav = createPagination({
+      total: Math.max(pageCount, 1),
+      current: pageIndex + 1,
+      showPages: false,
+      showFirstLast: true,
+      appearance: 'outline',
+      align: 'end',
+      // O nome do landmark sai da LEGENDA: `landmark-unique` do axe reprova dois
+      // `<nav>` de mesmo nome na mesma página, e uma docs page instancia várias
+      // tabelas. Quem compõe o texto é o catálogo compartilhado, para as cinco
+      // stacks não inventarem cinco formatos.
+      'aria-label': L.paginationNav(caption ?? ''),
+      // O vocabulário da TABELA vence: o rodapé diz "Primeira página", não "Ir
+      // para a primeira página". Os defaults do Pagination seguem valendo para
+      // quem usa o componente sozinho.
+      labels: {
+        first: L.firstPage,
+        previous: L.prevPage,
+        next: L.nextPage,
+        last: L.lastPage,
+        // Sem texto visível nos direcionais: o rodapé é só de ícones.
+        previousText: '',
+        nextText: '',
+      },
+      onPageChange: (page) => {
+        // A fábrica já barra o extremo; aqui o índice é 0-based.
+        table.setPageIndex(page - 1);
+      },
+    });
 
-    function navBtn(label: string, icon: string, onClick: () => void, disabled: boolean) {
-      const btn = createButton({
-        variant: 'outline',
-        size: 'icon',
-        'aria-label': label,
-        disabled,
-        onClick: () => onClick(),
-      });
-      btn.appendChild(svgEl(icon));
-      return btn;
-    }
-
-    navWrap.append(
-      navBtn(L.firstPage, ICONS.chevronsLeft, () => table.setPageIndex(0), !table.getCanPreviousPage()),
-      navBtn(L.prevPage, ICONS.chevronLeft, () => table.previousPage(), !table.getCanPreviousPage()),
-      navBtn(L.nextPage, ICONS.chevronRight, () => table.nextPage(), !table.getCanNextPage()),
-      navBtn(L.lastPage, ICONS.chevronsRight, () => table.setPageIndex(pageCount - 1), !table.getCanNextPage()),
-    );
-
-    controls.append(pageSizeWrap, pageInd, navWrap);
+    controls.append(pageSizeWrap, pageInd, nav);
     pagFooter.append(countText, controls);
   }
 

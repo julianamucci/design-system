@@ -1,8 +1,15 @@
 <script setup lang="ts" generic="TData extends RowData">
 import type { RowData, Table as TanstackTable } from '@tanstack/vue-table';
 import { computed } from 'vue';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationFirst,
+  PaginationItem,
+  PaginationLast,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import type { DataTableFeatures, DataTableLabels } from './data-table.vue';
 
 /*
@@ -19,6 +26,14 @@ const props = defineProps<{
   pageSizeOptions: number[];
   enableRowSelection: boolean;
   labels: DataTableLabels;
+  /**
+   * Legenda da tabela, e só por causa do landmark.
+   *
+   * Desde 2026-09-23 o rodapé é um `<nav>`: `landmark-unique` do axe reprova
+   * dois com o mesmo nome na mesma página, e uma docs page instancia várias
+   * tabelas. A legenda já é única por instância, então é ela que distingue.
+   */
+  caption?: string;
 }>();
 
 /*
@@ -36,6 +51,14 @@ const props = defineProps<{
 const pagination = computed(
   () => props.table.atoms.pagination?.get() ?? { pageIndex: 0, pageSize: 10 },
 );
+
+/*
+ * O total que a faixa lê é o de linhas FILTRADAS — o mesmo que a contagem à
+ * esquerda mostra. É dele que o primitivo deriva a contagem de páginas, e é
+ * isso que mantém o desabilitado dos quatro controles igual ao que o TanStack
+ * responderia: `Math.ceil(total / pageSize)` contra `getPageCount()`.
+ */
+const total = computed(() => props.table.getFilteredRowModel().rows.length);
 </script>
 
 <template>
@@ -45,10 +68,10 @@ const pagination = computed(
   >
     <div class="nds-data-table-pagination-count">
       <template v-if="enableRowSelection">
-        {{ props.labels.rowsSelected(props.table.getFilteredSelectedRowModel().rows.length, props.table.getFilteredRowModel().rows.length) }}
+        {{ props.labels.rowsSelected(props.table.getFilteredSelectedRowModel().rows.length, total) }}
       </template>
       <template v-else>
-        {{ props.labels.rowsTotal(props.table.getFilteredRowModel().rows.length) }}
+        {{ props.labels.rowsTotal(total) }}
       </template>
     </div>
     <div class="nds-data-table-pagination-controls">
@@ -73,44 +96,63 @@ const pagination = computed(
         {{ props.labels.page }} {{ pagination.pageIndex + 1 }} {{ props.labels.pageOf }}
         {{ Math.max(props.table.getPageCount(), 1) }}
       </div>
-      <div class="nds-data-table-pagination-nav">
-        <Button
-          variant="outline"
-          size="icon"
-          :aria-label="props.labels.firstPage"
-          :disabled="!props.table.getCanPreviousPage()"
-          @click="props.table.setPageIndex(0)"
-        >
-          <ChevronsLeft aria-hidden="true" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          :aria-label="props.labels.prevPage"
-          :disabled="!props.table.getCanPreviousPage()"
-          @click="props.table.previousPage()"
-        >
-          <ChevronLeft aria-hidden="true" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          :aria-label="props.labels.nextPage"
-          :disabled="!props.table.getCanNextPage()"
-          @click="props.table.nextPage()"
-        >
-          <ChevronRight aria-hidden="true" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          :aria-label="props.labels.lastPage"
-          :disabled="!props.table.getCanNextPage()"
-          @click="props.table.setPageIndex(props.table.getPageCount() - 1)"
-        >
-          <ChevronsRight aria-hidden="true" />
-        </Button>
-      </div>
+      <!--
+        A faixa de paginação do sistema, composta.
+
+        Até 2026-09-23 estes quatro controles eram quatro `Button` soltos dentro
+        de um `<div>`: mesma aparência da faixa e nenhuma das semânticas dela —
+        sem landmark, sem lista, sem `data-slot` de faixa. Havia duas paginações
+        no design system, e só uma delas era navegável por landmark.
+
+        A composição não muda a tela: sem números (quem diz em que página se está
+        é o "Página X de Y" ao lado), `appearance="outline"` é a variante que o
+        rodapé sempre usou, e sem texto visível os quatro direcionais nascem
+        quadrados como os botões de antes.
+
+        Sem `href` os controles são `<button>` com `disabled` nativo — o rodapé
+        nunca tem rota, e é isso que mantém de pé as asserções `toBeDisabled()`
+        das cinco suítes.
+
+        O vocabulário da TABELA vence: "Primeira página", não "Ir para a primeira
+        página". Os padrões da faixa seguem valendo para quem a usa sozinha.
+      -->
+      <Pagination
+        :total="total"
+        :items-per-page="pagination.pageSize"
+        :page="pagination.pageIndex + 1"
+        data-align="end"
+        :aria-label="props.labels.paginationNav(props.caption ?? '')"
+        @update:page="(page: number) => props.table.setPageIndex(page - 1)"
+      >
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationFirst
+              appearance="outline"
+              :aria-label="props.labels.firstPage"
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationPrevious
+              appearance="outline"
+              text=""
+              :aria-label="props.labels.prevPage"
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext
+              appearance="outline"
+              text=""
+              :aria-label="props.labels.nextPage"
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLast
+              appearance="outline"
+              :aria-label="props.labels.lastPage"
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   </div>
 </template>

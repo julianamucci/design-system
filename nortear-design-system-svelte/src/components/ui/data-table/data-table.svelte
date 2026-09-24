@@ -734,7 +734,7 @@
     {/if}
 
     {#if enablePagination && !virtualized}
-      <DataTablePagination {table} {pageSizeOptions} {enableRowSelection} labels={rotulos} />
+      <DataTablePagination {table} {pageSizeOptions} {enableRowSelection} labels={rotulos} {caption} />
     {/if}
   {/if}
 </div>

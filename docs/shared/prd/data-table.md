@@ -36,7 +36,7 @@ explorar, filtrar ou editar") e no conteúdo compartilhado, em
 | vizinho | diferença que decide |
 |---|---|
 | **Table** | é a camada semântica, e o DataTable a CONSOME (`.nds-table`, `.nds-table-wrapper`, `<th scope="col">`). Table não tem estado: nada nele ordena, filtra, marca ou pagina. Escolhe-se Table quando a leitura basta — e a troca não é de aparência, porque as duas desenham a mesma grade |
-| **Pagination** | é o componente de navegação numerada (`.nds-pagination`, `<nav>` com `<ul>` e `aria-current="page"`). O rodapé do DataTable **não é ele**: as cinco stacks montam a navegação com quatro Buttons de ícone e classes `.nds-data-table-pagination-*`. São duas paginações no sistema, com markup e semântica diferentes (ver a pendência da §11) |
+| **Pagination** | é o componente de navegação numerada, e **desde 2026-09-23 o rodapé do DataTable o COMPÕE** — por decisão da dona, numa forma que preserva a tela: o Pagination ganhou `showFirstLast`, `showPages` e `appearance`, e o rodapé passa `showPages: false`, `showFirstLast: true`, `appearance: "outline"`. Deixou de haver duas paginações no sistema. A contagem, o seletor de linhas por página e o indicador "Página X de Y" continuam do rodapé — não são do Pagination |
 | **Chart** | comparação visual de tendência; o DataTable é detalhe linha a linha (`usage.scenarios.item4`) |
 | lista de Card | leitura vertical densa em telas estreitas (`usage.scenarios.item6`, `usage.dont.item3`) |
 
@@ -77,7 +77,7 @@ idiomas, com 9 itens em `testes.functional`, 6 em `testes.accessibility` e 6 em
 | C16 | O estado vazio é UMA linha com a mensagem, e o `colspan` é derivado das colunas visíveis (mais a de seleção), nunca escrito à mão. A toolbar e o cabeçalho sobrevivem ao vazio | `testes.visual.item6`, `states.empty` · `NoResults` das cinco |
 | C17 | A paginação tem quatro botões nomeados (primeira, anterior, próxima, última) e os dois do lado sem saída ficam desabilitados nos extremos; trocar o tamanho da página não deixa ninguém numa página inexistente | `testes.functional.item8` · `Paginated` das cinco |
 | C18 | Virtualizar DESLIGA paginar, e as linhas fantasma (`aria-hidden="true"`) reservam a altura do que não está montado | `testes.functional.item7`, `notes.tip5` · `Virtualized1000Rows` de react, vue, svelte e vanilla — **não existe no angular** (D1) |
-| C19 | `data-slot` sai em três pontos: `data-table`, `data-table-toolbar` e `data-table-pagination` | — · Playground das cinco (a raiz) |
+| C19 | `data-slot` PRÓPRIO sai em três pontos: `data-table`, `data-table-toolbar` e `data-table-pagination`. Dentro do rodapé saem também os do Pagination composto (`pagination`, `-content`, `-item`, `-first`, `-previous`, `-next`, `-last`), que são contrato DAQUELE componente | — · Playground das cinco (a raiz) |
 
 **Três contratos só têm produtor em parte das stacks**, e não por decisão de
 API: C18 (virtualização), mais o redimensionamento e a fixação de coluna, que
@@ -325,10 +325,23 @@ data-table                       <div>, coluna flex, gap de 8px
     └── pagination-controls
         ├── page-size            rótulo + page-size-select
         ├── pagination-count     indicador "Página X de Y"
-        └── pagination-nav       quatro Buttons de ícone
+        └── pagination           o componente Pagination, composto
+            └── pagination-content   <ul>
+                ├── pagination-item › pagination-first
+                ├── pagination-item › pagination-previous
+                ├── pagination-item › pagination-next
+                └── pagination-item › pagination-last
 ```
 
-Três `data-slot` só: `data-table`, `data-table-toolbar`, `data-table-pagination`.
+Três `data-slot` PRÓPRIOS: `data-table`, `data-table-toolbar`,
+`data-table-pagination`. Dentro do rodapé saem os do Pagination, que são
+contrato daquele componente e não deste — o `-nav` que o rodapé tinha saiu da
+folha em 2026-09-23, porque quem dá o arranjo em linha agora é a lista do
+vizinho.
+
+**Não há `pagination-link` nem `pagination-ellipsis` aqui**: o rodapé passa
+`showPages: false`. Quem navega por página numerada é quem usa o Pagination
+sozinho.
 A moldura de rolagem, o `<table>` e as células são identificados por CLASSE — e
 no angular isso é regra, porque duas diretivas no mesmo botão disputam
 `data-slot` e quem escreve por último vence (o gatilho do menu de colunas é o

@@ -1000,6 +1000,7 @@ watch(
       :page-size-options="pageSizeOptions"
       :enable-row-selection="enableRowSelection"
       :labels="rotulos"
+      :caption="caption"
     />
   </div>
 </template>

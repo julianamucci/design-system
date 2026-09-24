@@ -49,6 +49,20 @@ export interface DataTableLabels {
   prevPage: string;
   nextPage: string;
   lastPage: string;
+  /**
+   * Nome acessível do `<nav>` do rodapé, composto a partir da LEGENDA da
+   * tabela.
+   *
+   * É função, e não texto montado em cada stack, porque o rodapé passou a ser
+   * um landmark: `landmark-unique` do axe reprova dois `<nav>` com o mesmo
+   * nome na mesma página, e a docs page do DataTable instancia até SETE
+   * tabelas com paginação. A legenda já é única por instância (D4), então ela
+   * é o que distingue.
+   *
+   * Sem legenda, devolve só a palavra — uma tabela sem nome é problema anterior
+   * a este, e o portão de nome acessível é quem o cobra.
+   */
+  paginationNav: (caption: string) => string;
   rowsTotal: (n: number) => string;
   rowsSelected: (s: number, n: number) => string;
   allOption: string;
@@ -73,6 +87,7 @@ export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
   prevPage: 'Página anterior',
   nextPage: 'Próxima página',
   lastPage: 'Última página',
+  paginationNav: (caption) => (caption ? `Paginação — ${caption}` : 'Paginação'),
   rowsTotal: (n) => `${n} linha(s).`,
   rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
   allOption: 'Todos',

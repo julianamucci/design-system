@@ -18,14 +18,16 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   Search,
   Settings2,
 } from 'lucide';
 import type { CheckedState } from '@radix-ng/primitives/menu';
+// O catálogo compartilhado inteiro NÃO vem (D8: aqui os rótulos são moldes com
+// `{col}`, porque quem os passa os passa de dentro de um template, onde não se
+// declara função). O que vem é só o FORMATO do nome do landmark do rodapé —
+// função pura, regra e não implementação, que existe para as cinco stacks não
+// inventarem cinco formatos.
+import { DATA_TABLE_LABELS_DEFAULT as LABELS_COMPARTILHADOS } from '@shared/primitives/data-table-labels';
 import { cn } from '@/lib/utils';
 import { NdsBadge, type BadgeVariant } from './badge';
 import { NdsButton } from './button';
@@ -42,6 +44,15 @@ import {
   NdsTableWrapper,
   type TableSortDirection,
 } from './table';
+import {
+  NdsPagination,
+  NdsPaginationContent,
+  NdsPaginationFirst,
+  NdsPaginationItem,
+  NdsPaginationLast,
+  NdsPaginationNext,
+  NdsPaginationPrevious,
+} from './pagination';
 import {
   NdsDropdownMenu,
   NdsDropdownMenuCheckboxItem,
@@ -210,6 +221,19 @@ export interface DataTableLabels {
   prevPage: string;
   nextPage: string;
   lastPage: string;
+  /**
+   * Nome acessível do `<nav>` do rodapé. Precisa conter `{caption}`.
+   *
+   * O rodapé virou landmark quando passou a compor o Pagination, e
+   * `landmark-unique` do axe reprova dois `<nav>` com o mesmo nome na mesma
+   * página — a docs page desta tabela instancia SETE tabelas paginadas. A
+   * legenda já é única por instância (D4), então ela é o que distingue.
+   *
+   * O FORMATO não é inventado aqui: ele sai da função compartilhada, para as
+   * cinco stacks não terem cinco formatos. O que é desta stack é a forma de
+   * MOLDE, pelo mesmo motivo de `sortBy` e de `selectRow` (D8).
+   */
+  paginationNav: string;
   rowsTotal: string;
   rowsSelected: string;
   noFilter: string;
@@ -232,6 +256,10 @@ export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
   prevPage: 'Página anterior',
   nextPage: 'Próxima página',
   lastPage: 'Última página',
+  // Semeado pela função compartilhada, e não escrito à mão: chamar com o
+  // marcador devolve o molde no formato que as cinco stacks publicam, então o
+  // dia em que o formato mudar lá ele muda aqui junto.
+  paginationNav: LABELS_COMPARTILHADOS.paginationNav('{caption}'),
   rowsTotal: '{n} linha(s).',
   rowsSelected: '{s} de {n} linha(s) selecionada(s).',
   noFilter: 'Sem filtro para {col}',
@@ -258,9 +286,11 @@ function preencher(modelo: string, values: Record<string, string | number>): str
 // Não é exportado: é peça interna deste arquivo, e exportá-lo criaria uma
 // segunda família de ícones concorrendo com a do botão.
 
+// Os quatro chevrons saíram em 2026-09-23, com o rodapé: quem desenha o
+// direcional agora é o Pagination, que traz os próprios ícones. Nome de ícone
+// sem uso é promessa de desenho que este arquivo já não faz.
 export type DataTableIconKind =
-  | 'search' | 'settings' | 'arrow-up' | 'arrow-down' | 'arrow-up-down'
-  | 'chevron-left' | 'chevron-right' | 'chevrons-left' | 'chevrons-right';
+  | 'search' | 'settings' | 'arrow-up' | 'arrow-down' | 'arrow-up-down';
 
 type LucideIconNode = [string, Record<string, string>];
 
@@ -270,10 +300,6 @@ const DATA_TABLE_ICON_MAP: Record<DataTableIconKind, LucideIconNode[]> = {
   'arrow-up':        ArrowUp       as unknown as LucideIconNode[],
   'arrow-down':      ArrowDown     as unknown as LucideIconNode[],
   'arrow-up-down':   ArrowUpDown   as unknown as LucideIconNode[],
-  'chevron-left':    ChevronLeft   as unknown as LucideIconNode[],
-  'chevron-right':   ChevronRight  as unknown as LucideIconNode[],
-  'chevrons-left':   ChevronsLeft  as unknown as LucideIconNode[],
-  'chevrons-right':  ChevronsRight as unknown as LucideIconNode[],
 };
 
 @Component({
@@ -370,6 +396,8 @@ interface LineRenderizada {
     NdsDropdownMenu, NdsDropdownMenuTrigger, NdsDropdownMenuContent,
     NdsDropdownMenuGroup, NdsDropdownMenuLabel, NdsDropdownMenuSeparator,
     NdsDropdownMenuCheckboxItem,
+    NdsPagination, NdsPaginationContent, NdsPaginationItem,
+    NdsPaginationFirst, NdsPaginationPrevious, NdsPaginationNext, NdsPaginationLast,
   ],
   host: {
     class: 'nds-data-table',
@@ -646,32 +674,72 @@ interface LineRenderizada {
             {{ rotulos().page }} {{ currentPage() + 1 }} {{ rotulos().pageOf }} {{ totalDePaginas() }}
           </div>
 
-          <div class="nds-data-table-pagination-nav">
-            <button
-              ndsButton variant="outline" size="icon"
-              [attr.aria-label]="rotulos().firstPage"
-              [disabled]="!podeVoltar()"
-              (click)="goToPage(0)"
-            ><svg ndsDataTableIcon kind="chevrons-left"></svg></button>
-            <button
-              ndsButton variant="outline" size="icon"
-              [attr.aria-label]="rotulos().prevPage"
-              [disabled]="!podeVoltar()"
-              (click)="goToPage(currentPage() - 1)"
-            ><svg ndsDataTableIcon kind="chevron-left"></svg></button>
-            <button
-              ndsButton variant="outline" size="icon"
-              [attr.aria-label]="rotulos().nextPage"
-              [disabled]="!podeAvancar()"
-              (click)="goToPage(currentPage() + 1)"
-            ><svg ndsDataTableIcon kind="chevron-right"></svg></button>
-            <button
-              ndsButton variant="outline" size="icon"
-              [attr.aria-label]="rotulos().lastPage"
-              [disabled]="!podeAvancar()"
-              (click)="goToPage(totalDePaginas() - 1)"
-            ><svg ndsDataTableIcon kind="chevrons-right"></svg></button>
-          </div>
+          <!-- A faixa de paginação do sistema, composta. Até 2026-09-23 estes
+               quatro controles eram quatro botões soltos dentro de um div:
+               mesma aparência do Pagination e nenhuma das semânticas dele — sem
+               landmark, sem lista, sem data-slot de faixa. Havia duas
+               paginações no design system, e só uma delas era navegável por
+               landmark.
+
+               A composição não muda a tela: sem régua numerada (quem diz em que
+               página se está é o "Página X de Y" ao lado), appearance outline é
+               a variante que o rodapé sempre usou, e com text vazio os quatro
+               direcionais nascem quadrados como os botões de antes.
+
+               O nome acessível vai por [label], e NÃO por [attr.aria-label]:
+               nesta stack o host binding da diretiva apaga o atributo estático
+               e vence o attr do template. Foi assim que 19 data-slot se
+               perderam em 2026-09-01.
+
+               Os quatro seguem sendo button com disabled NATIVO — o rodapé
+               nunca tem rota. É isso que mantém de pé as asserções
+               toBeDisabled() das cinco suítes. -->
+          <nav ndsPagination data-align="end" [label]="paginationNavName()">
+            <ul ndsPaginationContent>
+              <li ndsPaginationItem>
+                <button
+                  ndsPaginationFirst
+                  type="button"
+                  appearance="outline"
+                  [label]="rotulos().firstPage"
+                  [disabled]="!podeVoltar()"
+                  (click)="goToPage(0)"
+                ></button>
+              </li>
+              <li ndsPaginationItem>
+                <button
+                  ndsPaginationPrevious
+                  type="button"
+                  text=""
+                  appearance="outline"
+                  [label]="rotulos().prevPage"
+                  [disabled]="!podeVoltar()"
+                  (click)="goToPage(currentPage() - 1)"
+                ></button>
+              </li>
+              <li ndsPaginationItem>
+                <button
+                  ndsPaginationNext
+                  type="button"
+                  text=""
+                  appearance="outline"
+                  [label]="rotulos().nextPage"
+                  [disabled]="!podeAvancar()"
+                  (click)="goToPage(currentPage() + 1)"
+                ></button>
+              </li>
+              <li ndsPaginationItem>
+                <button
+                  ndsPaginationLast
+                  type="button"
+                  appearance="outline"
+                  [label]="rotulos().lastPage"
+                  [disabled]="!podeAvancar()"
+                  (click)="goToPage(totalDePaginas() - 1)"
+                ></button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     }
@@ -765,6 +833,21 @@ export class NdsDataTable<TData> implements OnInit {
     ...DATA_TABLE_LABELS_DEFAULT,
     ...this.labels(),
   }));
+
+  /**
+   * Nome acessível do `<nav>` do rodapé.
+   *
+   * Sem legenda devolve só a palavra, e é a função compartilhada que decide
+   * isso: uma tabela sem nome é problema anterior a este, e quem o cobra é o
+   * portão de nome acessível. Preencher o molde com vazio deixaria um travessão
+   * pendurado no fim do nome.
+   */
+  protected readonly paginationNavName = computed(() => {
+    const legenda = this.caption();
+    return legenda
+      ? preencher(this.rotulos().paginationNav, { caption: legenda })
+      : LABELS_COMPARTILHADOS.paginationNav('');
+  });
 
   protected sortLabel(column: DataTableColumn<TData>): string {
     return preencher(this.rotulos().sortBy, { col: column.header });
