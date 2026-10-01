@@ -139,7 +139,7 @@ jobs:
         # desenho do GitHub não enxerga segredo nenhum. Falhar nesses dois seria
         # vermelho que não diz nada sobre o código.
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v7
 
       - name: Sem chave configurada
         if: env.SONAR_TOKEN == ''
