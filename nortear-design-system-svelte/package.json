@@ -57,7 +57,7 @@
     "@storybook/addon-mcp": "^0.7.0",
     "@storybook/addon-onboarding": "^10.5.5",
     "@storybook/addon-themes": "^10.5.5",
-    "@storybook/addon-vitest": "^10.5.5",
+    "@storybook/addon-vitest": "^10.6.2",
     "@storybook/svelte-vite": "^10.5.5",
     "@sveltejs/vite-plugin-svelte": "^7.2.0",
     "@tsconfig/svelte": "^5.0.8",
