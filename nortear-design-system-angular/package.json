@@ -62,7 +62,7 @@
     "@storybook/addon-designs": "^11.1.4",
     "@storybook/addon-docs": "^10.5.7",
     "@storybook/addon-themes": "^10.5.7",
-    "@storybook/addon-vitest": "^10.5.7",
+    "@storybook/addon-vitest": "^10.6.2",
     "@storybook/angular-vite": "^10.5.7",
     "@types/node": "^26.1.2",
     "@vitest/browser-playwright": "^4.1.10",
